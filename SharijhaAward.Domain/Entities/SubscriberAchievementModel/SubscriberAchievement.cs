@@ -1,0 +1,43 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using SharijhaAward.Domain.Constants.SubscriberAchievementConstants;
+using SharijhaAward.Domain.Model.AchievementClassificationModel;
+using SharijhaAward.Domain.Model.Common;
+using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Model.SubscriberModel;
+
+namespace SharijhaAward.Domain.Model.SubscriberAchievementModel; 
+
+/*
+ *
+ * Note
+ * This model need configuration inside the infra layer in configuration directory
+ * configuration for the fluent api.
+ * 
+ */
+public class SubscriberAchievement: AuditInformation<User> {
+   public Guid Id { get; set; }
+   // the arabic title of the achievement
+   public string ArabicTitle { get; set; } = string.Empty;
+   // the english title of the achievement
+   public string EnglishTitle { get; set; } = string.Empty;
+   // the attachment (file) of the achievement
+   public string Attachment { get; set; } = string.Empty;
+   
+   // the date of the achievement
+   public DateOnly Date { get; set; }
+   
+   // the status of the achievement => (accepted, rejected)
+   public AchievementStatus Status { get; set; }
+   
+   // navigation property to the achievement classification 
+   public AchievementClassification AchievementClassification { get; set; } = null!;
+   [ForeignKey(nameof(AchievementClassification))]
+   public Guid AchievementClassificationId { get; set; }
+
+   
+   
+   // navigation property to the Subscriber
+   public Subscriber Subscriber { get; set; } = null!;
+   [ForeignKey(nameof(Subscriber))]
+   public Guid SubscriberId { get; set; }
+}
