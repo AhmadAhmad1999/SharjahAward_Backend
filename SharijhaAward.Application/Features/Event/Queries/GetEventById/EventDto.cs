@@ -9,8 +9,10 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetEventById
     public class EventDto
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string EnglishName { get; set; } = string.Empty;
+        public string ArabicName { get; set; } = string.Empty;
+        public string EnglishDescription { get; set; } = string.Empty;
+        public string ArabicDescription { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
     }

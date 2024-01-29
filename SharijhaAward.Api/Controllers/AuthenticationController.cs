@@ -18,7 +18,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost("Login", Name = "Login")]
         public async Task<ActionResult<string>> Login([FromBody] LoginCommand user)
         {
-          string token= await  _Mediator.Send(new LoginCommand() { Email = user.Email, Password =user.Password });
+            string token= await  _Mediator.Send(new LoginCommand() { Email = user.Email, Password =user.Password });
             
             return Ok(token);
         }

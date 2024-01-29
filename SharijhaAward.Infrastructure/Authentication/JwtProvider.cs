@@ -33,7 +33,7 @@ namespace SharijhaAward.Infrastructure.Authentication
                     _options.Issueer,
                     _options.Audience,
                     claims,
-                    null,
+                    DateTime.UtcNow,
                     DateTime.UtcNow.AddDays(1),
                     signingCredentials
                 );

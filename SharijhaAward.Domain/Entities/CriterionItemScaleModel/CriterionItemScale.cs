@@ -11,7 +11,7 @@ namespace SharijhaAward.Domain.Model.CriterionItemScaleModel;
 // the pivot table between the scale and criterion-item
 public class CriterionItemScale : AuditInformation<User> {
     [Key]
-    public int Id {  get; set; }
+    public Guid Id {  get; set; }
     // navigation property to the scale
     [DeleteBehavior(DeleteBehavior.NoAction)]
     public Scale Scale { get; set; } = null!;
