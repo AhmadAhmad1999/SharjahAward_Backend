@@ -23,6 +23,8 @@ namespace SharijhaAward.Persistence
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IPersonalInviteeRepository, PersonalInviteeRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGroupInviteeRepository, GroupInviteeRepository>();
+
             return services;
         }
     }

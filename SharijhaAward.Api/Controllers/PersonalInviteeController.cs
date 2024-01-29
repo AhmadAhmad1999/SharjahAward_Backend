@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ConfirmAttendancePersonal;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
 
@@ -65,6 +66,16 @@ namespace SharijhaAward.Api.Controllers
            var dto = await _mediator.Send(new GetAllPersonalInviteeQuery());
 
             return Ok(dto);
+        }
+        [HttpPost("ConfirmAttendancePersonal", Name = "ConfirmAttendancePersonal")]
+        public async Task<ActionResult> ConfirmAttendancePersonal([FromBody] Guid Id)
+        {
+            var respone = await _mediator.Send(new ConfirmAttendancePersonalQuery()
+            { 
+                Id = Id
+            });
+
+            return Ok(respone);
         }
     }
 }

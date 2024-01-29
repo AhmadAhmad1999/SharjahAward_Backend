@@ -9,16 +9,17 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Persistence.Repositories
 {
-    public class PersonalInviteeRepository : BaseRepository<PersonalInvitee>, IPersonalInviteeRepository
+    public class GroupInviteeRepository
+        : BaseRepository<GroupInvitee>, IGroupInviteeRepository
     {
-        public PersonalInviteeRepository(SharijhaAwardDbContext dbContext) : base(dbContext)
+        public GroupInviteeRepository(SharijhaAwardDbContext dbContext) : base(dbContext)
         {
         }
 
-        public async Task ConfirmationofAttendance(PersonalInvitee personal)
+        public async Task ConfirmationofAttendance(GroupInvitee group , int NumberOfAttendees)
         {
-            personal.IsAttend = true;
-            _dbContext.Entry(personal).State= EntityState.Modified;
+             group.ActualNumberOfAttendees = NumberOfAttendees;
+            _dbContext.Entry(group).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
     }
