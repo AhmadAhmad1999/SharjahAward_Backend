@@ -22,7 +22,6 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetEventWithInvitees
 
         public async Task<EventInviteesVM> Handle(GetEventWithInviteesQuery request, CancellationToken cancellationToken)
         {
-
             var Event = await _EventRepository.GetByIdAsync(request.Id);
             if (Event == null)
             {

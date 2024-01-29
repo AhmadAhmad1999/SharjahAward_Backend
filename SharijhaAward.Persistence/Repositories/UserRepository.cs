@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Application.Contract.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Model.IdentityModels;
 using System;
@@ -19,7 +20,7 @@ namespace SharijhaAward.Persistence.Repositories
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            var user = await _dbContext.Users.FindAsync(email);
+            var user = await _dbContext.Users.Where(u => u.Email == email).FirstAsync();
             if (user == null)
             {
                 throw new OpenQA.Selenium.NotFoundException();

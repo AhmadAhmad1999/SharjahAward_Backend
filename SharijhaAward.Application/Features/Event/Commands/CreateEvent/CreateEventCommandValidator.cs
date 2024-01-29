@@ -11,11 +11,11 @@ namespace SharijhaAward.Application.Features.Event.Commands.CreateEvent
     public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
     {
         public CreateEventCommandValidator() {
-            RuleFor(e => e.Name)
+            RuleFor(e => e.EnglishName)
                .NotEmpty().WithMessage("{PropertyName} is required.")
                .NotNull()
                .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
-            RuleFor(e => e.Description)
+            RuleFor(e => e.EnglishDescription)
                .NotEmpty().WithMessage("{PropertyName} is required.")
                .NotNull()
                .MaximumLength(255).WithMessage("{PropertyName} must not exceed 50 characters.");

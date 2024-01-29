@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Contract.Persistence
 {
-    public interface IPersonalInviteeRepository : IAsyncRepository<PersonalInvitee>
+    public interface IGroupInviteeRepository : IAsyncRepository<GroupInvitee>
     {
-        public Task ConfirmationofAttendance(PersonalInvitee personal);
+        public Task ConfirmationofAttendance(GroupInvitee group , int NumberOfAttendees);
     }
 }

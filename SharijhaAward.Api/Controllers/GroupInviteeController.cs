@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.DeleteGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.UpdateGroupInvitee;
+using SharijhaAward.Application.Features.InviteeForm.Group.Queries.ConfirmAttendanceGroup;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGroupInvitees;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupInviteeById;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ConfirmAttendancePersonal;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
 
@@ -70,6 +72,18 @@ namespace SharijhaAward.Api.Controllers
             var dto = await _mediator.Send(new GetAllGroupInviteeQuery());
 
             return Ok(dto);
+        }
+
+        [HttpPost("ConfirmAttendanceGroup", Name = "ConfirmAttendanceGroup")]
+        public async Task<ActionResult> ConfirmAttendanceGroup([FromBody] ConfirmAttendanceGroupQuery query)
+        {
+            var respone = await _mediator.Send(new ConfirmAttendanceGroupQuery()
+            {
+                Id = query.Id,
+                NumberOfAttendees=query.NumberOfAttendees
+            });
+
+            return Ok(respone);
         }
     }
 }

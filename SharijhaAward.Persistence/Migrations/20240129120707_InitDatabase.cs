@@ -1,68 +1,100 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace SharijhaAward.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class IniteDataBase : Migration
+    public partial class InitDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "Events",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishSiteName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicSiteName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ArabicName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Gender = table.Column<int>(type: "int", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Permissions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Permissions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Roles",
+                name: "GroupInvitees",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SchoolName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpectedNumberOfAttendees = table.Column<int>(type: "int", nullable: false),
+                    ActualNumberOfAttendees = table.Column<int>(type: "int", nullable: false),
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.PrimaryKey("PK_GroupInvitees", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GroupInvitees_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Personalnvitees",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Employer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsAttend = table.Column<bool>(type: "bit", nullable: false),
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Personalnvitees", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Personalnvitees_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,14 +114,14 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_AchievementClassification", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AchievementClassification_AspNetUsers_CreatedById",
+                        name: "FK_AchievementClassification_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_AchievementClassification_AspNetUsers_UpdatedById",
+                        name: "FK_AchievementClassification_Users_UpdatedById",
                         column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -113,14 +145,14 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_ArbitrationProcedure", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ArbitrationProcedure_AspNetUsers_CreatedById",
+                        name: "FK_ArbitrationProcedure_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ArbitrationProcedure_AspNetUsers_UpdatedById",
+                        name: "FK_ArbitrationProcedure_Users_UpdatedById",
                         column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -143,76 +175,15 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Arbitrator", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Arbitrator_AspNetUsers_CreatedById",
+                        name: "FK_Arbitrator_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Arbitrator_AspNetUsers_UpdatedById",
+                        name: "FK_Arbitrator_Users_UpdatedById",
                         column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -234,20 +205,20 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Committee", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Committee_AspNetUsers_ChairmanId",
+                        name: "FK_Committee_Users_ChairmanId",
                         column: x => x.ChairmanId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Committee_AspNetUsers_CreatedById",
+                        name: "FK_Committee_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Committee_AspNetUsers_UpdatedById",
+                        name: "FK_Committee_Users_UpdatedById",
                         column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -274,14 +245,14 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Coordinator", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Coordinator_AspNetUsers_CreatedById",
+                        name: "FK_Coordinator_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Coordinator_AspNetUsers_UpdatedById",
+                        name: "FK_Coordinator_Users_UpdatedById",
                         column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -308,14 +279,14 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Cycle", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Cycle_AspNetUsers_CreatedById",
+                        name: "FK_Cycle_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Cycle_AspNetUsers_UpdatedById",
+                        name: "FK_Cycle_Users_UpdatedById",
                         column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -336,14 +307,14 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_EducationalClass", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EducationalClass_AspNetUsers_CreatedById",
+                        name: "FK_EducationalClass_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_EducationalClass_AspNetUsers_UpdatedById",
+                        name: "FK_EducationalClass_Users_UpdatedById",
                         column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -364,14 +335,14 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Interview", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Interview_AspNetUsers_CreatedById",
+                        name: "FK_Interview_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Interview_AspNetUsers_UpdatedById",
+                        name: "FK_Interview_Users_UpdatedById",
                         column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -394,19 +365,19 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Subscriber", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Subscriber_AspNetUsers_CreatedById",
+                        name: "FK_Subscriber_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Subscriber_AspNetUsers_UpdatedById",
+                        name: "FK_Subscriber_Users_UpdatedById",
                         column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Subscriber_AspNetUsers_UserId",
+                        name: "FK_Subscriber_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -431,85 +402,15 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_TrainingWorkshop", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TrainingWorkshop_AspNetUsers_CreatedById",
+                        name: "FK_TrainingWorkshop_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_TrainingWorkshop_AspNetUsers_UpdatedById",
+                        name: "FK_TrainingWorkshop_Users_UpdatedById",
                         column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RolePermissions",
-                columns: table => new
-                {
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PermissionId = table.Column<int>(type: "int", nullable: false),
-                    RolesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RolePermissions", x => new { x.RoleId, x.PermissionId });
-                    table.ForeignKey(
-                        name: "FK_RolePermissions_Permissions_PermissionId",
-                        column: x => x.PermissionId,
-                        principalTable: "Permissions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RolePermissions_Roles_RolesId",
-                        column: x => x.RolesId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -533,9 +434,9 @@ namespace SharijhaAward.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Note_AspNetUsers_UserId",
+                        name: "FK_Note_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -565,21 +466,21 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Agenda", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Agenda_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Agenda_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Agenda_Cycle_CycleId",
                         column: x => x.CycleId,
                         principalTable: "Cycle",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Agenda_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Agenda_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -623,16 +524,6 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Category", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Category_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Category_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Category_Category_ParentId",
                         column: x => x.ParentId,
                         principalTable: "Category",
@@ -643,6 +534,16 @@ namespace SharijhaAward.Persistence.Migrations
                         principalTable: "Cycle",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Category_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Category_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -663,21 +564,21 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_CycleCondition", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CycleCondition_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CycleCondition_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_CycleCondition_Cycle_CycleId",
                         column: x => x.CycleId,
                         principalTable: "Cycle",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CycleCondition_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CycleCondition_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -703,21 +604,21 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_News", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_News_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_News_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_News_Cycle_CycleId",
                         column: x => x.CycleId,
                         principalTable: "Cycle",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_News_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_News_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -820,21 +721,21 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_RelatedAccount", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RelatedAccount_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_RelatedAccount_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_RelatedAccount_Subscriber_SubscriberId",
                         column: x => x.SubscriberId,
                         principalTable: "Subscriber",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RelatedAccount_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RelatedAccount_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -865,21 +766,21 @@ namespace SharijhaAward.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SubscriberAchievement_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_SubscriberAchievement_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_SubscriberAchievement_Subscriber_SubscriberId",
                         column: x => x.SubscriberId,
                         principalTable: "Subscriber",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubscriberAchievement_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SubscriberAchievement_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -909,9 +810,35 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TrainingWorkshopSubscriber",
+                name: "SubscriberTrainingWorkshop",
                 columns: table => new
                 {
+                    SubscribersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TrainingWorkshopsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubscriberTrainingWorkshop", x => new { x.SubscribersId, x.TrainingWorkshopsId });
+                    table.ForeignKey(
+                        name: "FK_SubscriberTrainingWorkshop_Subscriber_SubscribersId",
+                        column: x => x.SubscribersId,
+                        principalTable: "Subscriber",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubscriberTrainingWorkshop_TrainingWorkshop_TrainingWorkshopsId",
+                        column: x => x.TrainingWorkshopsId,
+                        principalTable: "TrainingWorkshop",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "trainingWorkshopSubscribers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     SubscribersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TrainingWorkshopsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -922,29 +849,29 @@ namespace SharijhaAward.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TrainingWorkshopSubscriber", x => new { x.SubscribersId, x.TrainingWorkshopsId });
+                    table.PrimaryKey("PK_trainingWorkshopSubscribers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TrainingWorkshopSubscriber_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_TrainingWorkshopSubscriber_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_TrainingWorkshopSubscriber_Subscriber_SubscribersId",
+                        name: "FK_trainingWorkshopSubscribers_Subscriber_SubscribersId",
                         column: x => x.SubscribersId,
                         principalTable: "Subscriber",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TrainingWorkshopSubscriber_TrainingWorkshop_TrainingWorkshopsId",
+                        name: "FK_trainingWorkshopSubscribers_TrainingWorkshop_TrainingWorkshopsId",
                         column: x => x.TrainingWorkshopsId,
                         principalTable: "TrainingWorkshop",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_trainingWorkshopSubscribers_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_trainingWorkshopSubscribers_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -978,26 +905,11 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: table => new
                 {
                     CategoriesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CommitteesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CommitteesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CategoryCommittee", x => new { x.CategoriesId, x.CommitteesId });
-                    table.ForeignKey(
-                        name: "FK_CategoryCommittee_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CategoryCommittee_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CategoryCommittee_Category_CategoriesId",
                         column: x => x.CategoriesId,
@@ -1010,6 +922,47 @@ namespace SharijhaAward.Persistence.Migrations
                         principalTable: "Committee",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "categoryCommittees",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoriesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CommitteesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_categoryCommittees", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_categoryCommittees_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_categoryCommittees_Committee_CommitteesId",
+                        column: x => x.CommitteesId,
+                        principalTable: "Committee",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_categoryCommittees_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_categoryCommittees_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1039,16 +992,6 @@ namespace SharijhaAward.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Criterion_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Criterion_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Criterion_Category_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Category",
@@ -1058,6 +1001,16 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_Criterion_Criterion_ParentId",
                         column: x => x.ParentId,
                         principalTable: "Criterion",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Criterion_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Criterion_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -1081,21 +1034,21 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_FrequentlyAskedQuestion", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FrequentlyAskedQuestion_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_FrequentlyAskedQuestion_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_FrequentlyAskedQuestion_Category_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Category",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FrequentlyAskedQuestion_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_FrequentlyAskedQuestion_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1118,21 +1071,21 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Meeting", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Meeting_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Meeting_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Meeting_Category_categoryId",
                         column: x => x.categoryId,
                         principalTable: "Category",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Meeting_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Meeting_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1160,16 +1113,6 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_ProvidedForm", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProvidedForm_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ProvidedForm_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_ProvidedForm_Category_categoryId",
                         column: x => x.categoryId,
                         principalTable: "Category",
@@ -1181,6 +1124,16 @@ namespace SharijhaAward.Persistence.Migrations
                         principalTable: "Subscriber",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProvidedForm_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProvidedForm_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1205,21 +1158,21 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_TermsAndConditions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TermsAndConditions_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_TermsAndConditions_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_TermsAndConditions_Category_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Category",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TermsAndConditions_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TermsAndConditions_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1242,21 +1195,21 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_TrainingManual", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TrainingManual_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_TrainingManual_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_TrainingManual_Category_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Category",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TrainingManual_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TrainingManual_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1305,21 +1258,21 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_CriterionItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CriterionItem_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CriterionItem_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_CriterionItem_Criterion_CriterionId",
                         column: x => x.CriterionId,
                         principalTable: "Criterion",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CriterionItem_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CriterionItem_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1342,21 +1295,21 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Scale", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Scale_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Scale_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Scale_Criterion_CriterionId",
                         column: x => x.CriterionId,
                         principalTable: "Criterion",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Scale_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Scale_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1398,15 +1351,15 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_MeetingUser", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MeetingUser_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_MeetingUser_Meeting_MeetingId",
                         column: x => x.MeetingId,
                         principalTable: "Meeting",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MeetingUser_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1490,6 +1443,31 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "CriterionItemScale",
                 columns: table => new
                 {
+                    CriterionItemsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ScalesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CriterionItemScale", x => new { x.CriterionItemsId, x.ScalesId });
+                    table.ForeignKey(
+                        name: "FK_CriterionItemScale_CriterionItem_CriterionItemsId",
+                        column: x => x.CriterionItemsId,
+                        principalTable: "CriterionItem",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CriterionItemScale_Scale_ScalesId",
+                        column: x => x.ScalesId,
+                        principalTable: "Scale",
+                        principalColumn: "Id"
+                        );
+                });
+
+            migrationBuilder.CreateTable(
+                name: "criterionItemScales",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ScalesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CriterionItemsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ArabicDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -1502,26 +1480,26 @@ namespace SharijhaAward.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CriterionItemScale", x => new { x.CriterionItemsId, x.ScalesId });
+                    table.PrimaryKey("PK_criterionItemScales", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CriterionItemScale_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CriterionItemScale_AspNetUsers_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CriterionItemScale_CriterionItem_CriterionItemsId",
+                        name: "FK_criterionItemScales_CriterionItem_CriterionItemsId",
                         column: x => x.CriterionItemsId,
                         principalTable: "CriterionItem",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_CriterionItemScale_Scale_ScalesId",
+                        name: "FK_criterionItemScales_Scale_ScalesId",
                         column: x => x.ScalesId,
                         principalTable: "Scale",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_criterionItemScales_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_criterionItemScales_Users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -1611,52 +1589,6 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "InterviewId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_RoleId",
-                table: "AspNetUserRoles",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                table: "AspNetUsers",
-                column: "NormalizedEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_Email",
-                table: "AspNetUsers",
-                column: "Email",
-                unique: true,
-                filter: "[Email] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_PhoneNumber",
-                table: "AspNetUsers",
-                column: "PhoneNumber",
-                unique: true,
-                filter: "[PhoneNumber] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Category_CreatedById",
                 table: "Category",
                 column: "CreatedById");
@@ -1692,13 +1624,23 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "CommitteesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryCommittee_CreatedById",
-                table: "CategoryCommittee",
+                name: "IX_categoryCommittees_CategoryId",
+                table: "categoryCommittees",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_categoryCommittees_CommitteesId",
+                table: "categoryCommittees",
+                column: "CommitteesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_categoryCommittees_CreatedById",
+                table: "categoryCommittees",
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryCommittee_UpdatedById",
-                table: "CategoryCommittee",
+                name: "IX_categoryCommittees_UpdatedById",
+                table: "categoryCommittees",
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
@@ -1777,18 +1719,28 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CriterionItemScale_CreatedById",
-                table: "CriterionItemScale",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CriterionItemScale_ScalesId",
                 table: "CriterionItemScale",
                 column: "ScalesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CriterionItemScale_UpdatedById",
-                table: "CriterionItemScale",
+                name: "IX_criterionItemScales_CreatedById",
+                table: "criterionItemScales",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_criterionItemScales_CriterionItemsId",
+                table: "criterionItemScales",
+                column: "CriterionItemsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_criterionItemScales_ScalesId",
+                table: "criterionItemScales",
+                column: "ScalesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_criterionItemScales_UpdatedById",
+                table: "criterionItemScales",
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
@@ -1855,6 +1807,11 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "IX_FrequentlyAskedQuestion_UpdatedById",
                 table: "FrequentlyAskedQuestion",
                 column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupInvitees_EventId",
+                table: "GroupInvitees",
+                column: "EventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Interview_CreatedById",
@@ -1927,10 +1884,9 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Permissions_Name",
-                table: "Permissions",
-                column: "Name",
-                unique: true);
+                name: "IX_Personalnvitees_EventId",
+                table: "Personalnvitees",
+                column: "EventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProvidedForm_categoryId",
@@ -1966,23 +1922,6 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "IX_RelatedAccount_UpdatedById",
                 table: "RelatedAccount",
                 column: "UpdatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RolePermissions_PermissionId",
-                table: "RolePermissions",
-                column: "PermissionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RolePermissions_RolesId",
-                table: "RolePermissions",
-                column: "RolesId");
-
-            migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                table: "Roles",
-                column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Scale_CreatedById",
@@ -2046,6 +1985,11 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "SubscriberId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SubscriberTrainingWorkshop_TrainingWorkshopsId",
+                table: "SubscriberTrainingWorkshop",
+                column: "TrainingWorkshopsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TermsAndConditions_CategoryId",
                 table: "TermsAndConditions",
                 column: "CategoryId");
@@ -2086,25 +2030,166 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TrainingWorkshopSubscriber_CreatedById",
-                table: "TrainingWorkshopSubscriber",
+                name: "IX_trainingWorkshopSubscribers_CreatedById",
+                table: "trainingWorkshopSubscribers",
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TrainingWorkshopSubscriber_TrainingWorkshopsId",
-                table: "TrainingWorkshopSubscriber",
+                name: "IX_trainingWorkshopSubscribers_SubscribersId",
+                table: "trainingWorkshopSubscribers",
+                column: "SubscribersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_trainingWorkshopSubscribers_TrainingWorkshopsId",
+                table: "trainingWorkshopSubscribers",
                 column: "TrainingWorkshopsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TrainingWorkshopSubscriber_UpdatedById",
-                table: "TrainingWorkshopSubscriber",
+                name: "IX_trainingWorkshopSubscribers_UpdatedById",
+                table: "trainingWorkshopSubscribers",
                 column: "UpdatedById");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Achievement");
 
+            migrationBuilder.DropTable(
+                name: "Agenda");
+
+            migrationBuilder.DropTable(
+                name: "Arbitration");
+
+            migrationBuilder.DropTable(
+                name: "ArbitratorClass");
+
+            migrationBuilder.DropTable(
+                name: "ArbitratorInterview");
+
+            migrationBuilder.DropTable(
+                name: "CategoryArbitrator");
+
+            migrationBuilder.DropTable(
+                name: "CategoryCommittee");
+
+            migrationBuilder.DropTable(
+                name: "categoryCommittees");
+
+            migrationBuilder.DropTable(
+                name: "CoordinatorProvidedForm");
+
+            migrationBuilder.DropTable(
+                name: "CriterionItemScale");
+
+            migrationBuilder.DropTable(
+                name: "criterionItemScales");
+
+            migrationBuilder.DropTable(
+                name: "CycleCondition");
+
+            migrationBuilder.DropTable(
+                name: "FormCondition");
+
+            migrationBuilder.DropTable(
+                name: "FrequentlyAskedQuestion");
+
+            migrationBuilder.DropTable(
+                name: "GroupInvitees");
+
+            migrationBuilder.DropTable(
+                name: "MeetingSubscriber");
+
+            migrationBuilder.DropTable(
+                name: "MeetingUser");
+
+            migrationBuilder.DropTable(
+                name: "News");
+
+            migrationBuilder.DropTable(
+                name: "Note");
+
+            migrationBuilder.DropTable(
+                name: "Personalnvitees");
+
+            migrationBuilder.DropTable(
+                name: "RelatedAccount");
+
+            migrationBuilder.DropTable(
+                name: "SubscriberAchievement");
+
+            migrationBuilder.DropTable(
+                name: "SubscriberInterview");
+
+            migrationBuilder.DropTable(
+                name: "SubscriberTrainingWorkshop");
+
+            migrationBuilder.DropTable(
+                name: "TermsAndConditions");
+
+            migrationBuilder.DropTable(
+                name: "TrainingManual");
+
+            migrationBuilder.DropTable(
+                name: "trainingWorkshopSubscribers");
+
+            migrationBuilder.DropTable(
+                name: "CycleClass");
+
+            migrationBuilder.DropTable(
+                name: "Arbitrator");
+
+            migrationBuilder.DropTable(
+                name: "Committee");
+
+            migrationBuilder.DropTable(
+                name: "Coordinator");
+
+            migrationBuilder.DropTable(
+                name: "CriterionItem");
+
+            migrationBuilder.DropTable(
+                name: "Scale");
+
+            migrationBuilder.DropTable(
+                name: "ProvidedForm");
+
+            migrationBuilder.DropTable(
+                name: "Meeting");
+
+            migrationBuilder.DropTable(
+                name: "Events");
+
+            migrationBuilder.DropTable(
+                name: "AchievementClassification");
+
+            migrationBuilder.DropTable(
+                name: "Interview");
+
+            migrationBuilder.DropTable(
+                name: "TrainingWorkshop");
+
+            migrationBuilder.DropTable(
+                name: "EducationalClass");
+
+            migrationBuilder.DropTable(
+                name: "Criterion");
+
+            migrationBuilder.DropTable(
+                name: "Subscriber");
+
+            migrationBuilder.DropTable(
+                name: "ArbitrationProcedure");
+
+            migrationBuilder.DropTable(
+                name: "Category");
+
+            migrationBuilder.DropTable(
+                name: "Cycle");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }
