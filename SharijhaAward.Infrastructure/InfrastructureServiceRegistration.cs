@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Infrastructure.Authentication;
+using SharijhaAward.Infrastructure.EmailSernder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace SharijhaAward.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IJwtProvider, JwtProvider>();
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IQRCodeGenerator, QRCodeGenerator>();
 
             return services;
         }
