@@ -25,7 +25,7 @@ namespace SharijhaAward.Infrastructure.Authentication
 
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(_options.SecurityKey)),
+                    Encoding.UTF8.GetBytes("Security-Key854796olikujyh0213456")),
                 SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken
