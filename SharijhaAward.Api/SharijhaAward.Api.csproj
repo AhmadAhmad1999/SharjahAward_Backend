@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,7 +23,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pics\" />
+    <Folder Include="QREmailHelper\" />
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\qr\caligraphy.svg" />
+    <None Include="wwwroot\assets\qr\email_header.svg" />
+    <None Include="wwwroot\assets\qr\logos.svg" />
+    <None Include="wwwroot\assets\qr\qr.png" />
+    <None Include="wwwroot\assets\qr\QRCodeForstringPersonalInvite.png" />
+    <None Include="wwwroot\QREmail.html" />
   </ItemGroup>
 
 </Project>

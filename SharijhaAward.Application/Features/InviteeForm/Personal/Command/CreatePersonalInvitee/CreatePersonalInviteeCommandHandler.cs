@@ -50,21 +50,21 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
 
             // Generate QR Code..
             Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(NewPersonalnvitee.EventId);
-            string EventName = EventEntity.Name;
-            string DataToSendIntoQR = $"{NewPersonalnvitee.Id   }/Personal/{EventName}";
+            string EventName = EventEntity.EnglishName;
+            string DataToSendIntoQR = $"{NewPersonalnvitee.Id}/Personal/{EventName}";
 
             string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR);
 
             // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
-            string HTMLFile = "QREmailHelper/QREmail.html";
+            string HTMLFile = "wwwroot/QREmail.html";
 
             string HTMLContent = File.ReadAllText(HTMLFile);
             string ManipulatedBody = HTMLContent
-                .Replace("./assets/qr/qr.png", $"./{QRCodeImagePath}") // QR Code Image Path..
+                .Replace("./assets/qr/qr.png", $"/{QRCodeImagePath}") // QR Code Image Path..
                 .Replace("$$", NewPersonalnvitee.Name, StringComparison.Ordinal) // Invited Name..
 
                 // Change The (EventEntity.Name) To (EventEntity.ArabicName)..
-                .Replace("$$", EventEntity.Name, StringComparison.Ordinal) // Event Name in Arabic..
+                .Replace("$$", EventEntity.ArabicName, StringComparison.Ordinal) // Event Name in Arabic..
 
                 .Replace("$$", EventEntity.StartDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
                 .Replace("$$", EventEntity.StartDate.Date.ToString(), StringComparison.Ordinal) // Event Date..
@@ -74,7 +74,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
             {
                 ToEmail = NewPersonalnvitee.Email,
                 // Change The (EventEntity.Name) To (EventEntity.ArabicName)..
-                Subject = $"دعوة فردية لحضور {EventEntity.Name}",
+                Subject = $"دعوة فردية لحضور {EventEntity.ArabicName}",
                 Body = ManipulatedBody
             };
 

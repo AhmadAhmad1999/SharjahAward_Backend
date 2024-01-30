@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Contract.Infrastructure
             HttpWebRequest Request = WebRequest.CreateHttp(URI);
             WebResponse? Response = await Request.GetResponseAsync();
             ContentDispositionHeaderValue ContentDisposition;
-            string FilePath = "Pics";
+            string FilePath = "wwwroot/Images";
 
             string[] DataSpliter = Data.Split('/');
 
@@ -41,7 +41,8 @@ namespace SharijhaAward.Application.Contract.Infrastructure
                 await Response.GetResponseStream().CopyToAsync(FileStream);
             }
 
-            return FilePath + "/" + FileName;
+            return  FilePath + "/" + FileName;
         }
     }
 }
+//E:\WarshaTec\SharijhaAward\SharijhaAward\SharijhaAward.Api\QREmailHelper\assets\qr\QRCodeForstringPersonalInvite.png

@@ -8,6 +8,7 @@ using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
 using SharijhaAward.Application.Features.Event.Queries.GetEventById;
 using SharijhaAward.Application.Features.Event.Queries.GetEventWithInvitees;
 
+
 namespace SharijhaAward.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -53,8 +54,43 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("GetEventById/{id}", Name = "GetEventById")]
         public async Task<ActionResult> GetEventById(Guid id)
         {
-            var Event = await _Mediator.Send(new GetEventByIdQuery() { Id = id });
-            return Ok(Event);
+            string lang;
+            var headerValue = HttpContext.Request.Headers["lang"];
+            if (string.IsNullOrWhiteSpace(headerValue))
+                lang = headerValue;
+            else
+                lang = "";
+            var Event = await _Mediator.Send(new GetEventByIdQuery() 
+            {
+                Id = id
+            });
+
+            if (lang == "ar")
+            {
+                EventDto ArabicResponse = new EventDtoArabic()
+                {
+                    Id = Event.Id,
+                    ArabicDescription = Event.ArabicDescription,
+                    ArabicName = Event.ArabicName,
+                    EndDate = Event.EndDate,
+                    StartDate = Event.StartDate
+                };
+                return Ok(ArabicResponse);
+            }
+            else 
+            {
+                EventDtoEnglish EnglishResponse = new EventDtoEnglish()
+                {
+                    Id = Event.Id,
+                    EnglishDescription = Event.EnglishDescription,
+                    EnglishName = Event.EnglishName,
+                    EndDate = Event.EndDate,
+                    StartDate = Event.StartDate
+                };
+                return Ok(EnglishResponse);
+            }
+               
+            
         }
         [HttpGet("GetEventWithInvitees", Name = "GetEventWithInvitees")]
         public async Task<ActionResult> GetEventWithInvitees(Guid id)
