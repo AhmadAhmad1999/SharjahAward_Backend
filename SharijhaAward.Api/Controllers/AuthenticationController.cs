@@ -21,7 +21,7 @@ namespace SharijhaAward.Api.Controllers
         {
             string token = await _Mediator.Send(new LoginCommand() { Email = user.Email, Password = user.Password });
 
-            return Ok(token);
+            return Ok(new { data = token });
         }
         [HttpPost("SignUp", Name = "SignUp")]
         public async Task<ActionResult<string>> SignUp([FromBody] SignUpCommand user)
@@ -36,7 +36,7 @@ namespace SharijhaAward.Api.Controllers
                 
             });
 
-            return token;
+            return Ok(new {data = token}) ;
         }
     }
 }

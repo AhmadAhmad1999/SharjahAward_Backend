@@ -30,7 +30,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<ActionResult<Guid>> AddGroupInvitee([FromBody] CreateGroupInviteeCommand createGroupInviteeCommand)
         {
             var response = await _mediator.Send(createGroupInviteeCommand);
-            return Ok(response);
+            return Ok(new { data = response });
         }
 
         [HttpPut("UpdateGroupInvitee", Name = "UpdateGroupInvitee")]
@@ -41,7 +41,7 @@ namespace SharijhaAward.Api.Controllers
         {
 
             await _mediator.Send(updateGroupInviteeCommand);
-            return Ok(Response);
+            return Ok(new {data = Response });
         }
 
         [HttpDelete("DeleteGroupInvitee",Name = "DeleteGroupInvitee")]
@@ -63,15 +63,38 @@ namespace SharijhaAward.Api.Controllers
                 {
                     Id = id
                 });
-            return Ok(Group);
+            return Ok(new { data = Group });
         }
 
         [HttpGet("GetAllGroupInvitee",Name = "GetAllGroupInvitee")]
-        public async Task<ActionResult> GetAllGroupInvitee()
+        public async Task<ActionResult> GetAllGroupInvitee(int page , int perPage)
         {
-            var dto = await _mediator.Send(new GetAllGroupInviteeQuery());
+            if (perPage == 0)
+                perPage = 10;
 
-            return Ok(dto);
+            var dto = await _mediator.Send(new GetAllGroupInviteeQuery());
+            var totalCount = dto.Count;
+            var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
+            var dataPerPage = dto
+                .Skip((page - 1) * perPage)
+                .Take(perPage)
+                .ToList();
+
+            return Json(
+                new
+                {
+                    data = dataPerPage,
+                    message = "Retrieved successfully.",
+                    status = true,
+                    pagination =
+                    new
+                    {
+                        current_page = page,
+                        last_page = totalPage,
+                        total_row = totalCount,
+                        per_page = perPage
+                    }
+                });
         }
 
         [HttpPost("ConfirmAttendanceGroup", Name = "ConfirmAttendanceGroup")]

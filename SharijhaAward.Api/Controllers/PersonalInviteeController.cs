@@ -57,15 +57,38 @@ namespace SharijhaAward.Api.Controllers
                 {
                     Id = id
                 });
-            return Ok(Personal);
+            
+            return Json(new {data = Personal });
+            //return Ok(Personal);
         }
 
         [HttpGet(Name = "GetAllPersonalInvitee")]
-        public async Task<ActionResult> GetAllPersonalInvitee()
+        public async Task<ActionResult> GetAllPersonalInvitee(int page , int perPage)
         {
-           var dto = await _mediator.Send(new GetAllPersonalInviteeQuery());
-
-            return Ok(dto);
+            if (perPage == 0)
+                perPage = 10;
+            var dto = await _mediator.Send(new GetAllPersonalInviteeQuery());
+            var totalCount=dto.Count;
+            var totalPage = (int) Math.Ceiling((decimal)totalCount / perPage);
+            var dataPerPage = dto
+                .Skip((page - 1) * perPage)
+                .Take(perPage)
+                .ToList();
+                
+            return Json(
+                new 
+                { 
+                    data = dataPerPage ,
+                    message = "Retrieved successfully.",
+                    status = true,
+                    pagination = 
+                    new { 
+                        current_page = page ,
+                        last_page = totalPage,
+                        total_row = totalCount,
+                        per_page = perPage
+                    } 
+                });
         }
         [HttpPost("ConfirmAttendancePersonal", Name = "ConfirmAttendancePersonal")]
         public async Task<ActionResult> ConfirmAttendancePersonal([FromBody] Guid Id)
