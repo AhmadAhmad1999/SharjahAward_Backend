@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SharijhaAward.Application.Features.Authentication.Login;
+using SharijhaAward.Application.Features.Authentication.SignUp;
 using SharijhaAward.Application.Features.Event.Commands.CreateEvent;
 using SharijhaAward.Application.Features.Event.Commands.UpdateEvent;
 using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
@@ -50,6 +51,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GroupInvitee , ConfirmAttendanceGroupQuery>();
 
             CreateMap<User , LoginCommand>();
+            CreateMap<User , SignUpCommand>().ReverseMap();
         }
     }
 }

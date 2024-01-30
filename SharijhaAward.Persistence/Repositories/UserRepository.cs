@@ -39,9 +39,14 @@ namespace SharijhaAward.Persistence.Repositories
             return "";
         }
 
-        public Task RegisterAsync(User user)
+        public async Task<string> RegisterAsync(User user)
         {
-            throw new NotImplementedException();
+            if (user != null)
+            {
+                string token = _jwtProvider.Generate(user);
+                return token;
+            }
+            else return "";
         }
     }
 }
