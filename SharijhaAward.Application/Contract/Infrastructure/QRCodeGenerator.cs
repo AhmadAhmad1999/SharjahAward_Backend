@@ -41,8 +41,7 @@ namespace SharijhaAward.Application.Contract.Infrastructure
                 await Response.GetResponseStream().CopyToAsync(FileStream);
             }
 
-            return  FilePath + "/" + FileName;
+            return FilePath + "/" + FileName;
         }
     }
 }
-//E:\WarshaTec\SharijhaAward\SharijhaAward\SharijhaAward.Api\QREmailHelper\assets\qr\QRCodeForstringPersonalInvite.png

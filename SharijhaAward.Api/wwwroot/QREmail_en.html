@@ -12,29 +12,29 @@
       letter-spacing: normal !important;
       font-family: "Tajawal", sans-serif !important;
       background: rgba(250, 241, 236, 1);
-      direction: rtl;
+      direction: ltr;
     }
   </style>
   <body>
     <div style="padding: 20px">
       <header>
         <img
-          src="./assets/qr/email_header.svg"
+          src="./assets/qr/email_header.png"
           style="width: 100%; margin-top: 2%; margin-bottom: 2%"
         />
         <img
-          src="./assets/qr/logos.svg"
+          src="./assets/qr/logos.png"
           style="width: 100%; margin-top: 2%; margin-bottom: 2%"
         />
       </header>
       <section>
-          أهلا بك . <br />
-          السلام عليكم و رحمة الله و بركاته<br />
-          تم تأكيد تسجيلك لحضور:  <br />
-          المقر: <br />
-          اليوم:  <br />
-          التاريخ:  <br />
-          الوقت:  <br />
+          Welcome, $NewPersonalnvitee.Name$. <br />
+          Peace be upon you, <br />
+          Registration for attendance has been confirmed: $EventEntity.EnglishName$ <br />
+          Venue: $EventEntity.EnglishLocation$ <br />
+          Day: $EventEntity.StartDate.DayOfWeek$ <br />
+          Date: $EventEntity.StartDate.Date$ <br />
+          Time: $EventEntity.StartDate.TimeOfDay$ <br />
       </section>
       <section style="display: flex; flex-direction: column; margin: 5vh 0px">
         <img
@@ -69,20 +69,20 @@
                 fill="white"
               />
             </svg>
-            تحميل الرمز ك ملف PDF
+            Download QR Code as a PDF file
           </button>
         </a>
       </section>
       <section>
-        يرجى الاحتفاظ برمز الاستجابة السريع المرفق مع هذا البريد، حيث سيتم
-        استخدامه للدخول إلى الفعالية.<br />
-        نتطلع إلى لقائكم قريبًا <br />
-        شاكرين لكم حسن تعاونكم معنا <br />
-        جائزة الشارقة للتفوق والتميز التربوي<br />
+        Please keep the attached QR code with this email, as it will be used to
+        access the event. <br />
+        We look forward to seeing you soon. <br />
+        Thank you for your cooperation. <br />
+        Sharjah Award for Educational Excellence and Distinction <br />
       </section>
       <footer>
         <img
-          src="cid:caligraphyImage"
+          src="./assets/qr/caligraphy.png"
           style="width: 100%; width: 100%; margin-top: 2%; margin-bottom: 2%"
         />
       </footer>
