@@ -39,10 +39,34 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllEvents", Name = "GetAllEvents")]
-        public async Task<ActionResult> GetAllEvents()
+        public async Task<ActionResult> GetAllEvents(int page , int perPage)
         {
-            var dtos = await _Mediator.Send(new GetAllEventsQuery());
-            return Ok(dtos);
+            if (perPage == 0)
+                perPage = 10;
+
+            var dto = await _Mediator.Send(new GetAllEventsQuery());
+            var totalCount = dto.Count;
+            var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
+            var dataPerPage = dto
+                .Skip((page - 1) * perPage)
+                .Take(perPage)
+                .ToList();
+
+            return Ok(
+                new
+                {
+                    data = dataPerPage,
+                    message = "Retrieved successfully.",
+                    status = true,
+                    pagination =
+                    new
+                    {
+                        current_page = page,
+                        last_page = totalPage,
+                        total_row = totalCount,
+                        per_page = perPage
+                    }
+                });
         }
         [HttpDelete("DeleteEvent", Name = "DeleteEvent")]
         public async Task<ActionResult> DeleteEvent(Guid id)
@@ -75,7 +99,7 @@ namespace SharijhaAward.Api.Controllers
                     EndDate = Event.EndDate,
                     StartDate = Event.StartDate
                 };
-                return Ok(ArabicResponse);
+                return Ok(new { data = ArabicResponse });
             }
             else 
             {
@@ -87,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
                     EndDate = Event.EndDate,
                     StartDate = Event.StartDate
                 };
-                return Ok(EnglishResponse);
+                return Ok(new { data = EnglishResponse });
             }
                
             
@@ -96,7 +120,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<ActionResult> GetEventWithInvitees(Guid id)
         {
             var response = await _Mediator.Send(new GetEventWithInviteesQuery() { Id = id });
-            return Ok(response);
+            return Ok(new { data = response });
         }
     }
 
