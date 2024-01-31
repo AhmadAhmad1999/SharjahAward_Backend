@@ -23,7 +23,11 @@ namespace SharijhaAward.Api.Controllers
             if (!string.IsNullOrWhiteSpace(headerValue))
                 ResendEmailQuery.lang = headerValue;
 
-            var response = await _Mediator.Send(ResendEmailQuery);
+            var response = await _Mediator.Send(new ResendEmailQuery()
+            {
+                InviteeId= ResendEmailQuery.InviteeId, 
+                Type = ResendEmailQuery.Type
+            });
             return Ok(new { data = response });
         }
 

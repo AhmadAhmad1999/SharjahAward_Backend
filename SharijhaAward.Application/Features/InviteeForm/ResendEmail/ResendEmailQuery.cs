@@ -12,6 +12,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
     {
         public Guid InviteeId { get; set; }
         public string Type { get; set; }
-        public string lang { get; set; }
+        public string? lang { get; set; }
     }
 }
