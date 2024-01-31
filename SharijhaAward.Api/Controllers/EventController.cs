@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.Event.Commands.CreateEvent;
 using SharijhaAward.Application.Features.Event.Commands.DeleteEvent;
 using SharijhaAward.Application.Features.Event.Commands.UpdateEvent;
@@ -20,7 +21,7 @@ namespace SharijhaAward.Api.Controllers
         {
             _Mediator = Mediator;
         }
-        [HttpPost("CreateEvent", Name = "AddEvent")]
+        [HttpPost(Name = "AddEvent")]
         public async Task<ActionResult<CreateEventCommandResponse>> Create([FromBody] CreateEventCommand CreateEventCommand)
         {
             CreateEventCommandResponse? Response = await _Mediator.Send(CreateEventCommand);
@@ -28,7 +29,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
 
-        [HttpPut("UpdateEvent", Name = "UpdateEvent")]
+        [HttpPut(Name = "UpdateEvent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
@@ -38,13 +39,29 @@ namespace SharijhaAward.Api.Controllers
             return Ok(Response);
         }
 
-        [HttpGet("GetAllEvents", Name = "GetAllEvents")]
-        public async Task<ActionResult> GetAllEvents(int page , int perPage)
+        [HttpGet(Name = "GetAllEvents")]
+        public async Task<ActionResult> GetAllEvents(int page, int perPage)
         {
+            //get Language from header
+            var headerValue = HttpContext.Request.Headers["lang"];
+            if (headerValue.IsNullOrEmpty())
+                headerValue = "";
+
+            //get data from mediator
+            var dto = await _Mediator.Send(new GetAllEventsQuery() { lang = headerValue});
+
+            // Pagenation
             if (perPage == 0)
                 perPage = 10;
+            else if(perPage == -1)
+                return Ok(
+                new
+                {
+                    data = dto,
+                    message = "Retrieved successfully.",
+                    status = true,
+                });
 
-            var dto = await _Mediator.Send(new GetAllEventsQuery());
             var totalCount = dto.Count;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
             var dataPerPage = dto
@@ -68,55 +85,29 @@ namespace SharijhaAward.Api.Controllers
                     }
                 });
         }
-        [HttpDelete("DeleteEvent", Name = "DeleteEvent")]
+        [HttpDelete(Name = "DeleteEvent")]
         public async Task<ActionResult> DeleteEvent(Guid id)
         {
             var dtos = await _Mediator.Send(new DeleteEventCommand() { Id = id });
             return Ok("Delete Success");
         }
 
-        [HttpGet("GetEventById/{id}", Name = "GetEventById")]
+        [HttpGet("{Id}", Name = "GetEventById")]
         public async Task<ActionResult> GetEventById(Guid id)
-        {
-            string lang;
+        { 
             var headerValue = HttpContext.Request.Headers["lang"];
-            if (string.IsNullOrWhiteSpace(headerValue))
-                lang = headerValue;
-            else
-                lang = "";
+            if (headerValue.IsNullOrEmpty())
+                headerValue = "";
             var Event = await _Mediator.Send(new GetEventByIdQuery() 
             {
-                Id = id
+                Id = id,
+                lang=headerValue
             });
 
-            if (lang == "ar")
-            {
-                EventDto ArabicResponse = new EventDtoArabic()
-                {
-                    Id = Event.Id,
-                    ArabicDescription = Event.ArabicDescription,
-                    ArabicName = Event.ArabicName,
-                    EndDate = Event.EndDate,
-                    StartDate = Event.StartDate
-                };
-                return Ok(new { data = ArabicResponse });
-            }
-            else 
-            {
-                EventDtoEnglish EnglishResponse = new EventDtoEnglish()
-                {
-                    Id = Event.Id,
-                    EnglishDescription = Event.EnglishDescription,
-                    EnglishName = Event.EnglishName,
-                    EndDate = Event.EndDate,
-                    StartDate = Event.StartDate
-                };
-                return Ok(new { data = EnglishResponse });
-            }
-               
-            
+            return Ok(new { data = Event });
+         
         }
-        [HttpGet("GetEventWithInvitees", Name = "GetEventWithInvitees")]
+        [HttpGet("GetEventWithInvitees/{Id}", Name = "GetEventWithInvitees")]
         public async Task<ActionResult> GetEventWithInvitees(Guid id)
         {
             var response = await _Mediator.Send(new GetEventWithInviteesQuery() { Id = id });

@@ -59,15 +59,24 @@ namespace SharijhaAward.Api.Controllers
                 });
             
             return Json(new {data = Personal });
-            //return Ok(Personal);
+            
         }
 
         [HttpGet(Name = "GetAllPersonalInvitee")]
         public async Task<ActionResult> GetAllPersonalInvitee(int page , int perPage)
         {
+            var dto = await _mediator.Send(new GetAllPersonalInviteeQuery());
             if (perPage == 0)
                 perPage = 10;
-            var dto = await _mediator.Send(new GetAllPersonalInviteeQuery());
+            if(perPage == -1)
+                 return Ok(
+                  new
+                  {
+                      data = dto,
+                      message = "Retrieved successfully.",
+                      status = true,
+                  });
+            
             var totalCount=dto.Count;
             var totalPage = (int) Math.Ceiling((decimal)totalCount / perPage);
             var dataPerPage = dto
@@ -91,11 +100,11 @@ namespace SharijhaAward.Api.Controllers
                 });
         }
         [HttpPost("ConfirmAttendancePersonal", Name = "ConfirmAttendancePersonal")]
-        public async Task<ActionResult> ConfirmAttendancePersonal([FromBody] Guid Id)
+        public async Task<ActionResult> ConfirmAttendancePersonal([FromBody] ConfirmAttendancePersonalQuery personalQuery)
         {
             var respone = await _mediator.Send(new ConfirmAttendancePersonalQuery()
             { 
-                Id = Id
+                Id = personalQuery.Id,
             });
 
             return Ok(respone);

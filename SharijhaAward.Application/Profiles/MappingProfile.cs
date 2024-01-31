@@ -33,7 +33,6 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Domain.Entities.EventModel.Event , UpdateEventCommand>().ReverseMap();
             CreateMap<Domain.Entities.EventModel.Event , EventListVM>().ReverseMap();
             CreateMap<Domain.Entities.EventModel.Event , EventDto>().ReverseMap();
-            CreateMap<Domain.Entities.EventModel.Event , EventDtoArabic>().ReverseMap();
             CreateMap<Domain.Entities.EventModel.Event , EventInviteesVM>().ReverseMap();
 
             CreateMap<PersonalInvitee , CreatePersonalInviteeCommand>().ReverseMap();

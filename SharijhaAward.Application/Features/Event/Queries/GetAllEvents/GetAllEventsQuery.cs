@@ -9,5 +9,6 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
 {
     public class GetAllEventsQuery : IRequest<List<EventListVM>>
     {
+        public string lang { get; set; }=string.Empty;
     }
 }

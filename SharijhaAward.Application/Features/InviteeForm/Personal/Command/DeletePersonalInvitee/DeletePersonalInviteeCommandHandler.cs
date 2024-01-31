@@ -2,11 +2,7 @@
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.InvitationModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePersonalInvitee
 {
@@ -28,7 +24,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Delete
             {
                 throw new OpenQA.Selenium.NotFoundException();
             }
-            
+
             await _PersonalInviteeRepository.DeleteAsync(personalToDelete);
             return Unit.Value;
         }

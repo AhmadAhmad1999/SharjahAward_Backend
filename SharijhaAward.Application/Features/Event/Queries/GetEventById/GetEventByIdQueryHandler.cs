@@ -30,10 +30,25 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetEventById
             }
             else
             {
-                
-                    return _mapper.Map<EventDto>(Event);
-                    
-               
+                    EventDto @event = new EventDto()
+                    {
+                        Id = Event.Id,
+                        Description = request.lang == "ar" ? Event.ArabicDescription : Event.EnglishDescription,
+                        Name = request.lang == "ar" ? Event.ArabicName : Event.EnglishName,
+                        SiteName = request.lang == "ar" ? Event.ArabicSiteName : Event.EnglishSiteName,
+                        Location = request.lang == "ar" ? Event.ArabicLocation : Event.EnglishLocation,
+                        StartDate = Event.StartDate,
+                        EndDate = Event.EndDate,
+                        ArabicName = Event.ArabicName,
+                        ArabicDescription = Event.ArabicDescription,
+                        ArabicLocation = Event.ArabicLocation,
+                        ArabicSiteName = Event.ArabicSiteName,
+                        EnglishName = Event.EnglishName,
+                        EnglishDescription = Event.EnglishDescription,
+                        EnglishLocation = Event.EnglishLocation,
+                        EnglishSiteName = Event.EnglishSiteName
+                    };
+                    return _mapper.Map<EventDto>(@event);
             }
         }
     }

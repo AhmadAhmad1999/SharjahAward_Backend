@@ -6,12 +6,7 @@ using SharijhaAward.Application.Features.InviteeForm.Group.Command.UpdateGroupIn
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.ConfirmAttendanceGroup;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGroupInvitees;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupInviteeById;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePersonalInvitee;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ConfirmAttendancePersonal;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
+
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -26,14 +21,14 @@ namespace SharijhaAward.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("CreateGroupInvitee",Name = "AddGroupInvitee")]
+        [HttpPost(Name = "AddGroupInvitee")]
         public async Task<ActionResult<Guid>> AddGroupInvitee([FromBody] CreateGroupInviteeCommand createGroupInviteeCommand)
         {
             var response = await _mediator.Send(createGroupInviteeCommand);
             return Ok(new { data = response });
         }
 
-        [HttpPut("UpdateGroupInvitee", Name = "UpdateGroupInvitee")]
+        [HttpPut(Name = "UpdateGroupInvitee")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
@@ -41,10 +36,10 @@ namespace SharijhaAward.Api.Controllers
         {
 
             await _mediator.Send(updateGroupInviteeCommand);
-            return Ok(new {data = Response });
+            return Ok(new { data = Response });
         }
 
-        [HttpDelete("DeleteGroupInvitee",Name = "DeleteGroupInvitee")]
+        [HttpDelete(Name = "DeleteGroupInvitee")]
         public async Task<ActionResult> DeleteGroupInvitee(Guid id)
         {
             DeleteGroupInviteeCommand deleteGroupInviteeCommand = new DeleteGroupInviteeCommand()
@@ -55,7 +50,7 @@ namespace SharijhaAward.Api.Controllers
             return Ok(Response);
         }
 
-        [HttpGet("GetGroupInviteeById/{id}", Name = "GetGroupInviteeById")]
+        [HttpGet("{Id}", Name = "GetGroupInviteeById")]
         public async Task<ActionResult<GetGroupInviteeByIdQuery>> GetById(Guid id)
         {
             GroupInviteeVM? Group = await _mediator
@@ -66,13 +61,23 @@ namespace SharijhaAward.Api.Controllers
             return Ok(new { data = Group });
         }
 
-        [HttpGet("GetAllGroupInvitee",Name = "GetAllGroupInvitee")]
+        [HttpGet(Name = "GetAllGroupInvitee")]
         public async Task<ActionResult> GetAllGroupInvitee(int page , int perPage)
         {
+            var dto = await _mediator.Send(new GetAllGroupInviteeQuery());
+
             if (perPage == 0)
                 perPage = 10;
+            else if (perPage == -1)
+                return Ok(
+                new
+                {
+                    data = dto,
+                    message = "Retrieved successfully.",
+                    status = true,
+                });
 
-            var dto = await _mediator.Send(new GetAllGroupInviteeQuery());
+          
             var totalCount = dto.Count;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
             var dataPerPage = dto

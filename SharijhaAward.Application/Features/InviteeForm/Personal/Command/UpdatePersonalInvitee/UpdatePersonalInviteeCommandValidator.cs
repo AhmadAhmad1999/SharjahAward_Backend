@@ -20,12 +20,10 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Update
             RuleFor(p => p.Name)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .NotNull()
-                .MinimumLength(10)
                 .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
             RuleFor(p => p.JobTitle)
                 .NotNull()
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .MinimumLength(10);
+                .NotEmpty().WithMessage("{PropertyName} is required.");
             RuleFor(p => p.PhoneNumber)
                 .NotNull()
                 .NotEmpty().WithMessage("{PropertyName} is required.")
