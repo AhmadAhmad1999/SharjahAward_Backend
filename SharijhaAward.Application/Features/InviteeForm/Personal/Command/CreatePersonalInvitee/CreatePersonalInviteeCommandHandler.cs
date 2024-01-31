@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
 using System.Net.Mime;
+using System;
+using System.Globalization;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee
 {
@@ -53,7 +55,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
             PersonalInvitee? NewPersonalnvitee = _mapper.Map<PersonalInvitee>(request);
             NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
 
-            if (request.lang.ToLower() == "ar")
+            if (!string.IsNullOrEmpty(request.lang) 
+                ? request.lang.ToLower() == "ar" 
+                : false)
             {
                 // Generate QR Code..
                 Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(NewPersonalnvitee.EventId);
@@ -80,13 +84,15 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
 
                 string HTMLContent = File.ReadAllText(HtmlBody);
 
+                CultureInfo ArabicCulture = new CultureInfo("ar-SA");
+
                 string ManipulatedBody = HTMLContent
-                    .Replace("$NewPersonalnvitee.Name$", NewPersonalnvitee.Name, StringComparison.Ordinal) // Invited Name..
+                    .Replace("$NewInvitee.Name$", NewPersonalnvitee.Name, StringComparison.Ordinal) // Invited Name..
                     .Replace("$EventEntity.ArabicName$", EventEntity.ArabicName, StringComparison.Ordinal) // Event Name in Arabic..
                     .Replace("$EventEntity.ArabicLocation$", EventEntity.ArabicSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                    .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                    .Replace("$EventEntity.StartDate.Date$", EventEntity.StartDate.ToString("M/d/yyyy"), StringComparison.Ordinal) // Event Date..
-                    .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.StartDate.ToString("HH:mm:ss"), StringComparison.Ordinal) // Event Time..
+                    .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                    .Replace("$EventEntity.StartDate.Date$", EventEntity.StartDate.ToString("M/d/yyyy", ArabicCulture), StringComparison.Ordinal) // Event Date..
+                    .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.StartDate.ToString("HH:mm:ss", ArabicCulture), StringComparison.Ordinal) // Event Time..
                     .Replace("\"./assets/qr/qr.png\"", $"'data:image/png;base64,{QRbase64String}'") // QR Code Image Path..
                     .Replace("\"./assets/qr/caligraphy.png\"", $"'data:image/png;base64,{CaligraphyBase64String}'") // Caligraphy Image..
                     .Replace("\"./assets/qr/email_header.png\"", $"'data:image/png;base64,{Email_HeaderBase64String}'") // Email_Header Image..
@@ -126,12 +132,12 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 string LogosBase64String = Convert.ToBase64String(LogosBytes);
 
                 // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
-                string HtmlBody = "wwwroot/QREmail_ar.html";
+                string HtmlBody = "wwwroot/QREmail_en.html";
 
                 string HTMLContent = File.ReadAllText(HtmlBody);
 
                 string ManipulatedBody = HTMLContent
-                    .Replace("$NewPersonalnvitee.Name$", NewPersonalnvitee.Name, StringComparison.Ordinal) // Invited Name..
+                    .Replace("$NewInvitee.Name$", NewPersonalnvitee.Name, StringComparison.Ordinal) // Invited Name..
                     .Replace("$EventEntity.EnglishName$", EventEntity.EnglishName, StringComparison.Ordinal) // Event Name in English..
                     .Replace("$EventEntity.EnglishLocation$", EventEntity.EnglishSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
                     .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
@@ -145,7 +151,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 EmailRequest EmailRequest = new EmailRequest()
                 {
                     ToEmail = NewPersonalnvitee.Email,
-                    Subject = $"an Invitation to attend {EventEntity.EnglishName}",
+                    Subject = $"Personal Invitation to attend {EventEntity.EnglishName}",
                     Body = ManipulatedBody,
                 };
 

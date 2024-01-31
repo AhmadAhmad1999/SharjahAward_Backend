@@ -23,6 +23,10 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost(Name = "AddPersonalInvitee")]
         public async Task<ActionResult<string>> AddPersonalInvitee([FromBody] CreatePersonalInviteeCommand createPersonalInviteeCommand)
         {
+            var headerValue = HttpContext.Request.Headers["lang"];
+            if (!string.IsNullOrWhiteSpace(headerValue))
+                createPersonalInviteeCommand.lang = headerValue;
+
             var response = await _mediator.Send(createPersonalInviteeCommand);
             return Ok(response);
         }
