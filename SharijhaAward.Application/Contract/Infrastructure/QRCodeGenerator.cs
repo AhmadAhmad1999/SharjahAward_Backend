@@ -34,15 +34,14 @@ namespace SharijhaAward.Application.Contract.Infrastructure
 
             string? FileName = ContentDispositionHeaderValue.TryParse(Response.Headers["Content-Disposition"], out ContentDisposition)
                 ? ContentDisposition.FileName
-                : $"QRCodeFor{DataSpliter[2]}{DataSpliter[1]}Invite.png";
+                : $"QRCodeFor-{DataSpliter[2]}-{DataSpliter[1]}-{DataSpliter[0]}-Invite.png";
 
             using (FileStream? FileStream = new FileStream(FilePath + "/" + FileName, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 await Response.GetResponseStream().CopyToAsync(FileStream);
             }
 
-            return  FilePath + "/" + FileName;
+            return FilePath + "/" + FileName;
         }
     }
 }
-//E:\WarshaTec\SharijhaAward\SharijhaAward\SharijhaAward.Api\QREmailHelper\assets\qr\QRCodeForstringPersonalInvite.png

@@ -19,22 +19,22 @@
     <div style="padding: 20px">
       <header>
         <img
-          src="./assets/qr/email_header.svg"
+          src="./assets/qr/email_header.png"
           style="width: 100%; margin-top: 2%; margin-bottom: 2%"
         />
         <img
-          src="./assets/qr/logos.svg"
+          src="./assets/qr/logos.png"
           style="width: 100%; margin-top: 2%; margin-bottom: 2%"
         />
       </header>
       <section>
-          أهلا بك . <br />
+          أهلا بك $NewInvitee.Name$. <br />
           السلام عليكم و رحمة الله و بركاته<br />
-          تم تأكيد تسجيلك لحضور:  <br />
-          المقر: <br />
-          اليوم:  <br />
-          التاريخ:  <br />
-          الوقت:  <br />
+          تم تأكيد تسجيلك لحضور: $EventEntity.ArabicName$ <br />
+          المقر:$EventEntity.ArabicLocation$ <br />
+          اليوم: $EventEntity.StartDate.DayOfWeek$ <br />
+          التاريخ: $EventEntity.StartDate.Date$ <br />
+          الوقت: $EventEntity.StartDate.TimeOfDay$ <br />
       </section>
       <section style="display: flex; flex-direction: column; margin: 5vh 0px">
         <img
@@ -82,7 +82,7 @@
       </section>
       <footer>
         <img
-          src="cid:caligraphyImage"
+          src="./assets/qr/caligraphy.png"
           style="width: 100%; width: 100%; margin-top: 2%; margin-bottom: 2%"
         />
       </footer>

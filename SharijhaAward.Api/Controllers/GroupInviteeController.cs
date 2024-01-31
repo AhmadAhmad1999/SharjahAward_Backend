@@ -24,6 +24,10 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost(Name = "AddGroupInvitee")]
         public async Task<ActionResult<Guid>> AddGroupInvitee([FromBody] CreateGroupInviteeCommand createGroupInviteeCommand)
         {
+            var headerValue = HttpContext.Request.Headers["lang"];
+            if (!string.IsNullOrWhiteSpace(headerValue))
+                createGroupInviteeCommand.lang = headerValue;
+
             var response = await _mediator.Send(createGroupInviteeCommand);
             return Ok(new { data = response });
         }
