@@ -96,7 +96,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     Body = ManipulatedBody,
                 };
 
-                await _EmailSender.SendEmail(EmailRequest, QRCodeImagePath);
+                await _EmailSender.SendEmail(EmailRequest);
             }
             else
             {
@@ -144,7 +144,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     Body = ManipulatedBody,
                 };
 
-                await _EmailSender.SendEmail(EmailRequest, QRCodeImagePath);
+                await _EmailSender.SendEmail(EmailRequest);
             }
 
             return Unit.Value;

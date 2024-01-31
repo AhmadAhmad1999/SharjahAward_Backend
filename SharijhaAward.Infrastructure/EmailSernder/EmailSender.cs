@@ -22,7 +22,7 @@ namespace SharijhaAward.Infrastructure.EmailSernder
 {
     public class EmailSender : IEmailSender
     {
-        public async Task SendEmail(EmailRequest EmailRequest, string QRCodeImagePath)
+        public async Task SendEmail(EmailRequest EmailRequest)
         {
             using (var client = new SmtpClient())
             {

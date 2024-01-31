@@ -105,7 +105,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     Body = ManipulatedBody,
                 };
 
-                await _EmailSender.SendEmail(EmailRequest, QRCodeImagePath);
+                await _EmailSender.SendEmail(EmailRequest);
 
                 return NewPersonalnvitee.Id;
             }
@@ -155,7 +155,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     Body = ManipulatedBody,
                 };
 
-                await _EmailSender.SendEmail(EmailRequest, QRCodeImagePath);
+                await _EmailSender.SendEmail(EmailRequest);
 
                 return NewPersonalnvitee.Id;
             }

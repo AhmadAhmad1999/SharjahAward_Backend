@@ -9,6 +9,6 @@ namespace SharijhaAward.Application.Contract.Infrastructure
 {
     public interface IEmailSender
     {
-        public Task SendEmail(EmailRequest EmailRequest, string QRCodeImagePath);
+        public Task SendEmail(EmailRequest EmailRequest);
     }
 }
