@@ -62,7 +62,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 byte[] CaligraphyBytes = File.ReadAllBytes(CaligraphyImagePath);
                 string CaligraphyBase64String = Convert.ToBase64String(CaligraphyBytes);
 
-                string Email_HeaderImagePath = "wwwroot/assets/qr/caligraphy.png";
+                string Email_HeaderImagePath = "wwwroot/assets/qr/email_header.png";
                 byte[] Email_HeaderBytes = File.ReadAllBytes(Email_HeaderImagePath);
                 string Email_HeaderBase64String = Convert.ToBase64String(Email_HeaderBytes);
 
@@ -112,7 +112,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 byte[] CaligraphyBytes = File.ReadAllBytes(CaligraphyImagePath);
                 string CaligraphyBase64String = Convert.ToBase64String(CaligraphyBytes);
 
-                string Email_HeaderImagePath = "wwwroot/assets/qr/caligraphy.png";
+                string Email_HeaderImagePath = "wwwroot/assets/qr/email_header.png";
                 byte[] Email_HeaderBytes = File.ReadAllBytes(Email_HeaderImagePath);
                 string Email_HeaderBase64String = Convert.ToBase64String(Email_HeaderBytes);
 
