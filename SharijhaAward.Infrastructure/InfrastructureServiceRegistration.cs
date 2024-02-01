@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Infrastructure.Authentication;
 using SharijhaAward.Infrastructure.EmailSernder;
+using SharijhaAward.Infrastructure.QRGenerator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace SharijhaAward.Infrastructure
         {
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<IEmailSender, EmailSender>();
-            services.AddScoped<IQRCodeGenerator, QRCodeGenerator>();
+            services.AddScoped<IQRCodeGenerator,QRCodeGenerator>();
 
             return services;
         }

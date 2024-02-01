@@ -19,8 +19,4 @@
     <ProjectReference Include="..\SharijhaAward.Application\SharijhaAward.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="QRCodeGenerator\" />
-  </ItemGroup>
-
 </Project>

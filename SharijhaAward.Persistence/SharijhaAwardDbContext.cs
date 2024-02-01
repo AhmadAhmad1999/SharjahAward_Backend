@@ -4,7 +4,9 @@ using SharijhaAward.Domain.Entities.EventModel;
 using SharijhaAward.Domain.Entities.InvitationModels;
 using SharijhaAward.Domain.Model.CategoryCommitteeModel;
 using SharijhaAward.Domain.Model.CriterionItemScaleModel;
+using SharijhaAward.Domain.Model.CycleModel;
 using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Model.SubscriberModel;
 using SharijhaAward.Domain.Model.TrainingWorkshopSubscriberModel;
 using System;
 using System.Collections.Generic;
@@ -26,12 +28,24 @@ namespace SharijhaAward.Persistence
         public DbSet<CategoryCommittee> categoryCommittees { get; set; }
         public DbSet<CriterionItemScale> criterionItemScales { get; set; }
         public DbSet<TrainingWorkshopSubscriber> trainingWorkshopSubscribers { get; set; }
+        public DbSet<Cycle> cycles { get; set; }
+        public DbSet<Subscriber> Subscribers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SharijhaAwardDbContext).Assembly);
+
+            modelBuilder.Entity<Cycle>().HasData(
+                new Cycle
+                {
+                    Id = new Guid(),
+                    EnglishName = "SharijhaAward",
+                    ArabicName ="جائزة الشارقة",    
+                    Year = 2023,
+                    
+                });
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

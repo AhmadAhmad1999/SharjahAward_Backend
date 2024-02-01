@@ -19,20 +19,18 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
     {
         private readonly IAsyncRepository<PersonalInvitee> _PersonalInviteeRepository;
         private readonly IAsyncRepository<GroupInvitee> _GroupInviteeRepository;
-        private readonly IMapper _Mapper;
         private IEmailSender _EmailSender;
         private IQRCodeGenerator _QRCodeGenerator;
         private readonly IAsyncRepository<Domain.Entities.EventModel.Event> _EventRepository;
 
-        public ResendEmailQueryHandler(IAsyncRepository<PersonalInvitee> personalInviteeRepository,
-            IMapper mapper,
+        public ResendEmailQueryHandler(
+            IAsyncRepository<PersonalInvitee> personalInviteeRepository,
             IAsyncRepository<GroupInvitee> GroupInviteeRepository,
             IEmailSender EmailSender,
             IQRCodeGenerator QRCodeGenerator,
             IAsyncRepository<Domain.Entities.EventModel.Event> EventRepository)
         {
             _PersonalInviteeRepository = personalInviteeRepository;
-            _Mapper = mapper;
             _GroupInviteeRepository = GroupInviteeRepository;
             _EmailSender = EmailSender;
             _QRCodeGenerator = QRCodeGenerator;

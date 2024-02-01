@@ -16,17 +16,15 @@ namespace SharijhaAward.Api.Controllers
         {
             _Mediator = mediator;
         }
-        [HttpPost("ResendEmail", Name = "ResendEmail")]
-        public async Task<ActionResult<Guid>> ResendEmail([FromBody] ResendEmailQuery ResendEmailQuery)
+        [HttpGet("ResendEmail", Name = "ResendEmail")]
+        public async Task<ActionResult<Guid>> ResendEmail( Guid InviteeId, string type)
         {
             var headerValue = HttpContext.Request.Headers["lang"];
-            if (!string.IsNullOrWhiteSpace(headerValue))
-                ResendEmailQuery.lang = headerValue;
-
             var response = await _Mediator.Send(new ResendEmailQuery()
             {
-                InviteeId= ResendEmailQuery.InviteeId, 
-                Type = ResendEmailQuery.Type
+                InviteeId= InviteeId, 
+                Type = type,
+                lang = headerValue
             });
             return Ok(new { data = response });
         }
