@@ -13,6 +13,6 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetEventWithInvitees
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
-        public List<EventInvitessDto> PersonalInvitees { get; set; }
+        public List<EventInvitessDto>? PersonalInvitees { get; set; }
     }
 }

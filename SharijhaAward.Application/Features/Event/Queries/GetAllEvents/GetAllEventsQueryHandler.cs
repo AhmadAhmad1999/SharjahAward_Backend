@@ -35,6 +35,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
                 vm.Location = request.lang == "ar" ? allEvents[i].ArabicLocation : allEvents[i].EnglishLocation;
                 vm.StartDate = allEvents[i].StartDate;
                 vm.EndDate= allEvents[i].EndDate;
+                vm.EventDate = allEvents[i].EventDate;
                 vm.EnglishName = allEvents[i].EnglishName;
                 vm.EnglishDescription = allEvents[i].EnglishDescription;
                 vm.EnglishLocation = allEvents[i].EnglishLocation;

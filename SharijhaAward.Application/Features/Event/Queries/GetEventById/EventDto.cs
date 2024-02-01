@@ -23,5 +23,6 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetEventById
         public string EnglishLocation { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public DateTime EventDate { get; set; }
     }
 }

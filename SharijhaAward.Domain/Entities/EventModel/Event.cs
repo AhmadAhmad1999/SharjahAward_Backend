@@ -23,6 +23,7 @@ namespace SharijhaAward.Domain.Entities.EventModel
         public string ArabicSiteName { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public DateTime EventDate { get; set; }
         public List<PersonalInvitee>? PersonalInvitees { get; set; }
         public List<GroupInvitee>? GroupInvitees { get; set; }
     }

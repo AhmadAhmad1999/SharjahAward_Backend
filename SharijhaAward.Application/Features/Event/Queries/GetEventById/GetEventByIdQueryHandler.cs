@@ -39,6 +39,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetEventById
                         Location = request.lang == "ar" ? Event.ArabicLocation : Event.EnglishLocation,
                         StartDate = Event.StartDate,
                         EndDate = Event.EndDate,
+                        EventDate = Event.EventDate,
                         ArabicName = Event.ArabicName,
                         ArabicDescription = Event.ArabicDescription,
                         ArabicLocation = Event.ArabicLocation,
