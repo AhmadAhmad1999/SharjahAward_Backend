@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Crmf;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.EventModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.InvitationModels;
 using SharijhaAward.Domain.Model.CategoryCommitteeModel;
 using SharijhaAward.Domain.Model.CriterionItemScaleModel;
@@ -30,6 +32,9 @@ namespace SharijhaAward.Persistence
         public DbSet<TrainingWorkshopSubscriber> trainingWorkshopSubscribers { get; set; }
         public DbSet<Cycle> cycles { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,14 +43,148 @@ namespace SharijhaAward.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SharijhaAwardDbContext).Assembly);
 
             modelBuilder.Entity<Cycle>().HasData(
-                new Cycle
+            new Cycle
+            {
+                 Id = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                 EnglishName = "SharijhaAward",
+                 ArabicName ="جائزة الشارقة",    
+                 Year = 2023,
+            });
+
+            modelBuilder.Entity<Role>().HasData(
+            new Role
+            {
+                RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                RoleName = "Admin"
+            });
+            modelBuilder.Entity<Role>().HasData(
+            new Role
+            {
+                RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
+                RoleName = "Subscriber"
+            });
+            modelBuilder.Entity<Role>().HasData(
+            new Role
+            {
+                RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db19"),
+                RoleName = "Manager"
+                
+            });
+            modelBuilder.Entity<Role>().HasData(
+            new Role
+            {
+                RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                RoleName = "User"
+                
+            });
+
+            modelBuilder.Entity<Permission>().HasData
+                (
+                new Permission
                 {
-                    Id = new Guid(),
-                    EnglishName = "SharijhaAward",
-                    ArabicName ="جائزة الشارقة",    
-                    Year = 2023,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    Name = "AccessUsers"
+                   
+
+                },
+                new Permission
+                {
+                    Id = new Guid("f00b7eb9-c7b9-4f35-8085-cdc97b8a0b47"),
+                    Name = "ViewUsers"
+                   
+
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353dba0"),
+                    Name = "ShowUser"
+                   
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353dba1"),
+                    Name = "CreateUser"
                     
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353dba2"),
+                    Name = "EditUser"
+                   
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353dba3"),
+                    Name = "RemoveUser"
+                    
+                },
+                 new Permission
+                 {
+                     Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353dba4"),
+                     Name = "AccessRoles"
+                     
+                 },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353dba5"),
+                    Name = "ViewRoles"
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353dba6"),
+                    Name = "ViewRole"
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353dba7"),
+                    Name = "EditRole"
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353dba8"),
+                    Name = "RemoveRole"
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353dba9"),
+                    Name = "AssignRole"
+                }, new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db10"),
+                    Name = "AccessPermissions"
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db11"),
+                    Name = "ViewPermissions"
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db12"),
+                    Name = "ShowPermission"
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db13"),
+                    Name = "CreatePermission"
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db14"),
+                    Name = "EditPermission"
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db15"),
+                    Name = "RemovePermission"
+                },
+                new Permission
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db16"),
+                    Name = "All"
                 });
+
+            
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

@@ -8,7 +8,7 @@ using SharijhaAward.Domain.Model.IdentityModels;
 using SharijhaAward.Domain.Model.NewsModel;
 
 namespace SharijhaAward.Domain.Model.CycleModel;
-public class Cycle : AuditInformation<User> {
+public class Cycle  {
     // id of the cycle
     public Guid Id { get; set; }
     // year of the cycle

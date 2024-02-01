@@ -1,8 +1,13 @@
 ﻿
+using SharijhaAward.Domain.Entities.IdentityModels;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace SharijhaAward.Domain.Model.IdentityModels; 
 
 public class Permission {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; } = null!;
-    public List<Role> Roles { get; set; } = new();
+    public RolePermission? Role { get; set; } = null!;
+    [ForeignKey(nameof(Role))]
+    public int? RolePermissionId { get; set; }
 }

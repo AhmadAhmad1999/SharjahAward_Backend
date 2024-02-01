@@ -13,21 +13,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SharijhaAward.Domain.Model.SubscriberModel; 
 
-[Index(nameof(UserId), IsUnique = true)]
-public class Subscriber : AuditInformation<User> {
-    public Guid Id { get; set; }
+
+public class Subscriber : User
+{
+    
     // subscription date
     public DateTime SubscriptionDate { get; set; }
     // status (active, inactive)
     public Status Status { get; set; }
     // identity number
     public string IdentityNumber { get; set; } = string.Empty;
-    
-    // navigation property to the user table
-    public User User { get; set; } = null!;
-    public Guid UserId { get; set; }
-    
-    
+
     // navigation property to the related accounts.
     public virtual List<RelatedAccount> RelatedAccounts { get; set; } = new();
     
