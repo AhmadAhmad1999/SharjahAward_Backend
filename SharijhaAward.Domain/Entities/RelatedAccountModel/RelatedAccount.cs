@@ -1,8 +1,8 @@
-﻿using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.SubscriberModel;
+﻿using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.SubscriberModel;
 
-namespace SharijhaAward.Domain.Model.RelatedAccountModel; 
+namespace SharijhaAward.Domain.Entities.RelatedAccountModel; 
 
 public class RelatedAccount : AuditInformation<User> {
     public Guid Id { get; set; }

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using SharijhaAward.Domain.Model.ArbitrationProcedureModel;
-using SharijhaAward.Domain.Model.CategoryModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.ScaleModel;
+using SharijhaAward.Domain.Entities.ArbitrationProcedureModel;
+using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.ScaleModel;
 using Microsoft.EntityFrameworkCore;
 
-namespace SharijhaAward.Domain.Model.CriterionModel; 
+namespace SharijhaAward.Domain.Entities.CriterionModel; 
 
 public class Criterion: AuditInformation<User> {
     public Guid Id { get; set; }

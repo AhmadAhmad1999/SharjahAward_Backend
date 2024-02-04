@@ -22,6 +22,13 @@ namespace SharijhaAward.Api.Controllers
             _Mediator = Mediator;
         }
         [HttpPost(Name = "AddEvent")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<CreateEventCommandResponse>> Create([FromBody] CreateEventCommand CreateEventCommand)
         {
             CreateEventCommandResponse? Response = await _Mediator.Send(CreateEventCommand);
@@ -32,6 +39,9 @@ namespace SharijhaAward.Api.Controllers
         [HttpPut(Name = "UpdateEvent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult> Update([FromBody] UpdateEventCommand updateEventCommand)
         {
@@ -40,6 +50,12 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllEvents")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> GetAllEvents(int page, int perPage)
         {
             //get Language from header
@@ -86,6 +102,12 @@ namespace SharijhaAward.Api.Controllers
                 });
         }
         [HttpDelete(Name = "DeleteEvent")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> DeleteEvent(Guid id)
         {
             var dtos = await _Mediator.Send(new DeleteEventCommand() { Id = id });
@@ -93,6 +115,12 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("{Id}", Name = "GetEventById")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> GetEventById(Guid id)
         { 
             var headerValue = HttpContext.Request.Headers["lang"];
@@ -108,6 +136,12 @@ namespace SharijhaAward.Api.Controllers
          
         }
         [HttpGet("GetEventWithInvitees/{Id}", Name = "GetEventWithInvitees")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> GetEventWithInvitees(Guid id)
         {
             var response = await _Mediator.Send(new GetEventWithInviteesQuery() { Id = id });

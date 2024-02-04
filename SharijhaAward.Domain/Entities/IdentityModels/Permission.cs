@@ -2,7 +2,7 @@
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SharijhaAward.Domain.Model.IdentityModels; 
+namespace SharijhaAward.Domain.Entities.IdentityModels; 
 
 public class Permission {
     public Guid Id { get; set; }

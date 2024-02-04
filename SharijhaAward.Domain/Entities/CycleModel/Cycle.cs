@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using SharijhaAward.Domain.Constants.Common;
-using SharijhaAward.Domain.Model.AgendaModel;
-using SharijhaAward.Domain.Model.CategoryModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.CycleConditionModel;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.NewsModel;
+using SharijhaAward.Domain.Entities.AgendaModel;
+using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.CycleConditionModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.NewsModel;
 
-namespace SharijhaAward.Domain.Model.CycleModel;
+namespace SharijhaAward.Domain.Entities.CycleModel;
 public class Cycle  {
     // id of the cycle
     public Guid Id { get; set; }

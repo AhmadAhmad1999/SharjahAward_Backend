@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using SharijhaAward.Domain.Constants.SubscriberAchievementConstants;
-using SharijhaAward.Domain.Model.AchievementClassificationModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.SubscriberModel;
+using SharijhaAward.Domain.Entities.AchievementClassificationModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.SubscriberModel;
 
-namespace SharijhaAward.Domain.Model.SubscriberAchievementModel; 
+namespace SharijhaAward.Domain.Entities.SubscriberAchievementModel; 
 
 /*
  *

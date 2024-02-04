@@ -1,7 +1,7 @@
-﻿using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
+﻿using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
-namespace SharijhaAward.Domain.Model.EducationalClassModel; 
+namespace SharijhaAward.Domain.Entities.EducationalClassModel; 
 
 public class EducationalClass : AuditInformation<User>{
     public Guid Id { get; set; }

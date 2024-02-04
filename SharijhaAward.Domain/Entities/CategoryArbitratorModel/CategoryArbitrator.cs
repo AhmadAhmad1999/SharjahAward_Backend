@@ -1,5 +1,5 @@
-﻿using SharijhaAward.Domain.Model.ArbitratorModel;
-using SharijhaAward.Domain.Model.CategoryModel;
+﻿using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.CategoryModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.CategoryArbitratorModel
+namespace SharijhaAward.Domain.Entities.CategoryArbitratorModel
 {
     public class CategoryArbitrator
     {

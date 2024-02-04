@@ -1,6 +1,6 @@
-﻿using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.EducationalInstitutionModel;
-using SharijhaAward.Domain.Model.IdentityModels;
+﻿using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.EducationalEntityModel
+namespace SharijhaAward.Domain.Entities.EducationalEntityModel
 {
     public class EducationalEntity: AuditInformation<User>
     {

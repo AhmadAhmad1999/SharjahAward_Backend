@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +13,24 @@ namespace SharijhaAward.Persistence.Repositories
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
         private readonly IJwtProvider _jwtProvider;
+        
         public UserRepository(SharijhaAwardDbContext dbContext , IJwtProvider jwtProvider) : base(dbContext)
         {
             _jwtProvider = jwtProvider;
         }
 
-        public Task AsignRole(User user, Role role)
+        public async Task AsignRole(Guid userId, Guid roleId)
         {
-            throw new NotImplementedException();
+            var role = await _dbContext.Roles.Where(r => r.RoleId == roleId).FirstOrDefaultAsync();
+            var user = await _dbContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+           
+            if (user != null && role != null)
+            {
+                user.RoleId = roleId;
+                user.Role = role;
+                role.Users.Add(user);
+            }
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<User> GetByEmailAsync(string email)

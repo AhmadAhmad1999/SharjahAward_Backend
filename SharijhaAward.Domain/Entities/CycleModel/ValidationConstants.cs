@@ -1,4 +1,4 @@
-﻿namespace SharijhaAward.Domain.Model.CycleModel; 
+﻿namespace SharijhaAward.Domain.Entities.CycleModel; 
 
 public static class ValidationConstants {
     //----------------- Arabic Name --------------------//

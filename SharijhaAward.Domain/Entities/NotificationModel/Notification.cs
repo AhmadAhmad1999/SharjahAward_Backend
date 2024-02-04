@@ -1,8 +1,8 @@
 ﻿using SharijhaAward.Domain.Constants.NotificationConstant;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
-namespace SharijhaAward.Domain.Model.NotificationModel; 
+namespace SharijhaAward.Domain.Entities.NotificationModel; 
 
 public class Notification : AuditInformation<User> {
     public Guid Id { get; set; }

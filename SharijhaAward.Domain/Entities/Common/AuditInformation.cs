@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace SharijhaAward.Domain.Model.Common; 
+namespace SharijhaAward.Domain.Entities.Common; 
 
 public class AuditInformation<TModel> : ITimeStamp {
     public Guid CreatedById { get; set; }

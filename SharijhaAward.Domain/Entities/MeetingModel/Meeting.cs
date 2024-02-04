@@ -1,8 +1,8 @@
-﻿using SharijhaAward.Domain.Model.CategoryModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.MeetingSubscriberModel;
-using SharijhaAward.Domain.Model.MeetingUserModel;
+﻿using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.MeetingSubscriberModel;
+using SharijhaAward.Domain.Entities.MeetingUserModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.MeetingModel
+namespace SharijhaAward.Domain.Entities.MeetingModel
 {
     public class Meeting:AuditInformation<User>
     {

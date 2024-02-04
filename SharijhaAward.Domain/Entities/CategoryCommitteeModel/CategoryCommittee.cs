@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SharijhaAward.Domain.Model.CategoryModel;
-using SharijhaAward.Domain.Model.CommitteeModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.CommitteeModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
-namespace SharijhaAward.Domain.Model.CategoryCommitteeModel; 
+namespace SharijhaAward.Domain.Entities.CategoryCommitteeModel; 
 
 public class CategoryCommittee : AuditInformation<User>{
 

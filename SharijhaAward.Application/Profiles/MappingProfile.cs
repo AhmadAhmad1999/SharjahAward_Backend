@@ -19,7 +19,12 @@ using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ConfirmAtt
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
 using SharijhaAward.Domain.Entities.InvitationModels;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Application.Features.User.Commands.DeleteUser;
+using SharijhaAward.Application.Features.User.Queries.GetUserById;
+using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
+using SharijhaAward.Application.Features.Identity.Role.Queries.GetAllRoles;
+using SharijhaAward.Application.Features.User.Queries.AsignRoleToUser;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -52,6 +57,13 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<User , LoginCommand>();
             CreateMap<User , SignUpCommand>().ReverseMap();
+            CreateMap<User , UpdateEventCommand>();
+            CreateMap<User , DeleteUserCommand>();
+            CreateMap<User , UserDto>().ReverseMap();
+            CreateMap<User , UserListVm>().ReverseMap();
+            CreateMap<User , AsignRoleToUserQuery>();
+
+            CreateMap<Role , RoleListVm>().ReverseMap();
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using SharijhaAward.Domain.Model.CoordinatorModel;
-using SharijhaAward.Domain.Model.EducationalEntityModel;
+﻿using SharijhaAward.Domain.Entities.CoordinatorModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.EducationCoordinatorModel
+namespace SharijhaAward.Domain.Entities.EducationCoordinatorModel
 {
     public class EducationCoordinator
     {

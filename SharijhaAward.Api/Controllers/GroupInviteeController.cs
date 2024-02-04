@@ -22,6 +22,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name = "AddGroupInvitee")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<Guid>> AddGroupInvitee([FromBody] CreateGroupInviteeCommand createGroupInviteeCommand)
         {
             var headerValue = HttpContext.Request.Headers["lang"];
@@ -35,6 +42,9 @@ namespace SharijhaAward.Api.Controllers
         [HttpPut(Name = "UpdateGroupInvitee")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult> UpdateGroupInvitee([FromBody] UpdateGroupInviteeCommand updateGroupInviteeCommand)
         {
@@ -43,7 +53,14 @@ namespace SharijhaAward.Api.Controllers
             return Ok(new { data = Response });
         }
 
+
         [HttpDelete(Name = "DeleteGroupInvitee")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> DeleteGroupInvitee(Guid id)
         {
             DeleteGroupInviteeCommand deleteGroupInviteeCommand = new DeleteGroupInviteeCommand()
@@ -54,7 +71,14 @@ namespace SharijhaAward.Api.Controllers
             return Ok(Response);
         }
 
+
         [HttpGet("{Id}", Name = "GetGroupInviteeById")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<GetGroupInviteeByIdQuery>> GetById(Guid id)
         {
             GroupInviteeVM? Group = await _mediator
@@ -66,6 +90,12 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllGroupInvitee")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> GetAllGroupInvitee(int page , int perPage)
         {
             var dto = await _mediator.Send(new GetAllGroupInviteeQuery());
@@ -107,6 +137,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost("ConfirmAttendanceGroup", Name = "ConfirmAttendanceGroup")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> ConfirmAttendanceGroup([FromBody] ConfirmAttendanceGroupQuery query)
         {
             var respone = await _mediator.Send(new ConfirmAttendanceGroupQuery()

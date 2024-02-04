@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.EducationalInstitutionModel
+namespace SharijhaAward.Domain.Entities.EducationalInstitutionModel
 {
     public class EducationalInstitution
     {

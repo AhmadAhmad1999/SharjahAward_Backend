@@ -1,5 +1,5 @@
-﻿using SharijhaAward.Domain.Model.CategoryModel;
-using SharijhaAward.Domain.Model.EducationalClassModel;
+﻿using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.EducationalClassModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.CategoryClassModel
+namespace SharijhaAward.Domain.Entities.CategoryClassModel
 {
     public class CategoryClass
     {
