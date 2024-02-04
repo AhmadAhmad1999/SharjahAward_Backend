@@ -41,6 +41,10 @@ namespace SharijhaAward.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>().ToTable("users");
+            modelBuilder.Entity<Subscriber>().ToTable("subscribers");
+            modelBuilder.Entity<Subscriber>().HasBaseType<User>();
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SharijhaAwardDbContext).Assembly);
 
             modelBuilder.Entity<Cycle>().HasData(
