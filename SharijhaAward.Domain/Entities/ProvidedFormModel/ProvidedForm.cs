@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Domain.Constants.ProvidedFromConstants;
+﻿using SharijhaAward.Domain.Constants;
+using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.Common;
@@ -32,7 +33,7 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
 
         public string Identity_Number { get; set; } = string.Empty;
 
-        public EducationType EducationType { get; set; }
+        public EducationType EducationType { get; set; } = new();
 
         public ProvidedFormStatus Status { get; set; }
 

@@ -25,6 +25,7 @@ using SharijhaAward.Application.Features.User.Queries.GetUserById;
 using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
 using SharijhaAward.Application.Features.Identity.Role.Queries.GetAllRoles;
 using SharijhaAward.Application.Features.User.Queries.AsignRoleToUser;
+using SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvidedForm;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -64,6 +65,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<User , AsignRoleToUserQuery>();
 
             CreateMap<Role , RoleListVm>().ReverseMap();
+
+            CreateMap<Domain.Entities.ProvidedFormModel.ProvidedForm , CreateProvidedFormCommand>();
         }
     }
 }

@@ -50,6 +50,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
                     ArabicName = allUser[i].ArabicName,
                     EnglishName = allUser[i].EnglishName,
                     Email = allUser[i].Email,
+                    Gender = allUser[i].Gender,
                     Role = role == null ? "User Has No Role" : role.RoleName
                 };
                 userList.Add(userListVm);
