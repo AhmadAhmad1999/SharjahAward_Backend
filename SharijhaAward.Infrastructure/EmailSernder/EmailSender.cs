@@ -17,70 +17,46 @@ using System.IO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats.Png;
+using Microsoft.Extensions.Configuration;
 
 namespace SharijhaAward.Infrastructure.EmailSernder
 {
     public class EmailSender : IEmailSender
     {
-        public async Task SendEmail(EmailRequest EmailRequest)
+        private IConfiguration _Configuration;
+        public EmailSender(IConfiguration Configuration)
+        {
+            _Configuration = Configuration;
+        }
+        public async Task SendEmail(EmailRequest EmailRequest, AlternateView AlternateView)
         {
             using (var client = new SmtpClient())
             {
+                string SenderEmail = _Configuration.GetSection("SMTP:SenderEmail").Value!;
+                string Password = _Configuration.GetSection("SMTP:Password").Value!;
+                string Host = _Configuration.GetSection("SMTP:Host").Value!;
+                int.TryParse(_Configuration.GetSection("SMTP:Port").Value, out int Port);
+
                 string HtmlBody = EmailRequest.Body;
-                //AlternateView HtmlView = AlternateView.CreateAlternateViewFromString(HtmlBody, null, MediaTypeNames.Text.Html);
-
-                //using (var image = SixLabors.ImageSharp.Image.Load(QRCodeImagePath))
-                //{
-                //    image.Mutate(x => x.Resize(10, 10));
-                //    using (var stream = new MemoryStream())
-                //    {
-                //        image.Save(stream, new PngEncoder());
-                //        byte[] resizedImageBytes = stream.ToArray();
-
-                //        LinkedResource linkedImage = new LinkedResource(new MemoryStream(resizedImageBytes), MediaTypeNames.Image.Png);
-                //        linkedImage.ContentId = "caligraphyImage";
-                //        HtmlView.LinkedResources.Add(linkedImage);
-                //    }
-
-
-                //    //using (var imageStream = new FileStream(ImagePath, FileMode.Open, FileAccess.Read))
-                //    //{
-
-                //    //    LinkedResource linkedImage = new LinkedResource("wwwroot/Images/QRCodeForTest Add EventPersonalInvite.png", MediaTypeNames.Image.Svg);
-                //    //    linkedImage.ContentId = "caligraphyImage";
-                //    //}
-                //}
-
-                //using (var imageStream = new FileStream(ImagePath, FileMode.Open, FileAccess.Read))
-                //{
-                    
-                //    AlternateView HtmlView = AlternateView.CreateAlternateViewFromString(HtmlBody, null, MediaTypeNames.Text.Html);
-                //    LinkedResource linkedImage = new LinkedResource("wwwroot/Images/QRCodeForTest Add EventPersonalInvite.png", MediaTypeNames.Image.Svg);
-                //    linkedImage.ContentId = "caligraphyImage";
-                //    HtmlView.LinkedResources.Add(linkedImage);
-                //}
-
                 NetworkCredential Credentials = new NetworkCredential
                 {
-                    UserName = "no-reply@warshatec.com",
-                    Password = "QAZwsx!@1212"
+                    UserName = SenderEmail,
+                    Password = Password
                 };
 
                 client.Credentials = Credentials;
-                client.Host = "mail.warshatec.com";
-                client.Port = 587;
+                client.Host = Host;
+                client.Port = Port;
                 client.EnableSsl = false;
 
                 MailMessage Message = new MailMessage
                 {
-                    From = new MailAddress("no-reply@warshatec.com"),
+                    From = new MailAddress(SenderEmail),
                     Subject = EmailRequest.Subject,
-                    Body = HtmlBody,
                     IsBodyHtml = true
                 };
 
-                //Message.AlternateViews.Add(HtmlView);
-
+                Message.AlternateViews.Add(AlternateView);
                 Message.To.Add(EmailRequest.ToEmail);
 
                 await client.SendMailAsync(Message);

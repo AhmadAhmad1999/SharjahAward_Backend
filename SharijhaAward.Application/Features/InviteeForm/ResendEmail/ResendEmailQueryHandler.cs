@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharijhaAward.Application.Models;
+using System.Net.Mail;
+using Microsoft.AspNetCore.Http;
 
 namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
 {
@@ -22,19 +24,21 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
         private IEmailSender _EmailSender;
         private IQRCodeGenerator _QRCodeGenerator;
         private readonly IAsyncRepository<Domain.Entities.EventModel.Event> _EventRepository;
-
+        private readonly IHttpContextAccessor _HttpContextAccessor;
         public ResendEmailQueryHandler(
             IAsyncRepository<PersonalInvitee> personalInviteeRepository,
             IAsyncRepository<GroupInvitee> GroupInviteeRepository,
             IEmailSender EmailSender,
             IQRCodeGenerator QRCodeGenerator,
-            IAsyncRepository<Domain.Entities.EventModel.Event> EventRepository)
+            IAsyncRepository<Domain.Entities.EventModel.Event> EventRepository,
+            IHttpContextAccessor HttpContextAccessor)
         {
             _PersonalInviteeRepository = personalInviteeRepository;
             _GroupInviteeRepository = GroupInviteeRepository;
             _EmailSender = EmailSender;
             _QRCodeGenerator = QRCodeGenerator;
             _EventRepository = EventRepository;
+            _HttpContextAccessor = HttpContextAccessor;
         }
 
         public async Task<Unit> Handle(ResendEmailQuery Request, CancellationToken cancellationToken)
@@ -51,21 +55,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                     Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(PersonalInvitee.EventId);
                     string EventName = EventEntity.ArabicName;
                     string DataToSendIntoQR = $"{PersonalInvitee.Id}/Personal/{EventName}";
-                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR);
+                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
                     byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
                     string QRbase64String = Convert.ToBase64String(QRCodeBytes);
-
-                    string CaligraphyImagePath = "wwwroot/assets/qr/caligraphy.png";
-                    byte[] CaligraphyBytes = File.ReadAllBytes(CaligraphyImagePath);
-                    string CaligraphyBase64String = Convert.ToBase64String(CaligraphyBytes);
-
-                    string Email_HeaderImagePath = "wwwroot/assets/qr/email_header.png";
-                    byte[] Email_HeaderBytes = File.ReadAllBytes(Email_HeaderImagePath);
-                    string Email_HeaderBase64String = Convert.ToBase64String(Email_HeaderBytes);
-
-                    string LogosImagePath = "wwwroot/assets/qr/logos.png";
-                    byte[] LogosBytes = File.ReadAllBytes(LogosImagePath);
-                    string LogosBase64String = Convert.ToBase64String(LogosBytes);
 
                     // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
                     string HtmlBody = "wwwroot/QREmail_ar.html";
@@ -74,6 +66,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
 
                     CultureInfo ArabicCulture = new CultureInfo("ar-SA");
 
+                    bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+
+                    string DownloadQRImageAPI = isHttps
+                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                            $"&EventName={EventEntity.ArabicName}"
+                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                            $"&EventName={EventEntity.ArabicName}";
+
                     string ManipulatedBody = HTMLContent
                         .Replace("$NewInvitee.Name$", PersonalInvitee.Name, StringComparison.Ordinal) // Invited Name..
                         .Replace("$EventEntity.ArabicName$", EventEntity.ArabicName, StringComparison.Ordinal) // Event Name in Arabic..
@@ -81,10 +81,24 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                         .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
                         .Replace("$EventEntity.StartDate.Date$", EventEntity.StartDate.ToString("M/d/yyyy", ArabicCulture), StringComparison.Ordinal) // Event Date..
                         .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.StartDate.ToString("HH:mm:ss", ArabicCulture), StringComparison.Ordinal) // Event Time..
-                        .Replace("\"./assets/qr/qr.png\"", $"'data:image/png;base64,{QRbase64String}'") // QR Code Image Path..
-                        .Replace("\"./assets/qr/caligraphy.png\"", $"'data:image/png;base64,{CaligraphyBase64String}'") // Caligraphy Image..
-                        .Replace("\"./assets/qr/email_header.png\"", $"'data:image/png;base64,{Email_HeaderBase64String}'") // Email_Header Image..
-                        .Replace("\"./assets/qr/logos.png\"", $"'data:image/png;base64,{LogosBase64String}'"); // Logos Image..
+                        .Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
+                        .Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+
+                    // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
+
+                    // Attach The Images As A Linked Resources..
+                    LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
+                    AlternateView.LinkedResources.Add(QRCodeImage);
+
+                    LinkedResource CaligraphyImage = new LinkedResource("wwwroot/assets/qr/caligraphy.png") { ContentId = "CaligraphyImage" }; // Caligraphy Image..
+                    AlternateView.LinkedResources.Add(CaligraphyImage);
+
+                    LinkedResource Email_HeaderImage = new LinkedResource("wwwroot/assets/qr/email_header.png") { ContentId = "Email_HeaderImage" }; // Email_Header Image..
+                    AlternateView.LinkedResources.Add(Email_HeaderImage);
+
+                    LinkedResource LogosImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogosImage" }; // Logos Image..
+                    AlternateView.LinkedResources.Add(LogosImage);
 
                     EmailRequest EmailRequest = new EmailRequest()
                     {
@@ -93,7 +107,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                         Body = ManipulatedBody,
                     };
 
-                    await _EmailSender.SendEmail(EmailRequest);
+                    await _EmailSender.SendEmail(EmailRequest, AlternateView);
 
                     return Unit.Value;
                 }
@@ -103,26 +117,22 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                     Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(PersonalInvitee.EventId);
                     string EventName = EventEntity.EnglishName;
                     string DataToSendIntoQR = $"{PersonalInvitee.Id}/Personal/{EventName}";
-                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR);
+                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
                     byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
                     string QRbase64String = Convert.ToBase64String(QRCodeBytes);
-
-                    string CaligraphyImagePath = "wwwroot/assets/qr/caligraphy.png";
-                    byte[] CaligraphyBytes = File.ReadAllBytes(CaligraphyImagePath);
-                    string CaligraphyBase64String = Convert.ToBase64String(CaligraphyBytes);
-
-                    string Email_HeaderImagePath = "wwwroot/assets/qr/email_header.png";
-                    byte[] Email_HeaderBytes = File.ReadAllBytes(Email_HeaderImagePath);
-                    string Email_HeaderBase64String = Convert.ToBase64String(Email_HeaderBytes);
-
-                    string LogosImagePath = "wwwroot/assets/qr/logos.png";
-                    byte[] LogosBytes = File.ReadAllBytes(LogosImagePath);
-                    string LogosBase64String = Convert.ToBase64String(LogosBytes);
 
                     // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
                     string HtmlBody = "wwwroot/QREmail_en.html";
 
                     string HTMLContent = File.ReadAllText(HtmlBody);
+
+                    bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+
+                    string DownloadQRImageAPI = isHttps
+                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                            $"&EventName={EventEntity.ArabicName}"
+                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                            $"&EventName={EventEntity.ArabicName}";
 
                     string ManipulatedBody = HTMLContent
                         .Replace("$NewInvitee.Name$", PersonalInvitee.Name, StringComparison.Ordinal) // Invited Name..
@@ -131,10 +141,24 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                         .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
                         .Replace("$EventEntity.StartDate.Date$", EventEntity.StartDate.ToString("M/d/yyyy"), StringComparison.Ordinal) // Event Date..
                         .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.StartDate.ToString("HH:mm:ss"), StringComparison.Ordinal) // Event Time..
-                        .Replace("\"./assets/qr/qr.png\"", $"'data:image/png;base64,{QRbase64String}'") // QR Code Image Path..
-                        .Replace("\"./assets/qr/caligraphy.png\"", $"'data:image/png;base64,{CaligraphyBase64String}'") // Caligraphy Image..
-                        .Replace("\"./assets/qr/email_header.png\"", $"'data:image/png;base64,{Email_HeaderBase64String}'") // Email_Header Image..
-                        .Replace("\"./assets/qr/logos.png\"", $"'data:image/png;base64,{LogosBase64String}'"); // Logos Image..
+                        .Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
+                        .Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+
+                    // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
+
+                    // Attach The Images As A Linked Resources..
+                    LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
+                    AlternateView.LinkedResources.Add(QRCodeImage);
+
+                    LinkedResource CaligraphyImage = new LinkedResource("wwwroot/assets/qr/caligraphy.png") { ContentId = "CaligraphyImage" }; // Caligraphy Image..
+                    AlternateView.LinkedResources.Add(CaligraphyImage);
+
+                    LinkedResource Email_HeaderImage = new LinkedResource("wwwroot/assets/qr/email_header.png") { ContentId = "Email_HeaderImage" }; // Email_Header Image..
+                    AlternateView.LinkedResources.Add(Email_HeaderImage);
+
+                    LinkedResource LogosImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogosImage" }; // Logos Image..
+                    AlternateView.LinkedResources.Add(LogosImage);
 
                     EmailRequest EmailRequest = new EmailRequest()
                     {
@@ -143,7 +167,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                         Body = ManipulatedBody,
                     };
 
-                    await _EmailSender.SendEmail(EmailRequest);
+                    await _EmailSender.SendEmail(EmailRequest, AlternateView);
 
                     return Unit.Value;
                 }
@@ -160,21 +184,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                     Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(GroupInvitee.EventId);
                     string EventName = EventEntity.ArabicName;
                     string DataToSendIntoQR = $"{GroupInvitee.Id}/Group/{EventName}";
-                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR);
+                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
                     byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
                     string QRbase64String = Convert.ToBase64String(QRCodeBytes);
-
-                    string CaligraphyImagePath = "wwwroot/assets/qr/caligraphy.png";
-                    byte[] CaligraphyBytes = File.ReadAllBytes(CaligraphyImagePath);
-                    string CaligraphyBase64String = Convert.ToBase64String(CaligraphyBytes);
-
-                    string Email_HeaderImagePath = "wwwroot/assets/qr/caligraphy.png";
-                    byte[] Email_HeaderBytes = File.ReadAllBytes(Email_HeaderImagePath);
-                    string Email_HeaderBase64String = Convert.ToBase64String(Email_HeaderBytes);
-
-                    string LogosImagePath = "wwwroot/assets/qr/logos.png";
-                    byte[] LogosBytes = File.ReadAllBytes(LogosImagePath);
-                    string LogosBase64String = Convert.ToBase64String(LogosBytes);
 
                     // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
                     string HtmlBody = "wwwroot/QREmail_ar.html";
@@ -183,6 +195,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
 
                     CultureInfo ArabicCulture = new CultureInfo("ar-SA");
 
+                    bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+
+                    string DownloadQRImageAPI = isHttps
+                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                            $"&EventName={EventEntity.ArabicName}"
+                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                            $"&EventName={EventEntity.ArabicName}";
+
                     string ManipulatedBody = HTMLContent
                         .Replace("$NewInvitee.Name$", GroupInvitee.Name, StringComparison.Ordinal) // Invited Name..
                         .Replace("$EventEntity.ArabicName$", EventEntity.ArabicName, StringComparison.Ordinal) // Event Name in Arabic..
@@ -190,10 +210,24 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                         .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
                         .Replace("$EventEntity.StartDate.Date$", EventEntity.StartDate.ToString("M/d/yyyy", ArabicCulture), StringComparison.Ordinal) // Event Date..
                         .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.StartDate.ToString("HH:mm:ss", ArabicCulture), StringComparison.Ordinal) // Event Time..
-                        .Replace("\"./assets/qr/qr.png\"", $"'data:image/png;base64,{QRbase64String}'") // QR Code Image Path..
-                        .Replace("\"./assets/qr/caligraphy.png\"", $"'data:image/png;base64,{CaligraphyBase64String}'") // Caligraphy Image..
-                        .Replace("\"./assets/qr/email_header.png\"", $"'data:image/png;base64,{Email_HeaderBase64String}'") // Email_Header Image..
-                        .Replace("\"./assets/qr/logos.png\"", $"'data:image/png;base64,{LogosBase64String}'"); // Logos Image..
+                        .Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
+                        .Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+
+                    // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
+
+                    // Attach The Images As A Linked Resources..
+                    LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
+                    AlternateView.LinkedResources.Add(QRCodeImage);
+
+                    LinkedResource CaligraphyImage = new LinkedResource("wwwroot/assets/qr/caligraphy.png") { ContentId = "CaligraphyImage" }; // Caligraphy Image..
+                    AlternateView.LinkedResources.Add(CaligraphyImage);
+
+                    LinkedResource Email_HeaderImage = new LinkedResource("wwwroot/assets/qr/email_header.png") { ContentId = "Email_HeaderImage" }; // Email_Header Image..
+                    AlternateView.LinkedResources.Add(Email_HeaderImage);
+
+                    LinkedResource LogosImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogosImage" }; // Logos Image..
+                    AlternateView.LinkedResources.Add(LogosImage);
 
                     EmailRequest EmailRequest = new EmailRequest()
                     {
@@ -202,7 +236,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                         Body = ManipulatedBody,
                     };
 
-                    await _EmailSender.SendEmail(EmailRequest);
+                    await _EmailSender.SendEmail(EmailRequest, AlternateView);
 
                     return Unit.Value;
                 }
@@ -212,26 +246,22 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                     Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(GroupInvitee.EventId);
                     string EventName = EventEntity.EnglishName;
                     string DataToSendIntoQR = $"{GroupInvitee.Id}/Group/{EventName}";
-                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR);
+                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
                     byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
                     string QRbase64String = Convert.ToBase64String(QRCodeBytes);
-
-                    string CaligraphyImagePath = "wwwroot/assets/qr/caligraphy.png";
-                    byte[] CaligraphyBytes = File.ReadAllBytes(CaligraphyImagePath);
-                    string CaligraphyBase64String = Convert.ToBase64String(CaligraphyBytes);
-
-                    string Email_HeaderImagePath = "wwwroot/assets/qr/caligraphy.png";
-                    byte[] Email_HeaderBytes = File.ReadAllBytes(Email_HeaderImagePath);
-                    string Email_HeaderBase64String = Convert.ToBase64String(Email_HeaderBytes);
-
-                    string LogosImagePath = "wwwroot/assets/qr/logos.png";
-                    byte[] LogosBytes = File.ReadAllBytes(LogosImagePath);
-                    string LogosBase64String = Convert.ToBase64String(LogosBytes);
 
                     // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
                     string HtmlBody = "wwwroot/QREmail_en.html";
 
                     string HTMLContent = File.ReadAllText(HtmlBody);
+
+                    bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+
+                    string DownloadQRImageAPI = isHttps
+                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                            $"&EventName={EventEntity.ArabicName}"
+                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                            $"&EventName={EventEntity.ArabicName}";
 
                     string ManipulatedBody = HTMLContent
                         .Replace("$NewInvitee.Name$", GroupInvitee.Name, StringComparison.Ordinal) // Invited Name..
@@ -240,10 +270,24 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                         .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
                         .Replace("$EventEntity.StartDate.Date$", EventEntity.StartDate.ToString("M/d/yyyy"), StringComparison.Ordinal) // Event Date..
                         .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.StartDate.ToString("HH:mm:ss"), StringComparison.Ordinal) // Event Time..
-                        .Replace("\"./assets/qr/qr.png\"", $"'data:image/png;base64,{QRbase64String}'") // QR Code Image Path..
-                        .Replace("\"./assets/qr/caligraphy.png\"", $"'data:image/png;base64,{CaligraphyBase64String}'") // Caligraphy Image..
-                        .Replace("\"./assets/qr/email_header.png\"", $"'data:image/png;base64,{Email_HeaderBase64String}'") // Email_Header Image..
-                        .Replace("\"./assets/qr/logos.png\"", $"'data:image/png;base64,{LogosBase64String}'"); // Logos Image..
+                        .Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
+                        .Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+
+                    // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
+
+                    // Attach The Images As A Linked Resources..
+                    LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
+                    AlternateView.LinkedResources.Add(QRCodeImage);
+
+                    LinkedResource CaligraphyImage = new LinkedResource("wwwroot/assets/qr/caligraphy.png") { ContentId = "CaligraphyImage" }; // Caligraphy Image..
+                    AlternateView.LinkedResources.Add(CaligraphyImage);
+
+                    LinkedResource Email_HeaderImage = new LinkedResource("wwwroot/assets/qr/email_header.png") { ContentId = "Email_HeaderImage" }; // Email_Header Image..
+                    AlternateView.LinkedResources.Add(Email_HeaderImage);
+
+                    LinkedResource LogosImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogosImage" }; // Logos Image..
+                    AlternateView.LinkedResources.Add(LogosImage);
 
                     EmailRequest EmailRequest = new EmailRequest()
                     {
@@ -252,7 +296,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                         Body = ManipulatedBody,
                     };
 
-                    await _EmailSender.SendEmail(EmailRequest);
+                    await _EmailSender.SendEmail(EmailRequest, AlternateView);
 
                     return Unit.Value;
                 }

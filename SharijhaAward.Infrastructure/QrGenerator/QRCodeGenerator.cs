@@ -15,13 +15,13 @@ namespace SharijhaAward.Infrastructure.QRGenerator
         /* 
          * This Data Paramater Must Contain (Guid For [Personal, Group Invite] + Type Of Invitation + Event Name) Sepereated With '/'
         */
-        public async Task<string> GenerateQRCode(string Data)
+        public async Task<string> GenerateQRCode(string Data, string WWWRootFolderPath)
         {
             Uri? URI = new Uri($"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={Data}");
             HttpWebRequest Request = WebRequest.CreateHttp(URI);
             WebResponse? Response = await Request.GetResponseAsync();
             ContentDispositionHeaderValue ContentDisposition;
-            string FilePath = "wwwroot/Images";
+            string FilePath = WWWRootFolderPath + "/Images";
 
             string[] DataSpliter = Data.Split('/');
 

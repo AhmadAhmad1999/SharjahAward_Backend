@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.DeleteGroupInvitee;
@@ -6,6 +7,7 @@ using SharijhaAward.Application.Features.InviteeForm.Group.Command.UpdateGroupIn
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.ConfirmAttendanceGroup;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGroupInvitees;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupInviteeById;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
 
 
 namespace SharijhaAward.Api.Controllers
@@ -15,10 +17,12 @@ namespace SharijhaAward.Api.Controllers
     public class GroupInviteeController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public GroupInviteeController(IMediator mediator)
+        public GroupInviteeController(IMediator mediator, IWebHostEnvironment WebHostEnvironment)
         {
             _mediator = mediator;
+            _WebHostEnvironment = WebHostEnvironment;
         }
 
         [HttpPost(Name = "AddGroupInvitee")]
@@ -27,6 +31,8 @@ namespace SharijhaAward.Api.Controllers
             var headerValue = HttpContext.Request.Headers["lang"];
             if (!string.IsNullOrWhiteSpace(headerValue))
                 createGroupInviteeCommand.lang = headerValue;
+
+            createGroupInviteeCommand.ImagePath = _WebHostEnvironment.WebRootPath;
 
             var response = await _mediator.Send(createGroupInviteeCommand);
             return Ok(new { data = response });

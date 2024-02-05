@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.Event.Commands.CreateEvent;
@@ -8,7 +7,7 @@ using SharijhaAward.Application.Features.Event.Commands.UpdateEvent;
 using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
 using SharijhaAward.Application.Features.Event.Queries.GetEventById;
 using SharijhaAward.Application.Features.Event.Queries.GetEventWithInvitees;
-
+using Aspose.Pdf;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -17,9 +16,12 @@ namespace SharijhaAward.Api.Controllers
     public class EventController : ControllerBase
     {
         private readonly IMediator _Mediator;
-        public EventController(IMediator Mediator)
+        private readonly IWebHostEnvironment _WebHostEnvironment;
+        public EventController(IMediator Mediator, 
+            IWebHostEnvironment webHostEnvironment)
         {
             _Mediator = Mediator;
+            _WebHostEnvironment = webHostEnvironment;
         }
         [HttpPost(Name = "AddEvent")]
         public async Task<ActionResult<CreateEventCommandResponse>> Create([FromBody] CreateEventCommand CreateEventCommand)
@@ -113,7 +115,47 @@ namespace SharijhaAward.Api.Controllers
             var response = await _Mediator.Send(new GetEventWithInviteesQuery() { Id = id });
             return Ok(new { data = response });
         }
-    }
+        [HttpGet("DownloadQRCode")]
+        public IActionResult DownloadQRCode(string QRCodeName, string EventName)
+        {
+            string QRImagePath = _WebHostEnvironment.WebRootPath + "\\Images\\" + QRCodeName;
 
-    
+            if (!System.IO.File.Exists(QRImagePath)) return NotFound();
+
+            byte[] QRCodeBytes = System.IO.File.ReadAllBytes(QRImagePath);
+            using (MemoryStream pngStream = new MemoryStream(QRCodeBytes))
+            {
+                Document pdfDocument = new Document();
+
+                Page page = pdfDocument.Pages.Add();
+                page.SetPageSize(PageSize.A4.Width, PageSize.A4.Height);
+
+                Aspose.Pdf.Image image = new Aspose.Pdf.Image();
+                image.ImageStream = new MemoryStream(QRCodeBytes);
+
+                double centerX = page.Rect.Width / 2;
+                double centerY = page.Rect.Height / 2;
+
+                double xPosition = centerX - image.FixWidth / 2;
+                double yPosition = centerY - image.FixHeight / 2;
+
+                image.Margin = new MarginInfo 
+                { 
+                    Top = (centerX - image.FixWidth) / 2,
+                    Bottom = (centerX - image.FixWidth) / 2,
+                    Left = (centerX - image.FixHeight) / 2,
+                    Right = (centerX - image.FixHeight) / 2
+                };
+
+                page.Paragraphs.Add(image);
+
+                using (MemoryStream pdfStream = new MemoryStream())
+                {
+                    pdfDocument.Save(pdfStream);
+
+                    return File(pdfStream.ToArray(), "application/pdf", "output.pdf");
+                }
+            }
+        }
+    }
 }

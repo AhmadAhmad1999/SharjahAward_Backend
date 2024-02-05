@@ -8,6 +8,6 @@ namespace SharijhaAward.Application.Contract.Infrastructure
 {
     public interface IQRCodeGenerator
     {
-        public Task<string> GenerateQRCode(string? Data);
+        public Task<string> GenerateQRCode(string? Data, string WWWRootFolderPath);
     }
 }

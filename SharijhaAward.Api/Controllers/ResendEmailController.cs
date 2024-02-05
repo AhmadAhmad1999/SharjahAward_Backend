@@ -11,10 +11,12 @@ namespace SharijhaAward.Api.Controllers
     public class ResendEmailController : ControllerBase
     {
         private readonly IMediator _Mediator;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public ResendEmailController(IMediator mediator)
+        public ResendEmailController(IMediator mediator, IWebHostEnvironment WebHostEnvironment)
         {
             _Mediator = mediator;
+            _WebHostEnvironment = WebHostEnvironment;
         }
         [HttpGet("ResendEmail", Name = "ResendEmail")]
         public async Task<ActionResult<Guid>> ResendEmail( Guid InviteeId, string type)
@@ -24,10 +26,11 @@ namespace SharijhaAward.Api.Controllers
             {
                 InviteeId= InviteeId, 
                 Type = type,
-                lang = headerValue
+                lang = headerValue,
+                ImagePath = _WebHostEnvironment.WebRootPath
             });
+
             return Ok(new { data = response });
         }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePersonalInvitee;
@@ -14,10 +15,12 @@ namespace SharijhaAward.Api.Controllers
     public class PersonalInviteeController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public PersonalInviteeController(IMediator mediator)
+        public PersonalInviteeController(IMediator mediator, IWebHostEnvironment WebHostEnvironment)
         {
             _mediator = mediator;
+            _WebHostEnvironment = WebHostEnvironment;
         }
 
         [HttpPost(Name = "AddPersonalInvitee")]
@@ -27,6 +30,7 @@ namespace SharijhaAward.Api.Controllers
             if (!string.IsNullOrWhiteSpace(headerValue))
                 createPersonalInviteeCommand.lang = headerValue;
 
+            createPersonalInviteeCommand.ImagePath = _WebHostEnvironment.WebRootPath;
             var response = await _mediator.Send(createPersonalInviteeCommand);
             return Ok(response);
         }
