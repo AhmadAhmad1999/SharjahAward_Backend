@@ -26,6 +26,11 @@ using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
 using SharijhaAward.Application.Features.Identity.Role.Queries.GetAllRoles;
 using SharijhaAward.Application.Features.User.Queries.AsignRoleToUser;
 using SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvidedForm;
+using SharijhaAward.Domain.Entities.ProvidedFormModel;
+using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Application.Features.Categories.Command.CreateCategory;
+using SharijhaAward.Application.Features.Categories.Queries.GatCategoryById;
+using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -34,39 +39,44 @@ namespace SharijhaAward.Application.Profiles
     {
         public MappingProfile()
         {
-            CreateMap<Domain.Entities.EventModel.Event , CreateEventDto>().ReverseMap();
-            CreateMap<Domain.Entities.EventModel.Event , CreateEventCommand>().ReverseMap();
-            CreateMap<Domain.Entities.EventModel.Event , UpdateEventCommand>().ReverseMap();
-            CreateMap<Domain.Entities.EventModel.Event , EventListVM>().ReverseMap();
-            CreateMap<Domain.Entities.EventModel.Event , EventDto>().ReverseMap();
-            CreateMap<Domain.Entities.EventModel.Event , EventInviteesVM>().ReverseMap();
+            CreateMap<Domain.Entities.EventModel.Event, CreateEventDto>().ReverseMap();
+            CreateMap<Domain.Entities.EventModel.Event, CreateEventCommand>().ReverseMap();
+            CreateMap<Domain.Entities.EventModel.Event, UpdateEventCommand>().ReverseMap();
+            CreateMap<Domain.Entities.EventModel.Event, EventListVM>().ReverseMap();
+            CreateMap<Domain.Entities.EventModel.Event, EventDto>().ReverseMap();
+            CreateMap<Domain.Entities.EventModel.Event, EventInviteesVM>().ReverseMap();
 
-            CreateMap<PersonalInvitee , CreatePersonalInviteeCommand>().ReverseMap();
-            CreateMap<PersonalInvitee , UpdatePersonalInviteeCommand>().ReverseMap();
-            CreateMap<PersonalInvitee , DeletePersonalInviteeCommand>().ReverseMap();
-            CreateMap<PersonalInvitee , PersonalInviteeVM>().ReverseMap();
-            CreateMap<PersonalInvitee , PersonalInviteeListVM>().ReverseMap();
-            CreateMap<PersonalInvitee , EventInvitessDto>().ReverseMap();
-            CreateMap<PersonalInvitee , ConfirmAttendancePersonalQuery>().ReverseMap();
+            CreateMap<PersonalInvitee, CreatePersonalInviteeCommand>().ReverseMap();
+            CreateMap<PersonalInvitee, UpdatePersonalInviteeCommand>().ReverseMap();
+            CreateMap<PersonalInvitee, DeletePersonalInviteeCommand>().ReverseMap();
+            CreateMap<PersonalInvitee, PersonalInviteeVM>().ReverseMap();
+            CreateMap<PersonalInvitee, PersonalInviteeListVM>().ReverseMap();
+            CreateMap<PersonalInvitee, EventInvitessDto>().ReverseMap();
+            CreateMap<PersonalInvitee, ConfirmAttendancePersonalQuery>().ReverseMap();
 
-            CreateMap<GroupInvitee , CreateGroupInviteeCommand>().ReverseMap();
-            CreateMap<GroupInvitee , DeleteGroupInviteeCommand>().ReverseMap();
-            CreateMap<GroupInvitee , UpdateGroupInviteeCommand>().ReverseMap();    
-            CreateMap<GroupInvitee , GroupInviteeListVM>().ReverseMap();
-            CreateMap<GroupInvitee , GroupInviteeVM>().ReverseMap();
-            CreateMap<GroupInvitee , ConfirmAttendanceGroupQuery>();
+            CreateMap<GroupInvitee, CreateGroupInviteeCommand>().ReverseMap();
+            CreateMap<GroupInvitee, DeleteGroupInviteeCommand>().ReverseMap();
+            CreateMap<GroupInvitee, UpdateGroupInviteeCommand>().ReverseMap();    
+            CreateMap<GroupInvitee, GroupInviteeListVM>().ReverseMap();
+            CreateMap<GroupInvitee, GroupInviteeVM>().ReverseMap();
+            CreateMap<GroupInvitee, ConfirmAttendanceGroupQuery>();
 
-            CreateMap<User , LoginCommand>();
-            CreateMap<User , SignUpCommand>().ReverseMap();
-            CreateMap<User , UpdateEventCommand>();
-            CreateMap<User , DeleteUserCommand>();
-            CreateMap<User , UserDto>().ReverseMap();
-            CreateMap<User , UserListVm>().ReverseMap();
-            CreateMap<User , AsignRoleToUserQuery>();
+            CreateMap<User, LoginCommand>();
+            CreateMap<User, SignUpCommand>().ReverseMap();
+            CreateMap<User, UpdateEventCommand>();
+            CreateMap<User, DeleteUserCommand>();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserListVm>().ReverseMap();
+            CreateMap<User, AsignRoleToUserQuery>();
 
-            CreateMap<Role , RoleListVm>().ReverseMap();
+            CreateMap<Role, RoleListVm>().ReverseMap();
 
-            CreateMap<Domain.Entities.ProvidedFormModel.ProvidedForm , CreateProvidedFormCommand>();
+            CreateMap<ProvidedForm, CreateProvidedFormCommand>();
+
+            CreateMap<Category, CreateCategoryCommand>();
+            CreateMap<Category, UpdateEventCommand>();
+            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Category, CategoryListVM>().ReverseMap();
         }
     }
 }

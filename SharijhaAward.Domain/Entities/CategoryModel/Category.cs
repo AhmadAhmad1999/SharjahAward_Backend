@@ -32,14 +32,6 @@ public class Category : AuditInformation<User>{
     public string Icon { get; set; } = string.Empty;
     // classification of the category individual or group
     public CategoryClassification CategoryClassification { get; set; }
-    // the arabic version of the interpretive guide => file
-    public string? ArabicInterpretiveGuide {get; set;}
-    // the english version of the interpretive guide => file
-    public string? EnglishInterpretiveGuide { get; set; }
-    // the arabic version training workshop => file
-    public string? ArabicTrainingWorkshop { get; set; }
-    // the english version of the training workshop => file
-    public string? EnglishTrainingWorkshop { get; set; }
     // Subscriber portal closing date
     public DateTime? SubscriberPortalClosingDate { get; set; }
     // Initial Arbitration State Date
@@ -52,18 +44,10 @@ public class Category : AuditInformation<User>{
     public DateTime? FinalArbitrationEndDate { get; set; }
     // Final Arbitration Qualification Mark
     public int FinalArbitrationQualificationMark { get; set; }
-    // arabic version of Workshop background  => file
-    public string? ArabicWorkshopBackground { get; set; } 
-    // english version of Workshop background => file
-    public string? EnglishWorkshopBackground { get; set; }
     // Winning Score 
     public int WinningScore { get; set; }
     // status of the category (active, inactive)
     public Status Status { get; set; } = Status.InActive;
-    // Award participate minimum limit
-    public int AwardParticipateMinimumLimit { get; set; }
-    // Certificate obtain minimum limit
-    public int CertificateObtainMinimumLimit { get; set; }
     // flag indicates if the category related to educational classes
     public bool RelatedToClasses { get; set; }
     // expected number of winners 

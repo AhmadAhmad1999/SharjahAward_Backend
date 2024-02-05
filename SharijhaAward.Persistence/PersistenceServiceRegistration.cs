@@ -25,6 +25,7 @@ namespace SharijhaAward.Persistence
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGroupInviteeRepository, GroupInviteeRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<ICategoryRepository , CategoryRepository>();
 
             return services;
         }

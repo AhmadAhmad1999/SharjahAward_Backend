@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using SharijhaAward.Domain.Constants;
+using SharijhaAward.Domain.Entities.CategoryModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -39,6 +40,8 @@ namespace SharijhaAward.Persistence
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<ProvidedForm> ProvidedForms { get; set; }
         public DbSet<EducationType> EducationTypes { get; set; }
+        public DbSet<Category> Categories { get; set; }
+             
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

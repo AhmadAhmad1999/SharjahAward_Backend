@@ -1,5 +1,4 @@
 ﻿using SharijhaAward.Domain.Constants;
-using SharijhaAward.Domain.Constants.CoordinatorConstant;
 using SharijhaAward.Domain.Entities.Common;
 using SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
