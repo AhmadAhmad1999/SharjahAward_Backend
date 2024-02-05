@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Infrastructure;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using SharijhaAward.Domain.Constants.CommitteeConstants;
-using SharijhaAward.Domain.Model.CategoryCommitteeModel;
-using SharijhaAward.Domain.Model.CategoryModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.CategoryCommitteeModel;
+using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
-namespace SharijhaAward.Domain.Model.CommitteeModel; 
+namespace SharijhaAward.Domain.Entities.CommitteeModel; 
 
 public class Committee : AuditInformation<User> {
     public Guid Id { get; set; }

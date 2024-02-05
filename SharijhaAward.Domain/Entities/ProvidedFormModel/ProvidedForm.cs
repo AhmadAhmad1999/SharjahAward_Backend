@@ -1,12 +1,12 @@
 ﻿using SharijhaAward.Domain.Constants.ProvidedFromConstants;
-using SharijhaAward.Domain.Model.ArbitrationModel;
-using SharijhaAward.Domain.Model.CategoryModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.CoordinatorProvidedFormModel;
-using SharijhaAward.Domain.Model.CycleModel;
-using SharijhaAward.Domain.Model.FormConditionModel;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.SubscriberModel;
+using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel;
+using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.FormConditionModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.SubscriberModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.ProvidedFormModel
+namespace SharijhaAward.Domain.Entities.ProvidedFormModel
 {
     public class ProvidedForm : AuditInformation<User>
     {

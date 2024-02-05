@@ -1,9 +1,9 @@
 ﻿using SharijhaAward.Domain.Constants.Common;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.CycleModel;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
-namespace SharijhaAward.Domain.Model.NewsModel; 
+namespace SharijhaAward.Domain.Entities.NewsModel; 
 
 public class News : AuditInformation<User> {
     public Guid Id { get; set; }

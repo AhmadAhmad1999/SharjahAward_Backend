@@ -1,14 +1,14 @@
-﻿using SharijhaAward.Domain.Model.ArbitratorInterviewModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.SubscriberInterviewModel;
+﻿using SharijhaAward.Domain.Entities.ArbitratorInterviewModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.SubscriberInterviewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.InterviewModel
+namespace SharijhaAward.Domain.Entities.InterviewModel
 {
     public class Interview:AuditInformation<User>
     {

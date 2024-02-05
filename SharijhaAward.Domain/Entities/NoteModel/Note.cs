@@ -1,5 +1,5 @@
-﻿using SharijhaAward.Domain.Model.ArbitrationProcedureModel;
-using SharijhaAward.Domain.Model.IdentityModels;
+﻿using SharijhaAward.Domain.Entities.ArbitrationProcedureModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.NoteModel
+namespace SharijhaAward.Domain.Entities.NoteModel
 {
     public class Note
     {

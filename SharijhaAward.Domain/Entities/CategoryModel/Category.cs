@@ -3,20 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.InteropServices;
 using SharijhaAward.Domain.Constants.CategoryConstants;
 using SharijhaAward.Domain.Constants.Common;
-using SharijhaAward.Domain.Model.CategoryArbitratorModel;
-using SharijhaAward.Domain.Model.CategoryCommitteeModel;
-using SharijhaAward.Domain.Model.CommitteeModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.CriterionModel;
-using SharijhaAward.Domain.Model.CycleModel;
-using SharijhaAward.Domain.Model.FAQModel;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.MeetingModel;
-using SharijhaAward.Domain.Model.ProvidedFormModel;
-using SharijhaAward.Domain.Model.TermsAndConditionsModel;
-using SharijhaAward.Domain.Model.TrainingManualModel;
+using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
+using SharijhaAward.Domain.Entities.CategoryCommitteeModel;
+using SharijhaAward.Domain.Entities.CommitteeModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.CriterionModel;
+using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.FAQModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.MeetingModel;
+using SharijhaAward.Domain.Entities.ProvidedFormModel;
+using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
+using SharijhaAward.Domain.Entities.TrainingManualModel;
 
-namespace SharijhaAward.Domain.Model.CategoryModel; 
+namespace SharijhaAward.Domain.Entities.CategoryModel; 
 
 public class Category : AuditInformation<User>{
     public Guid Id { get; set; }

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.CriterionItemModel;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.ScaleModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.CriterionItemModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.ScaleModel;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace SharijhaAward.Domain.Model.CriterionItemScaleModel;
+namespace SharijhaAward.Domain.Entities.CriterionItemScaleModel;
 
 // the pivot table between the scale and criterion-item
 public class CriterionItemScale : AuditInformation<User> {

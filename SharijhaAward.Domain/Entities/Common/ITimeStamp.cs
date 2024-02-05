@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace SharijhaAward.Domain.Model.Common; 
+namespace SharijhaAward.Domain.Entities.Common; 
 
 public interface ITimeStamp {
    // created at timestamp

@@ -1,5 +1,5 @@
-﻿using SharijhaAward.Domain.Model.InterviewModel;
-using SharijhaAward.Domain.Model.SubscriberModel;
+﻿using SharijhaAward.Domain.Entities.InterviewModel;
+using SharijhaAward.Domain.Entities.SubscriberModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.SubscriberInterviewModel
+namespace SharijhaAward.Domain.Entities.SubscriberInterviewModel
 {
     public class SubscriberInterview
     {

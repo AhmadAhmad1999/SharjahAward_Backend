@@ -1,11 +1,11 @@
-﻿using SharijhaAward.Domain.Model.ProvidedFormModel;
+﻿using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.FormConditionModel
+namespace SharijhaAward.Domain.Entities.FormConditionModel
 {
     public class FormCondition
     {

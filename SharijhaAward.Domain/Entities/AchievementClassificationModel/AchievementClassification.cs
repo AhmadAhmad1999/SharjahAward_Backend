@@ -1,9 +1,9 @@
-﻿using SharijhaAward.Domain.Model.AchievementModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.SubscriberAchievementModel;
+﻿using SharijhaAward.Domain.Entities.AchievementModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.SubscriberAchievementModel;
 
-namespace SharijhaAward.Domain.Model.AchievementClassificationModel; 
+namespace SharijhaAward.Domain.Entities.AchievementClassificationModel; 
 
 public class AchievementClassification : AuditInformation<User> {
     public Guid Id { get; set; }

@@ -1,9 +1,8 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.Authentication.Login
 {
@@ -19,7 +18,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         }
         public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            User user = await _userRepository.GetByEmailAsync(request.Email);
+           var user = await _userRepository.GetByEmailAsync(request.Email);
             if (user == null)
             {
                 throw new OpenQA.Selenium.NotFoundException();

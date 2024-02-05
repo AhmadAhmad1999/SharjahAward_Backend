@@ -1,5 +1,5 @@
-﻿using SharijhaAward.Domain.Model.NotificationModel;
-using SharijhaAward.Domain.Model.SubscriberModel;
+﻿using SharijhaAward.Domain.Entities.NotificationModel;
+using SharijhaAward.Domain.Entities.SubscriberModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.SubscriberNotificationModel
+namespace SharijhaAward.Domain.Entities.SubscriberNotificationModel
 {
     public class SubscriberNotification
     {

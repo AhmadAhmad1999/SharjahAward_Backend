@@ -1,9 +1,9 @@
-﻿using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.SubscriberModel;
-using SharijhaAward.Domain.Model.TrainingWorkshopSubscriberModel;
+﻿using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.SubscriberModel;
+using SharijhaAward.Domain.Entities.TrainingWorkshopSubscriberModel;
 
-namespace SharijhaAward.Domain.Model.TrainingWorkshopModel; 
+namespace SharijhaAward.Domain.Entities.TrainingWorkshopModel; 
 
 public class TrainingWorkshop : AuditInformation<User> {
     public Guid Id { get; set; }

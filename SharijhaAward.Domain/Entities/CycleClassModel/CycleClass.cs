@@ -1,6 +1,6 @@
-﻿using SharijhaAward.Domain.Model.ArbitratorClassModel;
-using SharijhaAward.Domain.Model.CycleModel;
-using SharijhaAward.Domain.Model.EducationalClassModel;
+﻿using SharijhaAward.Domain.Entities.ArbitratorClassModel;
+using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.EducationalClassModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.CycleClassModel
+namespace SharijhaAward.Domain.Entities.CycleClassModel
 {
     public class CycleClass
     {

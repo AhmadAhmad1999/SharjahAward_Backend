@@ -1,6 +1,6 @@
 ﻿
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.NotificationModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.NotificationModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.UserNotificationModel
+namespace SharijhaAward.Domain.Entities.UserNotificationModel
 {
     public class UserNotification
     {

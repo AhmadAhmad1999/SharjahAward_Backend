@@ -1,15 +1,15 @@
 ﻿using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Constants.CoordinatorConstant;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.CoordinatorProvidedFormModel;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.CoordinatorModel
+namespace SharijhaAward.Domain.Entities.CoordinatorModel
 {
     public class Coordinator:AuditInformation<User>
     {

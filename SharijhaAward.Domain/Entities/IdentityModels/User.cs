@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using SharijhaAward.Domain.Constants;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.MeetingUserModel;
-using SharijhaAward.Domain.Model.NoteModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.MeetingUserModel;
+using SharijhaAward.Domain.Entities.NoteModel;
 using ErrorOr;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace SharijhaAward.Domain.Model.IdentityModels;
+namespace SharijhaAward.Domain.Entities.IdentityModels;
 
 
 public class User  {
@@ -18,10 +18,10 @@ public class User  {
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public Gender Gender { get; set; }
-    public Role? Role { get; set; } = new();
+    public Role? Role { get; set; }
 
     [ForeignKey(nameof(Role))]
-    public Guid? RoleId { get; set; } = new();
+    public Guid? RoleId { get; set; }
     public virtual List<MeetingUser> MeetingUsers { get; set; } = null!;
 
     public virtual List<Note> Notes { get; set; } = null!;

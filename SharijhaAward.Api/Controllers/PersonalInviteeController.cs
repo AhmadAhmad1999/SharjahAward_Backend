@@ -24,6 +24,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name = "AddPersonalInvitee")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<string>> AddPersonalInvitee([FromBody] CreatePersonalInviteeCommand createPersonalInviteeCommand)
         {
             var headerValue = HttpContext.Request.Headers["lang"];
@@ -36,8 +43,12 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPut(Name = "UpdatePersonalInvitee")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult> UpdatePersonalInvitee([FromBody] UpdatePersonalInviteeCommand updatePersonalInviteeCommand)
         {
@@ -47,6 +58,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpDelete(Name = "DeletePersonalInvitee")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> DeletePersonalInvitee(Guid id)
         {
             DeletePersonalInviteeCommand deletePersonalInviteeCommand = new DeletePersonalInviteeCommand()
@@ -58,6 +76,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetPersonalInviteeById")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<GetPersonalInviteeByIdQuery>> GetById(Guid id)
         {
             PersonalInviteeVM? Personal = await _mediator
@@ -71,6 +96,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllPersonalInvitee")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> GetAllPersonalInvitee(int page , int perPage)
         {
             var dto = await _mediator.Send(new GetAllPersonalInviteeQuery());
@@ -108,6 +140,13 @@ namespace SharijhaAward.Api.Controllers
                 });
         }
         [HttpPost("ConfirmAttendancePersonal", Name = "ConfirmAttendancePersonal")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> ConfirmAttendancePersonal([FromBody] ConfirmAttendancePersonalQuery personalQuery)
         {
             var respone = await _mediator.Send(new ConfirmAttendancePersonalQuery()

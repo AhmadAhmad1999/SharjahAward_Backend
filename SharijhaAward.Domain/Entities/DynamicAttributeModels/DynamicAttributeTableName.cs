@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.DynamicAttributeModels
+namespace SharijhaAward.Domain.Entities.DynamicAttributeModels
 {
     public class DynamicAttributeTableName
     {

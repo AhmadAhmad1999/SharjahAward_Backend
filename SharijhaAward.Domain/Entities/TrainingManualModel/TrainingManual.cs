@@ -1,8 +1,8 @@
-﻿using SharijhaAward.Domain.Model.CategoryModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
+﻿using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
-namespace SharijhaAward.Domain.Model.TrainingManualModel; 
+namespace SharijhaAward.Domain.Entities.TrainingManualModel; 
 
 public class TrainingManual : AuditInformation<User> {
     public Guid Id { get; set; }

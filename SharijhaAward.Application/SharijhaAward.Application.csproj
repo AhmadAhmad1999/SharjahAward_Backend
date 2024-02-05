@@ -35,7 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\NewFolder\" />
+    <Folder Include="Features\Identity\Role\Command\" />
+    <Folder Include="Features\Subscriber\Queries\" />
   </ItemGroup>
 
 </Project>

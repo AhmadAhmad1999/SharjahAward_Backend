@@ -1,5 +1,5 @@
-﻿using SharijhaAward.Domain.Model.ArbitratorModel;
-using SharijhaAward.Domain.Model.ProvidedFormModel;
+﻿using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.ArbitrationModel
+namespace SharijhaAward.Domain.Entities.ArbitrationModel
 {
     public class Arbitration
     {

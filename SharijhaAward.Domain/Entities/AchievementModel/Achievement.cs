@@ -1,9 +1,9 @@
 ﻿using SharijhaAward.Domain.Constants.AchievementConstant;
-using SharijhaAward.Domain.Model.AchievementClassificationModel;
-using SharijhaAward.Domain.Model.SubscriberModel;
+using SharijhaAward.Domain.Entities.AchievementClassificationModel;
+using SharijhaAward.Domain.Entities.SubscriberModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SharijhaAward.Domain.Model.AchievementModel
+namespace SharijhaAward.Domain.Entities.AchievementModel
 {
     public class Achievement
     {

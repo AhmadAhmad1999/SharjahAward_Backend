@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.CycleModel;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace SharijhaAward.Domain.Model.CycleConditionModel; 
+namespace SharijhaAward.Domain.Entities.CycleConditionModel; 
 
 public class CycleCondition : AuditInformation<User>{
     public Guid Id { get; set; }

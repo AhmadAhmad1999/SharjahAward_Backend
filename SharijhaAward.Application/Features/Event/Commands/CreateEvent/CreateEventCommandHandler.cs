@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharijhaAward.Domain.Entities.EventModel;
 using AutoMapper;
-using SharijhaAward.Domain.Model.CategoryModel;
+using SharijhaAward.Domain.Entities.CategoryModel;
 
 namespace SharijhaAward.Application.Features.Event.Commands.CreateEvent
 {

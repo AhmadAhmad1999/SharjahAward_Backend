@@ -1,10 +1,10 @@
-﻿using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.CriterionItemScaleModel;
-using SharijhaAward.Domain.Model.CriterionModel;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.ScaleModel;
+﻿using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.CriterionItemScaleModel;
+using SharijhaAward.Domain.Entities.CriterionModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.ScaleModel;
 
-namespace SharijhaAward.Domain.Model.CriterionItemModel; 
+namespace SharijhaAward.Domain.Entities.CriterionItemModel; 
 
 public class CriterionItem : AuditInformation<User> {
    public Guid Id { get; set; }

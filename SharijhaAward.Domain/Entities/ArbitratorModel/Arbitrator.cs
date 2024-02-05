@@ -1,16 +1,16 @@
-﻿using SharijhaAward.Domain.Model.ArbitrationModel;
-using SharijhaAward.Domain.Model.ArbitratorClassModel;
-using SharijhaAward.Domain.Model.ArbitratorInterviewModel;
-using SharijhaAward.Domain.Model.CategoryArbitratorModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
+﻿using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.ArbitratorClassModel;
+using SharijhaAward.Domain.Entities.ArbitratorInterviewModel;
+using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Model.ArbitratorModel
+namespace SharijhaAward.Domain.Entities.ArbitratorModel
 {
     public class Arbitrator:AuditInformation<User>
     {

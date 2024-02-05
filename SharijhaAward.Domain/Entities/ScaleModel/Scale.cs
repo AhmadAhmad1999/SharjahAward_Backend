@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.CriterionItemModel;
-using SharijhaAward.Domain.Model.CriterionItemScaleModel;
-using SharijhaAward.Domain.Model.CriterionModel;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.CriterionItemModel;
+using SharijhaAward.Domain.Entities.CriterionItemScaleModel;
+using SharijhaAward.Domain.Entities.CriterionModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
-namespace SharijhaAward.Domain.Model.ScaleModel; 
+namespace SharijhaAward.Domain.Entities.ScaleModel; 
 
 public class Scale : AuditInformation<User> {
     public Guid Id { get; set; }

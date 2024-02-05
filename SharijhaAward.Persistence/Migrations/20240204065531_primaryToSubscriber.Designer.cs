@@ -201,7 +201,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Personalnvitees");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.AchievementClassificationModel.AchievementClassification", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -239,7 +239,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("AchievementClassification");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.AchievementModel.Achievement", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementModel.Achievement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -280,7 +280,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Achievement");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.AgendaModel.Agenda", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AgendaModel.Agenda", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -345,7 +345,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Agenda");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitrationModel.Arbitration", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitrationModel.Arbitration", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -368,7 +368,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Arbitration");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitrationProcedureModel.ArbitrationProcedure", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitrationProcedureModel.ArbitrationProcedure", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -415,7 +415,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("ArbitrationProcedure");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitratorClassModel.ArbitratorClass", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitratorClassModel.ArbitratorClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -438,7 +438,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("ArbitratorClass");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitratorInterviewModel.ArbitratorInterview", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitratorInterviewModel.ArbitratorInterview", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -461,7 +461,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("ArbitratorInterview");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitratorModel.Arbitrator", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -507,7 +507,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Arbitrator");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CategoryArbitratorModel.CategoryArbitrator", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CategoryArbitratorModel.CategoryArbitrator", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -530,7 +530,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("CategoryArbitrator");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CategoryCommitteeModel.CategoryCommittee", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CategoryCommitteeModel.CategoryCommittee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -575,7 +575,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("categoryCommittees");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CategoryModel.Category", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CategoryModel.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -692,7 +692,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CommitteeModel.Committee", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CommitteeModel.Committee", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -738,7 +738,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Committee");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CoordinatorModel.Coordinator", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CoordinatorModel.Coordinator", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -798,7 +798,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Coordinator");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CoordinatorProvidedFormModel.CoordinatorProvidedForm", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel.CoordinatorProvidedForm", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -821,7 +821,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("CoordinatorProvidedForm");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CriterionItemModel.CriterionItem", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -870,7 +870,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("CriterionItem");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CriterionItemScaleModel.CriterionItemScale", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemScaleModel.CriterionItemScale", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -918,7 +918,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("criterionItemScales");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CriterionModel.Criterion", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionModel.Criterion", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -974,7 +974,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Criterion");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CycleClassModel.CycleClass", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CycleClassModel.CycleClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -997,7 +997,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("CycleClass");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CycleConditionModel.CycleCondition", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CycleConditionModel.CycleCondition", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1040,7 +1040,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("CycleCondition");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CycleModel.Cycle", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CycleModel.Cycle", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1093,7 +1093,7 @@ namespace SharijhaAward.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.EducationalClassModel.EducationalClass", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationalClassModel.EducationalClass", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1131,7 +1131,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("EducationalClass");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.FAQModel.FrequentlyAskedQuestion", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.FAQModel.FrequentlyAskedQuestion", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1182,7 +1182,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("FrequentlyAskedQuestion");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.FormConditionModel.FormCondition", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.FormConditionModel.FormCondition", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1214,7 +1214,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("FormCondition");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.IdentityModels.Permission", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.Permission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1331,7 +1331,7 @@ namespace SharijhaAward.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.IdentityModels.Role", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.Role", b =>
                 {
                     b.Property<Guid>("RoleId")
                         .ValueGeneratedOnAdd()
@@ -1373,7 +1373,7 @@ namespace SharijhaAward.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.IdentityModels.User", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1410,7 +1410,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.UseTptMappingStrategy();
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.InterviewModel.Interview", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.InterviewModel.Interview", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1446,7 +1446,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Interview");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.MeetingModel.Meeting", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingModel.Meeting", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1495,7 +1495,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Meeting");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.MeetingSubscriberModel.MeetingSubscriber", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingSubscriberModel.MeetingSubscriber", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1518,7 +1518,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("MeetingSubscriber");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.MeetingUserModel.MeetingUser", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingUserModel.MeetingUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1541,7 +1541,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("MeetingUser");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.NewsModel.News", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.NewsModel.News", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1599,7 +1599,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("News");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.NoteModel.Note", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.NoteModel.Note", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1630,7 +1630,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Note");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ProvidedFormModel.ProvidedForm", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1700,7 +1700,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("ProvidedForm");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.RelatedAccountModel.RelatedAccount", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.RelatedAccountModel.RelatedAccount", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1739,7 +1739,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("RelatedAccount");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ScaleModel.Scale", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ScaleModel.Scale", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1788,7 +1788,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Scale");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.SubscriberAchievementModel.SubscriberAchievement", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.SubscriberAchievementModel.SubscriberAchievement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1846,7 +1846,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("SubscriberAchievement");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.SubscriberInterviewModel.SubscriberInterview", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.SubscriberInterviewModel.SubscriberInterview", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1869,7 +1869,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("SubscriberInterview");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.TermsAndConditionsModel.TermsAndConditions", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.TermsAndConditionsModel.TermsAndConditions", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1926,7 +1926,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("TermsAndConditions");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.TrainingManualModel.TrainingManual", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingManualModel.TrainingManual", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1977,7 +1977,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("TrainingManual");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.TrainingWorkshopModel.TrainingWorkshop", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2027,7 +2027,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("TrainingWorkshop");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.TrainingWorkshopSubscriberModel.TrainingWorkshopSubscriber", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingWorkshopSubscriberModel.TrainingWorkshopSubscriber", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2084,9 +2084,9 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("SubscriberTrainingWorkshop");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", b =>
                 {
-                    b.HasBaseType("SharijhaAward.Domain.Model.IdentityModels.User");
+                    b.HasBaseType("SharijhaAward.Domain.Entities.IdentityModels.User");
 
                     b.Property<string>("IdentityNumber")
                         .IsRequired()
@@ -2103,13 +2103,13 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("CategoryCommittee", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.CategoryModel.Category", null)
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CommitteeModel.Committee", null)
+                    b.HasOne("SharijhaAward.Domain.Entities.CommitteeModel.Committee", null)
                         .WithMany()
                         .HasForeignKey("CommitteesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2118,13 +2118,13 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("CriterionItemScale", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.CriterionItemModel.CriterionItem", null)
+                    b.HasOne("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", null)
                         .WithMany()
                         .HasForeignKey("CriterionItemsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.ScaleModel.Scale", null)
+                    b.HasOne("SharijhaAward.Domain.Entities.ScaleModel.Scale", null)
                         .WithMany()
                         .HasForeignKey("ScalesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2153,15 +2153,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.AchievementClassificationModel.AchievementClassification", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2172,15 +2172,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.AchievementModel.Achievement", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementModel.Achievement", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.AchievementClassificationModel.AchievementClassification", "Classification")
+                    b.HasOne("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", "Classification")
                         .WithMany("Achievements")
                         .HasForeignKey("classificationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", "Subscriber")
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber")
                         .WithMany("Achievements")
                         .HasForeignKey("subscriberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2191,21 +2191,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Subscriber");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.AgendaModel.Agenda", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AgendaModel.Agenda", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CycleModel.Cycle", "Cycle")
+                    b.HasOne("SharijhaAward.Domain.Entities.CycleModel.Cycle", "Cycle")
                         .WithMany("Agendas")
                         .HasForeignKey("CycleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2218,15 +2218,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitrationModel.Arbitration", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitrationModel.Arbitration", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.ArbitratorModel.Arbitrator", "Arbitrator")
+                    b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany("Arbitration")
                         .HasForeignKey("ArbitratorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.ProvidedFormModel.ProvidedForm", "ProvidedForm")
+                    b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany("Arbitrations")
                         .HasForeignKey("ProvidedFormId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2237,15 +2237,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("ProvidedForm");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitrationProcedureModel.ArbitrationProcedure", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitrationProcedureModel.ArbitrationProcedure", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2256,15 +2256,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitratorClassModel.ArbitratorClass", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitratorClassModel.ArbitratorClass", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.ArbitratorModel.Arbitrator", "Arbitrator")
+                    b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany("ArbitratorClasses")
                         .HasForeignKey("ArbitratorClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CycleClassModel.CycleClass", "CycleClass")
+                    b.HasOne("SharijhaAward.Domain.Entities.CycleClassModel.CycleClass", "CycleClass")
                         .WithMany("ArbitratorClasses")
                         .HasForeignKey("CycleClassId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2275,15 +2275,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("CycleClass");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitratorInterviewModel.ArbitratorInterview", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitratorInterviewModel.ArbitratorInterview", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.ArbitratorModel.Arbitrator", "Arbitrator")
+                    b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany("ArbitratorInterviews")
                         .HasForeignKey("ArbitratorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.InterviewModel.Interview", "Interview")
+                    b.HasOne("SharijhaAward.Domain.Entities.InterviewModel.Interview", "Interview")
                         .WithMany("ArbitratorInterviews")
                         .HasForeignKey("InterviewId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2294,15 +2294,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Interview");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitratorModel.Arbitrator", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2313,15 +2313,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CategoryArbitratorModel.CategoryArbitrator", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CategoryArbitratorModel.CategoryArbitrator", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.ArbitratorModel.Arbitrator", "Arbitrator")
+                    b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany("CategoryArbitrators")
                         .HasForeignKey("ArbitratorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CategoryModel.Category", "Category")
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany("CategoryArbitrators")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2332,25 +2332,25 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CategoryCommitteeModel.CategoryCommittee", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CategoryCommitteeModel.CategoryCommittee", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.CategoryModel.Category", null)
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", null)
                         .WithMany("CategoryCommittees")
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("SharijhaAward.Domain.Model.CommitteeModel.Committee", "Committee")
+                    b.HasOne("SharijhaAward.Domain.Entities.CommitteeModel.Committee", "Committee")
                         .WithMany("CategoryCommittees")
                         .HasForeignKey("CommitteesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2363,25 +2363,25 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CategoryModel.Category", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CategoryModel.Category", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CycleModel.Cycle", "Cycle")
+                    b.HasOne("SharijhaAward.Domain.Entities.CycleModel.Cycle", "Cycle")
                         .WithMany("Categories")
                         .HasForeignKey("CycleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CategoryModel.Category", "Parent")
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Parent")
                         .WithMany()
                         .HasForeignKey("ParentId");
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2396,21 +2396,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CommitteeModel.Committee", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CommitteeModel.Committee", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "Chairman")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "Chairman")
                         .WithMany()
                         .HasForeignKey("ChairmanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2423,15 +2423,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CoordinatorModel.Coordinator", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CoordinatorModel.Coordinator", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2442,15 +2442,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CoordinatorProvidedFormModel.CoordinatorProvidedForm", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel.CoordinatorProvidedForm", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.CoordinatorModel.Coordinator", "Coordinator")
+                    b.HasOne("SharijhaAward.Domain.Entities.CoordinatorModel.Coordinator", "Coordinator")
                         .WithMany("CoordinatorProvidedForms")
                         .HasForeignKey("CoordinatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.ProvidedFormModel.ProvidedForm", "ProvidedForm")
+                    b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany("CoordinatorProvidedForms")
                         .HasForeignKey("ProvidedFormId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2461,21 +2461,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("ProvidedForm");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CriterionItemModel.CriterionItem", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CriterionModel.Criterion", "Criterion")
+                    b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
                         .WithMany()
                         .HasForeignKey("CriterionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2488,27 +2488,27 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CriterionItemScaleModel.CriterionItemScale", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemScaleModel.CriterionItemScale", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CriterionItemModel.CriterionItem", "CriterionItem")
+                    b.HasOne("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", "CriterionItem")
                         .WithMany("CriterionItemScales")
                         .HasForeignKey("CriterionItemsId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.ScaleModel.Scale", "Scale")
+                    b.HasOne("SharijhaAward.Domain.Entities.ScaleModel.Scale", "Scale")
                         .WithMany("CriterionItemScales")
                         .HasForeignKey("ScalesId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2523,33 +2523,33 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CriterionModel.Criterion", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionModel.Criterion", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.ArbitrationProcedureModel.ArbitrationProcedure", "ArbitrationProcedure")
+                    b.HasOne("SharijhaAward.Domain.Entities.ArbitrationProcedureModel.ArbitrationProcedure", "ArbitrationProcedure")
                         .WithMany("Criteria")
                         .HasForeignKey("ArbitrationProcedureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CategoryModel.Category", "Category")
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany("Criterions")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CriterionModel.Criterion", "Parent")
+                    b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Parent")
                         .WithMany()
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2566,15 +2566,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CycleClassModel.CycleClass", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CycleClassModel.CycleClass", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.CycleModel.Cycle", "Cycle")
+                    b.HasOne("SharijhaAward.Domain.Entities.CycleModel.Cycle", "Cycle")
                         .WithMany()
                         .HasForeignKey("CycleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.EducationalClassModel.EducationalClass", "EducationalClass")
+                    b.HasOne("SharijhaAward.Domain.Entities.EducationalClassModel.EducationalClass", "EducationalClass")
                         .WithMany()
                         .HasForeignKey("EducationalClassId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2585,21 +2585,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("EducationalClass");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CycleConditionModel.CycleCondition", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CycleConditionModel.CycleCondition", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CycleModel.Cycle", "Cycle")
+                    b.HasOne("SharijhaAward.Domain.Entities.CycleModel.Cycle", "Cycle")
                         .WithMany("CycleConditions")
                         .HasForeignKey("CycleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2612,15 +2612,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.EducationalClassModel.EducationalClass", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationalClassModel.EducationalClass", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2631,21 +2631,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.FAQModel.FrequentlyAskedQuestion", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.FAQModel.FrequentlyAskedQuestion", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.CategoryModel.Category", "Category")
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany("FrequentlyAskedQuestions")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2658,9 +2658,9 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.FormConditionModel.FormCondition", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.FormConditionModel.FormCondition", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.ProvidedFormModel.ProvidedForm", "ProvidedForm")
+                    b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany("FormConditions")
                         .HasForeignKey("ProvidedFormId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2669,7 +2669,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("ProvidedForm");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.IdentityModels.Permission", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.Permission", b =>
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.RolePermission", "Role")
                         .WithMany("Permission")
@@ -2678,7 +2678,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.IdentityModels.Role", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.Role", b =>
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.RolePermission", "Permission")
                         .WithMany("Roles")
@@ -2687,24 +2687,24 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Permission");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.IdentityModels.User", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.User", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.Role", "Role")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.InterviewModel.Interview", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.InterviewModel.Interview", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2715,21 +2715,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.MeetingModel.Meeting", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingModel.Meeting", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CategoryModel.Category", "Category")
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany("Meetings")
                         .HasForeignKey("categoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2742,15 +2742,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.MeetingSubscriberModel.MeetingSubscriber", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingSubscriberModel.MeetingSubscriber", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.MeetingModel.Meeting", "Meeting")
+                    b.HasOne("SharijhaAward.Domain.Entities.MeetingModel.Meeting", "Meeting")
                         .WithMany("MeetingSubscribers")
                         .HasForeignKey("meetingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", "Subscriber")
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber")
                         .WithMany("MeetingSubscribers")
                         .HasForeignKey("subscriberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2761,15 +2761,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Subscriber");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.MeetingUserModel.MeetingUser", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingUserModel.MeetingUser", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.MeetingModel.Meeting", "Meeting")
+                    b.HasOne("SharijhaAward.Domain.Entities.MeetingModel.Meeting", "Meeting")
                         .WithMany("MeetingUsers")
                         .HasForeignKey("MeetingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "User")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany("MeetingUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2780,21 +2780,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.NewsModel.News", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.NewsModel.News", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CycleModel.Cycle", "Cycle")
+                    b.HasOne("SharijhaAward.Domain.Entities.CycleModel.Cycle", "Cycle")
                         .WithMany("News")
                         .HasForeignKey("CycleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2807,15 +2807,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.NoteModel.Note", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.NoteModel.Note", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.ArbitrationProcedureModel.ArbitrationProcedure", "ArbitrationProcedure")
+                    b.HasOne("SharijhaAward.Domain.Entities.ArbitrationProcedureModel.ArbitrationProcedure", "ArbitrationProcedure")
                         .WithMany("Notes")
                         .HasForeignKey("ArbitrationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "User")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany("Notes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2826,27 +2826,27 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ProvidedFormModel.ProvidedForm", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CategoryModel.Category", "Category")
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany("ProvidedForms")
                         .HasForeignKey("categoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", "Subscriber")
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber")
                         .WithMany("ProvidedForms")
                         .HasForeignKey("subscriberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2861,21 +2861,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.RelatedAccountModel.RelatedAccount", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.RelatedAccountModel.RelatedAccount", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", "Subscriber")
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber")
                         .WithMany("RelatedAccounts")
                         .HasForeignKey("SubscriberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2888,21 +2888,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ScaleModel.Scale", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ScaleModel.Scale", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.CriterionModel.Criterion", "Criterion")
+                    b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
                         .WithMany("Scales")
                         .HasForeignKey("CriterionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2915,27 +2915,27 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.SubscriberAchievementModel.SubscriberAchievement", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.SubscriberAchievementModel.SubscriberAchievement", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.AchievementClassificationModel.AchievementClassification", "AchievementClassification")
+                    b.HasOne("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", "AchievementClassification")
                         .WithMany("SubscriberAchievements")
                         .HasForeignKey("AchievementClassificationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", "Subscriber")
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber")
                         .WithMany("SubscriberAchievements")
                         .HasForeignKey("SubscriberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2950,15 +2950,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.SubscriberInterviewModel.SubscriberInterview", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.SubscriberInterviewModel.SubscriberInterview", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.InterviewModel.Interview", "Interview")
+                    b.HasOne("SharijhaAward.Domain.Entities.InterviewModel.Interview", "Interview")
                         .WithMany("SubscriberInterviews")
                         .HasForeignKey("InterviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", "Subscriber")
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber")
                         .WithMany("SubscriberInterviews")
                         .HasForeignKey("SubscriberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2969,21 +2969,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Subscriber");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.TermsAndConditionsModel.TermsAndConditions", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.TermsAndConditionsModel.TermsAndConditions", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.CategoryModel.Category", "Category")
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany("TermsAndConditions")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2996,21 +2996,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.TrainingManualModel.TrainingManual", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingManualModel.TrainingManual", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.CategoryModel.Category", "Category")
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany("TrainingManuals")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -3023,15 +3023,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.TrainingWorkshopModel.TrainingWorkshop", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -3042,27 +3042,27 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.TrainingWorkshopSubscriberModel.TrainingWorkshopSubscriber", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingWorkshopSubscriberModel.TrainingWorkshopSubscriber", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", "Subscriber")
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber")
                         .WithMany("TrainingWorkshopSubscribers")
                         .HasForeignKey("SubscribersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.TrainingWorkshopModel.TrainingWorkshop", "TrainingWorkshop")
+                    b.HasOne("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", "TrainingWorkshop")
                         .WithMany("TrainingWorkshopSubscribers")
                         .HasForeignKey("TrainingWorkshopsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -3079,24 +3079,24 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SubscriberTrainingWorkshop", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", null)
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", null)
                         .WithMany()
                         .HasForeignKey("SubscribersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Model.TrainingWorkshopModel.TrainingWorkshop", null)
+                    b.HasOne("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", null)
                         .WithMany()
                         .HasForeignKey("TrainingWorkshopsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Model.IdentityModels.User", null)
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", null)
                         .WithOne()
-                        .HasForeignKey("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", "Id")
+                        .HasForeignKey("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -3115,21 +3115,21 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Roles");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.AchievementClassificationModel.AchievementClassification", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", b =>
                 {
                     b.Navigation("Achievements");
 
                     b.Navigation("SubscriberAchievements");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitrationProcedureModel.ArbitrationProcedure", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitrationProcedureModel.ArbitrationProcedure", b =>
                 {
                     b.Navigation("Criteria");
 
                     b.Navigation("Notes");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ArbitratorModel.Arbitrator", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", b =>
                 {
                     b.Navigation("Arbitration");
 
@@ -3140,7 +3140,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("CategoryArbitrators");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CategoryModel.Category", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CategoryModel.Category", b =>
                 {
                     b.Navigation("CategoryArbitrators");
 
@@ -3159,32 +3159,32 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("TrainingManuals");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CommitteeModel.Committee", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CommitteeModel.Committee", b =>
                 {
                     b.Navigation("CategoryCommittees");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CoordinatorModel.Coordinator", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CoordinatorModel.Coordinator", b =>
                 {
                     b.Navigation("CoordinatorProvidedForms");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CriterionItemModel.CriterionItem", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", b =>
                 {
                     b.Navigation("CriterionItemScales");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CriterionModel.Criterion", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionModel.Criterion", b =>
                 {
                     b.Navigation("Scales");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CycleClassModel.CycleClass", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CycleClassModel.CycleClass", b =>
                 {
                     b.Navigation("ArbitratorClasses");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.CycleModel.Cycle", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CycleModel.Cycle", b =>
                 {
                     b.Navigation("Agendas");
 
@@ -3195,33 +3195,33 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("News");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.IdentityModels.Role", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.Role", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.IdentityModels.User", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.User", b =>
                 {
                     b.Navigation("MeetingUsers");
 
                     b.Navigation("Notes");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.InterviewModel.Interview", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.InterviewModel.Interview", b =>
                 {
                     b.Navigation("ArbitratorInterviews");
 
                     b.Navigation("SubscriberInterviews");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.MeetingModel.Meeting", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingModel.Meeting", b =>
                 {
                     b.Navigation("MeetingSubscribers");
 
                     b.Navigation("MeetingUsers");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ProvidedFormModel.ProvidedForm", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", b =>
                 {
                     b.Navigation("Arbitrations");
 
@@ -3230,17 +3230,17 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("FormConditions");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.ScaleModel.Scale", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ScaleModel.Scale", b =>
                 {
                     b.Navigation("CriterionItemScales");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.TrainingWorkshopModel.TrainingWorkshop", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", b =>
                 {
                     b.Navigation("TrainingWorkshopSubscribers");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Model.SubscriberModel.Subscriber", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", b =>
                 {
                     b.Navigation("Achievements");
 

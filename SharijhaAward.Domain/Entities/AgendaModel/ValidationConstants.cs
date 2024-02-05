@@ -1,4 +1,4 @@
-﻿namespace SharijhaAward.Domain.Model.AgendaModel; 
+﻿namespace SharijhaAward.Domain.Entities.AgendaModel; 
 
 public class ValidationConstants {
     //----------------- Arabic Title --------------------//

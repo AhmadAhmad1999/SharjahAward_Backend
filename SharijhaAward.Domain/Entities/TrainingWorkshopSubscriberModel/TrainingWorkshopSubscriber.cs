@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.SubscriberModel;
-using SharijhaAward.Domain.Model.TrainingWorkshopModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.SubscriberModel;
+using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 
-namespace SharijhaAward.Domain.Model.TrainingWorkshopSubscriberModel; 
+namespace SharijhaAward.Domain.Entities.TrainingWorkshopSubscriberModel; 
 
 public class TrainingWorkshopSubscriber : AuditInformation<User> {
     [Key]

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Domain.Model.IdentityModels;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
         public async Task<string> Handle(SignUpCommand request, CancellationToken cancellationToken)
         {
-            User user = _mapper.Map<User>(request);
+            var user = _mapper.Map<Domain.Entities.IdentityModels.User>(request);
 
             await _userRepository.AddAsync(user);
 

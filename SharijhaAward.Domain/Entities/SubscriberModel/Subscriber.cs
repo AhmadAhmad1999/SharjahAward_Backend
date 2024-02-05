@@ -1,17 +1,17 @@
 ﻿using SharijhaAward.Domain.Constants.Common;
-using SharijhaAward.Domain.Model.AchievementModel;
-using SharijhaAward.Domain.Model.Common;
-using SharijhaAward.Domain.Model.IdentityModels;
-using SharijhaAward.Domain.Model.MeetingSubscriberModel;
-using SharijhaAward.Domain.Model.ProvidedFormModel;
-using SharijhaAward.Domain.Model.RelatedAccountModel;
-using SharijhaAward.Domain.Model.SubscriberAchievementModel;
-using SharijhaAward.Domain.Model.SubscriberInterviewModel;
-using SharijhaAward.Domain.Model.TrainingWorkshopModel;
-using SharijhaAward.Domain.Model.TrainingWorkshopSubscriberModel;
+using SharijhaAward.Domain.Entities.AchievementModel;
+using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.MeetingSubscriberModel;
+using SharijhaAward.Domain.Entities.ProvidedFormModel;
+using SharijhaAward.Domain.Entities.RelatedAccountModel;
+using SharijhaAward.Domain.Entities.SubscriberAchievementModel;
+using SharijhaAward.Domain.Entities.SubscriberInterviewModel;
+using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
+using SharijhaAward.Domain.Entities.TrainingWorkshopSubscriberModel;
 using Microsoft.EntityFrameworkCore;
 
-namespace SharijhaAward.Domain.Model.SubscriberModel; 
+namespace SharijhaAward.Domain.Entities.SubscriberModel; 
 
 
 public class Subscriber : User
