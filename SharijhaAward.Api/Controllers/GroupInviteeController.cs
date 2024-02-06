@@ -1,6 +1,10 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.DeleteGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.UpdateGroupInvitee;
@@ -33,22 +37,44 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<Guid>> AddGroupInvitee([FromBody] CreateGroupInviteeCommand createGroupInviteeCommand)
+        public async Task<ActionResult<Guid>> AddGroupInvitee([FromBody] CreateGroupInviteeCommand CreateGroupInviteeCommand)
         {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (!string.IsNullOrWhiteSpace(headerValue))
-                createGroupInviteeCommand.lang = headerValue;
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            if (!string.IsNullOrWhiteSpace(HeaderValue))
+                CreateGroupInviteeCommand.lang = HeaderValue;
 
-            createGroupInviteeCommand.ImagePath = _WebHostEnvironment.WebRootPath;
-
+            CreateGroupInviteeCommand.ImagePath = _WebHostEnvironment.WebRootPath;
             try
             {
-                var response = await _mediator.Send(createGroupInviteeCommand);
-                return Ok(new { data = response });
+                Unit Response = await _mediator.Send(CreateGroupInviteeCommand);
+                return Ok(new { data = Response });
             }
-            catch (Exception Err)
+            catch (ValidationException Exc)
             {
-                return BadRequest(Err.Message);
+                return BadRequest(Exc.Message);
+            }
+            catch (DbUpdateException Exc) when (Exc.InnerException is SqlException SqlEx)
+            {
+                foreach (SqlError error in SqlEx.Errors)
+                {
+                    if (error.Number == 2601 || error.Number == 2627)
+                    {
+                        if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (HeaderValue.ToString() == "ar")
+                                return BadRequest("هذا البريد الإلكتروني مستخدم بالفعل.");
+
+                            else
+                                return BadRequest("This email is already in use.");
+                        }
+                    }
+                }
+
+                return BadRequest(Exc.Message);
+            }
+            catch (DbUpdateException Exc)
+            {
+                return BadRequest(Exc.Message);
             }
         }
 

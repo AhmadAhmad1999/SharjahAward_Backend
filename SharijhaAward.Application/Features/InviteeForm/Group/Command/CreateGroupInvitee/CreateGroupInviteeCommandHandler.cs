@@ -14,6 +14,7 @@ using SharijhaAward.Application.Models;
 using System.Net.Mail;
 using Microsoft.AspNetCore.Http;
 using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee
 {
@@ -49,15 +50,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
             if (ValidationResult.Errors.Count > 0)
                 throw new ValidationException(ValidationResult.Errors);
 
-            GroupInvitee NewGroupInvitee = _mapper.Map<GroupInvitee>(Request);
-
+            GroupInvitee? NewGroupInvitee = _mapper.Map<GroupInvitee>(Request);
             try
             {
                 NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
             }
-            catch (Exception Err)
+            catch (DbUpdateException)
             {
-                throw new Exception(Err.Message);
+                throw;
             }
 
             if (!string.IsNullOrEmpty(Request.lang)

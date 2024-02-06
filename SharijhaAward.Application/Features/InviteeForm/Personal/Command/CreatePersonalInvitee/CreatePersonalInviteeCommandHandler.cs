@@ -20,6 +20,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee
 {
@@ -62,9 +63,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
             {
                 NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
             }
-            catch (Exception Err)
+            catch (DbUpdateException)
             {
-                throw new Exception(Err.Message);
+                throw;
             }
 
             if (!string.IsNullOrEmpty(Request.lang)

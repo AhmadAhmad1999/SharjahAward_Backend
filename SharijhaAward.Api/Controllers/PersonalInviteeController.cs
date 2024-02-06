@@ -1,12 +1,22 @@
-﻿using MediatR;
+﻿using Aspose.Pdf;
+using Aspose.Pdf.Operators;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ConfirmAttendancePersonal;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
+using System.Globalization;
+using System.Resources;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -17,7 +27,8 @@ namespace SharijhaAward.Api.Controllers
         private readonly IMediator _mediator;
         private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public PersonalInviteeController(IMediator mediator, IWebHostEnvironment WebHostEnvironment)
+        public PersonalInviteeController(IMediator mediator,
+            IWebHostEnvironment WebHostEnvironment)
         {
             _mediator = mediator;
             _WebHostEnvironment = WebHostEnvironment;
@@ -31,22 +42,45 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<string>> AddPersonalInvitee([FromBody] CreatePersonalInviteeCommand createPersonalInviteeCommand)
+        public async Task<ActionResult<string>> AddPersonalInvitee([FromBody] CreatePersonalInviteeCommand CreatePersonalInviteeCommand)
         {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (!string.IsNullOrWhiteSpace(headerValue))
-                createPersonalInviteeCommand.lang = headerValue;
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            if (!string.IsNullOrWhiteSpace(HeaderValue))
+                CreatePersonalInviteeCommand.lang = HeaderValue;
 
-            createPersonalInviteeCommand.ImagePath = _WebHostEnvironment.WebRootPath;
+            CreatePersonalInviteeCommand.ImagePath = _WebHostEnvironment.WebRootPath;
 
             try
             {
-                var response = await _mediator.Send(createPersonalInviteeCommand);
-                return Ok(response);
+                Guid Response = await _mediator.Send(CreatePersonalInviteeCommand);
+                return Ok(Response);
             }
-            catch (Exception Err)
+            catch (ValidationException Exc)
             {
-                return BadRequest(Err.Message); 
+                return BadRequest(Exc.Message);
+            }
+            catch (DbUpdateException Exc) when (Exc.InnerException is SqlException SqlEx)
+            {
+                foreach (SqlError error in SqlEx.Errors)
+                {
+                    if (error.Number == 2601 || error.Number == 2627)
+                    {
+                        if (error.Message.Contains("IX_PersonaLnvitees_Email", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (HeaderValue.ToString() == "ar")
+                                return BadRequest("هذا البريد الإلكتروني مستخدم بالفعل.");
+
+                            else
+                                return BadRequest("This email is already in use.");
+                        }
+                    }
+                }
+
+                return BadRequest(Exc.Message);
+            }
+            catch (DbUpdateException Exc)
+            {
+                return BadRequest(Exc.Message);
             }
         }
 
