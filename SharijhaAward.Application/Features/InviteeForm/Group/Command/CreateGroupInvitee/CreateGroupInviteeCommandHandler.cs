@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using SharijhaAward.Application.Models;
 using System.Net.Mail;
 using Microsoft.AspNetCore.Http;
+using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee
 {
@@ -42,15 +44,21 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
 
         public async Task<Unit> Handle(CreateGroupInviteeCommand Request, CancellationToken cancellationToken)
         {
-            var validator = new CreateGroupInviteeCommandValidator();
-            var validationResult = await validator.ValidateAsync(Request);
+            CreateGroupInviteeCommandValidator Validator = new CreateGroupInviteeCommandValidator();
+            ValidationResult? ValidationResult = await Validator.ValidateAsync(Request);
 
-            if (validationResult.Errors.Count > 0)
+            if (ValidationResult.Errors.Count > 0)
+                throw new ValidationException(ValidationResult.Errors);
+
+            GroupInvitee? NewGroupInvitee = _mapper.Map<GroupInvitee>(Request);
+            try
             {
-                throw new ValidationException(validationResult.Errors);
+                NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
             }
-            var NewGroupInvitee = _mapper.Map<GroupInvitee>(Request);
-            NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
+            catch (DbUpdateException)
+            {
+                throw;
+            }
 
             if (!string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() == "ar"

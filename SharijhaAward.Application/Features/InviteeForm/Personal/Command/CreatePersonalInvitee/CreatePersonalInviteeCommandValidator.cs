@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
     {
         public CreatePersonalInviteeCommandValidator()
         {
-            RuleFor(p=>p.Email)
+            RuleFor(p => p.Email)
                 .EmailAddress()
                 .NotEmpty();
             RuleFor(p => p.Employer)

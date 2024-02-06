@@ -20,6 +20,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee
 {
@@ -58,7 +59,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 throw new FluentValidation.ValidationException(ValidationResult.Errors);
 
             PersonalInvitee? NewPersonalnvitee = _mapper.Map<PersonalInvitee>(Request);
-            NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
+            try
+            {
+                NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
 
             if (!string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() == "ar"
@@ -69,6 +77,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 string EventName = EventEntity.ArabicName;
                 string DataToSendIntoQR = $"{NewPersonalnvitee.Id}/Personal/{EventName}";
                 string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
+
                 byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
                 string QRbase64String = Convert.ToBase64String(QRCodeBytes);
 

@@ -35,6 +35,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Cycle\Commands\CreateCycle\" />
+    <Folder Include="Features\Cycle\Commands\DeleteCycle\" />
+    <Folder Include="Features\Cycle\Commands\UpdateCycle\" />
+    <Folder Include="Features\Cycle\Queries\GetAllCycles\" />
+    <Folder Include="Features\Cycle\Queries\GetCycleById\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
   </ItemGroup>

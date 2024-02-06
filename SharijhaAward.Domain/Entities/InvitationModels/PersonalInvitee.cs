@@ -1,6 +1,8 @@
-﻿using SharijhaAward.Domain.Entities.EventModel;
+﻿using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Domain.Entities.EventModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -20,6 +22,5 @@ namespace SharijhaAward.Domain.Entities.InvitationModels
         public Event Event { get; set; } = null!;
         [ForeignKey(nameof(Event))]
         public Guid EventId { get; set; }
-        
     }
 }
