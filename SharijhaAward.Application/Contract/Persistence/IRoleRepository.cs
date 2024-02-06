@@ -9,5 +9,6 @@ namespace SharijhaAward.Application.Contract.Persistence
 {
     public interface IRoleRepository : IAsyncRepository<Role>
     {
+        public Task<Role> GetByName(string name);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OpenQA.Selenium.DevTools.V120.Browser;
 using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Features.Authentication.SignUp;
 
@@ -19,9 +20,16 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost("Login", Name = "Login")]
         public async Task<ActionResult<string>> Login([FromBody] LoginCommand user)
         {
-            string token = await _Mediator.Send(new LoginCommand() { Email = user.Email, Password = user.Password });
+            var response = await _Mediator.Send(new LoginCommand() { Email = user.Email, Password = user.Password });
 
-            return Ok(new { data = token });
+            return Ok(
+                new 
+                {
+                    data = response.user,
+                    key = response.token,
+                    permission = response.permissions
+                    
+                });
         }
         [HttpPost("SignUp", Name = "SignUp")]
         public async Task<ActionResult<string>> SignUp([FromBody] SignUpCommand user)
@@ -32,6 +40,7 @@ namespace SharijhaAward.Api.Controllers
                 Password = user.Password,
                 ArabicName = user.ArabicName,
                 EnglishName = user.EnglishName,
+                RoleName = user.RoleName,
                 Gender = user.Gender
                 
             });

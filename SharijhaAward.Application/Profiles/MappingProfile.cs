@@ -61,7 +61,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GroupInvitee, GroupInviteeVM>().ReverseMap();
             CreateMap<GroupInvitee, ConfirmAttendanceGroupQuery>();
 
-            CreateMap<User, LoginCommand>();
+            CreateMap<User, LoginCommand>().ReverseMap();
             CreateMap<User, SignUpCommand>().ReverseMap();
             CreateMap<User, UpdateEventCommand>();
             CreateMap<User, DeleteUserCommand>();

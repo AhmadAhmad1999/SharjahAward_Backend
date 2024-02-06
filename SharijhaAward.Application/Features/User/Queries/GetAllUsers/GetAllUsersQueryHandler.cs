@@ -40,7 +40,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
 
             for (int i = 0; i < allUser.Count; i++)
             {
-                var role = allUser[i].RoleId.Equals("")
+                var role = allUser[i].RoleId == null
                     ? null
                     : await _roleRepository.GetByIdAsync((Guid)allUser[i].RoleId);
 

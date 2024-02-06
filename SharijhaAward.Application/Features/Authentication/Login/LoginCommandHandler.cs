@@ -6,27 +6,25 @@ using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.Authentication.Login
 {
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, string>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationResponse>
     {
+        private readonly IAsyncRepository<Role> _roleRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public LoginCommandHandler(IUserRepository userRepository ,IMapper mapper)
+        public LoginCommandHandler(IUserRepository userRepository , IMapper mapper, IAsyncRepository<Role> roleRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _roleRepository = roleRepository;
         }
-        public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<AuthenticationResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-           var user = await _userRepository.GetByEmailAsync(request.Email);
-            if (user == null)
-            {
-                throw new OpenQA.Selenium.NotFoundException();
-            }
+            var user =  _mapper.Map<Domain.Entities.IdentityModels.User>(request);
+         
+            var response = await _userRepository.LogInAsync(user);
 
-            string token = await _userRepository.LogInAsync(user);
-
-            return token;
+            return response;
             
         }
     }

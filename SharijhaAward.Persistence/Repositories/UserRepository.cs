@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Authentication;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
@@ -36,22 +37,31 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task<User> GetByEmailAsync(string email)
         {
             var user = await _dbContext.Users.Where(u => u.Email == email).FirstAsync();
-            if (user == null)
-            {
-                throw new OpenQA.Selenium.NotFoundException();
-            }
             return user;
         }
 
-        public async Task<string> LogInAsync(User user)
+        public async Task<AuthenticationResponse> LogInAsync(User user)
         {
            var userToLogin = await GetByEmailAsync(user.Email);
-            if(userToLogin.Password==user.Password)
+            if (userToLogin != null)
             {
-                var token = _jwtProvider.Generate(userToLogin);
-                return token;
+                if (userToLogin.Password == user.Password)
+                {
+                    var token = _jwtProvider.Generate(userToLogin);
+                    userToLogin.Role = await _dbContext.Roles.FindAsync(userToLogin.RoleId);
+                   // var permissions = await _dbContext.RolePermissions.FindAsync(userToLogin.Role.RolePermissionId);
+
+                    var response = new AuthenticationResponse()
+                    {
+                        token = token,
+                        user = userToLogin,
+                        //permissions = permissions.Permission
+                    };
+                    return response;
+                }
+                throw new Exception("Authentication Error");
             }
-            return "";
+            throw new Exception("Authentication Error");
         }
 
         public async Task<string> RegisterAsync(User user)
@@ -61,7 +71,7 @@ namespace SharijhaAward.Persistence.Repositories
                 string token = _jwtProvider.Generate(user);
                 return token;
             }
-            else return "";
+            throw new Exception("The Account is not created");
         }
     }
 }
