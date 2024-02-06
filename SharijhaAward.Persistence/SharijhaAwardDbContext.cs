@@ -54,6 +54,14 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SharijhaAwardDbContext).Assembly);
 
+            modelBuilder.Entity<PersonalInvitee>()
+                .HasIndex(p => p.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<GroupInvitee>()
+                .HasIndex(p => p.Email)
+                .IsUnique();
+
             modelBuilder.Entity<Cycle>().HasData(
             new Cycle
             {

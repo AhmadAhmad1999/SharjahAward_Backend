@@ -41,8 +41,15 @@ namespace SharijhaAward.Api.Controllers
 
             createGroupInviteeCommand.ImagePath = _WebHostEnvironment.WebRootPath;
 
-            var response = await _mediator.Send(createGroupInviteeCommand);
-            return Ok(new { data = response });
+            try
+            {
+                var response = await _mediator.Send(createGroupInviteeCommand);
+                return Ok(new { data = response });
+            }
+            catch (Exception Err)
+            {
+                return BadRequest(Err.Message);
+            }
         }
 
         [HttpPut(Name = "UpdateGroupInvitee")]

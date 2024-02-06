@@ -38,8 +38,16 @@ namespace SharijhaAward.Api.Controllers
                 createPersonalInviteeCommand.lang = headerValue;
 
             createPersonalInviteeCommand.ImagePath = _WebHostEnvironment.WebRootPath;
-            var response = await _mediator.Send(createPersonalInviteeCommand);
-            return Ok(response);
+
+            try
+            {
+                var response = await _mediator.Send(createPersonalInviteeCommand);
+                return Ok(response);
+            }
+            catch (Exception Err)
+            {
+                return BadRequest(Err.Message); 
+            }
         }
 
         [HttpPut(Name = "UpdatePersonalInvitee")]

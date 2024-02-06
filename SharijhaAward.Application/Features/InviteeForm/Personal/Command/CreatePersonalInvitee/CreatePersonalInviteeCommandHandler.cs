@@ -58,7 +58,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 throw new FluentValidation.ValidationException(ValidationResult.Errors);
 
             PersonalInvitee? NewPersonalnvitee = _mapper.Map<PersonalInvitee>(Request);
-            NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
+            try
+            {
+                NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
+            }
+            catch (Exception Err)
+            {
+                throw new Exception(Err.Message);
+            }
 
             if (!string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() == "ar"
@@ -69,6 +76,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 string EventName = EventEntity.ArabicName;
                 string DataToSendIntoQR = $"{NewPersonalnvitee.Id}/Personal/{EventName}";
                 string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
+
                 byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
                 string QRbase64String = Convert.ToBase64String(QRCodeBytes);
 
