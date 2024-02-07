@@ -13,6 +13,7 @@ namespace SharijhaAward.Domain.Entities.EventModel
     public class Event 
     {
         public Guid Id { get; set; }
+        public int UniqueIntegerId { get; set; }
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;

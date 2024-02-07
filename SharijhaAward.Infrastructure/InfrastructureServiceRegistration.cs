@@ -18,7 +18,7 @@ namespace SharijhaAward.Infrastructure
         {
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<IEmailSender, EmailSender>();
-            services.AddScoped<IQRCodeGenerator,QRCodeGenerator>();
+            services.AddScoped<IEmailCodesGenerator,EmailCodesGenerator>();
 
             return services;
         }

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using SharijhaAward.Domain.Entities.EventModel;
 using AutoMapper;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using System.Security.Cryptography;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace SharijhaAward.Application.Features.Event.Commands.CreateEvent
 {
@@ -38,8 +40,20 @@ namespace SharijhaAward.Application.Features.Event.Commands.CreateEvent
             }
             if (CreateEventCommandResponse.Success)
             {
-                SharijhaAward.Domain.Entities.EventModel.Event NewEvent =
-                _Mapper.Map<Domain.Entities.EventModel.Event>(Request);
+                Domain.Entities.EventModel.Event NewEvent =
+                    _Mapper.Map<Domain.Entities.EventModel.Event>(Request);
+
+                Random Random = new Random();
+                IEnumerable<int> ListOfUniqueIntegerId = _EventRepository.ListAllAsync()
+                    .Result.Select(x => x.UniqueIntegerId);
+
+                int UniqueIntegerId;
+                do
+                {
+                    UniqueIntegerId = Random.Next();
+                } while (ListOfUniqueIntegerId.Contains(UniqueIntegerId));
+
+                NewEvent.UniqueIntegerId = UniqueIntegerId;
 
                 await _EventRepository.AddAsync(NewEvent);
                 CreateEventCommandResponse.CreateEventDto = _Mapper.Map<CreateEventDto>(NewEvent);

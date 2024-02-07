@@ -2,13 +2,17 @@
 using System.Net.Http.Headers;
 using System.Net;
 using SharijhaAward.Application.Contract.Infrastructure;
+using IronBarCode;
+using Microsoft.AspNetCore.Hosting;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Drawing;
 
 namespace SharijhaAward.Infrastructure.QRGenerator
 {
-    public class QRCodeGenerator : IQRCodeGenerator
+    public class EmailCodesGenerator : IEmailCodesGenerator
     {
         private IConfiguration _Configuration;
-        public QRCodeGenerator(IConfiguration Configuration)
+        public EmailCodesGenerator(IConfiguration Configuration)
         {
             _Configuration = Configuration;
         }
@@ -35,6 +39,28 @@ namespace SharijhaAward.Infrastructure.QRGenerator
             }
 
             return FilePath + "/" + FileName;
+        }
+        public string GenerateBarCode(string Data, string WWWRootFolderPath)
+        {
+            GeneratedBarcode BarCode = BarcodeWriter.CreateBarcode(Data, BarcodeWriterEncoding.Code128);
+
+            BarCode.ResizeTo(400, 120);
+            BarCode.AddBarcodeValueTextBelowBarcode();
+            BarCode.ChangeBarCodeColor(Color.Black);
+            BarCode.SetMargins(10);
+
+            string Path = System.IO.Path.Combine(WWWRootFolderPath, "GeneratedBarcode");
+
+            if (!Directory.Exists(Path))
+                Directory.CreateDirectory(Path);
+
+            string[] DataSpliter = Data.Split('/');
+
+            string FilePath = System.IO.Path.Combine(Path,
+                $"BarCodeFor-{DataSpliter[2]}-{DataSpliter[1]}-{DataSpliter[0]}-Invite.png");
+
+            BarCode.SaveAsPng(FilePath);
+            return FilePath;
         }
     }
 }

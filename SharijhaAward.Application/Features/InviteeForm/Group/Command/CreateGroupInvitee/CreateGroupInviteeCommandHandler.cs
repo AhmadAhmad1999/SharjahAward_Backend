@@ -25,11 +25,11 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
         private readonly IMapper _mapper;
         private readonly IAsyncRepository<Domain.Entities.EventModel.Event> _EventRepository;
         private IEmailSender _EmailSender;
-        private IQRCodeGenerator _QRCodeGenerator;
+        private IEmailCodesGenerator _QRCodeGenerator;
         private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public CreateGroupInviteeCommandHandler(IAsyncRepository<GroupInvitee> groupInviteeRepository, IMapper mapper,
-            IQRCodeGenerator QRCodeGenerator,
+            IEmailCodesGenerator QRCodeGenerator,
             IAsyncRepository<Domain.Entities.EventModel.Event> EventRepository,
             IEmailSender EmailSender,
             IHttpContextAccessor HttpContextAccessor)
@@ -51,6 +51,16 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 throw new ValidationException(ValidationResult.Errors);
 
             GroupInvitee? NewGroupInvitee = _mapper.Map<GroupInvitee>(Request);
+            IEnumerable<int> ListOfUniqueIntegerId = _groupInviteeRepository.ListAllAsync()
+                .Result.Select(x => x.UniqueIntegerId);
+            Random Random = new Random();
+            int UniqueIntegerId;
+            do
+            {
+                UniqueIntegerId = Random.Next();
+            } while (ListOfUniqueIntegerId.Contains(UniqueIntegerId));
+
+            NewGroupInvitee.UniqueIntegerId = UniqueIntegerId;
             try
             {
                 NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);

@@ -33,11 +33,11 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
         private readonly IAsyncRepository<Domain.Entities.EventModel.Event> _EventRepository;
         private readonly IMapper _mapper;
         private IEmailSender _EmailSender;
-        private IQRCodeGenerator _QRCodeGenerator;
+        private IEmailCodesGenerator _QRCodeGenerator;
         private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public CreatePersonalInviteeCommandHandler(IAsyncRepository<PersonalInvitee> personalInviteeRepository, IMapper mapper,
-            IQRCodeGenerator QRCodeGenerator,
+            IEmailCodesGenerator QRCodeGenerator,
             IAsyncRepository<Domain.Entities.EventModel.Event> EventRepository,
             IEmailSender EmailSender,
             IHttpContextAccessor HttpContextAccessor)
@@ -59,6 +59,16 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 throw new FluentValidation.ValidationException(ValidationResult.Errors);
 
             PersonalInvitee? NewPersonalnvitee = _mapper.Map<PersonalInvitee>(Request);
+            IEnumerable<int> ListOfUniqueIntegerId = _PersonalInviteeRepository.ListAllAsync()
+                .Result.Select(x => x.UniqueIntegerId);
+            Random Random = new Random();
+            int UniqueIntegerId;
+            do
+            {
+                UniqueIntegerId = Random.Next();
+            } while (ListOfUniqueIntegerId.Contains(UniqueIntegerId));
+
+            NewPersonalnvitee.UniqueIntegerId = UniqueIntegerId;
             try
             {
                 NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
@@ -80,6 +90,10 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
 
                 byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
                 string QRbase64String = Convert.ToBase64String(QRCodeBytes);
+
+                // Generate BarCode..
+                string DataToSendIntoBarCode = $"{NewPersonalnvitee.UniqueIntegerId}999999999909999999999";
+                string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoQR, Request.ImagePath!);
 
                 // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
                 string HtmlBody = "wwwroot/QREmail_ar.html";

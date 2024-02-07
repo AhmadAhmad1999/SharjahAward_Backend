@@ -22,14 +22,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
         private readonly IAsyncRepository<PersonalInvitee> _PersonalInviteeRepository;
         private readonly IAsyncRepository<GroupInvitee> _GroupInviteeRepository;
         private IEmailSender _EmailSender;
-        private IQRCodeGenerator _QRCodeGenerator;
+        private IEmailCodesGenerator _QRCodeGenerator;
         private readonly IAsyncRepository<Domain.Entities.EventModel.Event> _EventRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
         public ResendEmailQueryHandler(
             IAsyncRepository<PersonalInvitee> personalInviteeRepository,
             IAsyncRepository<GroupInvitee> GroupInviteeRepository,
             IEmailSender EmailSender,
-            IQRCodeGenerator QRCodeGenerator,
+            IEmailCodesGenerator QRCodeGenerator,
             IAsyncRepository<Domain.Entities.EventModel.Event> EventRepository,
             IHttpContextAccessor HttpContextAccessor)
         {

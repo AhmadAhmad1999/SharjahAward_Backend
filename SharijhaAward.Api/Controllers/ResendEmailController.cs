@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.ResendEmail;
+using IronBarCode;
+using System.Diagnostics;
+using System.Drawing;
+using System.Net.Http.Headers;
 
 namespace SharijhaAward.Api.Controllers
 {
