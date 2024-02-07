@@ -10,5 +10,6 @@ namespace SharijhaAward.Application.Contract.Persistence
     public interface IPersonalInviteeRepository : IAsyncRepository<PersonalInvitee>
     {
         public Task ConfirmationofAttendance(PersonalInvitee personal);
+        public Task<PersonalInvitee> GetByInviteeNumber(int inviteeNumber);
     }
 }

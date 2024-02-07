@@ -15,5 +15,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Update
         public string Email { get; set; } = string.Empty;
         public string Employer { get; set; } = string.Empty;
         public string JobTitle { get; set; } = string.Empty;
+        public string TypeOfInvitee { get; set; } = string.Empty;
     }
 }

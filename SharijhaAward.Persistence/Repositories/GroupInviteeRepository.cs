@@ -22,5 +22,11 @@ namespace SharijhaAward.Persistence.Repositories
             _dbContext.Entry(group).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<GroupInvitee> GetByInviteeNumber(int inviteeNumber)
+        {
+            var Group = await _dbContext.GroupInvitees.Where(p => p.UniqueIntegerId == inviteeNumber).FirstAsync();
+            return Group;
+        }
     }
 }

@@ -14,6 +14,7 @@ using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePers
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ConfirmAttendancePersonal;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
 using System.Globalization;
 using System.Resources;
@@ -135,6 +136,26 @@ namespace SharijhaAward.Api.Controllers
             
             return Json(new {data = Personal });
             
+        }
+
+        [HttpGet("GetPersonalByInviteeNumber/{id}", Name = "GetPersonalInviteeByInviteeNumber")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<GetPersonalByInviteeNumberQuery>> GetPersonalInviteeByInviteeNumber(int id)
+        {
+            PersonalDto? Personal = await _mediator
+                .Send(new GetPersonalByInviteeNumberQuery
+                {
+                    InviteeNumber = id
+                });
+
+            return Json(new { data = Personal });
+
         }
 
         [HttpGet(Name = "GetAllPersonalInvitee")]

@@ -31,6 +31,8 @@ using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Application.Features.Categories.Command.CreateCategory;
 using SharijhaAward.Application.Features.Categories.Queries.GatCategoryById;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalByInviteeNumber;
+using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupByInviteeNumber;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -53,6 +55,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<PersonalInvitee, PersonalInviteeListVM>().ReverseMap();
             CreateMap<PersonalInvitee, EventInvitessDto>().ReverseMap();
             CreateMap<PersonalInvitee, ConfirmAttendancePersonalQuery>().ReverseMap();
+            CreateMap<PersonalInvitee, PersonalDto >().ReverseMap();
 
             CreateMap<GroupInvitee, CreateGroupInviteeCommand>().ReverseMap();
             CreateMap<GroupInvitee, DeleteGroupInviteeCommand>().ReverseMap();
@@ -60,6 +63,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GroupInvitee, GroupInviteeListVM>().ReverseMap();
             CreateMap<GroupInvitee, GroupInviteeVM>().ReverseMap();
             CreateMap<GroupInvitee, ConfirmAttendanceGroupQuery>();
+            CreateMap<GroupInvitee, GroupDto>().ReverseMap();
 
             CreateMap<User, LoginCommand>().ReverseMap();
             CreateMap<User, SignUpCommand>().ReverseMap();

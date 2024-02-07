@@ -52,59 +52,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("CriterionItemScale");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.EventModel.Event", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ArabicDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ArabicLocation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ArabicName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ArabicSiteName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EnglishDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EnglishLocation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EnglishName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EnglishSiteName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EventDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Events");
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.RolePermission", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Constants.EducationType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,90 +60,17 @@ namespace SharijhaAward.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.HasKey("Id");
-
-                    b.ToTable("RolePermissions");
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.InvitationModels.GroupInvitee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ActualNumberOfAttendees")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
+                    b.Property<string>("ArabicTypeName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ExpectedNumberOfAttendees")
-                        .HasColumnType("int");
-
-                    b.Property<string>("JobTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SchoolName")
+                    b.Property<string>("EnglishTypeName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EventId");
-
-                    b.ToTable("GroupInvitees");
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.InvitationModels.PersonalInvitee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Employer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsAttend")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("JobTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("Personalnvitees");
+                    b.ToTable("EducationTypes");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", b =>
@@ -582,26 +457,11 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ArabicInterpretiveGuide")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ArabicName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ArabicTrainingWorkshop")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ArabicWorkshopBackground")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("AwardParticipateMinimumLimit")
-                        .HasColumnType("int");
-
                     b.Property<int>("CategoryClassification")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CertificateObtainMinimumLimit")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -620,17 +480,8 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EnglishInterpretiveGuide")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("EnglishName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EnglishTrainingWorkshop")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EnglishWorkshopBackground")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ExpectedNumberOfWinners")
@@ -686,7 +537,7 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CommitteeModel.Committee", b =>
@@ -754,7 +605,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EducationType")
+                    b.Property<int>("EducationTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -789,6 +640,8 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("EducationTypeId");
 
                     b.HasIndex("UpdatedById");
 
@@ -1128,6 +981,61 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("EducationalClass");
                 });
 
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.EventModel.Event", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ArabicDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicSiteName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishSiteName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UniqueIntegerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Events");
+                });
+
             modelBuilder.Entity("SharijhaAward.Domain.Entities.FAQModel.FrequentlyAskedQuestion", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1370,6 +1278,19 @@ namespace SharijhaAward.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.RolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RolePermissions");
+                });
+
             modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1441,6 +1362,103 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasIndex("UpdatedById");
 
                     b.ToTable("Interview");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.InvitationModels.GroupInvitee", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ActualNumberOfAttendees")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ExpectedNumberOfAttendees")
+                        .HasColumnType("int");
+
+                    b.Property<string>("JobTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SchoolName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UniqueIntegerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("GroupInvitees");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.InvitationModels.PersonalInvitee", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Employer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsAttend")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("JobTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TypeOfInvitee")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UniqueIntegerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("Personalnvitees");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingModel.Meeting", b =>
@@ -1646,7 +1664,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EducationType")
+                    b.Property<int>("EducationTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -1688,13 +1706,15 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.HasIndex("CreatedById");
 
+                    b.HasIndex("EducationTypeId");
+
                     b.HasIndex("UpdatedById");
 
                     b.HasIndex("categoryId");
 
                     b.HasIndex("subscriberId");
 
-                    b.ToTable("ProvidedForm");
+                    b.ToTable("ProvidedForms");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.RelatedAccountModel.RelatedAccount", b =>
@@ -1980,6 +2000,10 @@ namespace SharijhaAward.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ArabicDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ArabicTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1987,6 +2011,9 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<string>("ArabicWorkshopAttachment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1997,6 +2024,10 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("EnglishDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("EnglishTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2005,7 +2036,11 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Icon")
+                    b.Property<string>("Thumbnale")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TypeOfAttachment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -2016,6 +2051,8 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("CreatedById");
 
@@ -2126,28 +2163,6 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasForeignKey("ScalesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.InvitationModels.GroupInvitee", b =>
-                {
-                    b.HasOne("SharijhaAward.Domain.Entities.EventModel.Event", "Event")
-                        .WithMany("GroupInvitees")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.InvitationModels.PersonalInvitee", b =>
-                {
-                    b.HasOne("SharijhaAward.Domain.Entities.EventModel.Event", "Event")
-                        .WithMany("PersonalInvitees")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", b =>
@@ -2428,6 +2443,12 @@ namespace SharijhaAward.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("SharijhaAward.Domain.Constants.EducationType", "EducationType")
+                        .WithMany()
+                        .HasForeignKey("EducationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
@@ -2435,6 +2456,8 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
+
+                    b.Navigation("EducationType");
 
                     b.Navigation("UpdatedBy");
                 });
@@ -2712,6 +2735,28 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.InvitationModels.GroupInvitee", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.EventModel.Event", "Event")
+                        .WithMany("GroupInvitees")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.InvitationModels.PersonalInvitee", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.EventModel.Event", "Event")
+                        .WithMany("PersonalInvitees")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
             modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingModel.Meeting", b =>
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
@@ -2831,6 +2876,12 @@ namespace SharijhaAward.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("SharijhaAward.Domain.Constants.EducationType", "EducationType")
+                        .WithMany()
+                        .HasForeignKey("EducationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
@@ -2852,6 +2903,8 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("CreatedBy");
+
+                    b.Navigation("EducationType");
 
                     b.Navigation("Subscriber");
 
@@ -3022,6 +3075,12 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", b =>
                 {
+                    b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
@@ -3033,6 +3092,8 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("CreatedBy");
 
@@ -3096,20 +3157,6 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasForeignKey("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.EventModel.Event", b =>
-                {
-                    b.Navigation("GroupInvitees");
-
-                    b.Navigation("PersonalInvitees");
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.RolePermission", b =>
-                {
-                    b.Navigation("Permission");
-
-                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", b =>
@@ -3192,9 +3239,23 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("News");
                 });
 
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.EventModel.Event", b =>
+                {
+                    b.Navigation("GroupInvitees");
+
+                    b.Navigation("PersonalInvitees");
+                });
+
             modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.RolePermission", b =>
+                {
+                    b.Navigation("Permission");
+
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.User", b =>

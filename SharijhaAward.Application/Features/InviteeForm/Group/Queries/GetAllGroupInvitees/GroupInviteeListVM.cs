@@ -9,6 +9,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
     public class GroupInviteeListVM
     {
         public Guid Id { get; set; }
+        public int UniqueIntegerId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

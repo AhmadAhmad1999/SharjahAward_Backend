@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static QRCoder.PayloadGenerator;
 
 namespace SharijhaAward.Persistence.Repositories
 {
@@ -20,6 +21,12 @@ namespace SharijhaAward.Persistence.Repositories
             personal.IsAttend = true;
             _dbContext.Entry(personal).State= EntityState.Modified;
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<PersonalInvitee> GetByInviteeNumber(int inviteeNumber)
+        {
+            var personal = await _dbContext.Personalnvitees.Where(p => p.UniqueIntegerId == inviteeNumber).FirstAsync();
+            return personal;
         }
     }
 }

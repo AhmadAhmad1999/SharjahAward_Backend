@@ -14,6 +14,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
         public string Email { get; set; } = string.Empty;
         public string Employer { get; set; } = string.Empty;
         public string JobTitle { get; set; } = string.Empty;
+        public string TypeOfInvitee { get; set; } = string.Empty;
         public Guid EventId { get; set; }
         public string? lang { get; set; }
         public string? ImagePath { get; set; }

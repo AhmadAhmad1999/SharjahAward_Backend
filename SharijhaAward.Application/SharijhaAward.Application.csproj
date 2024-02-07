@@ -43,6 +43,7 @@
     <Folder Include="Features\Cycle\Queries\GetCycleById\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
+    <Folder Include="Features\TrainingWorkshops\Queries\" />
   </ItemGroup>
 
 </Project>

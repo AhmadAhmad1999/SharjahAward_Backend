@@ -9,11 +9,13 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
     public class PersonalInviteeListVM
     {
         public Guid Id { get; set; }
+        public int UniqueIntegerId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Employer { get; set; } = string.Empty;
         public string JobTitle { get; set; } = string.Empty;
+        public string TypeOfInvitee { get; set; } = string.Empty;
         public bool IsAttend { get; set; }
     }
 }

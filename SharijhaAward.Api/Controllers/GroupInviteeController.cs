@@ -10,6 +10,7 @@ using SharijhaAward.Application.Features.InviteeForm.Group.Command.DeleteGroupIn
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.UpdateGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.ConfirmAttendanceGroup;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGroupInvitees;
+using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupInviteeById;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
 
@@ -124,6 +125,23 @@ namespace SharijhaAward.Api.Controllers
                 .Send(new GetGroupInviteeByIdQuery
                 {
                     Id = id
+                });
+            return Ok(new { data = Group });
+        }
+
+        [HttpGet("GetGroupByInviteeNumber/{Id}", Name = "GetGroupByInviteeNumber")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<GetGroupByInviteeNumberQuery>> GetGroupByInviteeNumber(int id)
+        {
+            GroupDto? Group = await _mediator
+                .Send(new GetGroupByInviteeNumberQuery
+                {
+                    InviteeNumber = id
                 });
             return Ok(new { data = Group });
         }
