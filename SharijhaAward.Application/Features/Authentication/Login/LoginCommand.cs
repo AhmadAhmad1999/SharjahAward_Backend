@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Authentication.Login
 {
-    public class LoginCommand : IRequest<string>
+    public class LoginCommand : IRequest<AuthenticationResponse>
     {
         public string Email { get; set; }=string.Empty;
         public string Password { get; set; } = string.Empty;

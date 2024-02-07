@@ -13,9 +13,11 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
     public class SignUpCommandHandler : IRequestHandler<SignUpCommand, string>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
-        public SignUpCommandHandler(IUserRepository userRepository, IMapper mapper)
+        public SignUpCommandHandler(IUserRepository userRepository,IRoleRepository roleRepository ,IMapper mapper)
         {
+            _roleRepository = roleRepository;
             _userRepository = userRepository;
             _mapper = mapper;
         }
@@ -27,7 +29,18 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
             await _userRepository.AddAsync(user);
 
             string token = await _userRepository.RegisterAsync(user);
+            
+                var role = request.RoleName != null 
+                    ? await _roleRepository.GetByName(request.RoleName)
+                    : await _roleRepository.GetByName("User");
 
+                if (role == null)
+                {
+                    throw new OpenQA.Selenium.NotFoundException("Role dose not Exsist");
+                }
+                await _userRepository.AsignRole(user.Id, role.RoleId);
+            
+            
             return token;
         }
     }
