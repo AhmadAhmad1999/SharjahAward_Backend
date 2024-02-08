@@ -150,7 +150,7 @@ namespace SharijhaAward.Api.Controllers
             return Ok(new { data = response });
         }
         [HttpGet("DownloadQRCode")]
-        public IActionResult DownloadQRCode(string QRCodeName, string EventName)
+        public IActionResult DownloadQRCode(string QRCodeName)
         {
             string QRImagePath = _WebHostEnvironment.WebRootPath + "\\Images\\" + QRCodeName;
 
@@ -187,7 +187,49 @@ namespace SharijhaAward.Api.Controllers
                 {
                     pdfDocument.Save(pdfStream);
 
-                    return File(pdfStream.ToArray(), "application/pdf", "output.pdf");
+                    return File(pdfStream.ToArray(), "application/pdf", "QRCode.pdf");
+                }
+            }
+        }
+        [HttpGet("DownloadBarCode")]
+        public IActionResult DownloadBarCode(string BarCodeName)
+        {
+            string BarCodeImagePath = _WebHostEnvironment.WebRootPath + "\\GeneratedBarcode\\" + BarCodeName;
+
+            if (!System.IO.File.Exists(BarCodeImagePath)) return NotFound();
+
+            byte[] BarCodeBytes = System.IO.File.ReadAllBytes(BarCodeImagePath);
+            using (MemoryStream PNGStream = new MemoryStream(BarCodeBytes))
+            {
+                Document PDFDocument = new Document();
+
+                Page Page = PDFDocument.Pages.Add();
+                Page.SetPageSize(PageSize.A4.Width, PageSize.A4.Height);
+
+                Aspose.Pdf.Image image = new Aspose.Pdf.Image();
+                image.ImageStream = new MemoryStream(BarCodeBytes);
+
+                double centerX = Page.Rect.Width;
+                double centerY = Page.Rect.Height;
+
+                double xPosition = centerX - image.FixWidth;
+                double yPosition = centerY - image.FixHeight;
+
+                image.Margin = new MarginInfo
+                {
+                    Top = (centerX - image.FixWidth) / 16,
+                    Bottom = (centerX - image.FixWidth) / 16,
+                    Left = (centerX - image.FixHeight) / 16,
+                    Right = (centerX - image.FixHeight) / 16
+                };
+
+                Page.Paragraphs.Add(image);
+
+                using (MemoryStream pdfStream = new MemoryStream())
+                {
+                    PDFDocument.Save(pdfStream);
+
+                    return File(pdfStream.ToArray(), "application/pdf", "BarCode.pdf");
                 }
             }
         }

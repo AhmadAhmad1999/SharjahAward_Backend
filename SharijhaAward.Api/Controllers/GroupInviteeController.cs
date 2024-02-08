@@ -13,6 +13,7 @@ using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGroupIn
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupInviteeById;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
+using System.Net;
 
 
 namespace SharijhaAward.Api.Controllers
@@ -76,6 +77,14 @@ namespace SharijhaAward.Api.Controllers
             catch (DbUpdateException Exc)
             {
                 return BadRequest(Exc.Message);
+            }
+            catch (WebException)
+            {
+                return BadRequest("Internet connection error, please check your internet connection and try again later.");
+            }
+            catch (System.Net.Mail.SmtpException)
+            {
+                return BadRequest("Internet connection error, please check your internet connection and try again later.");
             }
         }
 

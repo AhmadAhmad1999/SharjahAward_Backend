@@ -23,7 +23,15 @@ namespace SharijhaAward.Infrastructure.QRGenerator
         {
             Uri? URI = new Uri($"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={Data}");
             HttpWebRequest Request = WebRequest.CreateHttp(URI);
-            WebResponse? Response = await Request.GetResponseAsync();
+            WebResponse? Response;
+            try
+            {
+                Response = await Request.GetResponseAsync();
+            }
+            catch (WebException)
+            {
+                throw;
+            }
             ContentDispositionHeaderValue ContentDisposition;
             string FilePath = WWWRootFolderPath + "/Images";
 
@@ -54,10 +62,8 @@ namespace SharijhaAward.Infrastructure.QRGenerator
             if (!Directory.Exists(Path))
                 Directory.CreateDirectory(Path);
 
-            string[] DataSpliter = Data.Split('/');
-
             string FilePath = System.IO.Path.Combine(Path,
-                $"BarCodeFor-{DataSpliter[2]}-{DataSpliter[1]}-{DataSpliter[0]}-Invite.png");
+                $"BarCodeFor-{Data}-Invite.png");
 
             BarCode.SaveAsPng(FilePath);
             return FilePath;

@@ -54,42 +54,57 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                     // Generate QR Code..
                     Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(PersonalInvitee.EventId);
                     string EventName = EventEntity.ArabicName;
-                    string DataToSendIntoQR = $"{PersonalInvitee.Id}/Personal/{EventName}";
-                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
-                    byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
-                    string QRbase64String = Convert.ToBase64String(QRCodeBytes);
+                    //string DataToSendIntoQR = $"{PersonalInvitee.Id}/Personal/{EventName}";
+                    //string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
+                    //byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
+                    //string QRbase64String = Convert.ToBase64String(QRCodeBytes);
+
+                    // Generate BarCode..
+                    string DataToSendIntoBarCode = $"{PersonalInvitee.UniqueIntegerId}";
+                    string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.ImagePath!);
 
                     // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
                     string HtmlBody = "wwwroot/QREmail_ar.html";
 
                     string HTMLContent = File.ReadAllText(HtmlBody);
 
-                    CultureInfo ArabicCulture = new CultureInfo("ar-SA");
+                    CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
                     bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
 
-                    string DownloadQRImageAPI = isHttps
-                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                            $"&EventName={EventEntity.ArabicName}"
-                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                            $"&EventName={EventEntity.ArabicName}";
+                    //string DownloadQRImageAPI = isHttps
+                    //    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                    //        $"&EventName={EventEntity.ArabicName}"
+                    //    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                    //        $"&EventName={EventEntity.ArabicName}";
+
+                    string DownloadBarCodeImageAPI = isHttps
+                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}"
+                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}";
+
+                    DateTime GregorianDate = new DateTime(EventEntity.StartDate.Year, EventEntity.StartDate.Month,
+                        EventEntity.StartDate.Day, EventEntity.StartDate.Hour, EventEntity.StartDate.Minute, EventEntity.StartDate.Second);
 
                     string ManipulatedBody = HTMLContent
                         .Replace("$NewInvitee.Name$", PersonalInvitee.Name, StringComparison.Ordinal) // Invited Name..
                         .Replace("$EventEntity.ArabicName$", EventEntity.ArabicName, StringComparison.Ordinal) // Event Name in Arabic..
                         .Replace("$EventEntity.ArabicLocation$", EventEntity.ArabicSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                        .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                        .Replace("$EventEntity.StartDate.Date$", EventEntity.StartDate.ToString("M/d/yyyy", ArabicCulture), StringComparison.Ordinal) // Event Date..
-                        .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.StartDate.ToString("HH:mm:ss", ArabicCulture), StringComparison.Ordinal) // Event Time..
-                        .Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
-                        .Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+                        .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                        .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("M/d/yyyy", ArabicCulture), StringComparison.Ordinal) // Event Date..
+                        .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("HH:mm:ss", ArabicCulture), StringComparison.Ordinal) // Event Time..
+                        //.Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
+                        //.Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+                        .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
 
                     // Create An AlternateView to Specify The HTML Body And Embed The Image..
                     AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
 
                     // Attach The Images As A Linked Resources..
-                    LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
-                    AlternateView.LinkedResources.Add(QRCodeImage);
+                    //LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
+                    //AlternateView.LinkedResources.Add(QRCodeImage);
+
+                    LinkedResource BarCodeImage = new LinkedResource(BarCodeImagePath) { ContentId = "BarCodeImage" }; // Bar Code Image..
+                    AlternateView.LinkedResources.Add(BarCodeImage);
 
                     LinkedResource CaligraphyImage = new LinkedResource("wwwroot/assets/qr/caligraphy.png") { ContentId = "CaligraphyImage" }; // Caligraphy Image..
                     AlternateView.LinkedResources.Add(CaligraphyImage);
@@ -116,10 +131,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                     // Generate QR Code..
                     Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(PersonalInvitee.EventId);
                     string EventName = EventEntity.EnglishName;
-                    string DataToSendIntoQR = $"{PersonalInvitee.Id}/Personal/{EventName}";
-                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
-                    byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
-                    string QRbase64String = Convert.ToBase64String(QRCodeBytes);
+                    //string DataToSendIntoQR = $"{PersonalInvitee.Id}/Personal/{EventName}";
+                    //string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
+                    //byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
+                    //string QRbase64String = Convert.ToBase64String(QRCodeBytes);
+
+                    // Generate BarCode..
+                    string DataToSendIntoBarCode = $"{PersonalInvitee.UniqueIntegerId}";
+                    string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.ImagePath!);
 
                     // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
                     string HtmlBody = "wwwroot/QREmail_en.html";
@@ -128,28 +147,39 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
 
                     bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
 
-                    string DownloadQRImageAPI = isHttps
-                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                            $"&EventName={EventEntity.ArabicName}"
-                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                            $"&EventName={EventEntity.ArabicName}";
+                    //string DownloadQRImageAPI = isHttps
+                    //    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                    //        $"&EventName={EventEntity.ArabicName}"
+                    //    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                    //        $"&EventName={EventEntity.ArabicName}";
+
+                    string DownloadBarCodeImageAPI = isHttps
+                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}"
+                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}";
+
+                    DateTime GregorianDate = new DateTime(EventEntity.StartDate.Year, EventEntity.StartDate.Month,
+                        EventEntity.StartDate.Day, EventEntity.StartDate.Hour, EventEntity.StartDate.Minute, EventEntity.StartDate.Second);
 
                     string ManipulatedBody = HTMLContent
                         .Replace("$NewInvitee.Name$", PersonalInvitee.Name, StringComparison.Ordinal) // Invited Name..
                         .Replace("$EventEntity.EnglishName$", EventEntity.EnglishName, StringComparison.Ordinal) // Event Name in English..
                         .Replace("$EventEntity.EnglishLocation$", EventEntity.EnglishSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                        .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                        .Replace("$EventEntity.StartDate.Date$", EventEntity.StartDate.ToString("M/d/yyyy"), StringComparison.Ordinal) // Event Date..
-                        .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.StartDate.ToString("HH:mm:ss"), StringComparison.Ordinal) // Event Time..
-                        .Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
-                        .Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+                        .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                        .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("M/d/yyyy"), StringComparison.Ordinal) // Event Date..
+                        .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("HH:mm:ss"), StringComparison.Ordinal) // Event Time..
+                        //.Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
+                        //.Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+                        .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
 
                     // Create An AlternateView to Specify The HTML Body And Embed The Image..
                     AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
 
                     // Attach The Images As A Linked Resources..
-                    LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
-                    AlternateView.LinkedResources.Add(QRCodeImage);
+                    //LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
+                    //AlternateView.LinkedResources.Add(QRCodeImage);
+
+                    LinkedResource BarCodeImage = new LinkedResource(BarCodeImagePath) { ContentId = "BarCodeImage" }; // Bar Code Image..
+                    AlternateView.LinkedResources.Add(BarCodeImage);
 
                     LinkedResource CaligraphyImage = new LinkedResource("wwwroot/assets/qr/caligraphy.png") { ContentId = "CaligraphyImage" }; // Caligraphy Image..
                     AlternateView.LinkedResources.Add(CaligraphyImage);
@@ -183,25 +213,33 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                     // Generate QR Code..
                     Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(GroupInvitee.EventId);
                     string EventName = EventEntity.ArabicName;
-                    string DataToSendIntoQR = $"{GroupInvitee.Id}/Group/{EventName}";
-                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
-                    byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
-                    string QRbase64String = Convert.ToBase64String(QRCodeBytes);
+                    //string DataToSendIntoQR = $"{GroupInvitee.Id}/Group/{EventName}";
+                    //string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
+                    //byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
+                    //string QRbase64String = Convert.ToBase64String(QRCodeBytes);
+
+                    // Generate BarCode..
+                    string DataToSendIntoBarCode = $"{GroupInvitee.UniqueIntegerId}";
+                    string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.ImagePath!);
 
                     // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
                     string HtmlBody = "wwwroot/QREmail_ar.html";
 
                     string HTMLContent = File.ReadAllText(HtmlBody);
 
-                    CultureInfo ArabicCulture = new CultureInfo("ar-SA");
+                    CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
                     bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
 
-                    string DownloadQRImageAPI = isHttps
-                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                            $"&EventName={EventEntity.ArabicName}"
-                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                            $"&EventName={EventEntity.ArabicName}";
+                    //string DownloadQRImageAPI = isHttps
+                    //    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                    //        $"&EventName={EventEntity.ArabicName}"
+                    //    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                    //        $"&EventName={EventEntity.ArabicName}";
+
+                    string DownloadBarCodeImageAPI = isHttps
+                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}"
+                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}";
 
                     string ManipulatedBody = HTMLContent
                         .Replace("$NewInvitee.Name$", GroupInvitee.Name, StringComparison.Ordinal) // Invited Name..
@@ -210,15 +248,19 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                         .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
                         .Replace("$EventEntity.StartDate.Date$", EventEntity.StartDate.ToString("M/d/yyyy", ArabicCulture), StringComparison.Ordinal) // Event Date..
                         .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.StartDate.ToString("HH:mm:ss", ArabicCulture), StringComparison.Ordinal) // Event Time..
-                        .Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
-                        .Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+                        //.Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
+                        //.Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+                        .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
 
                     // Create An AlternateView to Specify The HTML Body And Embed The Image..
                     AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
 
                     // Attach The Images As A Linked Resources..
-                    LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
-                    AlternateView.LinkedResources.Add(QRCodeImage);
+                    //LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
+                    //AlternateView.LinkedResources.Add(QRCodeImage);
+
+                    LinkedResource BarCodeImage = new LinkedResource(BarCodeImagePath) { ContentId = "BarCodeImage" }; // Bar Code Image..
+                    AlternateView.LinkedResources.Add(BarCodeImage);
 
                     LinkedResource CaligraphyImage = new LinkedResource("wwwroot/assets/qr/caligraphy.png") { ContentId = "CaligraphyImage" }; // Caligraphy Image..
                     AlternateView.LinkedResources.Add(CaligraphyImage);
@@ -245,10 +287,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
                     // Generate QR Code..
                     Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(GroupInvitee.EventId);
                     string EventName = EventEntity.EnglishName;
-                    string DataToSendIntoQR = $"{GroupInvitee.Id}/Group/{EventName}";
-                    string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
-                    byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
-                    string QRbase64String = Convert.ToBase64String(QRCodeBytes);
+                    //string DataToSendIntoQR = $"{GroupInvitee.Id}/Group/{EventName}";
+                    //string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
+                    //byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
+                    //string QRbase64String = Convert.ToBase64String(QRCodeBytes);
+
+                    // Generate BarCode..
+                    string DataToSendIntoBarCode = $"{GroupInvitee.UniqueIntegerId}";
+                    string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.ImagePath!);
 
                     // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
                     string HtmlBody = "wwwroot/QREmail_en.html";
@@ -257,28 +303,39 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
 
                     bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
 
-                    string DownloadQRImageAPI = isHttps
-                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                            $"&EventName={EventEntity.ArabicName}"
-                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                            $"&EventName={EventEntity.ArabicName}";
+                    //string DownloadQRImageAPI = isHttps
+                    //    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                    //        $"&EventName={EventEntity.ArabicName}"
+                    //    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
+                    //        $"&EventName={EventEntity.ArabicName}";
+
+                    string DownloadBarCodeImageAPI = isHttps
+                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}"
+                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}";
+
+                    DateTime GregorianDate = new DateTime(EventEntity.StartDate.Year, EventEntity.StartDate.Month,
+                        EventEntity.StartDate.Day, EventEntity.StartDate.Hour, EventEntity.StartDate.Minute, EventEntity.StartDate.Second);
 
                     string ManipulatedBody = HTMLContent
                         .Replace("$NewInvitee.Name$", GroupInvitee.Name, StringComparison.Ordinal) // Invited Name..
                         .Replace("$EventEntity.EnglishName$", EventEntity.EnglishName, StringComparison.Ordinal) // Event Name in English..
                         .Replace("$EventEntity.EnglishLocation$", EventEntity.EnglishSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                        .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.StartDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                        .Replace("$EventEntity.StartDate.Date$", EventEntity.StartDate.ToString("M/d/yyyy"), StringComparison.Ordinal) // Event Date..
-                        .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.StartDate.ToString("HH:mm:ss"), StringComparison.Ordinal) // Event Time..
-                        .Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
-                        .Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+                        .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                        .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("M/d/yyyy"), StringComparison.Ordinal) // Event Date..
+                        .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("HH:mm:ss"), StringComparison.Ordinal) // Event Time..
+                        //.Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
+                        //.Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
+                        .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
 
                     // Create An AlternateView to Specify The HTML Body And Embed The Image..
                     AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
 
                     // Attach The Images As A Linked Resources..
-                    LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
-                    AlternateView.LinkedResources.Add(QRCodeImage);
+                    //LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
+                    //AlternateView.LinkedResources.Add(QRCodeImage);
+
+                    LinkedResource BarCodeImage = new LinkedResource(BarCodeImagePath) { ContentId = "BarCodeImage" }; // Bar Code Image..
+                    AlternateView.LinkedResources.Add(BarCodeImage);
 
                     LinkedResource CaligraphyImage = new LinkedResource("wwwroot/assets/qr/caligraphy.png") { ContentId = "CaligraphyImage" }; // Caligraphy Image..
                     AlternateView.LinkedResources.Add(CaligraphyImage);

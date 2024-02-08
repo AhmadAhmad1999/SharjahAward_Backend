@@ -1,55 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Event Invitation</title>
+    <style>
+        @font-face {
+            font-family: 'Tajawal';
+            src: url('https://website.award-shj.ae/external/Tajawal-Regular.ttf') format('ttf');
+        }
+    </style>
 </head>
-<body style="padding: 20px; letter-spacing: normal; font-family: 'Tajawal', sans-serif; background: rgba(250, 241, 236, 1); direction: rtl;">
-    <div style="padding: 20px">
-        <header>
-            <img src="cid:Email_HeaderImage"
-                 style="width: 100%; margin-top: 2%; margin-bottom: 2%" />
-            <img src="cid:LogosImage"
-                 style="width: 100%; margin-top: 2%; margin-bottom: 2%" />
-        </header>
-        <section style="margin: 5vh 0px; display: flex; flex-direction: column;">
-            أهلا بك $NewInvitee.Name$. <br />
-            السلام عليكم و رحمة الله و بركاته<br />
-            تم تأكيد تسجيلك لحضور: $EventEntity.ArabicName$ <br />
-            المقر:$EventEntity.ArabicLocation$ <br />
-            اليوم: $EventEntity.StartDate.DayOfWeek$ <br />
-            التاريخ: $EventEntity.StartDate.Date$ <br />
-            الوقت: $EventEntity.StartDate.TimeOfDay$ <br />
-        </section>
-        <section style="display: flex; flex-direction: column; justify-content: center;;  margin:5vh 0px">
-            <img src="cid:QRCodeImage" style="margin-top: 4%; margin-bottom: 4%; align-self: center" />
-            <a href="$DownloadQRCodeAPI$" download="QRCode.png">
-                <button style="
-                    background: rgba(45, 149, 150, 1);
+<body style="font-family: Tajawal; background: rgb(250, 241, 236); ">
+    <table style="width:40%;  margin-left: auto;margin-right: auto;direction:rtl">
+        <tr>
+            <td colspan="3">
+                <img src="cid:Email_HeaderImage" style="width: 100%; margin-top: 2%; margin-bottom: 2%" />
+                <img src="cid:LogosImage" style="width: 100%; margin-top: 2%; margin-bottom: 2%" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3"> أهلا بك $NewInvitee.Name$.</td>
+        </tr>
+        <tr>
+            <td colspan="3">السلام عليكم و رحمة الله و بركاته.</td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td colspan="3">تم تأكيد تسجيلك لحضور: $EventEntity.ArabicName$</td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td colspan="3">المقر:$EventEntity.ArabicLocation$</td>
+        </tr>
+        <tr>
+            <td colspan="3">اليوم: $EventEntity.StartDate.DayOfWeek$</td>
+        </tr>
+        <tr>
+            <td colspan="3">التاريخ: $EventEntity.StartDate.Date$</td>
+        </tr>
+        <tr>
+            <td colspan="3">الوقت: $EventEntity.StartDate.TimeOfDay$</td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <img src="cid:BarCodeImage" style="margin-top: 4%; margin-bottom: 4%; align-self: center" />
+        </tr>
+
+
+        <tr>
+            <td style=" text-align: center; width: 50%;padding:15px" align="center">
+                <a href="$DownloadBarCodeAPI$" download="BarCode.png" style="
+                    background: rgb(45, 149, 150);
                     border-radius: 6px;
-                    box-shadow: unset;
                     color: white;
                     padding: 10px;
-                    max-width: 200px;
                     border: unset;
+                    cursor: pointer;
+                    text-decoration:none;
                 ">
-                    <svg width="13" height="14" viewBox="0 0 13 14" fill="none" style="color: white; background-color: transparent" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.07004 0.0400391C5.70001 0.0400391 5.40004 0.340008 5.40004 0.710039V2.05004H1.38004C0.639978 2.05004 0.0400391 2.64998 0.0400391 3.39004V12.1C0.0400391 12.8401 0.639977 13.44 1.38004 13.44H10.76C11.5001 13.44 12.1 12.8401 12.1 12.1V3.39004C12.1 2.64998 11.5001 2.05004 10.76 2.05004H6.74004V0.710039C6.74004 0.340008 6.44007 0.0400391 6.07004 0.0400391ZM6.74004 2.05004V6.5438H8.84323C9.29091 6.5438 9.51511 7.08506 9.19855 7.40162L6.5438 10.0564C6.28215 10.318 5.85793 10.318 5.59628 10.0564L2.94153 7.40162C2.62497 7.08506 2.84917 6.5438 3.29685 6.5438H5.40004V2.05004H6.74004Z" fill="white" />
+                    <svg width="13" height="14" viewBox="0 0 13 14" fill="none"
+                         style="color: white; background-color: transparent" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M6.07004 0.0400391C5.70001 0.0400391 5.40004 0.340008 5.40004 0.710039V2.05004H1.38004C0.639978 2.05004 0.0400391 2.64998 0.0400391 3.39004V12.1C0.0400391 12.8401 0.639977 13.44 1.38004 13.44H10.76C11.5001 13.44 12.1 12.8401 12.1 12.1V3.39004C12.1 2.64998 11.5001 2.05004 10.76 2.05004H6.74004V0.710039C6.74004 0.340008 6.44007 0.0400391 6.07004 0.0400391ZM6.74004 2.05004V6.5438H8.84323C9.29091 6.5438 9.51511 7.08506 9.19855 7.40162L6.5438 10.0564C6.28215 10.318 5.85793 10.318 5.59628 10.0564L2.94153 7.40162C2.62497 7.08506 2.84917 6.5438 3.29685 6.5438H5.40004V2.05004H6.74004Z"
+                              fill="white" />
                     </svg>
                     تحميل الرمز ك ملف PDF
-                </button>
-            </a>
-        </section>
-        <section>
-            يرجى الاحتفاظ برمز الاستجابة السريع المرفق مع هذا البريد، حيث سيتم استخدامه للدخول إلى الفعالية.<br />
-            نتطلع إلى لقائكم قريبًا <br />
-            شاكرين لكم حسن تعاونكم معنا <br />
-            جائزة الشارقة للتفوق والتميز التربوي<br />
-        </section>
-        <footer>
-            <img src="cid:CaligraphyImage" style="width: 100%; width: 100%; margin-top: 2%; margin-bottom: 2%" />
-        </footer>
-    </div>
+                </a>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="3" style="padding: 20px">
+                يرجى الاحتفاظ بالرمز المرفق مع هذا البريد، حيث سيتم استخدامه للدخول إلى الفعالية.<br />
+            </td>
+        </tr>
+        <tr style="">
+            <td colspan="3">
+                نتطلع إلى لقائكم قريبًا.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                شاكرين لكم حسن تعاونكم معنا.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                جائزة الشارقة للتفوق والتميز التربوي.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+    </table>
+<table style="width: 40%; margin-left: auto; margin-right: auto;  background: url('cid:CaligraphyImage') no-repeat; background-position: center; background-size: contain">
+
+</table>
 </body>
 </html>

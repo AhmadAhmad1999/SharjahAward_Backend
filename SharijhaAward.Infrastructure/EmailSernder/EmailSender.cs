@@ -58,8 +58,14 @@ namespace SharijhaAward.Infrastructure.EmailSernder
 
                 Message.AlternateViews.Add(AlternateView);
                 Message.To.Add(EmailRequest.ToEmail);
-
-                await client.SendMailAsync(Message);
+                try
+                {
+                    await client.SendMailAsync(Message);
+                }
+                catch (SmtpException)
+                {
+                    throw;
+                }
             }
         }
     }

@@ -17,6 +17,7 @@ using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPers
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
 using System.Globalization;
+using System.Net;
 using System.Resources;
 
 namespace SharijhaAward.Api.Controllers
@@ -82,6 +83,14 @@ namespace SharijhaAward.Api.Controllers
             catch (DbUpdateException Exc)
             {
                 return BadRequest(Exc.Message);
+            }
+            catch (WebException)
+            {
+                return BadRequest("Internet connection error, please check your internet connection and try again later.");
+            }
+            catch(System.Net.Mail.SmtpException)
+            {
+                return BadRequest("Internet connection error, please check your internet connection and try again later.");
             }
         }
 
