@@ -6,6 +6,8 @@ using IronBarCode;
 using Microsoft.AspNetCore.Hosting;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
+using QRCoder;
+using Spire.Barcode;
 
 namespace SharijhaAward.Infrastructure.QRGenerator
 {
@@ -50,22 +52,21 @@ namespace SharijhaAward.Infrastructure.QRGenerator
         }
         public string GenerateBarCode(string Data, string WWWRootFolderPath)
         {
-            GeneratedBarcode BarCode = BarcodeWriter.CreateBarcode(Data, BarcodeWriterEncoding.Code128);
+            BarcodeSettings BarCodeSettings = new BarcodeSettings();
 
-            BarCode.ResizeTo(400, 120);
-            BarCode.AddBarcodeValueTextBelowBarcode();
-            BarCode.ChangeBarCodeColor(Color.Black);
-            BarCode.SetMargins(10);
+            BarCodeSettings.Type = BarCodeType.Code39;
+            BarCodeSettings.Data = Data;
+            BarCodeGenerator BarCodeGenerator = new BarCodeGenerator(BarCodeSettings);
 
             string Path = System.IO.Path.Combine(WWWRootFolderPath, "GeneratedBarcode");
-
             if (!Directory.Exists(Path))
                 Directory.CreateDirectory(Path);
 
             string FilePath = System.IO.Path.Combine(Path,
                 $"BarCodeFor-{Data}-Invite.png");
 
-            BarCode.SaveAsPng(FilePath);
+            BarCodeGenerator.GenerateImage().Save(FilePath);
+
             return FilePath;
         }
     }

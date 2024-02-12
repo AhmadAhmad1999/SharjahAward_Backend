@@ -92,6 +92,10 @@ namespace SharijhaAward.Api.Controllers
             {
                 return BadRequest("Internet connection error, please check your internet connection and try again later.");
             }
+            catch(Exception Ex)
+            {
+                return BadRequest(Ex.Message + "//////" + Ex.InnerException);
+            }
         }
 
         [HttpPut(Name = "UpdatePersonalInvitee")]

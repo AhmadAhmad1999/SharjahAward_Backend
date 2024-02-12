@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SharijhaAward.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDataBase : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -118,6 +118,7 @@ namespace SharijhaAward.Persistence.Migrations
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Employer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeOfInvitee = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsAttend = table.Column<bool>(type: "bit", nullable: false),
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -604,37 +605,6 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TrainingWorkshop",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ArabicTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EnglishTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ArabicWorkshopAttachment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EnglishWorkshopAttachment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TrainingWorkshop", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TrainingWorkshop_users_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_TrainingWorkshop_users_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Note",
                 columns: table => new
                 {
@@ -882,6 +852,47 @@ namespace SharijhaAward.Persistence.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_TrainingManual_users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TrainingWorkshop",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ArabicTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeOfAttachment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicWorkshopAttachment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishWorkshopAttachment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Thumbnale = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrainingWorkshop", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrainingWorkshop_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TrainingWorkshop_users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TrainingWorkshop_users_UpdatedById",
                         column: x => x.UpdatedById,
                         principalTable: "users",
                         principalColumn: "Id");
@@ -1195,71 +1206,6 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SubscriberTrainingWorkshop",
-                columns: table => new
-                {
-                    SubscribersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TrainingWorkshopsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SubscriberTrainingWorkshop", x => new { x.SubscribersId, x.TrainingWorkshopsId });
-                    table.ForeignKey(
-                        name: "FK_SubscriberTrainingWorkshop_TrainingWorkshop_TrainingWorkshopsId",
-                        column: x => x.TrainingWorkshopsId,
-                        principalTable: "TrainingWorkshop",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SubscriberTrainingWorkshop_subscribers_SubscribersId",
-                        column: x => x.SubscribersId,
-                        principalTable: "subscribers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "trainingWorkshopSubscribers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SubscribersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TrainingWorkshopsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_trainingWorkshopSubscribers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_trainingWorkshopSubscribers_TrainingWorkshop_TrainingWorkshopsId",
-                        column: x => x.TrainingWorkshopsId,
-                        principalTable: "TrainingWorkshop",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_trainingWorkshopSubscribers_subscribers_SubscribersId",
-                        column: x => x.SubscribersId,
-                        principalTable: "subscribers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_trainingWorkshopSubscribers_users_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_trainingWorkshopSubscribers_users_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CriterionItem",
                 columns: table => new
                 {
@@ -1383,6 +1329,71 @@ namespace SharijhaAward.Persistence.Migrations
                         principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubscriberTrainingWorkshop",
+                columns: table => new
+                {
+                    SubscribersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TrainingWorkshopsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubscriberTrainingWorkshop", x => new { x.SubscribersId, x.TrainingWorkshopsId });
+                    table.ForeignKey(
+                        name: "FK_SubscriberTrainingWorkshop_TrainingWorkshop_TrainingWorkshopsId",
+                        column: x => x.TrainingWorkshopsId,
+                        principalTable: "TrainingWorkshop",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubscriberTrainingWorkshop_subscribers_SubscribersId",
+                        column: x => x.SubscribersId,
+                        principalTable: "subscribers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "trainingWorkshopSubscribers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SubscribersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TrainingWorkshopsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_trainingWorkshopSubscribers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_trainingWorkshopSubscribers_TrainingWorkshop_TrainingWorkshopsId",
+                        column: x => x.TrainingWorkshopsId,
+                        principalTable: "TrainingWorkshop",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_trainingWorkshopSubscribers_subscribers_SubscribersId",
+                        column: x => x.SubscribersId,
+                        principalTable: "subscribers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_trainingWorkshopSubscribers_users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_trainingWorkshopSubscribers_users_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -2111,6 +2122,11 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "IX_TrainingManual_UpdatedById",
                 table: "TrainingManual",
                 column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TrainingWorkshop_CategoryId",
+                table: "TrainingWorkshop",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TrainingWorkshop_CreatedById",
