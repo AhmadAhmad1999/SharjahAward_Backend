@@ -103,8 +103,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 //        $"&EventName={EventEntity.ArabicName}";
 
                 string DownloadBarCodeImageAPI = isHttps
-                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}"
-                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}";
+                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}"
+                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}";
 
                 string ManipulatedBody = HTMLContent
                     .Replace("$NewInvitee.Name$", NewGroupInvitee.Name, StringComparison.Ordinal) // Invited Name..
@@ -182,8 +182,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 //        $"&EventName={EventEntity.ArabicName}";
 
                 string DownloadBarCodeImageAPI = isHttps
-                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}"
-                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('/').LastOrDefault()}";
+                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}"
+                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}";
 
                 DateTime GregorianDate = new DateTime(EventEntity.StartDate.Year, EventEntity.StartDate.Month,
                     EventEntity.StartDate.Day, EventEntity.StartDate.Hour, EventEntity.StartDate.Minute, EventEntity.StartDate.Second);
