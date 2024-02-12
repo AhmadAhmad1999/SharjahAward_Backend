@@ -15,6 +15,7 @@ using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using SharijhaAward.Domain.Entities.TrainingManualModel;
+using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 
 namespace SharijhaAward.Domain.Entities.CategoryModel; 
 
@@ -79,7 +80,7 @@ public class Category : AuditInformation<User>{
     
     
     // navigation property to the Training Manual
-    public virtual List<TrainingManual> TrainingManuals { get; set; } = new();
+    public virtual List<TrainingWorkshop> TrainingWorkshops { get; set; } = new();
     
     
     // navigation property to the criterion 

@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTrainingWorkshop
+namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTrainingWrokshop
 {
-    public class CreateTrainingWorkshopsCommand : IRequest<Unit>
+    public class UpdateTrainingWorkshopCommand : IRequest<Unit>
     {
+        public Guid Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicWorkshopAttachment { get; set; } = string.Empty;

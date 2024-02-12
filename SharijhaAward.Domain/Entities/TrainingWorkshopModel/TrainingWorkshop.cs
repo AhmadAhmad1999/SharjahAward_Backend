@@ -22,7 +22,7 @@ public class TrainingWorkshop : AuditInformation<User> {
     // english version of the workshop attachment => file
     public string EnglishWorkshopAttachment { get; set; } = string.Empty;
  
-    public string Thumbnale { get; set; } = string.Empty;
+    public string Thumbnail { get; set; } = string.Empty;
 
     public Category Category { get; set; } = null!;
 
