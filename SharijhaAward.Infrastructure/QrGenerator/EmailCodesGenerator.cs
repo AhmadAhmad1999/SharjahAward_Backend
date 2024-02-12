@@ -65,8 +65,15 @@ namespace SharijhaAward.Infrastructure.QRGenerator
             string FilePath = System.IO.Path.Combine(Path,
                 $"BarCodeFor-{Data}-Invite.png");
 
-            BarCodeGenerator.GenerateImage().Save(FilePath);
+            Image barcodeImage = BarCodeGenerator.GenerateImage();
+            Bitmap croppedImage = new Bitmap(barcodeImage.Width, barcodeImage.Height - 50);
 
+            using (Graphics graphics = Graphics.FromImage(croppedImage))
+            {
+                graphics.DrawImage(barcodeImage, 0, 0, new Rectangle(0, 50, barcodeImage.Width, barcodeImage.Height - 50), GraphicsUnit.Pixel);
+            }
+
+            croppedImage.Save(FilePath);
             return FilePath;
         }
     }
