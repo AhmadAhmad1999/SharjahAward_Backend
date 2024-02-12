@@ -34,7 +34,12 @@ namespace SharijhaAward.Api.Controllers
         public async Task<ActionResult<CreateEventCommandResponse>> Create([FromBody] CreateEventCommand CreateEventCommand)
         {
             CreateEventCommandResponse? Response = await _Mediator.Send(CreateEventCommand);
-            return Ok(Response);
+            return Ok(
+                      new
+                      {
+                          data = Response,
+                          message = "تم إنشاء الفعالية بنجاح"
+                      });
         }
 
 
