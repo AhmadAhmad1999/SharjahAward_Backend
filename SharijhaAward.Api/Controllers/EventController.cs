@@ -199,6 +199,12 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("DownloadBarCode")]
         public IActionResult DownloadBarCode(string BarCodeName)
         {
+            if (BarCodeName.Contains('%'))
+            {
+                List<string> ttt = BarCodeName.Split("BarCodeFor").ToList();
+                BarCodeName = "BarCodeFor" + ttt.LastOrDefault();
+            }
+
             string BarCodeImagePath = _WebHostEnvironment.WebRootPath + "\\GeneratedBarcode\\" + BarCodeName;
 
             if (!System.IO.File.Exists(BarCodeImagePath)) return NotFound();
