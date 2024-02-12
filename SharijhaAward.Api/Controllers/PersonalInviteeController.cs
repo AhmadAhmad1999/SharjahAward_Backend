@@ -55,7 +55,12 @@ namespace SharijhaAward.Api.Controllers
             try
             {
                 Guid Response = await _mediator.Send(CreatePersonalInviteeCommand);
-                return Ok(Response);
+                return Ok(
+                     new
+                     {
+                         data = Response ,
+                         message = "تم إنشاء الدعوة الفردية بنجاح"
+                     });
             }
             catch (ValidationException Exc)
             {

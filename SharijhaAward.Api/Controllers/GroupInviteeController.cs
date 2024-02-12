@@ -49,7 +49,12 @@ namespace SharijhaAward.Api.Controllers
             try
             {
                 Unit Response = await _mediator.Send(CreateGroupInviteeCommand);
-                return Ok(new { data = Response });
+                return Ok(
+                     new
+                     {
+                         data = Response,
+                         message = "تم إنشاء الدعوة الجماعية بنجاح"
+                     });
             }
             catch (ValidationException Exc)
             {
