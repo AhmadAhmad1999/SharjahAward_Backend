@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Authentication.SignUp
 {
-    public class SignUpCommand : IRequest<string>
+    public class SignUpCommand : IRequest<AuthenticationResponse>
     {
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;

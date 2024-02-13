@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Authentication.SignUp
 {
-    public class SignUpCommandHandler : IRequestHandler<SignUpCommand, string>
+    public class SignUpCommandHandler
+        : IRequestHandler<SignUpCommand, AuthenticationResponse>
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
@@ -22,11 +23,9 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
             _mapper = mapper;
         }
 
-        public async Task<string> Handle(SignUpCommand request, CancellationToken cancellationToken)
+        public async Task<AuthenticationResponse> Handle(SignUpCommand request, CancellationToken cancellationToken)
         {
             var user = _mapper.Map<Domain.Entities.IdentityModels.User>(request);
-
-            await _userRepository.AddAsync(user);
 
             string token = await _userRepository.RegisterAsync(user);
             
@@ -36,12 +35,20 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
                 if (role == null)
                 {
-                    throw new OpenQA.Selenium.NotFoundException("Role dose not Exsist");
+                    return new AuthenticationResponse()
+                    {
+                        message = "the User is not Created , Role dose not Exsist"
+                    };
                 }
-                await _userRepository.AsignRole(user.Id, role.RoleId);
-            
-            
-            return token;
+            await _userRepository.AsignRole(user.Id, role.RoleId);
+            await _userRepository.AddAsync(user);
+
+            return new AuthenticationResponse() 
+            {
+                token = token,
+                user = user,
+                message = "User has been Created"
+            };
         }
     }
 }
