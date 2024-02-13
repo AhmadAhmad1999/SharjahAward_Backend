@@ -8,10 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Features\DynamicAttribute\**" />
+    <Compile Remove="Features\Cycle\**" />
     <Compile Remove="Features\InviteeForm\Group\NewFolder1\**" />
     <EmbeddedResource Remove="Features\DynamicAttribute\**" />
+    <EmbeddedResource Remove="Features\Cycle\**" />
     <EmbeddedResource Remove="Features\InviteeForm\Group\NewFolder1\**" />
     <None Remove="Features\DynamicAttribute\**" />
+    <None Remove="Features\Cycle\**" />
     <None Remove="Features\InviteeForm\Group\NewFolder1\**" />
   </ItemGroup>
 
@@ -39,14 +42,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Cycle\Commands\CreateCycle\" />
-    <Folder Include="Features\Cycle\Commands\DeleteCycle\" />
-    <Folder Include="Features\Cycle\Commands\UpdateCycle\" />
-    <Folder Include="Features\Cycle\Queries\GetAllCycles\" />
-    <Folder Include="Features\Cycle\Queries\GetCycleById\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
-    <Folder Include="Features\TrainingWorkshops\Queries\" />
   </ItemGroup>
 
 </Project>

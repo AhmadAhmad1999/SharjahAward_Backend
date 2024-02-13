@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.Event.Commands.UpdateEvent
             var eventForUpdate = await _eventRepository.GetByIdAsync(request.Id);
             if (eventForUpdate == null)
             {
-                throw new OpenQA.Selenium.NotFoundException(nameof(Domain.Entities.EventModel.Event));
+                throw new OpenQA.Selenium.NotFoundException("Event Not found");
             }
             else
             {

@@ -25,7 +25,7 @@ namespace SharijhaAward.Application.Features.Event.Commands.DeleteEvent
             var EventToDelete = await _eventRepository.GetByIdAsync(request.Id);
             if (EventToDelete == null)
             {
-                throw new OpenQA.Selenium.NotFoundException(nameof(Domain.Entities.EventModel.Event));
+                throw new OpenQA.Selenium.NotFoundException("Event Not Found");
             }
 
             await _eventRepository.DeleteAsync(EventToDelete);

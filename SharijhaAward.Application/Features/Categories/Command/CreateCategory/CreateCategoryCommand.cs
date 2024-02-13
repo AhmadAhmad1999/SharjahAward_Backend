@@ -28,5 +28,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         public bool RelatedToClasses { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
         public Guid? ParentId { get; set; }
+        public Guid CycleId { get; set; }
     }
 }

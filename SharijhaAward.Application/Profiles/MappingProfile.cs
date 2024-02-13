@@ -33,6 +33,18 @@ using SharijhaAward.Application.Features.Categories.Queries.GatCategoryById;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupByInviteeNumber;
+using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
+using SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTrainingWorkshop;
+using SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTrainingWrokshop;
+using SharijhaAward.Application.Features.TrainingWorkshops.Command.DeleteTrainingWorkshop;
+using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTrainingWorkshopById;
+using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTrainingWorkshops;
+using SharijhaAward.Domain.Entities.FAQModel;
+using SharijhaAward.Application.Features.FAQs.Commands.CreateFAQ;
+using SharijhaAward.Application.Features.FAQs.Commands.UpdateFAQ;
+using SharijhaAward.Application.Features.FAQs.Commands.DeleteFAQ;
+using SharijhaAward.Application.Features.FAQs.Queries.GetFAQById;
+using SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -81,6 +93,18 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Category, UpdateEventCommand>();
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Category, CategoryListVM>().ReverseMap();
+
+            CreateMap<TrainingWorkshop, CreateTrainingWorkshopsCommand>().ReverseMap();
+            CreateMap<TrainingWorkshop, UpdateTrainingWorkshopCommand>().ReverseMap();
+            CreateMap<TrainingWorkshop, DeleteTrainingWorkshopCommand>().ReverseMap();
+            CreateMap<TrainingWorkshop, TrainingWorkshopDto>().ReverseMap();
+            CreateMap<TrainingWorkshop, TrainingWorkshopListVm>().ReverseMap();
+
+            CreateMap<FrequentlyAskedQuestion, CreateFAQCommand>().ReverseMap();
+            CreateMap<FrequentlyAskedQuestion, UpdateFAQCommand>().ReverseMap();
+            CreateMap<FrequentlyAskedQuestion, DeleteFAQCommand>().ReverseMap();
+            CreateMap<FrequentlyAskedQuestion, FAQDto>().ReverseMap();
+            CreateMap<FrequentlyAskedQuestion, FAQListVm>().ReverseMap();
         }
     }
 }
