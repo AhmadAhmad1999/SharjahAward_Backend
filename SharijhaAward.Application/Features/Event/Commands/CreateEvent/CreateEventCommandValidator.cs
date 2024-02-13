@@ -25,8 +25,6 @@ namespace SharijhaAward.Application.Features.Event.Commands.CreateEvent
             RuleFor(e => e.EndDate)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .NotNull();
-                
-                
         }
     }
 }

@@ -7,7 +7,6 @@ using SharijhaAward.Domain.Entities.InvitationModels;
 using SharijhaAward.Domain.Entities.CategoryCommitteeModel;
 using SharijhaAward.Domain.Entities.CriterionItemScaleModel;
 using SharijhaAward.Domain.Entities.CycleModel;
-using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.SubscriberModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopSubscriberModel;
 using System;
@@ -18,6 +17,7 @@ using System.Threading.Tasks;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -41,7 +41,18 @@ namespace SharijhaAward.Persistence
         public DbSet<ProvidedForm> ProvidedForms { get; set; }
         public DbSet<EducationType> EducationTypes { get; set; }
         public DbSet<Category> Categories { get; set; }
-             
+
+        public DbSet<AttributeDataType> AttributeDataTypes { get; set; }
+        public DbSet<AttributeOperation> AttributeOperations { get; set; }
+        public DbSet<AttributeTableName> AttributeTableNames { get; set; }
+        public DbSet<Dependency> Dependencies { get; set; }
+        public DbSet<DependencyValidation> DependencyValidations { get; set; }
+        public DbSet<DynamicAttribute> DynamicAttributes { get; set; }
+        public DbSet<GeneralValidation> DynamicAttributeGeneralValidations { get; set; }
+        public DbSet<DynamicAttributeListValue> DynamicAttributeListValues { get; set; }
+        public DbSet<DynamicAttributeSection> DynamicAttributeSections { get; set; }
+        public DbSet<DynamicAttributeValue> DynamicAttributeValues { get; set; }
+        public DbSet<StaticAttribute> StaticAttributes { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

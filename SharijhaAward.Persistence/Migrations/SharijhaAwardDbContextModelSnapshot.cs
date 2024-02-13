@@ -943,6 +943,307 @@ namespace SharijhaAward.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeDataType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AttributeDataTypes");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeOperation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("OperationAsString")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AttributeOperations");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeTableName", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AttributeTableNames");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.Dependency", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttributeOperationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DynamicAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StaticAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeOperationId");
+
+                    b.HasIndex("DynamicAttributeId");
+
+                    b.HasIndex("StaticAttributeId");
+
+                    b.ToTable("Dependencies");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DependencyValidation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttributeOperationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DependencyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeOperationId");
+
+                    b.HasIndex("DependencyId");
+
+                    b.ToTable("DependencyValidations");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ArabicLabel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicPlaceHolder")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AttributeDataTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AttributeTableNameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DynamicAttributeSectionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EnglishLabel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishPlaceHolder")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsUnique")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LinkedToAnotherAttribute")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeDataTypeId");
+
+                    b.HasIndex("AttributeTableNameId");
+
+                    b.HasIndex("DynamicAttributeSectionId");
+
+                    b.ToTable("DynamicAttributes");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeGeneralValidation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttributeOperationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DynamicAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeOperationId");
+
+                    b.HasIndex("DynamicAttributeId");
+
+                    b.ToTable("DynamicAttributeGeneralValidations");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeListValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DynamicAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DynamicAttributeId");
+
+                    b.ToTable("DynamicAttributeListValues");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeSection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttributeTableNameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeTableNameId");
+
+                    b.ToTable("DynamicAttributeSections");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DynamicAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecordId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DynamicAttributeId");
+
+                    b.ToTable("DynamicAttributeValues");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.StaticAttribute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ArabicLabel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AttributeDataTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AttributeTableNameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EnglishLabel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeDataTypeId");
+
+                    b.HasIndex("AttributeTableNameId");
+
+                    b.ToTable("StaticAttributes");
+                });
+
             modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationalClassModel.EducationalClass", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2630,6 +2931,146 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Cycle");
 
                     b.Navigation("UpdatedBy");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.Dependency", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeOperation", "AttributeOperation")
+                        .WithMany()
+                        .HasForeignKey("AttributeOperationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "DynamicAttribute")
+                        .WithMany()
+                        .HasForeignKey("DynamicAttributeId");
+
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.StaticAttribute", "StaticAttribute")
+                        .WithMany()
+                        .HasForeignKey("StaticAttributeId");
+
+                    b.Navigation("AttributeOperation");
+
+                    b.Navigation("DynamicAttribute");
+
+                    b.Navigation("StaticAttribute");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DependencyValidation", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeOperation", "AttributeOperation")
+                        .WithMany()
+                        .HasForeignKey("AttributeOperationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.Dependency", "Dependency")
+                        .WithMany()
+                        .HasForeignKey("DependencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AttributeOperation");
+
+                    b.Navigation("Dependency");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeDataType", "AttributeDataType")
+                        .WithMany()
+                        .HasForeignKey("AttributeDataTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeTableName", "AttributeTableName")
+                        .WithMany()
+                        .HasForeignKey("AttributeTableNameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeSection", "DynamicAttributeSection")
+                        .WithMany()
+                        .HasForeignKey("DynamicAttributeSectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AttributeDataType");
+
+                    b.Navigation("AttributeTableName");
+
+                    b.Navigation("DynamicAttributeSection");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeGeneralValidation", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeOperation", "AttributeOperation")
+                        .WithMany()
+                        .HasForeignKey("AttributeOperationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "DynamicAttribute")
+                        .WithMany()
+                        .HasForeignKey("DynamicAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AttributeOperation");
+
+                    b.Navigation("DynamicAttribute");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeListValue", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "DynamicAttribute")
+                        .WithMany()
+                        .HasForeignKey("DynamicAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DynamicAttribute");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeSection", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeTableName", "AttributeTableName")
+                        .WithMany()
+                        .HasForeignKey("AttributeTableNameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AttributeTableName");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeValue", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "DynamicAttribute")
+                        .WithMany()
+                        .HasForeignKey("DynamicAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DynamicAttribute");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.DynamicAttributeModel.StaticAttribute", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeDataType", "AttributeDataType")
+                        .WithMany()
+                        .HasForeignKey("AttributeDataTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeTableName", "AttributeTableName")
+                        .WithMany()
+                        .HasForeignKey("AttributeTableNameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AttributeDataType");
+
+                    b.Navigation("AttributeTableName");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationalClassModel.EducationalClass", b =>

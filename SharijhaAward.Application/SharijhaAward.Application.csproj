@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\DynamicAttribute\**" />
     <Compile Remove="Features\InviteeForm\Group\NewFolder1\**" />
+    <EmbeddedResource Remove="Features\DynamicAttribute\**" />
     <EmbeddedResource Remove="Features\InviteeForm\Group\NewFolder1\**" />
+    <None Remove="Features\DynamicAttribute\**" />
     <None Remove="Features\InviteeForm\Group\NewFolder1\**" />
   </ItemGroup>
 
