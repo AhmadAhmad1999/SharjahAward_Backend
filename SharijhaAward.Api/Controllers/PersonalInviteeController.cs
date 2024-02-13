@@ -75,10 +75,18 @@ namespace SharijhaAward.Api.Controllers
                         if (error.Message.Contains("IX_PersonaLnvitees_Email", StringComparison.OrdinalIgnoreCase))
                         {
                             if (HeaderValue.ToString() == "ar")
-                                return BadRequest("هذا البريد الإلكتروني مستخدم بالفعل.");
+                                return BadRequest(
+                                    new 
+                                    { 
+                                        message = "هذا البريد الإلكتروني مستخدم بالفعل."
+                                    });
 
                             else
-                                return BadRequest("This email is already in use.");
+                                return BadRequest(
+                                    new
+                                    {
+                                        message = "This email is already in use." 
+                                    });
                         }
                     }
                 }
@@ -91,15 +99,27 @@ namespace SharijhaAward.Api.Controllers
             }
             catch (WebException)
             {
-                return BadRequest("Internet connection error, please check your internet connection and try again later.");
+                return BadRequest(
+                    new 
+                    {
+                        message = "Internet connection error, please check your internet connection and try again later." 
+                    });
             }
             catch(System.Net.Mail.SmtpException)
             {
-                return BadRequest("Internet connection error, please check your internet connection and try again later.");
+                return BadRequest(
+                    new
+                    {
+                        message = "Internet connection error, please check your internet connection and try again later."
+                    });
             }
             catch(Exception Ex)
             {
-                return BadRequest(Ex.Message + "//////" + Ex.InnerException);
+                return BadRequest(
+                    new
+                    {
+                        message = Ex.Message + "//////" + Ex.InnerException
+                    });
             }
         }
 
@@ -115,7 +135,7 @@ namespace SharijhaAward.Api.Controllers
         {
 
             await _mediator.Send(updatePersonalInviteeCommand);
-            return Ok(Response);
+            return Ok(new { message = Response });
         }
 
         [HttpDelete(Name = "DeletePersonalInvitee")]
@@ -133,7 +153,7 @@ namespace SharijhaAward.Api.Controllers
                 Id = id
             };
             await _mediator.Send(deletePersonalInviteeCommand);
-            return Ok(Response);
+            return Ok(new { message = Response });
         }
 
         [HttpGet("{id}", Name = "GetPersonalInviteeById")]
@@ -235,7 +255,12 @@ namespace SharijhaAward.Api.Controllers
                 Id = personalQuery.Id,
             });
 
-            return Ok(respone);
+            return Ok(
+                new
+                {
+                    data = respone,
+                    message = "Confirmed Sucsessfuly"
+                });
         }
     }
 }

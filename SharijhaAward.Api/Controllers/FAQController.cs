@@ -47,7 +47,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> UpdateFAQ(UpdateFAQCommand command)
+        public async Task<ActionResult> UpdateFAQ([FromBody] UpdateFAQCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(
@@ -66,9 +66,9 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> DeleteFAQ(DeleteFAQCommand commad)
+        public async Task<ActionResult> DeleteFAQ(Guid Id)
         { 
-            var response = await _mediator.Send(commad);
+            var response = await _mediator.Send(new DeleteFAQCommand() {Id=Id });
             return Ok(
                new
                {
@@ -77,7 +77,7 @@ namespace SharijhaAward.Api.Controllers
                });
         }
 
-        [HttpGet(Name="GetFAQById")]
+        [HttpGet("{Id}",Name="GetFAQById")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

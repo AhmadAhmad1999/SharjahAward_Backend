@@ -108,6 +108,7 @@ namespace SharijhaAward.Api.Controllers
                     }
                 });
         }
+       
         [HttpDelete(Name = "DeleteEvent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -118,6 +119,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<ActionResult> DeleteEvent(Guid id)
         {
             var dtos = await _Mediator.Send(new DeleteEventCommand() { Id = id });
+           
             return Ok("Delete Success");
         }
 

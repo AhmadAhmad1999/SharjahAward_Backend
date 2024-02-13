@@ -12,5 +12,6 @@ namespace SharijhaAward.Application.Features.Authentication
         public string token {  get; set; }=string.Empty;
         public Domain.Entities.IdentityModels.User user { get; set; } = null!;
         public List<Permission>? permissions { get; set; } = null!;
+        public string message {  get; set; } =string.Empty;
     }
 }

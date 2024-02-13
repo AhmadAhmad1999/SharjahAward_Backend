@@ -69,27 +69,51 @@ namespace SharijhaAward.Api.Controllers
                         if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase))
                         {
                             if (HeaderValue.ToString() == "ar")
-                                return BadRequest("هذا البريد الإلكتروني مستخدم بالفعل.");
+                                return BadRequest(
+                                    new
+                                    {
+                                        message = "هذا البريد الإلكتروني مستخدم بالفعل."
+                                    });
 
                             else
-                                return BadRequest("This email is already in use.");
+                                return BadRequest(
+                                    new
+                                    {
+                                        message = "This email is already in use."
+                                    });
                         }
                     }
                 }
-
-                return BadRequest(Exc.Message);
+                return BadRequest(
+                    new
+                    {
+                        message = Exc.Message
+                    });
+                
             }
             catch (DbUpdateException Exc)
             {
-                return BadRequest(Exc.Message);
+                return BadRequest(
+                    new
+                    {
+                         message = Exc.Message
+                    });
             }
             catch (WebException)
             {
-                return BadRequest("Internet connection error, please check your internet connection and try again later.");
+                return BadRequest(
+                    new
+                    {
+                        message = "Internet connection error, please check your internet connection and try again later."
+                    });
             }
             catch (System.Net.Mail.SmtpException)
             {
-                return BadRequest("Internet connection error, please check your internet connection and try again later.");
+                return BadRequest(
+                    new
+                    {
+                        message = "Internet connection error, please check your internet connection and try again later."
+                    });
             }
         }
 
@@ -122,7 +146,7 @@ namespace SharijhaAward.Api.Controllers
                 Id = id
             };
             await _mediator.Send(deleteGroupInviteeCommand);
-            return Ok(Response);
+            return Ok(new { message = Response });
         }
 
 
@@ -223,7 +247,12 @@ namespace SharijhaAward.Api.Controllers
                 NumberOfAttendees=query.NumberOfAttendees
             });
 
-            return Ok(respone);
+            return Ok(
+                new
+                {
+                     data = respone,
+                     message = "Confirmed Sucsessfuly"
+                });
         }
     }
 }

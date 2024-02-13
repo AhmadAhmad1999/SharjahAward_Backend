@@ -36,39 +36,48 @@ namespace SharijhaAward.Persistence.Repositories
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            var user = await _dbContext.Users.Where(u => u.Email == email).FirstAsync();
+            User? user = await _dbContext.Users
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
             return user;
         }
 
         public async Task<AuthenticationResponse> LogInAsync(User user)
         {
-           var userToLogin = await GetByEmailAsync(user.Email);
-            if (userToLogin != null)
+            User? userToLogin = await GetByEmailAsync(user.Email);
+            if (userToLogin == null)
             {
-                if (userToLogin.Password == user.Password)
+                return new AuthenticationResponse()
                 {
-                    var token = _jwtProvider.Generate(userToLogin);
-                    userToLogin.Role = await _dbContext.Roles.FindAsync(userToLogin.RoleId);
-                   // var permissions = await _dbContext.RolePermissions.FindAsync(userToLogin.Role.RolePermissionId);
-
-                    var response = new AuthenticationResponse()
-                    {
-                        token = token,
-                        user = userToLogin,
-                        //permissions = permissions.Permission
-                    };
-                    return response;
-                }
-                throw new Exception("Authentication Error");
+                    message = "User Not Found"
+                };
             }
-            throw new Exception("Authentication Error");
+            if (userToLogin.Password == user.Password)
+            {
+                var token = _jwtProvider.Generate(userToLogin);
+                userToLogin.Role = await _dbContext.Roles.FindAsync(userToLogin.RoleId);
+                // var permissions = await _dbContext.RolePermissions.FindAsync(userToLogin.Role.RolePermissionId);
+
+                var response = new AuthenticationResponse()
+                {
+                    token = token,
+                    user = userToLogin,
+                    //permissions = permissions.Permission
+                    message = "Login Sucsses"
+                };
+                return response;
+            }
+            return new AuthenticationResponse()
+            {
+                message = "Authentication Error"
+            };
+           
         }
 
         public async Task<string> RegisterAsync(User user)
         {
             if (user != null)
             {
-                string token = _jwtProvider.Generate(user);
+                string token =  _jwtProvider.Generate(user);
                 return token;
             }
             throw new Exception("The Account is not created");

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OpenQA.Selenium.DevTools.V120.Browser;
+using SharijhaAward.Application.Features.Authentication;
 using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Features.Authentication.SignUp;
 
@@ -20,21 +21,35 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost("Login", Name = "Login")]
         public async Task<ActionResult<string>> Login([FromBody] LoginCommand user)
         {
-            var response = await _Mediator.Send(new LoginCommand() { Email = user.Email, Password = user.Password });
-
-            return Ok(
-                new 
-                {
-                    data = response.user,
-                    key = response.token,
-                    permission = response.permissions
-                    
+            var response = await _Mediator.Send(
+                new LoginCommand()
+                { 
+                    Email = user.Email,
+                    Password = user.Password 
                 });
+            if (response.user == null)
+            {
+                return StatusCode(400,
+                    new
+                    {
+                        message = response.message
+                    });
+            }
+            else 
+                return Ok(
+                    new
+                    {
+                        data = response.user,
+                        key = response.token,
+                        permission = response.permissions,
+                        message = response.message
+
+                    });
         }
         [HttpPost("SignUp", Name = "SignUp")]
         public async Task<ActionResult<string>> SignUp([FromBody] SignUpCommand user)
         {
-            string token = await _Mediator.Send(new SignUpCommand()
+            var response = await _Mediator.Send(new SignUpCommand()
             {
                 Email = user.Email,
                 Password = user.Password,
@@ -45,7 +60,24 @@ namespace SharijhaAward.Api.Controllers
                 
             });
 
-            return Ok(new {data = token}) ;
+            if (response.user == null)
+            {
+                return StatusCode(400,
+                    new
+                    {
+                        message = response.message
+                    });
+            }
+            else
+                return Ok(
+                    new
+                    {
+                        data = response.user,
+                        key = response.token,
+                        permission = response.permissions,
+                        message = response.message
+
+                    });
         }
     }
 }

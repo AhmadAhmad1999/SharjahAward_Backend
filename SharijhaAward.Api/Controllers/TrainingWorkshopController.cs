@@ -66,9 +66,9 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult> DeleteTrainingWorkshop(DeleteTrainingWorkshopCommand command)
+        public async Task<ActionResult> DeleteTrainingWorkshop(Guid Id)
         {
-            var response = await _mediator.Send(command);
+            var response = await _mediator.Send(new DeleteTrainingWorkshopCommand() {Id = Id });
             return Ok(
                 new
                 {
