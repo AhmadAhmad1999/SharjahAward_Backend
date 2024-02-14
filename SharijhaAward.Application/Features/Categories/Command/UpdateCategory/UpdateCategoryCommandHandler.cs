@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                 throw new OpenQA.Selenium.NotFoundException("Category Not Found");
             }
             _mapper.Map(request, categoryToUpdate, typeof(UpdateCategoryCommand), typeof(Category));
-
+            await _categoryRepository.UpdateAsync(categoryToUpdate);
             return Unit.Value;
         }
     }
