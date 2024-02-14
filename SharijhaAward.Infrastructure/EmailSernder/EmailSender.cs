@@ -47,7 +47,7 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                 client.Credentials = Credentials;
                 client.Host = Host;
                 client.Port = Port;
-                client.EnableSsl = false;
+                client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
 
                 MailMessage Message = new MailMessage
                 {
