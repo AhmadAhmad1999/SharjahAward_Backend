@@ -13,7 +13,7 @@ public class Cycle  {
     public Guid Id { get; set; }
     // year of the cycle
     // e.g 2023-2024 just take the smaller one 
-    public int Year { get; set; }
+    public string Year { get; set; } = string.Empty;
     // the arabic name of the cycle.
     [MinLength(ValidationConstants.ArabicNameMinLength)]
     [MaxLength(ValidationConstants.ArabicNameMaxLength)]
@@ -25,7 +25,8 @@ public class Cycle  {
     // the status of the cycle (active, inactive)
     // the initial state of the cycle is inactive.
     public Status Status { get; set; } = Status.InActive;
-    
+    public DateTime RegistrationPortalOpeningDate { get; set; }
+    public DateTime RegistrationPortalClosingDate { get; set; }
     // Number of individual categories in which subscriber can entitled.
     [Range(ValidationConstants.IndividualCategoryNumberMinValue, ValidationConstants.IndividualCategoryNumberMaxValue)]
     public int IndividualCategoryNumber { get; set; } = 0; 
@@ -33,14 +34,6 @@ public class Cycle  {
     // Number of group categories in which subscriber can entitled.
     [Range(ValidationConstants.GroupCategoryNumberMinValue, ValidationConstants.GroupCategoryNumberMaxValue)]
     public int GroupCategoryNumber { get; set; } = 0;
-    
-    // Minimum amount for obtaining a statement.
-    [Range(ValidationConstants.MinAmountForStatementMinValue, ValidationConstants.MinAmountForStatementMaxValue)]
-    public int MinAmountForStatement { get; set; } = 0;
-    
-    // Margin of Difference between the results of the arbitrators.
-    [Range(ValidationConstants.ArbitratorsResultsMarginMinValue, ValidationConstants.ArbitratorsResultsMarginMaxValue)]
-    public int ArbitratorsResultsMargin { get; set; } = 0;
     
     // navigation property to the category
     public virtual List<Category> Categories { get; set; } = new();

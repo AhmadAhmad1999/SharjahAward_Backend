@@ -45,6 +45,8 @@ using SharijhaAward.Application.Features.FAQs.Commands.UpdateFAQ;
 using SharijhaAward.Application.Features.FAQs.Commands.DeleteFAQ;
 using SharijhaAward.Application.Features.FAQs.Queries.GetFAQById;
 using SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs;
+using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Application.Features.Cycles.Commands.CreateCycle;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -105,6 +107,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<FrequentlyAskedQuestion, DeleteFAQCommand>().ReverseMap();
             CreateMap<FrequentlyAskedQuestion, FAQDto>().ReverseMap();
             CreateMap<FrequentlyAskedQuestion, FAQListVm>().ReverseMap();
+
+            CreateMap<Cycle, CreateCycleCommand>().ReverseMap();   
         }
     }
 }

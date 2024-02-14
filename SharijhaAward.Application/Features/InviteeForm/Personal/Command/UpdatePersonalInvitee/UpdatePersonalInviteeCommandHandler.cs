@@ -35,7 +35,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Update
             {
                 throw new OpenQA.Selenium.NotFoundException();
             }
-
+            _mapper.Map(request, PersonalToUpdate, typeof(UpdatePersonalInviteeCommand), typeof(PersonalInvitee));
             await _PersonalInviteeRepository.UpdateAsync(PersonalToUpdate);
 
             return Unit.Value;

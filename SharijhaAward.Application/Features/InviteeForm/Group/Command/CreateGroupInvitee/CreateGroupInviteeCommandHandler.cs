@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee
 {
     public class CreateGroupInviteeCommandHandler
-        : IRequestHandler<CreateGroupInviteeCommand, Unit>
+        : IRequestHandler<CreateGroupInviteeCommand, CreateInviteeResponse>
     {
         private readonly IAsyncRepository<GroupInvitee> _groupInviteeRepository;
         private readonly IMapper _mapper;
@@ -42,7 +42,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
             _HttpContextAccessor = HttpContextAccessor;
         }
 
-        public async Task<Unit> Handle(CreateGroupInviteeCommand Request, CancellationToken cancellationToken)
+        public async Task<CreateInviteeResponse> Handle(CreateGroupInviteeCommand Request, CancellationToken cancellationToken)
         {
             CreateGroupInviteeCommandValidator Validator = new CreateGroupInviteeCommandValidator();
             ValidationResult? ValidationResult = await Validator.ValidateAsync(Request);
@@ -153,6 +153,17 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 {
                     throw;
                 }
+                return new CreateInviteeResponse()
+                {
+                    Name = NewGroupInvitee.Name,
+                    EventName = EventEntity.ArabicName,
+                    EventSiteName = EventEntity.ArabicSiteName,
+                    EventDayName = EventEntity.StartDate.ToString("dddd", ArabicCulture),
+                    EventDate = EventEntity.StartDate.ToString("M/d/yyyy", ArabicCulture),
+                    EventTime = EventEntity.StartDate.ToString("HH:mm:ss", ArabicCulture),
+                    ImageURl = BarCodeImagePath,
+                    DownLoadURL = DownloadBarCodeImageAPI
+                };
             }
             else
             {
@@ -235,9 +246,19 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 {
                     throw;
                 }
+                return new CreateInviteeResponse()
+                {
+                    Name = NewGroupInvitee.Name,
+                    EventName = EventEntity.EnglishName,
+                    EventSiteName = EventEntity.EnglishSiteName,
+                    EventDayName = EventEntity.StartDate.DayOfWeek.ToString(),
+                    EventDate = EventEntity.StartDate.ToString("M/d/yyyy"),
+                    EventTime = EventEntity.StartDate.ToString("HH:mm:ss"),
+                    ImageURl = BarCodeImagePath,
+                    DownLoadURL = DownloadBarCodeImageAPI
+                };
             }
 
-            return Unit.Value;
         }
     }
 }

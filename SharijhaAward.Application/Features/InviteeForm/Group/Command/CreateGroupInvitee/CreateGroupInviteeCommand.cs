@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee
 {
-    public class CreateGroupInviteeCommand : IRequest<Unit>
+    public class CreateGroupInviteeCommand : IRequest<CreateInviteeResponse>
     {
         public string Name { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;

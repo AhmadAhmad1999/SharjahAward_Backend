@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
     public class CreatePersonalInviteeCommandHandler
         : IRequestHandler<
             CreatePersonalInviteeCommand,
-            Guid>
+            CreateInviteeResponse>
     {
         private readonly IAsyncRepository<PersonalInvitee> _PersonalInviteeRepository;
         private readonly IAsyncRepository<Domain.Entities.EventModel.Event> _EventRepository;
@@ -51,7 +51,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
             _HttpContextAccessor = HttpContextAccessor;
         }
 
-        public async Task<Guid> Handle(CreatePersonalInviteeCommand Request, CancellationToken CancellationToken)
+        public async Task<CreateInviteeResponse> Handle(CreatePersonalInviteeCommand Request, CancellationToken CancellationToken)
         {
             CreatePersonalInviteeCommandValidator? Validator = new CreatePersonalInviteeCommandValidator();
             FluentValidation.Results.ValidationResult? ValidationResult = await Validator.ValidateAsync(Request, CancellationToken);
@@ -167,7 +167,17 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     throw;
                 }
 
-                return NewPersonalnvitee.Id;
+                return new CreateInviteeResponse()
+                {
+                    Name = NewPersonalnvitee.Name,
+                    EventName = EventEntity.ArabicName,
+                    EventSiteName = EventEntity.ArabicSiteName,
+                    EventDayName = GregorianDate.ToString("dddd", ArabicCulture),
+                    EventDate = GregorianDate.ToString("M/d/yyyy", ArabicCulture),
+                    EventTime = GregorianDate.ToString("HH:mm:ss", ArabicCulture),
+                    ImageURl = BarCodeImagePath,
+                    DownLoadURL = DownloadBarCodeImageAPI
+                };
             }
             else
             {
@@ -251,7 +261,17 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     throw;
                 }
 
-                return NewPersonalnvitee.Id;
+                return new CreateInviteeResponse()
+                {
+                    Name = NewPersonalnvitee.Name,
+                    EventName = EventEntity.EnglishName,
+                    EventSiteName = EventEntity.EnglishSiteName,
+                    EventDayName = GregorianDate.DayOfWeek.ToString(),
+                    EventDate = GregorianDate.ToString("M/d/yyyy"),
+                    EventTime = GregorianDate.ToString("HH:mm:ss"),
+                    ImageURl = BarCodeImagePath,
+                    DownLoadURL = DownloadBarCodeImageAPI
+                };
             }
         }
     }

@@ -13,8 +13,6 @@ namespace SharijhaAward.Application.Features.Event.Commands.CreateEvent
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
-        public string EnglishLocation { get; set; } = string.Empty;
-        public string ArabicLocation { get; set; } = string.Empty;
         public string EnglishSiteName { get; set; } = string.Empty;
         public string ArabicSiteName { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
