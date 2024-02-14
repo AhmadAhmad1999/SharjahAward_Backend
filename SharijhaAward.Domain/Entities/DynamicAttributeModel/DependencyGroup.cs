@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Entities.DynamicAttributeModels
+namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
 {
-    public class DynamicAttributeOperation
+    public class DependencyGroup
     {
         public int Id { get; set; }
-
-        public string Name { get; set; }
     }
 }

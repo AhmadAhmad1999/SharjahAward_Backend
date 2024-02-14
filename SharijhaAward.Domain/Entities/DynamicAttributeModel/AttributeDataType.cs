@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Entities.DynamicAttributeModels
+namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
 {
-    public class DynamicAttributeDataType
+    public class AttributeDataType
     {
         public int Id { get; set; }
-        public string Name { get; set; }=string.Empty;
+        public string Name { get; set; } = null!;
     }
 }

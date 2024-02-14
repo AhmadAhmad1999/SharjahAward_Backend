@@ -8,11 +8,50 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SharijhaAward.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class AhmadMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AttributeDataTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AttributeDataTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AttributeOperations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OperationAsString = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AttributeOperations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AttributeTableNames",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AttributeTableNames", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "cycles",
                 columns: table => new
@@ -79,6 +118,55 @@ namespace SharijhaAward.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RolePermissions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DynamicAttributeSections",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AttributeTableNameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DynamicAttributeSections", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DynamicAttributeSections_AttributeTableNames_AttributeTableNameId",
+                        column: x => x.AttributeTableNameId,
+                        principalTable: "AttributeTableNames",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StaticAttributes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Key = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicLabel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishLabel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AttributeDataTypeId = table.Column<int>(type: "int", nullable: false),
+                    AttributeTableNameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StaticAttributes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StaticAttributes_AttributeDataTypes_AttributeDataTypeId",
+                        column: x => x.AttributeDataTypeId,
+                        principalTable: "AttributeDataTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StaticAttributes_AttributeTableNames_AttributeTableNameId",
+                        column: x => x.AttributeTableNameId,
+                        principalTable: "AttributeTableNames",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,6 +258,47 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DynamicAttributes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Key = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicLabel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishLabel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicPlaceHolder = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishPlaceHolder = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsRequired = table.Column<bool>(type: "bit", nullable: false),
+                    IsUnique = table.Column<bool>(type: "bit", nullable: false),
+                    LinkedToAnotherAttribute = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    AttributeDataTypeId = table.Column<int>(type: "int", nullable: false),
+                    AttributeTableNameId = table.Column<int>(type: "int", nullable: false),
+                    DynamicAttributeSectionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DynamicAttributes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DynamicAttributes_AttributeDataTypes_AttributeDataTypeId",
+                        column: x => x.AttributeDataTypeId,
+                        principalTable: "AttributeDataTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DynamicAttributes_AttributeTableNames_AttributeTableNameId",
+                        column: x => x.AttributeTableNameId,
+                        principalTable: "AttributeTableNames",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DynamicAttributes_DynamicAttributeSections_DynamicAttributeSectionId",
+                        column: x => x.DynamicAttributeSectionId,
+                        principalTable: "DynamicAttributeSections",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "users",
                 columns: table => new
                 {
@@ -189,6 +318,106 @@ namespace SharijhaAward.Persistence.Migrations
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "RoleId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Dependencies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DynamicAttributeId = table.Column<int>(type: "int", nullable: true),
+                    StaticAttributeId = table.Column<int>(type: "int", nullable: true),
+                    AttributeOperationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Dependencies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Dependencies_AttributeOperations_AttributeOperationId",
+                        column: x => x.AttributeOperationId,
+                        principalTable: "AttributeOperations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Dependencies_DynamicAttributes_DynamicAttributeId",
+                        column: x => x.DynamicAttributeId,
+                        principalTable: "DynamicAttributes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Dependencies_StaticAttributes_StaticAttributeId",
+                        column: x => x.StaticAttributeId,
+                        principalTable: "StaticAttributes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DynamicAttributeGeneralValidations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DynamicAttributeId = table.Column<int>(type: "int", nullable: false),
+                    AttributeOperationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DynamicAttributeGeneralValidations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DynamicAttributeGeneralValidations_AttributeOperations_AttributeOperationId",
+                        column: x => x.AttributeOperationId,
+                        principalTable: "AttributeOperations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DynamicAttributeGeneralValidations_DynamicAttributes_DynamicAttributeId",
+                        column: x => x.DynamicAttributeId,
+                        principalTable: "DynamicAttributes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DynamicAttributeListValues",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DynamicAttributeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DynamicAttributeListValues", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DynamicAttributeListValues_DynamicAttributes_DynamicAttributeId",
+                        column: x => x.DynamicAttributeId,
+                        principalTable: "DynamicAttributes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DynamicAttributeValues",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecordId = table.Column<int>(type: "int", nullable: false),
+                    DynamicAttributeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DynamicAttributeValues", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DynamicAttributeValues_DynamicAttributes_DynamicAttributeId",
+                        column: x => x.DynamicAttributeId,
+                        principalTable: "DynamicAttributes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -602,6 +831,32 @@ namespace SharijhaAward.Persistence.Migrations
                         principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DependencyValidations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DependencyId = table.Column<int>(type: "int", nullable: false),
+                    AttributeOperationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DependencyValidations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DependencyValidations_AttributeOperations_AttributeOperationId",
+                        column: x => x.AttributeOperationId,
+                        principalTable: "AttributeOperations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DependencyValidations_Dependencies_DependencyId",
+                        column: x => x.DependencyId,
+                        principalTable: "Dependencies",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1872,6 +2127,71 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Dependencies_AttributeOperationId",
+                table: "Dependencies",
+                column: "AttributeOperationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Dependencies_DynamicAttributeId",
+                table: "Dependencies",
+                column: "DynamicAttributeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Dependencies_StaticAttributeId",
+                table: "Dependencies",
+                column: "StaticAttributeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DependencyValidations_AttributeOperationId",
+                table: "DependencyValidations",
+                column: "AttributeOperationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DependencyValidations_DependencyId",
+                table: "DependencyValidations",
+                column: "DependencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DynamicAttributeGeneralValidations_AttributeOperationId",
+                table: "DynamicAttributeGeneralValidations",
+                column: "AttributeOperationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DynamicAttributeGeneralValidations_DynamicAttributeId",
+                table: "DynamicAttributeGeneralValidations",
+                column: "DynamicAttributeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DynamicAttributeListValues_DynamicAttributeId",
+                table: "DynamicAttributeListValues",
+                column: "DynamicAttributeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DynamicAttributes_AttributeDataTypeId",
+                table: "DynamicAttributes",
+                column: "AttributeDataTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DynamicAttributes_AttributeTableNameId",
+                table: "DynamicAttributes",
+                column: "AttributeTableNameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DynamicAttributes_DynamicAttributeSectionId",
+                table: "DynamicAttributes",
+                column: "DynamicAttributeSectionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DynamicAttributeSections_AttributeTableNameId",
+                table: "DynamicAttributeSections",
+                column: "AttributeTableNameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DynamicAttributeValues_DynamicAttributeId",
+                table: "DynamicAttributeValues",
+                column: "DynamicAttributeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EducationalClass_CreatedById",
                 table: "EducationalClass",
                 column: "CreatedById");
@@ -2059,6 +2379,16 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StaticAttributes_AttributeDataTypeId",
+                table: "StaticAttributes",
+                column: "AttributeDataTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StaticAttributes_AttributeTableNameId",
+                table: "StaticAttributes",
+                column: "AttributeTableNameId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SubscriberAchievement_AchievementClassificationId",
                 table: "SubscriberAchievement",
                 column: "AchievementClassificationId");
@@ -2204,6 +2534,18 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "CycleCondition");
 
             migrationBuilder.DropTable(
+                name: "DependencyValidations");
+
+            migrationBuilder.DropTable(
+                name: "DynamicAttributeGeneralValidations");
+
+            migrationBuilder.DropTable(
+                name: "DynamicAttributeListValues");
+
+            migrationBuilder.DropTable(
+                name: "DynamicAttributeValues");
+
+            migrationBuilder.DropTable(
                 name: "FormCondition");
 
             migrationBuilder.DropTable(
@@ -2270,6 +2612,9 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "Scale");
 
             migrationBuilder.DropTable(
+                name: "Dependencies");
+
+            migrationBuilder.DropTable(
                 name: "ProvidedForms");
 
             migrationBuilder.DropTable(
@@ -2294,6 +2639,15 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "Criterion");
 
             migrationBuilder.DropTable(
+                name: "AttributeOperations");
+
+            migrationBuilder.DropTable(
+                name: "DynamicAttributes");
+
+            migrationBuilder.DropTable(
+                name: "StaticAttributes");
+
+            migrationBuilder.DropTable(
                 name: "EducationTypes");
 
             migrationBuilder.DropTable(
@@ -2306,10 +2660,19 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "Categories");
 
             migrationBuilder.DropTable(
+                name: "DynamicAttributeSections");
+
+            migrationBuilder.DropTable(
+                name: "AttributeDataTypes");
+
+            migrationBuilder.DropTable(
                 name: "cycles");
 
             migrationBuilder.DropTable(
                 name: "users");
+
+            migrationBuilder.DropTable(
+                name: "AttributeTableNames");
 
             migrationBuilder.DropTable(
                 name: "Roles");
