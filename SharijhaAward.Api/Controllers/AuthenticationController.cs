@@ -19,6 +19,9 @@ namespace SharijhaAward.Api.Controllers
         }
         //
         [HttpPost("Login", Name = "Login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
         public async Task<ActionResult<string>> Login([FromBody] LoginCommand user)
         {
             var response = await _Mediator.Send(
@@ -47,6 +50,8 @@ namespace SharijhaAward.Api.Controllers
                     });
         }
         [HttpPost("SignUp", Name = "SignUp")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<string>> SignUp([FromBody] SignUpCommand user)
         {
             var response = await _Mediator.Send(new SignUpCommand()
