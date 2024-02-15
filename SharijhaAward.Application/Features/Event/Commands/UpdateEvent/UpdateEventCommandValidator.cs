@@ -12,10 +12,18 @@ namespace SharijhaAward.Application.Features.Event.Commands.UpdateEvent
     {
         public UpdateEventCommandValidator() {
             RuleFor(e => e.EnglishName)
-               .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
+               .NotEmpty().WithMessage("{PropertyName} is required.")
+               .NotNull();
+
             RuleFor(e => e.EnglishDescription)
-               .MaximumLength(255).WithMessage("{PropertyName} must not exceed 50 characters.");
-   
+               .NotEmpty().WithMessage("{PropertyName} is required.")
+               .NotNull();
+            RuleFor(e => e.StartDate)
+                .NotEmpty().WithMessage("{PropertyName} is required.")
+                .NotNull();
+            RuleFor(e => e.EndDate)
+                .NotEmpty().WithMessage("{PropertyName} is required.")
+                .NotNull();
         }
     }
 }
