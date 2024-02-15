@@ -9,8 +9,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
 {
     public class CreateDependencyValidation
     {
-        public int AttributeOperationId { get; set; }
         public string Value { get; set; } = null!;
+        public int AttributeOperationId { get; set; }
         public List<CreateDependency> Dependencies { get; set; } = null!;
     }
 }
