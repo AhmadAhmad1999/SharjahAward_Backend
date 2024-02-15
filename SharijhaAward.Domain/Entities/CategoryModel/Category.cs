@@ -19,7 +19,7 @@ using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 
 namespace SharijhaAward.Domain.Entities.CategoryModel; 
 
-public class Category : AuditInformation<User>{
+public class Category {
     public Guid Id { get; set; }
     // arabic name of the category
     public string ArabicName { get; set; } = string.Empty;

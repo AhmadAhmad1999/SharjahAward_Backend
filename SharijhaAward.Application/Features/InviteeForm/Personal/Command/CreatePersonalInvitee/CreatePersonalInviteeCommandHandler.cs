@@ -22,6 +22,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
+using IronBarCode;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee
 {
@@ -166,7 +167,13 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 {
                     throw;
                 }
-
+                string BarCodeImageURL = isHttps
+                   ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
+                   : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
+                
+                string DownloadFileUrl = isHttps
+                   ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile=QREmail_ar.html"
+                   : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile=QREmail_ar.html";
                 return new CreateInviteeResponse()
                 {
                     Name = NewPersonalnvitee.Name,
@@ -175,8 +182,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     EventDayName = GregorianDate.ToString("dddd", ArabicCulture),
                     EventDate = GregorianDate.ToString("M/d/yyyy", ArabicCulture),
                     EventTime = GregorianDate.ToString("HH:mm:ss", ArabicCulture),
-                    ImageURl = BarCodeImagePath,
-                    DownLoadURL = DownloadBarCodeImageAPI
+                    ImageURl = BarCodeImageURL,
+                    DownLoadURL = DownloadBarCodeImageAPI,
+                    DownloadFileURL= DownloadFileUrl
                 };
             }
             else
@@ -260,7 +268,13 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 {
                     throw;
                 }
+                string BarCodeImageURL = isHttps
+                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
+                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
 
+                string DownloadFileUrl = isHttps
+                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile=QREmail_en.html"
+                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile=QREmail_en.html";
                 return new CreateInviteeResponse()
                 {
                     Name = NewPersonalnvitee.Name,
@@ -269,8 +283,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     EventDayName = GregorianDate.DayOfWeek.ToString(),
                     EventDate = GregorianDate.ToString("M/d/yyyy"),
                     EventTime = GregorianDate.ToString("HH:mm:ss"),
-                    ImageURl = BarCodeImagePath,
-                    DownLoadURL = DownloadBarCodeImageAPI
+                    ImageURl = BarCodeImageURL,
+                    DownLoadURL = DownloadBarCodeImageAPI,
+                    DownloadFileURL=DownloadFileUrl
                 };
             }
         }

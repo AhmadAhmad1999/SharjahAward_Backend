@@ -7,7 +7,11 @@ using SharijhaAward.Application.Features.Event.Commands.UpdateEvent;
 using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
 using SharijhaAward.Application.Features.Event.Queries.GetEventById;
 using SharijhaAward.Application.Features.Event.Queries.GetEventWithInvitees;
+using Aspose.Html;
+using Aspose.Html.Converters;
 using Aspose.Pdf;
+using System;
+using PdfSaveOptions = Aspose.Pdf.PdfSaveOptions;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -245,6 +249,27 @@ namespace SharijhaAward.Api.Controllers
                     return File(pdfStream.ToArray(), "application/pdf", "BarCode.pdf");
                 }
             }
+        }
+        [HttpGet("DownloadTempletAsPdf")]
+        public IActionResult DownloadTempletAsPdf(string htmlFile)
+        {
+            // Prepare a path to a source HTML file
+            string documentPath = Path.Combine("wwwroot", htmlFile);
+
+            // Prepare a path for converted file saving 
+            string savePath = Path.Combine("wwwroot", "InviteeOutput.pdf");
+
+            // Initialize an HTML document from the file
+            using var document = new HTMLDocument(documentPath);
+
+            // Initialize PdfSaveOptions 
+            var options = new Aspose.Html.Saving.PdfSaveOptions();
+
+            // Convert HTML to PDF
+            Converter.ConvertHTML(document, options, savePath);
+
+            return Ok();
+            
         }
     }
 }

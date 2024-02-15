@@ -16,5 +16,6 @@ namespace SharijhaAward.Application.Features.InviteeForm
         public string EventTime { get; set; } = string.Empty;
         public string ImageURl { get; set; } = string.Empty;
         public string DownLoadURL { get; set; } = string.Empty;
+        public string DownloadFileURL { get; set; } = string.Empty;
     }
 }

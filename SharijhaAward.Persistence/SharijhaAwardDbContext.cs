@@ -79,7 +79,7 @@ namespace SharijhaAward.Persistence
                  Id = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
                  EnglishName = "SharijhaAward",
                  ArabicName ="جائزة الشارقة",    
-                 Year = 2023,
+                 Year = "2023-2024",
             });
 
             modelBuilder.Entity<Role>().HasData(

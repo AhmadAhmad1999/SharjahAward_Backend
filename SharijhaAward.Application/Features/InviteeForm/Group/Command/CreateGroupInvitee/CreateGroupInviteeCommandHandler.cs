@@ -153,6 +153,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 {
                     throw;
                 }
+                string BarCodeImageURL = isHttps
+                   ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
+                   : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
                 return new CreateInviteeResponse()
                 {
                     Name = NewGroupInvitee.Name,
@@ -161,7 +164,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     EventDayName = EventEntity.StartDate.ToString("dddd", ArabicCulture),
                     EventDate = EventEntity.StartDate.ToString("M/d/yyyy", ArabicCulture),
                     EventTime = EventEntity.StartDate.ToString("HH:mm:ss", ArabicCulture),
-                    ImageURl = BarCodeImagePath,
+                    ImageURl = BarCodeImageURL,
                     DownLoadURL = DownloadBarCodeImageAPI
                 };
             }
@@ -246,6 +249,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 {
                     throw;
                 }
+                string BarCodeImageURL = isHttps
+                  ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
+                  : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
                 return new CreateInviteeResponse()
                 {
                     Name = NewGroupInvitee.Name,
@@ -254,7 +260,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     EventDayName = EventEntity.StartDate.DayOfWeek.ToString(),
                     EventDate = EventEntity.StartDate.ToString("M/d/yyyy"),
                     EventTime = EventEntity.StartDate.ToString("HH:mm:ss"),
-                    ImageURl = BarCodeImagePath,
+                    ImageURl = BarCodeImageURL,
                     DownLoadURL = DownloadBarCodeImageAPI
                 };
             }

@@ -91,8 +91,8 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<ProvidedForm, CreateProvidedFormCommand>();
 
-            CreateMap<Category, CreateCategoryCommand>();
-            CreateMap<Category, UpdateEventCommand>();
+            CreateMap<Category, CreateCategoryCommand>().ReverseMap();
+            CreateMap<Category, UpdateEventCommand>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Category, CategoryListVM>().ReverseMap();
 
