@@ -24,7 +24,11 @@ namespace SharijhaAward.Persistence
     public class SharijhaAwardDbContext : DbContext
     {
         public SharijhaAwardDbContext(DbContextOptions<SharijhaAwardDbContext> options)
-        : base(options) { }
+        : base(options) 
+        {
+      
+        }
+    
 
         public DbSet<Event> Events { get; set; }
         public DbSet<PersonalInvitee> Personalnvitees { get; set; }
@@ -41,7 +45,6 @@ namespace SharijhaAward.Persistence
         public DbSet<ProvidedForm> ProvidedForms { get; set; }
         public DbSet<EducationType> EducationTypes { get; set; }
         public DbSet<Category> Categories { get; set; }
-
         public DbSet<AttributeDataType> AttributeDataTypes { get; set; }
         public DbSet<AttributeOperation> AttributeOperations { get; set; }
         public DbSet<AttributeTableName> AttributeTableNames { get; set; }
@@ -58,6 +61,8 @@ namespace SharijhaAward.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Event>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<Subscriber>().ToTable("subscribers");

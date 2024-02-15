@@ -73,33 +73,21 @@ namespace SharijhaAward.Api.Controllers
             var headerValue = HttpContext.Request.Headers["lang"];
             if (headerValue.IsNullOrEmpty())
                 headerValue = "";
-
+            int pageSize = perPage == 0 ? 10 : perPage;
             //get data from mediator
-            var dto = await _Mediator.Send(new GetAllEventsQuery() { lang = headerValue});
-
-            // Pagenation
-            if (perPage == 0)
-                perPage = 10;
-            else if(perPage == -1)
-                return Ok(
-                new
-                {
-                    data = dto,
-                    message = "Retrieved successfully.",
-                    status = true,
-                });
-
+            var dto = await _Mediator.Send(new GetAllEventsQuery() 
+            { 
+                lang = headerValue,
+                page=page,
+                pageSize = pageSize
+            });
+           
             var totalCount = dto.Count;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
-            var dataPerPage = dto
-                .Skip((page - 1) * perPage)
-                .Take(perPage)
-                .ToList();
-
+            var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
             return Ok(
                 new
                 {
-                    data = dataPerPage,
+                    data = dto,
                     message = "Retrieved successfully.",
                     status = true,
                     pagination =
@@ -108,7 +96,7 @@ namespace SharijhaAward.Api.Controllers
                         current_page = page,
                         last_page = totalPage,
                         total_row = totalCount,
-                        per_page = perPage
+                        per_page = pageSize
                     }
                 });
         }

@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Cycles\Queries\" />
+    <Folder Include="Features\Cycles\Queries\GetAllCycles\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
   </ItemGroup>

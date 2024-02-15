@@ -50,7 +50,8 @@ namespace SharijhaAward.Persistence.Repositories
 
         public async Task DeleteAsync(T entity)
         {
-            _dbContext.Set<T>().Remove(entity);
+            typeof(T).GetProperty("isDeleted").SetValue(entity, true);
+            typeof(T).GetProperty("DeletedAt").SetValue(entity, DateTime.UtcNow);
             await _dbContext.SaveChangesAsync();
         }
     }

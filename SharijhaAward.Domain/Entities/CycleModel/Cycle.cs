@@ -34,7 +34,7 @@ public class Cycle  {
     // Number of group categories in which subscriber can entitled.
     [Range(ValidationConstants.GroupCategoryNumberMinValue, ValidationConstants.GroupCategoryNumberMaxValue)]
     public int GroupCategoryNumber { get; set; } = 0;
-    
+    public bool IsDelete { get; set; }
     // navigation property to the category
     public virtual List<Category> Categories { get; set; } = new();
     

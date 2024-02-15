@@ -20,6 +20,8 @@ namespace SharijhaAward.Domain.Entities.InvitationModels
         public string JobTitle { get; set; } = string.Empty;
         public int ExpectedNumberOfAttendees { get; set; }
         public int ActualNumberOfAttendees { get; set; }
+        public bool IsDelete { get; set; }
+
         [ForeignKey(nameof(Event))]
         public Guid EventId { get; set; }
         public Event Event { get; set; } = null!;

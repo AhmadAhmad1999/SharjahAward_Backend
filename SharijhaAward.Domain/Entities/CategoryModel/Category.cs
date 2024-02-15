@@ -53,7 +53,7 @@ public class Category {
     public bool RelatedToClasses { get; set; }
     // expected number of winners 
     public int ExpectedNumberOfWinners { get; set; }
-    
+    public bool IsDelete {  get; set; }
     // navigation property to itself 
     // this indicates of category is main category or subcategory
     public Category? Parent { get; set; }

@@ -22,7 +22,10 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
 
         public async Task<List<EventListVM>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
         {
-            var allEvents = await _eventRepository.ListAllAsync();
+            var allEvents = request.pageSize == -1 || request.page==0
+                ? await _eventRepository.ListAllAsync()
+                : await _eventRepository.GetPagedReponseAsync(request.page,request.pageSize);
+           
             List<EventListVM> allEventsVM = new List<EventListVM>();
          
             for (int i=0 ; i < allEvents.Count ; i++)

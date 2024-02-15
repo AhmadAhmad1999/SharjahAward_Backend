@@ -21,6 +21,7 @@ namespace SharijhaAward.Domain.Entities.InvitationModels
         public string JobTitle {  get; set; } = string.Empty;
         public string TypeOfInvitee { get; set; }=string.Empty;
         public bool IsAttend { get; set; } = false;
+        public bool IsDelete { get; set; }
         public Event Event { get; set; } = null!;
         [ForeignKey(nameof(Event))]
         public Guid EventId { get; set; }
