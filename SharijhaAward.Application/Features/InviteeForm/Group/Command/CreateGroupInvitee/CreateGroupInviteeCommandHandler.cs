@@ -193,7 +193,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     EventDate = EventEntity.StartDate.ToString("M/d/yyyy", ArabicCulture),
                     EventTime = EventEntity.StartDate.ToString("HH:mm:ss", ArabicCulture),
                     ImageURl = BarCodeImageURL,
-                    DownLoadURL = DownloadedHTMLFileName
+                    DownLoadURL = DownloadedHTMLFileName,
+                    DownloadFileURL = DownloadedHTMLFileName
                 };
             }
             else
@@ -317,7 +318,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     EventDate = EventEntity.StartDate.ToString("M/d/yyyy"),
                     EventTime = EventEntity.StartDate.ToString("HH:mm:ss"),
                     ImageURl = BarCodeImageURL,
-                    DownLoadURL = DownloadedHTMLFileName
+                    DownLoadURL = DownloadedHTMLFileName,
+                    DownloadFileURL = DownloadedHTMLFileName
                 };
             }
         }
