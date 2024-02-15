@@ -56,8 +56,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> Update([FromBody] UpdateEventCommand updateEventCommand)
         {
-            await _Mediator.Send(updateEventCommand);
-            return Ok(Response);
+           var response= await _Mediator.Send(updateEventCommand);
+            return Ok(new {data = response , message= "Updated Sucssesfully"});
         }
 
         [HttpGet(Name = "GetAllEvents")]
