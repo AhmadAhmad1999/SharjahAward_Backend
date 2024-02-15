@@ -32,6 +32,7 @@
   <ItemGroup>
     <Folder Include="QREmailHelper\" />
     <Folder Include="wwwroot\Images\" />
+    <Folder Include="wwwroot\HTMLCodes\" />
   </ItemGroup>
 
   <ItemGroup>

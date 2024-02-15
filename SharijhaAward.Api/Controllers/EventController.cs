@@ -253,23 +253,25 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("DownloadTempletAsPdf")]
         public IActionResult DownloadTempletAsPdf(string htmlFile)
         {
-            // Prepare a path to a source HTML file
-            string documentPath = Path.Combine("wwwroot", htmlFile);
+            string documentPath = Path.Combine("wwwroot", "HTMLCodes", htmlFile);
 
-            // Prepare a path for converted file saving 
-            string savePath = Path.Combine("wwwroot", "InviteeOutput.pdf");
+            string savePath = Path.Combine("wwwroot", $"{htmlFile.Split('.')[0]}.pdf");
 
-            // Initialize an HTML document from the file
             using var document = new HTMLDocument(documentPath);
 
-            // Initialize PdfSaveOptions 
             var options = new Aspose.Html.Saving.PdfSaveOptions();
 
-            // Convert HTML to PDF
+            options.PageSetup.AnyPage.Size = new Aspose.Html.Drawing.Size(1200, 1200);
+
             Converter.ConvertHTML(document, options, savePath);
 
-            return Ok();
-            
+            string contentType = "application/pdf";
+            var fileStreamResult = new FileStreamResult(new FileStream(savePath, FileMode.Open, FileAccess.Read), contentType)
+            {
+                FileDownloadName = htmlFile.Split('.')[0]
+            };
+
+            return fileStreamResult;
         }
     }
 }
