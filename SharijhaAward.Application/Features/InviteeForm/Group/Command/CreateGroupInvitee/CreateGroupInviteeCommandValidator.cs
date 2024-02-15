@@ -11,26 +11,26 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
     {
         public CreateGroupInviteeCommandValidator()
         {
-            RuleFor(g=>g.Name)
+            RuleFor(g => g.Name)
                .NotEmpty().WithMessage("{PropertyName} is required.")
-               .NotNull()
-               .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
-            RuleFor(g=>g.SchoolName)
+               .NotNull();
+
+            RuleFor(g => g.SchoolName)
                .NotEmpty().WithMessage("{PropertyName} is required.")
-               .NotNull()
-               .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
+               .NotNull();
+             
             RuleFor(g => g.Email)
                 .EmailAddress()
                 .NotNull()
                 .NotEmpty().WithMessage("{PropertyName} is required.");
             RuleFor(g => g.PhoneNumber)
                 .NotNull()
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .MaximumLength(15).WithMessage("{PropertyName} must not exceed 50 characters.");
+                .NotEmpty().WithMessage("{PropertyName} is required.");
+
             RuleFor(g => g.JobTitle)
                 .NotNull()
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
+                .NotEmpty().WithMessage("{PropertyName} is required.");
+               
             RuleFor(g => g.ExpectedNumberOfAttendees)
                 .NotNull()
                 .GreaterThan(0)

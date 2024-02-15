@@ -20,15 +20,15 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 .NotEmpty().WithMessage("{PropertyName} is required.");
             RuleFor(p => p.Name)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
-                .NotNull()
-                .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
+                .NotNull();
+               
             RuleFor(p => p.JobTitle)
                 .NotNull()
-                .NotEmpty().WithMessage("{PropertyName} is required.");  
+                .NotEmpty().WithMessage("{PropertyName} is required.");
             RuleFor(p => p.PhoneNumber)
                 .NotNull()
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .MaximumLength(15).WithMessage("{PropertyName} must not exceed 15 number.");
+                .NotEmpty().WithMessage("{PropertyName} is required.");
+               
         }
     }
 }

@@ -11,16 +11,16 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.UpdateGro
     {
         public UpdateGroupInviteeCommandValidator()
         {
-            RuleFor(g => g.Name)
-               .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
-            RuleFor(g => g.SchoolName)
-               .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
+            RuleFor(g => g.Name);
+
+            RuleFor(g => g.SchoolName);
+              
             RuleFor(g => g.Email)
                 .EmailAddress();
-            RuleFor(g => g.PhoneNumber)
-                .MaximumLength(15).WithMessage("{PropertyName} must not exceed 50 characters.");
-            RuleFor(g => g.JobTitle)
-                .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
+            RuleFor(g => g.PhoneNumber);
+
+            RuleFor(g => g.JobTitle);
+
             RuleFor(g => g.ExpectedNumberOfAttendees)
                 .GreaterThan(0)
                 .LessThan(int.MaxValue);
