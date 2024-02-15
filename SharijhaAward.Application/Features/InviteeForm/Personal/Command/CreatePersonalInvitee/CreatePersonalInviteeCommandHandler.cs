@@ -118,15 +118,15 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}"
                     : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}";
 
-                DateTime GregorianDate = new DateTime(EventEntity.StartDate.Year, EventEntity.StartDate.Month,
-                    EventEntity.StartDate.Day, EventEntity.StartDate.Hour, EventEntity.StartDate.Minute, EventEntity.StartDate.Second);
+                DateTime GregorianDate = new DateTime(EventEntity.EventDate.Year, EventEntity.EventDate.Month,
+                    EventEntity.EventDate.Day, EventEntity.EventDate.Hour, EventEntity.EventDate.Minute, EventEntity.EventDate.Second);
 
                 string ManipulatedBody = HTMLContent
                     .Replace("$NewInvitee.Name$", NewPersonalnvitee.Name, StringComparison.Ordinal) // Invited Name..
                     .Replace("$EventEntity.ArabicName$", EventEntity.ArabicName, StringComparison.Ordinal) // Event Name in Arabic..
                     .Replace("$EventEntity.ArabicLocation$", EventEntity.ArabicSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
                     .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                    .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("M/d/yyyy", ArabicCulture)) // Event Date..
+                    .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("d/M/yyyy", ArabicCulture)) // Event Date..
                     .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("HH:mm:ss", ArabicCulture)) // Event Time..
                     //.Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
                     //.Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
@@ -205,7 +205,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     EventName = EventEntity.ArabicName,
                     EventSiteName = EventEntity.ArabicSiteName,
                     EventDayName = GregorianDate.ToString("dddd", ArabicCulture),
-                    EventDate = GregorianDate.ToString("M/d/yyyy", ArabicCulture),
+                    EventDate = GregorianDate.ToString("d/M/yyyy", ArabicCulture),
                     EventTime = GregorianDate.ToString("HH:mm:ss", ArabicCulture),
                     ImageURl = BarCodeImageURL,
                     DownLoadURL = DownloadBarCodeImageAPI,
@@ -243,15 +243,15 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}"
                     : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}";
 
-                DateTime GregorianDate = new DateTime(EventEntity.StartDate.Year, EventEntity.StartDate.Month,
-                    EventEntity.StartDate.Day, EventEntity.StartDate.Hour, EventEntity.StartDate.Minute, EventEntity.StartDate.Second);
+                DateTime GregorianDate = new DateTime(EventEntity.EventDate.Year, EventEntity.EventDate.Month,
+                    EventEntity.EventDate.Day, EventEntity.EventDate.Hour, EventEntity.EventDate.Minute, EventEntity.EventDate.Second);
 
                 string ManipulatedBody = HTMLContent
                     .Replace("$NewInvitee.Name$", NewPersonalnvitee.Name, StringComparison.Ordinal) // Invited Name..
                     .Replace("$EventEntity.EnglishName$", EventEntity.EnglishName, StringComparison.Ordinal) // Event Name in English..
                     .Replace("$EventEntity.EnglishLocation$", EventEntity.EnglishSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
                     .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                    .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("M/d/yyyy")) // Event Date..
+                    .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("d/M/yyyy")) // Event Date..
                     .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("HH:mm:ss"))
                     //.Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
                     //.Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
@@ -330,7 +330,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     EventName = EventEntity.EnglishName,
                     EventSiteName = EventEntity.EnglishSiteName,
                     EventDayName = GregorianDate.DayOfWeek.ToString(),
-                    EventDate = GregorianDate.ToString("M/d/yyyy"),
+                    EventDate = GregorianDate.ToString("d/M/yyyy"),
                     EventTime = GregorianDate.ToString("HH:mm:ss"),
                     ImageURl = BarCodeImageURL,
                     DownLoadURL = DownloadBarCodeImageAPI,

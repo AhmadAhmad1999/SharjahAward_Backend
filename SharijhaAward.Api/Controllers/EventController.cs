@@ -255,7 +255,7 @@ namespace SharijhaAward.Api.Controllers
         {
             string documentPath = Path.Combine("wwwroot", "HTMLCodes", htmlFile);
 
-            string savePath = Path.Combine("wwwroot", $"{htmlFile.Split('.')[0]}.pdf");
+            string savePath = Path.Combine("wwwroot", "InvitationPDFFiles", $"{htmlFile.Split('.')[0]}.pdf");
 
             using var document = new HTMLDocument(documentPath);
 
