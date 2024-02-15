@@ -145,6 +145,36 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
 
                 await _EmailSender.SendEmail(EmailRequest, AlternateView);
 
+                string BarCodeImageURL = isHttps
+                   ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
+                   : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
+
+                string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
+                string DownloadedHTMLFilePath = Request.ImagePath + "\\HTMLCodes\\" + DownloadedHTMLFileName;
+
+                byte[] Email_HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/email_header.png");
+                string Email_HeaderImagebase64String = Convert.ToBase64String(Email_HeaderImageBytes);
+
+                byte[] LogosImageImageBytes = File.ReadAllBytes("wwwroot/assets/qr/logos.png");
+                string LogosImageImagebase64String = Convert.ToBase64String(LogosImageImageBytes);
+
+                byte[] BarCodeImageImageBytes = File.ReadAllBytes(BarCodeImagePath);
+                string BarCodeImagebase64String = Convert.ToBase64String(BarCodeImageImageBytes);
+
+                byte[] CaligraphyImageImageBytes = File.ReadAllBytes("wwwroot/assets/qr/caligraphy.png");
+                string CaligraphyImagebase64String = Convert.ToBase64String(CaligraphyImageImageBytes);
+
+                string ManipulatedBodyForPdf = ManipulatedBody
+                    .Replace("\"cid:Email_HeaderImage\"", $"'data:image/png;base64,{Email_HeaderImagebase64String}'")
+                    .Replace("\"cid:LogosImage\"", $"'data:image/png;base64,{LogosImageImagebase64String}'")
+                    .Replace("\"cid:BarCodeImage\"", $"'data:image/png;base64,{BarCodeImagebase64String}'")
+                    .Replace("'cid:CaligraphyImage'", $"'data:image/png;base64,{CaligraphyImagebase64String}'");
+
+                var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
+                ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
+
+                System.IO.File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
+                
                 try
                 {
                     NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
@@ -153,9 +183,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 {
                     throw;
                 }
-                string BarCodeImageURL = isHttps
-                   ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
-                   : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
+
                 return new CreateInviteeResponse()
                 {
                     Name = NewGroupInvitee.Name,
@@ -165,7 +193,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     EventDate = EventEntity.StartDate.ToString("M/d/yyyy", ArabicCulture),
                     EventTime = EventEntity.StartDate.ToString("HH:mm:ss", ArabicCulture),
                     ImageURl = BarCodeImageURL,
-                    DownLoadURL = DownloadBarCodeImageAPI
+                    DownLoadURL = DownloadedHTMLFileName
                 };
             }
             else
@@ -241,6 +269,36 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
 
                 await _EmailSender.SendEmail(EmailRequest, AlternateView);
 
+                string BarCodeImageURL = isHttps
+                  ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
+                  : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
+
+                string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
+                string DownloadedHTMLFilePath = Request.ImagePath + "\\HTMLCodes\\" + DownloadedHTMLFileName;
+
+                byte[] Email_HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/email_header.png");
+                string Email_HeaderImagebase64String = Convert.ToBase64String(Email_HeaderImageBytes);
+
+                byte[] LogosImageImageBytes = File.ReadAllBytes("wwwroot/assets/qr/logos.png");
+                string LogosImageImagebase64String = Convert.ToBase64String(LogosImageImageBytes);
+
+                byte[] BarCodeImageImageBytes = File.ReadAllBytes(BarCodeImagePath);
+                string BarCodeImagebase64String = Convert.ToBase64String(BarCodeImageImageBytes);
+
+                byte[] CaligraphyImageImageBytes = File.ReadAllBytes("wwwroot/assets/qr/caligraphy.png");
+                string CaligraphyImagebase64String = Convert.ToBase64String(CaligraphyImageImageBytes);
+
+                string ManipulatedBodyForPdf = ManipulatedBody
+                    .Replace("\"cid:Email_HeaderImage\"", $"'data:image/png;base64,{Email_HeaderImagebase64String}'")
+                    .Replace("\"cid:LogosImage\"", $"'data:image/png;base64,{LogosImageImagebase64String}'")
+                    .Replace("\"cid:BarCodeImage\"", $"'data:image/png;base64,{BarCodeImagebase64String}'")
+                    .Replace("'cid:CaligraphyImage'", $"'data:image/png;base64,{CaligraphyImagebase64String}'");
+
+                var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
+                ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
+
+                System.IO.File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
+
                 try
                 {
                     NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
@@ -249,9 +307,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 {
                     throw;
                 }
-                string BarCodeImageURL = isHttps
-                  ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
-                  : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
+
                 return new CreateInviteeResponse()
                 {
                     Name = NewGroupInvitee.Name,
@@ -261,10 +317,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     EventDate = EventEntity.StartDate.ToString("M/d/yyyy"),
                     EventTime = EventEntity.StartDate.ToString("HH:mm:ss"),
                     ImageURl = BarCodeImageURL,
-                    DownLoadURL = DownloadBarCodeImageAPI
+                    DownLoadURL = DownloadedHTMLFileName
                 };
             }
-
         }
     }
 }
