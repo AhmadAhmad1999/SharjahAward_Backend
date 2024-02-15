@@ -135,7 +135,7 @@ namespace SharijhaAward.Api.Controllers
         {
 
             var response = await _mediator.Send(updatePersonalInviteeCommand);
-            return Ok(new { message = response });
+            return Ok(new { data = response, message = "Updated Sucssesfully" });
         }
 
         [HttpDelete(Name = "DeletePersonalInvitee")]

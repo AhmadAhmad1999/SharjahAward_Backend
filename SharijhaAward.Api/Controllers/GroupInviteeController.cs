@@ -127,8 +127,8 @@ namespace SharijhaAward.Api.Controllers
         public async Task<ActionResult> UpdateGroupInvitee([FromBody] UpdateGroupInviteeCommand updateGroupInviteeCommand)
         {
 
-            await _mediator.Send(updateGroupInviteeCommand);
-            return Ok(new { data = Response });
+           var response = await _mediator.Send(updateGroupInviteeCommand);
+            return Ok(new { data = response, message = "Updated Sucssesfully" });
         }
 
 
