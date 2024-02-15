@@ -33,6 +33,7 @@
     <Folder Include="QREmailHelper\" />
     <Folder Include="wwwroot\Images\" />
     <Folder Include="wwwroot\HTMLCodes\" />
+    <Folder Include="wwwroot\InvitationPDFFiles\" />
   </ItemGroup>
 
   <ItemGroup>
