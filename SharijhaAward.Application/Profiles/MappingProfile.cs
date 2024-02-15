@@ -47,6 +47,10 @@ using SharijhaAward.Application.Features.FAQs.Queries.GetFAQById;
 using SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Application.Features.Cycles.Commands.CreateCycle;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
+using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Application.Features.DynamicAttributeFeaturesFeatures.Commands.CreateDynamicAttribute;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -108,7 +112,18 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<FrequentlyAskedQuestion, FAQDto>().ReverseMap();
             CreateMap<FrequentlyAskedQuestion, FAQListVm>().ReverseMap();
 
-            CreateMap<Cycle, CreateCycleCommand>().ReverseMap();   
+            CreateMap<Cycle, CreateCycleCommand>().ReverseMap();
+
+            //
+            // Dynamic Attribute..
+            //
+
+            // Create..
+            CreateMap<DynamicAttribute, CreateDynamicAttributeCommand>().ReverseMap();
+            CreateMap<GeneralValidation, CreateGeneralValidation>().ReverseMap();
+            CreateMap<Dependency, CreateDependency>().ReverseMap();
+            CreateMap<DependencyValidation, CreateDependencyValidation>().ReverseMap();
+            CreateMap<DynamicAttributeSection, CreateDynamicAttributeSectionCommand>().ReverseMap();
         }
     }
 }

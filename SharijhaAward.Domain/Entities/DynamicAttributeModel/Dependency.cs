@@ -10,6 +10,8 @@ namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
     {
         public int Id { get; set; }
         public string Value { get; set; } = null!;
+        public int MainDynamicAttributeId { get; set; }
+        public DynamicAttribute? MainDynamicAttribute { get; set; }
         public int DependencyGroupId { get; set; }
         public DependencyGroup? DependencyGroup { get; set; }
         public int? DynamicAttributeId { get; set; }
