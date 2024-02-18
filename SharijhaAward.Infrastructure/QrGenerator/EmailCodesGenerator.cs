@@ -8,6 +8,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
 using QRCoder;
 using Spire.Barcode;
+using BarcodeLib;
 
 namespace SharijhaAward.Infrastructure.QRGenerator
 {
@@ -52,11 +53,8 @@ namespace SharijhaAward.Infrastructure.QRGenerator
         }
         public string GenerateBarCode(string Data, string WWWRootFolderPath)
         {
-            BarcodeSettings BarCodeSettings = new BarcodeSettings();
-
-            BarCodeSettings.Type = BarCodeType.Code39;
-            BarCodeSettings.Data = Data;
-            BarCodeGenerator BarCodeGenerator = new BarCodeGenerator(BarCodeSettings);
+            Barcode Barcode = new Barcode();
+            Image BarCodeImage = Barcode.Encode(TYPE.CODE39, Data, Color.Black, Color.White, 500, 100);
 
             string Path = System.IO.Path.Combine(WWWRootFolderPath, "GeneratedBarcode");
             if (!Directory.Exists(Path))
@@ -65,15 +63,14 @@ namespace SharijhaAward.Infrastructure.QRGenerator
             string FilePath = System.IO.Path.Combine(Path,
                 $"BarCodeFor-{Data}-Invite.png");
 
-            Image barcodeImage = BarCodeGenerator.GenerateImage();
-            Bitmap croppedImage = new Bitmap(barcodeImage.Width, barcodeImage.Height - 50);
+            Bitmap CroppedImage = new Bitmap(BarCodeImage.Width, BarCodeImage.Height);
 
-            using (Graphics graphics = Graphics.FromImage(croppedImage))
+            using (Graphics Graphics = Graphics.FromImage(CroppedImage))
             {
-                graphics.DrawImage(barcodeImage, 0, 0, new Rectangle(0, 50, barcodeImage.Width, barcodeImage.Height - 50), GraphicsUnit.Pixel);
+                Graphics.DrawImage(BarCodeImage, 0, 0, new Rectangle(0, 50, BarCodeImage.Width, BarCodeImage.Height), GraphicsUnit.Pixel);
             }
 
-            croppedImage.Save(FilePath);
+            CroppedImage.Save(FilePath);
             return FilePath;
         }
     }

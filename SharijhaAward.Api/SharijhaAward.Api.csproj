@@ -31,18 +31,15 @@
 
   <ItemGroup>
     <Folder Include="QREmailHelper\" />
+    <Folder Include="wwwroot\GeneratedBarcode\" />
     <Folder Include="wwwroot\Images\" />
     <Folder Include="wwwroot\HTMLCodes\" />
     <Folder Include="wwwroot\InvitationPDFFiles\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\assets\qr\caligraphy.svg" />
-    <None Include="wwwroot\assets\qr\email_header.svg" />
-    <None Include="wwwroot\assets\qr\logos.svg" />
     <None Include="wwwroot\assets\qr\qr.png" />
     <None Include="wwwroot\assets\qr\QRCodeForstringPersonalInvite.png" />
-    <None Include="wwwroot\QREmail.html" />
   </ItemGroup>
 
 </Project>
