@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NPOI.SS.Formula.Functions;
 using SharijhaAward.Application.Contract.Infrastructure;
+using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Infrastructure.Authentication;
 using SharijhaAward.Infrastructure.EmailSernder;
+using SharijhaAward.Infrastructure.ExcelHelper;
 using SharijhaAward.Infrastructure.QRGenerator;
 using System;
 using System.Collections.Generic;
@@ -19,6 +22,7 @@ namespace SharijhaAward.Infrastructure
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IEmailCodesGenerator,EmailCodesGenerator>();
+            services.AddScoped(typeof(IExcelHelper<>), typeof(ExcelHelper<>));
 
             return services;
         }

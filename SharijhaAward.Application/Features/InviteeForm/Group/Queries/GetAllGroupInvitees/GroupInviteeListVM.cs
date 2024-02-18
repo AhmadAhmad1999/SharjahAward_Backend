@@ -16,6 +16,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
         public string SchoolName { get; set; } = string.Empty;
         public string JobTitle { get; set; } = string.Empty;
         public int ExpectedNumberOfAttendees { get; set; }
-        public int ActualNumberOfAttendees { get; set; } 
+        public int ActualNumberOfAttendees { get; set; }
+        public Guid EventId { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

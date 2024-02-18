@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupInviteeById
+namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ExportGroupToExcel
 {
-    public class GroupInviteeVM
+    public class GroupExportVM
     {
         public Guid Id { get; set; }
         public int UniqueIntegerId { get; set; }
@@ -18,6 +18,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupI
         public int ExpectedNumberOfAttendees { get; set; }
         public int ActualNumberOfAttendees { get; set; }
         public Guid EventId { get; set; }
-        public DateTime CreatedAt {  get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

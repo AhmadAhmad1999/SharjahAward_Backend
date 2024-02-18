@@ -12,6 +12,10 @@ using Aspose.Html.Converters;
 using Aspose.Pdf;
 using System;
 using PdfSaveOptions = Aspose.Pdf.PdfSaveOptions;
+using SharijhaAward.Infrastructure.ExcelHelper;
+using NPOI.SS.Extractor;
+using SharijhaAward.Application.Contract.Infrastructure;
+using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -20,12 +24,15 @@ namespace SharijhaAward.Api.Controllers
     public class EventController : ControllerBase
     {
         private readonly IMediator _Mediator;
+        private readonly IExcelHelper<EventsExportVM> _excelHelper;
         private readonly IWebHostEnvironment _WebHostEnvironment;
         public EventController(IMediator Mediator, 
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IExcelHelper<EventsExportVM> excelHelper)
         {
             _Mediator = Mediator;
             _WebHostEnvironment = webHostEnvironment;
+            _excelHelper = excelHelper;
         }
         [HttpPost(Name = "AddEvent")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -260,6 +267,13 @@ namespace SharijhaAward.Api.Controllers
             };
 
             return fileStreamResult;
+        }
+        [HttpGet("ExportToExcel")]
+        public async Task<FileResult> ExportToExcel()
+        {
+            var EventsList =await _Mediator.Send(new ExportToExcelQuery());
+            var file = _excelHelper.ExportToExcel(EventsList);
+            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Events.xlsx");
         }
     }
 }

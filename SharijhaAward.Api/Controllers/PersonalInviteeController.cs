@@ -8,11 +8,14 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Contract.Infrastructure;
+using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ConfirmAttendancePersonal;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
@@ -28,12 +31,15 @@ namespace SharijhaAward.Api.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IWebHostEnvironment _WebHostEnvironment;
+        private readonly IExcelHelper<PersonalExportVM> _excelHelper;
 
         public PersonalInviteeController(IMediator mediator,
-            IWebHostEnvironment WebHostEnvironment)
+            IWebHostEnvironment WebHostEnvironment,
+            IExcelHelper<PersonalExportVM> excelHelper)
         {
             _mediator = mediator;
             _WebHostEnvironment = WebHostEnvironment;
+            _excelHelper = excelHelper;
         }
 
         [HttpPost(Name = "AddPersonalInvitee")]
@@ -261,6 +267,13 @@ namespace SharijhaAward.Api.Controllers
                     data = respone,
                     message = "Confirmed Sucsessfuly"
                 });
+        }
+        [HttpGet("ExportToExcel")]
+        public async Task<FileResult> ExportToExcel()
+        {
+            var PersonalList = await _mediator.Send(new PersonalExportQuery());
+            var file = _excelHelper.ExportToExcel(PersonalList);
+            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "PersonalInvitees.xlsx");
         }
     }
 }

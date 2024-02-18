@@ -51,6 +51,9 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.Creat
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Application.Features.DynamicAttributeFeaturesFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.InviteeForm.Group.Queries.ExportGroupToExcel;
+using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -65,6 +68,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Domain.Entities.EventModel.Event, EventListVM>().ReverseMap();
             CreateMap<Domain.Entities.EventModel.Event, EventDto>().ReverseMap();
             CreateMap<Domain.Entities.EventModel.Event, EventInviteesVM>().ReverseMap();
+            CreateMap<Domain.Entities.EventModel.Event, EventsExportVM>().ReverseMap();
 
             CreateMap<PersonalInvitee, CreatePersonalInviteeCommand>().ReverseMap();
             CreateMap<PersonalInvitee, UpdatePersonalInviteeCommand>().ReverseMap();
@@ -74,6 +78,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<PersonalInvitee, EventInvitessDto>().ReverseMap();
             CreateMap<PersonalInvitee, ConfirmAttendancePersonalQuery>().ReverseMap();
             CreateMap<PersonalInvitee, PersonalDto >().ReverseMap();
+            CreateMap<PersonalInvitee, PersonalExportVM>().ReverseMap();
+
 
             CreateMap<GroupInvitee, CreateGroupInviteeCommand>().ReverseMap();
             CreateMap<GroupInvitee, DeleteGroupInviteeCommand>().ReverseMap();
@@ -82,6 +88,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GroupInvitee, GroupInviteeVM>().ReverseMap();
             CreateMap<GroupInvitee, ConfirmAttendanceGroupQuery>();
             CreateMap<GroupInvitee, GroupDto>().ReverseMap();
+            CreateMap<GroupInvitee, GroupExportVM>().ReverseMap();
 
             CreateMap<User, LoginCommand>().ReverseMap();
             CreateMap<User, SignUpCommand>().ReverseMap();

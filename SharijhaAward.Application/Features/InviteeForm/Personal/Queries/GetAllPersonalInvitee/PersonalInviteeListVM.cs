@@ -17,5 +17,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
         public string JobTitle { get; set; } = string.Empty;
         public string TypeOfInvitee { get; set; } = string.Empty;
         public bool IsAttend { get; set; }
+        public Guid EventId { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
