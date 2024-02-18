@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.InteropServices;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants.CategoryConstants;
 using SharijhaAward.Domain.Constants.Common;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
@@ -19,7 +20,8 @@ using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 
 namespace SharijhaAward.Domain.Entities.CategoryModel; 
 
-public class Category {
+public class Category : AuditableEntity
+{
     public Guid Id { get; set; }
     // arabic name of the category
     public string ArabicName { get; set; } = string.Empty;
@@ -53,7 +55,6 @@ public class Category {
     public bool RelatedToClasses { get; set; }
     // expected number of winners 
     public int ExpectedNumberOfWinners { get; set; }
-    public bool IsDelete {  get; set; }
     // navigation property to itself 
     // this indicates of category is main category or subcategory
     public Category? Parent { get; set; }

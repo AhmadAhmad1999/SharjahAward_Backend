@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.EventModel
 {
-    public class Event : ICustomSoftDelete
+    public class Event : AuditableEntity
     {
         public Guid Id { get; set; }
         public int UniqueIntegerId { get; set; }
@@ -24,8 +24,6 @@ namespace SharijhaAward.Domain.Entities.EventModel
         public string ArabicSiteName { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public bool isDeleted { get; set; }
-        public DateTime? DeletedAt { get; set; }
 
         public DateTime EventDate { get; set; }
         public List<PersonalInvitee>? PersonalInvitees { get; set; }

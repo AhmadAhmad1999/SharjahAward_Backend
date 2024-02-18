@@ -18,6 +18,9 @@ using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
+using SharijhaAward.Domain.Entities.FAQModel;
+using SharijhaAward.Domain.Entities.NewsModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -28,8 +31,9 @@ namespace SharijhaAward.Persistence
         {
       
         }
-    
-
+        
+        public DbSet<FrequentlyAskedQuestion> frequentlyAskedQuestions { get; set; }
+        public DbSet<TrainingWorkshop> trainingWorkshops { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<PersonalInvitee> Personalnvitees { get; set; }
         public DbSet<GroupInvitee> GroupInvitees { get; set; }
@@ -62,7 +66,19 @@ namespace SharijhaAward.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
+            //Filter for Deleted items
             modelBuilder.Entity<Event>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Cycle>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<GroupInvitee>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<PersonalInvitee>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Category>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<News>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<TrainingWorkshop>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<FrequentlyAskedQuestion>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<User>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Role>().HasQueryFilter(p => !p.isDeleted);
+
+
 
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<Subscriber>().ToTable("subscribers");
@@ -225,7 +241,7 @@ namespace SharijhaAward.Persistence
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+            foreach (var entry in ChangeTracker.Entries <AuditableEntity> ())
             {
                 switch (entry.State)
                 {

@@ -6,11 +6,12 @@ using SharijhaAward.Domain.Entities.NoteModel;
 using ErrorOr;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Domain.Common;
 
 namespace SharijhaAward.Domain.Entities.IdentityModels;
 
 
-public class User  {
+public class User : AuditableEntity  {
 
     public Guid Id { get; set; } 
     public string ArabicName { get; set; } = string.Empty;
@@ -18,7 +19,7 @@ public class User  {
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public Gender Gender { get; set; }
-    public bool IsDelete { get; set; }
+
     public Role? Role { get; set; }
 
     [ForeignKey(nameof(Role))]

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.EventModel;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.InvitationModels
 {
-    public class GroupInvitee
+    public class GroupInvitee : AuditableEntity
     {
         public Guid Id { get; set; }
         public int UniqueIntegerId { get; set; }
@@ -20,7 +21,7 @@ namespace SharijhaAward.Domain.Entities.InvitationModels
         public string JobTitle { get; set; } = string.Empty;
         public int ExpectedNumberOfAttendees { get; set; }
         public int ActualNumberOfAttendees { get; set; }
-        public bool IsDelete { get; set; }
+
 
         [ForeignKey(nameof(Event))]
         public Guid EventId { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.EventModel;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.InvitationModels
 {
-    public class PersonalInvitee
+    public class PersonalInvitee : AuditableEntity
     {
         public Guid Id { get; set; }
         public int UniqueIntegerId { get; set; }
@@ -21,7 +22,7 @@ namespace SharijhaAward.Domain.Entities.InvitationModels
         public string JobTitle {  get; set; } = string.Empty;
         public string TypeOfInvitee { get; set; }=string.Empty;
         public bool IsAttend { get; set; } = false;
-        public bool IsDelete { get; set; }
+
         public Event Event { get; set; } = null!;
         [ForeignKey(nameof(Event))]
         public Guid EventId { get; set; }

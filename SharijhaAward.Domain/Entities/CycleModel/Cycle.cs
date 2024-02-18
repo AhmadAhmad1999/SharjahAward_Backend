@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants.Common;
 using SharijhaAward.Domain.Entities.AgendaModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -8,7 +9,8 @@ using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.NewsModel;
 
 namespace SharijhaAward.Domain.Entities.CycleModel;
-public class Cycle  {
+public class Cycle : AuditableEntity
+{
     // id of the cycle
     public Guid Id { get; set; }
     // year of the cycle
@@ -34,7 +36,6 @@ public class Cycle  {
     // Number of group categories in which subscriber can entitled.
     [Range(ValidationConstants.GroupCategoryNumberMinValue, ValidationConstants.GroupCategoryNumberMaxValue)]
     public int GroupCategoryNumber { get; set; } = 0;
-    public bool IsDelete { get; set; }
     // navigation property to the category
     public virtual List<Category> Categories { get; set; } = new();
     
@@ -46,4 +47,5 @@ public class Cycle  {
     
     // navigation property to the News
     public virtual List<News> News { get; set; } = new();
+   
 }
