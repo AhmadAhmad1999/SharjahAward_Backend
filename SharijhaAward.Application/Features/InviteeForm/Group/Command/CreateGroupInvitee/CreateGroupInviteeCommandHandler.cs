@@ -95,7 +95,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
                 bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
-
+                string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
+                string DownloadedHTMLFilePath = Request.ImagePath + "\\HTMLCodes\\" + DownloadedHTMLFileName;
                 //string DownloadQRImageAPI = isHttps
                 //    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
                 //        $"&EventName={EventEntity.ArabicName}"
@@ -103,8 +104,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 //        $"&EventName={EventEntity.ArabicName}";
 
                 string DownloadBarCodeImageAPI = isHttps
-                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}"
-                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}";
+                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFilePath.Split('\\').LastOrDefault()}"
+                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFilePath.Split('\\').LastOrDefault()}";
 
                 string ManipulatedBody = HTMLContent
                     .Replace("$NewInvitee.Name$", NewGroupInvitee.Name, StringComparison.Ordinal) // Invited Name..
@@ -112,7 +113,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     .Replace("$EventEntity.ArabicLocation$", EventEntity.ArabicSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
                     .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.EventDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
                     .Replace("$EventEntity.StartDate.Date$", EventEntity.EventDate.ToString("d/M/yyyy", ArabicCulture), StringComparison.Ordinal) // Event Date..
-                    .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.EventDate.ToString("HH:mm:ss", ArabicCulture), StringComparison.Ordinal) // Event Time..
+                    .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.EventDate.ToString("HH:mm tt", ArabicCulture), StringComparison.Ordinal) // Event Time..
                     //.Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
                     //.Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
                     .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
@@ -149,8 +150,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
 
-                string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
-                string DownloadedHTMLFilePath = Request.ImagePath + "\\HTMLCodes\\" + DownloadedHTMLFileName;
+               
+                
 
                 byte[] Email_HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/email_header.png");
                 string Email_HeaderImagebase64String = Convert.ToBase64String(Email_HeaderImageBytes);
@@ -191,7 +192,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     EventSiteName = EventEntity.ArabicSiteName,
                     EventDayName = EventEntity.EventDate.ToString("dddd", ArabicCulture),
                     EventDate = EventEntity.EventDate.ToString("d/M/yyyy", ArabicCulture),
-                    EventTime = EventEntity.EventDate.ToString("HH:mm:ss", ArabicCulture),
+                    EventTime = EventEntity.EventDate.ToString("HH:mm tt", ArabicCulture),
                     ImageURl = BarCodeImageURL,
                     DownLoadURL = DownloadedHTMLFileName,
                     DownloadFileURL = DownloadedHTMLFileName
@@ -217,16 +218,18 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 string HTMLContent = File.ReadAllText(HtmlBody);
 
                 bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
-
+                CultureInfo EnglishCulture = new CultureInfo("en-US");
                 //string DownloadQRImageAPI = isHttps
                 //    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
                 //        $"&EventName={EventEntity.ArabicName}"
                 //    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
                 //        $"&EventName={EventEntity.ArabicName}";
+                string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
+                string DownloadedHTMLFilePath = Request.ImagePath + "\\HTMLCodes\\" + DownloadedHTMLFileName;
 
                 string DownloadBarCodeImageAPI = isHttps
-                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}"
-                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadBarCode?BarCodeName={BarCodeImagePath.Split('\\').LastOrDefault()}";
+                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFilePath.Split('\\').LastOrDefault()}"
+                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFilePath.Split('\\').LastOrDefault()}";
 
                 DateTime GregorianDate = new DateTime(EventEntity.EventDate.Year, EventEntity.EventDate.Month,
                     EventEntity.EventDate.Day, EventEntity.EventDate.Hour, EventEntity.EventDate.Minute, EventEntity.EventDate.Second);
@@ -236,8 +239,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     .Replace("$EventEntity.EnglishName$", EventEntity.EnglishName, StringComparison.Ordinal) // Event Name in English..
                     .Replace("$EventEntity.EnglishLocation$", EventEntity.EnglishSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
                     .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
-                    .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("d/M/yyyy")) // Event Date..
-                    .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("HH:mm:ss")) // Event Time..
+                    .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("d/M/yyyy", EnglishCulture)) // Event Date..
+                    .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("HH:mm tt", EnglishCulture)) // Event Time..
                     //.Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
                     //.Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
                     .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
@@ -274,8 +277,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                   ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
                   : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
 
-                string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
-                string DownloadedHTMLFilePath = Request.ImagePath + "\\HTMLCodes\\" + DownloadedHTMLFileName;
+                
 
                 byte[] Email_HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/email_header.png");
                 string Email_HeaderImagebase64String = Convert.ToBase64String(Email_HeaderImageBytes);
@@ -315,8 +317,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     EventName = EventEntity.EnglishName,
                     EventSiteName = EventEntity.EnglishSiteName,
                     EventDayName = EventEntity.EventDate.DayOfWeek.ToString(),
-                    EventDate = EventEntity.EventDate.ToString("d/M/yyyy"),
-                    EventTime = EventEntity.EventDate.ToString("HH:mm:ss"),
+                    EventDate = EventEntity.EventDate.ToString("d/M/yyyy" , EnglishCulture),
+                    EventTime = EventEntity.EventDate.ToString("HH:mm tt", EnglishCulture),
                     ImageURl = BarCodeImageURL,
                     DownLoadURL = DownloadedHTMLFileName,
                     DownloadFileURL = DownloadedHTMLFileName

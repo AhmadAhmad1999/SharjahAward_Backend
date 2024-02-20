@@ -158,8 +158,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 Id = id
             };
-            await _mediator.Send(deletePersonalInviteeCommand);
-            return Ok(new { message = Response });
+            var response = await _mediator.Send(deletePersonalInviteeCommand);
+            return Ok(new { message = "تم حذف الدعوة الفردية بنجاح" });
         }
 
         [HttpGet("{id}", Name = "GetPersonalInviteeById")]

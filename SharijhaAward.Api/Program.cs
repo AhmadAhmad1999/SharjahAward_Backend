@@ -4,6 +4,8 @@ using SharijhaAward.Api.OptionsSetup;
 using SharijhaAward.Application;
 using SharijhaAward.Infrastructure;
 using SharijhaAward.Persistence;
+using WkHtmlToPdfDotNet.Contracts;
+using WkHtmlToPdfDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,8 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
-  
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

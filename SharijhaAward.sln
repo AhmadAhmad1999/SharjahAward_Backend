@@ -5,21 +5,24 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0126130F-3970-4A34-A0F1-9E0C0BBCFBF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharijhaAward.Domain", "SharijhaAward.Domain\SharijhaAward.Domain.csproj", "{3980AB59-0F5D-45F6-AFBB-2A68F8C7F08A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharijhaAward.Domain", "SharijhaAward.Domain\SharijhaAward.Domain.csproj", "{3980AB59-0F5D-45F6-AFBB-2A68F8C7F08A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharijhaAward.Application", "SharijhaAward.Application\SharijhaAward.Application.csproj", "{7D2C7B21-3992-4568-AE77-A928927B5A23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharijhaAward.Application", "SharijhaAward.Application\SharijhaAward.Application.csproj", "{7D2C7B21-3992-4568-AE77-A928927B5A23}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{0C486FA0-7DC1-4F86-B1D9-6D551B347DBF}"
+	ProjectSection(SolutionItems) = preProject
+		SharijhaAward.Api\appsettings.Development.json = SharijhaAward.Api\appsettings.Development.json
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{CD57EA25-FB87-4E07-828E-9472B9F054E3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{EEF26A1C-9CCF-41D9-8EEC-4F6A54194D66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharijhaAward.Infrastructure", "SharijhaAward.Infrastructure\SharijhaAward.Infrastructure.csproj", "{C39618B2-E054-4C7F-996E-DE67FC206422}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharijhaAward.Infrastructure", "SharijhaAward.Infrastructure\SharijhaAward.Infrastructure.csproj", "{C39618B2-E054-4C7F-996E-DE67FC206422}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharijhaAward.Persistence", "SharijhaAward.Persistence\SharijhaAward.Persistence.csproj", "{151FC06C-4DC6-489E-BE3F-091C780C83B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharijhaAward.Persistence", "SharijhaAward.Persistence\SharijhaAward.Persistence.csproj", "{151FC06C-4DC6-489E-BE3F-091C780C83B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharijhaAward.Api", "SharijhaAward.Api\SharijhaAward.Api.csproj", "{D1A29A60-2339-4EB6-83B1-96EDF879DB11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharijhaAward.Api", "SharijhaAward.Api\SharijhaAward.Api.csproj", "{D1A29A60-2339-4EB6-83B1-96EDF879DB11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,15 +7,25 @@ using SharijhaAward.Application.Features.Event.Commands.UpdateEvent;
 using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
 using SharijhaAward.Application.Features.Event.Queries.GetEventById;
 using SharijhaAward.Application.Features.Event.Queries.GetEventWithInvitees;
-using Aspose.Html;
-using Aspose.Html.Converters;
+
+
+
 using Aspose.Pdf;
 using System;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 using PdfSaveOptions = Aspose.Pdf.PdfSaveOptions;
 using SharijhaAward.Infrastructure.ExcelHelper;
 using NPOI.SS.Extractor;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
+using Aspose.Html;
+using Aspose.Html.Converters;
+using System.Net;
+using WkHtmlToPdfDotNet;
+using BarcodeStandard;
+using Microsoft.AspNetCore.Components.Web;
+
+
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -268,6 +278,8 @@ namespace SharijhaAward.Api.Controllers
 
             return fileStreamResult;
         }
+
+       
         [HttpGet("ExportToExcel")]
         public async Task<FileResult> ExportToExcel()
         {

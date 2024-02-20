@@ -36,6 +36,7 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task<T> AddAsync(T entity)
         {
             await _dbContext.Set<T>().AddAsync(entity);
+            typeof(T).GetProperty("CreatedAt").SetValue(entity, DateTime.UtcNow);
             await _dbContext.SaveChangesAsync();
 
             return entity;

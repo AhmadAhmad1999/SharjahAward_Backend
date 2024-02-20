@@ -246,10 +246,10 @@ namespace SharijhaAward.Persistence
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedDate = DateTime.Now;
+                        entry.Entity.CreatedAt = DateTime.Now;
                         break;
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedDate = DateTime.Now;
+                        entry.Entity.LastModifiedAt = DateTime.Now;
                         break;
                 }
             }
