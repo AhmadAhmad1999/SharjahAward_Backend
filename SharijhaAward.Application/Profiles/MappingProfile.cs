@@ -54,6 +54,12 @@ using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Comman
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.ExportGroupToExcel;
 using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
+using SharijhaAward.Domain.Entities.NewsModel;
+using SharijhaAward.Application.Features.News.Commands.CreateNews;
+using SharijhaAward.Application.Features.News.Commands.UpdateNews;
+using SharijhaAward.Application.Features.News.Queries.GetNewsById;
+using SharijhaAward.Application.Features.News.Queries.GetAllNews;
+using SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -77,13 +83,13 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<PersonalInvitee, PersonalInviteeListVM>().ReverseMap();
             CreateMap<PersonalInvitee, EventInvitessDto>().ReverseMap();
             CreateMap<PersonalInvitee, ConfirmAttendancePersonalQuery>().ReverseMap();
-            CreateMap<PersonalInvitee, PersonalDto >().ReverseMap();
+            CreateMap<PersonalInvitee, PersonalDto>().ReverseMap();
             CreateMap<PersonalInvitee, PersonalExportVM>().ReverseMap();
 
 
             CreateMap<GroupInvitee, CreateGroupInviteeCommand>().ReverseMap();
             CreateMap<GroupInvitee, DeleteGroupInviteeCommand>().ReverseMap();
-            CreateMap<GroupInvitee, UpdateGroupInviteeCommand>().ReverseMap();    
+            CreateMap<GroupInvitee, UpdateGroupInviteeCommand>().ReverseMap();
             CreateMap<GroupInvitee, GroupInviteeListVM>().ReverseMap();
             CreateMap<GroupInvitee, GroupInviteeVM>().ReverseMap();
             CreateMap<GroupInvitee, ConfirmAttendanceGroupQuery>();
@@ -120,6 +126,12 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<FrequentlyAskedQuestion, FAQListVm>().ReverseMap();
 
             CreateMap<Cycle, CreateCycleCommand>().ReverseMap();
+            CreateMap<Cycle, CycleListVM>().ReverseMap();
+
+            CreateMap<News, CreateNewsCommand>().ReverseMap();
+            CreateMap<News, UpdateNewsCommand>().ReverseMap();
+            CreateMap<News, NewsVM>().ReverseMap();
+            CreateMap<News, NewsListVM>().ReverseMap();
 
             //
             // Dynamic Attribute..
