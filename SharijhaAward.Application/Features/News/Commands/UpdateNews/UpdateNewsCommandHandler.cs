@@ -2,6 +2,7 @@
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.NewsModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,8 +36,9 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
 
                 return new BaseResponse<Domain.Entities.NewsModel.News>(msg,false,404);
             }
-            var news = _mapper.Map<Domain.Entities.NewsModel.News>(request);
-            await _newsRepository.UpdateAsync(news);
+            _mapper.Map(request,newsToUpdate,typeof(UpdateNewsCommand),typeof(Domain.Entities.NewsModel.News));
+            
+            await _newsRepository.UpdateAsync(newsToUpdate);
 
             msg = request.lang == "en"
                 ? "The news has been Updated"
