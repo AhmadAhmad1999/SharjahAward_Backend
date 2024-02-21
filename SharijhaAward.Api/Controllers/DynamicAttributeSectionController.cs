@@ -7,8 +7,13 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.Creat
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.DeleteDynamicAttributeSection;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSections;
+using SharijhaAward.Application.Features.Event.Queries.GetEventWithInvitees;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee;
+using SharijhaAward.Application.Features.News.Queries.GetAllNews;
+using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -152,6 +157,56 @@ namespace SharijhaAward.Api.Controllers
                         message = ResponseMessage
                     });
             }
+        }
+        [HttpGet(Name = "GetAllDynamicAttributeSections")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> GetAllDynamicAttributeSections(int Page, int PerPage)
+        {
+            return Ok();
+
+            //StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            //List<DynamicAttributeSectionListVM> Response = await _Mediator.Send(new GetAllDynamicAttributeSectionsQuery()
+            //{
+            //    lang = HeaderValue,
+            //    page = Page,
+            //    pageSize = PerPage
+            //});
+
+            //int PageSize = PerPage == 0 ? 10 : PerPage;
+
+            //if (Response.StatusCode == 404)
+            //{
+            //    return NotFound(new
+            //    {
+            //        Response.Message,
+            //        Response.StatusCode
+            //    });
+            //}
+            //int totalCount = DTO.Data.Count;
+            //var totalPage = (int)Math.Ceiling((decimal)totalCount / PageSize);
+            //return Ok(
+            //    new
+            //    {
+            //        data = DTO.Data,
+            //        DTO.Message,
+            //        DTO.StatusCode,
+            //        pagination =
+            //        new
+            //        {
+            //            current_page = page,
+            //            last_page = totalPage,
+            //            total_row = totalCount,
+            //            per_page = PageSize
+            //        }
+
+            //    });
         }
     }
 }

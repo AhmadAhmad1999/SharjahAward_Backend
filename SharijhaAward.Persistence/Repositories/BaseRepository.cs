@@ -32,11 +32,11 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async Task<IReadOnlyList<T>> ListAllAsync()
         {
-            return await _DbSet.ToListAsync();
+            return await _DbSet.AsNoTracking().ToListAsync();
         }
         public async virtual Task<IReadOnlyList<T>> GetPagedReponseAsync(int page, int size)
         {
-            return await _DbSet.Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();
+            return await _DbSet.AsNoTracking().Skip((page - 1) * size).Take(size).ToListAsync();
         }
         public async Task<T> AddAsync(T entity)
         {
@@ -78,64 +78,73 @@ namespace SharijhaAward.Persistence.Repositories
 
         public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
         {
-            return _DbSet.Where(predicate);
+            return _DbSet.AsNoTracking().Where(predicate);
+        }
+        public async virtual Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, int page, int size)
+        {
+            return await _DbSet.AsNoTracking()
+                .Where(predicate).Skip((page - 1) * size).Take(size).ToListAsync();
         }
         public T? FirstOrDefault(Expression<Func<T, bool>> predicate)
         {
-            return _DbSet.FirstOrDefault(predicate);
+            return _DbSet.AsNoTracking().FirstOrDefault(predicate);
         }
         public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _DbSet.FirstOrDefaultAsync(predicate);
+            return await _DbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
         }
         public T? LastOrDefault(Expression<Func<T, bool>> predicate)
         {
-            return _DbSet.LastOrDefault(predicate);
+            return _DbSet.AsNoTracking().LastOrDefault(predicate);
         }
         public async Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _DbSet.LastOrDefaultAsync(predicate);
+            return await _DbSet.AsNoTracking().LastOrDefaultAsync(predicate);
         }
         public IQueryable<TResult> Select<TResult>(Expression<Func<T, TResult>> selector)
         {
-            return _DbSet.Select(selector);
+            return _DbSet.AsNoTracking().Select(selector);
         }
         public IQueryable<T> OrderBy<TKey>(Expression<Func<T, TKey>> keySelector)
         {
-            return _DbSet.OrderBy(keySelector);
+            return _DbSet.AsNoTracking().OrderBy(keySelector);
         }
         public IQueryable<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector)
         {
-            return _DbSet.OrderByDescending(keySelector);
+            return _DbSet.AsNoTracking().OrderByDescending(keySelector);
         }
         public IQueryable<T> Include(string navigationPropertyPath)
         {
-            return _DbSet.Include(navigationPropertyPath);
+            return _DbSet.AsNoTracking().Include(navigationPropertyPath);
         }
         public IQueryable<T> Include(Expression<Func<T, object>> navigationProperty)
         {
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.Include(navigationPropertyPath);
+            return _DbSet.AsNoTracking().Include(navigationPropertyPath);
         }
         public IQueryable<T> IncludeThenWhere(Expression<Func<T, object>> navigationProperty, 
             Expression<Func<T, bool>> predicate)
         {
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.Include(navigationPropertyPath).Where(predicate);
+            return _DbSet.AsNoTracking().Include(navigationPropertyPath).Where(predicate);
         }
         public IQueryable<T> WhereThenInclude(Expression<Func<T, bool>> predicate,
             Expression<Func<T, object>> navigationProperty)
         {
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.Where(predicate).Include(navigationPropertyPath);
+            return _DbSet.AsNoTracking().Where(predicate).Include(navigationPropertyPath);
         }
-        public T? IncludeThenFirstOrDefault(string navigationPropertyPath, Expression<Func<T, bool>> predicate)
+        public T? IncludeThenFirstOrDefault(Expression<Func<T, object>> navigationProperty, 
+            Expression<Func<T, bool>> predicate)
         {
-            return _DbSet.Include(navigationPropertyPath).FirstOrDefault(predicate);
+            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            return _DbSet.AsNoTracking().Include(navigationPropertyPath).FirstOrDefault(predicate);
         }
-        public T? IncludeThenLastOrDefault(string navigationPropertyPath, Expression<Func<T, bool>> predicate)
+        public T? IncludeThenLastOrDefault(Expression<Func<T, object>> navigationProperty, 
+            Expression<Func<T, bool>> predicate)
         {
-            return _DbSet.Include(navigationPropertyPath).LastOrDefault(predicate);
+            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            return _DbSet.AsNoTracking().Include(navigationPropertyPath).LastOrDefault(predicate);
         }
         private string GetNavigationPropertyPath(Expression<Func<T, object>> navigationProperty)
         {
