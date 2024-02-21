@@ -37,8 +37,7 @@ namespace SharijhaAward.Api.Controllers
                 page = page,
                 pageSize = pageSize
             });
-            int totalCount = dto.DataList.Count;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            
 
             if (dto.StatusCode == 404)
             {
@@ -48,10 +47,12 @@ namespace SharijhaAward.Api.Controllers
                     dto.StatusCode
                 });
             }
+            int totalCount = dto.Data.Count;
+            var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
             return Ok(
                new
                {
-                   data = dto.DataList,
+                   data = dto.Data,
                    dto.Message,
                    dto.StatusCode,
                    pagination =

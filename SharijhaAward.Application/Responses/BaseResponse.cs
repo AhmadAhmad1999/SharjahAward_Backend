@@ -32,19 +32,12 @@ namespace SharijhaAward.Application.Responses
             Message = message;
             Data = data;
         }
-        public BaseResponse(string message, bool success, int statusCode, List<T> dataList)
-        {
-            StatusCode = statusCode;
-            Success = success;
-            Message = message;
-            DataList = dataList;
-        }
+ 
 
         public bool Success { get; set; }
         public int StatusCode {  get; set; }
         public string Message { get; set; } = string.Empty;
         public T? Data { get; set; }
-        public List<T> DataList { get; set; }
         public List<string>? ValidationErrors { get; set; }
     }
 }
