@@ -5,6 +5,8 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -59,6 +61,34 @@ namespace SharijhaAward.Api.Controllers
                         message = ResponseMessage
                     });
             }
+        }
+        [HttpPost("UpdateDynamicAttributeSection")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<CreateDynamicAttributeCommandResponse>> UpdateDynamicAttributeSection([FromBody] UpdateDynamicAttributeSectionCommand UpdateDynamicAttributeSectionCommand)
+        {
+            try
+            {
+                Unit Response = await _Mediator.Send(UpdateDynamicAttributeSectionCommand);
+                return Ok(new 
+                { 
+                    data = Response,
+                    message = "Updated Sucssesfully" 
+                });
+            }
+            catch (Exception Ex)
+            {
+                return BadRequest(Ex.Message +
+                    Ex.InnerException != null
+                        ? " / " + Ex.InnerException.Message
+                        : string.Empty);
+            }
+            
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Domain.Constants.DynamicAttribute;
+﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Constants.DynamicAttribute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
 {
-    public class DynamicAttribute
+    public class DynamicAttribute : AuditableEntity
     {
         public int Id { get; set; }
         public string Key { get; set; } = null!;

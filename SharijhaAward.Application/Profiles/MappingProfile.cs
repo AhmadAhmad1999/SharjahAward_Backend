@@ -60,6 +60,9 @@ using SharijhaAward.Application.Features.News.Commands.UpdateNews;
 using SharijhaAward.Application.Features.News.Queries.GetNewsById;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles;
+using SharijhaAward.Application.Features.User.Commands.UpdateUser;
+using SharijhaAward.Application.Features.Categories.Command.UpdateCategory;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -98,7 +101,7 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<User, LoginCommand>().ReverseMap();
             CreateMap<User, SignUpCommand>().ReverseMap();
-            CreateMap<User, UpdateEventCommand>();
+            CreateMap<User, UpdateUserCommand>();
             CreateMap<User, DeleteUserCommand>();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserListVm>().ReverseMap();
@@ -109,7 +112,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ProvidedForm, CreateProvidedFormCommand>();
 
             CreateMap<Category, CreateCategoryCommand>().ReverseMap();
-            CreateMap<Category, UpdateEventCommand>().ReverseMap();
+            CreateMap<Category, UpdateCategoryCommand>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Category, CategoryListVM>().ReverseMap();
 
@@ -143,6 +146,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Dependency, CreateDependency>().ReverseMap();
             CreateMap<DependencyValidation, CreateDependencyValidation>().ReverseMap();
             CreateMap<DynamicAttributeSection, CreateDynamicAttributeSectionCommand>().ReverseMap();
+            CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
         }
     }
 }
