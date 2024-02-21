@@ -7,25 +7,21 @@ using SharijhaAward.Application.Features.Event.Commands.UpdateEvent;
 using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
 using SharijhaAward.Application.Features.Event.Queries.GetEventById;
 using SharijhaAward.Application.Features.Event.Queries.GetEventWithInvitees;
-
-
-
+using Aspose.Html;
+using Aspose.Html.Converters;
+using System.Net;
+using BarcodeStandard;
+using Microsoft.AspNetCore.Components.Web;
 using Aspose.Pdf;
 using System;
-using TheArtOfDev.HtmlRenderer.PdfSharp;
 using PdfSaveOptions = Aspose.Pdf.PdfSaveOptions;
 using SharijhaAward.Infrastructure.ExcelHelper;
 using NPOI.SS.Extractor;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
-using Aspose.Html;
-using Aspose.Html.Converters;
-using System.Net;
-using WkHtmlToPdfDotNet;
-using BarcodeStandard;
-using Microsoft.AspNetCore.Components.Web;
-
-
+using SelectPdf;
+using PdfSharpCore.Pdf.Content.Objects;
+using System.Xml;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -258,28 +254,27 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("DownloadTempletAsPdf")]
         public IActionResult DownloadTempletAsPdf(string htmlFile)
         {
-            string documentPath = Path.Combine("wwwroot", "HTMLCodes", htmlFile);
+            string Path = _WebHostEnvironment.WebRootPath + "\\HTMLCodes\\" + htmlFile;
+            string HTML = System.IO.File.ReadAllText(Path);
+            HTML = HTML.Replace("StrTag", "<").Replace("EndTag", ">");
 
-            string savePath = Path.Combine("wwwroot", "InvitationPDFFiles", $"{htmlFile.Split('.')[0]}.pdf");
+            HTML = HTML
+                .Replace("<td colspan=\"3\" style=\"padding: 20px\">",
+                    "<td colspan=\"3\">")
+                .Replace("<td colspan=\"3\">",
+                    "<td colspan=\"3\" style=\"padding-left:20%\">");
 
-            using var document = new HTMLDocument(documentPath);
+            List<string> HTMLSpliter = HTML.Split("<!--100% Here-->").ToList();
+            HTML = HTMLSpliter[0] + "<table style = \"width : 100%; margin-left: auto; margin-right: auto; direction: ltr\">" + HTMLSpliter[2];
 
-            var options = new Aspose.Html.Saving.PdfSaveOptions();
+            HtmlToPdf oHtmlToPdf = new HtmlToPdf();
+            PdfDocument oPdfDocument = oHtmlToPdf.ConvertHtmlString(HTML);
 
-            options.PageSetup.AnyPage.Size = new Aspose.Html.Drawing.Size(1200, 1200);
+            byte[] pdf = oPdfDocument.Save();
+            oPdfDocument.Close();
 
-            Converter.ConvertHTML(document, options, savePath);
-
-            string contentType = "application/pdf";
-            var fileStreamResult = new FileStreamResult(new FileStream(savePath, FileMode.Open, FileAccess.Read), contentType)
-            {
-                FileDownloadName = htmlFile.Split('.')[0]
-            };
-
-            return fileStreamResult;
+            return File(pdf, "application/pdf", $"Sharjah-Award-Invitation.pdf");
         }
-
-       
         [HttpGet("ExportToExcel")]
         public async Task<FileResult> ExportToExcel()
         {
