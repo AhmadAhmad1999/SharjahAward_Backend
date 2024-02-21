@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Domain.Entities.InvitationModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,11 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ConfirmAt
         : IRequestHandler<ConfirmAttendanceGroupQuery, Unit>
     {
         private readonly IGroupInviteeRepository _groupInviteeRepository;
-        public ConfirmAttendanceGroupQueryHandler(IGroupInviteeRepository groupInviteeRepository)
+        private readonly IAsyncRepository<Student> _studentRepository;
+        public ConfirmAttendanceGroupQueryHandler(IGroupInviteeRepository groupInviteeRepository,IAsyncRepository<Student> studentRepository)
         {
             _groupInviteeRepository = groupInviteeRepository;
+            _studentRepository = studentRepository;
         }
 
         public async Task<Unit> Handle(ConfirmAttendanceGroupQuery request, CancellationToken cancellationToken)
