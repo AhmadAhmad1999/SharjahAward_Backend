@@ -156,7 +156,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
 
-        [HttpGet("{Id}", Name = "GetGroupInviteeById")]
+        [HttpGet("{id}", Name = "GetGroupInviteeById")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -173,7 +173,7 @@ namespace SharijhaAward.Api.Controllers
             return Ok(new { data = Group });
         }
 
-        [HttpGet("GetGroupByInviteeNumber/{Id}", Name = "GetGroupByInviteeNumber")]
+        [HttpGet("GetGroupByInviteeNumber/{id}", Name = "GetGroupByInviteeNumber")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -244,12 +244,24 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> ConfirmAttendanceGroup([FromBody] ConfirmAttendanceGroupQuery query)
         {
+            List<string> studentNames = query.StudentNames!;
             var respone = await _mediator.Send(new ConfirmAttendanceGroupQuery()
             {
                 Id = query.Id,
-                NumberOfAttendees=query.NumberOfAttendees
+                NumberOfAttendees=query.NumberOfAttendees,
+                StudentNames = studentNames,
             });
-
+            if(query.NumberOfAttendees!=studentNames.Count)
+            {
+                if (query.NumberOfAttendees != studentNames.Count)
+                {
+                    return BadRequest(
+                        new
+                        {
+                            message = "The NumberOfAttendees is not equal the number of students"
+                        });
+                }
+            }
             return Ok(
                 new
                 {

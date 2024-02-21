@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ConfirmAttendanceGroup
 {
@@ -27,7 +28,17 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ConfirmAt
             {
                throw new OpenQA.Selenium.NotFoundException();
             }
+            if (request.StudentNames != null)
+            {
+                var students = request.StudentNames.Select(StudentName =>
+                new Student
+                {
+                    StudentName = StudentName,
+                    GroupInviteeId = request.Id 
+                }).ToList();
 
+                await _studentRepository.AddRangeAsync(students);
+            }
             await _groupInviteeRepository.ConfirmationofAttendance(group, request.NumberOfAttendees);
             return Unit.Value;
         }

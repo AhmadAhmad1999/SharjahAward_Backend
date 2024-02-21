@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.InvitationModels;
 using System;
@@ -14,20 +15,29 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupI
         : IRequestHandler<GetGroupInviteeByIdQuery, GroupInviteeVM>
     {
         private readonly IAsyncRepository<GroupInvitee> _groupInviteeRepository;
+        private readonly IAsyncRepository<Student> _studentRepository;
         private readonly IMapper _mapper;
-        public GetGroupInviteeByIdQueryHandler(IAsyncRepository<GroupInvitee> groupInviteeRepository, IMapper mapper)
+        public GetGroupInviteeByIdQueryHandler(
+            IAsyncRepository<Student> studentRepository,
+            IAsyncRepository<GroupInvitee> groupInviteeRepository,
+            IMapper mapper)
         {
             _groupInviteeRepository = groupInviteeRepository;
+            _studentRepository = studentRepository;
             _mapper = mapper;
         }
 
         public async Task<GroupInviteeVM> Handle(GetGroupInviteeByIdQuery request, CancellationToken cancellationToken)
         {
+            //var GroupInvitee = _groupInviteeRepository.IncludeThenFirstOrDefault(");
             var GroupInvitee = await _groupInviteeRepository.GetByIdAsync(request.Id);
+            
             if (GroupInvitee == null)
             {
                 throw new OpenQA.Selenium.NotFoundException();
             }
+           
+            
             return _mapper.Map<GroupInviteeVM>(GroupInvitee);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Domain.Entities.InvitationModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ConfirmAt
     {
         public Guid Id { get; set; }
         public int NumberOfAttendees {  get; set; }
+        public List<string>? StudentNames { get; set; }
     }
 }
