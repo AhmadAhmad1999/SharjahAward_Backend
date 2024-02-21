@@ -5,7 +5,9 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.DeleteDynamicAttributeSection;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
 
 namespace SharijhaAward.Api.Controllers
@@ -27,7 +29,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<CreateDynamicAttributeCommandResponse>> CreateNewDynamicAttributeSection([FromBody] CreateDynamicAttributeSectionCommand CreateDynamicAttributeSectionCommand)
+        public async Task<ActionResult<CreateDynamicAttributeSectionCommandResponse>> CreateNewDynamicAttributeSection([FromBody] CreateDynamicAttributeSectionCommand CreateDynamicAttributeSectionCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -62,7 +64,7 @@ namespace SharijhaAward.Api.Controllers
                     });
             }
         }
-        [HttpPost("UpdateDynamicAttributeSection")]
+        [HttpPut("UpdateDynamicAttributeSection")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -70,25 +72,86 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<CreateDynamicAttributeCommandResponse>> UpdateDynamicAttributeSection([FromBody] UpdateDynamicAttributeSectionCommand UpdateDynamicAttributeSectionCommand)
+        public async Task<ActionResult> UpdateDynamicAttributeSection([FromBody] UpdateDynamicAttributeSectionCommand UpdateDynamicAttributeSectionCommand)
         {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
             try
             {
+                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
+                    ? (HeaderValue.ToString() == "ar"
+                        ? "تم تعديل العنوان الرئيسي بنجاح"
+                        : "Updated Sucssesfully")
+                    : "تم تعديل العنوان الرئيسي بنجاح";
+
                 Unit Response = await _Mediator.Send(UpdateDynamicAttributeSectionCommand);
                 return Ok(new 
                 { 
                     data = Response,
-                    message = "Updated Sucssesfully" 
+                    message = ResponseMessage
                 });
             }
-            catch (Exception Ex)
+            catch (Exception)
             {
-                return BadRequest(Ex.Message +
-                    Ex.InnerException != null
-                        ? " / " + Ex.InnerException.Message
-                        : string.Empty);
+                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
+                    ? (HeaderValue.ToString() == "ar"
+                        ? "حدث خطأ, يرجى إعادة المحاولة لاحقاً"
+                        : "An error occurred, Please try again later")
+                    : "حدث خطأ, يرجى إعادة المحاولة لاحقاً";
+
+                return BadRequest(
+                    new
+                    {
+                        message = ResponseMessage
+                    });
             }
-            
+        }
+        [HttpDelete(Name = "DeleteDynamicAttributeSection")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> DeleteDynamicAttributeSection(int Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            DeleteDynamicAttributeSectionCommand DeleteDynamicAttributeSectionCommand = new DeleteDynamicAttributeSectionCommand()
+            {
+                Id = Id
+            };
+
+            try
+            {
+                Unit Response = await _Mediator.Send(DeleteDynamicAttributeSectionCommand);
+
+                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
+                    ? (HeaderValue.ToString() == "ar"
+                        ? "تم حذف العنوان الرئيسي بنجاح"
+                        : "Deleted Sucssesfully")
+                    : "تم حذف العنوان الرئيسي بنجاح";
+
+                return Ok(new 
+                { 
+                    message = ResponseMessage
+                });
+            }
+            catch (Exception)
+            {
+                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
+                    ? (HeaderValue.ToString() == "ar"
+                        ? "حدث خطأ, يرجى إعادة المحاولة لاحقاً"
+                        : "An error occurred, Please try again later")
+                    : "حدث خطأ, يرجى إعادة المحاولة لاحقاً";
+
+                return BadRequest(
+                    new
+                    {
+                        message = ResponseMessage
+                    });
+            }
         }
     }
 }
