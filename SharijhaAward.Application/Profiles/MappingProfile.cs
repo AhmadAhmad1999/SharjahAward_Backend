@@ -60,6 +60,8 @@ using SharijhaAward.Application.Features.News.Commands.UpdateNews;
 using SharijhaAward.Application.Features.News.Queries.GetNewsById;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles;
+using SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle;
+using SharijhaAward.Application.Features.Cycles.Queries.GetCycleById;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -127,6 +129,8 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<Cycle, CreateCycleCommand>().ReverseMap();
             CreateMap<Cycle, CycleListVM>().ReverseMap();
+            CreateMap<Cycle, UpdateCycleCommand>().ReverseMap();
+            CreateMap<Cycle, CycleDto>().ReverseMap();
 
             CreateMap<News, CreateNewsCommand>().ReverseMap();
             CreateMap<News, UpdateNewsCommand>().ReverseMap();
