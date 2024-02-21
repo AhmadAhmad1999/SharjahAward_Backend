@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Event.Commands.CreateEvent
 {
-    public class CreateEventCommandResponse : BaseResponse
+    public class CreateEventCommandResponse : BaseResponse<object>
     {
         public CreateEventCommandResponse() : base() { }
         public CreateEventDto CreateEventDto { get; set; } 

@@ -67,7 +67,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles
                 : "تم إسترجاع الاأخبار بنجاح";
 
 
-            return new BaseResponse<List<CycleListVM>>(msg, false, 200, Data);
+            return new BaseResponse<List<CycleListVM>>(msg,true,200, Data);
         }
     }
 }

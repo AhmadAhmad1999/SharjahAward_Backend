@@ -143,8 +143,7 @@ namespace SharijhaAward.Api.Controllers
                 page = page,
                 pageSize = pageSize
             });
-            int totalCount = dto.DataList.Count;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
+           
             
             if(dto.StatusCode == 404)
             {
@@ -154,10 +153,12 @@ namespace SharijhaAward.Api.Controllers
                     dto.StatusCode
                 });
             }
+            int totalCount = dto.Data.Count;
+            var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
             return Ok(
                 new
                 {
-                    data = dto.DataList,
+                    data = dto.Data,
                     dto.Message,
                     dto.StatusCode,
                     pagination =
@@ -172,7 +173,7 @@ namespace SharijhaAward.Api.Controllers
                 });
         }
 
-        [HttpGet(Name = "GetNewsByCycleId")]
+        [HttpGet("GetNewsByCycleId",Name = "GetNewsByCycleId")]
         public async Task<IActionResult> GetNewsByCycleId(int page, int perPage, Guid CycleId)
         {
             //get Language from header
@@ -191,7 +192,7 @@ namespace SharijhaAward.Api.Controllers
                 CycleId = CycleId
                 
             });
-            int totalCount = dto.DataList.Count;
+            int totalCount = dto.Data.Count;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
 
             if (dto.StatusCode == 404)
@@ -205,7 +206,7 @@ namespace SharijhaAward.Api.Controllers
             return Ok(
                 new
                 {
-                    data = dto.DataList,
+                    data = dto.Data,
                     dto.Message,
                     dto.StatusCode,
                     pagination =
