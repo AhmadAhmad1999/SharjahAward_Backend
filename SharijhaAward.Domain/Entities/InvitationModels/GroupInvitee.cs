@@ -22,9 +22,10 @@ namespace SharijhaAward.Domain.Entities.InvitationModels
         public int ExpectedNumberOfAttendees { get; set; }
         public int ActualNumberOfAttendees { get; set; }
 
-
         [ForeignKey(nameof(Event))]
         public Guid EventId { get; set; }
         public Event Event { get; set; } = null!;
+
+        public List<Student>? Students { get; set; }
     }
 }
