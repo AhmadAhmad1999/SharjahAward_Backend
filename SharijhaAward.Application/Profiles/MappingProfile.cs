@@ -65,6 +65,8 @@ using SharijhaAward.Application.Features.Cycles.Queries.GetCycleById;
 using SharijhaAward.Application.Features.User.Commands.UpdateUser;
 using SharijhaAward.Application.Features.Categories.Command.UpdateCategory;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSections;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributes;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -150,7 +152,13 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Dependency, CreateDependency>().ReverseMap();
             CreateMap<DependencyValidation, CreateDependencyValidation>().ReverseMap();
             CreateMap<DynamicAttributeSection, CreateDynamicAttributeSectionCommand>().ReverseMap();
+
+            // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
+
+            // Get..
+            CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
+            CreateMap<DynamicAttribute, DynamicAttributeListVM>().ReverseMap();
         }
     }
 }

@@ -19,6 +19,7 @@ namespace SharijhaAward.Application.Contract.Persistence
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
         IQueryable<T> Where(Expression<Func<T, bool>> predicate);
+        Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, int page, int size);
         T? FirstOrDefault(Expression<Func<T, bool>> predicate);
         Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
         T? LastOrDefault(Expression<Func<T, bool>> predicate);
@@ -32,7 +33,9 @@ namespace SharijhaAward.Application.Contract.Persistence
             Expression<Func<T, bool>> predicate);
         IQueryable<T> WhereThenInclude(Expression<Func<T, bool>> predicate,
             Expression<Func<T, object>> navigationProperty);
-        T? IncludeThenFirstOrDefault(string navigationPropertyPath, Expression<Func<T, bool>> predicate);
-        T? IncludeThenLastOrDefault(string navigationPropertyPath, Expression<Func<T, bool>> predicate);
+        T? IncludeThenFirstOrDefault(Expression<Func<T, object>> navigationProperty,
+            Expression<Func<T, bool>> predicate);
+        T? IncludeThenLastOrDefault(Expression<Func<T, object>> navigationProperty,
+            Expression<Func<T, bool>> predicate);
     }
 }
