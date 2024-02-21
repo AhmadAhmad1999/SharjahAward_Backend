@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupInviteeById;
 using SharijhaAward.Domain.Entities.InvitationModels;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ExportGro
 
         public async Task<List<GroupExportVM>> Handle(ExportGroupToExcelQuery request, CancellationToken cancellationToken)
         {
-            var groupList = await _groupInviteeRepository.ListAllAsync();
+            var groupList =  _groupInviteeRepository.IncludeThenWhere(g=>g.StudentNames!,g => g.isDeleted != true);
+
+            
             return _mapper.Map<List<GroupExportVM>>(groupList);
         }
     }

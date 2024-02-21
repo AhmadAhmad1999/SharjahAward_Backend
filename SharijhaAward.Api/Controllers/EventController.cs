@@ -149,7 +149,7 @@ namespace SharijhaAward.Api.Controllers
             return Ok(new { data = Event });
          
         }
-        [HttpGet("GetEventWithInvitees/{Id}", Name = "GetEventWithInvitees")]
+        [HttpGet("GetEventWithInvitees/{id}", Name = "GetEventWithInvitees")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -18,6 +18,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupI
         public string JobTitle { get; set; } = string.Empty;
         public int ExpectedNumberOfAttendees { get; set; }
         public int ActualNumberOfAttendees { get; set; }
+        public List<GroupInviteeStudentsDto>? StudentNames {  get; set; }
         public Guid EventId { get; set; }
         public DateTime CreatedAt {  get; set; }
     }

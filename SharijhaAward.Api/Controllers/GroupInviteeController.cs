@@ -245,14 +245,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<ActionResult> ConfirmAttendanceGroup([FromBody] ConfirmAttendanceGroupQuery query)
         {
             List<string> studentNames = query.StudentNames!;
-            var respone = await _mediator.Send(new ConfirmAttendanceGroupQuery()
-            {
-                Id = query.Id,
-                NumberOfAttendees=query.NumberOfAttendees,
-                StudentNames = studentNames,
-            });
-            if(query.NumberOfAttendees!=studentNames.Count)
-            {
+           
                 if (query.NumberOfAttendees != studentNames.Count)
                 {
                     return BadRequest(
@@ -261,7 +254,12 @@ namespace SharijhaAward.Api.Controllers
                             message = "The NumberOfAttendees is not equal the number of students"
                         });
                 }
-            }
+            var respone = await _mediator.Send(new ConfirmAttendanceGroupQuery()
+            {
+                Id = query.Id,
+                NumberOfAttendees = query.NumberOfAttendees,
+                StudentNames = studentNames,
+            });
             return Ok(
                 new
                 {

@@ -29,15 +29,15 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupI
 
         public async Task<GroupInviteeVM> Handle(GetGroupInviteeByIdQuery request, CancellationToken cancellationToken)
         {
-            //var GroupInvitee = _groupInviteeRepository.IncludeThenFirstOrDefault(");
-            var GroupInvitee = await _groupInviteeRepository.GetByIdAsync(request.Id);
+            var GroupInvitee = _groupInviteeRepository.IncludeThenFirstOrDefault(g => g.StudentNames!, g => g.Id == request.Id);
+            // var GroupInvitee = await _groupInviteeRepository.GetByIdAsync(request.Id);
             
             if (GroupInvitee == null)
             {
                 throw new OpenQA.Selenium.NotFoundException();
             }
-           
-            
+            _mapper.Map<List<GroupInviteeStudentsDto>>(GroupInvitee.StudentNames!.ToList());
+
             return _mapper.Map<GroupInviteeVM>(GroupInvitee);
         }
     }
