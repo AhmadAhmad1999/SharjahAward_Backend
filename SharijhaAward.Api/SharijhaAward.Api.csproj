@@ -1,61 +1,47 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <InvariantGlobalization>false</InvariantGlobalization>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<InvariantGlobalization>false</InvariantGlobalization>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="wwwroot\Images\**" />
-    <Content Remove="wwwroot\Images\**" />
-    <EmbeddedResource Remove="wwwroot\Images\**" />
-    <None Remove="wwwroot\Images\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Aspose.HTML" Version="24.1.0" />
+		<PackageReference Include="Aspose.PDF" Version="24.1.0" />
+		<PackageReference Include="BarCode" Version="2024.2.1" />
+		<PackageReference Include="DinkToPdf" Version="1.0.8" />
+		<PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="PdfSharpCore" Version="1.3.63" />
+		<PackageReference Include="QRCoder" Version="1.4.3" />
+		<PackageReference Include="Select.HtmlToPdf.NetCore" Version="23.2.0" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Aspose.HTML" Version="24.1.0" />
-    <PackageReference Include="Aspose.PDF" Version="24.1.0" />
-    <PackageReference Include="BarCode" Version="2024.2.1" />
-    <PackageReference Include="Haukcode.WkHtmlToPdfDotNet" Version="1.5.86" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.59" />
-    <PackageReference Include="HtmlRenderer.PdfSharp" Version="1.5.0.6" />
-    <PackageReference Include="HtmlRendererCore.PdfSharp" Version="1.0.5" />
-    <PackageReference Include="HtmlRendererCore.PdfSharpCore" Version="1.0.1" />
-    <PackageReference Include="iTextSharp" Version="5.5.13.3" />
-    <PackageReference Include="itextsharp.xmlworker" Version="5.5.13.3" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="PDFsharp" Version="6.0.0" />
-    <PackageReference Include="PdfSharpCore" Version="1.3.63" />
-    <PackageReference Include="Polybioz.HtmlRenderer.PdfSharp.Core" Version="1.0.0" />
-    <PackageReference Include="QRCoder" Version="1.4.3" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="WkHtmlToPdf" Version="1.0.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SharijhaAward.Application\SharijhaAward.Application.csproj" />
+		<ProjectReference Include="..\SharijhaAward.Infrastructure\SharijhaAward.Infrastructure.csproj" />
+		<ProjectReference Include="..\SharijhaAward.Persistence\SharijhaAward.Persistence.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SharijhaAward.Application\SharijhaAward.Application.csproj" />
-    <ProjectReference Include="..\SharijhaAward.Infrastructure\SharijhaAward.Infrastructure.csproj" />
-    <ProjectReference Include="..\SharijhaAward.Persistence\SharijhaAward.Persistence.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="QREmailHelper\" />
+		<Folder Include="wwwroot\GeneratedBarcode\" />
+		<Folder Include="wwwroot\Images\" />
+		<Folder Include="wwwroot\HTMLCodes\" />
+		<Folder Include="wwwroot\InvitationPDFFiles\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="QREmailHelper\" />
-    <Folder Include="wwwroot\GeneratedBarcode\" />
-    <Folder Include="wwwroot\HTMLCodes\" />
-    <Folder Include="wwwroot\InvitationPDFFiles\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\assets\qr\qr.png" />
-    <None Include="wwwroot\assets\qr\QRCodeForstringPersonalInvite.png" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="wwwroot\assets\qr\qr.png" />
+		<None Include="wwwroot\assets\qr\QRCodeForstringPersonalInvite.png" />
+	</ItemGroup>
 
 </Project>
