@@ -132,8 +132,17 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> UpdateGroupInvitee([FromBody] UpdateGroupInviteeCommand updateGroupInviteeCommand)
         {
+            List<string> studentNames = updateGroupInviteeCommand.StudentNamesAsString!;
 
-           var response = await _mediator.Send(updateGroupInviteeCommand);
+            if (updateGroupInviteeCommand.ExpectedNumberOfAttendees != studentNames.Count)
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "The NumberOfAttendees is not equal the number of students"
+                    });
+            }
+            var response = await _mediator.Send(updateGroupInviteeCommand);
             return Ok(new { data = response, message = "Updated Sucssesfully" });
         }
 
@@ -244,21 +253,10 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> ConfirmAttendanceGroup([FromBody] ConfirmAttendanceGroupQuery query)
         {
-            List<string> studentNames = query.StudentNames!;
-           
-                if (query.NumberOfAttendees != studentNames.Count)
-                {
-                    return BadRequest(
-                        new
-                        {
-                            message = "The NumberOfAttendees is not equal the number of students"
-                        });
-                }
             var respone = await _mediator.Send(new ConfirmAttendanceGroupQuery()
             {
                 Id = query.Id,
-                NumberOfAttendees = query.NumberOfAttendees,
-                StudentNames = studentNames,
+                NumberOfAttendees = query.NumberOfAttendees
             });
             return Ok(
                 new

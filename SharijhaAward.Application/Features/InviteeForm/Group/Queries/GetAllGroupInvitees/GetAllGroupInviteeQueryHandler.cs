@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
 
         public async Task<List<GroupInviteeListVM>> Handle(GetAllGroupInviteeQuery request, CancellationToken cancellationToken)
         {
-            var AllGroupInvitees = await _groupInviteeRepository.ListAllAsync();
+            var AllGroupInvitees = _groupInviteeRepository.Include(x => x.StudentNames);
             return _mapper.Map<List<GroupInviteeListVM>>(AllGroupInvitees);
         }
     }

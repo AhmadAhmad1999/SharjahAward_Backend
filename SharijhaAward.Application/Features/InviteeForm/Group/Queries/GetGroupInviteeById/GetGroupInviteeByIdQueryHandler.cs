@@ -36,7 +36,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupI
             {
                 throw new OpenQA.Selenium.NotFoundException();
             }
-            _mapper.Map<List<GroupInviteeStudentsDto>>(GroupInvitee.StudentNames!.ToList());
 
             return _mapper.Map<GroupInviteeVM>(GroupInvitee);
         }

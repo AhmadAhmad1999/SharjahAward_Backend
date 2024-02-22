@@ -27,12 +27,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
         private IEmailSender _EmailSender;
         private IEmailCodesGenerator _QRCodeGenerator;
         private readonly IHttpContextAccessor _HttpContextAccessor;
+        private readonly IAsyncRepository<Student> _StudentRepository;
 
         public CreateGroupInviteeCommandHandler(IAsyncRepository<GroupInvitee> groupInviteeRepository, IMapper mapper,
             IEmailCodesGenerator QRCodeGenerator,
             IAsyncRepository<Domain.Entities.EventModel.Event> EventRepository,
             IEmailSender EmailSender,
-            IHttpContextAccessor HttpContextAccessor)
+            IHttpContextAccessor HttpContextAccessor,
+            IAsyncRepository<Student> StudentRepository)
         {
             _groupInviteeRepository = groupInviteeRepository;
             _mapper = mapper;
@@ -40,6 +42,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
             _EventRepository = EventRepository;
             _EmailSender = EmailSender;
             _HttpContextAccessor = HttpContextAccessor;
+            _StudentRepository = StudentRepository;
         }
 
         public async Task<CreateInviteeResponse> Handle(CreateGroupInviteeCommand Request, CancellationToken cancellationToken)
@@ -176,6 +179,18 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 try
                 {
                     NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
+
+                    if (Request.StudentNamesAsString != null)
+                    {
+                        var students = Request.StudentNamesAsString.Select(StudentName =>
+                            new Student
+                            {
+                                StudentName = StudentName,
+                                GroupInviteeId = NewGroupInvitee.Id
+                            }).ToList();
+
+                        await _StudentRepository.AddRangeAsync(students);
+                    }
                 }
                 catch (DbUpdateException)
                 {
@@ -300,6 +315,18 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 try
                 {
                     NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
+
+                    if (Request.StudentNamesAsString != null)
+                    {
+                        List<Student> Students = Request.StudentNamesAsString.Select(StudentName =>
+                            new Student
+                            {
+                                StudentName = StudentName,
+                                GroupInviteeId = NewGroupInvitee.Id
+                            }).ToList();
+
+                        await _StudentRepository.AddRangeAsync(Students);
+                    }
                 }
                 catch (DbUpdateException)
                 {

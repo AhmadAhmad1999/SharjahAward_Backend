@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -75,7 +76,22 @@ namespace SharijhaAward.Persistence.Repositories
             typeof(T).GetProperty("DeletedAt").SetValue(entity, DateTime.UtcNow);
             await _dbContext.SaveChangesAsync();
         }
-
+        public async Task DeleteListAsync(IEnumerable<T> entities)
+        {
+            typeof(T).GetProperty("isDeleted").SetValue(entities, true);
+            typeof(T).GetProperty("DeletedAt").SetValue(entities, DateTime.UtcNow);
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task RemoveAsync(T entity)
+        {
+            _dbContext.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task RemoveListAsync(IEnumerable<T> entities)
+        {
+            _dbContext.RemoveRange(entities);
+            await _dbContext.SaveChangesAsync();
+        }
         public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
         {
             return _DbSet.AsNoTracking().Where(predicate);

@@ -18,5 +18,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
         public Guid EventId { get; set; }
         public string? lang { get; set; }
         public string? ImagePath { get; set; }
+        public List<string>? StudentNamesAsString { get; set; }
     }
 }

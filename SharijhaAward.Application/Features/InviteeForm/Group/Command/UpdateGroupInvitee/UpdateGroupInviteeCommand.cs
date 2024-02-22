@@ -17,5 +17,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.UpdateGro
         public string JobTitle { get; set; } = string.Empty;
         public int ExpectedNumberOfAttendees { get; set; }
         public int ActualNumberOfAttendees { get; set; }
+        public List<string>? StudentNamesAsString { get; set; }
     }
 }

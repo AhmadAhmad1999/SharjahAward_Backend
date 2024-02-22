@@ -17,6 +17,11 @@ namespace SharijhaAward.Api.Controllers
         {
             _Mediator = mediator;
         }
+        [HttpGet("APIForTestPublishOnly")]
+        public IActionResult APIForTestPublishOnly()
+        {
+            return Ok("Connected TO BackEnd Successfuly");
+        }
         //
         [HttpPost("Login", Name = "Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]

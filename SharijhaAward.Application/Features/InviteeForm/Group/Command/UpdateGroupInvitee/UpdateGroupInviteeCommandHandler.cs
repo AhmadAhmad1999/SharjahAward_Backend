@@ -2,6 +2,7 @@
 using FluentValidation;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
 using SharijhaAward.Domain.Entities.InvitationModels;
 using System;
 using System.Collections.Generic;
@@ -14,29 +15,52 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.UpdateGro
     public class UpdateGroupInviteeCommandHandler
         : IRequestHandler<UpdateGroupInviteeCommand, Unit>
     {
-        private readonly IAsyncRepository<GroupInvitee> _groupInviteeRepository;
-        private readonly IMapper _mapper;
-        public UpdateGroupInviteeCommandHandler(IAsyncRepository<GroupInvitee> groupInviteeRepository, IMapper mapper)
+        private readonly IAsyncRepository<GroupInvitee> _GroupInviteeRepository;
+        private readonly IMapper _Mapper;
+        private readonly IAsyncRepository<Student> _StudentRepository;
+        public UpdateGroupInviteeCommandHandler(IAsyncRepository<GroupInvitee> GroupInviteeRepository,
+            IMapper Mapper,
+            IAsyncRepository<Student> StudentRepository)
         {
-            _groupInviteeRepository = groupInviteeRepository;
-            _mapper = mapper;
+            _GroupInviteeRepository = GroupInviteeRepository;
+            _Mapper = Mapper;
+            _StudentRepository = StudentRepository;
         }
 
-        public async Task<Unit> Handle(UpdateGroupInviteeCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateGroupInviteeCommand Request, CancellationToken cancellationToken)
         {
             var validator = new UpdateGroupInviteeCommandValidator();
-            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+            var validationResult = await validator.ValidateAsync(Request, cancellationToken);
 
             if (validationResult.Errors.Count>0)
             {
                 throw new ValidationException(validationResult.Errors);
             }
-            var GroupInviteeToUpdate = await _groupInviteeRepository.GetByIdAsync(request.Id);
+            var GroupInviteeToUpdate = await _GroupInviteeRepository.GetByIdAsync(Request.Id);
             if (GroupInviteeToUpdate == null)
             {
                 throw new OpenQA.Selenium.NotFoundException();
             }
-            await _groupInviteeRepository.UpdateAsync(GroupInviteeToUpdate);
+
+            if (Request.StudentNamesAsString != null)
+            {
+                List<Student> AlreadyExistStudents = _StudentRepository
+                    .Where(x => x.GroupInviteeId == Request.Id).ToList();
+
+                await _StudentRepository.RemoveListAsync(AlreadyExistStudents);
+
+                List<Student> Students = Request.StudentNamesAsString.Select(StudentName =>
+                    new Student
+                    {
+                        StudentName = StudentName,
+                        GroupInviteeId = Request.Id
+                    }).ToList();
+
+                await _StudentRepository.AddRangeAsync(Students);
+            }
+
+            _Mapper.Map(Request, GroupInviteeToUpdate, typeof(UpdatePersonalInviteeCommand), typeof(PersonalInvitee));
+            await _GroupInviteeRepository.UpdateAsync(GroupInviteeToUpdate);
             return Unit.Value;
         }
     }

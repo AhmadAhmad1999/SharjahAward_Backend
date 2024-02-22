@@ -18,6 +18,9 @@ namespace SharijhaAward.Application.Contract.Persistence
         Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
+        Task DeleteListAsync(IEnumerable<T> entities);
+        Task RemoveAsync(T entity);
+        Task RemoveListAsync(IEnumerable<T> entities);
         IQueryable<T> Where(Expression<Func<T, bool>> predicate);
         Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, int page, int size);
         T? FirstOrDefault(Expression<Func<T, bool>> predicate);

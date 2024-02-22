@@ -60,6 +60,7 @@ namespace SharijhaAward.Persistence
         public DbSet<DynamicAttributeSection> DynamicAttributeSections { get; set; }
         public DbSet<DynamicAttributeValue> DynamicAttributeValues { get; set; }
         public DbSet<StaticAttribute> StaticAttributes { get; set; }
+        public DbSet<Student> Students { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -77,6 +78,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<FrequentlyAskedQuestion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<User>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Role>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Student>().HasQueryFilter(p => !p.isDeleted);
 
 
 
