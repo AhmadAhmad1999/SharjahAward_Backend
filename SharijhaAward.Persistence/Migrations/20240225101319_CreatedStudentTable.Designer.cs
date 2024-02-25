@@ -12,8 +12,8 @@ using SharijhaAward.Persistence;
 namespace SharijhaAward.Persistence.Migrations
 {
     [DbContext(typeof(SharijhaAwardDbContext))]
-    [Migration("20240222080341_test")]
-    partial class test
+    [Migration("20240225101319_CreatedStudentTable")]
+    partial class CreatedStudentTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2151,7 +2151,7 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.HasIndex("GroupInviteeId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Student");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingModel.Meeting", b =>

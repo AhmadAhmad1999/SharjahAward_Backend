@@ -34,6 +34,13 @@ namespace SharijhaAward.Persistence.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task ChangePassword(Guid Id, string password)
+        {
+            var user =await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
+            user!.Password= password;
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<User> GetByEmailAsync(string email)
         {
             User? user = await _dbContext.Users

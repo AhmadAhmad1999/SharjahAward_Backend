@@ -9,5 +9,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
 {
     public class GetAllGroupInviteeQuery : IRequest<List<GroupInviteeListVM>>
     {
+        public int page {  get; set; }
+        public int pageSize { get; set; }
+        public string? name { get; set; } = string.Empty;
     }
 }

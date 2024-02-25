@@ -61,7 +61,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 
             msg = request.lang == "en"
                 ? "The News Retrieved Success"
-                : "تم إسترجاع الاأخبار بنجاح";
+                : "تم إسترجاع الأخبار بنجاح";
 
 
             return new BaseResponse<List<NewsListVM>>(msg, false, 200, Data);
