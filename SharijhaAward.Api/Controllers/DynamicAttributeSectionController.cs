@@ -38,36 +38,20 @@ namespace SharijhaAward.Api.Controllers
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            try
-            {
-                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                    ? (HeaderValue.ToString() == "ar"
-                        ? "تم إنشاء العنوان الرئيسي بنجاح"
-                        : "Section Added Successfuly")
-                    : "تم إنشاء العنوان الرئيسي بنجاح";
+            CreateDynamicAttributeSectionCommandResponse? Response = await _Mediator.Send(CreateDynamicAttributeSectionCommand);
 
-                CreateDynamicAttributeSectionCommandResponse? Response = await _Mediator.Send(CreateDynamicAttributeSectionCommand);
-                return Ok(
-                    new
-                    {
-                        data = Response,
-                        message = ResponseMessage
-                    });
-            }
-            catch (Exception)
-            {
-                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                    ? (HeaderValue.ToString() == "ar"
-                        ? "حدث خطأ, يرجى إعادة المحاولة لاحقاً"
-                        : "An error occurred, Please try again later")
-                    : "حدث خطأ, يرجى إعادة المحاولة لاحقاً";
+            string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
+                ? (HeaderValue.ToString() == "ar"
+                    ? "تم إنشاء العنوان الرئيسي بنجاح"
+                    : "Section Added Successfuly")
+                : "تم إنشاء العنوان الرئيسي بنجاح";
 
-                return BadRequest(
-                    new
-                    {
-                        message = ResponseMessage
-                    });
-            }
+            return Ok(
+                new
+                {
+                    data = Response,
+                    message = ResponseMessage
+                });
         }
         [HttpPut("UpdateDynamicAttributeSection")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -81,35 +65,19 @@ namespace SharijhaAward.Api.Controllers
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            try
-            {
-                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                    ? (HeaderValue.ToString() == "ar"
-                        ? "تم تعديل العنوان الرئيسي بنجاح"
-                        : "Updated Sucssesfully")
-                    : "تم تعديل العنوان الرئيسي بنجاح";
+            Unit Response = await _Mediator.Send(UpdateDynamicAttributeSectionCommand);
 
-                Unit Response = await _Mediator.Send(UpdateDynamicAttributeSectionCommand);
-                return Ok(new 
-                { 
-                    data = Response,
-                    message = ResponseMessage
-                });
-            }
-            catch (Exception)
-            {
-                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                    ? (HeaderValue.ToString() == "ar"
-                        ? "حدث خطأ, يرجى إعادة المحاولة لاحقاً"
-                        : "An error occurred, Please try again later")
-                    : "حدث خطأ, يرجى إعادة المحاولة لاحقاً";
+            string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
+                ? (HeaderValue.ToString() == "ar"
+                    ? "تم تعديل العنوان الرئيسي بنجاح"
+                    : "Updated Sucssesfully")
+                : "تم تعديل العنوان الرئيسي بنجاح";
 
-                return BadRequest(
-                    new
-                    {
-                        message = ResponseMessage
-                    });
-            }
+            return Ok(new 
+            { 
+                data = Response,
+                message = ResponseMessage
+            });
         }
         [HttpDelete(Name = "DeleteDynamicAttributeSection")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -128,35 +96,18 @@ namespace SharijhaAward.Api.Controllers
                 Id = Id
             };
 
-            try
-            {
-                Unit Response = await _Mediator.Send(DeleteDynamicAttributeSectionCommand);
+            Unit Response = await _Mediator.Send(DeleteDynamicAttributeSectionCommand);
 
-                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                    ? (HeaderValue.ToString() == "ar"
-                        ? "تم حذف العنوان الرئيسي بنجاح"
-                        : "Deleted Sucssesfully")
-                    : "تم حذف العنوان الرئيسي بنجاح";
+            string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
+                ? (HeaderValue.ToString() == "ar"
+                    ? "تم حذف العنوان الرئيسي بنجاح"
+                    : "Deleted Sucssesfully")
+                : "تم حذف العنوان الرئيسي بنجاح";
 
-                return Ok(new 
-                { 
-                    message = ResponseMessage
-                });
-            }
-            catch (Exception)
-            {
-                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                    ? (HeaderValue.ToString() == "ar"
-                        ? "حدث خطأ, يرجى إعادة المحاولة لاحقاً"
-                        : "An error occurred, Please try again later")
-                    : "حدث خطأ, يرجى إعادة المحاولة لاحقاً";
-
-                return BadRequest(
-                    new
-                    {
-                        message = ResponseMessage
-                    });
-            }
+            return Ok(new 
+            { 
+                message = ResponseMessage
+            });
         }
         [HttpGet(Name = "GetAllDynamicAttributeSections")]
         [ProducesResponseType(StatusCodes.Status201Created)]

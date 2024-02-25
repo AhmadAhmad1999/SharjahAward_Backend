@@ -30,36 +30,20 @@ namespace SharijhaAward.Api.Controllers
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            try
-            {
-                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                    ? (HeaderValue.ToString() == "ar"
-                        ? "تم إنشاء الفعالية بنجاح"
-                        : "Dynamic Attribute Added Successfuly")
-                    : "تم إنشاء الفعالية بنجاح";
+            CreateDynamicAttributeCommandResponse? Response = await _Mediator.Send(CreateDynamicAttributeCommand);
 
-                CreateDynamicAttributeCommandResponse? Response = await _Mediator.Send(CreateDynamicAttributeCommand);
-                return Ok(
-                    new
-                    {
-                        data = Response,
-                        message = ResponseMessage
-                    });
-            }
-            catch (Exception)
-            {
-                string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                    ? (HeaderValue.ToString() == "ar"
-                        ? "حدث خطأ, يرجى إعادة المحاولة لاحقاً"
-                        : "An error occurred, Please try again later")
-                    : "حدث خطأ, يرجى إعادة المحاولة لاحقاً";
+            string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
+                ? (HeaderValue.ToString() == "ar"
+                    ? "تم إنشاء الفعالية بنجاح"
+                    : "Dynamic Attribute Added Successfuly")
+                : "تم إنشاء الفعالية بنجاح";
 
-                return BadRequest(
-                    new
-                    {
-                        message = ResponseMessage
-                    });
-            }
+            return Ok(
+                new
+                {
+                    data = Response,
+                    message = ResponseMessage
+                });
         }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
+using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
 using SharijhaAward.Application;
 using SharijhaAward.Infrastructure;
@@ -23,7 +24,7 @@ builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddLogging();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
@@ -39,7 +40,7 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 app.UseStaticFiles();
 app.UseAuthentication();
