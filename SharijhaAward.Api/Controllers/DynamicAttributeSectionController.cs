@@ -13,6 +13,7 @@ using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePers
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 
 namespace SharijhaAward.Api.Controllers
@@ -65,6 +66,11 @@ namespace SharijhaAward.Api.Controllers
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            UpdateDynamicAttributeSectionCommand.lang = HeaderValue!;
+
             Unit Response = await _Mediator.Send(UpdateDynamicAttributeSectionCommand);
 
             string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
@@ -90,10 +96,13 @@ namespace SharijhaAward.Api.Controllers
         public async Task<ActionResult> DeleteDynamicAttributeSection(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
 
             DeleteDynamicAttributeSectionCommand DeleteDynamicAttributeSectionCommand = new DeleteDynamicAttributeSectionCommand()
             {
-                Id = Id
+                Id = Id,
+                lang = HeaderValue!
             };
 
             Unit Response = await _Mediator.Send(DeleteDynamicAttributeSectionCommand);
@@ -119,45 +128,46 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> GetAllDynamicAttributeSections(int Page, int PerPage)
         {
-            return Ok();
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            //StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
 
-            //List<DynamicAttributeSectionListVM> Response = await _Mediator.Send(new GetAllDynamicAttributeSectionsQuery()
-            //{
-            //    lang = HeaderValue,
-            //    page = Page,
-            //    pageSize = PerPage
-            //});
+            BaseResponse<List<DynamicAttributeSectionListVM>> Response = await _Mediator.Send(new GetAllDynamicAttributeSectionsQuery()
+            {
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage
+            });
 
-            //int PageSize = PerPage == 0 ? 10 : PerPage;
+            int PageSize = PerPage == 0 ? 10 : PerPage;
 
-            //if (Response.StatusCode == 404)
-            //{
-            //    return NotFound(new
-            //    {
-            //        Response.Message,
-            //        Response.StatusCode
-            //    });
-            //}
-            //int totalCount = DTO.Data.Count;
-            //var totalPage = (int)Math.Ceiling((decimal)totalCount / PageSize);
-            //return Ok(
-            //    new
-            //    {
-            //        data = DTO.Data,
-            //        DTO.Message,
-            //        DTO.StatusCode,
-            //        pagination =
-            //        new
-            //        {
-            //            current_page = page,
-            //            last_page = totalPage,
-            //            total_row = totalCount,
-            //            per_page = PageSize
-            //        }
+            if (Response.StatusCode == 404)
+            {
+                return NotFound(new
+                {
+                    Response.Message,
+                    Response.StatusCode
+                });
+            }
 
-            //    });
+            int TotalCount = Response.Data!.Count;
+            int TotalPage = (int)Math.Ceiling((decimal)TotalCount / PageSize);
+
+            return Ok(new
+            {
+                data = Response.Data,
+                Response.Message,
+                Response.StatusCode,
+                pagination =
+                new
+                {
+                    current_page = Page,
+                    last_page = TotalPage,
+                    total_row = TotalCount,
+                    per_page = PageSize
+                }
+            });
         }
     }
 }

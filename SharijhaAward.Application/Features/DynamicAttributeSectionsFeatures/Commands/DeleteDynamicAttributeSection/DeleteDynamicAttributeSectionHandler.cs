@@ -19,8 +19,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
             DynamicAttributeSection? DynamicAttributeSectionToDelete = await _DynamicAttributeSectionRepository.GetByIdAsync(Request.Id);
             
             if (DynamicAttributeSectionToDelete == null)
-                throw new OpenQA.Selenium.NotFoundException("Section Not Found");
-
+                throw new OpenQA.Selenium.NotFoundException(!string.IsNullOrEmpty(Request.lang) 
+                    ? (Request.lang.ToLower() == "en"
+                        ? "Section Not Found."
+                        : "هذا القسم غير موجود.")
+                    : "Section Not Found.");
 
             await _DynamicAttributeSectionRepository.DeleteAsync(DynamicAttributeSectionToDelete);
 

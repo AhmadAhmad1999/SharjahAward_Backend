@@ -10,5 +10,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
     public class DeleteDynamicAttributeSectionCommand : IRequest<Unit>
     {
         public int Id { get; set; }
+        public string? lang { get; set; }
     }
 }
