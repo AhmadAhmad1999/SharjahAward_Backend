@@ -14,5 +14,6 @@ namespace SharijhaAward.Application.Contract.Persistence
         public Task<AuthenticationResponse> LogInAsync(User user);
         public Task<string> RegisterAsync(User user);
         public Task AsignRole(Guid userId, Guid roleId);
+        public Task ChangePassword(Guid Id,string password);
     }
 }

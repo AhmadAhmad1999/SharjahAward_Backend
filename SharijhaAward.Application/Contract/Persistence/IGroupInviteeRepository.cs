@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Contract.Persistence
 {
     public interface IGroupInviteeRepository : IAsyncRepository<GroupInvitee>
     {
-        public Task ConfirmationofAttendance(GroupInvitee group , int NumberOfAttendees);
+        public Task ConfirmationofAttendance(GroupInvitee group , int NumberOfAttendees); 
         public Task<GroupInvitee> GetByInviteeNumber(int inviteeNumber);
     }
 }

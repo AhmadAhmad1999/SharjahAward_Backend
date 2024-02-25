@@ -98,10 +98,10 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GroupInvitee, DeleteGroupInviteeCommand>().ReverseMap();
             CreateMap<GroupInvitee, UpdateGroupInviteeCommand>().ReverseMap();
             CreateMap<GroupInvitee, GroupInviteeListVM>()
-                .ForMember(x => x.StudentNamesAsString, x => x.MapFrom(y => y.StudentNames.Select(z => z.StudentName)));
+                .ForMember(x => x.StudentNamesAsString, x => x.MapFrom(y => y.StudentNames.Select(z => z.StudentName))).ReverseMap();
             CreateMap<GroupInviteeListVM, GroupInvitee>();
             CreateMap<GroupInvitee, GroupInviteeVM>()
-                .ForMember(x => x.StudentNamesAsString, x => x.MapFrom(y => y.StudentNames.Select(z => z.StudentName)));
+                .ForMember(x => x.StudentNamesAsString, x => x.MapFrom(y => y.StudentNames.Select(z => z.StudentName))).ReverseMap();
             CreateMap<GroupInviteeVM, GroupInvitee>();
             CreateMap<GroupInvitee, ConfirmAttendanceGroupQuery>();
             CreateMap<GroupInvitee, GroupDto>().ReverseMap();

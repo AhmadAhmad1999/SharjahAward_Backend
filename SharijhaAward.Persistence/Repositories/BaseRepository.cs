@@ -42,7 +42,7 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task<T> AddAsync(T entity)
         {
             await _DbSet.AddAsync(entity);
-            typeof(T).GetProperty("CreatedAt").SetValue(entity, DateTime.UtcNow);
+            typeof(T).GetProperty("CreatedAt")!.SetValue(entity, DateTime.UtcNow);
             await _dbContext.SaveChangesAsync();
 
             return entity;
@@ -51,7 +51,7 @@ namespace SharijhaAward.Persistence.Repositories
         {
             await _DbSet.AddRangeAsync(entities);
 
-            PropertyInfo createdAtProperty = typeof(T).GetProperty("CreatedAt");
+            PropertyInfo createdAtProperty = typeof(T).GetProperty("CreatedAt")!;
             if (createdAtProperty != null && createdAtProperty.PropertyType == typeof(DateTime))
             {
                 DateTime currentTime = DateTime.UtcNow;
@@ -72,14 +72,14 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async Task DeleteAsync(T entity)
         {
-            typeof(T).GetProperty("isDeleted").SetValue(entity, true);
-            typeof(T).GetProperty("DeletedAt").SetValue(entity, DateTime.UtcNow);
+            typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
+            typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
             await _dbContext.SaveChangesAsync();
         }
         public async Task DeleteListAsync(IEnumerable<T> entities)
         {
-            typeof(T).GetProperty("isDeleted").SetValue(entities, true);
-            typeof(T).GetProperty("DeletedAt").SetValue(entities, DateTime.UtcNow);
+            typeof(T).GetProperty("isDeleted")!.SetValue(entities, true);
+            typeof(T).GetProperty("DeletedAt")!.SetValue(entities, DateTime.UtcNow);
             await _dbContext.SaveChangesAsync();
         }
         public async Task RemoveAsync(T entity)

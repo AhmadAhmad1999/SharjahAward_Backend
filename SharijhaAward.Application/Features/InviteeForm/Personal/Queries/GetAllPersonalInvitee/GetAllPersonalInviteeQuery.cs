@@ -9,5 +9,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
 {
     public class GetAllPersonalInviteeQuery : IRequest<List<PersonalInviteeListVM>>
     {
+        public int page { get; set; }
+        public int pageSize { get; set; }
+        public string? name { get; set; } = string.Empty;
     }
 }

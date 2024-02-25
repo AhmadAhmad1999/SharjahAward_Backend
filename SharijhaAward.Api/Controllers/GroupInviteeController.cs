@@ -52,8 +52,7 @@ namespace SharijhaAward.Api.Controllers
                 CreateGroupInviteeCommand.lang = HeaderValue;
 
             CreateGroupInviteeCommand.ImagePath = _WebHostEnvironment.WebRootPath;
-            try
-            {
+            
                 var Response = await _mediator.Send(CreateGroupInviteeCommand);
                 return Ok(
                      new
@@ -61,66 +60,8 @@ namespace SharijhaAward.Api.Controllers
                          data = Response,
                          message = "تم إنشاء الدعوة الجماعية بنجاح"
                      });
-            }
-            catch (ValidationException Exc)
-            {
-                return BadRequest(Exc.Message);
-            }
-            catch (DbUpdateException Exc) when (Exc.InnerException is SqlException SqlEx)
-            {
-                foreach (SqlError error in SqlEx.Errors)
-                {
-                    if (error.Number == 2601 || error.Number == 2627)
-                    {
-                        if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (HeaderValue.ToString() == "ar")
-                                return BadRequest(
-                                    new
-                                    {
-                                        message = "هذا البريد الإلكتروني مستخدم بالفعل."
-                                    });
-
-                            else
-                                return BadRequest(
-                                    new
-                                    {
-                                        message = "This email is already in use."
-                                    });
-                        }
-                    }
-                }
-                return BadRequest(
-                    new
-                    {
-                        message = Exc.Message
-                    });
-                
-            }
-            catch (DbUpdateException Exc)
-            {
-                return BadRequest(
-                    new
-                    {
-                         message = Exc.Message
-                    });
-            }
-            catch (WebException)
-            {
-                return BadRequest(
-                    new
-                    {
-                        message = "Internet connection error, please check your internet connection and try again later."
-                    });
-            }
-            catch (System.Net.Mail.SmtpException)
-            {
-                return BadRequest(
-                    new
-                    {
-                        message = "Internet connection error, please check your internet connection and try again later."
-                    });
-            }
+            
+            
         }
 
         [HttpPut(Name = "UpdateGroupInvitee")]
@@ -206,9 +147,14 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetAllGroupInvitee(int page , int perPage)
+        public async Task<ActionResult> GetAllGroupInvitee(int page , int perPage, string? name)
         {
-            var dto = await _mediator.Send(new GetAllGroupInviteeQuery());
+            var dto = await _mediator.Send(new GetAllGroupInviteeQuery()
+            {
+                page = page,
+                pageSize = perPage,
+                name = name
+            });
 
             if (perPage == 0)
                 perPage = 10;
@@ -224,15 +170,12 @@ namespace SharijhaAward.Api.Controllers
           
             var totalCount = dto.Count;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
-            var dataPerPage = dto
-                .Skip((page - 1) * perPage)
-                .Take(perPage)
-                .ToList();
+           
 
-            return Json(
+            return Ok(
                 new
                 {
-                    data = dataPerPage,
+                    data = dto,
                     message = "Retrieved successfully.",
                     status = true,
                     pagination =

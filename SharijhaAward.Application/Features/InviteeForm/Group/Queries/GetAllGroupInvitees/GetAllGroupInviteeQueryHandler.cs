@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using PdfSharpCore.Pdf;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.InvitationModels;
 using System;
@@ -23,7 +24,31 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
 
         public async Task<List<GroupInviteeListVM>> Handle(GetAllGroupInviteeQuery request, CancellationToken cancellationToken)
         {
-            var AllGroupInvitees = _groupInviteeRepository.Include(x => x.StudentNames);
+            List<GroupInvitee> AllGroupInvitees;
+
+            if (request.name != null)
+            {
+                 AllGroupInvitees = request.pageSize == -1 || request.page == 0
+                   ? _groupInviteeRepository.WhereThenInclude(g => g.Name.ToLower().Contains(request.name.ToLower()), g => g.StudentNames!).ToList()
+                   : _groupInviteeRepository
+                   .WhereThenInclude(g => g.Name.ToLower()
+                   .Contains(request.name!.ToLower()), g => g.StudentNames!)
+                   .Skip((request.page - 1) * request.pageSize)
+                   .Take(request.pageSize)
+                   .ToList();
+            }
+            else
+            {
+                
+                    AllGroupInvitees = request.pageSize == -1 || request.page == 0
+                      ? _groupInviteeRepository.WhereThenInclude(g => true, g => g.StudentNames!).ToList()
+                      : _groupInviteeRepository
+                      .WhereThenInclude(g => true, g => g.StudentNames!)
+                      .Skip((request.page - 1) * request.pageSize)
+                      .Take(request.pageSize)
+                      .ToList();
+               
+            }
             return _mapper.Map<List<GroupInviteeListVM>>(AllGroupInvitees);
         }
     }

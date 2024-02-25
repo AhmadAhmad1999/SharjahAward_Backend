@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.User.Commands.DeleteUser;
 using SharijhaAward.Application.Features.User.Commands.UpdateUser;
 using SharijhaAward.Application.Features.User.Queries.AsignRoleToUser;
+using SharijhaAward.Application.Features.User.Queries.ChangePassword;
 using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
 using SharijhaAward.Application.Features.User.Queries.GetUserById;
 
@@ -18,13 +20,7 @@ namespace SharijhaAward.Api.Controllers
             _mediator = mediator;
         }
         [HttpPut(Name = "UpdateUser")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
+
         public async Task<ActionResult> UpdateUser([FromBody] UpdateUserCommand updateUserCommand)
         {
             await _mediator.Send(updateUserCommand);
@@ -32,12 +28,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpDelete(Name = "DeleteUser")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
+
         public async Task<ActionResult> DeleteUser([FromBody] DeleteUserCommand deleteUser)
         {
             await _mediator.Send(deleteUser);
@@ -45,11 +36,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetUserById")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+
         [ProducesDefaultResponseType]
         public async Task<ActionResult> GetUserById(Guid id)
         {
@@ -64,12 +51,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpGet(Name = "GetAllUsers")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
+
         public async Task<ActionResult> GetAllUsers(int page , int perPage)
         {
             var dto = await _mediator.Send(new GetAllUsersQuery());
@@ -109,12 +91,7 @@ namespace SharijhaAward.Api.Controllers
                 });
         }
         [HttpPost("AsignRole",Name = "AsignRole")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
+
         public async Task<ActionResult> AsignRole([FromBody] AsignRoleToUserQuery query)
         {
             await _mediator.Send(new AsignRoleToUserQuery()
@@ -129,6 +106,28 @@ namespace SharijhaAward.Api.Controllers
                     status = true
                 });
 
+        }
+        [HttpPost("ChangePassword", Name = "ChangePassword")]
+        public async Task<ActionResult> ChangePassword([FromBody]ChangePasswordQuery query)
+        {
+            //get Language from header
+            var headerValue = HttpContext.Request.Headers["lang"];
+            if (headerValue.IsNullOrEmpty())
+                headerValue = "";
+
+            query.lang = headerValue;
+            var response = await _mediator.Send(query);
+
+            if (response.StatusCode == 404)
+            {
+                return NotFound(new { response });
+            }
+            else if (response.StatusCode == 400)
+            {
+                return BadRequest(new { response });
+            }
+            else
+                return Ok(new { response });
         }
     }
 }
