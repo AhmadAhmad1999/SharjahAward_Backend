@@ -79,10 +79,10 @@ namespace SharijhaAward.Api.MiddleWares
                                     if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase) ||
                                         error.Message.Contains("IX_PersonaLnvitees_Email", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                                        Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
                                         BaseResponse<string> Response = new BaseResponse<string>
-                                            ("This email is already in use.", false, (int)HttpStatusCode.InternalServerError);
+                                            ("This email is already in use.", false, (int)HttpStatusCode.BadRequest);
 
                                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                                     }
@@ -166,10 +166,10 @@ namespace SharijhaAward.Api.MiddleWares
                                     if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase) ||
                                         error.Message.Contains("IX_PersonaLnvitees_Email", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                                        Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
                                         BaseResponse<string> Response = new BaseResponse<string>
-                                            ("هذا الإيميل مستخدم مسبقاً.", false, (int)HttpStatusCode.InternalServerError);
+                                            ("هذا الإيميل مستخدم مسبقاً.", false, (int)HttpStatusCode.BadRequest);
 
                                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                                     }

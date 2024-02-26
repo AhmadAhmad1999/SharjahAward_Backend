@@ -160,8 +160,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     Body = ManipulatedBody,
                 };
 
-                await _EmailSender.SendEmail(EmailRequest, AlternateView);
-
                 string BarCodeImageURL = isHttps
                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
@@ -187,15 +185,21 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
 
-                System.IO.File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
-                
-                try
+                using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
-                }
-                catch (DbUpdateException)
-                {
-                    throw;
+                    try
+                    {
+                        NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
+
+                        await _EmailSender.SendEmail(EmailRequest, AlternateView);
+                        File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
+
+                        Transaction.Complete();
+                    }
+                    catch (DbUpdateException)
+                    {
+                        throw;
+                    }
                 }
 
                 return new CreateInviteeResponse()
@@ -284,8 +288,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     Body = ManipulatedBody,
                 };
 
-                await _EmailSender.SendEmail(EmailRequest, AlternateView);
-                
                 string BarCodeImageURL = isHttps
                     ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
                     : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
@@ -311,15 +313,21 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
 
-                System.IO.File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
+                using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    try
+                    {
+                        NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
 
-                try
-                {
-                    NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
-                }
-                catch (DbUpdateException)
-                {
-                    throw;
+                        await _EmailSender.SendEmail(EmailRequest, AlternateView);
+                        File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
+
+                        Transaction.Complete();
+                    }
+                    catch (DbUpdateException)
+                    {
+                        throw;
+                    }
                 }
 
                 return new CreateInviteeResponse()

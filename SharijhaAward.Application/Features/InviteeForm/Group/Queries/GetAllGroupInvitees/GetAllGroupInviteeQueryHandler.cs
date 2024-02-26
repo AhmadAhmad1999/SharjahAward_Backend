@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using PdfSharpCore.Pdf;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.InvitationModels;
 using System;
