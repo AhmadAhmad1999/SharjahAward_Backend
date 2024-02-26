@@ -97,7 +97,7 @@ namespace SharijhaAward.Api.Controllers
                         response.StatusCode
                     });
         }
-        [HttpGet("{id}",Name="GetNewsById")]
+        [HttpGet("{Id}",Name="GetNewsById")]
         public async Task<IActionResult> GetNewsById(Guid Id)
         {
             //get Language from header

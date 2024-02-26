@@ -1,6 +1,4 @@
-﻿using MediatR;
-using SharijhaAward.Application.Responses;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
 {
-    public class CreateAgendaCommand : IRequest<BaseResponse<CreateAgendaDto>>
+    public class CreateAgendaDto
     {
-        public string lang { get; set; } = string.Empty;
+        public Guid Id { get; set; }
+        public string Title { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
 {
     public class CreateAgendaCommandHandler
-        : IRequestHandler<CreateAgendaCommand, BaseResponse<AgendaDto>>
+        : IRequestHandler<CreateAgendaCommand, BaseResponse<CreateAgendaDto>>
     {
         private readonly IAsyncRepository<Agenda> _agendaRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<AgendaDto>> Handle(CreateAgendaCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<CreateAgendaDto>> Handle(CreateAgendaCommand request, CancellationToken cancellationToken)
         {
             Agenda agenda = _mapper.Map<Agenda>( request );
             Cycle cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
@@ -41,15 +41,15 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
                     ? "Cycle Not Found"
                     : "الدورة غير موجودة";
 
-                return new BaseResponse<AgendaDto>(msg, false, 404);
+                return new BaseResponse<CreateAgendaDto>(msg, false, 404);
             }
             await _agendaRepository.AddAsync(agenda);
-            var data = _mapper.Map<AgendaDto>(agenda);
+            var data = _mapper.Map<CreateAgendaDto>(agenda);
             msg = request.lang == "en"
                 ? "Agenda has been added Successfully"
                 : "تم اضافة الأجندة بنجاح";
 
-            return new BaseResponse<AgendaDto>(msg, true, 201, data);
+            return new BaseResponse<CreateAgendaDto>(msg, true, 201, data);
             
         }
     }

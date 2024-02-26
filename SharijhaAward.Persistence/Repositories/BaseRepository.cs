@@ -37,7 +37,7 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async virtual Task<IReadOnlyList<T>> GetPagedReponseAsync(int page, int size)
         {
-            if (page == -1)
+            if (size == -1 || page == 0)
                 return await _DbSet.AsNoTracking().ToListAsync();
 
             return await _DbSet.AsNoTracking().Skip((page - 1) * size).Take(size).ToListAsync();
@@ -57,7 +57,7 @@ namespace SharijhaAward.Persistence.Repositories
             PropertyInfo createdAtProperty = typeof(T).GetProperty("CreatedAt")!;
             if (createdAtProperty != null && createdAtProperty.PropertyType == typeof(DateTime))
             {
-                DateTime currentTime = DateTime.UtcNow;
+                DateTime currentTime = DateTime.Now;
                 foreach (T entity in entities)
                 {
                     createdAtProperty.SetValue(entity, currentTime);

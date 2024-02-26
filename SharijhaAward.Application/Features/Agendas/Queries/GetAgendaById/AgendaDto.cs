@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
+namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById
 {
     public class AgendaDto
     {
