@@ -265,7 +265,11 @@ namespace SharijhaAward.Api.Controllers
                     "<td colspan=\"3\" style=\"padding-left:20%\">");
 
             List<string> HTMLSpliter = HTML.Split("<!--100% Here-->").ToList();
-            HTML = HTMLSpliter[0] + "<table style = \"width : 100%; margin-left: auto; margin-right: auto; direction: ltr\">" + HTMLSpliter[2];
+
+            if (HTML.Contains("هذا"))
+                HTML = HTMLSpliter[0] + "<table style = \"width : 100%; margin-left: auto; margin-right: auto; direction: rtl\">" + HTMLSpliter[2];
+            else
+                HTML = HTMLSpliter[0] + "<table style = \"width : 100%; margin-left: auto; margin-right: auto; direction: ltr\">" + HTMLSpliter[2];
 
             HtmlToPdf oHtmlToPdf = new HtmlToPdf();
             PdfDocument oPdfDocument = oHtmlToPdf.ConvertHtmlString(HTML);

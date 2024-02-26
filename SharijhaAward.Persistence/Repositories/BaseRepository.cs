@@ -37,6 +37,9 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async virtual Task<IReadOnlyList<T>> GetPagedReponseAsync(int page, int size)
         {
+            if (page == -1)
+                return await _DbSet.AsNoTracking().ToListAsync();
+
             return await _DbSet.AsNoTracking().Skip((page - 1) * size).Take(size).ToListAsync();
         }
         public async Task<T> AddAsync(T entity)
@@ -78,8 +81,12 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async Task DeleteListAsync(IEnumerable<T> entities)
         {
-            typeof(T).GetProperty("isDeleted")!.SetValue(entities, true);
-            typeof(T).GetProperty("DeletedAt")!.SetValue(entities, DateTime.UtcNow);
+            entities.ToList().ForEach(entity =>
+            {
+                typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
+                typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
+            });
+            
             await _dbContext.SaveChangesAsync();
         }
         public async Task RemoveAsync(T entity)
@@ -98,6 +105,9 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async virtual Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, int page, int size)
         {
+            if (page == -1)
+                return await _DbSet.AsNoTracking().Where(predicate).ToListAsync();
+
             return await _DbSet.AsNoTracking()
                 .Where(predicate).Skip((page - 1) * size).Take(size).ToListAsync();
         }

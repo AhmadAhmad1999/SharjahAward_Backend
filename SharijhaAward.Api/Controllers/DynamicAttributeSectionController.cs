@@ -159,9 +159,7 @@ namespace SharijhaAward.Api.Controllers
                 data = Response.Data,
                 Response.Message,
                 Response.StatusCode,
-                pagination =
-                new
-                {
+                pagination = new {
                     current_page = Page,
                     last_page = TotalPage,
                     total_row = TotalCount,

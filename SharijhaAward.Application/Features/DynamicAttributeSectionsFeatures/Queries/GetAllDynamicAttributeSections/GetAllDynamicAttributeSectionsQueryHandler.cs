@@ -54,13 +54,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             foreach (DynamicAttributeSectionListVM DynamicAttributeSection in DynamicAttributeSections)
             {
                 DynamicAttributeSection.DynamicAttributes = _DynamicAttributeRepository
-                    .Where(x => x.DynamicAttributeSectionId == DynamicAttributeSection.Id)
-                    .Include(x => x.AttributeDataType)
+                    .WhereThenInclude(x => x.DynamicAttributeSectionId == DynamicAttributeSection.Id,
+                        x => x.AttributeDataType!)
                     .Select(x => new DynamicAttributeListVM()
                     {
                         Id = x.Id,
                         Key = x.Key,
-                        AttributeDataTypeName = x.AttributeDataType.Name,
+                        AttributeDataTypeName = x.AttributeDataType!.Name,
                         Label = Language.ToLower() == "ar"
                             ? x.ArabicLabel
                             : x.EnglishLabel, 
