@@ -29,7 +29,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
             DynamicAttributeSection? DynamicAttributeSectionOldData = await _DynamicAttributeSectionRepository.GetByIdAsync(Request.Id);
 
             if (DynamicAttributeSectionOldData == null)
-                throw new OpenQA.Selenium.NotFoundException("Section Not found");
+                throw new OpenQA.Selenium.NotFoundException(!string.IsNullOrEmpty(Request.lang) 
+                    ? (Request.lang.ToLower() == "en" 
+                        ? "Section not found" 
+                        : "هذا القسم غير موجود")
+                    : "Section not found");
 
             UpdateDynamicAttributeSectionValidator Validator = new UpdateDynamicAttributeSectionValidator();
             ValidationResult ValidationResult = await Validator.ValidateAsync(Request);

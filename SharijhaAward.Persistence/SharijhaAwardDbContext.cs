@@ -79,7 +79,17 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<User>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Role>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Student>().HasQueryFilter(p => !p.isDeleted);
-
+            modelBuilder.Entity<AttributeDataType>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AttributeOperation>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AttributeTableName>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Dependency>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DependencyValidation>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttribute>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<GeneralValidation>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributeListValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributeSection>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributeValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => !p.isDeleted);
 
 
             modelBuilder.Entity<User>().ToTable("users");

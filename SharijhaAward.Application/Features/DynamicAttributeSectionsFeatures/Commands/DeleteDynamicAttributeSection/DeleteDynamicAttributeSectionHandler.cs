@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.DeleteDynamicAttributeSection
 {
@@ -16,15 +17,30 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
         }
         public async Task<Unit> Handle(DeleteDynamicAttributeSectionCommand Request, CancellationToken cancellationToken)
         {
-            DynamicAttributeSection? DynamicAttributeSectionToDelete = await _DynamicAttributeSectionRepository.GetByIdAsync(Request.Id);
-            
-            if (DynamicAttributeSectionToDelete == null)
-                throw new OpenQA.Selenium.NotFoundException("Section Not Found");
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                DynamicAttributeSection? DynamicAttributeSectionToDelete = await _DynamicAttributeSectionRepository.GetByIdAsync(Request.Id);
 
+                if (DynamicAttributeSectionToDelete == null)
+                {
+                    Transaction.Dispose();
 
-            await _DynamicAttributeSectionRepository.DeleteAsync(DynamicAttributeSectionToDelete);
+                    throw new OpenQA.Selenium.NotFoundException(!string.IsNullOrEmpty(Request.lang)
+                        ? (Request.lang.ToLower() == "en"
+                            ? "Section Not Found."
+                            : "هذا القسم غير موجود.")
+                        : "Section Not Found.");
+                }
 
-            return Unit.Value;
+                IQueryable<DynamicAttribute> DynamicAttributesInsideSection = _DynamicAttributeRepository
+                    .Where(x => x.DynamicAttributeSectionId == Request.Id);
+
+                await _DynamicAttributeRepository.DeleteListAsync(DynamicAttributesInsideSection);
+                await _DynamicAttributeSectionRepository.DeleteAsync(DynamicAttributeSectionToDelete);
+
+                Transaction.Complete();
+                return Unit.Value;
+            }
         }
     }
 }

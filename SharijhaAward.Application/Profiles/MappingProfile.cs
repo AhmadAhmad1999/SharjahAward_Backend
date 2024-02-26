@@ -67,6 +67,7 @@ using SharijhaAward.Application.Features.Categories.Command.UpdateCategory;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSections;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributes;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.UpdateDynamicAttribute;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -161,6 +162,7 @@ namespace SharijhaAward.Application.Profiles
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
+            CreateMap<DynamicAttribute, UpdateDynamicAttributeCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();

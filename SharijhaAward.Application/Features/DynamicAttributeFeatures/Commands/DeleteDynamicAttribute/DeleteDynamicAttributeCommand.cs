@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.DeleteDynamicAttributeSection
+namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute
 {
-    public class DeleteDynamicAttributeSectionCommand : IRequest<Unit>
+    public class DeleteDynamicAttributeCommand : IRequest<Unit>
     {
         public int Id { get; set; }
         public string? lang { get; set; }
