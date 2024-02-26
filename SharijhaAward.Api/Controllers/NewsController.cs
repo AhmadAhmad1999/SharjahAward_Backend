@@ -139,7 +139,7 @@ namespace SharijhaAward.Api.Controllers
             //get data from mediator
             var dto = await _mediator.Send(new GetAllNewsQuery()
             {
-                lang = headerValue,
+                lang = headerValue!,
                 page = page,
                 pageSize = pageSize
             });

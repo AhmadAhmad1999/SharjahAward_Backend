@@ -115,7 +115,10 @@ namespace SharijhaAward.Api.Controllers
             if (headerValue.IsNullOrEmpty())
                 headerValue = "";
 
-            query.lang = headerValue;
+            var token = HttpContext.Request.Headers.Authorization;
+
+            query.Token = token!;
+            query.lang = headerValue!;
             var response = await _mediator.Send(query);
 
             if (response.StatusCode == 404)
@@ -127,7 +130,13 @@ namespace SharijhaAward.Api.Controllers
                 return BadRequest(new { response });
             }
             else
-                return Ok(new { response });
+                return Ok(
+                    new 
+                    {
+                        response.Message,
+                        response.Success,
+                        response.StatusCode,
+                    });
         }
     }
 }

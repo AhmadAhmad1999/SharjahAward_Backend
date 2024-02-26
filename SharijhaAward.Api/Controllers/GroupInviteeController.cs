@@ -149,25 +149,16 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> GetAllGroupInvitee(int page , int perPage, string? name)
         {
+            if (perPage == 0)
+                perPage = 10;
+
             var dto = await _mediator.Send(new GetAllGroupInviteeQuery()
             {
                 page = page,
                 pageSize = perPage,
                 name = name
             });
-
-            if (perPage == 0)
-                perPage = 10;
-            else if (perPage == -1)
-                return Ok(
-                new
-                {
-                    data = dto,
-                    message = "Retrieved successfully.",
-                    status = true,
-                });
-
-          
+  
             var totalCount = dto.Count;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
            

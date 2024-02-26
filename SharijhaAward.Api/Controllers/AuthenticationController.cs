@@ -63,8 +63,6 @@ namespace SharijhaAward.Api.Controllers
             {
                 Email = user.Email,
                 Password = user.Password,
-                ArabicName = user.ArabicName,
-                EnglishName = user.EnglishName,
                 RoleName = user.RoleName,
                 Gender = user.Gender
                 

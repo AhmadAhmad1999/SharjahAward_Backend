@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
+using Newtonsoft.Json.Linq;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +27,8 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
 
         public async Task<BaseResponse<object>> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
         {
+
+
             var user = await _userRepository.GetByIdAsync(request.Id);
             string msg;
             if (user == null)

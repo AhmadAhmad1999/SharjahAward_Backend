@@ -69,9 +69,10 @@ namespace SharijhaAward.Infrastructure.ExcelHelper
                         cellContent.SetCellValue(dateValue.ToString("yyyy-MM-dd"));
                     }
                     else cellContent.SetCellValue(value.ToString());
+                    colContentIndex++;
                 }
             
-                    colContentIndex++;
+                    
                 
 
                 rowNum++;

@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ExportGro
 
         public async Task<List<GroupExportVM>> Handle(ExportGroupToExcelQuery request, CancellationToken cancellationToken)
         {
-            var groupList =  _groupInviteeRepository.IncludeThenWhere(g=>g.StudentNames!,g => g.isDeleted != true);
+            var groupList =  _groupInviteeRepository.Where(g => g.isDeleted != true);
 
             
             return _mapper.Map<List<GroupExportVM>>(groupList);

@@ -12,5 +12,7 @@ namespace SharijhaAward.Application.Features.Event.Commands.CreateEvent
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
 
+        public DateTime CreatedAt { get; set; }
+
     }
 }

@@ -47,6 +47,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
                 vm.ArabicDescription = allEvents[i].ArabicDescription;
                 vm.ArabicLocation = allEvents[i].ArabicLocation;
                 vm.ArabicSiteName = allEvents[i].ArabicSiteName;
+                vm.CreatedAt= allEvents[i].CreatedAt;
                 allEventsVM.Add(vm);
             }
             
