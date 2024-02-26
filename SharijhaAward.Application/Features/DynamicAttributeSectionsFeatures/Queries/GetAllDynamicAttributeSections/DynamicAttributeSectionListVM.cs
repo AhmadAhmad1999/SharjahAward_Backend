@@ -1,4 +1,4 @@
-﻿using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributes;
+﻿using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using System;
 using System.Collections.Generic;

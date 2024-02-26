@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributes;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.DynamicAttribute;
@@ -30,15 +30,15 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             string Language = !string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() : "ar";
 
-            List<DynamicAttributeSectionListVM> DynamicAttributeSections = _Mapper.Map<List<DynamicAttributeSectionListVM>>
-                (_DynamicAttributeSectionRepository.GetPagedReponseAsync(Request.page, Request.pageSize).Result
+            List<DynamicAttributeSectionListVM> DynamicAttributeSections = 
+                _DynamicAttributeSectionRepository.GetPagedReponseAsync(Request.page, Request.pageSize).Result
                 .Select(x => new DynamicAttributeSectionListVM()
                 {
                     Id = x.Id,
                     Name = Language == "ar"
                         ? x.ArabicName
                         : x.EnglishName
-                }));
+                }).ToList();
 
             string ResponseMessage = string.Empty;
 

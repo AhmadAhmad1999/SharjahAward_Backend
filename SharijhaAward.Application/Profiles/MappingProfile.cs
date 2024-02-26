@@ -66,7 +66,7 @@ using SharijhaAward.Application.Features.User.Commands.UpdateUser;
 using SharijhaAward.Application.Features.Categories.Command.UpdateCategory;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSections;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributes;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.UpdateDynamicAttribute;
 
 

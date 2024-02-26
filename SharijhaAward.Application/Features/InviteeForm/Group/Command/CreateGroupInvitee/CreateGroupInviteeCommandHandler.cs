@@ -15,6 +15,7 @@ using System.Net.Mail;
 using Microsoft.AspNetCore.Http;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee
 {
@@ -147,8 +148,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     Body = ManipulatedBody,
                 };
 
-                await _EmailSender.SendEmail(EmailRequest, AlternateView);
-
                 string BarCodeImageURL = isHttps
                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
@@ -174,27 +173,33 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
 
-                System.IO.File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
-                
-                try
+                using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
-
-                    if (Request.StudentNamesAsString != null)
+                    try
                     {
-                        var students = Request.StudentNamesAsString.Select(StudentName =>
-                            new Student
-                            {
-                                StudentName = StudentName,
-                                GroupInviteeId = NewGroupInvitee.Id
-                            }).ToList();
+                        NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
 
-                        await _StudentRepository.AddRangeAsync(students);
+                        if (Request.StudentNamesAsString != null)
+                        {
+                            List<Student> Students = Request.StudentNamesAsString.Select(StudentName =>
+                                new Student
+                                {
+                                    StudentName = StudentName,
+                                    GroupInviteeId = NewGroupInvitee.Id
+                                }).ToList();
+
+                            await _StudentRepository.AddRangeAsync(Students);
+                        }
+
+                        await _EmailSender.SendEmail(EmailRequest, AlternateView);
+                        File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
+
+                        Transaction.Complete();
                     }
-                }
-                catch (DbUpdateException)
-                {
-                    throw;
+                    catch (DbUpdateException)
+                    {
+                        throw;
+                    }
                 }
 
                 return new CreateInviteeResponse()
@@ -283,8 +288,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     Body = ManipulatedBody,
                 };
 
-                await _EmailSender.SendEmail(EmailRequest, AlternateView);
-
                 string BarCodeImageURL = isHttps
                   ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
                   : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
@@ -310,27 +313,33 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
 
-                System.IO.File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
-
-                try
+                using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
-
-                    if (Request.StudentNamesAsString != null)
+                    try
                     {
-                        List<Student> Students = Request.StudentNamesAsString.Select(StudentName =>
-                            new Student
-                            {
-                                StudentName = StudentName,
-                                GroupInviteeId = NewGroupInvitee.Id
-                            }).ToList();
+                        NewGroupInvitee = await _groupInviteeRepository.AddAsync(NewGroupInvitee);
 
-                        await _StudentRepository.AddRangeAsync(Students);
+                        if (Request.StudentNamesAsString != null)
+                        {
+                            List<Student> Students = Request.StudentNamesAsString.Select(StudentName =>
+                                new Student
+                                {
+                                    StudentName = StudentName,
+                                    GroupInviteeId = NewGroupInvitee.Id
+                                }).ToList();
+
+                            await _StudentRepository.AddRangeAsync(Students);
+                        }
+
+                        await _EmailSender.SendEmail(EmailRequest, AlternateView);
+                        File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
+
+                        Transaction.Complete();
                     }
-                }
-                catch (DbUpdateException)
-                {
-                    throw;
+                    catch (DbUpdateException)
+                    {
+                        throw;
+                    }
                 }
 
                 return new CreateInviteeResponse()
