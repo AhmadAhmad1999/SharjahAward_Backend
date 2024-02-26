@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
                       ? _groupInviteeRepository.WhereThenInclude(g => true, g => g.StudentNames!).ToList()
                       : _groupInviteeRepository
                       .WhereThenInclude(g => true, g => g.StudentNames!)
-                      .Skip((request.page ) * request.pageSize)
+                      .Skip((request.page -1) * request.pageSize)
                       .Take(request.pageSize)
                       .ToList();
                
