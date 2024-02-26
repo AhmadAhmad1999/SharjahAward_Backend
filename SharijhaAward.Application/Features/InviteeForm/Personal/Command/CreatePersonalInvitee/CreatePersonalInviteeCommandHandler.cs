@@ -198,6 +198,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     }
                     catch (DbUpdateException)
                     {
+                        Transaction.Dispose();
                         throw;
                     }
                 }
@@ -326,6 +327,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     }
                     catch (DbUpdateException)
                     {
+                        Transaction.Dispose();
                         throw;
                     }
                 }

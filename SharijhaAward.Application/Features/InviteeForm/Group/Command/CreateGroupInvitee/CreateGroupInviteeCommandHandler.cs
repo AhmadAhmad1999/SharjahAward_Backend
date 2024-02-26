@@ -198,6 +198,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     }
                     catch (DbUpdateException)
                     {
+                        Transaction.Dispose();
                         throw;
                     }
                 }
@@ -338,6 +339,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     }
                     catch (DbUpdateException)
                     {
+                        Transaction.Dispose();
                         throw;
                     }
                 }
