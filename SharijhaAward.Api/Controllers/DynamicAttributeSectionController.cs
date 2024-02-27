@@ -134,23 +134,23 @@ namespace SharijhaAward.Api.Controllers
 
             int PageSize = PerPage == 0 ? 10 : PerPage;
 
-            if (Response.StatusCode == 404)
+            if (Response.statusCode == 404)
             {
                 return NotFound(new
                 {
-                    Response.Message,
-                    Response.StatusCode
+                    Response.message,
+                    Response.statusCode
                 });
             }
 
-            int TotalCount = Response.Data!.Count;
+            int TotalCount = Response.data!.Count;
             int TotalPage = (int)Math.Ceiling((decimal)TotalCount / PageSize);
 
             return Ok(new
             {
-                data = Response.Data,
-                Response.Message,
-                Response.StatusCode,
+                data = Response.data,
+                Response.message,
+                Response.statusCode,
                 pagination = new {
                     current_page = Page,
                     last_page = TotalPage,

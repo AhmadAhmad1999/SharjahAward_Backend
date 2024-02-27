@@ -185,17 +185,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
 
-
-                System.IO.File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
-                
-                try
-                {
-                    NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
-                }
-                catch (DbUpdateException)
-                {
-                    throw;
-                }
                 using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     try

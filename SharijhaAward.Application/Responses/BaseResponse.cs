@@ -10,34 +10,34 @@ namespace SharijhaAward.Application.Responses
     {
         public BaseResponse()
         {
-            Success = true;
+            success = true;
         }
         public BaseResponse(string message)
         {
-            Success = true;
-            StatusCode = 200;
-            Message = message;
+            success = true;
+            statusCode = 200;
+            this.message = message;
         }
 
         public BaseResponse(string message, bool success, int statusCode)
         {
-            Success = success;
-            StatusCode = statusCode;
-            Message = message;
+            this.success = success;
+            this.statusCode = statusCode;
+            this.message = message;
         }
         public BaseResponse(string message, bool success, int statusCode, T data)
         {
-            StatusCode = statusCode;
-            Success = success;
-            Message = message;
-            Data = data;
+            this.statusCode = statusCode;
+            this.success = success;
+            this.message = message;
+            this.data = data;
         }
  
 
-        public bool Success { get; set; }
-        public int StatusCode {  get; set; }
-        public string Message { get; set; } = string.Empty;
-        public T? Data { get; set; }
-        public List<string>? ValidationErrors { get; set; }
+        public bool success { get; set; }
+        public int statusCode {  get; set; }
+        public string message { get; set; } = string.Empty;
+        public T? data { get; set; }
+        public List<string>? validationErrors { get; set; }
     }
 }
