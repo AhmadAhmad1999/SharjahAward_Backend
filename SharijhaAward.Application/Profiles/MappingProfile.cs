@@ -68,6 +68,10 @@ using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Comman
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSections;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.UpdateDynamicAttribute;
+using SharijhaAward.Domain.Entities.AgendaModel;
+using SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda;
+using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
+using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -149,6 +153,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<News, UpdateNewsCommand>().ReverseMap();
             CreateMap<News, NewsVM>().ReverseMap();
             CreateMap<News, NewsListVM>().ReverseMap();
+
+            CreateMap<Agenda, CreateAgendaCommand>().ReverseMap();
+            CreateMap<Agenda, CreateAgendaDto>().ReverseMap();
+            CreateMap<Agenda, AgendaDto>().ReverseMap();
+            CreateMap<Agenda, AgendaListVm>().ReverseMap();
 
             //
             // Dynamic Attribute..

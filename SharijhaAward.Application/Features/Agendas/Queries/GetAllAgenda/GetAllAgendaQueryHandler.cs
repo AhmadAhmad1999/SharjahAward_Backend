@@ -41,6 +41,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
                 for(int i = 0; i < agendas.Count; i++)
                 {
                     AgendaListVm listVm = new AgendaListVm();
+                    listVm.Id = agendas[i].Id;
                     listVm.Title = request.lang == "en" ? agendas[i].EnglishTitle : agendas[i].ArabicTitle;
                     listVm.EnglishTitle = agendas[i].EnglishTitle;
                     listVm.ArabicTitle = agendas[i].ArabicTitle;
