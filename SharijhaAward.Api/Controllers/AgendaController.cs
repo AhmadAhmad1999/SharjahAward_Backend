@@ -26,29 +26,29 @@ namespace SharijhaAward.Api.Controllers
             command.lang = headerValue!;
 
             var response = await _mediator.Send(command);
-            if(response.StatusCode == 404)
+            if(response.statusCode == 404)
             {
                 return NotFound(new
                 {
-                    response.Message,
-                    response.StatusCode,
-                    response.Success
+                    response.message,
+                    response.statusCode,
+                    response.success
                 });
             }
-            else if (response.StatusCode == 200)
+            else if (response.statusCode == 200)
             {
                 return Ok(new
                 {
-                    response.Data,
-                    response.Message,
-                    response.StatusCode,
-                    response.Success
+                    response.data,
+                    response.message,
+                    response.statusCode,
+                    response.success
                 });
             }
             else return BadRequest(new
             {
-                response.Message,
-                response.StatusCode,
+                response.message,
+                response.statusCode,
             });
         }
     }

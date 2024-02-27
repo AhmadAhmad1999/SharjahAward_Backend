@@ -121,11 +121,11 @@ namespace SharijhaAward.Api.Controllers
             query.lang = headerValue!;
             var response = await _mediator.Send(query);
 
-            if (response.StatusCode == 404)
+            if (response.statusCode == 404)
             {
                 return NotFound(new { response });
             }
-            else if (response.StatusCode == 400)
+            else if (response.statusCode == 400)
             {
                 return BadRequest(new { response });
             }
@@ -133,9 +133,9 @@ namespace SharijhaAward.Api.Controllers
                 return Ok(
                     new 
                     {
-                        response.Message,
-                        response.Success,
-                        response.StatusCode,
+                        response.message,
+                        response.success,
+                        response.statusCode,
                     });
         }
     }

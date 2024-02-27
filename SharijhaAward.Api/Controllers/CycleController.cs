@@ -35,20 +35,20 @@ namespace SharijhaAward.Api.Controllers
             command.lang = headerValue!;
 
             var response =await _mediator.Send(command);
-            if(response.StatusCode == 404)
+            if(response.statusCode == 404)
             {
                 return NotFound(
                     new
                     {
-                        response.Message,
-                        response.StatusCode
+                        response.message,
+                        response.statusCode
                     });
             }
             return Ok(
                 new
                 {
-                    response.Message,
-                    response.StatusCode
+                    response.message,
+                    response.statusCode
                 });
         }
 
@@ -66,20 +66,20 @@ namespace SharijhaAward.Api.Controllers
                     Id = Id,
                     lang = headerValue!
                 });
-            if(response.StatusCode == 404)
+            if(response.statusCode == 404)
             {
                 return NotFound(
                     new
                     { 
-                        response.Message,
-                        response.StatusCode 
+                        response.message,
+                        response.statusCode 
                     });
             }
             return Ok(
                 new
                 {
-                    response.Message,
-                    response.StatusCode
+                    response.message,
+                    response.statusCode
                 });
         }
 
@@ -100,22 +100,22 @@ namespace SharijhaAward.Api.Controllers
             });
             
 
-            if (dto.StatusCode == 404)
+            if (dto.statusCode == 404)
             {
                 return NotFound(new
                 {
-                    dto.Message,
-                    dto.StatusCode
+                    dto.message,
+                    dto.statusCode
                 });
             }
-            int totalCount = dto.Data.Count;
+            int totalCount = dto.data.Count;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
             return Ok(
                new
                {
-                   data = dto.Data,
-                   dto.Message,
-                   dto.StatusCode,
+                   data = dto.data,
+                   dto.message,
+                   dto.statusCode,
                    pagination =
                    new
                    {

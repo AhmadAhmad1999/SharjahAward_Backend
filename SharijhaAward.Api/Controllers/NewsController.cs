@@ -33,23 +33,23 @@ namespace SharijhaAward.Api.Controllers
             command.lang = headerValue!;
 
             var response = await _mediator.Send(command);
-            if(response.StatusCode == 404)
+            if(response.statusCode == 404)
                 return NotFound(
                     new
                     {
-                         response.Success,
-                         response.Message,
-                         response.StatusCode
+                         response.success,
+                         response.message,
+                         response.statusCode
                          
                     });
 
             return Ok(
                 new
                 {
-                    response.Data,
-                    response.Success,
-                    response.Message,
-                    response.StatusCode
+                    response.data,
+                    response.success,
+                    response.message,
+                    response.statusCode
                 });
         }
         [HttpDelete(Name="DeleteNews")]
@@ -66,10 +66,10 @@ namespace SharijhaAward.Api.Controllers
                 lang = headerValue!
             });
 
-            if(response.StatusCode==404)
-                return NotFound(new { response.Message });
+            if(response.statusCode==404)
+                return NotFound(new { response.message });
             else
-                return Ok(new { response.Message });
+                return Ok(new { response.message });
         }
         [HttpPut(Name = "UpdateNews")]
         public async Task<IActionResult> UpdateNews(UpdateNewsCommand command)
@@ -82,22 +82,22 @@ namespace SharijhaAward.Api.Controllers
             command.lang = headerValue!;
             var response = await _mediator.Send(command);
 
-            if (response.StatusCode == 404)
+            if (response.statusCode == 404)
                 return NotFound(
                     new 
                     { 
-                        response.Message,
-                        response.StatusCode
+                        response.message,
+                        response.statusCode
                     });
             else
                 return Ok(
                     new 
                     { 
-                        response.Message,
-                        response.StatusCode
+                        response.message,
+                        response.statusCode
                     });
         }
-        [HttpGet("{Id}",Name="GetNewsById")]
+        [HttpGet("{id}",Name="GetNewsById")]
         public async Task<IActionResult> GetNewsById(Guid Id)
         {
             //get Language from header
@@ -111,20 +111,20 @@ namespace SharijhaAward.Api.Controllers
                 lang = headerValue!
             });
 
-            if (response.StatusCode == 404)
+            if (response.statusCode == 404)
                 return NotFound(
                     new 
                     { 
-                        response.Message,
-                        response.StatusCode
+                        response.message,
+                        response.statusCode
                     });
             else
                 return Ok(
                     new 
                     { 
-                        response.Message,
-                        response.StatusCode,
-                        response.Data
+                        response.message,
+                        response.statusCode,
+                        response.data
 
                     });
         }
@@ -145,22 +145,22 @@ namespace SharijhaAward.Api.Controllers
             });
            
             
-            if(dto.StatusCode == 404)
+            if(dto.statusCode == 404)
             {
                 return NotFound(new
                 {
-                    dto.Message,
-                    dto.StatusCode
+                    dto.message,
+                    dto.statusCode
                 });
             }
-            int totalCount = dto.Data.Count;
+            int totalCount = dto.data.Count;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
             return Ok(
                 new
                 {
-                    data = dto.Data,
-                    dto.Message,
-                    dto.StatusCode,
+                    data = dto.data,
+                    dto.message,
+                    dto.statusCode,
                     pagination =
                     new
                     {
@@ -192,23 +192,23 @@ namespace SharijhaAward.Api.Controllers
                 CycleId = CycleId
                 
             });
-            int totalCount = dto.Data.Count;
+            int totalCount = dto.data.Count;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
 
-            if (dto.StatusCode == 404)
+            if (dto.statusCode == 404)
             {
                 return NotFound(new
                 {
-                    dto.Message,
-                    dto.StatusCode
+                    dto.message,
+                    dto.statusCode
                 });
             }
             return Ok(
                 new
                 {
-                    data = dto.Data,
-                    dto.Message,
-                    dto.StatusCode,
+                    data = dto.data,
+                    dto.message,
+                    dto.statusCode,
                     pagination =
                     new
                     {

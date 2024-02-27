@@ -31,14 +31,14 @@ namespace SharijhaAward.Application.Features.Event.Commands.CreateEvent
 
             if (validationResult.Errors.Count > 0)
             {
-                CreateEventCommandResponse.Success = false;
-                CreateEventCommandResponse.ValidationErrors = new List<string>();
+                CreateEventCommandResponse.success = false;
+                CreateEventCommandResponse.validationErrors = new List<string>();
                 foreach (var error in validationResult.Errors)
                 {
-                    CreateEventCommandResponse.ValidationErrors.Add(error.ErrorMessage);
+                    CreateEventCommandResponse.validationErrors.Add(error.ErrorMessage);
                 }
             }
-            if (CreateEventCommandResponse.Success)
+            if (CreateEventCommandResponse.success)
             {
                 Domain.Entities.EventModel.Event NewEvent =
                     _Mapper.Map<Domain.Entities.EventModel.Event>(Request);
