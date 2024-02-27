@@ -106,7 +106,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GroupInviteeVM, GroupInvitee>();
             CreateMap<GroupInvitee, ConfirmAttendanceGroupQuery>();
             CreateMap<GroupInvitee, GroupDto>().ReverseMap();
-            CreateMap<GroupInvitee, GroupExportVM>().ReverseMap();
+            CreateMap<GroupInvitee, GroupExportVM>()
+                .ForMember(x => x.StudentNames, x => x.MapFrom(y => y.StudentNames.Select(z => z.StudentName))).ReverseMap();
             CreateMap<Student, GroupInviteeStudentsDto>().ReverseMap();
            
 

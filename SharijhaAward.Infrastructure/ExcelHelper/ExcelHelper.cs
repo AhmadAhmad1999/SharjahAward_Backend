@@ -68,6 +68,12 @@ namespace SharijhaAward.Infrastructure.ExcelHelper
                         var dateValue = (DateTime)value;
                         cellContent.SetCellValue(dateValue.ToString("yyyy-MM-dd"));
                     }
+                    else if (property.PropertyType == typeof(List<string>))
+                    {
+                        var stringList = (List<string>)value;
+                        var combinedString = string.Join(", ", stringList);
+                        cellContent.SetCellValue(combinedString);
+                    }
                     else cellContent.SetCellValue(value.ToString());
                     colContentIndex++;
                 }
