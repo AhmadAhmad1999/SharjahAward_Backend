@@ -88,21 +88,21 @@ namespace SharijhaAward.Api.Controllers
                 headerValue = "";
             int pageSize = perPage == 0 ? 10 : perPage;
             //get data from mediator
-            var dto = await _Mediator.Send(new GetAllEventsQuery() 
+            var response = await _Mediator.Send(new GetAllEventsQuery() 
             { 
                 lang = headerValue,
                 page=page,
                 pageSize = pageSize
             });
            
-            var totalCount = dto.Count;
+            var totalCount = response.totalItem;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
             return Ok(
                 new
                 {
-                    data = dto,
-                    message = "Retrieved successfully.",
-                    status = true,
+                     response.data,
+                     response.message,
+                     response.statusCode,
                     pagination =
                     new
                     {

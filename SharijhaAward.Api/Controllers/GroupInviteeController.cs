@@ -150,23 +150,23 @@ namespace SharijhaAward.Api.Controllers
             if (perPage == 0)
                 perPage = 10;
 
-            var dto = await _mediator.Send(new GetAllGroupInviteeQuery()
+            var response = await _mediator.Send(new GetAllGroupInviteeQuery()
             {
                 page = page,
                 pageSize = perPage,
                 name = name
             });
   
-            var totalCount = dto.Count;
+            var totalCount = response.totalItem;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
            
 
             return Ok(
                 new
                 {
-                    data = dto,
-                    message = "Retrieved successfully.",
-                    status = true,
+                     response.data,
+                    response.message,
+                    response.statusCode,
                     pagination =
                     new
                     {

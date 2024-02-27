@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee
 {
-    public class GetAllPersonalInviteeQuery : IRequest<List<PersonalInviteeListVM>>
+    public class GetAllPersonalInviteeQuery : IRequest<BaseResponse<List<PersonalInviteeListVM>>>
     {
         public int page { get; set; }
         public int pageSize { get; set; }

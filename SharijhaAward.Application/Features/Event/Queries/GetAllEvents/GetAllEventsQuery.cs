@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
 {
-    public class GetAllEventsQuery : IRequest<List<EventListVM>>
+    public class GetAllEventsQuery : IRequest<BaseResponse<List<EventListVM>>>
     {
         public string lang { get; set; }=string.Empty;
         public int page {  get; set; }

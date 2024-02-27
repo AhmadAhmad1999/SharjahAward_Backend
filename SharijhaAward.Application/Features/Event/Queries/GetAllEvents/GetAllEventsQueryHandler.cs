@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
 {
-    public class GetAllEventsQueryHandler : IRequestHandler<GetAllEventsQuery, List<EventListVM>>
+    public class GetAllEventsQueryHandler : IRequestHandler<GetAllEventsQuery, BaseResponse<List<EventListVM>>>
     {
         private readonly IAsyncRepository<Domain.Entities.EventModel.Event> _eventRepository;
         private readonly IMapper _mapper;
@@ -20,7 +21,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
             _mapper = mapper;
         }
 
-        public async Task<List<EventListVM>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<EventListVM>>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
         {
             var allEvents = request.pageSize == -1 || request.page==0
                 ? await _eventRepository.ListAllAsync()
@@ -51,7 +52,9 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
                 allEventsVM.Add(vm);
             }
             
-            return _mapper.Map<List<EventListVM>>(allEventsVM);
+            var data = _mapper.Map<List<EventListVM>>(allEventsVM);
+            var count = (await _eventRepository.ListAllAsync()).Count();
+            return new BaseResponse<List<EventListVM>>("تم إسترجاع الفعاليات بنجاح", true, 200, data, count);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.InvitationModels;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGroupInvitees
 {
     public class GetAllGroupInviteeQueryHandler
-        : IRequestHandler<GetAllGroupInviteeQuery, List<GroupInviteeListVM>>
+        : IRequestHandler<GetAllGroupInviteeQuery, BaseResponse<List<GroupInviteeListVM>>>
     {
         private readonly IAsyncRepository<GroupInvitee> _groupInviteeRepository;
         private readonly IMapper _mapper;
@@ -21,7 +22,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
             _mapper = mapper;
         }
 
-        public async Task<List<GroupInviteeListVM>> Handle(GetAllGroupInviteeQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<GroupInviteeListVM>>> Handle(GetAllGroupInviteeQuery request, CancellationToken cancellationToken)
         {
             List<GroupInvitee> AllGroupInvitees;
 
@@ -48,7 +49,9 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
                       .ToList();
 
             }
-            return _mapper.Map<List<GroupInviteeListVM>>(AllGroupInvitees);
+            var data =  _mapper.Map<List<GroupInviteeListVM>>(AllGroupInvitees);
+            var allitem = await _groupInviteeRepository.ListAllAsync();
+            return new BaseResponse<List<GroupInviteeListVM>>("Retrive Succssfully",true,200,data,allitem.Count);
         }
     }
 }

@@ -2,6 +2,8 @@
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ExportToExcel;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.InvitationModels;
 using System;
 using System.Collections.Generic;
@@ -13,8 +15,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
 {
     public class GetAllPersonalInviteeQueryHandler
         : IRequestHandler<
-            GetAllPersonalInviteeQuery,
-            List<PersonalInviteeListVM>
+            GetAllPersonalInviteeQuery, BaseResponse<List<PersonalInviteeListVM>>
             >
     {
         private readonly IAsyncRepository<PersonalInvitee> _PersonalInviteeRepository;
@@ -25,7 +26,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
             _mapper = mapper;
         }
 
-        public async Task<List<PersonalInviteeListVM>> Handle(GetAllPersonalInviteeQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<PersonalInviteeListVM>>> Handle(GetAllPersonalInviteeQuery request, CancellationToken cancellationToken)
         {
             List<PersonalInvitee> allPersonalInvitee;
             if (request.name != null)
@@ -49,7 +50,10 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
 
             }
             
-            return _mapper.Map<List<PersonalInviteeListVM>>(allPersonalInvitee);
+            
+            var data = _mapper.Map<List<PersonalInviteeListVM>>(allPersonalInvitee);
+            var Count = (await _PersonalInviteeRepository.ListAllAsync()).Count;
+            return new BaseResponse<List<PersonalInviteeListVM>>("Retrive Succssfully", true, 200, data, Count);
         }
     }
 }
