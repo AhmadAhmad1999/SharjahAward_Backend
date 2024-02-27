@@ -42,17 +42,17 @@ namespace SharijhaAward.Api.MiddleWares
                     Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     Context.Response.ContentType = "application/json";
 
-                    string ResponseMessage = Ex.InnerException != null
-                        ? $"Exception = {Ex.Message}, Inner Exeption = {Ex.InnerException}"
-                        : $"Exception = {Ex.Message}";
+                    //string ResponseMessage = Ex.InnerException != null
+                    //    ? $"Exception = {Ex.Message}, Inner Exeption = {Ex.InnerException}"
+                    //    : $"Exception = {Ex.Message}";
 
                     if (Ex is BadRequestException)
                     {
                         Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
                         BaseResponse<string> Response = new BaseResponse<string>
-                            ("Bad request. Please check your input. " +
-                            $"{ResponseMessage}", false, (int)HttpStatusCode.BadRequest);
+                            ("Bad request. Please check your input. " /*+*/
+                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest);
 
                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                     }
@@ -61,8 +61,8 @@ namespace SharijhaAward.Api.MiddleWares
                         Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                         BaseResponse<string> Response = new BaseResponse<string>
-                            ("Database connection error. " +
-                            $"{ResponseMessage}", false, (int)HttpStatusCode.InternalServerError);
+                            ("Database connection error. " /*+*/
+                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError);
 
                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                     }
@@ -94,8 +94,8 @@ namespace SharijhaAward.Api.MiddleWares
                             Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                             BaseResponse<string> Response = new BaseResponse<string>
-                                ("An error occurred. Please try again later. " +
-                                $"{ResponseMessage}", false, (int)HttpStatusCode.InternalServerError);
+                                ("An error occurred. Please try again later. " /*+*/
+                                /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError);
 
                             await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                         }
@@ -106,8 +106,8 @@ namespace SharijhaAward.Api.MiddleWares
                         Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                         BaseResponse<string> Response = new BaseResponse<string>
-                            ("Internet connection error, please check your internet connection and try again later. " +
-                            $"{ResponseMessage}", false, (int)HttpStatusCode.InternalServerError);
+                            ("Internet connection error, please check your internet connection and try again later. " /*+*/
+                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError);
 
                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                     }
@@ -116,8 +116,8 @@ namespace SharijhaAward.Api.MiddleWares
                         Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                         BaseResponse<string> Response = new BaseResponse<string>
-                            ("An error occurred. Please try again later. " +
-                            $"{ResponseMessage}", false, (int)HttpStatusCode.InternalServerError);
+                            ("An error occurred. Please try again later. " /*+*/
+                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError);
 
                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                     }
@@ -129,17 +129,17 @@ namespace SharijhaAward.Api.MiddleWares
                     Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     Context.Response.ContentType = "application/json";
 
-                    string ResponseMessage = Ex.InnerException != null
-                        ? $"استثناء = {Ex.Message}، الاستثناء الداخلي = {Ex.InnerException}"
-                        : $"استثناء = {Ex.Message}";
+                    //string ResponseMessage = Ex.InnerException != null
+                    //    ? $"استثناء = {Ex.Message}، الاستثناء الداخلي = {Ex.InnerException}"
+                    //    : $"استثناء = {Ex.Message}";
 
                     if (Ex is BadRequestException)
                     {
                         Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
                         BaseResponse<string> Response = new BaseResponse<string>
-                            ("إدخال خاطئ. الرجاء التحقق من المعلومات المدخلة. " + 
-                            $"{ResponseMessage}", false, (int)HttpStatusCode.BadRequest);
+                            ("إدخال خاطئ. الرجاء التحقق من المعلومات المدخلة. " /*+ */
+                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest);
 
                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                     }
@@ -148,8 +148,8 @@ namespace SharijhaAward.Api.MiddleWares
                         Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                         BaseResponse<string> Response = new BaseResponse<string>
-                            ("حدث خطأ بالاتصال بقاعدة المعطيات. " +
-                            $"{ResponseMessage}", false, (int)HttpStatusCode.InternalServerError);
+                            ("حدث خطأ بالاتصال بقاعدة المعطيات. " /*+*/
+                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError);
 
                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                     }
@@ -181,8 +181,8 @@ namespace SharijhaAward.Api.MiddleWares
                             Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                             BaseResponse<string> Response = new BaseResponse<string>
-                                ("حدث خطأ. الرجاء المحاولة لاحقأ. " +
-                                $"{ResponseMessage}", false, (int)HttpStatusCode.InternalServerError);
+                                ("حدث خطأ. الرجاء المحاولة لاحقأ. " /*+*/
+                               /* $"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError);
 
                             await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                         }
@@ -193,8 +193,8 @@ namespace SharijhaAward.Api.MiddleWares
                         Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                         BaseResponse<string> Response = new BaseResponse<string>
-                            ("خطأ في الاتصال بالإنترنت، يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى لاحقًا. " +
-                            $"{ResponseMessage}", false, (int)HttpStatusCode.InternalServerError);
+                            ("خطأ في الاتصال بالإنترنت، يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى لاحقًا. "/* +*/
+                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError);
 
                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                     }
@@ -203,8 +203,8 @@ namespace SharijhaAward.Api.MiddleWares
                         Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                         BaseResponse<string> Response = new BaseResponse<string>
-                            ("حدث خطأ. الرجاء المحاولة لاحقاً. " + 
-                            $"{ResponseMessage}", false, (int)HttpStatusCode.InternalServerError);
+                            ("حدث خطأ. الرجاء المحاولة لاحقاً. " /*+ */
+                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError);
 
                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                     }

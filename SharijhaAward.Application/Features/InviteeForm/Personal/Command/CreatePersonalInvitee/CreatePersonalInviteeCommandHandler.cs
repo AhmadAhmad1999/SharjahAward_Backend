@@ -74,27 +74,12 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
 
             NewPersonalnvitee.UniqueIntegerId = UniqueIntegerId;
 
-            //try
-            //{
-            //    NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
-            //}
-            //catch (DbUpdateException)
-            //{
-            //    throw;
-            //}
-
             if (!string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() == "ar"
                 : false)
             {
-                // Generate QR Code..
                 Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(NewPersonalnvitee.EventId);
-                string EventName = EventEntity.ArabicName;
-                //string DataToSendIntoQR = $"{NewPersonalnvitee.Id}/Personal/{EventName}";
-                //string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
-                //byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
-                //string QRbase64String = Convert.ToBase64String(QRCodeBytes);
-
+                
                 // Generate BarCode..
                 string DataToSendIntoBarCode = $"{NewPersonalnvitee.UniqueIntegerId}";
                 string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.ImagePath!);
@@ -108,11 +93,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
 
                 bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
 
-                //string DownloadQRImageAPI = isHttps
-                //    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                //        $"&EventName={EventEntity.ArabicName}"
-                //    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                //        $"&EventName={EventEntity.ArabicName}";
                 string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
                 string DownloadedHTMLFilePath = Request.ImagePath + "\\HTMLCodes\\" + DownloadedHTMLFileName;
 
@@ -130,28 +110,17 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
                     .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("d/M/yyyy", ArabicCulture)) // Event Date..
                     .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("hh:mm tt", ArabicCulture)) // Event Time..
-                    //.Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
-                    //.Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
                     .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
 
                 // Create An AlternateView to Specify The HTML Body And Embed The Image..
                 AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
 
                 // Attach The Images As A Linked Resources..
-                //LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
-                //AlternateView.LinkedResources.Add(QRCodeImage);
-
                 LinkedResource BarCodeImage = new LinkedResource(BarCodeImagePath) { ContentId = "BarCodeImage" }; // Bar Code Image..
                 AlternateView.LinkedResources.Add(BarCodeImage);
 
-                LinkedResource CaligraphyImage = new LinkedResource("wwwroot/assets/qr/caligraphy.png") { ContentId = "CaligraphyImage" }; // Caligraphy Image..
-                AlternateView.LinkedResources.Add(CaligraphyImage);
-
-                LinkedResource Email_HeaderImage = new LinkedResource("wwwroot/assets/qr/email_header.png") { ContentId = "Email_HeaderImage" }; // Email_Header Image..
-                AlternateView.LinkedResources.Add(Email_HeaderImage);
-
-                LinkedResource LogosImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogosImage" }; // Logos Image..
-                AlternateView.LinkedResources.Add(LogosImage);
+                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                AlternateView.LinkedResources.Add(HeaderImage);
 
                 EmailRequest EmailRequest = new EmailRequest()
                 {
@@ -164,23 +133,15 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
 
-                byte[] Email_HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/email_header.png");
-                string Email_HeaderImagebase64String = Convert.ToBase64String(Email_HeaderImageBytes);
-
-                byte[] LogosImageImageBytes = File.ReadAllBytes("wwwroot/assets/qr/logos.png");
-                string LogosImageImagebase64String = Convert.ToBase64String(LogosImageImageBytes);
-
                 byte[] BarCodeImageImageBytes = File.ReadAllBytes(BarCodeImagePath);
                 string BarCodeImagebase64String = Convert.ToBase64String(BarCodeImageImageBytes);
 
-                byte[] CaligraphyImageImageBytes = File.ReadAllBytes("wwwroot/assets/qr/caligraphy.png");
-                string CaligraphyImagebase64String = Convert.ToBase64String(CaligraphyImageImageBytes);
+                byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
 
                 string ManipulatedBodyForPdf = ManipulatedBody
-                    .Replace("\"cid:Email_HeaderImage\"", $"'data:image/png;base64,{Email_HeaderImagebase64String}'")
-                    .Replace("\"cid:LogosImage\"", $"'data:image/png;base64,{LogosImageImagebase64String}'")
                     .Replace("\"cid:BarCodeImage\"", $"'data:image/png;base64,{BarCodeImagebase64String}'")
-                    .Replace("'cid:CaligraphyImage'", $"'data:image/png;base64,{CaligraphyImagebase64String}'");
+                    .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
 
                 var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
@@ -201,7 +162,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                         Transaction.Dispose();
                         throw;
                     }
-
                 }
 
                 return new CreateInviteeResponse()
@@ -219,14 +179,10 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
             }
             else
             {
-                // Generate QR Code..
                 Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(NewPersonalnvitee.EventId);
-                string EventName = EventEntity.EnglishName;
-                //string DataToSendIntoQR = $"{NewPersonalnvitee.Id}/Personal/{EventName}";
-                //string QRCodeImagePath = await _QRCodeGenerator.GenerateQRCode(DataToSendIntoQR, Request.ImagePath!);
-                //byte[] QRCodeBytes = File.ReadAllBytes(QRCodeImagePath);
-                //string QRbase64String = Convert.ToBase64String(QRCodeBytes);
+                
                 CultureInfo EnglishCulture = new CultureInfo("en-US");
+                
                 // Generate BarCode..
                 string DataToSendIntoBarCode = $"{NewPersonalnvitee.UniqueIntegerId}";
                 string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.ImagePath!);
@@ -238,11 +194,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
 
                 bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
 
-                //string DownloadQRImageAPI = isHttps
-                //    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                //        $"&EventName={EventEntity.ArabicName}"
-                //    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadQRCode?QRCodeName={QRCodeImagePath.Split('/').LastOrDefault()}" +
-                //        $"&EventName={EventEntity.ArabicName}";
                 string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
                 string DownloadedHTMLFilePath = Request.ImagePath + "\\HTMLCodes\\" + DownloadedHTMLFileName;
 
@@ -260,28 +211,17 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
                     .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("d/M/yyyy", EnglishCulture)) // Event Date..
                     .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("hh:mm tt", EnglishCulture))
-                    //.Replace("[BASE64_ENCODED_IMAGE]", $"'data:image/png;base64,{QRbase64String}'") // Download QR Code Image..
-                    //.Replace("$DownloadQRCodeAPI$", DownloadQRImageAPI); // Download QR Code Image API..
                     .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
 
                 // Create An AlternateView to Specify The HTML Body And Embed The Image..
                 AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
 
                 // Attach The Images As A Linked Resources..
-                //LinkedResource QRCodeImage = new LinkedResource(QRCodeImagePath) { ContentId = "QRCodeImage" }; // QR Code Image..
-                //AlternateView.LinkedResources.Add(QRCodeImage);
-
                 LinkedResource BarCodeImage = new LinkedResource(BarCodeImagePath) { ContentId = "BarCodeImage" }; // Bar Code Image..
                 AlternateView.LinkedResources.Add(BarCodeImage);
 
-                LinkedResource CaligraphyImage = new LinkedResource("wwwroot/assets/qr/caligraphy.png") { ContentId = "CaligraphyImage" }; // Caligraphy Image..
-                AlternateView.LinkedResources.Add(CaligraphyImage);
-
-                LinkedResource Email_HeaderImage = new LinkedResource("wwwroot/assets/qr/email_header.png") { ContentId = "Email_HeaderImage" }; // Email_Header Image..
-                AlternateView.LinkedResources.Add(Email_HeaderImage);
-
-                LinkedResource LogosImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogosImage" }; // Logos Image..
-                AlternateView.LinkedResources.Add(LogosImage);
+                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                AlternateView.LinkedResources.Add(HeaderImage);
 
                 EmailRequest EmailRequest = new EmailRequest()
                 {
@@ -294,23 +234,15 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
                     : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
 
-                byte[] Email_HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/email_header.png");
-                string Email_HeaderImagebase64String = Convert.ToBase64String(Email_HeaderImageBytes);
-
-                byte[] LogosImageImageBytes = File.ReadAllBytes("wwwroot/assets/qr/logos.png");
-                string LogosImageImagebase64String = Convert.ToBase64String(LogosImageImageBytes);
-
                 byte[] BarCodeImageImageBytes = File.ReadAllBytes(BarCodeImagePath);
                 string BarCodeImagebase64String = Convert.ToBase64String(BarCodeImageImageBytes);
 
-                byte[] CaligraphyImageImageBytes = File.ReadAllBytes("wwwroot/assets/qr/caligraphy.png");
-                string CaligraphyImagebase64String = Convert.ToBase64String(CaligraphyImageImageBytes);
+                byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
 
                 string ManipulatedBodyForPdf = ManipulatedBody
-                    .Replace("\"cid:Email_HeaderImage\"", $"'data:image/png;base64,{Email_HeaderImagebase64String}'")
-                    .Replace("\"cid:LogosImage\"", $"'data:image/png;base64,{LogosImageImagebase64String}'")
                     .Replace("\"cid:BarCodeImage\"", $"'data:image/png;base64,{BarCodeImagebase64String}'")
-                    .Replace("'cid:CaligraphyImage'", $"'data:image/png;base64,{CaligraphyImagebase64String}'");
+                    .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
 
                 var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
