@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PdfSharpCore.Pdf;
 using SharijhaAward.Application.Contract.Persistence;
 using System;
 using System.Collections;
@@ -39,7 +40,8 @@ namespace SharijhaAward.Persistence.Repositories
         {
             if (size == -1 || page == 0)
                 return await _DbSet.AsNoTracking().ToListAsync();
-
+            if (size == 0)
+                size = 10;
             return await _DbSet.AsNoTracking().Skip((page - 1) * size).Take(size).ToListAsync();
         }
         public async Task<T> AddAsync(T entity)

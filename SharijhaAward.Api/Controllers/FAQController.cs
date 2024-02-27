@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Aspose.Pdf.Operators;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
@@ -93,7 +94,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetFAQByIdQuery()
             {
                 Id = Id,
-                lang = headerValue
+                lang = headerValue!
             });
 
             return Ok(
@@ -111,43 +112,49 @@ namespace SharijhaAward.Api.Controllers
             var headerValue = HttpContext.Request.Headers["lang"];
             if (headerValue.IsNullOrEmpty())
                 headerValue = "";
-            //get data from mediator
-            var dto = await _mediator.Send(new GetAllFAQsQuery() { lang = headerValue });
 
-            // Pagenation
-            if (perPage == 0)
-                perPage = 10;
-            else if (perPage == -1)
+            //get data from mediator
+            var response = await _mediator.Send(new GetAllFAQsQuery() 
+            {
+                lang = headerValue!,
+                page = page,
+                pageSize = perPage
+                
+            });
+
+            if(response.statusCode == 404)
+            {
+                return NotFound(new
+                {
+                    response.message,
+                    response.statusCode,
+                    response.success
+                });
+            }
+            else if(response.statusCode == 200)
+            {
+                var totalCount = response.data!.Count;
+                var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
+
                 return Ok(
                 new
                 {
-                    data = dto,
-                    message = "Retrieved successfully.",
-                    status = true,
+                        response.data,
+                        response.message,
+                        response.statusCode,
+                        pagination =
+                        new
+                        {
+                            current_page = page,
+                            last_page = page - 1,
+                            total_row = totalCount,
+                            per_page = perPage,
+                            totalPage = totalPage
+                        }
                 });
-
-            var totalCount = dto.Count;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
-            var dataPerPage = dto
-                .Skip((page - 1) * perPage)
-                .Take(perPage)
-                .ToList();
-
-            return Ok(
-                new
-                {
-                    data = dataPerPage,
-                    message = "Retrieved successfully.",
-                    status = true,
-                    pagination =
-                    new
-                    {
-                        current_page = page,
-                        last_page = totalPage,
-                        total_row = totalCount,
-                        per_page = perPage
-                    }
-                });
+            }
+            else return BadRequest(new { response });
+            
         }
     }
 }

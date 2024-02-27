@@ -97,7 +97,7 @@ namespace SharijhaAward.Api.Controllers
                         response.statusCode
                     });
         }
-        [HttpGet("{id}",Name="GetNewsById")]
+        [HttpGet("{Id}",Name="GetNewsById")]
         public async Task<IActionResult> GetNewsById(Guid Id)
         {
             //get Language from header
@@ -158,16 +158,17 @@ namespace SharijhaAward.Api.Controllers
             return Ok(
                 new
                 {
-                    data = dto.data,
+                    dto.data,
                     dto.message,
                     dto.statusCode,
                     pagination =
                     new
                     {
                         current_page = page,
-                        last_page = totalPage,
+                        last_page = page - 1,
                         total_row = totalCount,
-                        per_page = pageSize
+                        per_page = pageSize,
+                        totalPage = totalPage
                     }
 
                 });

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.FAQModel;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs
 {
     public class GetAllFAQsQueryHandler 
-        : IRequestHandler<GetAllFAQsQuery, List<FAQListVm>>
+        : IRequestHandler<GetAllFAQsQuery, BaseResponse<List<FAQListVm>>>
     {
         private readonly IAsyncRepository<FrequentlyAskedQuestion> _faqRepository;
         private readonly IMapper _mapper;
@@ -22,13 +23,17 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs
             _mapper = mapper;
         }
 
-        public async Task<List<FAQListVm>> Handle(GetAllFAQsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<FAQListVm>>> Handle(GetAllFAQsQuery request, CancellationToken cancellationToken)
         {
-            var FAQs = await _faqRepository.ListAllAsync();
-
+            var FAQs = await _faqRepository.GetPagedReponseAsync(request.page,request.pageSize);
+            string msg;
             if(FAQs.Count == 0)
             {
-                throw new OpenQA.Selenium.NotFoundException("There is No FAQs");
+                msg = request.lang == "en"
+                    ? "There is no FAQs"
+                    : "لا يوجد أسألة شائعة";
+
+                return new BaseResponse<List<FAQListVm>>(msg, false, 404);
             }
 
             List<FAQListVm> questions = new List<FAQListVm>();
@@ -54,7 +59,13 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs
                 questions.Add(listVm);
 
             }
-            return _mapper.Map<List<FAQListVm>>(questions);
+            var data = _mapper.Map<List<FAQListVm>>(questions);
+
+            msg = request.lang == "en"
+                   ? "Retrieved Successfully"
+                   : "تم الإسترجاع بنجاح";
+
+            return new BaseResponse<List<FAQListVm>>(msg, true, 200,data);
         }
     }
 }
