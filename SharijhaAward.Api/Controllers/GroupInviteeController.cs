@@ -60,8 +60,6 @@ namespace SharijhaAward.Api.Controllers
                          data = Response,
                          message = "تم إنشاء الدعوة الجماعية بنجاح"
                      });
-            
-            
         }
 
         [HttpPut(Name = "UpdateGroupInvitee")]
@@ -102,7 +100,7 @@ namespace SharijhaAward.Api.Controllers
                 Id = id
             };
             await _mediator.Send(deleteGroupInviteeCommand);
-            return Ok(new { message = Response });
+            return Ok(new { message = "تم حذف الدعوة الجماعية بنجاح" });
         }
 
 

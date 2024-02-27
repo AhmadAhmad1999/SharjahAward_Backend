@@ -12,8 +12,8 @@ using SharijhaAward.Persistence;
 namespace SharijhaAward.Persistence.Migrations
 {
     [DbContext(typeof(SharijhaAwardDbContext))]
-    [Migration("20240225101319_CreatedStudentTable")]
-    partial class CreatedStudentTable
+    [Migration("20240227103230_Ahmad")]
+    partial class Ahmad
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,9 +161,6 @@ namespace SharijhaAward.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ArabicNote")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ArabicTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -183,9 +180,6 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EnglishNote")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("EnglishTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -194,17 +188,14 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Slug")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
@@ -2041,10 +2032,11 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
                     b.HasIndex("EventId");
+
+                    b.HasIndex("Email", "isDeleted")
+                        .IsUnique()
+                        .HasFilter("[isDeleted] = 0");
 
                     b.ToTable("GroupInvitees");
                 });
@@ -2108,10 +2100,11 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
                     b.HasIndex("EventId");
+
+                    b.HasIndex("Email", "isDeleted")
+                        .IsUnique()
+                        .HasFilter("[isDeleted] = 0");
 
                     b.ToTable("Personalnvitees");
                 });
@@ -2151,7 +2144,7 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.HasIndex("GroupInviteeId");
 
-                    b.ToTable("Student");
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.MeetingModel.Meeting", b =>

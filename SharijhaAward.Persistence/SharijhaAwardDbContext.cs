@@ -99,11 +99,13 @@ namespace SharijhaAward.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SharijhaAwardDbContext).Assembly);
 
             modelBuilder.Entity<PersonalInvitee>()
-                .HasIndex(p => p.Email)
+                .HasIndex(p => new { p.Email, p.isDeleted })
+                .HasFilter("[isDeleted] = 0")
                 .IsUnique();
 
             modelBuilder.Entity<GroupInvitee>()
-                .HasIndex(p => p.Email)
+                .HasIndex(p => new { p.Email, p.isDeleted })
+                .HasFilter("[isDeleted] = 0")
                 .IsUnique();
 
             modelBuilder.Entity<Cycle>().HasData(
