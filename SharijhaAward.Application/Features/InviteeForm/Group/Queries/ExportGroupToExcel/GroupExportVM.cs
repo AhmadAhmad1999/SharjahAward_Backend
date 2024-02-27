@@ -20,5 +20,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ExportGro
         public int ActualNumberOfAttendees { get; set; }
         public Guid EventId { get; set; }
         public DateTime CreatedAt { get; set; }
+        public List<string>? StudentNames { get; set; }
     }
 }
