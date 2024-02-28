@@ -75,6 +75,7 @@ using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
 using SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Commands.UpdateCycleCondition;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -185,6 +186,7 @@ namespace SharijhaAward.Application.Profiles
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
             CreateMap<DynamicAttribute, DynamicAttributeListVM>().ReverseMap();
+            CreateMap<DynamicAttribute, GetDynamicAttributeByIdDto>().ReverseMap();
         }
     }
 }

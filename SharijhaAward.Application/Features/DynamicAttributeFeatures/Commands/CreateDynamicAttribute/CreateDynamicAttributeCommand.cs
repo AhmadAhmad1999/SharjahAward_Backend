@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Features.Event.Commands.CreateEvent;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.DynamicAttribute;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute
 {
-    public class CreateDynamicAttributeCommand : IRequest<CreateDynamicAttributeCommandResponse>
+    public class CreateDynamicAttributeCommand : IRequest<BaseResponse<CreateDynamicAttributeCommandResponse>>
     {
         public string Key { get; set; } = null!;
         public string ArabicLabel { get; set; } = null!;
@@ -24,5 +25,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
         public int DynamicAttributeSectionId { get; set; }
         public CreateGeneralValidation? GeneralValidationObject { get; set; }
         public List<CreateDependencyValidation>? DependencyValidations { get; set; }
+        public string? lang { get; set; }
     }
 }

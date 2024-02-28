@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute
 {
-    public class DeleteDynamicAttributeCommand : IRequest<Unit>
+    public class DeleteDynamicAttributeCommand : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
         public string? lang { get; set; }

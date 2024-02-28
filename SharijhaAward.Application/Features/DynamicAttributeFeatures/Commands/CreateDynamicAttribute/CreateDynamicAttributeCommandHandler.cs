@@ -3,6 +3,8 @@ using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeFeaturesFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Features.Event.Commands.CreateEvent;
+using SharijhaAward.Application.Features.News.Commands.CreateNews;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.DynamicAttribute;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using System;
@@ -14,19 +16,24 @@ using System.Transactions;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute
 {
-    public class CreateDynamicAttributeCommandHandler : IRequestHandler<CreateDynamicAttributeCommand, CreateDynamicAttributeCommandResponse>
+    public class CreateDynamicAttributeCommandHandler : IRequestHandler<CreateDynamicAttributeCommand, 
+        BaseResponse<CreateDynamicAttributeCommandResponse>>
     {
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
         private readonly IAsyncRepository<DependencyGroup> _DependencyGroupRepository;
         private readonly IAsyncRepository<Dependency> _DependencyRepository;
         private readonly IAsyncRepository<DependencyValidation> _DependencyValidationRepository;
+        private readonly IAsyncRepository<AttributeDataType> _AttributeDataTypeRepository;
+        private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
         private readonly IMapper _Mapper;
         public CreateDynamicAttributeCommandHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<GeneralValidation> GeneralValidationRepository,
             IAsyncRepository<DependencyGroup> DependencyGroupRepository,
             IAsyncRepository<Dependency> DependencyRepository,
             IAsyncRepository<DependencyValidation> DependencyValidationRepository,
+            IAsyncRepository<AttributeDataType> AttributeDataTypeRepository,
+            IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IMapper Mapper)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
@@ -34,10 +41,36 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
             _DependencyGroupRepository = DependencyGroupRepository;
             _DependencyRepository = DependencyRepository;
             _DependencyValidationRepository = DependencyValidationRepository;
+            _AttributeDataTypeRepository = AttributeDataTypeRepository;
+            _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _Mapper = Mapper;
         }
-        public async Task<CreateDynamicAttributeCommandResponse> Handle(CreateDynamicAttributeCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<CreateDynamicAttributeCommandResponse>> Handle(CreateDynamicAttributeCommand Request, CancellationToken cancellationToken)
         {
+            string ResponseMessage = string.Empty;
+
+            AttributeDataType? CheckIfAttributeDataTypeIdDoesExist = await _AttributeDataTypeRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.AttributeDataTypeId);
+            if (CheckIfAttributeDataTypeIdDoesExist == null)
+            {
+                ResponseMessage = Request.lang == "en"
+                  ? "Attribute data type is not Found"
+                  : "نوع الحقل غير موجود";
+
+                return new BaseResponse<CreateDynamicAttributeCommandResponse>(ResponseMessage, false, 404);
+            }
+
+            DynamicAttributeSection? CheckIfDynamicAttributeSectionIdDoesExist = await _DynamicAttributeSectionRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributeSectionId);
+            if (CheckIfDynamicAttributeSectionIdDoesExist == null)
+            {
+                ResponseMessage = Request.lang == "en"
+                  ? "Section is not Found"
+                  : "العنوان الرئيسي غير موجود";
+
+                return new BaseResponse<CreateDynamicAttributeCommandResponse>(ResponseMessage, false, 404);
+            }
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -87,15 +120,25 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
 
                 Transaction.Complete();
 
-                return new CreateDynamicAttributeCommandResponse()
+                ResponseMessage = Request.lang == "en"
+                    ? "Created successfully"
+                    : "تم إنشاء الحقل بنجاح";
+
+                return new BaseResponse<CreateDynamicAttributeCommandResponse>()
                 {
-                    CreateDynamicAttributeDto = new CreateDynamicAttributeDto()
+                    data = new CreateDynamicAttributeCommandResponse()
                     {
-                        Id = NewDynamicAttributeEntity.Id,
-                        Key = NewDynamicAttributeEntity.Key,
-                        ArabicLabel = NewDynamicAttributeEntity.ArabicLabel,
-                        EnglishLabel = NewDynamicAttributeEntity.EnglishLabel
-                    }
+                        CreateDynamicAttributeDto = new CreateDynamicAttributeDto()
+                        {
+                            Id = NewDynamicAttributeEntity.Id,
+                            Key = NewDynamicAttributeEntity.Key,
+                            ArabicLabel = NewDynamicAttributeEntity.ArabicLabel,
+                            EnglishLabel = NewDynamicAttributeEntity.EnglishLabel
+                        }
+                    },
+                    success = true,
+                    message = ResponseMessage,
+                    statusCode = 200
                 };
             }
         }
