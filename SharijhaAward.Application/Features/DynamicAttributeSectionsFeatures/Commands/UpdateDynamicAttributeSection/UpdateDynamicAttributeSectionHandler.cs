@@ -4,6 +4,7 @@ using FluentValidation.Results;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Event.Commands.UpdateEvent;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection
 {
-    public class UpdateDynamicAttributeSectionHandler : IRequestHandler<UpdateDynamicAttributeSectionCommand, Unit>
+    public class UpdateDynamicAttributeSectionHandler : IRequestHandler<UpdateDynamicAttributeSectionCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
         private readonly IMapper _Mapper;
@@ -24,16 +25,20 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _Mapper = Mapper;
         }
-        public async Task<Unit> Handle(UpdateDynamicAttributeSectionCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(UpdateDynamicAttributeSectionCommand Request, CancellationToken cancellationToken)
         {
+            string ResponseMessage = string.Empty;
+
             DynamicAttributeSection? DynamicAttributeSectionOldData = await _DynamicAttributeSectionRepository.GetByIdAsync(Request.Id);
 
             if (DynamicAttributeSectionOldData == null)
-                throw new OpenQA.Selenium.NotFoundException(!string.IsNullOrEmpty(Request.lang) 
-                    ? (Request.lang.ToLower() == "en" 
-                        ? "Section not found" 
-                        : "هذا القسم غير موجود")
-                    : "Section not found");
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Section not Found"
+                    : "هذا القسم غير موجود";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
 
             UpdateDynamicAttributeSectionValidator Validator = new UpdateDynamicAttributeSectionValidator();
             ValidationResult ValidationResult = await Validator.ValidateAsync(Request);
@@ -41,15 +46,16 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
             if (ValidationResult.Errors.Count > 0)
                 throw new ValidationException(ValidationResult.Errors);
 
-            else
-            {
-                _Mapper.Map(Request, DynamicAttributeSectionOldData, typeof(UpdateDynamicAttributeSectionCommand),
-                    typeof(DynamicAttributeSection));
+            _Mapper.Map(Request, DynamicAttributeSectionOldData, typeof(UpdateDynamicAttributeSectionCommand),
+                typeof(DynamicAttributeSection));
 
-                await _DynamicAttributeSectionRepository.UpdateAsync(DynamicAttributeSectionOldData);
-            }
+            await _DynamicAttributeSectionRepository.UpdateAsync(DynamicAttributeSectionOldData);
 
-            return Unit.Value;
+            ResponseMessage = Request.lang == "en"
+                ? "Section has been updated successfully"
+                : "تم تعديل القسم بنجاح";
+
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

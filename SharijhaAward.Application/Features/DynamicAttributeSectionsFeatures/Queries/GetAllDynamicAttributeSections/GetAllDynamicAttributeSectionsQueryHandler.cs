@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Responses;
@@ -46,9 +47,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             {
                 ResponseMessage = Request.lang == "en"
                     ? "There is no sections"
-                    : "لا يوجد أقسام";
+                : "لا يوجد أقسام";
 
-                return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, false, 404);
+                return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 204, DynamicAttributeSections, 0);
             }
 
             foreach (DynamicAttributeSectionListVM DynamicAttributeSection in DynamicAttributeSections)
@@ -71,11 +72,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     }).ToList();
             }
 
-            ResponseMessage = Request.lang == "en"
-                ? "The sections are retrieved successfully"
-                : "تم إسترجاع الأقسام بنجاح";
+            int TotalCount = await _DynamicAttributeSectionRepository.GetCountAsync(null);
 
-            return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, false, 200, DynamicAttributeSections);
+            return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 200, DynamicAttributeSections, TotalCount);
         }
     }
 }

@@ -72,6 +72,7 @@ using SharijhaAward.Domain.Entities.AgendaModel;
 using SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -177,6 +178,7 @@ namespace SharijhaAward.Application.Profiles
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
             CreateMap<DynamicAttribute, DynamicAttributeListVM>().ReverseMap();
+            CreateMap<DynamicAttribute, GetDynamicAttributeByIdDto>().ReverseMap();
         }
     }
 }

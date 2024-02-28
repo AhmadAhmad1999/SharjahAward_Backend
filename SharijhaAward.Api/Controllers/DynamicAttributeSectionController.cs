@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using ErrorOr;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection;
@@ -27,24 +30,22 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<CreateDynamicAttributeSectionCommandResponse>> CreateNewDynamicAttributeSection([FromBody] CreateDynamicAttributeSectionCommand CreateDynamicAttributeSectionCommand)
+        public async Task<IActionResult> 
+            CreateNewDynamicAttributeSection([FromBody] CreateDynamicAttributeSectionCommand CreateDynamicAttributeSectionCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            CreateDynamicAttributeSectionCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
 
-            CreateDynamicAttributeSectionCommandResponse? Response = await _Mediator.Send(CreateDynamicAttributeSectionCommand);
+            BaseResponse<CreateDynamicAttributeSectionCommandResponse>? Response = await _Mediator.Send(CreateDynamicAttributeSectionCommand);
 
-            string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                ? (HeaderValue.ToString() == "ar"
-                    ? "تم إنشاء العنوان الرئيسي بنجاح"
-                    : "Section Added Successfuly")
-                : "تم إنشاء العنوان الرئيسي بنجاح";
-
-            return Ok(
-                new
-                {
-                    data = Response,
-                    message = ResponseMessage
-                });
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
         [HttpPut("UpdateDynamicAttributeSection")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -54,30 +55,26 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> UpdateDynamicAttributeSection([FromBody] UpdateDynamicAttributeSectionCommand UpdateDynamicAttributeSectionCommand)
+        public async Task<IActionResult> UpdateDynamicAttributeSection([FromBody] UpdateDynamicAttributeSectionCommand UpdateDynamicAttributeSectionCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            if (string.IsNullOrEmpty(HeaderValue))
-                HeaderValue = "en";
+            UpdateDynamicAttributeSectionCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
 
             UpdateDynamicAttributeSectionCommand.lang = HeaderValue!;
 
-            Unit Response = await _Mediator.Send(UpdateDynamicAttributeSectionCommand);
+            BaseResponse<object> Response = await _Mediator.Send(UpdateDynamicAttributeSectionCommand);
 
-            string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                ? (HeaderValue.ToString() == "ar"
-                    ? "تم تعديل العنوان الرئيسي بنجاح"
-                    : "Updated Sucssesfully")
-                : "تم تعديل العنوان الرئيسي بنجاح";
-
-            return Ok(new 
-            { 
-                data = Response,
-                message = ResponseMessage
-            });
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
-        [HttpDelete("DeleteDynamicAttributeSection")]
+        [HttpDelete("DeleteDynamicAttributeSection/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -85,30 +82,24 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> DeleteDynamicAttributeSection(int Id)
+        public async Task<IActionResult> DeleteDynamicAttributeSection(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            DeleteDynamicAttributeSectionCommand DeleteDynamicAttributeSectionCommand = new DeleteDynamicAttributeSectionCommand()
+            BaseResponse<object>? Response = await _Mediator.Send(new DeleteDynamicAttributeSectionCommand()
             {
                 Id = Id,
                 lang = HeaderValue!
-            };
-
-            Unit Response = await _Mediator.Send(DeleteDynamicAttributeSectionCommand);
-
-            string ResponseMessage = !string.IsNullOrEmpty(HeaderValue)
-                ? (HeaderValue.ToString() == "ar"
-                    ? "تم حذف العنوان الرئيسي بنجاح"
-                    : "Deleted Sucssesfully")
-                : "تم حذف العنوان الرئيسي بنجاح";
-
-            return Ok(new 
-            { 
-                message = ResponseMessage
             });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
         [HttpGet("GetAllDynamicAttributeSections")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -118,7 +109,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetAllDynamicAttributeSections(int Page, int PerPage)
+        public async Task<IActionResult> GetAllDynamicAttributeSections(int Page = 0, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -131,33 +122,24 @@ namespace SharijhaAward.Api.Controllers
                 page = Page,
                 pageSize = PerPage
             });
-
-            int PageSize = PerPage == 0 ? 10 : PerPage;
-
-            if (Response.statusCode == 404)
+            return Response.statusCode switch
             {
-                return NotFound(new
+                404 => NotFound(Response),
+                200 => Ok(new
                 {
-                    Response.message,
-                    Response.statusCode
-                });
-            }
-
-            int TotalCount = Response.data!.Count;
-            int TotalPage = (int)Math.Ceiling((decimal)TotalCount / PageSize);
-
-            return Ok(new
-            {
-                data = Response.data,
-                Response.message,
-                Response.statusCode,
-                pagination = new {
-                    current_page = Page,
-                    last_page = TotalPage,
-                    total_row = TotalCount,
-                    per_page = PageSize
-                }
-            });
+                    Response,
+                    pagination =
+                        new {
+                            current_page = Page,
+                            last_page = Page - 1,
+                            total_row = Response.data!.Count,
+                            per_page = PerPage,
+                            totalPage = (int)Math.Ceiling((decimal)Response.totalItem / PerPage),
+                            currentPageCount = Response.data!.Count()
+                        }
+                }),
+                _ => BadRequest(Response)
+            };
         }
         [HttpGet("GetDynamicAttributeSectionById/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -167,22 +149,24 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetDynamicAttributeSectionById(int Id)
+        public async Task<IActionResult> GetDynamicAttributeSectionById(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             if (string.IsNullOrEmpty(HeaderValue))
-                HeaderValue = "ar";
+                HeaderValue = "en";
 
-            BaseResponse<DynamicAttributeSectionDto> Response = await _Mediator.Send(new DynamicAttributeSectionQuery()
+            BaseResponse<GetDynamicAttributeSectionByIdDto> Response = await _Mediator.Send(new GetDynamicAttributeSectionByIdQuery()
             {
                 Id = Id,
                 lang = HeaderValue!
             });
 
-            return Ok(new 
-            { 
-                data = Response
-            });
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
     }
 }

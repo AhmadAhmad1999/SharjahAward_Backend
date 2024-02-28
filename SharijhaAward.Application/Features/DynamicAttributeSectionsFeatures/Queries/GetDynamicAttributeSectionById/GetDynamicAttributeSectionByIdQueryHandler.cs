@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSections;
 using SharijhaAward.Application.Features.Event.Queries.GetEventById;
@@ -15,13 +16,14 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetDynamicAttributeSectionById
 {
-    public class DynamicAttributeSectionQueryHandler : IRequestHandler<DynamicAttributeSectionQuery, BaseResponse<DynamicAttributeSectionDto>>
+    public class GetDynamicAttributeSectionByIdQueryHandler : IRequestHandler<GetDynamicAttributeSectionByIdQuery,
+        BaseResponse<GetDynamicAttributeSectionByIdDto>>
     {
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IMapper _Mapper;
 
-        public DynamicAttributeSectionQueryHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
+        public GetDynamicAttributeSectionByIdQueryHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IMapper Mapper)
         {
@@ -29,14 +31,16 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _Mapper = Mapper;
         }
-        public async Task<BaseResponse<DynamicAttributeSectionDto>> Handle(DynamicAttributeSectionQuery Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<GetDynamicAttributeSectionByIdDto>> Handle(GetDynamicAttributeSectionByIdQuery Request, CancellationToken cancellationToken)
         {
+            string ResponseMessage = string.Empty;
+
             string Language = !string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() : "ar";
 
-            DynamicAttributeSectionDto DynamicAttributeSection = _Mapper.Map<DynamicAttributeSectionDto>
+            GetDynamicAttributeSectionByIdDto DynamicAttributeSection = _Mapper.Map<GetDynamicAttributeSectionByIdDto>
                 (await _DynamicAttributeSectionRepository.Where(x => x.Id == Request.Id)
-                    .Select(x => new DynamicAttributeSectionDto()
+                    .Select(x => new GetDynamicAttributeSectionByIdDto()
                     {
                         Id = x.Id,
                         Name = Language == "ar"
@@ -44,14 +48,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             : x.EnglishName
                     }).FirstOrDefaultAsync());
 
-            string ResponseMessage = string.Empty;
             if (DynamicAttributeSection == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? $"There is no section with this id: {Request.Id}"
-                    : $"لا يوجد قسم بهذا المعرف: {Request.Id}";
+                    ? "Section not found"
+                    : "هذا القسم غير موجود";
 
-                return new BaseResponse<DynamicAttributeSectionDto>(ResponseMessage, false, 404);
+                return new BaseResponse<GetDynamicAttributeSectionByIdDto>(ResponseMessage, false, 404);
             }
 
             DynamicAttributeSection.DynamicAttributes = _DynamicAttributeRepository
@@ -71,11 +74,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     Status = x.Status.ToString()
                 }).ToList();
 
-            ResponseMessage = Request.lang == "en"
-                ? "The section are retrieved successfully"
-                : "تم إسترجاع القسم بنجاح";
-
-            return new BaseResponse<DynamicAttributeSectionDto>(ResponseMessage, false, 200, DynamicAttributeSection);
+            return new BaseResponse<GetDynamicAttributeSectionByIdDto>(ResponseMessage, true, 200, DynamicAttributeSection);
         }
     }
 }

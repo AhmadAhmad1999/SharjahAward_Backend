@@ -22,6 +22,21 @@ namespace SharijhaAward.Persistence.Repositories
             _dbContext = dbContext;
             _DbSet = _dbContext.Set<T>();
         }
+        
+        public virtual int GetCount(Expression<Func<T, bool>>? predicate)
+        {
+            if (predicate == null)
+                return _DbSet.Count();
+
+            return _DbSet.AsNoTracking().Where(predicate).Count();
+        }
+        public virtual async Task<int> GetCountAsync(Expression<Func<T, bool>>? predicate)
+        {
+            if (predicate == null)
+                return await _DbSet.CountAsync();
+
+            return await _DbSet.AsNoTracking().Where(predicate).CountAsync();
+        }
         public virtual async Task<T?> GetByIdAsync(Guid id)
         {
             T? t = await _DbSet.FindAsync(id);
@@ -107,9 +122,10 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async virtual Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, int page, int size)
         {
-            if (page == -1)
+            if (size == -1 || page == 0)
                 return await _DbSet.AsNoTracking().Where(predicate).ToListAsync();
-
+            if (size == 0)
+                size = 10;
             return await _DbSet.AsNoTracking()
                 .Where(predicate).Skip((page - 1) * size).Take(size).ToListAsync();
         }
@@ -156,17 +172,54 @@ namespace SharijhaAward.Persistence.Repositories
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
             return _DbSet.AsNoTracking().Include(navigationPropertyPath).Where(predicate);
         }
-        public IQueryable<T> WhereThenInclude(Expression<Func<T, bool>> predicate,
-            Expression<Func<T, object>> navigationProperty)
+        public IQueryable<T> WhereThenIncludeThenPagination(
+            Expression<Func<T, bool>> predicate, int page, int size,
+            params Expression<Func<T, object>>[] navigationProperties)
         {
-            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.AsNoTracking().Where(predicate).Include(navigationPropertyPath);
+            IQueryable<T> query;
+
+            if (size == 0)
+                size = 10;
+
+            if (size == -1 || page == 0)
+                query = _DbSet.AsNoTracking().Where(predicate);
+            else
+                query = _DbSet.AsNoTracking()
+                    .Where(predicate).Skip((page - 1) * size).Take(size);
+
+            foreach (var navigationProperty in navigationProperties)
+            {
+                string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+                query = query.Include(navigationPropertyPath);
+            }
+
+            return query;
+        }
+        public IQueryable<T> WhereThenInclude(
+            Expression<Func<T, bool>> predicate,
+            params Expression<Func<T, object>>[] navigationProperties)
+        {
+            IQueryable<T> query = _DbSet.AsNoTracking().Where(predicate);
+
+            foreach (var navigationProperty in navigationProperties)
+            {
+                string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+                query = query.Include(navigationPropertyPath);
+            }
+
+            return query;
         }
         public T? IncludeThenFirstOrDefault(Expression<Func<T, object>> navigationProperty, 
             Expression<Func<T, bool>> predicate)
         {
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
             return _DbSet.AsNoTracking().Include(navigationPropertyPath).FirstOrDefault(predicate);
+        }
+        public async Task<T?> IncludeThenFirstOrDefaultAsync(Expression<Func<T, object>> navigationProperty,
+            Expression<Func<T, bool>> predicate)
+        {
+            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            return await _DbSet.AsNoTracking().Include(navigationPropertyPath).FirstOrDefaultAsync(predicate);
         }
         public T? IncludeThenLastOrDefault(Expression<Func<T, object>> navigationProperty, 
             Expression<Func<T, bool>> predicate)
@@ -184,6 +237,14 @@ namespace SharijhaAward.Persistence.Repositories
 
             var properties = memberExpression.ToString().Split('.');
             return string.Join(".", properties.Skip(1));
+        }
+        public void SaveChanges()
+        {
+            _dbContext.SaveChanges();
+        }
+        public async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

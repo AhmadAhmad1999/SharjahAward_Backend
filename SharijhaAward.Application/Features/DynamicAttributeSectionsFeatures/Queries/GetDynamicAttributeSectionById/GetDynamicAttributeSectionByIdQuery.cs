@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetDynamicAttributeSectionById
 {
-    public class DynamicAttributeSectionQuery : IRequest<BaseResponse<DynamicAttributeSectionDto>>
+    public class GetDynamicAttributeSectionByIdQuery : IRequest<BaseResponse<GetDynamicAttributeSectionByIdDto>>
     {
         public int Id { get; set; }
         public string lang { get; set; } = string.Empty;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetDynamicAttributeSectionById
 {
-    public class DynamicAttributeSectionDto
+    public class GetDynamicAttributeSectionByIdDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

@@ -10,6 +10,8 @@ namespace SharijhaAward.Application.Contract.Persistence
 {
     public interface IAsyncRepository<T> where T : class
     {
+        Task<int> GetCountAsync(Expression<Func<T, bool>>? predicate);
+        int GetCount(Expression<Func<T, bool>>? predicate);
         Task<T> GetByIdAsync(Guid id);
         Task<T?> GetByIdAsync(int id);
         Task<IReadOnlyList<T>> ListAllAsync();
@@ -29,16 +31,23 @@ namespace SharijhaAward.Application.Contract.Persistence
         Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> predicate);
         IQueryable<TResult> Select<TResult>(Expression<Func<T, TResult>> selector);
         IQueryable<T> OrderBy<TKey>(Expression<Func<T, TKey>> keySelector);
+        IQueryable<T> WhereThenIncludeThenPagination(
+            Expression<Func<T, bool>> predicate, int page, int size,
+            params Expression<Func<T, object>>[] navigationProperties);
         IQueryable<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector);
         IQueryable<T> Include(string navigationPropertyPath);
         IQueryable<T> Include(Expression<Func<T, object>> navigationProperty);
         IQueryable<T> IncludeThenWhere(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate);
-        IQueryable<T> WhereThenInclude(Expression<Func<T, bool>> predicate,
-            Expression<Func<T, object>> navigationProperty);
+        public IQueryable<T> WhereThenInclude(Expression<Func<T, bool>> predicate,
+            params Expression<Func<T, object>>[] navigationProperties);
         T? IncludeThenFirstOrDefault(Expression<Func<T, object>> navigationProperty,
+            Expression<Func<T, bool>> predicate);
+        Task<T?> IncludeThenFirstOrDefaultAsync(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate);
         T? IncludeThenLastOrDefault(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate);
+        void SaveChanges();
+        Task SaveChangesAsync();
     }
 }
