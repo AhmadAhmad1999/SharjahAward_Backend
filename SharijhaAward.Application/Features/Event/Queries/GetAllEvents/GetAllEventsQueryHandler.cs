@@ -53,7 +53,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
             }
             
             var data = _mapper.Map<List<EventListVM>>(allEventsVM);
-            var count = (await _eventRepository.ListAllAsync()).Count();
+            var count =  _eventRepository.ListAllAsync().Result.Count();
             return new BaseResponse<List<EventListVM>>("تم إسترجاع الفعاليات بنجاح", true, 200, data, count);
         }
     }

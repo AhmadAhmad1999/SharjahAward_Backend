@@ -52,7 +52,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
             
             
             var data = _mapper.Map<List<PersonalInviteeListVM>>(allPersonalInvitee);
-            var Count = (await _PersonalInviteeRepository.ListAllAsync()).Count;
+            var Count = _PersonalInviteeRepository.ListAllAsync().Result.Count();
             return new BaseResponse<List<PersonalInviteeListVM>>("Retrive Succssfully", true, 200, data, Count);
         }
     }

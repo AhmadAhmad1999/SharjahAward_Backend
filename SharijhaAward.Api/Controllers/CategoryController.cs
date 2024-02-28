@@ -107,7 +107,7 @@ namespace SharijhaAward.Api.Controllers
             var category = await _mediator.Send(new GetCategoryByIdQuery()
             {
                 Id = Id,
-                lang = headerValue
+                lang = headerValue!
             });
 
             return Ok(

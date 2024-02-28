@@ -49,7 +49,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
                 ? "Agenda has been added Successfully"
                 : "تم اضافة الأجندة بنجاح";
 
-            return new BaseResponse<CreateAgendaDto>(msg, true, 201, data);
+            return new BaseResponse<CreateAgendaDto>(msg, true, 200, data);
             
         }
     }

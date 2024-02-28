@@ -61,7 +61,7 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
                 ? "Created Succsess"
                 : "تم إنشاء الخبر بنجاح";
 
-             return new BaseResponse<NewsDto>(msg, true, 201 ,dto);
+             return new BaseResponse<NewsDto>(msg, true, 200 ,dto);
         }
     }
 }

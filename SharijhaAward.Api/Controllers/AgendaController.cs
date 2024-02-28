@@ -114,11 +114,10 @@ namespace SharijhaAward.Api.Controllers
                 pageSize = perPage
             });
 
-            if (response.statusCode == 404)
-                return NotFound(new { response.message, response.statusCode, });
-            else if (response.statusCode == 200)
-            {
-                var totalCount = response.data!.Count;
+           
+             if (response.statusCode == 200)
+             {
+                var totalCount = response.totalItem;
                 var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
 
                 return Ok(new 
@@ -133,7 +132,8 @@ namespace SharijhaAward.Api.Controllers
                             last_page = page - 1,
                             total_row = totalCount,
                             per_page = perPage,
-                            totalPage
+                            totalPage,
+                            currentPageCount = response.data!.Count
                         }
                 });
             }

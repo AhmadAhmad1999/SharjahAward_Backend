@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
                     ? "There is No News"
                     : "لا يوجد أخبار";
 
-                return new BaseResponse<List<NewsListVM>>(msg, false, 404);
+                return new BaseResponse<List<NewsListVM>>(msg, true, 200);
             }
             List<NewsListVM> newsListVm = new List<NewsListVM>();
 

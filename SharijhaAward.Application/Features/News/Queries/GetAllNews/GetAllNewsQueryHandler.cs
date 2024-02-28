@@ -34,7 +34,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
                     ? "There is No News"
                     : "لا يوجد أخبار";
 
-                return new BaseResponse<List<NewsListVM>>(msg, false, 404);
+                return new BaseResponse<List<NewsListVM>>(msg, true, 200);
             }
             List<NewsListVM> newsListVm = new List<NewsListVM>();
 
@@ -63,8 +63,8 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
                 ? "The News Retrieved Success"
                 : "تم إسترجاع الأخبار بنجاح";
 
-
-            return new BaseResponse<List<NewsListVM>>(msg, false, 200, Data);
+            int count =  _newsRepository.ListAllAsync().Result.Count();
+            return new BaseResponse<List<NewsListVM>>(msg, false, 200, Data, count);
         }
     }
 }

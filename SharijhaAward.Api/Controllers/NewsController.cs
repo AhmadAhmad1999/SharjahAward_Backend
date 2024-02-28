@@ -143,15 +143,7 @@ namespace SharijhaAward.Api.Controllers
                 pageSize = pageSize
             });
            
-            
-            if(dto.statusCode == 404)
-            {
-                return NotFound(new
-                {
-                    dto.statusCode
-                });
-            }
-            int totalCount = dto.data.Count;
+            int totalCount = dto.totalItem;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
             return Ok(
                 new
@@ -165,7 +157,8 @@ namespace SharijhaAward.Api.Controllers
                         last_page = page - 1,
                         total_row = totalCount,
                         per_page = pageSize,
-                        totalPage = totalPage
+                        totalPage,
+                        currentPageCount= dto.data!.Count
                     }
 
                 });
@@ -184,34 +177,27 @@ namespace SharijhaAward.Api.Controllers
             //get data from mediator
             var dto = await _mediator.Send(new GetNewsByCycleIdQuery()
             {
-                lang = headerValue,
+                lang = headerValue!,
                 page = page,
                 pageSize = pageSize,
                 CycleId = CycleId
                 
             });
-            int totalCount = dto.data.Count;
+            int totalCount = dto.totalItem;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
 
-            if (dto.statusCode == 404)
-            {
-                return NotFound(new
-                {
-                    dto.statusCode
-                });
-            }
             return Ok(
                 new
                 {
-                    dto.data,
-                    dto.statusCode,
+                    dto,
                     pagination =
                     new
                     {
                         current_page = page,
                         last_page = totalPage,
                         total_row = totalCount,
-                        per_page = pageSize
+                        per_page = pageSize,
+                        currentPageCount= dto.data!.Count
                     }
 
                 });

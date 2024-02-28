@@ -14,7 +14,7 @@ namespace SharijhaAward.Api.Controllers
         {
             _mediator = mediator;
         }
-
+  
         [HttpGet(Name = "GetAllRoles")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

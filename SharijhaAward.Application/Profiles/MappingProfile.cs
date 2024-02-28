@@ -72,6 +72,9 @@ using SharijhaAward.Domain.Entities.AgendaModel;
 using SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
+using SharijhaAward.Domain.Entities.CycleConditionModel;
+using SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycleCondition;
+using SharijhaAward.Application.Features.CycleConditions.Commands.UpdateCycleCondition;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -103,15 +106,15 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GroupInvitee, DeleteGroupInviteeCommand>().ReverseMap();
             CreateMap<GroupInvitee, UpdateGroupInviteeCommand>().ReverseMap();
             CreateMap<GroupInvitee, GroupInviteeListVM>()
-                .ForMember(x => x.StudentNamesAsString, x => x.MapFrom(y => y.StudentNames.Select(z => z.StudentName))).ReverseMap();
+                .ForMember(x => x.StudentNamesAsString, x => x.MapFrom(y => y.StudentNames!.Select(z => z.StudentName))).ReverseMap();
             CreateMap<GroupInviteeListVM, GroupInvitee>();
             CreateMap<GroupInvitee, GroupInviteeVM>()
-                .ForMember(x => x.StudentNamesAsString, x => x.MapFrom(y => y.StudentNames.Select(z => z.StudentName))).ReverseMap();
+                .ForMember(x => x.StudentNamesAsString, x => x.MapFrom(y => y.StudentNames!.Select(z => z.StudentName))).ReverseMap();
             CreateMap<GroupInviteeVM, GroupInvitee>();
             CreateMap<GroupInvitee, ConfirmAttendanceGroupQuery>();
             CreateMap<GroupInvitee, GroupDto>().ReverseMap();
             CreateMap<GroupInvitee, GroupExportVM>()
-                .ForMember(x => x.StudentNames, x => x.MapFrom(y => y.StudentNames.Select(z => z.StudentName))).ReverseMap();
+                .ForMember(x => x.StudentNames, x => x.MapFrom(y => y.StudentNames!.Select(z => z.StudentName))).ReverseMap();
             CreateMap<Student, GroupInviteeStudentsDto>().ReverseMap();
            
 
@@ -158,6 +161,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Agenda, CreateAgendaDto>().ReverseMap();
             CreateMap<Agenda, AgendaDto>().ReverseMap();
             CreateMap<Agenda, AgendaListVm>().ReverseMap();
+
+            CreateMap<CycleCondition, CreateCycleConditionCommand>().ReverseMap();
+            CreateMap<CycleCondition, UpdateCycleConditionCommand>().ReverseMap();
+            CreateMap<CycleCondition, CycleDto>().ReverseMap();
+            CreateMap<CycleCondition, CycleListVM>().ReverseMap();
 
             //
             // Dynamic Attribute..

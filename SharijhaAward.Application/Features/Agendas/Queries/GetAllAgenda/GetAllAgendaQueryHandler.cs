@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
                     ? "There is no Agendas"
                     : "لا يوجد أجندة";
 
-                return new BaseResponse<List<AgendaListVm>>(msg, false, 404);
+                return new BaseResponse<List<AgendaListVm>>(msg, true, 200);
             }
             else
             {
@@ -57,8 +57,8 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
                 msg = request.lang == "en"
                     ? "Agendas Retrived Succsessfully"
                     : "تم إسترجاع الأجندة بنجاح";
-
-                return new BaseResponse<List<AgendaListVm>>(msg, true, 200, data);
+                int count = _agendaRepository.ListAllAsync().Result.Count();
+                return new BaseResponse<List<AgendaListVm>>(msg, true, 200, data,count);
             }
         }
     }

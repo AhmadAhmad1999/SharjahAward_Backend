@@ -106,7 +106,7 @@ namespace SharijhaAward.Api.Controllers
                     dto.statusCode
                 });
             }
-            int totalCount = dto.data.Count;
+            int totalCount = dto.totalItem;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
             return Ok(
                new

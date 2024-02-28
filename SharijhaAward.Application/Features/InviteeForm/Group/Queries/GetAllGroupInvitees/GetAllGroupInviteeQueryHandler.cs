@@ -28,14 +28,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
 
             if (request.name != null)
             {
-                 AllGroupInvitees = request.pageSize == -1 || request.page == 0
-                   ? _groupInviteeRepository.WhereThenInclude(g => g.Name.ToLower().Contains(request.name.ToLower()), g => g.StudentNames!).ToList()
-                   : _groupInviteeRepository
-                   .WhereThenInclude(g => g.Name.ToLower()
-                   .Contains(request.name!.ToLower()), g => g.StudentNames!)
-                   .Skip((request.page - 1) * request.pageSize)
-                   .Take(request.pageSize)
-                   .ToList();
+
+                var allDataWithoutPagenation = _groupInviteeRepository.WhereThenInclude(g => g.Name.ToLower().Contains(request.name.ToLower()), g => g.StudentNames!).ToList();
+                AllGroupInvitees = request.pageSize == -1 || request.page == 0
+                    ? allDataWithoutPagenation
+                    : allDataWithoutPagenation
+                      .Skip((request.page - 1) * request.pageSize)
+                      .Take(request.pageSize)
+                      .ToList();
             }
             else
             {
@@ -50,8 +50,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
 
             }
             var data =  _mapper.Map<List<GroupInviteeListVM>>(AllGroupInvitees);
-            var allitem = await _groupInviteeRepository.ListAllAsync();
-            return new BaseResponse<List<GroupInviteeListVM>>("Retrive Succssfully",true,200,data,allitem.Count);
+            var count =  _groupInviteeRepository.ListAllAsync().Result.Count();
+            return new BaseResponse<List<GroupInviteeListVM>>("Retrive Succssfully",true,200,data,count);
         }
     }
 }
