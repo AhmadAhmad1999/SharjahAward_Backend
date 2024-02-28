@@ -69,7 +69,6 @@ namespace SharijhaAward.Api.Controllers
                 new
                 {
                     data = dto,
-                    message = "Retrieved successfully.",
                     status = true,
                 });
 
@@ -84,7 +83,6 @@ namespace SharijhaAward.Api.Controllers
                 new
                 {
                     data = dataPerPage,
-                    message = "Retrieved successfully.",
                     status = true,
                     pagination =
                     new
@@ -116,7 +114,6 @@ namespace SharijhaAward.Api.Controllers
                 new 
                 {
                     data = category,
-                    message = "Retrieved successfully."
                 });
         }
 

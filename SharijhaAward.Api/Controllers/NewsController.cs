@@ -122,7 +122,6 @@ namespace SharijhaAward.Api.Controllers
                 return Ok(
                     new 
                     { 
-                        response.message,
                         response.statusCode,
                         response.data
 
@@ -149,7 +148,6 @@ namespace SharijhaAward.Api.Controllers
             {
                 return NotFound(new
                 {
-                    dto.message,
                     dto.statusCode
                 });
             }
@@ -159,7 +157,6 @@ namespace SharijhaAward.Api.Controllers
                 new
                 {
                     dto.data,
-                    dto.message,
                     dto.statusCode,
                     pagination =
                     new
@@ -200,15 +197,13 @@ namespace SharijhaAward.Api.Controllers
             {
                 return NotFound(new
                 {
-                    dto.message,
                     dto.statusCode
                 });
             }
             return Ok(
                 new
                 {
-                    data = dto.data,
-                    dto.message,
+                    dto.data,
                     dto.statusCode,
                     pagination =
                     new

@@ -101,7 +101,6 @@ namespace SharijhaAward.Api.Controllers
                 new
                 {
                      response.data,
-                     response.message,
                      response.statusCode,
                     pagination =
                     new

@@ -101,7 +101,6 @@ namespace SharijhaAward.Api.Controllers
                 new
                 { 
                     data = response,
-                    message = "تم إسترجاع السؤال بنجاح"
                 });
         }
 
@@ -126,7 +125,6 @@ namespace SharijhaAward.Api.Controllers
             {
                 return NotFound(new
                 {
-                    response.message,
                     response.statusCode,
                     response.success
                 });
@@ -140,7 +138,6 @@ namespace SharijhaAward.Api.Controllers
                 new
                 {
                         response.data,
-                        response.message,
                         response.statusCode,
                         pagination =
                         new

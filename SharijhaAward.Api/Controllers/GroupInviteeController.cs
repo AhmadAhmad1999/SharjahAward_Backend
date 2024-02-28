@@ -164,8 +164,7 @@ namespace SharijhaAward.Api.Controllers
             return Ok(
                 new
                 {
-                     response.data,
-                    response.message,
+                    response.data,
                     response.statusCode,
                     pagination =
                     new

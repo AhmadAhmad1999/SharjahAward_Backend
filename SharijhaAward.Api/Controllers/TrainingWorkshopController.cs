@@ -98,7 +98,6 @@ namespace SharijhaAward.Api.Controllers
                 new
                 {
                     data = respons,
-                    message = "تم استرجاع الدورة التدريبية بنجاح"
                 });
         }
         [HttpGet(Name="GetAllTrainingWorkshops")]
@@ -120,7 +119,6 @@ namespace SharijhaAward.Api.Controllers
                 new
                 {
                     data = dto,
-                    message = "تم استرجاع الدورات التدريبية بنجاح",
                     status = true,
                 });
 
@@ -135,7 +133,6 @@ namespace SharijhaAward.Api.Controllers
                 new
                 {
                     data = dataPerPage,
-                    message = "تم استرجاع الدورات التدريبية بنجاح",
                     status = true,
                     pagination =
                     new
