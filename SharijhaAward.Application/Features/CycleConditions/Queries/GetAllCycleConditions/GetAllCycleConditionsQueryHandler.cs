@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
             {
                 var data = _mapper.Map<List<CycleConditionListVM>>(allCycleCondition);
 
-                return new BaseResponse<List<CycleConditionListVM>>("NoContent", true, 204, data);
+                return new BaseResponse<List<CycleConditionListVM>>("", true, 200, data);
             }
             List<CycleConditionListVM> cycleConditionsList = new List<CycleConditionListVM>();
             for (int i = 0; i < allCycleCondition.Count; i++)

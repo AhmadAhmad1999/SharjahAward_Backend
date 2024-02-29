@@ -1,10 +1,11 @@
-﻿using SharijhaAward.Domain.Entities.CategoryModel;
+﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.Common;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Domain.Entities.TrainingManualModel; 
 
-public class TrainingManual : AuditInformation<User> {
+public class TrainingManual : AuditableEntity {
     public Guid Id { get; set; }
     // arabic title of the Training Manual
     public string ArabicTitle { get; set; } = string.Empty;

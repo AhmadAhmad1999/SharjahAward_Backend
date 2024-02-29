@@ -76,6 +76,11 @@ using SharijhaAward.Domain.Entities.CycleConditionModel;
 using SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Commands.UpdateCycleCondition;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
+using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
+using SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateTermAndCondition;
+using SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateTermAndCondition;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermAndConditionById;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -167,6 +172,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CycleCondition, UpdateCycleConditionCommand>().ReverseMap();
             CreateMap<CycleCondition, CycleDto>().ReverseMap();
             CreateMap<CycleCondition, CycleListVM>().ReverseMap();
+
+            CreateMap<TermAndCondition, CreateTermAndConditionCommand>().ReverseMap();
+            CreateMap<TermAndCondition, UpdateTermAndConditionCommand>().ReverseMap();
+            CreateMap<TermAndCondition, TermAndConditionDto>().ReverseMap();
+            CreateMap<TermAndCondition, TermAndConditionListVM>().ReverseMap();
 
             //
             // Dynamic Attribute..

@@ -1,48 +1,30 @@
-﻿using Aspose.Pdf.Operators;
-using MediatR;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycleCondition;
-using SharijhaAward.Application.Features.CycleConditions.Commands.DeleteCycleCondition;
-using SharijhaAward.Application.Features.CycleConditions.Commands.UpdateCycleCondition;
-using SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycleConditions;
-using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionById;
+using SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateTermAndCondition;
+using SharijhaAward.Application.Features.TermsAndConditions.Commands.DeleteTermAndCondition;
+using SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateTermAndCondition;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermAndConditionById;
 
 namespace SharijhaAward.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CycleConditionController : ControllerBase
+    public class TermsAndConditionsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public CycleConditionController(IMediator mediator)
+        public TermsAndConditionsController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        [HttpPost(Name ="AddCycleCondition")]
-        public async Task<ActionResult> AddCycleCondition(CreateCycleConditionCommand command)
+        [HttpPost(Name= "AddTermAndCondition")]
+        public async Task<ActionResult> AddTermAndCondition(CreateTermAndConditionCommand command)
         {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
-
-            command.lang = headerValue!;
-
-            var response = await _mediator.Send(command);
-
-            return response.statusCode switch
-            {
-                404 => NotFound(response),
-                200 => Ok(response),
-                _ => BadRequest(response)
-            };
-           
-        }
-        [HttpPut(Name="UpdateCycleCondition")]
-        public async Task<ActionResult> UpdateCycleCondition(UpdateCycleConditionCommand command)
-        {
+            //get Language from header
             var headerValue = HttpContext.Request.Headers["lang"];
             if (headerValue.IsNullOrEmpty())
                 headerValue = "";
@@ -58,37 +40,18 @@ namespace SharijhaAward.Api.Controllers
             };
 
         }
-        [HttpDelete(Name = "DeleteCycleCondition")]
-        public async Task<ActionResult> DeleteCycleCondition(Guid Id)
+        [HttpDelete(Name = "DeleteTermAndCondition")]
+        public async Task<ActionResult> DeleteTermAndCondition(Guid Id)
         {
+            // get Language from header
             var headerValue = HttpContext.Request.Headers["lang"];
             if (headerValue.IsNullOrEmpty())
                 headerValue = "";
 
-            var response = await _mediator.Send(new DeleteCycleConditionCommand()
+            var response = await _mediator.Send(new DeleteTermAndConditionCommand()
             {
                 Id = Id,
-                lang =headerValue!
-            });
-
-            return response.statusCode switch
-            {
-                404 => NotFound(response),
-                200 => Ok(response),
-                _ => BadRequest(response)
-            };
-        }
-        [HttpGet("{Id}", Name = "GetCycleConditionById")]
-        public async Task<ActionResult> GetCycleConditionById(Guid Id)
-        {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
-
-            var response = await _mediator.Send(new GetCycleConditionByIdQuery()
-            {
-                Id = Id,
-                lang = headerValue!
+                lang= headerValue!,
             });
 
             return response.statusCode switch
@@ -99,19 +62,62 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet(Name="GetAllCycleCondition")] 
-        public async Task<ActionResult> GetAllCycleCondition(int page, int perPage)
+        [HttpPut(Name="UpdateTermAndCondition")]
+        public async Task<ActionResult> UpdateTermAndCondition(UpdateTermAndConditionCommand command)
         {
+            // get Language from header
             var headerValue = HttpContext.Request.Headers["lang"];
             if (headerValue.IsNullOrEmpty())
                 headerValue = "";
 
-            perPage = perPage == 0 ? 10 : perPage;
-            var response = await _mediator.Send(new GetAllCycleConditionsQuery()
+            command.lang=headerValue!;
+
+            var response = await _mediator.Send(command);
+
+            return response.statusCode switch
             {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("{Id}",Name="GetTermAndCondition")]
+        public async Task<ActionResult> GetTermAndCondition(Guid Id)
+        {
+            // get Language from header
+            var headerValue = HttpContext.Request.Headers["lang"];
+            if (headerValue.IsNullOrEmpty())
+                headerValue = "";
+
+            var response = await _mediator.Send(new GetTermAndConditionByIdQuery()
+            {
+                Id = Id,
                 lang = headerValue!,
+            });
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet(Name="GetAllTermsAndConditions")]
+        public async Task<ActionResult> GetAllTermsAndConditions(int page , int perPage)
+        {
+            // get Language from header
+            var headerValue = HttpContext.Request.Headers["lang"];
+            if (headerValue.IsNullOrEmpty())
+                headerValue = "";
+            perPage = perPage == 0 ? 10 : perPage;
+
+            var response = await _mediator.Send(new GetAllTermAndConditionQuery()
+            {
                 page = page,
-                pageSize = perPage
+                pageSize =  perPage ,
+                lang = headerValue!,
             });
 
             return response.statusCode switch
@@ -129,10 +135,10 @@ namespace SharijhaAward.Api.Controllers
                         per_page = perPage,
                         currentPageCount = response.data!.Count
                     }
+                    
                 }),
                 _ => BadRequest(response)
-            } ;
-
+            };
         }
     }
 }

@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTra
             var workShops = await _trainingWorkshopRepository.ListAllAsync();
             if (workShops.Count == 0)
             {
-                throw new OpenQA.Selenium.NotFoundException("Training Workshop is Empty");
+                return _mapper.Map<List<TrainingWorkshopListVm>>(workShops);
             }
             List<TrainingWorkshopListVm> trainingWorkshops = new List<TrainingWorkshopListVm>();
             for(int i = 0 ; i < workShops.Count ; i++)

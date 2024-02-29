@@ -28,36 +28,29 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
                 ? await _newsRepository.ListAllAsync()
                 : await _newsRepository.GetPagedReponseAsync(request.page, request.pageSize);
             string msg;
-            if(newsList.Count== 0)
+            var Data = _mapper.Map<List<NewsListVM>>(newsList);
+
+            if (newsList.Count== 0)
             {
                 msg = request.lang == "en"
                     ? "There is No News"
                     : "لا يوجد أخبار";
 
-                return new BaseResponse<List<NewsListVM>>(msg, true, 200);
+                return new BaseResponse<List<NewsListVM>>(msg, true, 200, Data);
             }
-            List<NewsListVM> newsListVm = new List<NewsListVM>();
+            
 
-            for(int i = 0; i< newsList.Count; i++)
+            for(int i = 0; i< Data.Count; i++)
             {
-                NewsListVM newsVM = new NewsListVM();
-                newsVM.Id = newsList[i].Id;
-                newsVM.ArabicTitle = newsList[i].ArabicTitle;
-                newsVM.ArabicDescription = newsList[i].ArabicDescription;
-                newsVM.EnglishTitle = newsList[i].EnglishTitle;
-                newsVM.EnglishDescription = newsList[i].EnglishDescription;
-                newsVM.CycleId = newsList[i].CycleId;
-                newsVM.Image = newsList[i].Image;
-                newsVM.Title = request.lang == "en"
-                    ? newsList[i].EnglishTitle
-                    : newsList[i].ArabicTitle;
+                Data[i].Title = request.lang == "en"
+                    ? Data[i].EnglishTitle
+                    : Data[i].ArabicTitle;
 
-                newsVM.Description = request.lang == "en"
-                    ? newsList[i].EnglishDescription!
-                    : newsList[i].ArabicDescription!;
-                newsListVm.Add(newsVM);
+                Data[i].Description = request.lang == "en"
+                    ? Data[i].EnglishDescription!
+                    : Data[i].ArabicDescription!;
             }
-            var Data = _mapper.Map<List<NewsListVM>>(newsListVm);
+            
 
             msg = request.lang == "en"
                 ? "The News Retrieved Success"

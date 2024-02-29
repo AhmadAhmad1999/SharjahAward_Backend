@@ -77,7 +77,7 @@ public class Category : AuditableEntity
     
     
     // navigation to TermsAndConditions
-    public virtual List<TermsAndConditions> TermsAndConditions { get; set; } = new();
+    public virtual List<TermAndCondition> TermsAndConditions { get; set; } = new();
     
     
     // navigation property to the Training Manual

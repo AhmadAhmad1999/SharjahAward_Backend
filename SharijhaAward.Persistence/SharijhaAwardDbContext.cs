@@ -21,6 +21,7 @@ using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 using SharijhaAward.Domain.Entities.FAQModel;
 using SharijhaAward.Domain.Entities.NewsModel;
+using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -61,6 +62,7 @@ namespace SharijhaAward.Persistence
         public DbSet<DynamicAttributeValue> DynamicAttributeValues { get; set; }
         public DbSet<StaticAttribute> StaticAttributes { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<TermAndCondition> TermsAndConditions {  get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -90,6 +92,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<DynamicAttributeSection>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<DynamicAttributeValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<TermAndCondition>().HasQueryFilter(p => !p.isDeleted);
 
 
             modelBuilder.Entity<User>().ToTable("users");

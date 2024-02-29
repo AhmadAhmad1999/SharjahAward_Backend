@@ -109,7 +109,10 @@ namespace SharijhaAward.Api.Controllers
                 headerValue = "";
 
             //get data from mediator
-            var dto = await _mediator.Send(new GetAllTrainingWorkshopsQuery() { lang = headerValue });
+            var dto = await _mediator.Send(new GetAllTrainingWorkshopsQuery()
+            {
+                lang = headerValue!
+            });
 
             // Pagenation
             if (perPage == 0)
