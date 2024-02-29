@@ -154,10 +154,9 @@ namespace SharijhaAward.Api.Controllers
                     new
                     {
                         current_page = page,
-                        last_page = page - 1,
+                        last_page = totalPage,
                         total_row = totalCount,
                         per_page = pageSize,
-                        totalPage,
                         currentPageCount= dto.data!.Count
                     }
 
