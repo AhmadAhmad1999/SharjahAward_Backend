@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute
 {
-    public class CreateDynamicAttributeCommand : IRequest<BaseResponse<CreateDynamicAttributeCommandResponse>>
+    public class CreateDynamicAttributeCommand : IRequest<BaseResponse<CreateDynamicAttributeResponse>>
     {
         public string Key { get; set; } = null!;
         public string ArabicLabel { get; set; } = null!;
@@ -23,6 +23,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
         public bool LinkedToAnotherAttribute { get; set; } = false;
         public int AttributeDataTypeId { get; set; }
         public int DynamicAttributeSectionId { get; set; }
+        public List<string>? Values { get; set; }
         public CreateGeneralValidation? GeneralValidationObject { get; set; }
         public List<CreateDependencyValidation>? DependencyValidations { get; set; }
         public string? lang { get; set; }

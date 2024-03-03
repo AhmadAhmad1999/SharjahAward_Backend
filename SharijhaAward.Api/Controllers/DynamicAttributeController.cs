@@ -6,6 +6,9 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.Chang
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.UpdateDynamicAttribute;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllAttributeOperations;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllAttributeTablesNames;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDataTypes;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
@@ -42,7 +45,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            BaseResponse<CreateDynamicAttributeCommandResponse>? Response = await _Mediator.Send(CreateDynamicAttributeCommand);
+            BaseResponse<CreateDynamicAttributeResponse>? Response = await _Mediator.Send(CreateDynamicAttributeCommand);
 
             return Response.statusCode switch
             {
@@ -111,7 +114,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllDynamicAttribute(int SectionId, int Page = 0, int PerPage = 10)
+        public async Task<IActionResult> GetAllDynamicAttribute(int SectionId, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -129,19 +132,7 @@ namespace SharijhaAward.Api.Controllers
             return Response.statusCode switch
             {
                 404 => NotFound(Response),
-                200 => Ok(new
-                {
-                    Response,
-                    pagination = 
-                        new {
-                            current_page = Page,
-                            last_page = Page - 1,
-                            total_row = Response.totalItem,
-                            per_page = PerPage,
-                            totalPage = (int)Math.Ceiling((decimal)Response.totalItem / PerPage),
-                            currentPageCount = Response.data!.Count()
-                        }
-                }),
+                200 => Ok(Response),
                 _ => BadRequest(Response)
             };
         }
@@ -190,6 +181,93 @@ namespace SharijhaAward.Api.Controllers
             {
                 Id = Id,
                 lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllAttributeTablesNames")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllAttributeTablesNames(int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllAttributeTablesNamesListVM>> Response = await _Mediator.Send(new GetAllAttributeTablesNamesQuery()
+            {
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllDataTypes")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllDataTypes(int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllDataTypesListVM>> Response = await _Mediator.Send(new GetAllDataTypesQuery()
+            {
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllAttributeOperations")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllAttributeOperations(int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllAttributeOperationsListVM>> Response = await _Mediator.Send(new GetAllAttributeOperationsQuery()
+            {
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage
             });
 
             return Response.statusCode switch

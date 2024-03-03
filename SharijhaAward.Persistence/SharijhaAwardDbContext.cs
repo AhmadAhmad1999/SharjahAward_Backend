@@ -63,6 +63,8 @@ namespace SharijhaAward.Persistence
         public DbSet<StaticAttribute> StaticAttributes { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<TermAndCondition> TermsAndConditions {  get; set; }
+        public DbSet<DynamicAttributePattern> DynamicAttributePatterns {  get; set; }
+        public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues {  get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -93,7 +95,207 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<DynamicAttributeValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<TermAndCondition>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributePattern>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributePatternValue>().HasQueryFilter(p => !p.isDeleted);
 
+            modelBuilder.Entity<AttributeTableName>()
+                .HasData(new AttributeTableName()
+                {
+                    Id = 1,
+                    Name = "SubCategory",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                });
+
+            modelBuilder.Entity<AttributeDataType>()
+                .HasData(new AttributeDataType()
+                {
+                    Id = 1,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Text"
+                }, new AttributeDataType()
+                {
+                    Id = 2,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Email"
+                }, new AttributeDataType()
+                {
+                    Id = 3,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Image"
+                }, new AttributeDataType()
+                {
+                    Id = 4,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "File"
+                }, new AttributeDataType()
+                {
+                    Id = 5,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Phone Number"
+                }, new AttributeDataType()
+                {
+                    Id = 6,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Phone Number"
+                }, new AttributeDataType()
+                {
+                    Id = 7,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Number"
+                }, new AttributeDataType()
+                {
+                    Id = 8,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Date"
+                }, new AttributeDataType()
+                {
+                    Id = 9,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Single Select List"
+                }, new AttributeDataType()
+                {
+                    Id = 10,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Multi Select List"
+                });
+
+            modelBuilder.Entity<AttributeOperation>()
+                .HasData(new AttributeOperation()
+                {
+                    Id = 1,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    OperationAsString = ">"
+                }, new AttributeOperation()
+                {
+                    Id = 2,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    OperationAsString = ">="
+                }, new AttributeOperation()
+                {
+                    Id = 3,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    OperationAsString = "<"
+                }, new AttributeOperation()
+                {
+                    Id = 4,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    OperationAsString = "<="
+                }, new AttributeOperation()
+                {
+                    Id = 5,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    OperationAsString = "="
+                }, new AttributeOperation()
+                {
+                    Id = 6,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    OperationAsString = "!="
+                }, new AttributeOperation()
+                {
+                    Id = 7,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    OperationAsString = "is Empty"
+                }, new AttributeOperation()
+                {
+                    Id = 8,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    OperationAsString = "is not Empty"
+                });
 
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<Subscriber>().ToTable("subscribers");

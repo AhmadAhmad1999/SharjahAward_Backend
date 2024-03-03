@@ -1,0 +1,100 @@
+﻿using AutoMapper;
+using MediatR;
+using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+
+namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById
+{
+    public class GetDynamicAttributeByIdHandler : IRequestHandler<GetDynamicAttributeByIdQuery,
+        BaseResponse<GetDynamicAttributeByIdDto>>
+    {
+        private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
+        private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
+        private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
+        private readonly IAsyncRepository<Dependency> _DependencyRepository;
+        private readonly IAsyncRepository<DependencyValidation> _DependencyValidationRepository;
+        private readonly IMapper _Mapper;
+
+        public GetDynamicAttributeByIdHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
+            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
+            IAsyncRepository<GeneralValidation> GeneralValidationRepository,
+            IAsyncRepository<Dependency> DependencyRepository,
+            IAsyncRepository<DependencyValidation> DependencyValidationRepository,
+            IMapper Mapper)
+        {
+            _DynamicAttributeRepository = DynamicAttributeRepository;
+            _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
+            _GeneralValidationRepository = GeneralValidationRepository;
+            _DependencyRepository = DependencyRepository;
+            _DependencyValidationRepository = DependencyValidationRepository;
+            _Mapper = Mapper;
+        }
+
+        public async Task<BaseResponse<GetDynamicAttributeByIdDto>> Handle(GetDynamicAttributeByIdQuery Request, 
+            CancellationToken cancellationToken)
+        {
+            string ResponseMessage = string.Empty;
+
+            string Language = !string.IsNullOrEmpty(Request.lang)
+                ? Request.lang.ToLower() : "ar";
+
+            GetDynamicAttributeByIdDto DynamicAttribute = _Mapper.Map<GetDynamicAttributeByIdDto>
+                (await _DynamicAttributeRepository.IncludeThenFirstOrDefaultAsync(x => x.AttributeDataType!, 
+                    x => x.Id == Request.Id));
+
+            if (DynamicAttribute == null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Field not found"
+                    : "هذا الحقل غير موجود";
+
+                return new BaseResponse<GetDynamicAttributeByIdDto>(ResponseMessage, false, 404);
+            }
+
+            DynamicAttribute.GeneralValidation = _Mapper.Map<GeneralValidationDto>(await _GeneralValidationRepository
+                .FirstOrDefaultAsync(x => x.DynamicAttributeId == Request.Id));
+
+            IQueryable<IGrouping<int, Dependency>> Dependencies = _DependencyRepository
+                .WhereThenInclude(x => x.MainDynamicAttributeId == Request.Id, x => x.AttributeOperation!, 
+                    x => x.DynamicAttribute, x => x.StaticAttribute)
+                .GroupBy(x => x.DependencyGroupId);
+
+            foreach (IGrouping<int, Dependency> Dependency in Dependencies)
+            {
+                DependencyValidation? DependencyValidation = await _DependencyValidationRepository
+                    .IncludeThenFirstOrDefaultAsync(x => x.AttributeOperation!, x => x.DependencyGroupId == Dependency.Key);
+
+                if (DependencyValidation != null)
+                {
+                    DependencyValidationDto? DependencyValidationDto = new DependencyValidationDto()
+                    {
+                        Id = DependencyValidation.Id,
+                        Value = DependencyValidation.Value,
+                        Operation = DependencyValidation.AttributeOperation!.OperationAsString,
+                        Dependencies = Dependency.Select(x => new DependencyDto()
+                        {
+                            Id = x.Id,
+                            Operation = x.AttributeOperation!.OperationAsString,
+                            Value = x.Value,
+                            AttributeLabel = x.StaticAttributeId != null 
+                                ? (Request.lang == "en"
+                                    ? x.StaticAttribute!.EnglishLabel
+                                    : x.StaticAttribute!.ArabicLabel)
+                                : (Request.lang == "en"
+                                    ? x.DynamicAttribute!.EnglishLabel
+                                    : x.DynamicAttribute!.ArabicLabel)
+                        }).ToList()
+                    };
+
+                    DynamicAttribute.ListOfDependencies.Add(DependencyValidationDto);
+                }
+            }
+
+            DynamicAttribute.Values = _Mapper.Map<List<DynamicAttributeListValueListVM>>(_DynamicAttributeListValueRepository
+                .Where(x => x.DynamicAttributeId == Request.Id));
+
+            return new BaseResponse<GetDynamicAttributeByIdDto>(ResponseMessage, true, 200, DynamicAttribute);
+        }
+    }
+}

@@ -82,6 +82,10 @@ using SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateTermA
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermAndConditionById;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
 using SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDataTypes;
+using SharijhaAward.Application.Features.DynamicAttributeListValues.Commands.CreateDynamicAttributeListValue;
+using SharijhaAward.Application.Features.DynamicAttributeListValues.Commands.UpdateDynamicAttributeListValue;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllAttributeOperations;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -193,11 +197,22 @@ namespace SharijhaAward.Application.Profiles
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
             CreateMap<DynamicAttribute, UpdateDynamicAttributeCommand>().ReverseMap();
+            CreateMap<DynamicAttributeListValue, UpdateDynamicAttributeListValueCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
             CreateMap<DynamicAttribute, DynamicAttributeListVM>().ReverseMap();
             CreateMap<DynamicAttribute, GetDynamicAttributeByIdDto>().ReverseMap();
+            CreateMap<AttributeDataType, GetAllDataTypesListVM>().ReverseMap();
+            CreateMap<GeneralValidation, GeneralValidationDto>()
+                .ForMember(x => x.AttributeOperation, x => x.MapFrom(y => y.AttributeOperation.OperationAsString));
+            CreateMap<GeneralValidationDto, GeneralValidation>();
+            CreateMap<DynamicAttributeListValue, CreateDynamicAttributeListValueCommand>();
+            CreateMap<AttributeOperation, GetAllAttributeOperationsListVM>()
+                .ForMember(x => x.Name, x => x.MapFrom(y => y.OperationAsString));
+            CreateMap<GetAllAttributeOperationsListVM, AttributeOperation>()
+                .ForMember(x => x.OperationAsString, x => x.MapFrom(y => y.Name));
+            CreateMap<DynamicAttributeListValue, DynamicAttributeListValueListVM>().ReverseMap();
         }
     }
 }
