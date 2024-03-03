@@ -36,8 +36,9 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
                     data[i].Description = request.lang == "en" ? data[i].EnglishDescription : data[i].ArabicDescription;
                 }
             }
-            var count = await  _termAndConditionRepository.GetCountAsync(t => true);
-            return new BaseResponse<List<TermAndConditionListVM>>("", true, 200, data,count);    
+            var count = await  _termAndConditionRepository.GetCountAsync(t => t.isDeleted == false);
+            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            return new BaseResponse<List<TermAndConditionListVM>>("", true, 200, data, pagination);    
             
         }
     }

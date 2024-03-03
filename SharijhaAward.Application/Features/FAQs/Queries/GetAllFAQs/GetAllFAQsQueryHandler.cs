@@ -26,46 +26,25 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs
         public async Task<BaseResponse<List<FAQListVm>>> Handle(GetAllFAQsQuery request, CancellationToken cancellationToken)
         {
             var FAQs = await _faqRepository.GetPagedReponseAsync(request.page,request.pageSize);
-            string msg;
-            if(FAQs.Count == 0)
+            var data = _mapper.Map<List<FAQListVm>>(FAQs);
+
+            if(data.Count != 0)
             {
-                msg = request.lang == "en"
-                    ? "There is no FAQs"
-                    : "لا يوجد أسألة شائعة";
-
-                return new BaseResponse<List<FAQListVm>>(msg, false, 404);
-            }
-
-            List<FAQListVm> questions = new List<FAQListVm>();
-
-            for(int i = 0; i< FAQs.Count; i++)
-            {
-                FAQListVm listVm = new FAQListVm()
+                for (int i = 0; i < data.Count; i++)
                 {
-                    Id = FAQs[i].Id,
-                    ArabicAnswer = FAQs[i].ArabicAnswer,
-                    ArabicQuestion = FAQs[i].ArabicQuestion,
-                    EnglishAnswer = FAQs[i].EnglishAnswer,
-                    EnglishQuestion = FAQs[i].EnglishQuestion,
+                    data[i].Answer = request.lang == "en"
+                    ? data[i].EnglishAnswer
+                    : data[i].ArabicAnswer;
 
-                    Answer = request.lang == "en"
-                    ? FAQs[i].EnglishAnswer
-                    : FAQs[i].ArabicAnswer,
-
-                    Question = request.lang == "en"
-                    ? FAQs[i].EnglishQuestion
-                    : FAQs[i].ArabicQuestion,
-                };
-                questions.Add(listVm);
-
+                    data[i].Question = request.lang == "en"
+                     ? data[i].EnglishQuestion
+                     : data[i].ArabicQuestion;
+                }
             }
-            var data = _mapper.Map<List<FAQListVm>>(questions);
-
-            msg = request.lang == "en"
-                   ? "Retrieved Successfully"
-                   : "تم الإسترجاع بنجاح";
-
-            return new BaseResponse<List<FAQListVm>>(msg, true, 200,data);
+            int count = _faqRepository.GetCount(f => f.isDeleted == false);
+            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            
+            return new BaseResponse<List<FAQListVm>>("", true, 200, data, pagination);
         }
     }
 }

@@ -22,136 +22,97 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name = "CreateFAQ")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult> CreateFAQ(CreateFAQCommand command)
+        public async Task<IActionResult> CreateFAQ(CreateFAQCommand command)
         {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            command.lang = language!;
             var response = await _mediator.Send(command);
-            return Ok(
-                new
-                {
-                    data = response,
-                    message = "تم إنشاء سؤال شائع بنجاح"
-                });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
 
         [HttpPut(Name = "UpdateFAQ")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult> UpdateFAQ([FromBody] UpdateFAQCommand command)
+        public async Task<IActionResult> UpdateFAQ([FromBody] UpdateFAQCommand command)
         {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+            command.lang = language!;
+
             var response = await _mediator.Send(command);
-            return Ok(
-               new
-               {
-                   data = response,
-                   message = "تم تعديل السؤال الشائع بنجاح"
-               });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
 
         [HttpDelete(Name = "DeleteFAQ")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult> DeleteFAQ(Guid Id)
-        { 
-            var response = await _mediator.Send(new DeleteFAQCommand() {Id=Id });
-            return Ok(
-               new
-               {
-                   data = response,
-                   message = "تم حذف السؤال الشائع بنجاح"
-               });
+        public async Task<IActionResult> DeleteFAQ(Guid Id)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new DeleteFAQCommand()
+            {
+                Id = Id,
+                lang = language!
+            });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
 
         [HttpGet("{Id}",Name="GetFAQById")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetFAQById(Guid Id)
+        public async Task<IActionResult> GetFAQById(Guid Id)
         {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetFAQByIdQuery()
+            var response = await _mediator.Send(new DeleteFAQCommand()
             {
                 Id = Id,
-                lang = headerValue!
+                lang = language!
             });
-
-            return Ok(
-                new
-                { 
-                    data = response,
-                });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
 
         [HttpGet(Name ="GetAllFAQs")]
-        public async Task<ActionResult> GetAllFAQs(int perPage, int page)
+        public async Task<IActionResult> GetAllFAQs(int perPage = 10, int page = 1)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var language = HttpContext.Request.Headers["lang"];
 
             //get data from mediator
             var response = await _mediator.Send(new GetAllFAQsQuery() 
             {
-                lang = headerValue!,
+                lang = language!,
                 page = page,
                 pageSize = perPage
                 
             });
 
-            if(response.statusCode == 404)
+            return response.statusCode switch
             {
-                return NotFound(new
-                {
-                    response.statusCode,
-                    response.success
-                });
-            }
-            else if(response.statusCode == 200)
-            {
-                var totalCount = response.data!.Count;
-                var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
-
-                return Ok(
-                new
-                {
-                        response.data,
-                        response.statusCode,
-                        pagination =
-                        new
-                        {
-                            current_page = page,
-                            last_page = totalPage,
-                            total_row = totalCount,
-                            per_page = perPage,
-                            totalPage = totalPage
-                        }
-                });
-            }
-            else return BadRequest(new { response });
-            
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
     }
 }

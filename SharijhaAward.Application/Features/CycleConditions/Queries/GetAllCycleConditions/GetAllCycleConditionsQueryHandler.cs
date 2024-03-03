@@ -26,28 +26,16 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
         public async Task<BaseResponse<List<CycleConditionListVM>>> Handle(GetAllCycleConditionsQuery request, CancellationToken cancellationToken)
         {
             var allCycleCondition = await _cycleConditionRepository.GetPagedReponseAsync(request.page, request.pageSize);
-            if(allCycleCondition.Count == 0)
-            {
-                var data = _mapper.Map<List<CycleConditionListVM>>(allCycleCondition);
+            var data = _mapper.Map<List<CycleConditionListVM>>(allCycleCondition);
 
-                return new BaseResponse<List<CycleConditionListVM>>("", true, 200, data);
-            }
-            List<CycleConditionListVM> cycleConditionsList = new List<CycleConditionListVM>();
-            for (int i = 0; i < allCycleCondition.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                CycleConditionListVM cycleCondition =new CycleConditionListVM()
-                {
-                    Id = allCycleCondition[i].Id,
-                    CreatedAt = allCycleCondition[i].CreatedAt,
-                    Title = request.lang == "en" 
-                    ? allCycleCondition[i].EnglishTitle
-                    : allCycleCondition[i].ArabicTitle
-                };
-                cycleConditionsList.Add(cycleCondition);
+                data[i].Title = request.lang.ToLower() == "en"
+                    ? data[i].ArabicTitle : data[i].EnglishTitle;
             }
             int count = _cycleConditionRepository.ListAllAsync().Result.Count();
-
-            return new BaseResponse<List<CycleConditionListVM>>("", true, 200, cycleConditionsList,count);
+            Pagination pagination = new Pagination(request.page,request.pageSize,count);
+            return new BaseResponse<List<CycleConditionListVM>>("", true, 200, data, pagination);
         }
     }
 }

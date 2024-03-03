@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.News.Commands.CreateNews
 {
-    public class CreateNewsCommand : IRequest<BaseResponse<NewsDto>>
+    public class CreateNewsCommand : IRequest<BaseResponse<object>>
     {
         public string lang { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;

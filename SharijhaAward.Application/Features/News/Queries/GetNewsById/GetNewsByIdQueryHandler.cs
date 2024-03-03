@@ -35,26 +35,12 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsById
 
                 return new BaseResponse<NewsVM>(msg, false, 404);
             }
-            msg = request.lang == "en"
-                    ? "The News Retrieved Success"
-                    : "تم استرجاع الخبر بنجاح";
+            var data = _mapper.Map<NewsVM>(news);
 
-            NewsVM newsVM = new NewsVM()
-            {
-                Id=news.Id,
-                ArabicTitle = news.ArabicTitle,
-                ArabicDescription = news.ArabicDescription,
-                CycleId = news.CycleId,
-                EnglishTitle = news.EnglishTitle,
-                EnglishDescription = news.EnglishDescription,
-                Image=news.Image,
-                Title = request.lang=="en" ? news.EnglishTitle : news.ArabicTitle, 
-                Description = request.lang == "en" ? news.EnglishDescription : news.ArabicDescription
-            };
-            var Data = _mapper.Map<NewsVM>(newsVM);
+            data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle;
+            data.Description = request.lang == "en" ? data.EnglishDescription! : data.ArabicDescription!;
 
-            return new BaseResponse<NewsVM>(msg, true, 200, Data);
-
+            return new BaseResponse<NewsVM>("", true, 200, data);
         }
     }
 }

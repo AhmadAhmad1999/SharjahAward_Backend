@@ -22,14 +22,12 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name= "AddTermAndCondition")]
-        public async Task<ActionResult> AddTermAndCondition(CreateTermAndConditionCommand command)
+        public async Task<IActionResult> AddTermAndCondition(CreateTermAndConditionCommand command)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
-
-            command.lang = headerValue!;
+            var Language = HttpContext.Request.Headers["lang"];
+      
+            command.lang = Language!;
             var response = await _mediator.Send(command);
 
             return response.statusCode switch
@@ -41,17 +39,15 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpDelete(Name = "DeleteTermAndCondition")]
-        public async Task<ActionResult> DeleteTermAndCondition(Guid Id)
+        public async Task<IActionResult> DeleteTermAndCondition(Guid Id)
         {
-            // get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+             //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new DeleteTermAndConditionCommand()
             {
                 Id = Id,
-                lang= headerValue!,
+                lang= Language!,
             });
 
             return response.statusCode switch
@@ -63,14 +59,12 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPut(Name="UpdateTermAndCondition")]
-        public async Task<ActionResult> UpdateTermAndCondition(UpdateTermAndConditionCommand command)
+        public async Task<IActionResult> UpdateTermAndCondition(UpdateTermAndConditionCommand command)
         {
-            // get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
 
-            command.lang=headerValue!;
+            command.lang= Language!;
 
             var response = await _mediator.Send(command);
 
@@ -83,17 +77,15 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("{Id}",Name="GetTermAndCondition")]
-        public async Task<ActionResult> GetTermAndCondition(Guid Id)
+        public async Task<IActionResult> GetTermAndCondition(Guid Id)
         {
-            // get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new GetTermAndConditionByIdQuery()
             {
                 Id = Id,
-                lang = headerValue!,
+                lang = Language!,
             });
 
             return response.statusCode switch
@@ -105,38 +97,23 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name="GetAllTermsAndConditions")]
-        public async Task<ActionResult> GetAllTermsAndConditions(int page , int perPage)
+        public async Task<IActionResult> GetAllTermsAndConditions(int page = 1 , int perPage = 10)
         {
-            // get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
-            perPage = perPage == 0 ? 10 : perPage;
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+         
 
             var response = await _mediator.Send(new GetAllTermAndConditionQuery()
             {
                 page = page,
                 pageSize =  perPage ,
-                lang = headerValue!,
+                lang = Language!,
             });
 
             return response.statusCode switch
             {
                
-                200 => Ok(new
-                {
-                    response,
-                    pagination =
-                    new
-                    {
-                        current_page = page,
-                        last_page = (int)Math.Ceiling((decimal)response.totalItem / perPage),
-                        total_row = response.totalItem,
-                        per_page = perPage,
-                        currentPageCount = response.data!.Count
-                    }
-                    
-                }),
+                200 => Ok(response),
                 _ => BadRequest(response)
             };
         }

@@ -26,141 +26,89 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> AddNews(CreateNewsCommand command)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var language = HttpContext.Request.Headers["lang"];
 
-            command.lang = headerValue!;
-
+            command.lang = language!;
             var response = await _mediator.Send(command);
-            if(response.statusCode == 404)
-                return NotFound(
-                    new
-                    {
-                         response.success,
-                         response.message,
-                         response.statusCode
-                         
-                    });
-
-            return Ok(
-                new
-                {
-                    response.data,
-                    response.success,
-                    response.message,
-                    response.statusCode
-                });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
         [HttpDelete(Name="DeleteNews")]
         public async Task<IActionResult> DeleteNews(Guid Id)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new DeleteNewsCommand()
             {
                 Id = Id,
-                lang = headerValue!
+                lang = language!
             });
 
-            if(response.statusCode==404)
-                return NotFound(new { response.message });
-            else
-                return Ok(new { response.message });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
         [HttpPut(Name = "UpdateNews")]
         public async Task<IActionResult> UpdateNews(UpdateNewsCommand command)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var language = HttpContext.Request.Headers["lang"];
 
-            command.lang = headerValue!;
+            command.lang = language!;
             var response = await _mediator.Send(command);
-
-            if (response.statusCode == 404)
-                return NotFound(
-                    new 
-                    { 
-                        response.message,
-                        response.statusCode
-                    });
-            else
-                return Ok(
-                    new 
-                    { 
-                        response.message,
-                        response.statusCode
-                    });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
         [HttpGet("{Id}",Name="GetNewsById")]
         public async Task<IActionResult> GetNewsById(Guid Id)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetNewsByIdQuery()
+            var response = await _mediator.Send(new DeleteNewsCommand()
             {
                 Id = Id,
-                lang = headerValue!
+                lang = language!
             });
 
-            if (response.statusCode == 404)
-                return NotFound(
-                    new 
-                    { 
-                        response.message,
-                        response.statusCode
-                    });
-            else
-                return Ok(
-                    new 
-                    { 
-                        response.statusCode,
-                        response.data
-
-                    });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
         [HttpGet(Name ="GetAllNews")]
-        public async Task<IActionResult> GetAllNews(int page , int perPage)
+        public async Task<IActionResult> GetAllNews(int page = 1 , int perPage = 10)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
-            int pageSize = perPage == 0 ? 10 : perPage;
-            //get data from mediator
-            var dto = await _mediator.Send(new GetAllNewsQuery()
-            {
-                lang = headerValue!,
-                page = page,
-                pageSize = pageSize
-            });
-           
-            int totalCount = dto.totalItem;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
-            return Ok(
-                new
-                {
-                    dto.data,
-                    dto.statusCode,
-                    pagination =
-                    new
-                    {
-                        current_page = page,
-                        last_page = totalPage,
-                        total_row = totalCount,
-                        per_page = pageSize,
-                        currentPageCount= dto.data!.Count
-                    }
+            var language = HttpContext.Request.Headers["lang"];
 
-                });
+            var response = await _mediator.Send(new GetAllNewsQuery()
+            {
+                page = page,
+                pageSize = perPage,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
 
         [HttpGet("GetNewsByCycleId",Name = "GetNewsByCycleId")]

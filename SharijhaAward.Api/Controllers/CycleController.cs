@@ -19,110 +19,78 @@ namespace SharijhaAward.Api.Controllers
             _mediator = mediator;
         }
         [HttpPost(Name = "CreateCycle")]
-        public async Task<ActionResult> CreateCycle([FromBody] CreateCycleCommand command)
+        public async Task<IActionResult> CreateCycle([FromBody] CreateCycleCommand command)
         {
-            var rsponse = await _mediator.Send(command);
-            return StatusCode(201, new { data = rsponse } );
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            command.lang = Language!;
+            var response = await _mediator.Send(command);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
         [HttpPut(Name="UpdateCycle")]
-        public async Task<ActionResult> UpdateCycle(UpdateCycleCommand command)
+        public async Task<IActionResult> UpdateCycle(UpdateCycleCommand command)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var Language = HttpContext.Request.Headers["lang"];
 
-            command.lang = headerValue!;
+            command.lang = Language!;
 
             var response =await _mediator.Send(command);
-            if(response.statusCode == 404)
+            return response.statusCode switch
             {
-                return NotFound(
-                    new
-                    {
-                        response.message,
-                        response.statusCode
-                    });
-            }
-            return Ok(
-                new
-                {
-                    response.message,
-                    response.statusCode
-                });
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
 
-        [HttpGet("{id}",Name="GetCycleById")]
-        public async Task<ActionResult> GetCycleById(Guid Id)
+        [HttpGet("{Id}",Name="GetCycleById")]
+        public async Task<IActionResult> GetCycleById(Guid Id)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var Language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(
                 new GetCycleByIdQuery
                 {
                     Id = Id,
-                    lang = headerValue!
+                    lang = Language!
                 });
-            if(response.statusCode == 404)
+            return response.statusCode switch
             {
-                return NotFound(
-                    new
-                    { 
-                        response.statusCode 
-                    });
-            }
-            return Ok(
-                new
-                {
-                    response.statusCode
-                });
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
 
         [HttpGet(Name ="GetAllCycle")]
-        public async Task<IActionResult> GetAllCycle(int page , int perPage)
+        public async Task<IActionResult> GetAllCycle(int page = 1 , int perPage = 10)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
-            int pageSize = perPage == 0 ? 10 : perPage;
+            var Language = HttpContext.Request.Headers["lang"];
+
             //get data from mediator
-            var dto = await _mediator.Send(new GetAllCyclesQuery()
+            var response = await _mediator.Send(new GetAllCyclesQuery()
             {
-                lang = headerValue!,
+                lang = Language!,
                 page = page,
-                pageSize = pageSize
+                pageSize = perPage
             });
-            
 
-            if (dto.statusCode == 404)
+            return response.statusCode switch
             {
-                return NotFound(new
-                {
-                    dto.message,
-                    dto.statusCode
-                });
-            }
-            int totalCount = dto.totalItem;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
-            return Ok(
-               new
-               {
-                   data = dto.data,
-                   dto.statusCode,
-                   pagination =
-                   new
-                   {
-                       current_page = page,
-                       last_page = totalPage,
-                       total_row = totalCount,
-                       per_page = pageSize
-                   }
-
-               });
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
     }
 }

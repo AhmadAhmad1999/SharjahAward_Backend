@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.FAQs.Commands.UpdateFAQ
 {
-    public class UpdateFAQCommand : IRequest<Unit>
+    public class UpdateFAQCommand : IRequest<BaseResponse<object>>
     {
         public Guid Id { get; set; }
         public string ArabicQuestion { get; set; } = string.Empty;
@@ -15,5 +16,6 @@ namespace SharijhaAward.Application.Features.FAQs.Commands.UpdateFAQ
         public string ArabicAnswer { get; set; } = string.Empty;
         public string EnglishAnswer { get; set; } = string.Empty;
         public Guid CategoryId { get; set; }
+        public string lang { get; set; } = string.Empty;
     }
 }

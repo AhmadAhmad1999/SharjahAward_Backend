@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.Authentication;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;

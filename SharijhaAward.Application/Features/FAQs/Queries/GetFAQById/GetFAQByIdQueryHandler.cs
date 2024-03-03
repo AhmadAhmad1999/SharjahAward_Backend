@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.FAQModel;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.FAQs.Queries.GetFAQById
 {
-    public class GetFAQByIdQueryHandler : IRequestHandler<GetFAQByIdQuery, FAQDto>
+    public class GetFAQByIdQueryHandler : IRequestHandler<GetFAQByIdQuery, BaseResponse<FAQDto>>
     {
         private readonly IAsyncRepository<FrequentlyAskedQuestion> _faqRepository;
         private readonly IMapper _mapper;
@@ -21,31 +22,31 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetFAQById
             _mapper = mapper;
         }
 
-        public async Task<FAQDto> Handle(GetFAQByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<FAQDto>> Handle(GetFAQByIdQuery request, CancellationToken cancellationToken)
         {
             var faq = await _faqRepository.GetByIdAsync(request.Id);
+            string msg;
+
             if (faq == null)
             {
-                throw new OpenQA.Selenium.NotFoundException("Frequently Asked Question Not Found");
+                msg = request.lang == "en"
+                    ? "The FAQ Not Found"
+                    : "السؤال الشائع غير موجود";
+
+                return new BaseResponse<FAQDto>(msg, false, 404);
             }
+            var data = _mapper.Map<FAQDto>(faq);
 
-            FAQDto fAQDto = new FAQDto()
-            {
-                ArabicQuestion = faq.ArabicQuestion,
-                EnglishQuestion = faq.EnglishQuestion,
-                ArabicAnswer = faq.ArabicAnswer,
-                EnglishAnswer = faq.EnglishAnswer,
+            data.Answer = request.lang == "en"
+               ? data.EnglishAnswer
+               : data.ArabicAnswer;
 
-                Answer = request.lang == "en"
-                ? faq.EnglishAnswer
-                : faq.ArabicAnswer,
 
-                Question = request.lang == "en"
-                ? faq.EnglishQuestion
-                : faq.ArabicQuestion,
-            };
+            data.Question = request.lang == "en"
+                ? data.EnglishQuestion
+                : data.ArabicQuestion;
 
-            return _mapper.Map<FAQDto>(fAQDto);
+            return new BaseResponse<FAQDto>("", true, 200,data);
         }
     }
 }

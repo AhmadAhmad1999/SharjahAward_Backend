@@ -27,6 +27,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
         public async Task<BaseResponse<CycleConditionDto>> Handle(GetCycleConditionByIdQuery request, CancellationToken cancellationToken)
         {
             var cycleCondition = await _cycleConditionRepository.GetByIdAsync(request.Id); 
+            
             if (cycleCondition == null)
             {
                 var msg = request.lang == "en"
@@ -35,15 +36,11 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
 
                 return new BaseResponse<CycleConditionDto>("", false, 404);
             }
-            CycleConditionDto conditionDto = new CycleConditionDto()
-            {
-                CreatedAt = cycleCondition.CreatedAt,
-                Id = cycleCondition.Id,
-                Title = request.lang == "en" ? cycleCondition.EnglishTitle : cycleCondition.ArabicTitle
-            };
+            var data = _mapper.Map<CycleConditionDto>(cycleCondition);
 
-            return new BaseResponse<CycleConditionDto>("", true, 200, conditionDto);
-            
+            data.Title = request.lang == "en" ? cycleCondition.EnglishTitle : cycleCondition.ArabicTitle;
+        
+            return new BaseResponse<CycleConditionDto>("", true, 200, data);
         }
     }
 }

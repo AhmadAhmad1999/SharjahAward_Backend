@@ -2,6 +2,7 @@
 using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.Authentication.Login

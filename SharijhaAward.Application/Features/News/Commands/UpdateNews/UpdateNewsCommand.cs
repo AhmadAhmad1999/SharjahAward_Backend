@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
 {
-    public class UpdateNewsCommand : IRequest<BaseResponse<Domain.Entities.NewsModel.News>>
+    public class UpdateNewsCommand : IRequest<BaseResponse<object>>
     {
         public Guid Id { get; set; }
         public string? Image { get; set; }

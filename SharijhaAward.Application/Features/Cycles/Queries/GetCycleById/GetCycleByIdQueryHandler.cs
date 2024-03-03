@@ -25,7 +25,6 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetCycleById
 
         public async Task<BaseResponse<CycleDto>> Handle(GetCycleByIdQuery request, CancellationToken cancellationToken)
         {
-           
             var Cycle = await _cycleRepository.GetByIdAsync(request.Id);
             string msg;
            
@@ -39,11 +38,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetCycleById
             }
             var Data = _mapper.Map<CycleDto>(Cycle);
 
-            msg = request.lang == "en"
-                ? "The Cycle Retrive Successfully"
-                : "تم استرجاع الدورة بنجاح";
-
-            return new BaseResponse<CycleDto>(msg, true, 200, Data);
+            return new BaseResponse<CycleDto>("", true, 200, Data);
         }
     }
 }

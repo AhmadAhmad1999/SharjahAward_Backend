@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.CategoryConstants;
 using SharijhaAward.Domain.Constants.Common;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
 {
-    public class UpdateCategoryCommand : IRequest<Unit>
+    public class UpdateCategoryCommand : IRequest<BaseResponse<object>>
     {
         public Guid Id { get; set; }
         public string ArabicName { get; set; } = string.Empty;
@@ -28,5 +29,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
         public Status Status { get; set; } = Status.InActive;
         public bool RelatedToClasses { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
+        public string lang { get; set; } = string.Empty;
     }
 }

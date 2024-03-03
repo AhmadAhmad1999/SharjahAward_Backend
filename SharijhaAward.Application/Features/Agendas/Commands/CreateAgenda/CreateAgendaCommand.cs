@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
 {
-    public class CreateAgendaCommand : IRequest<BaseResponse<CreateAgendaDto>>
+    public class CreateAgendaCommand : IRequest<BaseResponse<object>>
     {
         public string lang { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.News.Commands.DeleteNews
 {
     public class DeleteNewsCommandHandler
-        : IRequestHandler<DeleteNewsCommand, BaseResponse<Domain.Entities.NewsModel.News>>
+        : IRequestHandler<DeleteNewsCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
        
@@ -21,18 +21,17 @@ namespace SharijhaAward.Application.Features.News.Commands.DeleteNews
             _newsRepository = newsRepository;
         }
 
-        public async Task<BaseResponse<Domain.Entities.NewsModel.News>> Handle(DeleteNewsCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(DeleteNewsCommand request, CancellationToken cancellationToken)
         {
-            string msg = "";
-
             var news = await _newsRepository.GetByIdAsync(request.Id);
+            string msg;
+
             if (news == null)
             {
-                
                 msg = request.lang == "en" 
                     ? "The News Not Found" 
                     : "الخبر غير موجود";
-                return new BaseResponse<Domain.Entities.NewsModel.News>(msg,false,404);
+                return new BaseResponse<object>(msg, false, 404);
             }
             await _newsRepository.DeleteAsync(news);
           
@@ -40,7 +39,7 @@ namespace SharijhaAward.Application.Features.News.Commands.DeleteNews
                   ? "The News has been Deleted"
                   :  "تم حذف الخبر بنجاح";
 
-            return new BaseResponse<Domain.Entities.NewsModel.News>(msg, true, 200);
+            return new BaseResponse<object>(msg, true, 200);
         }
     }
 }

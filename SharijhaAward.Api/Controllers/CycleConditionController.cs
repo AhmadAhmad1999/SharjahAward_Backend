@@ -24,11 +24,10 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost(Name ="AddCycleCondition")]
         public async Task<ActionResult> AddCycleCondition(CreateCycleConditionCommand command)
         {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
 
-            command.lang = headerValue!;
+            command.lang = language!;
 
             var response = await _mediator.Send(command);
 
@@ -43,11 +42,10 @@ namespace SharijhaAward.Api.Controllers
         [HttpPut(Name="UpdateCycleCondition")]
         public async Task<ActionResult> UpdateCycleCondition(UpdateCycleConditionCommand command)
         {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
 
-            command.lang = headerValue!;
+            command.lang = language!;
             var response = await _mediator.Send(command);
 
             return response.statusCode switch
@@ -61,14 +59,13 @@ namespace SharijhaAward.Api.Controllers
         [HttpDelete(Name = "DeleteCycleCondition")]
         public async Task<ActionResult> DeleteCycleCondition(Guid Id)
         {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new DeleteCycleConditionCommand()
             {
                 Id = Id,
-                lang =headerValue!
+                lang =language!
             });
 
             return response.statusCode switch
@@ -81,14 +78,13 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("{Id}", Name = "GetCycleConditionById")]
         public async Task<ActionResult> GetCycleConditionById(Guid Id)
         {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new GetCycleConditionByIdQuery()
             {
                 Id = Id,
-                lang = headerValue!
+                lang = language!
             });
 
             return response.statusCode switch
@@ -100,38 +96,24 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name="GetAllCycleCondition")] 
-        public async Task<ActionResult> GetAllCycleCondition(int page, int perPage)
+        public async Task<ActionResult> GetAllCycleCondition(int page = 1, int perPage = 10)
         {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
 
-            perPage = perPage == 0 ? 10 : perPage;
             var response = await _mediator.Send(new GetAllCycleConditionsQuery()
             {
-                lang = headerValue!,
+                lang = language!,
                 page = page,
                 pageSize = perPage
             });
 
             return response.statusCode switch
             {
-               
-                200 => Ok(new
-                {
-                    response,
-                    pagination =
-                    new
-                    {
-                        current_page = page,
-                        last_page = (int)Math.Ceiling((decimal)response.totalItem / perPage),
-                        total_row = response.totalItem,
-                        per_page = perPage,
-                        currentPageCount = response.data!.Count
-                    }
-                }),
+                200 => Ok(response),
+                400 => NotFound(response),
                 _ => BadRequest(response)
-            } ;
+            };
 
         }
     }

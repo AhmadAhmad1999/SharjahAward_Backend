@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.CategoryConstants;
 using SharijhaAward.Domain.Constants.Common;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
 {
-    public class CreateCategoryCommand : IRequest<Unit>
+    public class CreateCategoryCommand : IRequest<BaseResponse<object>>
     {
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
@@ -29,5 +30,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         public int ExpectedNumberOfWinners { get; set; }
         public Guid? ParentId { get; set; }
         public Guid CycleId { get; set; }
+        public string lang {  get; set; } = string.Empty;
     }
 }

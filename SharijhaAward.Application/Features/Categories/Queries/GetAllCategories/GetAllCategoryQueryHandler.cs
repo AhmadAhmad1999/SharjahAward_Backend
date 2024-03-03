@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
 {
     public class GetAllCategoryQueryHandler
-        : IRequestHandler<GetAllCategoryQuery, List<CategoryListVM>>
+        : IRequestHandler<GetAllCategoryQuery, BaseResponse<List<CategoryListVM>>>
     {
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IMapper _mapper;
@@ -21,34 +22,20 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
             _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
-        public async Task<List<CategoryListVM>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<CategoryListVM>>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
         {
-            var AllCategories = await _categoryRepository.ListAllAsync();
+            var categories = await _categoryRepository.GetPagedReponseAsync(request.page,request.pageSize);
 
-            List<CategoryListVM> categories = new List<CategoryListVM>();
+            var data = _mapper.Map<List<CategoryListVM>>(categories);
 
-            for (int i = 0; i < AllCategories.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                CategoryListVM categoryList = new CategoryListVM();
-
-                categoryList.Id = AllCategories[i].Id;
-                categoryList.Name = request.lang == "ar" ? AllCategories[i].ArabicName : AllCategories[i].EnglishName;
-                categoryList.Description = request.lang == "ar" ? AllCategories[i].ArabicDescription : AllCategories[i].EnglishDescription;
-                categoryList.Icon = AllCategories[i].Icon;
-                categoryList.WinningScore = AllCategories[i].WinningScore;
-                categoryList.SubscriberPortalClosingDate = AllCategories[i].SubscriberPortalClosingDate;
-                categoryList.FinalArbitrationStartDate = AllCategories[i].FinalArbitrationStartDate;
-                categoryList.FinalArbitrationEndDate = AllCategories[i].FinalArbitrationEndDate;
-                categoryList.CategoryClassification = AllCategories[i].CategoryClassification;
-                categoryList.InitialArbitrationStartDate = AllCategories[i].InitialArbitrationStartDate;
-                categoryList.InitialArbitrationEndDate = AllCategories[i].InitialArbitrationEndDate;
-                categoryList.FinalArbitrationQualificationMark = AllCategories[i].FinalArbitrationQualificationMark;
-                categoryList.Status = AllCategories[i].Status;
-                categoryList.RelatedToClasses = AllCategories[i].RelatedToClasses;
-                categoryList.ExpectedNumberOfWinners = AllCategories[i].ExpectedNumberOfWinners;
-                categories.Add(categoryList);
+                data[i].Name = request.lang == "ar" ? data[i].ArabicName : data[i].EnglishName;
+                data[i].Description = request.lang == "ar" ? data[i].ArabicDescription : data[i].EnglishDescription;
             }
-            return _mapper.Map<List<CategoryListVM>>(categories);
+            int count = _categoryRepository.GetCount(c=>c.isDeleted == false);
+            Pagination pagination = new Pagination(request.page,request.pageSize,count);
+            return new BaseResponse<List<CategoryListVM>>("", true, 200,data, pagination);
         }
     }
 }

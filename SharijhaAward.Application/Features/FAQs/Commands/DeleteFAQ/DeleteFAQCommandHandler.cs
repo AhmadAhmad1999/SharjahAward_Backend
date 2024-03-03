@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.FAQModel;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.FAQs.Commands.DeleteFAQ
 {
     public class DeleteFAQCommandHandler
-        : IRequestHandler<DeleteFAQCommand, Unit>
+        : IRequestHandler<DeleteFAQCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<FrequentlyAskedQuestion> _faqRepository;
       
@@ -22,18 +23,26 @@ namespace SharijhaAward.Application.Features.FAQs.Commands.DeleteFAQ
            
         }
 
-        public async Task<Unit> Handle(DeleteFAQCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(DeleteFAQCommand request, CancellationToken cancellationToken)
         {
-            var faqToDelete = await  _faqRepository.GetByIdAsync(request.Id);
+            var faqToDelete = await _faqRepository.GetByIdAsync(request.Id);
+            string msg;
+
             if (faqToDelete == null) 
             {
-                throw new OpenQA.Selenium.NotFoundException("Frequently Asked Question Not Found");
-            }
+                msg = request.lang == "en"
+                    ? "FAQ Not Found"
+                    : "السؤال الشائع غير موجود";
 
+                return new BaseResponse<object>(msg,false,404);
+            }
             await _faqRepository.DeleteAsync(faqToDelete);
 
-            return Unit.Value;
+            msg = request.lang == "en"
+                   ? "FAQ has been Deleted"
+                   : "تم حذف السؤال الشائع";
 
+            return new BaseResponse<object>(msg, false, 404);
         }
     }
 }

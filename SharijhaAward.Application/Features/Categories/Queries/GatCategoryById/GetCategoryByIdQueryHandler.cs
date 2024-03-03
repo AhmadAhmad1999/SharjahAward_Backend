@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.Categories.Queries.GatCategoryById
 {
     public class GetCategoryByIdQueryHandler 
-        : IRequestHandler<GetCategoryByIdQuery , CategoryDto>
+        : IRequestHandler<GetCategoryByIdQuery , BaseResponse<CategoryDto>>
     {
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IMapper _mapper;
@@ -22,34 +23,24 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GatCategoryById
             _mapper = mapper;
         }
 
-        public async Task<CategoryDto> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<CategoryDto>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
             var category = await _categoryRepository.GetByIdAsync(request.Id);
 
             if (category == null)
             {
-                throw new OpenQA.Selenium.NotFoundException("Not Found Category");
-            }
-            CategoryDto categoryDto = new CategoryDto() 
-            {
-                  Id = category.Id,
-                  Name=request.lang=="ar"? category.ArabicName: category.EnglishName,
-                  Description=request.lang=="ar" ? category.ArabicDescription : category.EnglishDescription,
-                  Icon=category.Icon,
-                  CategoryClassification=category.CategoryClassification,
-                  ExpectedNumberOfWinners=category.ExpectedNumberOfWinners,
-                  FinalArbitrationEndDate = category.FinalArbitrationEndDate,
-                  FinalArbitrationQualificationMark= category.FinalArbitrationQualificationMark,
-                  FinalArbitrationStartDate=category.FinalArbitrationStartDate,
-                  InitialArbitrationEndDate=category.InitialArbitrationEndDate,
-                  InitialArbitrationStartDate= category.InitialArbitrationStartDate,
-                  RelatedToClasses=category.RelatedToClasses,
-                  Status=category.Status,
-                  SubscriberPortalClosingDate=category.SubscriberPortalClosingDate,
-                  WinningScore = category.WinningScore
-            };
-            return _mapper.Map<CategoryDto>(categoryDto);
+                string msg = request.lang == "en"
+                    ? "Category Not Found"
+                    : "الفئة غير موجودة";
 
+                return new BaseResponse<CategoryDto>(msg, false, 404);
+            }
+            var data = _mapper.Map<CategoryDto>(category);
+
+            data.Name = request.lang == "ar" ? category.ArabicName : category.EnglishName;
+            data.Description = request.lang == "ar" ? category.ArabicDescription : category.EnglishDescription;
+
+            return new BaseResponse<CategoryDto>("",true,200,data);
         }
     }
 }

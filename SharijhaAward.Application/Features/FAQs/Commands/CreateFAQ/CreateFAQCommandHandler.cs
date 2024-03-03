@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.FAQModel;
 using System;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.FAQs.Commands.CreateFAQ
 {
     public class CreateFAQCommandHandler 
-        :IRequestHandler<CreateFAQCommand, Unit>
+        :IRequestHandler<CreateFAQCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<FrequentlyAskedQuestion> _faQRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
@@ -29,21 +30,26 @@ namespace SharijhaAward.Application.Features.FAQs.Commands.CreateFAQ
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(CreateFAQCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CreateFAQCommand request, CancellationToken cancellationToken)
         {
             FrequentlyAskedQuestion faq = _mapper.Map<FrequentlyAskedQuestion>(request);
             Category category = await _categoryRepository.GetByIdAsync(faq.CategoryId);
+            string msg;
             if (category == null)
             {
-                throw new OpenQA.Selenium.NotFoundException("Category Not Found");
+                msg = request.lang.ToLower() == "en"
+                    ? "Category not Found"
+                    : "الفئة غير موجودة";
+
+                return new BaseResponse<object>(msg, false, 404);
             }
             await _faQRepository.AddAsync(faq);
 
-            category.FrequentlyAskedQuestions.Add(faq);
+            msg = request.lang == "en"
+                ? "FAQ has been Created"
+                : "تم إضافة السؤال الشائع";
 
-            await _categoryRepository.UpdateAsync(category);
-
-            return Unit.Value;
+            return new BaseResponse<object>(msg, true, 200);
          
         }
     }

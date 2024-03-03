@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
 {
     public class UpdateNewsCommandHandler
-        : IRequestHandler<UpdateNewsCommand, BaseResponse<Domain.Entities.NewsModel.News>>
+        : IRequestHandler<UpdateNewsCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
         private readonly IMapper _mapper;
@@ -23,18 +23,18 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<Domain.Entities.NewsModel.News>> Handle(UpdateNewsCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(UpdateNewsCommand request, CancellationToken cancellationToken)
         {
             var newsToUpdate = await _newsRepository.GetByIdAsync(request.Id);
            
-            string msg = "";
+            string msg;
             if (newsToUpdate == null)
             {
                 msg = request.lang == "en"
                     ? "The News is not Found"
                     : "الخبر غير موجود";
 
-                return new BaseResponse<Domain.Entities.NewsModel.News>(msg,false,404);
+                return new BaseResponse<object>(msg,false,404);
             }
             _mapper.Map(request,newsToUpdate,typeof(UpdateNewsCommand),typeof(Domain.Entities.NewsModel.News));
             
@@ -44,9 +44,7 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
                 ? "The news has been Updated"
                 : "تم تعديل الخبر بنجاح";
 
-          
-
-            return new BaseResponse<Domain.Entities.NewsModel.News>(msg, true, 200);
+            return new BaseResponse<object>(msg, true, 200);
         }
     }
 }

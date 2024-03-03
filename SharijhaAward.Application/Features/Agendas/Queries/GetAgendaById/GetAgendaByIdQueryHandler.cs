@@ -26,10 +26,10 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById
         public async Task<BaseResponse<AgendaDto>> Handle(GetAgendaByIdQuery request, CancellationToken cancellationToken)
         {
             var agenda = await _agendaRepository.GetByIdAsync(request.Id);
-            string msg;
+
             if(agenda == null)
             {
-                msg = request.lang == "en"
+                string msg = request.lang == "en"
                     ? "The Agenda is Not Found"
                     : "الأجندة غير موجودة";
 
@@ -40,12 +40,8 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById
                 var data = _mapper.Map<AgendaDto>(agenda);
 
                 data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle; 
-                    
-                msg = request.lang == "en"
-                ? "Agenda Retrived Succssfully"
-                : "تم إسترجاع الأجندة بنجاح";
 
-                return new BaseResponse<AgendaDto>(msg, true, 200, data);
+                return new BaseResponse<AgendaDto>("", true, 200, data);
             }
         }
     }

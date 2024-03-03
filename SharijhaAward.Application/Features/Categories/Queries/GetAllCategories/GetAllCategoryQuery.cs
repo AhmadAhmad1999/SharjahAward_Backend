@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
 {
-    public class GetAllCategoryQuery : IRequest<List<CategoryListVM>>
+    public class GetAllCategoryQuery : IRequest<BaseResponse<List<CategoryListVM>>>
     {
+        public int page {  get; set; }
+        public int pageSize { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

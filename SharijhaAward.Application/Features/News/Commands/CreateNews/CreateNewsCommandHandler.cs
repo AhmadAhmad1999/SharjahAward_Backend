@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.News.Commands.CreateNews
 {
     public class CreateNewsCommandHandler
-        : IRequestHandler<CreateNewsCommand , BaseResponse<NewsDto>>
+        : IRequestHandler<CreateNewsCommand , BaseResponse<object>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
@@ -26,10 +26,10 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<NewsDto>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
         {
             var cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
-            string msg = "";
+            string msg;
 
             if (cycle == null)
             {
@@ -37,31 +37,17 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
                   ?  "Cycle is not Found"
                   :  "الدورة غير موجودة";
 
-                return new BaseResponse<NewsDto>(msg, false, 404);
+                return new BaseResponse<object>(msg, false, 404);
             }
             var news = _mapper.Map<Domain.Entities.NewsModel.News>(request);
 
             await _newsRepository.AddAsync(news);
 
-
-            var newsDto = new NewsDto()
-            {
-                Id = news.Id,
-                ArabicTitle = news.ArabicTitle,
-                ArabicDescription = news.ArabicDescription,
-                EnglishTitle = news.EnglishTitle,
-                EnglishDescription = news.EnglishDescription,
-                CycleId = news.CycleId,
-                Image = news.Image,
-                Title = request.lang == "en" ? news.EnglishTitle : news.ArabicTitle,
-                Description = request.lang == "en" ? news.ArabicDescription :news.EnglishDescription
-            };
-             NewsDto dto = newsDto;
              msg = request.lang == "en"
                 ? "Created Succsess"
                 : "تم إنشاء الخبر بنجاح";
 
-             return new BaseResponse<NewsDto>(msg, true, 200 ,dto);
+             return new BaseResponse<object>(msg, true, 200);
         }
     }
 }

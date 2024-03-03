@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 {
@@ -24,40 +25,28 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 
         public async Task<BaseResponse<List<NewsListVM>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
-            var newsList = request.pageSize == -1 || request.page == 0
-                ? await _newsRepository.ListAllAsync()
-                : await _newsRepository.GetPagedReponseAsync(request.page, request.pageSize);
-            string msg;
-            var Data = _mapper.Map<List<NewsListVM>>(newsList);
-
-            if (newsList.Count== 0)
-            {
-                msg = request.lang == "en"
-                    ? "There is No News"
-                    : "لا يوجد أخبار";
-
-                return new BaseResponse<List<NewsListVM>>(msg, true, 200, Data);
-            }
+            var newsList = await _newsRepository.GetPagedReponseAsync(request.page, request.pageSize);
             
+            var data = _mapper.Map<List<NewsListVM>>(newsList);
 
-            for(int i = 0; i< Data.Count; i++)
+            if (data.Count != 0)
             {
-                Data[i].Title = request.lang == "en"
-                    ? Data[i].EnglishTitle
-                    : Data[i].ArabicTitle;
+                for (int i = 0; i < data.Count; i++)
+                {
+                    data[i].Title = request.lang == "en"
+                        ? data[i].EnglishTitle
+                        : data[i].ArabicTitle;
 
-                Data[i].Description = request.lang == "en"
-                    ? Data[i].EnglishDescription!
-                    : Data[i].ArabicDescription!;
+                    data[i].Description = request.lang == "en"
+                        ? data[i].EnglishDescription!
+                        : data[i].ArabicDescription!;
+                }
+
             }
-            
 
-            msg = request.lang == "en"
-                ? "The News Retrieved Success"
-                : "تم إسترجاع الأخبار بنجاح";
-
-            int count =  _newsRepository.ListAllAsync().Result.Count();
-            return new BaseResponse<List<NewsListVM>>(msg, false, 200, Data, count);
+            int count = _newsRepository.GetCount(n => n.isDeleted == false);
+            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            return new BaseResponse<List<NewsListVM>>("", false, 200, data, pagination);
         }
     }
 }

@@ -81,6 +81,7 @@ using SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateTermA
 using SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateTermAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermAndConditionById;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
+using SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -164,7 +165,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<News, NewsListVM>().ReverseMap();
 
             CreateMap<Agenda, CreateAgendaCommand>().ReverseMap();
-            CreateMap<Agenda, CreateAgendaDto>().ReverseMap();
+            CreateMap<Agenda, UpdateAgendaCommand>().ReverseMap();
             CreateMap<Agenda, AgendaDto>().ReverseMap();
             CreateMap<Agenda, AgendaListVm>().ReverseMap();
 

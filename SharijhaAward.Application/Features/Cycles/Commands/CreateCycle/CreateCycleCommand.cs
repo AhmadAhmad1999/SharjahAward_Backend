@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.Common;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
 {
-    public class CreateCycleCommand : IRequest<CreateCycleResponse>
+    public class CreateCycleCommand : IRequest<BaseResponse<object>>
     {
         public string Year { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;

@@ -1,7 +1,5 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda;
 using SharijhaAward.Application.Features.Agendas.Commands.DeleteAgenda;
 using SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda;
@@ -21,155 +19,103 @@ namespace SharijhaAward.Api.Controllers
             _mediator = mediator;
            
         }
+
         [HttpPost(Name = "AddAgenda")]
-        public async Task<ActionResult> AddAgenda(CreateAgendaCommand command)
+        public async Task<IActionResult> AddAgenda(CreateAgendaCommand command)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var language = HttpContext.Request.Headers["lang"];
 
-            command.lang = headerValue!;
+            command.lang = language!;
 
             var response = await _mediator.Send(command);
-            if (response.statusCode == 404)
+
+            return response.statusCode switch
             {
-                return NotFound(new
-                {
-                    response.message,
-                    response.statusCode,
-                    response.success
-                });
-            }
-            else if (response.statusCode == 200)
-            {
-                return Ok(new
-                {
-                    response.data,
-                    response.message,
-                    response.statusCode,
-                    response.success
-                });
-            }
-            else return BadRequest(new
-            {
-                response.message,
-                response.statusCode,
-            });
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+          
         }
 
         [HttpPut(Name="UpdateAgenda")]
-        public async Task<ActionResult> UpdateAgenda([FromBody] UpdateAgendaCommand command)
+        public async Task<IActionResult> UpdateAgenda([FromBody] UpdateAgendaCommand command)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var language = HttpContext.Request.Headers["lang"];
 
-            command.lang = headerValue!;
+            command.lang = language!;
             var response = await _mediator.Send(command);
 
-            if (response.statusCode == 404)
-                return NotFound(new { response.message, response.statusCode });
-            else if (response.statusCode == 200)
-                return Ok(new { response.message, response.statusCode });
-            else return BadRequest(new { response });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+           
         }
 
         [HttpDelete(Name="DeleteAgenda")]
-        public async Task<ActionResult> DeleteAgenda(Guid Id)
+        public async Task<IActionResult> DeleteAgenda(Guid Id)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new DeleteAgendaCommand()
             {
                 Id = Id,
-                lang = headerValue!
+                lang = language!
             });
-            if(response.statusCode==404)
-                return NotFound(new {response.message, response.statusCode});
-            else if(response.statusCode==200)
-                return Ok(new { response.message,response.statusCode});
-            else return BadRequest(new { response });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+           
         }
 
         [HttpGet(Name = "GetAllAgenda")]
-        public async Task<ActionResult> GetAllAgenda(int page, int perPage)
+        public async Task<IActionResult> GetAllAgenda(int page = 1, int perPage = 10)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
-
-            if (perPage == 0)
-                perPage = 10;
+            var Language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new GetAllAgendaQuery
             {
-                lang = headerValue!,
+                lang = Language!,
                 page = page,
-                pageSize = perPage
+                pageSize = perPage 
             });
 
-           
-             if (response.statusCode == 200)
-             {
-                var totalCount = response.totalItem;
-                var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
-
-                return Ok(new 
-                { 
-                    response.data, 
-                    response.statusCode,
-                    response.success,
-                    pagination =
-                        new
-                        {
-                            current_page = page,
-                            last_page = totalPage,
-                            total_row = totalCount,
-                            per_page = perPage,
-                            totalPage,
-                            currentPageCount = response.data!.Count
-                        }
-                });
-            }
-            else
-                return BadRequest(new { response });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
 
         }
         [HttpGet("{Id}", Name="GetAgendaById")]
-        public async Task<ActionResult> GetAgendaById(Guid Id)
+        public async Task<IActionResult> GetAgendaById(Guid Id)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var Language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new GetAgendaByIdQuery()
             {
                 Id = Id,
-                lang = headerValue!
+                lang = Language!
             }) ;
 
-
-            if (response.statusCode == 404)
-                return NotFound(new { response.message, response.statusCode, });
-            else if (response.statusCode == 200)
-                return Ok(new
-                {
-                    response.data,
-                    response.statusCode,
-                    response.success,
-                   
-               });
-            
-            else
-                return BadRequest(new { response });
-
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
 
         }
     }

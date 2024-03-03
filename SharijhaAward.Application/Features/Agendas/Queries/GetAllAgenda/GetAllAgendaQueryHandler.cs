@@ -26,40 +26,17 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
         public async Task<BaseResponse<List<AgendaListVm>>> Handle(GetAllAgendaQuery request, CancellationToken cancellationToken)
         {
             var agendas = await _agendaRepository.GetPagedReponseAsync(request.page, request.pageSize);
-            string msg;
-            if (agendas.Count == 0)
+            var data = _mapper.Map<List<AgendaListVm>>(agendas);
+         
+            for(int i=0; i < data.Count; i++)
             {
-                msg = request.lang == "en"
-                    ? "There is no Agendas"
-                    : "لا يوجد أجندة";
-
-                return new BaseResponse<List<AgendaListVm>>(msg, true, 200);
+                data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
             }
-            else
-            {
-                List<AgendaListVm> data = new List<AgendaListVm>();
-                for(int i = 0; i < agendas.Count; i++)
-                {
-                    AgendaListVm listVm = new AgendaListVm();
-                    listVm.Id = agendas[i].Id;
-                    listVm.Title = request.lang == "en" ? agendas[i].EnglishTitle : agendas[i].ArabicTitle;
-                    listVm.EnglishTitle = agendas[i].EnglishTitle;
-                    listVm.ArabicTitle = agendas[i].ArabicTitle;
-                    listVm.IsActive = agendas[i].IsActive;
-                    listVm.CycleId = agendas[i].CycleId;
-                    listVm.Date = agendas[i].Date;
-                    listVm.Icon = agendas[i].Icon;
-
-                    data.Add(listVm);
-                }
-                _mapper.Map<List<AgendaListVm>>(data);
-
-                msg = request.lang == "en"
-                    ? "Agendas Retrived Succsessfully"
-                    : "تم إسترجاع الأجندة بنجاح";
-                int count = _agendaRepository.ListAllAsync().Result.Count();
-                return new BaseResponse<List<AgendaListVm>>(msg, true, 200, data,count);
-            }
+            
+            int count = await _agendaRepository.GetCountAsync(a => a.isDeleted == false);
+            Pagination pagination = new Pagination(request.page,request.pageSize,count);
+            
+            return new BaseResponse<List<AgendaListVm>>("", true, 200, data, pagination);
         }
     }
 }
