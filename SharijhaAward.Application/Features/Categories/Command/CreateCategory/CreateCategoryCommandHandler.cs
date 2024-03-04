@@ -59,10 +59,10 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
             await _categoryRepository.AddAsync(category);
             
             msg = request.lang == "en"
-                ? "Cycle not Found"
-                : "الدورة غير موجودة";
+                ? "Created successfully"
+                : "تم إنشاء الفئة بنجاح";
 
-            return new BaseResponse<object>(msg, true, 200);
+            return new BaseResponse<object>(msg, true, 200, category.Id);
         }
     }
 }

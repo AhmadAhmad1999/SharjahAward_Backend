@@ -1,4 +1,6 @@
-﻿namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById
+﻿using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+
+namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById
 {
     public class GetDynamicAttributeByIdDto
     {
@@ -16,5 +18,8 @@
         public string? AttributeDataTypeName { get; set; }
         public int DynamicAttributeSectionId { get; set; }
         public string? DynamicAttributeSectionName { get; set; }
+        public GeneralValidationDto? GeneralValidation { get; set; }
+        public List<DependencyValidationDto> ListOfDependencies { get; set; } = new List<DependencyValidationDto>();
+        public List<DynamicAttributeListValueListVM>? Values { get; set; }
     }
 }

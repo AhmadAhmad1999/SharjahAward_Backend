@@ -7,12 +7,12 @@ using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId
 {
-    public class GetAllDynamicAttributesBySectionIdQueryHandler : IRequestHandler<GetAllDynamicAttributesBySectionIdQuery,
+    public class GetAllDynamicAttributesBySectionIdHandler : IRequestHandler<GetAllDynamicAttributesBySectionIdQuery,
         BaseResponse<List<DynamicAttributeListVM>>>
     {
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
 
-        public GetAllDynamicAttributesBySectionIdQueryHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository)
+        public GetAllDynamicAttributesBySectionIdHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
         }
@@ -39,8 +39,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                     Status = x.Status.ToString()
                 }).ToListAsync();
 
-            int TotalCount = await _DynamicAttributeRepository.GetCountAsync(x => x.DynamicAttributeSectionId == Request.SectionId);
-
             string ResponseMessage = string.Empty;
 
             if (DynamicAttributes.Count <= 0)
@@ -49,10 +47,16 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                     ? "There is no fields"
                     : "لا يوجد حقول";
 
-                return new BaseResponse<List<DynamicAttributeListVM>>(ResponseMessage, true, 204, DynamicAttributes, 0);
+                return new BaseResponse<List<DynamicAttributeListVM>>(ResponseMessage, true, 204);
             }
 
-            return new BaseResponse<List<DynamicAttributeListVM>>(ResponseMessage, true, 200, DynamicAttributes, TotalCount);
+            int TotalCount = await _DynamicAttributeRepository
+                .GetCountAsync(x => x.DynamicAttributeSectionId == Request.SectionId);
+
+            Pagination PaginationParameter = new Pagination(Request.page,
+                Request.pageSize, TotalCount);
+
+            return new BaseResponse<List<DynamicAttributeListVM>>(ResponseMessage, true, 200, DynamicAttributes, PaginationParameter);
         }
     }
 }

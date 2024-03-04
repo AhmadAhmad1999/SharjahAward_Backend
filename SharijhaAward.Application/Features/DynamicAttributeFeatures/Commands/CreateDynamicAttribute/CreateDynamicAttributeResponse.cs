@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute
 {
-    public class CreateDynamicAttributeCommandResponse : BaseResponse<object>
+    public class CreateDynamicAttributeResponse : BaseResponse<object>
     {
-        public CreateDynamicAttributeCommandResponse() : base() { }
+        public CreateDynamicAttributeResponse() : base() { }
         public CreateDynamicAttributeDto CreateDynamicAttributeDto { get; set; }
     }
 }

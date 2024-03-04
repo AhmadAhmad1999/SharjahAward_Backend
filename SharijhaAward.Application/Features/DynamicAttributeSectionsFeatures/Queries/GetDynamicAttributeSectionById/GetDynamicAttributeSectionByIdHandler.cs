@@ -16,14 +16,14 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetDynamicAttributeSectionById
 {
-    public class GetDynamicAttributeSectionByIdQueryHandler : IRequestHandler<GetDynamicAttributeSectionByIdQuery,
+    public class GetDynamicAttributeSectionByIdHandler : IRequestHandler<GetDynamicAttributeSectionByIdQuery,
         BaseResponse<GetDynamicAttributeSectionByIdDto>>
     {
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IMapper _Mapper;
 
-        public GetDynamicAttributeSectionByIdQueryHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
+        public GetDynamicAttributeSectionByIdHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IMapper Mapper)
         {

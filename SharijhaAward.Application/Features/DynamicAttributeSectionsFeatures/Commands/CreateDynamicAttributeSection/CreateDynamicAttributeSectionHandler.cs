@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection
 {
-    public class CreateDynamicAttributeSectionCommandHandler : IRequestHandler<CreateDynamicAttributeSectionCommand, 
-        BaseResponse<CreateDynamicAttributeSectionCommandResponse>>
+    public class CreateDynamicAttributeSectionHandler : IRequestHandler<CreateDynamicAttributeSectionCommand, 
+        BaseResponse<CreateDynamicAttributeSectionResponse>>
     {
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
         private readonly IAsyncRepository<AttributeTableName> _AttributeTableNameRepository;
-        public CreateDynamicAttributeSectionCommandHandler(IMapper Mapper,
+        public CreateDynamicAttributeSectionHandler(IMapper Mapper,
             IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<AttributeTableName> AttributeTableNameRepository)
         {
@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _AttributeTableNameRepository = AttributeTableNameRepository;
         }
-        public async Task<BaseResponse<CreateDynamicAttributeSectionCommandResponse>> Handle(CreateDynamicAttributeSectionCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<CreateDynamicAttributeSectionResponse>> Handle(CreateDynamicAttributeSectionCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
                   ? "Attribute data type is not Found"
                   : "نوع الحقل غير موجود";
 
-                return new BaseResponse<CreateDynamicAttributeSectionCommandResponse>(ResponseMessage, false, 404);
+                return new BaseResponse<CreateDynamicAttributeSectionResponse>(ResponseMessage, false, 404);
             }
 
             DynamicAttributeSection NewDynamicAttributeSectionEntity = _Mapper.Map<DynamicAttributeSection>(Request);
@@ -48,9 +48,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
                 ? "Created successfully"
                 : "تم إنشاء الحقل بنجاح";
 
-            return new BaseResponse<CreateDynamicAttributeSectionCommandResponse>()
+            return new BaseResponse<CreateDynamicAttributeSectionResponse>()
             {
-                data = new CreateDynamicAttributeSectionCommandResponse()
+                data = new CreateDynamicAttributeSectionResponse()
                 {
                     CreateDynamicAttributeSectionDto = new CreateDynamicAttributeSectionDto()
                     {

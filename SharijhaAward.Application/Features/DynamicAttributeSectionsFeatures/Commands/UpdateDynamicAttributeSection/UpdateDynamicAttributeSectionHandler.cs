@@ -34,7 +34,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
             if (DynamicAttributeSectionOldData == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Section not Found"
+                    ? "Section is not found"
                     : "هذا القسم غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);

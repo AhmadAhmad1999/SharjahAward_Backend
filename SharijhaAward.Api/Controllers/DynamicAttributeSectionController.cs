@@ -38,7 +38,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            BaseResponse<CreateDynamicAttributeSectionCommandResponse>? Response = await _Mediator.Send(CreateDynamicAttributeSectionCommand);
+            BaseResponse<CreateDynamicAttributeSectionResponse>? Response = await _Mediator.Send(CreateDynamicAttributeSectionCommand);
 
             return Response.statusCode switch
             {
@@ -125,19 +125,7 @@ namespace SharijhaAward.Api.Controllers
             return Response.statusCode switch
             {
                 404 => NotFound(Response),
-                200 => Ok(new
-                {
-                    Response,
-                    pagination =
-                        new {
-                            current_page = Page,
-                            last_page = Page - 1,
-                            total_row = Response.data!.Count,
-                            per_page = PerPage,
-                            totalPage = (int)Math.Ceiling((decimal)Response.totalItem / PerPage),
-                            currentPageCount = Response.data!.Count()
-                        }
-                }),
+                200 => Ok(Response),
                 _ => BadRequest(Response)
             };
         }

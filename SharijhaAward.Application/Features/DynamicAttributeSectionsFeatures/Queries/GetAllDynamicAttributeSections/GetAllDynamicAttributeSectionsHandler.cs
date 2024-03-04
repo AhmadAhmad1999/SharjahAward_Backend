@@ -11,14 +11,14 @@ using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSections
 {
-    public class GetAllDynamicAttributeSectionsQueryHandler : IRequestHandler<GetAllDynamicAttributeSectionsQuery,
+    public class GetAllDynamicAttributeSectionsHandler : IRequestHandler<GetAllDynamicAttributeSectionsQuery,
         BaseResponse<List<DynamicAttributeSectionListVM>>>
     {
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IMapper _Mapper;
 
-        public GetAllDynamicAttributeSectionsQueryHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
+        public GetAllDynamicAttributeSectionsHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IMapper Mapper)
         {
@@ -73,8 +73,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             }
 
             int TotalCount = await _DynamicAttributeSectionRepository.GetCountAsync(null);
+            
+            Pagination PaginationParameter = new Pagination(Request.page, 
+                Request.pageSize, TotalCount);
 
-            return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 200, DynamicAttributeSections, TotalCount);
+            return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 200, DynamicAttributeSections, PaginationParameter);
         }
     }
 }

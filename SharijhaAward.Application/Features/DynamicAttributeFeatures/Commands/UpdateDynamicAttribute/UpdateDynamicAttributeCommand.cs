@@ -16,6 +16,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
         public string EnglishLabel { get; set; } = null!;
         public string ArabicPlaceHolder { get; set; } = null!;
         public string EnglishPlaceHolder { get; set; } = null!;
+        public bool IsRequired { get; set; }
+        public List<string>? Values { get; set; }
         public string? lang { get; set; }
     }
 }

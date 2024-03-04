@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection
 {
-    public class CreateDynamicAttributeSectionCommand : IRequest<BaseResponse<CreateDynamicAttributeSectionCommandResponse>>
+    public class CreateDynamicAttributeSectionCommand : IRequest<BaseResponse<CreateDynamicAttributeSectionResponse>>
     {
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
