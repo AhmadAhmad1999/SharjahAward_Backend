@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Contract.Infrastructure;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute;
 using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
@@ -19,6 +20,7 @@ using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ExportToEx
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
+using SharijhaAward.Application.Responses;
 using System.Globalization;
 using System.Net;
 using System.Resources;
@@ -188,17 +190,22 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> ConfirmAttendancePersonal([FromBody] ConfirmAttendancePersonalQuery personalQuery)
         {
-            var respone = await _mediator.Send(new ConfirmAttendancePersonalQuery()
-            { 
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object>? Response = await _mediator.Send(new ConfirmAttendancePersonalQuery()
+            {
                 Id = personalQuery.Id,
+                lang = HeaderValue!
             });
 
-            return Ok(
-                new
-                {
-                    data = respone,
-                    message = "Confirmed Sucsessfuly"
-                });
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
         [HttpGet("ExportToExcel")]
         public async Task<FileResult> ExportToExcel()

@@ -16,7 +16,9 @@ using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGroupIn
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupInviteeById;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
+using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ConfirmAttendancePersonal;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ExportToExcel;
+using SharijhaAward.Application.Responses;
 using System.Net;
 
 
@@ -184,17 +186,22 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> ConfirmAttendanceGroup([FromBody] ConfirmAttendanceGroupQuery query)
         {
-            var respone = await _mediator.Send(new ConfirmAttendanceGroupQuery()
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object>? Response = await _mediator.Send(new ConfirmAttendanceGroupQuery()
             {
                 Id = query.Id,
-                NumberOfAttendees = query.NumberOfAttendees
+                lang = HeaderValue!
             });
-            return Ok(
-                new
-                {
-                     data = respone,
-                     message = "Confirmed Sucsessfuly"
-                });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
         [HttpGet("ExportToExcel")]
         public async Task<FileResult> ExportToExcel()

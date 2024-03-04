@@ -62,7 +62,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
             int UniqueIntegerId;
             do
             {
-                UniqueIntegerId = Random.Next();
+                UniqueIntegerId = Random.Next(100000000, 999999999);
             } while (ListOfUniqueIntegerId.Contains(UniqueIntegerId));
 
             NewGroupInvitee.UniqueIntegerId = UniqueIntegerId;
