@@ -12,6 +12,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle
     public class UpdateCycleCommand : IRequest<BaseResponse<object>>
     {
         public Guid Id { get; set; }
+        public int CycleNumber { get; set; }
         public string Year { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;

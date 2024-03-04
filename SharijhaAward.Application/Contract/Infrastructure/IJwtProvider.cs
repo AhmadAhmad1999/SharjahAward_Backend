@@ -10,5 +10,6 @@ namespace SharijhaAward.Application.Contract.Infrastructure
     public interface IJwtProvider
     {
         public string Generate(User user);
+        public string GetUserIdFromToken(string token);
     }
 }

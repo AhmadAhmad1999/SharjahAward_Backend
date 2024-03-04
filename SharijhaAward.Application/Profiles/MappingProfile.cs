@@ -82,6 +82,7 @@ using SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateTermA
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermAndConditionById;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
 using SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda;
+using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -141,6 +142,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Category, UpdateCategoryCommand>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Category, CategoryListVM>().ReverseMap();
+            CreateMap<Category, CategoriesSubcategoriesDto>().ReverseMap();
+            CreateMap<Category, SubcategoriesListVM>().ReverseMap();
 
             CreateMap<TrainingWorkshop, CreateTrainingWorkshopsCommand>().ReverseMap();
             CreateMap<TrainingWorkshop, UpdateTrainingWorkshopCommand>().ReverseMap();

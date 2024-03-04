@@ -17,6 +17,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateT
         public string EnglishDescription { get; set; } = string.Empty;
         public bool NeedAttachment { get; set; } = false;
         public int? RequiredAttachmentNumber { get; set; }
+        public bool? IsSpecial { get; set; } = false;
         public Guid CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
     }

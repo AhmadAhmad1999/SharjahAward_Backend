@@ -9,7 +9,8 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles
 {
     public class CycleListVM
     {
-        public Guid id { get; set; } 
+        public Guid Id { get; set; }
+        public int CycleNumber { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Year { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;

@@ -17,17 +17,21 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
         :IRequestHandler<ChangePasswordQuery, BaseResponse<object>>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
-        public ChangePasswordQueryHandler(IUserRepository userRepository, IMapper mapper)
+        public ChangePasswordQueryHandler(
+            IUserRepository userRepository, IMapper mapper, IJwtProvider jwtProvider)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _jwtProvider = jwtProvider;
         }
 
         public async Task<BaseResponse<object>> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
         {
 
+            var UserID = _jwtProvider.GetUserIdFromToken(request.Token);
 
             var user = await _userRepository.GetByIdAsync(request.Id);
             string msg;

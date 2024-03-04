@@ -14,6 +14,7 @@ public class Cycle : AuditableEntity
     // id of the cycle
     public Guid Id { get; set; }
     // year of the cycle
+    public int CycleNumber {  get; set; }
     // e.g 2023-2024 just take the smaller one 
     public string Year { get; set; } = string.Empty;
     // the arabic name of the cycle.

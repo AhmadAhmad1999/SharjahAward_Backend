@@ -23,7 +23,7 @@ namespace SharijhaAward.Domain.Entities.ArbitrationModel
         public ProvidedForm ProvidedForm { get; set; }
 
         [ForeignKey(nameof(ProvidedForm))]
-        public Guid ProvidedFormId { get; set; }
+        public int ProvidedFormId { get; set; }
 
     }
 }

@@ -19,8 +19,8 @@ namespace SharijhaAward.Infrastructure.Authentication
         {
             var claims = new Claim[]
             {
-                new (JwtRegisteredClaimNames.Sub , user.Id.ToString()),
-                new (JwtRegisteredClaimNames.Sub , user.Email.ToString())
+                new ("Id", user.Id.ToString()),
+                new ("Email", user.Email.ToString())
             };
 
             var signingCredentials = new SigningCredentials(
@@ -42,5 +42,14 @@ namespace SharijhaAward.Infrastructure.Authentication
             return tokenValue;
 
         }
+        public string GetUserIdFromToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+            return userIdClaim!;
+        }
     }
+    
 }

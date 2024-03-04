@@ -11,12 +11,11 @@ namespace SharijhaAward.Domain.Entities.FormConditionModel
     {
         public int Id { get; set; }
 
-        public string ArabicTitle { get; set; }=string.Empty;
-        public string EnglishTitle { get; set; }=string.Empty;
-        public DateTime AgreeDate { get; set; }
-
-        public bool IsSpecial { get; set; }
-
+        public string ArabicTitle { get; set; } = string.Empty;
+        public string EnglishTitle { get; set; } = string.Empty;
+        public bool? IsAgree { get; set; }
+        public bool? IsSpecial { get; set; } = false;
+        public bool? IshaveAttchment { get; set; } = false;
         public ProvidedForm ProvidedForm { get; set; } = null!;
 
 

@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Domain.Constants;
+﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -17,24 +18,13 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.ProvidedFormModel
 {
-    public class ProvidedForm : AuditInformation<User>
+    public class ProvidedForm : AuditableEntity
     {
-        public Guid Id { get; set; }    
-
-        public  required string Arabic_Name { get; set; }
-
-        public required string English_Name { get; set; }
-
-        public required string Male { get; set; }
-
-        public  required string Email { get; set; }
-
-        public string PhoneNumber { get; set; } = string.Empty;
-
-        public string Identity_Number { get; set; } = string.Empty;
-
-        public EducationType EducationType { get; set; } = new();
-
+        public int Id { get; set; }    
+        public int PercentCompletion { get; set; }
+        public int CycleNumber { get; set; }
+        public string CycleYear { get; set; } = string.Empty;
+        public ProvidedFormType Type { get; set; }
         public ProvidedFormStatus Status { get; set; }
 
         public Subscriber Subscriber { get; set; } = null!;

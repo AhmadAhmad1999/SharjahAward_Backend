@@ -17,6 +17,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
         public string EnglishDescription { get; set; } = string.Empty;
         public bool NeedAttachment { get; set; } = false;
         public int? RequiredAttachmentNumber { get; set; }
+        public bool? IsSpecial { get; set; } = false;
         public Guid CategoryId { get; set; }
     }
 }

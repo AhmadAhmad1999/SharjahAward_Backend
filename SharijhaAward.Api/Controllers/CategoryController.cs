@@ -7,6 +7,7 @@ using SharijhaAward.Application.Features.Categories.Command.CreateCategory;
 using SharijhaAward.Application.Features.Categories.Command.UpdateCategory;
 using SharijhaAward.Application.Features.Categories.Queries.GatCategoryById;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
+using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories;
 
 
 namespace SharijhaAward.Api.Controllers
@@ -88,6 +89,23 @@ namespace SharijhaAward.Api.Controllers
                 lang = Language!
             });
 
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpGet("CategoriesWithSubcategories",Name = "CategoriesWithSubcategories")]
+        public async Task<IActionResult> CategoriesWithSubcategories()
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetCategoriesWithSubcategoriesQuery()
+            {
+                lang = Language!
+            });
             return response.statusCode switch
             {
                 200 => Ok(response),

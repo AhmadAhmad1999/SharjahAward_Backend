@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SharijhaAward.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Ahmad : Migration
+    public partial class CreateTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -75,6 +75,7 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CycleNumber = table.Column<int>(type: "int", nullable: false),
                     Year = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ArabicName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     EnglishName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -299,6 +300,32 @@ namespace SharijhaAward.Persistence.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Categories_cycles_CycleId",
+                        column: x => x.CycleId,
+                        principalTable: "cycles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CycleCondition",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ArabicTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CycleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CycleCondition", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CycleCondition_cycles_CycleId",
                         column: x => x.CycleId,
                         principalTable: "cycles",
                         principalColumn: "Id",
@@ -543,6 +570,37 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TermsAndConditions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ArabicTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsSpecial = table.Column<bool>(type: "bit", nullable: true),
+                    NeedAttachment = table.Column<bool>(type: "bit", nullable: false),
+                    RequiredAttachmentNumber = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TermsAndConditions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TermsAndConditions_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "trainingWorkshops",
                 columns: table => new
                 {
@@ -766,6 +824,33 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Attachments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Attached = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SizeOfAttachmentInKB = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    TermAndConditionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attachments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Attachments_TermsAndConditions_TermAndConditionId",
+                        column: x => x.TermAndConditionId,
+                        principalTable: "TermsAndConditions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AchievementClassification",
                 columns: table => new
                 {
@@ -931,41 +1016,6 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CycleCondition",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ArabicTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EnglishTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CycleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CycleCondition", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CycleCondition_cycles_CycleId",
-                        column: x => x.CycleId,
-                        principalTable: "cycles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CycleCondition_users_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CycleCondition_users_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "EducationalClass",
                 columns: table => new
                 {
@@ -1076,45 +1126,6 @@ namespace SharijhaAward.Persistence.Migrations
                         principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TermsAndConditions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ArabicTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EnglishTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ArabicDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EnglishDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NeedAttachment = table.Column<bool>(type: "bit", nullable: false),
-                    RequiredAttachmentNumber = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TermsAndConditions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TermsAndConditions_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TermsAndConditions_users_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_TermsAndConditions_users_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1424,21 +1435,20 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "ProvidedForms",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Arabic_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    English_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Male = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Identity_Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EducationTypeId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PercentCompletion = table.Column<int>(type: "int", nullable: false),
+                    CycleNumber = table.Column<int>(type: "int", nullable: false),
+                    CycleYear = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     subscriberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     categoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -1451,27 +1461,11 @@ namespace SharijhaAward.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProvidedForms_EducationTypes_EducationTypeId",
-                        column: x => x.EducationTypeId,
-                        principalTable: "EducationTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_ProvidedForms_subscribers_subscriberId",
                         column: x => x.subscriberId,
                         principalTable: "subscribers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProvidedForms_users_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ProvidedForms_users_UpdatedById",
-                        column: x => x.UpdatedById,
-                        principalTable: "users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1751,7 +1745,7 @@ namespace SharijhaAward.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ArbitratorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProvidedFormId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ProvidedFormId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1777,7 +1771,7 @@ namespace SharijhaAward.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CoordinatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProvidedFormId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ProvidedFormId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1792,7 +1786,8 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_CoordinatorProvidedForm_ProvidedForms_ProvidedFormId",
                         column: x => x.ProvidedFormId,
                         principalTable: "ProvidedForms",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1803,9 +1798,10 @@ namespace SharijhaAward.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ArabicTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EnglishTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AgreeDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsSpecial = table.Column<bool>(type: "bit", nullable: false),
-                    ProvidedFormId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    IsAgree = table.Column<bool>(type: "bit", nullable: true),
+                    IsSpecial = table.Column<bool>(type: "bit", nullable: true),
+                    IshaveAttchment = table.Column<bool>(type: "bit", nullable: true),
+                    ProvidedFormId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1920,8 +1916,8 @@ namespace SharijhaAward.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "cycles",
-                columns: new[] { "Id", "ArabicName", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishName", "GroupCategoryNumber", "IndividualCategoryNumber", "LastModifiedAt", "LastModifiedBy", "RegistrationPortalClosingDate", "RegistrationPortalOpeningDate", "Status", "Year", "isDeleted" },
-                values: new object[] { new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"), "جائزة الشارقة", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "SharijhaAward", 0, 0, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "2023-2024", false });
+                columns: new[] { "Id", "ArabicName", "CreatedAt", "CreatedBy", "CycleNumber", "DeletedAt", "EnglishName", "GroupCategoryNumber", "IndividualCategoryNumber", "LastModifiedAt", "LastModifiedBy", "RegistrationPortalClosingDate", "RegistrationPortalOpeningDate", "Status", "Year", "isDeleted" },
+                values: new object[] { new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"), "جائزة الشارقة", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 0, null, "SharijhaAward", 0, 0, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "2023-2024", false });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Achievement_classificationId",
@@ -1997,6 +1993,11 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "IX_ArbitratorInterview_InterviewId",
                 table: "ArbitratorInterview",
                 column: "InterviewId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attachments_TermAndConditionId",
+                table: "Attachments",
+                column: "TermAndConditionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_CycleId",
@@ -2159,19 +2160,9 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "EducationalClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CycleCondition_CreatedById",
-                table: "CycleCondition",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CycleCondition_CycleId",
                 table: "CycleCondition",
                 column: "CycleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CycleCondition_UpdatedById",
-                table: "CycleCondition",
-                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dependencies_AttributeOperationId",
@@ -2358,24 +2349,9 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "categoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProvidedForms_CreatedById",
-                table: "ProvidedForms",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProvidedForms_EducationTypeId",
-                table: "ProvidedForms",
-                column: "EducationTypeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProvidedForms_subscriberId",
                 table: "ProvidedForms",
                 column: "subscriberId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProvidedForms_UpdatedById",
-                table: "ProvidedForms",
-                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RelatedAccount_CreatedById",
@@ -2468,16 +2444,6 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TermsAndConditions_CreatedById",
-                table: "TermsAndConditions",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TermsAndConditions_UpdatedById",
-                table: "TermsAndConditions",
-                column: "UpdatedById");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_trainingWorkshops_CategoryId",
                 table: "trainingWorkshops",
                 column: "CategoryId");
@@ -2525,6 +2491,9 @@ namespace SharijhaAward.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "ArbitratorInterview");
+
+            migrationBuilder.DropTable(
+                name: "Attachments");
 
             migrationBuilder.DropTable(
                 name: "CategoryArbitrator");
@@ -2602,13 +2571,13 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "SubscriberTrainingWorkshop");
 
             migrationBuilder.DropTable(
-                name: "TermsAndConditions");
-
-            migrationBuilder.DropTable(
                 name: "trainingWorkshopSubscribers");
 
             migrationBuilder.DropTable(
                 name: "CycleClass");
+
+            migrationBuilder.DropTable(
+                name: "TermsAndConditions");
 
             migrationBuilder.DropTable(
                 name: "Arbitrator");
@@ -2659,6 +2628,9 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "EducationalClass");
 
             migrationBuilder.DropTable(
+                name: "EducationTypes");
+
+            migrationBuilder.DropTable(
                 name: "Criterion");
 
             migrationBuilder.DropTable(
@@ -2666,9 +2638,6 @@ namespace SharijhaAward.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "DynamicAttributeSections");
-
-            migrationBuilder.DropTable(
-                name: "EducationTypes");
 
             migrationBuilder.DropTable(
                 name: "subscribers");

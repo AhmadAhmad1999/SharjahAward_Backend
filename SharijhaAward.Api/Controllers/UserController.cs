@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.User.Commands.DeleteUser;
@@ -8,6 +9,7 @@ using SharijhaAward.Application.Features.User.Queries.ChangePassword;
 using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
 using SharijhaAward.Application.Features.User.Queries.GetUserById;
 
+ 
 namespace SharijhaAward.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -104,6 +106,7 @@ namespace SharijhaAward.Api.Controllers
                 });
 
         }
+        //[Authorize]
         [HttpPost("ChangePassword", Name = "ChangePassword")]
         public async Task<ActionResult> ChangePassword([FromBody]ChangePasswordQuery query)
         {
@@ -113,8 +116,8 @@ namespace SharijhaAward.Api.Controllers
                 headerValue = "";
 
             var token = HttpContext.Request.Headers.Authorization;
-
-            query.Token = token!;
+            
+            query.Token = token! ;
             query.lang = headerValue!;
             var response = await _mediator.Send(query);
 

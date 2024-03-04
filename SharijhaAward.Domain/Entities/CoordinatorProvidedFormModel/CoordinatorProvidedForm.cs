@@ -22,7 +22,7 @@ namespace SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel
         public ProvidedForm ProvidedForm { get; set; } = null!;
 
         [ForeignKey(nameof(ProvidedForm))]
-        public Guid ProvidedFormId { get; set; }
+        public int ProvidedFormId { get; set; }
 
 
     }
