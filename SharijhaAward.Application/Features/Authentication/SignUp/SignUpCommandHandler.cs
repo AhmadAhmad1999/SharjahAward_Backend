@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         {
             var user = _mapper.Map<Domain.Entities.IdentityModels.User>(request);
 
-            string token = await _userRepository.RegisterAsync(user);
+            
             
                 var role = request.RoleName != null 
                     ? await _roleRepository.GetByName(request.RoleName)
@@ -42,8 +42,8 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                     };
                 }
             await _userRepository.AsignRole(user.Id, role.RoleId);
-            await _userRepository.AddAsync(user);
-
+            var data = await _userRepository.AddAsync(user);
+            string token = await _userRepository.RegisterAsync(data);
             return new AuthenticationResponse() 
             {
                 token = token,

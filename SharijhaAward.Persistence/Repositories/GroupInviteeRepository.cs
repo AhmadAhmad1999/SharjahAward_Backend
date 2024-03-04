@@ -18,7 +18,8 @@ namespace SharijhaAward.Persistence.Repositories
 
         public async Task ConfirmationofAttendance(GroupInvitee group , int NumberOfAttendees)
         {
-            typeof(GroupInvitee).GetProperty("ActualNumberOfAttendees")!.SetValue(group, NumberOfAttendees);
+            int ActualNumberOfAttendees = (int)(typeof(GroupInvitee).GetProperty("ActualNumberOfAttendees")!.GetValue(group))! + NumberOfAttendees;
+            typeof(GroupInvitee).GetProperty("ActualNumberOfAttendees")!.SetValue(group, ActualNumberOfAttendees);
             await _dbContext.SaveChangesAsync();
         }
 
