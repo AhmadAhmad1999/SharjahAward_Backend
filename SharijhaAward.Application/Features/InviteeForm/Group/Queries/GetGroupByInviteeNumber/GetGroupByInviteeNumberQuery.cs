@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupByInviteeNumber
 {
-    public class GetGroupByInviteeNumberQuery : IRequest<GroupDto>
+    public class GetGroupByInviteeNumberQuery : IRequest<BaseResponse<GroupDto>>
     {
         public int InviteeNumber { get; set; }
+        public string lang { get; set; } = string.Empty;
     }
 }
