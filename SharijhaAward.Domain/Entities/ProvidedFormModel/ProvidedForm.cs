@@ -24,23 +24,23 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public int PercentCompletion { get; set; }
         public int CycleNumber { get; set; }
         public string CycleYear { get; set; } = string.Empty;
-        public ProvidedFormType Type { get; set; }
-        public ProvidedFormStatus Status { get; set; }
+        public ProvidedFormType Type { get; set; } 
+        public ProvidedFormStatus Status { get; set; } 
 
-        public Subscriber Subscriber { get; set; } = null!;
+        public User User { get; set; } = null!;
 
-        [ForeignKey(nameof(Subscriber))]
-        public Guid subscriberId { get; set; }
+        [ForeignKey(nameof(User))]
+        public Guid userId { get; set; }
         
         public Category Category { get; set; } = null!;
 
         [ForeignKey(nameof(Category))]
         public Guid categoryId { get; set; }
 
-        public virtual List<Arbitration> Arbitrations { get; set; } = new();
+        //public virtual List<Arbitration> Arbitrations { get; set; } = new();
 
-        public virtual List<FormCondition> FormConditions { get; set; } = new();
+       // public virtual List<FormCondition> FormConditions { get; set; } = new();
     
-        public virtual List<CoordinatorProvidedForm> CoordinatorProvidedForms { get; set; } = new();
+        //public virtual List<CoordinatorProvidedForm> CoordinatorProvidedForms { get; set; } = new();
     }
 }

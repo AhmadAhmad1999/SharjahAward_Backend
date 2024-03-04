@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Contract.Persistence
     {
         Task<int> GetCountAsync(Expression<Func<T, bool>>? predicate);
         int GetCount(Expression<Func<T, bool>>? predicate);
-        Task<T> GetByIdAsync(Guid id);
+        Task<T> GetByIdAsync(Guid? id);
         Task<T?> GetByIdAsync(int id);
         Task<IReadOnlyList<T>> ListAllAsync();
         Task<IReadOnlyList<T>> GetPagedReponseAsync(int page, int size);

@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using JWT;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System.IdentityModel.Tokens.Jwt;
@@ -44,11 +47,12 @@ namespace SharijhaAward.Infrastructure.Authentication
         }
         public string GetUserIdFromToken(string token)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var jwtToken = tokenHandler.ReadJwtToken(token);
-
-            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
-            return userIdClaim!;
+            var stream = token.Replace("Bearer ",string.Empty);
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = jsonToken as JwtSecurityToken;
+            var Id = tokenS!.Claims.First(claim => claim.Type == "Id").Value;
+            return Id;
         }
     }
     

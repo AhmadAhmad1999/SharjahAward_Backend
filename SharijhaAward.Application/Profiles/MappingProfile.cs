@@ -186,6 +186,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<TermAndCondition, TermAndConditionDto>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionListVM>().ReverseMap();
 
+            CreateMap<ProvidedForm, CreateProvidedFormCommand>().ReverseMap();
             //
             // Dynamic Attribute..
             //

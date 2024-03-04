@@ -189,12 +189,8 @@ namespace SharijhaAward.Api.Controllers
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
-
-            BaseResponse<object>? Response = await _mediator.Send(new ConfirmAttendanceGroupQuery()
-            {
-                Id = query.Id,
-                lang = HeaderValue!
-            });
+            query.lang = HeaderValue!;
+            BaseResponse<object>? Response = await _mediator.Send(query);
 
             return Response.statusCode switch
             {

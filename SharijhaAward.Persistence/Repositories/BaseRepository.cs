@@ -37,7 +37,7 @@ namespace SharijhaAward.Persistence.Repositories
 
             return await _DbSet.AsNoTracking().Where(predicate).CountAsync();
         }
-        public virtual async Task<T?> GetByIdAsync(Guid id)
+        public virtual async Task<T?> GetByIdAsync(Guid? id)
         {
             T? t = await _DbSet.FindAsync(id);
             return t;

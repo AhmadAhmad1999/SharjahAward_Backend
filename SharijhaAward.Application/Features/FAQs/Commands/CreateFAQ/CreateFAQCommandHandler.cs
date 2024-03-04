@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.FAQModel;
 using System;
 using System.Collections.Generic;
@@ -16,30 +17,30 @@ namespace SharijhaAward.Application.Features.FAQs.Commands.CreateFAQ
         :IRequestHandler<CreateFAQCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<FrequentlyAskedQuestion> _faQRepository;
-        private readonly IAsyncRepository<Category> _categoryRepository;
+        private readonly IAsyncRepository<Cycle> _cycleRepository;
         private readonly IMapper _mapper;
 
         public CreateFAQCommandHandler(
             IAsyncRepository<FrequentlyAskedQuestion> faQRepository, 
-            IAsyncRepository<Category> categoryRepository,
+            IAsyncRepository<Cycle> cycleRepository,
             IMapper mapper
             )
         {
             _faQRepository = faQRepository;
-            _categoryRepository = categoryRepository;
+            _cycleRepository = cycleRepository;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateFAQCommand request, CancellationToken cancellationToken)
         {
             FrequentlyAskedQuestion faq = _mapper.Map<FrequentlyAskedQuestion>(request);
-            Category category = await _categoryRepository.GetByIdAsync(faq.CategoryId);
+            Cycle cycle = await _cycleRepository.GetByIdAsync(faq.CycleId);
             string msg;
-            if (category == null)
+            if (cycle == null)
             {
                 msg = request.lang.ToLower() == "en"
-                    ? "Category not Found"
-                    : "الفئة غير موجودة";
+                    ? "Cycle not Found"
+                    : "الدورة غير موجودة";
 
                 return new BaseResponse<object>(msg, false, 404);
             }

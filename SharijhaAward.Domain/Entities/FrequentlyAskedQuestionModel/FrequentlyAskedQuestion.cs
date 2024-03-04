@@ -2,6 +2,7 @@
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Domain.Entities.FAQModel; 
@@ -21,6 +22,6 @@ public class FrequentlyAskedQuestion : AuditableEntity
     
     // navigation property to the category
     [ForeignKey(nameof(Category))]
-    public Guid  CategoryId { get; set; }
-    public Category Category { get; set; } = null!;
+    public Guid CycleId { get; set; }
+    public Cycle Cycle { get; set; } = null!;
 }
