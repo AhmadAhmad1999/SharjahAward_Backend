@@ -1,0 +1,10 @@
+image: mcr.microsoft.com/dotnet/sdk:latest
+
+pipelines:
+  default:
+    - step:
+        name: Build and Test
+        script:
+              - dotnet publish -c Release -o ./publish
+        artifacts:
+          - publish/**
