@@ -54,6 +54,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
 
             AttributeDataType? CheckIfAttributeDataTypeIdDoesExist = await _AttributeDataTypeRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.AttributeDataTypeId);
+
             if (CheckIfAttributeDataTypeIdDoesExist == null)
             {
                 ResponseMessage = Request.lang == "en"

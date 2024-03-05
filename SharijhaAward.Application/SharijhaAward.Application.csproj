@@ -7,12 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\DynamicAttributePattern\**" />
     <Compile Remove="Features\DynamicAttribute\**" />
     <Compile Remove="Features\Cycle\**" />
     <Compile Remove="Features\InviteeForm\Group\NewFolder1\**" />
+    <EmbeddedResource Remove="Features\DynamicAttributePattern\**" />
     <EmbeddedResource Remove="Features\DynamicAttribute\**" />
     <EmbeddedResource Remove="Features\Cycle\**" />
     <EmbeddedResource Remove="Features\InviteeForm\Group\NewFolder1\**" />
+    <None Remove="Features\DynamicAttributePattern\**" />
     <None Remove="Features\DynamicAttribute\**" />
     <None Remove="Features\Cycle\**" />
     <None Remove="Features\InviteeForm\Group\NewFolder1\**" />

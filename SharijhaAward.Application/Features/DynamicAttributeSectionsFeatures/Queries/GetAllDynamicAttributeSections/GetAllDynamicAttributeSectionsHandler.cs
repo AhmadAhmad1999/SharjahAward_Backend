@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             {
                 ResponseMessage = Request.lang == "en"
                     ? "There is no sections"
-                : "لا يوجد أقسام";
+                    : "لا يوجد أقسام";
 
                 return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 204, DynamicAttributeSections, 0);
             }

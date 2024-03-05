@@ -10,7 +10,7 @@ namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
     public class GeneralValidation : AuditableEntity
     {
         public int Id { get; set; }
-        public string Value { get; set; } = null!;
+        public string? Value { get; set; }
         public int DynamicAttributeId { get; set; }
         public DynamicAttribute? DynamicAttribute { get; set; }
         public int AttributeOperationId { get; set; }
