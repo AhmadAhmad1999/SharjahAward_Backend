@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Mail;
 using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.Common;
@@ -22,9 +23,11 @@ public class TermAndCondition: AuditableEntity {
     // need attachment or not 
     public bool NeedAttachment { get; set; } = false;
    // number of required attachment 
-    public int RequiredAttachmentNumber { get; set; }
-    
-   // navigation property to the category 
+    public int? RequiredAttachmentNumber { get; set; }
+    public AttachmentType? Type { get; set; }
+    public int? SizeOfAttachmentInKB { get; set; }
+    public bool IsAgree { get; set; } = false;
+    // navigation property to the category 
     [ForeignKey(nameof(Category))]
     public Guid CategoryId { get; set; }
     public Category Category { get; set; } = null!;

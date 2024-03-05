@@ -35,12 +35,18 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GatCategoryById
 
                 return new BaseResponse<CategoryDto>(msg, false, 404);
             }
+
             var data = _mapper.Map<CategoryDto>(category);
+            var mainCategory = await _categoryRepository.GetByIdAsync(category.ParentId)!;
 
             data.Name = request.lang == "ar" ? category.ArabicName : category.EnglishName;
             data.Description = request.lang == "ar" ? category.ArabicDescription : category.EnglishDescription;
+            if (mainCategory != null)
+            {
+                data.MainCategoryName = request.lang == "ar" ? mainCategory!.ArabicName : mainCategory!.EnglishName;
+            }
 
-            return new BaseResponse<CategoryDto>("",true,200,data);
+            return new BaseResponse<CategoryDto>("",true, 200, data);
         }
     }
 }

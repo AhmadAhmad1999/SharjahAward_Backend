@@ -37,8 +37,12 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
             for (int i=0; i<data.Count; i++)
             {
                 data[i].Name = request.lang == "en" ? categories[i].EnglishName : categories[i].ArabicName;
-                var subCategories = _categoryRepository.Where(c => c.ParentId == data[i].Id);
+                List<Category> subCategories = _categoryRepository.Where(c => c.ParentId == data[i].Id).ToList();
                 data[i].subcategories = _mapper.Map<List<SubcategoriesListVM>>(subCategories);
+                for(int j=0; j < subCategories.Count; j++)
+                {
+                    data[i].subcategories![j].Name = request.lang == "en" ? subCategories[j].EnglishName : subCategories[j].ArabicName;
+                }
               
             }
             return new BaseResponse<List<CategoriesSubcategoriesDto>>("",true,200,data);

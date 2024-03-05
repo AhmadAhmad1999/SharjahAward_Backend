@@ -32,20 +32,24 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
 
         public async Task<BaseResponse<object>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
             string msg;
-            if (cycle == null)
+            if (request.CycleId != null)
             {
-                msg = request.lang == "en"
-                    ? "Cycle not Found"
-                    : "الدورة غير موجودة";
+                var cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
 
-                return new BaseResponse<object>(msg, false, 404);
+                if (cycle == null)
+                {
+                    msg = request.lang == "en"
+                        ? "Cycle not Found"
+                        : "الدورة غير موجودة";
+
+                    return new BaseResponse<object>(msg, false, 404);
+                }
             }
             else if (request.ParentId != null)
             {
                 var ParentCategory = await _categoryRepository.GetByIdAsync(request.ParentId.Value);
-                if(ParentCategory == null)
+                if (ParentCategory == null)
                 {
                     msg = request.lang == "en"
                         ? "Parent Category not Found"

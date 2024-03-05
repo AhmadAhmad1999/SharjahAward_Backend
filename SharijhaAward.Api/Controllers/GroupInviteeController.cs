@@ -123,21 +123,30 @@ namespace SharijhaAward.Api.Controllers
             return Ok(new { data = Group });
         }
 
-        [HttpGet("GetGroupByInviteeNumber/{id}", Name = "GetGroupByInviteeNumber")]
+        [HttpGet("GetGroupByInviteeNumber/{Id}", Name = "GetGroupByInviteeNumber")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GetGroupByInviteeNumberQuery>> GetGroupByInviteeNumber(int id)
+        public async Task<ActionResult<GetGroupByInviteeNumberQuery>> GetGroupByInviteeNumber(int Id)
         {
-            GroupDto? Group = await _mediator
-                .Send(new GetGroupByInviteeNumberQuery
-                {
-                    InviteeNumber = id
-                });
-            return Ok(new { data = Group });
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetGroupByInviteeNumberQuery()
+            {
+                lang = language!,
+                InviteeNumber = Id
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
 
         [HttpGet(Name = "GetAllGroupInvitee")]
@@ -189,12 +198,8 @@ namespace SharijhaAward.Api.Controllers
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
-
-            BaseResponse<object>? Response = await _mediator.Send(new ConfirmAttendanceGroupQuery()
-            {
-                Id = query.Id,
-                lang = HeaderValue!
-            });
+            query.lang = HeaderValue!;
+            BaseResponse<object>? Response = await _mediator.Send(query);
 
             return Response.statusCode switch
             {

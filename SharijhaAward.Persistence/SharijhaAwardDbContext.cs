@@ -24,6 +24,8 @@ using SharijhaAward.Domain.Entities.NewsModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using SharijhaAward.Domain.Entities.AttachmentModel;
 using System.Net.Mail;
+using SharijhaAward.Domain.Entities.CategoryFAQ;
+using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -68,7 +70,8 @@ namespace SharijhaAward.Persistence
         public DbSet<ConditionsAttachment> Attachments { get; set; }
         public DbSet<DynamicAttributePattern> DynamicAttributePatterns {  get; set; }
         public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues {  get; set; }
-
+        public DbSet<CategoryFAQ> categoryFAQs { get; set; }
+        public DbSet<ExplanatoryGuide> explanatoryGuides { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -97,9 +100,12 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<DynamicAttributeValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<TermAndCondition>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<ConditionsAttachment>().HasQueryFilter(p => p.isDeleted);
+            modelBuilder.Entity<ConditionsAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<DynamicAttributePattern>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<DynamicAttributePatternValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CategoryFAQ>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ExplanatoryGuide>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AttributeTableName>()
                 .HasData(new AttributeTableName()
@@ -293,6 +299,11 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<GroupInvitee>()
                 .HasIndex(p => new { p.Email, p.isDeleted })
+                .HasFilter("[isDeleted] = 0")
+                .IsUnique();
+
+            modelBuilder.Entity<ProvidedForm>()
+                .HasIndex(p => new { p.Id})
                 .HasFilter("[isDeleted] = 0")
                 .IsUnique();
 

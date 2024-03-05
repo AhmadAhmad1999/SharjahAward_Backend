@@ -5,7 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateTermAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Commands.DeleteTermAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateTermAndCondition;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnTermsAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermAndConditionById;
 
 namespace SharijhaAward.Api.Controllers
@@ -112,8 +114,39 @@ namespace SharijhaAward.Api.Controllers
 
             return response.statusCode switch
             {
-               
                 200 => Ok(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetAllTermsAndConditionsByCategoryId/{Id}", Name = "GetAllTermsAndConditionsByCategoryId")]
+        public async Task<IActionResult> GetAllTermsAndConditionsByCategoryId(Guid Id)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAllTermsByCategoryIdQuery()
+            {
+                lang = Language!,
+                CategoryId = Id,
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpPost("AgreeOnTermAndCondition",Name ="AgreeOnTermAndCondition")]
+        public async Task<IActionResult> AgreeOnTermAndCondition(AgreeOnTermsAndConditionQuery query)
+        {
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
                 _ => BadRequest(response)
             };
         }

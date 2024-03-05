@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupByInviteeNumber
 {
     public class GetGroupByInviteeNumberQueryHandler
-        : IRequestHandler<GetGroupByInviteeNumberQuery , GroupDto>
+        : IRequestHandler<GetGroupByInviteeNumberQuery , BaseResponse<GroupDto>>
     {
         private readonly IGroupInviteeRepository _groupInviteeRepository;
         private readonly IMapper _mapper;
@@ -21,15 +22,21 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupB
             _mapper = mapper;
         }
 
-        public async Task<GroupDto> Handle(GetGroupByInviteeNumberQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<GroupDto>> Handle(GetGroupByInviteeNumberQuery request, CancellationToken cancellationToken)
         {
             var group = await _groupInviteeRepository.GetByInviteeNumber(request.InviteeNumber);
+            string msg;
             if (group == null)
             {
-                throw new OpenQA.Selenium.NotFoundException("There is No Group Invitee");
+                msg = request.lang == "en"
+                    ? "Group Invitee Not Found"
+                    : "الدعوة الجماعية غير موجودة";
+                return new BaseResponse<GroupDto>(msg, false, 404);
             }
 
-            return _mapper.Map<GroupDto>(group);
+            var data = _mapper.Map<GroupDto>(group);
+
+            return new BaseResponse<GroupDto>("", true, 200,data);
 
         }
     }

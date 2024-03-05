@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
 
             var UserID = _jwtProvider.GetUserIdFromToken(request.Token);
 
-            var user = await _userRepository.GetByIdAsync(request.Id);
+            var user = await _userRepository.GetByIdAsync(new Guid(UserID));
             string msg;
             if (user == null)
             {

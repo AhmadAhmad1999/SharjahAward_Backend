@@ -8,6 +8,7 @@ using SharijhaAward.Application.Features.FAQs.Commands.DeleteFAQ;
 using SharijhaAward.Application.Features.FAQs.Commands.UpdateFAQ;
 using SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs;
 using SharijhaAward.Application.Features.FAQs.Queries.GetFAQById;
+using SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -105,6 +106,27 @@ namespace SharijhaAward.Api.Controllers
                 page = page,
                 pageSize = perPage
                 
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetAllFAQsByCategoryId/{Id}", Name = "GetAllFAQsByCategoryId")]
+        public async Task<IActionResult> GetAllFAQsByCategoryId(Guid Id)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            //get data from mediator
+            var response = await _mediator.Send(new GetAllFAQsByCategoryIdQuery()
+            {
+                lang = language!,
+                CategoryId = Id
             });
 
             return response.statusCode switch
