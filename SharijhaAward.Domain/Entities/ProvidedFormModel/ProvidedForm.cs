@@ -26,7 +26,8 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public string CycleYear { get; set; } = string.Empty;
         public ProvidedFormType Type { get; set; } 
         public ProvidedFormStatus Status { get; set; } 
-
+        public int CurrentStep {  get; set; } 
+             
         public User User { get; set; } = null!;
 
         [ForeignKey(nameof(User))]

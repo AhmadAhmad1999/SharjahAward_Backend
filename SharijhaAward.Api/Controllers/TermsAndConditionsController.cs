@@ -6,9 +6,12 @@ using SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateTermA
 using SharijhaAward.Application.Features.TermsAndConditions.Commands.DeleteTermAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateTermAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnTermsAndCondition;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAllConditions;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSpecialConditionsByCategoryId;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermAndConditionById;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -138,6 +141,27 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+
+        [HttpGet("GetAllSpecialConditionsByCategoryId/{Id}", Name = "GetAllSpecialConditionsByCategoryId")]
+        public async Task<IActionResult> GetAllSpecialConditionsByCategoryId(Guid Id)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAllSpecialConditionsByCategoryIdQuery()
+            {
+                lang = Language!,
+                CategoryId = Id,
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
         [HttpPost("AgreeOnTermAndCondition",Name ="AgreeOnTermAndCondition")]
         public async Task<IActionResult> AgreeOnTermAndCondition(AgreeOnTermsAndConditionQuery query)
         {
@@ -149,6 +173,26 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(response),
                 _ => BadRequest(response)
             };
+        }
+        [HttpGet("CheckAllConditions/{Id}",Name= "CheckAllConditions")]
+        public async Task<IActionResult> CheckAllConditions(Guid Id)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new CheckAllConditionsQuery()
+            {
+                CategoryId = Id,
+                lang = Language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+
         }
     }
 }

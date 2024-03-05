@@ -34,7 +34,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
 
         public async Task<BaseResponse<object>> Handle(CreateAttachmentCommand request, CancellationToken cancellationToken)
         {
-            var term = await _termsRepository.GetByIdAsync(request.TermAndConditionId);
+            var term = _termsRepository.WhereThenInclude(t => t.Id == request.TermAndConditionId, t => t.Attachments).FirstOrDefault();
             string msg;
             if (term == null)
             {
@@ -46,7 +46,19 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
             }
             var data = _mapper.Map<ConditionsAttachment>(request);
 
-            await _attachmentsRepository.AddAsync(data);
+            if(term.RequiredAttachmentNumber > term.Attachments.Count)
+            {
+                await _attachmentsRepository.AddAsync(data);
+
+            }
+            else
+            {
+                msg = request.lang == "en"
+                   ? "You Can't Upload file"
+                   : "لا يمكنك رفع المزيد من الملفات";
+
+                return new BaseResponse<object>(msg, true, 400);
+            }
 
             return new BaseResponse<object>("", true, 200);
         }

@@ -9,6 +9,7 @@ using SharijhaAward.Application.Features.TrainingWorkshops.Command.DeleteTrainin
 using SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTrainingWrokshop;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTrainingWorkshops;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTrainingWorkshopById;
+using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId;
 using System.Text.Json.Nodes;
 
 namespace SharijhaAward.Api.Controllers
@@ -146,6 +147,24 @@ namespace SharijhaAward.Api.Controllers
                         per_page = perPage
                     }
                 });
+        }
+        [HttpGet("GetWorkShopsByCategoryId/{Id}",Name= "GetWorkShopsByCategoryId")]
+        public async Task<IActionResult> GetTrainingWorkShopsByCategoryId(Guid Id)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetWorkShopsByCategoryIdQuery()
+            {
+                CategoryId = Id,
+                lang = language!
+            });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
     }
 }

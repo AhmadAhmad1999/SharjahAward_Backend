@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvidedForm;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.ChangeStep;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SharijhaAward.Api.Controllers
@@ -32,6 +33,19 @@ namespace SharijhaAward.Api.Controllers
             return response.statusCode switch
             {
                 200 => Ok(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPost("ChangeStep", Name= "ChangeStep")]
+        public async Task<IActionResult> ChangeStep(ChangeStepQuery query)
+        {
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
                 _ => BadRequest(response)
             };
         }
