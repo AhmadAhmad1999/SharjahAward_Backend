@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
     public class GeneralValidationDto
     {
         public int Id { get; set; }
-        public string Value { get; set; } = null!;
+        public string? Value { get; set; }
         public int DynamicAttributeId { get; set; }
         public string? DynamicAttributeLabel { get; set; }
         public int AttributeOperationId { get; set; }

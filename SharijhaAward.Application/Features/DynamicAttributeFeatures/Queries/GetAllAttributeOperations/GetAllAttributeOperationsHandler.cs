@@ -20,9 +20,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
         public async Task<BaseResponse<List<GetAllAttributeOperationsListVM>>> Handle(GetAllAttributeOperationsQuery Request,
             CancellationToken cancellationToken)
         {
-            string Language = !string.IsNullOrEmpty(Request.lang)
-                ? Request.lang.ToLower() : "ar";
-
             List<GetAllAttributeOperationsListVM> AttributeOperations = _Mapper.Map<List<GetAllAttributeOperationsListVM>>(
                 await _AttributeOperationRepository.ListAllAsync());
 
@@ -37,12 +34,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                 return new BaseResponse<List<GetAllAttributeOperationsListVM>>(ResponseMessage, true, 204);
             }
 
-            int TotalCount = await _AttributeOperationRepository.GetCountAsync(null);
-
-            Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
-
-            return new BaseResponse<List<GetAllAttributeOperationsListVM>>(ResponseMessage, true, 200, AttributeOperations, PaginationParameter);
+            return new BaseResponse<List<GetAllAttributeOperationsListVM>>(ResponseMessage, true, 200, AttributeOperations);
         }
     }
 }

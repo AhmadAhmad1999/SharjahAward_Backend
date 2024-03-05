@@ -36,12 +36,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                 return new BaseResponse<List<GetAllDataTypesListVM>>(ResponseMessage, true, 204);
             }
 
-            int TotalCount = await _AttributeDataTypeRepository.GetCountAsync(null);
-
-            Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
-
-            return new BaseResponse<List<GetAllDataTypesListVM>>(ResponseMessage, true, 200, DataTypes, PaginationParameter);
+            return new BaseResponse<List<GetAllDataTypesListVM>>(ResponseMessage, true, 200, DataTypes);
         }
     }
 }

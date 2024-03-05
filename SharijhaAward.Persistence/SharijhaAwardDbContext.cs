@@ -105,7 +105,7 @@ namespace SharijhaAward.Persistence
                 .HasData(new AttributeTableName()
                 {
                     Id = 1,
-                    Name = "SubCategory",
+                    Name = "Category",
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -174,7 +174,7 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Phone Number"
+                    Name = "Number"
                 }, new AttributeDataType()
                 {
                     Id = 7,
@@ -184,7 +184,7 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Number"
+                    Name = "Date"
                 }, new AttributeDataType()
                 {
                     Id = 8,
@@ -194,27 +194,7 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Date"
-                }, new AttributeDataType()
-                {
-                    Id = 9,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Name = "Single Select List"
-                }, new AttributeDataType()
-                {
-                    Id = 10,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Name = "Multi Select List"
+                    Name = "List"
                 });
 
             modelBuilder.Entity<AttributeOperation>()

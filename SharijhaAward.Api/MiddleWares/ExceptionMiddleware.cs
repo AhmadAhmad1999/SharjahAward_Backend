@@ -1,7 +1,4 @@
-﻿using Aspose.Pdf.Operators;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharijhaAward.Application.Exceptions;
@@ -70,23 +67,36 @@ namespace SharijhaAward.Api.MiddleWares
                     {
                         if (Ex.InnerException != null)
                         {
-                            SqlException SqlEx = Ex.InnerException as SqlException;
-
-                            foreach (SqlError error in SqlEx.Errors)
+                            if (Ex.InnerException is SqlException)
                             {
-                                if (error.Number == 2601 || error.Number == 2627)
+                                SqlException SqlEx = Ex.InnerException as SqlException;
+
+                                foreach (SqlError error in SqlEx.Errors)
                                 {
-                                    if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase) ||
-                                        error.Message.Contains("IX_PersonaLnvitees_Email", StringComparison.OrdinalIgnoreCase))
+                                    if (error.Number == 2601 || error.Number == 2627)
                                     {
-                                        Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                                        if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase) ||
+                                            error.Message.Contains("IX_PersonaLnvitees_Email", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-                                        BaseResponse<string> Response = new BaseResponse<string>
-                                            ("This email is already in use.", false, (int)HttpStatusCode.BadRequest);
+                                            BaseResponse<string> Response = new BaseResponse<string>
+                                                ("This email is already in use.", false, (int)HttpStatusCode.BadRequest);
 
-                                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                        }
                                     }
                                 }
+                            }
+                            else
+                            {
+                                Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                                BaseResponse<string> Response = new BaseResponse<string>
+                                    ("An error occurred. Please try again later. " /*+*/
+                                    /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError);
+
+                                await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                             }
                         }
                         else

@@ -16,6 +16,7 @@ using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Querie
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetDynamicAttributeSectionById;
 using SharijhaAward.Application.Features.Event.Commands.CreateEvent;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
+using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -198,7 +199,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllAttributeTablesNames(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllAttributeTablesNames()
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -207,9 +208,7 @@ namespace SharijhaAward.Api.Controllers
 
             BaseResponse<List<GetAllAttributeTablesNamesListVM>> Response = await _Mediator.Send(new GetAllAttributeTablesNamesQuery()
             {
-                lang = HeaderValue!,
-                page = Page,
-                pageSize = PerPage
+                lang = HeaderValue!
             });
 
             return Response.statusCode switch
@@ -227,7 +226,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllDataTypes(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllDataTypes()
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -236,9 +235,7 @@ namespace SharijhaAward.Api.Controllers
 
             BaseResponse<List<GetAllDataTypesListVM>> Response = await _Mediator.Send(new GetAllDataTypesQuery()
             {
-                lang = HeaderValue!,
-                page = Page,
-                pageSize = PerPage
+                lang = HeaderValue!
             });
 
             return Response.statusCode switch
@@ -256,7 +253,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllAttributeOperations(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllAttributeOperations()
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -265,10 +262,33 @@ namespace SharijhaAward.Api.Controllers
 
             BaseResponse<List<GetAllAttributeOperationsListVM>> Response = await _Mediator.Send(new GetAllAttributeOperationsQuery()
             {
-                lang = HeaderValue!,
-                page = Page,
-                pageSize = PerPage
+                lang = HeaderValue!
             });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("CreateDynamicAttributesValues")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            CreateDynamicAttributesValues([FromBody] AddDynamicAttributeValueCommand AddDynamicAttributeValueCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            AddDynamicAttributeValueCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<AddDynamicAttributeValueResponse>? Response = await _Mediator.Send(AddDynamicAttributeValueCommand);
 
             return Response.statusCode switch
             {

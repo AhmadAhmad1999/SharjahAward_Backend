@@ -32,6 +32,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
 
             AttributeTableName? CheckIfAttributeTableNameIdDoesExist = await _AttributeTableNameRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.AttributeTableNameId);
+
             if (CheckIfAttributeTableNameIdDoesExist == null)
             {
                 ResponseMessage = Request.lang == "en"

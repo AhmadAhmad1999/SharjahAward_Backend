@@ -5,7 +5,5 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
     public class GetAllAttributeTablesNamesQuery : IRequest<BaseResponse<List<GetAllAttributeTablesNamesListVM>>>
     {
         public string lang { get; set; } = string.Empty;
-        public int page { get; set; }
-        public int pageSize { get; set; }
     }
 }

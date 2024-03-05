@@ -87,6 +87,9 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAll
 using SharijhaAward.Application.Features.DynamicAttributeListValues.Commands.CreateDynamicAttributeListValue;
 using SharijhaAward.Application.Features.DynamicAttributeListValues.Commands.UpdateDynamicAttributeListValue;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllAttributeOperations;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllAttributeTablesNames;
+using SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.GetAllDynamicAttributePattern;
+using SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.GetDynamicAttributePatternById;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -216,6 +219,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GetAllAttributeOperationsListVM, AttributeOperation>()
                 .ForMember(x => x.OperationAsString, x => x.MapFrom(y => y.Name));
             CreateMap<DynamicAttributeListValue, DynamicAttributeListValueListVM>().ReverseMap();
+            CreateMap<AttributeTableName, GetAllAttributeTablesNamesListVM>().ReverseMap();
+            CreateMap<DynamicAttribute, DynamicAttributePattern>().ReverseMap();
+            CreateMap<DynamicAttributePattern, GetAllDynamicAttributePatternListVM>().ReverseMap();
+            CreateMap<DynamicAttributePatternValue, GetDynamicAttributePatternByIdValues>().ReverseMap();
+            CreateMap<DynamicAttributePattern, GetDynamicAttributePatternByIdDto>().ReverseMap();
         }
     }
 }
