@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharijhaAward.Domain.Constants.AttachmentConstant;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,9 +16,12 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermA
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
+        public bool? IsSpecial { get; set; } = false;
         public bool NeedAttachment { get; set; } = false;
         public int? RequiredAttachmentNumber { get; set; }
-        public bool? IsSpecial { get; set; } = false;
+        public int? SizeOfAttachmentInKB { get; set; }
+        public AttachmentType? Type { get; set; }
+        public bool IsAgree { get; set; }
         public Guid CategoryId { get; set; }
     }
 }

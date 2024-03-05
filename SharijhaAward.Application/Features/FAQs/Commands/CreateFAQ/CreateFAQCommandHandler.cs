@@ -17,30 +17,30 @@ namespace SharijhaAward.Application.Features.FAQs.Commands.CreateFAQ
         :IRequestHandler<CreateFAQCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<FrequentlyAskedQuestion> _faQRepository;
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
+        private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IMapper _mapper;
 
         public CreateFAQCommandHandler(
             IAsyncRepository<FrequentlyAskedQuestion> faQRepository, 
-            IAsyncRepository<Cycle> cycleRepository,
+            IAsyncRepository<Category> categoryRepository,
             IMapper mapper
             )
         {
             _faQRepository = faQRepository;
-            _cycleRepository = cycleRepository;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateFAQCommand request, CancellationToken cancellationToken)
         {
             FrequentlyAskedQuestion faq = _mapper.Map<FrequentlyAskedQuestion>(request);
-            Cycle cycle = await _cycleRepository.GetByIdAsync(faq.CycleId);
+            Category category = await _categoryRepository.GetByIdAsync(faq.CategoryId);
             string msg;
-            if (cycle == null)
+            if (category == null)
             {
                 msg = request.lang.ToLower() == "en"
-                    ? "Cycle not Found"
-                    : "الدورة غير موجودة";
+                    ? "Category not Found"
+                    : "الفئة غير موجودة";
 
                 return new BaseResponse<object>(msg, false, 404);
             }

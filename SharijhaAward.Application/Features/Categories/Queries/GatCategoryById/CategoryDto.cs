@@ -25,5 +25,6 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GatCategoryById
         public Status Status { get; set; } = Status.InActive;
         public bool RelatedToClasses { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
+        public string MainCategoryName { get; set; } = string.Empty;
     }
 }

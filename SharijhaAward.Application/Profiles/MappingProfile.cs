@@ -87,6 +87,9 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAll
 using SharijhaAward.Application.Features.DynamicAttributeListValues.Commands.CreateDynamicAttributeListValue;
 using SharijhaAward.Application.Features.DynamicAttributeListValues.Commands.UpdateDynamicAttributeListValue;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllAttributeOperations;
+using SharijhaAward.Domain.Entities.AttachmentModel;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
+using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.CreateAttachment;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -185,6 +188,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<TermAndCondition, UpdateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionDto>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionListVM>().ReverseMap();
+
+            CreateMap<ConditionsAttachment, AttachmentListVM>().ReverseMap();
+            CreateMap<ConditionsAttachment, CreateAttachmentCommand>().ReverseMap();
 
             CreateMap<ProvidedForm, CreateProvidedFormCommand>().ReverseMap();
             //

@@ -48,6 +48,7 @@
   <ItemGroup>
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
+    <Folder Include="Features\TermsAndConditions\Attacments\Queries\" />
   </ItemGroup>
 
 </Project>

@@ -100,7 +100,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<DynamicAttributeValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<TermAndCondition>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<ConditionsAttachment>().HasQueryFilter(p => p.isDeleted);
+            modelBuilder.Entity<ConditionsAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<DynamicAttributePattern>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<DynamicAttributePatternValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => !p.isDeleted);

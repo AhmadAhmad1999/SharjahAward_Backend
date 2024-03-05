@@ -27,12 +27,12 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
         {
             var cycle = _mapper.Map<Cycle>(request);
 
-            await _cycleRepository.AddAsync(cycle);
+            var data = await _cycleRepository.AddAsync(cycle);
             string msg = request.lang == "en"
                 ? "Cycle has been Created"
                 : "تم إنشاء الدورة بنجاح";
 
-            return new BaseResponse<object>(msg, true, 200);
+            return new BaseResponse<object>(msg, true, 200, data.Id);
            
         }
     }

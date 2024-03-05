@@ -22,6 +22,6 @@ public class FrequentlyAskedQuestion : AuditableEntity
     
     // navigation property to the category
     [ForeignKey(nameof(Category))]
-    public Guid CycleId { get; set; }
-    public Cycle Cycle { get; set; } = null!;
+    public Guid CategoryId { get; set; }
+    public Category Category { get; set; } = null!;
 }
