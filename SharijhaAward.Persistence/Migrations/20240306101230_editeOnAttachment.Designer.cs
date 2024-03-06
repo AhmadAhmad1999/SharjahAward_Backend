@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharijhaAward.Persistence;
 
@@ -11,9 +12,11 @@ using SharijhaAward.Persistence;
 namespace SharijhaAward.Persistence.Migrations
 {
     [DbContext(typeof(SharijhaAwardDbContext))]
-    partial class SharijhaAwardDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240306101230_editeOnAttachment")]
+    partial class editeOnAttachment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -997,56 +1000,56 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1891),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9070),
                             Name = "Text",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1893),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9072),
                             Name = "Email",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1894),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9074),
                             Name = "Image",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1896),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9076),
                             Name = "File",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1898),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9078),
                             Name = "Phone Number",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1899),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9079),
                             Name = "Number",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1901),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9081),
                             Name = "Date",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1903),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9083),
                             Name = "List",
                             isDeleted = false
                         });
@@ -1090,56 +1093,56 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1944),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9129),
                             OperationAsString = ">",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1946),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9131),
                             OperationAsString = ">=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1948),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9133),
                             OperationAsString = "<",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1949),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9135),
                             OperationAsString = "<=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1951),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9136),
                             OperationAsString = "=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1953),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9138),
                             OperationAsString = "!=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1954),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9140),
                             OperationAsString = "is Empty",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1956),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(9142),
                             OperationAsString = "is not Empty",
                             isDeleted = false
                         });
@@ -1183,7 +1186,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 6, 19, 56, 50, 493, DateTimeKind.Utc).AddTicks(1698),
+                            CreatedAt = new DateTime(2024, 3, 6, 10, 12, 24, 435, DateTimeKind.Utc).AddTicks(8860),
                             Name = "Category",
                             isDeleted = false
                         });
@@ -1839,11 +1842,7 @@ namespace SharijhaAward.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ArabicFilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ArabicTitle")
+                    b.Property<string>("ArabicFile")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1859,11 +1858,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EnglishFilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EnglishTitle")
+                    b.Property<string>("EnglishFile")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -2892,6 +2887,10 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ArabicWorkshopAttachment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
@@ -2912,6 +2911,10 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EnglishWorkshopAttachment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -2921,9 +2924,6 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<string>("Thumbnail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("TrainingWorkshopId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TypeOfAttachment")
                         .IsRequired()
@@ -2935,8 +2935,6 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("TrainingWorkshopId");
 
                     b.ToTable("trainingWorkshops");
                 });
@@ -3964,10 +3962,6 @@ namespace SharijhaAward.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", null)
-                        .WithMany("TrainingWorkshops")
-                        .HasForeignKey("TrainingWorkshopId");
-
                     b.Navigation("Category");
                 });
 
@@ -4163,8 +4157,6 @@ namespace SharijhaAward.Persistence.Migrations
             modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", b =>
                 {
                     b.Navigation("TrainingWorkshopSubscribers");
-
-                    b.Navigation("TrainingWorkshops");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", b =>

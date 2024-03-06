@@ -16,14 +16,16 @@ namespace SharijhaAward.Api.Controllers
         {
             _mediator = mediator;
         }
-
+  
         [HttpPost(Name="AddAttachment")]
-        public async Task<IActionResult> AddAttachment(CreateAttachmentCommand command)
+        //[Consumes("multipart/form-data")]
+        public async Task<IActionResult> AddAttachment([FromForm] CreateAttachmentCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
             command.lang = language!;
+          
             var response = await _mediator.Send(command);
 
             return response.statusCode switch

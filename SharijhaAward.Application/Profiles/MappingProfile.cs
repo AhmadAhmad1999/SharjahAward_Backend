@@ -93,6 +93,10 @@ using SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.GetDyn
 using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.CreateAttachment;
+using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionById;
+using SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycleConditions;
+using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
+using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateExplanatoryGuide;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -184,8 +188,8 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<CycleCondition, CreateCycleConditionCommand>().ReverseMap();
             CreateMap<CycleCondition, UpdateCycleConditionCommand>().ReverseMap();
-            CreateMap<CycleCondition, CycleDto>().ReverseMap();
-            CreateMap<CycleCondition, CycleListVM>().ReverseMap();
+            CreateMap<CycleCondition, CycleConditionDto>().ReverseMap();
+            CreateMap<CycleCondition, CycleConditionListVM>().ReverseMap();
 
             CreateMap<TermAndCondition, CreateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, UpdateTermAndConditionCommand>().ReverseMap();
@@ -196,6 +200,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ConditionsAttachment, CreateAttachmentCommand>().ReverseMap();
 
             CreateMap<ProvidedForm, CreateProvidedFormCommand>().ReverseMap();
+
+            CreateMap<ExplanatoryGuide, CreateExplanatoryGuideCommand>().ReverseMap();
             //
             // Dynamic Attribute..
             //

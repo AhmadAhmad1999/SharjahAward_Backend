@@ -30,8 +30,8 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
 
             for (int i = 0; i < data.Count; i++)
             {
-                data[i].Title = request.lang.ToLower() == "en"
-                    ? data[i].ArabicTitle : data[i].EnglishTitle;
+                data[i].Title = request.lang == "en"
+                    ? data[i].EnglishTitle : data[i].ArabicTitle;
             }
             int count = _cycleConditionRepository.ListAllAsync().Result.Count();
             Pagination pagination = new Pagination(request.page,request.pageSize,count);

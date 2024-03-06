@@ -38,17 +38,15 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTra
                     Id = workShops[i].Id,
                     ArabicTitle = workShops[i].ArabicTitle,
                     EnglishTitle = workShops[i].EnglishTitle,
-                    ArabicWorkshopAttachment = workShops[i].ArabicWorkshopAttachment,
-                    EnglishWorkshopAttachment = workShops[i].EnglishWorkshopAttachment,
+                   
                     Thumbnail = workShops[i].Thumbnail,
 
                     Title = request.lang=="ar"?
                     workShops[i].ArabicTitle :
                     workShops[i].EnglishTitle,
 
-                    WorkshopAttachment = request.lang=="ar"?
-                    workShops[i].ArabicWorkshopAttachment : 
-                    workShops[i].EnglishWorkshopAttachment
+                    
+                   
                 };
                 trainingWorkshops.Add(listVm);
             }

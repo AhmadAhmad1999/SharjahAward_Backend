@@ -16,9 +16,10 @@ namespace SharijhaAward.Domain.Entities.AttachmentModel
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string Attached { get; set; } = string.Empty;
+        public string AttachementPath { get; set; } = string.Empty;
         public int SizeOfAttachmentInKB {  get; set; }
-        
+      
+
         public TermAndCondition TermAndCondition { get; set; } = null!;
         [ForeignKey(nameof(TermAndCondition))]
         public Guid TermAndConditionId {  get; set; }

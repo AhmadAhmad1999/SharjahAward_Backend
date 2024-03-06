@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 
@@ -8,10 +10,11 @@ using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTrainingWorkshop
 {
     public class CreateTrainingWorkshopsCommandHandler
-        : IRequestHandler<CreateTrainingWorkshopsCommand , Unit>
+        : IRequestHandler<CreateTrainingWorkshopsCommand , BaseResponse<object>>
     {
         private readonly IAsyncRepository<TrainingWorkshop> _trainingWorkshopRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
+      //  private readonly IFileService<>
         private readonly IMapper _mapper;
 
         public CreateTrainingWorkshopsCommandHandler(
@@ -25,21 +28,22 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(CreateTrainingWorkshopsCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CreateTrainingWorkshopsCommand request, CancellationToken cancellationToken)
         {
             TrainingWorkshop workshop = _mapper.Map<TrainingWorkshop>(request);
             Category category = await _categoryRepository.GetByIdAsync(workshop.CategoryId);
             if (category == null)
             {
-                throw new OpenQA.Selenium.NotFoundException("Category Not Found");
+                return new BaseResponse<object>("Category Not Found",false,404);
             }
+
             await _trainingWorkshopRepository.AddAsync(workshop);
 
             category.TrainingWorkshops.Add(workshop);
 
             await _categoryRepository.UpdateAsync(category);
-            
-            return Unit.Value;
+
+            return new BaseResponse<object>("", true, 200);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using System;
@@ -14,8 +15,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string Attached { get; set; } = string.Empty;
+        public IFormFile attachment { get; set; } = null!;
         public Guid TermAndConditionId { get; set; }
-        public string lang {get;set; } = string.Empty;
+        public string? lang {get;set; } = string.Empty;
     }
 }

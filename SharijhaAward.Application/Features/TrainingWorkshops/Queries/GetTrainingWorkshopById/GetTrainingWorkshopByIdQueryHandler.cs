@@ -34,11 +34,10 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTraini
                 Id = trainingWorkshop.Id,
                 ArabicTitle = trainingWorkshop.ArabicTitle,
                 EnglishTitle = trainingWorkshop.EnglishTitle,
-                ArabicWorkshopAttachment = trainingWorkshop.ArabicWorkshopAttachment,
-                EnglishWorkshopAttachment = trainingWorkshop.EnglishWorkshopAttachment,
+               
                 Thumbnail = trainingWorkshop.Thumbnail,
                 Title = request.lang == "ar" ? trainingWorkshop.ArabicTitle : trainingWorkshop.EnglishTitle,
-                WorkshopAttachment = request.lang == "ar" ? trainingWorkshop.ArabicWorkshopAttachment : trainingWorkshop.EnglishWorkshopAttachment
+
             };
 
             return _mapper.Map<TrainingWorkshopDto>(workshopDto);

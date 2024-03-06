@@ -26,6 +26,7 @@ using SharijhaAward.Domain.Entities.AttachmentModel;
 using System.Net.Mail;
 using SharijhaAward.Domain.Entities.CategoryFAQ;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
+using SharijhaAward.Domain.Entities.CycleConditionModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -72,6 +73,7 @@ namespace SharijhaAward.Persistence
         public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues {  get; set; }
         public DbSet<CategoryFAQ> categoryFAQs { get; set; }
         public DbSet<ExplanatoryGuide> explanatoryGuides { get; set; }
+        public DbSet<CycleCondition> cycleCondition { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -106,6 +108,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryFAQ>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ExplanatoryGuide>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CycleCondition>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AttributeTableName>()
                 .HasData(new AttributeTableName()

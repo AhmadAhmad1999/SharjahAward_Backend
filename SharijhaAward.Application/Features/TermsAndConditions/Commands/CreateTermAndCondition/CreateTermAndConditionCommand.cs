@@ -19,7 +19,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateT
         public bool? IsSpecial { get; set; } = false;
         public int? RequiredAttachmentNumber { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
-        public AttachmentType? Type { get; set; }
+        public AttachmentType? AttachmentType { get; set; }
         public bool IsAgree { get; set; } = false;
         public Guid CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;

@@ -24,7 +24,7 @@ public class TermAndCondition: AuditableEntity {
     public bool NeedAttachment { get; set; } = false;
    // number of required attachment 
     public int? RequiredAttachmentNumber { get; set; }
-    public AttachmentType? Type { get; set; }
+    public AttachmentType? AttachmentType { get; set; }
     public int? SizeOfAttachmentInKB { get; set; }
     public bool IsAgree { get; set; } = false;
     // navigation property to the category 
