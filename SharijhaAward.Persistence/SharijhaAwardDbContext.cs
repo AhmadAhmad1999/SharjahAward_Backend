@@ -27,6 +27,7 @@ using System.Net.Mail;
 using SharijhaAward.Domain.Entities.CategoryFAQ;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
+using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 
 namespace SharijhaAward.Persistence
 {
@@ -74,6 +75,7 @@ namespace SharijhaAward.Persistence
         public DbSet<CategoryFAQ> categoryFAQs { get; set; }
         public DbSet<ExplanatoryGuide> explanatoryGuides { get; set; }
         public DbSet<CycleCondition> cycleCondition { get; set; }
+        public DbSet<TrainingWrokshopeAttachment> TrainingWrokshopeAttachment { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

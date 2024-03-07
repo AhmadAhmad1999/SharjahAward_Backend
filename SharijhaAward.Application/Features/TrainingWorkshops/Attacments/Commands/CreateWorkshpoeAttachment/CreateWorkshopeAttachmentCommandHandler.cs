@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.CreateWorkshpoeAttachment
+namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment
 {
     public class CreateWorkshopeAttachmentCommandHandler
         : IRequestHandler<CreateWorkshopeAttachmentCommand, BaseResponse<object>>
@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Create
         public async Task<BaseResponse<object>> Handle(CreateWorkshopeAttachmentCommand request, CancellationToken cancellationToken)
         {
             var workShop = await _workshopRepository.GetByIdAsync(request.WorkshopeId);
-            if(workShop == null)
+            if (workShop == null)
             {
                 return new BaseResponse<object>("", false, 404);
             }

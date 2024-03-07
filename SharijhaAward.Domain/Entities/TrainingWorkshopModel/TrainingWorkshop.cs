@@ -4,6 +4,7 @@ using SharijhaAward.Domain.Entities.Common;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.SubscriberModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopSubscriberModel;
+using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharijhaAward.Domain.Entities.TrainingWorkshopModel; 
@@ -31,8 +32,8 @@ public class TrainingWorkshop : AuditableEntity
 
 
     // navigation property to the subscriber -> many-to-many relation
-    public virtual List<TrainingWorkshop> TrainingWorkshops { get; set; } = new();
+    public virtual List<TrainingWrokshopeAttachment> Attachments { get; set; } = new();
     public virtual List<Subscriber> Subscribers { get; set; } = new();
     public virtual List<TrainingWorkshopSubscriber> TrainingWorkshopSubscribers { get; set; } = new();
-
+    
 }

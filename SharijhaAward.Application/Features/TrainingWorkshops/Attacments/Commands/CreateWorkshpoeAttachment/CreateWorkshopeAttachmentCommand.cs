@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.CreateWorkshpoeAttachment
+namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment
 {
     public class CreateWorkshopeAttachmentCommand : IRequest<BaseResponse<object>>
     {

@@ -53,7 +53,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
             {
                 fileContent = fileContent,
                 fileContentType = "applection/pdf",
-                fileFileName = Guide.EnglishTitle
+                fileFileName = Guide!.EnglishTitle
             };
 
             return new BaseResponse<ExplanatoryGuideDto>("", true, 200, data);

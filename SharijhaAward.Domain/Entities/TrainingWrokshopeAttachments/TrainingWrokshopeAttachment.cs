@@ -21,7 +21,7 @@ namespace SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments
         public AttachmentType AttachmentType { get; set; }
 
         public TrainingWorkshop TrainingWorkshop { get; set; } = null!;
-        [ForeignKey(nameof(TrainingWorkshopModel))]
+        [ForeignKey(nameof(TrainingWorkshop))]
         public Guid WorkshopeId { get; set; }
     }
 }

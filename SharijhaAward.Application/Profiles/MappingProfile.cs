@@ -97,6 +97,9 @@ using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditi
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycleConditions;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateExplanatoryGuide;
+using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
+using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId;
+using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -202,6 +205,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ProvidedForm, CreateProvidedFormCommand>().ReverseMap();
 
             CreateMap<ExplanatoryGuide, CreateExplanatoryGuideCommand>().ReverseMap();
+
+            CreateMap<TrainingWrokshopeAttachment, WorkshopAttachmentListVM>().ReverseMap();
+            CreateMap<TrainingWrokshopeAttachment, CreateWorkshopeAttachmentCommand>().ReverseMap();
             //
             // Dynamic Attribute..
             //
