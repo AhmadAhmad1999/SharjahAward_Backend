@@ -46,7 +46,6 @@ namespace SharijhaAward.Api.Controllers
             });
 
             // Return the file as a downloadable response
-            // return DownLoadExplanatoryGuide(response);
             return File(response.data!.fileContent, "application/pdf", "ExplanatoryGuide.pdf");
         }
 

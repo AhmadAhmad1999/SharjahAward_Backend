@@ -30,14 +30,19 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
             {
                 return new BaseResponse<object>("", false, 404);
             }
-            var terms = _termRepository.WhereThenInclude(t => t.CategoryId == category.Id, t => t.Attachments).ToList();
+            var terms = _termRepository
+                .WhereThenInclude(t => t.CategoryId == category.Id, t => t.Attachments)
+                .Where(t=>t.IsSpecial==request.IsSpecial)
+                .ToList();
+
             string msg;
             if(terms.Count() != 0)
             {
                 for(int i=0; i < terms.Count(); i++)
                 {
                     //Check on Terms that need Attachments
-                    if (terms[i].RequiredAttachmentNumber != terms[i].Attachments.Count)
+                    if (terms[i].RequiredAttachmentNumber != terms[i].Attachments.Count 
+                        && terms[i].RequiredAttachmentNumber != 0 )
                     {
                         msg = request.lang == "en"
                             ? "Pleas Complete Uploading The File "
@@ -47,7 +52,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
 
                     }
                     //Check on Terms that don't need Attachments
-                    if (!terms[i].IsAgree)
+                    else if (!terms[i].IsAgree && !terms[i].NeedAttachment)
                     {
                         msg = request.lang == "en"
                             ? "Pleas Agree on All Terms and Conditions"

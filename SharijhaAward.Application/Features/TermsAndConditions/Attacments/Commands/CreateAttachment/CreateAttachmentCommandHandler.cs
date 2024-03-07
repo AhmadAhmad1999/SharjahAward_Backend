@@ -57,6 +57,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
                 {
                     data.AttachementPath = await _attachmentFileService.SaveFileAsync(request.attachment);
                     await _attachmentsRepository.AddAsync(data);
+                  
                 }
                 else
                 {
