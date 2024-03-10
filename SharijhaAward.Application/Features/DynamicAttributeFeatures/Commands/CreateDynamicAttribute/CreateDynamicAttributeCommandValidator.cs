@@ -12,11 +12,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
     {
         public CreateDynamicAttributeCommandValidator()
         {
-            RuleFor(e => e.Key)
-               .NotEmpty().WithMessage("{PropertyName} is required.")
-               .NotNull()
-               .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
-
             RuleFor(e => e.ArabicLabel)
                .NotEmpty().WithMessage("{PropertyName} is required.")
                .NotNull()

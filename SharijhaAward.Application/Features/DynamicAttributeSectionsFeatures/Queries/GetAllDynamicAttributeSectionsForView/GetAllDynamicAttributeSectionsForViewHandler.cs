@@ -67,7 +67,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     .Select(x => new DynamicAttributeListVM()
                     {
                         Id = x.Id,
-                        Key = x.Key,
                         AttributeDataTypeName = x.AttributeDataType!.Name,
                         Label = Language.ToLower() == "ar"
                             ? x.ArabicLabel

@@ -3,9 +3,12 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection;
 using SharijhaAward.Application.Helpers.Constants;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using System.Collections.Generic;
 using System.IO;
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd
@@ -19,12 +22,14 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<AttributeDataType> _AttributeDataTypeRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
         public GetAllDynamicAttributeSectionsForAddHandler(IMapper Mapper,
             IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<AttributeDataType> AttributeDataTypeRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository)
+            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository)
         {
             _Mapper = Mapper;
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
@@ -32,16 +37,30 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             _AttributeDataTypeRepository = AttributeDataTypeRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
+            _ProvidedFormRepository = ProvidedFormRepository;
         }
         public async Task<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>> Handle(GetAllDynamicAttributeSectionsForAddQuery Request,
             CancellationToken cancellationToken)
         {
+            string ResponseMessage = string.Empty;
+
             string Language = !string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() : "ar";
 
-            List<GetAllDynamicAttributeSectionsForAddListVM> DynamicAttributeSections =
-                _DynamicAttributeSectionRepository.IncludeThenWhere(x => x.AttributeTableName!,
-                    x => x.RecordIdOnRelation == Request.CategoryId &&
+            Domain.Entities.ProvidedFormModel.ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.ProvidedFormId);
+
+            if (ProvidedFormEntity == null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Provided form is not Found"
+                    : "الاستمارة المقدمة غير موجود";
+
+                return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, false, 404);
+            }
+
+            List<GetAllDynamicAttributeSectionsForAddListVM> DynamicAttributeSections = _DynamicAttributeSectionRepository
+                .IncludeThenWhere(x => x.AttributeTableName!, x => x.RecordIdOnRelation == ProvidedFormEntity.categoryId &&
                     x.AttributeTableName!.Name.ToLower() == TableNames.Category.ToString().ToLower())
                 .Select(x => new GetAllDynamicAttributeSectionsForAddListVM()
                 {
@@ -50,8 +69,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         ? x.ArabicName
                         : x.EnglishName
                 }).ToList();
-
-            string ResponseMessage = string.Empty;
 
             if (DynamicAttributeSections.Count <= 0)
             {
@@ -65,7 +82,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             IReadOnlyList<AttributeDataType> DataTypes = await _AttributeDataTypeRepository.ListAllAsync();
 
             List<DynamicAttributeValue> AlreadyInsertedDynamicAttributeValues = await _DynamicAttributeValueRepository
-                .Where(x => x.RecordId == Request.CategoryId).ToListAsync();
+                .Where(x => x.RecordId != null 
+                    ? x.RecordId == Request.ProvidedFormId
+                    : false).ToListAsync();
 
             foreach (GetAllDynamicAttributeSectionsForAddListVM DynamicAttributeSection in DynamicAttributeSections)
             {
@@ -76,7 +95,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     .Select(x => new DynamicAttributeListWithListValuesVM()
                     {
                         Id = x.Id,
-                        Key = x.Key,
                         AttributeDataTypeId = x.AttributeDataTypeId,
                         Label = Language.ToLower() == "ar"
                             ? x.ArabicLabel

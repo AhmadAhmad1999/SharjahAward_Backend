@@ -9,7 +9,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.Ge
     public class GetDynamicAttributePatternByIdDto
     {
         public int Id { get; set; }
-        public string Key { get; set; } = null!;
         public string ArabicLabel { get; set; } = null!;
         public string EnglishLabel { get; set; } = null!;
         public string ArabicPlaceHolder { get; set; } = null!;

@@ -13,7 +13,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
 {
     public class CreateDynamicAttributeCommand : IRequest<BaseResponse<CreateDynamicAttributeResponse>>
     {
-        public string Key { get; set; } = null!;
         public string ArabicLabel { get; set; } = null!;
         public string EnglishLabel { get; set; } = null!;
         public string ArabicPlaceHolder { get; set; } = null!;

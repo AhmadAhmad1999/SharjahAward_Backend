@@ -116,7 +116,7 @@ namespace SharijhaAward.Persistence
                 .HasData(new AttributeTableName()
                 {
                     Id = 1,
-                    Name = "Category",
+                    Name = "Provided Form",
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -320,34 +320,359 @@ namespace SharijhaAward.Persistence
                  ArabicName ="جائزة الشارقة",    
                  Year = "2023-2024",
             });
+            modelBuilder.Entity<Category>()
+                .HasData(new Category()
+                {
+                    CreatedAt = DateTime.UtcNow,
+                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    DeletedAt = null,
+                    EnglishDescription = "Test Description 1",
+                    EnglishName = "Test Name 1",
+                    ExpectedNumberOfWinners = 1,
+                    FinalArbitrationEndDate = DateTime.UtcNow,
+                    ArabicDescription = "اختبار وصف 1",
+                    ArabicName = "اختبار اسم 1",
+                    CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
+                    CreatedBy = null,
+                    FinalArbitrationQualificationMark = 0,
+                    Icon = "string",
+                    FinalArbitrationStartDate = DateTime.UtcNow,
+                    InitialArbitrationEndDate = null,
+                    isDeleted = false,
+                    InitialArbitrationStartDate = DateTime.UtcNow,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ParentId = null,
+                    RelatedToClasses = false,
+                    WinningScore = 0,
+                    SubscriberPortalClosingDate = DateTime.UtcNow,
+                    Status = Domain.Constants.Common.Status.Active,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d")
+                }, new Category()
+                {
+                    CreatedAt = DateTime.UtcNow,
+                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    DeletedAt = null,
+                    EnglishDescription = "Test Description 2",
+                    EnglishName = "Test Name 2",
+                    ExpectedNumberOfWinners = 1,
+                    FinalArbitrationEndDate = DateTime.UtcNow,
+                    ArabicDescription = "اختبار وصف 2",
+                    ArabicName = "اختبار اسم 2",
+                    CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
+                    CreatedBy = null,
+                    FinalArbitrationQualificationMark = 0,
+                    Icon = "string",
+                    FinalArbitrationStartDate = DateTime.UtcNow,
+                    InitialArbitrationEndDate = null,
+                    isDeleted = false,
+                    InitialArbitrationStartDate = DateTime.UtcNow,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    RelatedToClasses = false,
+                    WinningScore = 0,
+                    SubscriberPortalClosingDate = DateTime.UtcNow,
+                    Status = Domain.Constants.Common.Status.Active,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    ParentId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d")
+                });
+            modelBuilder.Entity<Role>().HasData(
+                new Role
+                {
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    RoleName = "Admin"
+                });
+                modelBuilder.Entity<Role>().HasData(
+                new Role
+                {
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
+                    RoleName = "Subscriber"
+                });
+                modelBuilder.Entity<Role>().HasData(
+                new Role
+                {
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db19"),
+                    RoleName = "Manager"
 
-            modelBuilder.Entity<Role>().HasData(
-            new Role
-            {
-                RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                RoleName = "Admin"
-            });
-            modelBuilder.Entity<Role>().HasData(
-            new Role
-            {
-                RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
-                RoleName = "Subscriber"
-            });
-            modelBuilder.Entity<Role>().HasData(
-            new Role
-            {
-                RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db19"),
-                RoleName = "Manager"
-                
-            });
-            modelBuilder.Entity<Role>().HasData(
-            new Role
-            {
-                RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
-                RoleName = "User"
-                
-            });
+                });
+                modelBuilder.Entity<Role>().HasData(
+                new Role
+                {
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    RoleName = "User"
 
+                });
+            modelBuilder.Entity<User>()
+                .HasData(new User()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "ادمن 123",
+                    Email = "ahmad.a.ahmad.100011@gmail.com",
+                    EnglishName = "Admin 123",
+                    Gender = Gender.Male,
+                    Password = "QAZwsx!@1212",
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d")
+                });
+            modelBuilder.Entity<ProvidedForm>()
+                .HasData(new ProvidedForm()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    categoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    CurrentStep = 1,
+                    CycleYear = "2023-2024",
+                    CycleNumber = 1,
+                    PercentCompletion = 1,
+                    Status = Domain.Constants.ProvidedFromConstants.ProvidedFormStatus.Active,
+                    Type = Domain.Constants.ProvidedFromConstants.ProvidedFormType.Current,
+                    userId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    Id = 1
+                });
+            modelBuilder.Entity<DynamicAttributeSection>()
+                .HasData(new DynamicAttributeSection()
+                {
+                    ArabicName = "اختبار اسم 1",
+                    EnglishName = "Test Name 1",
+                    isDeleted = false,
+                    AttributeTableNameId = 1,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    RecordIdOnRelation = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    Id = 1
+                });
+
+            modelBuilder.Entity<DynamicAttribute>()
+                .HasData(new DynamicAttribute()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = 1,
+                    ArabicLabel = "اختبار نص 1",
+                    ArabicPlaceHolder = "اختبار نص 1",
+                    AttributeDataTypeId = 1,
+                    DynamicAttributeSectionId = 1,
+                    EnglishLabel = "Test Text 1",
+                    EnglishPlaceHolder = "Test Text 1",
+                    IsRequired = false,
+                    IsUnique = false,
+                    MaxSizeInKB = null,
+                    Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
+                    LinkedToAnotherAttribute = false
+                }, new DynamicAttribute()
+                {
+                    Id = 2,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicLabel = "اختبار ايميل 1",
+                    ArabicPlaceHolder = "اختبار ايميل 1",
+                    AttributeDataTypeId = 2,
+                    DynamicAttributeSectionId = 1,
+                    EnglishLabel = "Test Email 1",
+                    EnglishPlaceHolder = "Test Email 1",
+                    IsRequired = false,
+                    IsUnique = false,
+                    MaxSizeInKB = null,
+                    Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
+                    LinkedToAnotherAttribute = false
+                }, new DynamicAttribute()
+                {
+                    Id = 3,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicLabel = "اختبار صورة 1",
+                    ArabicPlaceHolder = "اختبار صورة 1",
+                    AttributeDataTypeId = 3,
+                    DynamicAttributeSectionId = 1,
+                    EnglishLabel = "Test Image 1",
+                    EnglishPlaceHolder = "Test Image 1",
+                    IsRequired = false,
+                    IsUnique = false,
+                    MaxSizeInKB = 1028,
+                    Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
+                    LinkedToAnotherAttribute = false
+                }, new DynamicAttribute()
+                {
+                    Id = 4,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicLabel = "اختبار ملف 1",
+                    ArabicPlaceHolder = "اختبار ملف 1",
+                    AttributeDataTypeId = 4,
+                    DynamicAttributeSectionId = 1,
+                    EnglishLabel = "Test File 1",
+                    EnglishPlaceHolder = "Test File 1",
+                    IsRequired = false,
+                    IsUnique = false,
+                    MaxSizeInKB = 4112,
+                    Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
+                    LinkedToAnotherAttribute = false
+                }, new DynamicAttribute()
+                {
+                    Id = 5,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicLabel = "اختبار رقم متحرك 1",
+                    ArabicPlaceHolder = "اختبار رقم متحرك 1",
+                    AttributeDataTypeId = 5,
+                    DynamicAttributeSectionId = 1,
+                    EnglishLabel = "Test Phone Number 1",
+                    EnglishPlaceHolder = "Test Phone Number 1",
+                    IsRequired = false,
+                    IsUnique = false,
+                    MaxSizeInKB = null,
+                    Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
+                    LinkedToAnotherAttribute = false
+                }, new DynamicAttribute()
+                {
+                    Id = 6,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicLabel = "اختبار رقم 1",
+                    ArabicPlaceHolder = "اختبار رقم 1",
+                    AttributeDataTypeId = 6,
+                    DynamicAttributeSectionId = 1,
+                    EnglishLabel = "Test Number 1",
+                    EnglishPlaceHolder = "Test Number 1",
+                    IsRequired = false,
+                    IsUnique = false,
+                    MaxSizeInKB = null,
+                    Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
+                    LinkedToAnotherAttribute = false
+                }, new DynamicAttribute()
+                {
+                    Id = 7,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicLabel = "اختبار تاريخ 1",
+                    ArabicPlaceHolder = "اختبار تاريخ 1",
+                    AttributeDataTypeId = 7,
+                    DynamicAttributeSectionId = 1,
+                    EnglishLabel = "Test Date 1",
+                    EnglishPlaceHolder = "Test Date 1",
+                    IsRequired = false,
+                    IsUnique = false,
+                    MaxSizeInKB = null,
+                    Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
+                    LinkedToAnotherAttribute = false
+                }, new DynamicAttribute()
+                {
+                    Id = 8,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicLabel = "اختبار قائمة 1",
+                    ArabicPlaceHolder = "اختبار قائمة 1",
+                    AttributeDataTypeId = 8,
+                    DynamicAttributeSectionId = 1,
+                    EnglishLabel = "Test List 1",
+                    EnglishPlaceHolder = "Test List 1",
+                    IsRequired = false,
+                    IsUnique = false,
+                    MaxSizeInKB = null,
+                    Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
+                    LinkedToAnotherAttribute = false
+                });
+            modelBuilder.Entity<DynamicAttributeListValue>()
+                .HasData(new DynamicAttributeListValue()
+                {
+                    Id = 1,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DynamicAttributeId = 8,
+                    Value = "Test Value 1"
+                }, new DynamicAttributeListValue()
+                {
+                    Id = 2,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DynamicAttributeId = 8,
+                    Value = "Test Value 2"
+                }, new DynamicAttributeListValue()
+                {
+                    Id = 3,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DynamicAttributeId = 8,
+                    Value = "Test Value 3"
+                }, new DynamicAttributeListValue()
+                {
+                    Id = 4,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DynamicAttributeId = 8,
+                    Value = "Test Value 4"
+                }, new DynamicAttributeListValue()
+                {
+                    Id = 5,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DynamicAttributeId = 8,
+                    Value = "Test Value 5"
+                });
             modelBuilder.Entity<Permission>().HasData
                 (
                 new Permission

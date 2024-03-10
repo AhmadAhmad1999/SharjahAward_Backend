@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
 {
     public class AddDynamicAttributeValueForSaveCommand : IRequest<BaseResponse<AddDynamicAttributeValueForSaveResponse>>
     {
-        public Guid RecordId { get; set; }
+        public int RecordId { get; set; }
         public List<AddDynamicAttributeValueForSaveMainCommand> DynamicAttributesWithValues { get; set; } = new List<AddDynamicAttributeValueForSaveMainCommand>();
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }

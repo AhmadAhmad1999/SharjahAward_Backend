@@ -11,7 +11,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
     public class UpdateDynamicAttributeCommand : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
-        public string Key { get; set; } = null!;
         public string ArabicLabel { get; set; } = null!;
         public string EnglishLabel { get; set; } = null!;
         public string ArabicPlaceHolder { get; set; } = null!;
