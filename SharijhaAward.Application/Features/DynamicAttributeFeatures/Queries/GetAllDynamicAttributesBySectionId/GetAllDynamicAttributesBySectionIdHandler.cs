@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
-
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId
 {
     public class GetAllDynamicAttributesBySectionIdHandler : IRequestHandler<GetAllDynamicAttributesBySectionIdQuery,
@@ -47,7 +45,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                     ? "There is no fields"
                     : "لا يوجد حقول";
 
-                return new BaseResponse<List<DynamicAttributeListVM>>(ResponseMessage, true, 204);
+                return new BaseResponse<List<DynamicAttributeListVM>>(ResponseMessage, true, 204, DynamicAttributes, 0);
             }
 
             int TotalCount = await _DynamicAttributeRepository

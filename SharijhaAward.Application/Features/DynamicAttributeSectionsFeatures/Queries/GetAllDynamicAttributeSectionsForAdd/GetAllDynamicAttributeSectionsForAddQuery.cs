@@ -7,13 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId
+namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd
 {
-    public class GetAllDynamicAttributesBySectionIdQuery : IRequest<BaseResponse<List<DynamicAttributeListVM>>>
+    public class GetAllDynamicAttributeSectionsForAddQuery : IRequest<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>>
     {
-        public int SectionId { get; set; }
+        public Guid CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
-        public int page { get; set; }
-        public int pageSize { get; set; }
     }
 }

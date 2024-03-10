@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.ChangeDynamicAttributeStatus;
@@ -11,12 +10,8 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAll
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDataTypes;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSections;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetDynamicAttributeSectionById;
-using SharijhaAward.Application.Features.Event.Commands.CreateEvent;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
+using SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -272,7 +267,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPost("CreateDynamicAttributesValues")]
+        [HttpPost("AddDynamicAttributeValue")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -281,7 +276,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult>
-            CreateDynamicAttributesValues([FromBody] AddDynamicAttributeValueCommand AddDynamicAttributeValueCommand)
+            AddDynamicAttributeValue([FromBody] AddDynamicAttributeValueCommand AddDynamicAttributeValueCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             AddDynamicAttributeValueCommand.lang = !string.IsNullOrEmpty(HeaderValue)
@@ -289,6 +284,32 @@ namespace SharijhaAward.Api.Controllers
                 : "en";
 
             BaseResponse<AddDynamicAttributeValueResponse>? Response = await _Mediator.Send(AddDynamicAttributeValueCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("UpdateDynamicAttributeValue")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            UpdateDynamicAttributeValue([FromBody] UpdateDynamicAttributeValueCommand UpdateDynamicAttributeValueCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            UpdateDynamicAttributeValueCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<UpdateDynamicAttributeValueResponse>? Response = await _Mediator.Send(UpdateDynamicAttributeValueCommand);
 
             return Response.statusCode switch
             {

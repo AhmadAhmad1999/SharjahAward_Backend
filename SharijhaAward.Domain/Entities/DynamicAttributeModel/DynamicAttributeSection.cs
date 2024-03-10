@@ -12,7 +12,7 @@ namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
         public int Id { get; set; }
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
-        public int? RecordIdOnRelation { get; set; }
+        public Guid? RecordIdOnRelation { get; set; }
         public int AttributeTableNameId { get; set; }
         public AttributeTableName? AttributeTableName { get; set; }
     }

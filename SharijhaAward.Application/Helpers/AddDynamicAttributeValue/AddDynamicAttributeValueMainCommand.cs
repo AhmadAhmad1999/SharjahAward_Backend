@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
     public class AddDynamicAttributeValueMainCommand
     {
         public int DynamicAttributeId { get; set; }
-        public string? Value { get; set; } = null!;
+        public string? ValueAsString { get; set; } = null!;
+        public IFormFile? ValueAsBinaryFile { get; set; } = null!;
     }
 }
