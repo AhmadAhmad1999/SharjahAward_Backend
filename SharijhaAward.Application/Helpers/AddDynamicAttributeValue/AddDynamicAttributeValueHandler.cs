@@ -17,6 +17,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         private readonly IAsyncRepository<DependencyValidation> _DependencyValidationRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
+
         public AddDynamicAttributeValueHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<Dependency> DependencyRepository,
             IAsyncRepository<DependencyValidation> DependencyValidationRepository,
@@ -1408,15 +1409,29 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             {
                 try
                 {
-                    foreach (var item in Request.DynamicAttributesWithValues)
-                    {
-                        if (string.IsNullOrEmpty(item.ValueAsString) && 
-                            item.ValueAsBinaryFile is not null)
-                        {
-                            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(item.ValueAsBinaryFile.FileName)}";
+                    List<AddDynamicAttributeValueMainCommand> DynamicAttributesAsFile = Request.DynamicAttributesWithValues
+                        .Where(x => x.ValueAsBinaryFile != null).ToList();
 
+                    foreach (AddDynamicAttributeValueMainCommand DynamicAttributeAsFile in DynamicAttributesAsFile)
+                    {
+                        string? FolderPath = Path.Combine(Request.WWWRootFilePath!, Request.RecordId.ToString());
+
+                        if (!Directory.Exists(FolderPath))
+                            Directory.CreateDirectory(FolderPath);
+
+                        string? FileName = $"{Path.GetExtension(DynamicAttributeAsFile.ValueAsBinaryFile!.FileName)}";
+
+                        string? FilePath = Path.Combine(FolderPath, FileName);
+                            
+                        using (FileStream FileStream = new FileStream(FilePath, FileMode.Create))
+                        {
+                            DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(FileStream);
                         }
+
+                        DynamicAttributeAsFile.ValueAsBinaryFile = null;
+                        DynamicAttributeAsFile.ValueAsString = FilePath;
                     }
+
                     List<DynamicAttributeValue> DynamicAttributeValuesEntities = Request.DynamicAttributesWithValues
                         .Where(x => !string.IsNullOrEmpty(x.ValueAsString))
                         .Select(x => new DynamicAttributeValue()
@@ -1445,7 +1460,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 
             ResponseMessage = Request.lang == "en"
                 ? "Created successfully"
-                : "تم إنشاء الحقل بنجاح";
+                : "تم إدخال المعلومات بنجاح";
 
             return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, true, 200);
         }

@@ -14,5 +14,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         public Guid RecordId { get; set; }
         public List<AddDynamicAttributeValueMainCommand> DynamicAttributesWithValues { get; set; } = new List<AddDynamicAttributeValueMainCommand>();
         public string? lang { get; set; }
+        public string? WWWRootFilePath { get; set; }
     }
 }

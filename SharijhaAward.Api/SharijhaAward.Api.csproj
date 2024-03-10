@@ -33,6 +33,7 @@
 
 	<ItemGroup>
 		<Folder Include="QREmailHelper\" />
+		<Folder Include="wwwroot\DynamicFiles\" />
 		<Folder Include="wwwroot\UploadedFiles\" />
 		<Folder Include="wwwroot\GeneratedBarcode\" />
 		<Folder Include="wwwroot\Images\" />

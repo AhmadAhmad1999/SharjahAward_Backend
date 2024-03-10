@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using PdfSharpCore.Pdf.Content.Objects;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.ChangeDynamicAttributeStatus;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute;
@@ -11,6 +12,7 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAll
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
+using SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave;
 using SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 
@@ -21,9 +23,12 @@ namespace SharijhaAward.Api.Controllers
     public class DynamicAttributeController : ControllerBase
     {
         private readonly IMediator _Mediator;
-        public DynamicAttributeController(IMediator Mediator)
+        private readonly IWebHostEnvironment _WebHostEnvironment;
+        public DynamicAttributeController(IMediator Mediator,
+            IWebHostEnvironment WebHostEnvironment)
         {
             _Mediator = Mediator;
+            _WebHostEnvironment = WebHostEnvironment;
         }
         [HttpPost("CreateNewDynamicAttribute")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -283,7 +288,34 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
+            AddDynamicAttributeValueCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
             BaseResponse<AddDynamicAttributeValueResponse>? Response = await _Mediator.Send(AddDynamicAttributeValueCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("AddDynamicAttributeValueForSave")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            AddDynamicAttributeValueForSave([FromBody] AddDynamicAttributeValueForSaveCommand AddDynamicAttributeValueForSaveCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            AddDynamicAttributeValueForSaveCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            AddDynamicAttributeValueForSaveCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
+            BaseResponse<AddDynamicAttributeValueForSaveResponse>? Response = await _Mediator.Send(AddDynamicAttributeValueForSaveCommand);
 
             return Response.statusCode switch
             {
