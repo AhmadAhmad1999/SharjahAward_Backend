@@ -61,7 +61,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
             List<GetAllDynamicAttributeSectionsForAddListVM> DynamicAttributeSections = _DynamicAttributeSectionRepository
                 .IncludeThenWhere(x => x.AttributeTableName!, x => x.RecordIdOnRelation == ProvidedFormEntity.categoryId &&
-                    x.AttributeTableName!.Name.ToLower() == TableNames.Category.ToString().ToLower())
+                    x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower())
                 .Select(x => new GetAllDynamicAttributeSectionsForAddListVM()
                 {
                     Id = x.Id,

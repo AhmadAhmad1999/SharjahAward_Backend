@@ -116,7 +116,7 @@ namespace SharijhaAward.Persistence
                 .HasData(new AttributeTableName()
                 {
                     Id = 1,
-                    Name = "Provided Form",
+                    Name = "ProvidedForm",
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -450,7 +450,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    RecordIdOnRelation = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    RecordIdOnRelation = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
                     Id = 1
                 });
 
