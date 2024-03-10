@@ -12,6 +12,7 @@ namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
         public int Id { get; set; }
         public string Value { get; set; } = null!;
         public Guid RecordId { get; set; }
+        public bool isAccepted { get; set; }
         public int DynamicAttributeId { get; set; }
         public DynamicAttribute? DynamicAttribute { get; set; }
     }

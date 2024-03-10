@@ -19,7 +19,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         public string AttributeDataTypeName { get; set; } = null!;
         public bool isRequired { get; set; }
         public string? InsertedValueAsString { get; set; }
-        public IFormFile? InsertedValueAsBinaryFile { get; set; }
+        public string? InsertedValueAsBinaryFilePath { get; set; }
+        public bool isAccepted { get; set; }
         public List<DynamicAttributeListValueListVM>? DynamicAttributeListValues { get; set; }
     }
 }

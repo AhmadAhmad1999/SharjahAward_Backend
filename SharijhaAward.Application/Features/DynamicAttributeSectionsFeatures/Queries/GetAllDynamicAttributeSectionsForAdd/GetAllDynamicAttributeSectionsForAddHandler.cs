@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
@@ -15,21 +14,18 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
     {
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
-        private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<AttributeDataType> _AttributeDataTypeRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
 
         public GetAllDynamicAttributeSectionsForAddHandler(IMapper Mapper,
             IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
-            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<AttributeDataType> AttributeDataTypeRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
         {
             _Mapper = Mapper;
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
-            _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _AttributeDataTypeRepository = AttributeDataTypeRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
@@ -106,10 +102,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                             if (CheckIfValueIsAlreadyInserted != null)
                             {
-                                using FileStream Stream = new FileStream(CheckIfValueIsAlreadyInserted.Value, FileMode.Open);
-
-                                DynamicAttributeInSection.InsertedValueAsBinaryFile = new FormFile(Stream, 0, Stream.Length, null,
-                                    Path.GetFileName(CheckIfValueIsAlreadyInserted.Value));
+                                DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                             }
                         }
                         else
@@ -118,7 +112,10 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id);
 
                             if (CheckIfValueIsAlreadyInserted != null)
+                            {
                                 DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value;
+                                DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                            }
                         }
                     }
                 });
