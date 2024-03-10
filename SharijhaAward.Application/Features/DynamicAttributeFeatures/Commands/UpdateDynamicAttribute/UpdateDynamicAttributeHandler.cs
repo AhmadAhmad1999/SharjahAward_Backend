@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
             if (DynamicAttributeOldData == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "field not found"
+                    ? "Field not found"
                     : "هذا الحقل غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
             await _DynamicAttributeRepository.UpdateAsync(DynamicAttributeOldData);
 
             ResponseMessage = Request.lang == "en"
-                ? "field has been updated successfully"
+                ? "Field has been updated successfully"
                 : "تم تعديل الحقل بنجاح";
 
             return new BaseResponse<object>(ResponseMessage, true, 200);

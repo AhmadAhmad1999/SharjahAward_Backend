@@ -13,6 +13,7 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAll
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave;
+using SharijhaAward.Application.Helpers.RejectDynamicAttributeValue;
 using SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 
@@ -342,6 +343,31 @@ namespace SharijhaAward.Api.Controllers
                 : "en";
 
             BaseResponse<UpdateDynamicAttributeValueResponse>? Response = await _Mediator.Send(UpdateDynamicAttributeValueCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("RejectDynamicAttributeValue")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> RejectDynamicAttributeValue(RejectDynamicAttributeValueCommand RejectDynamicAttributeValueCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+            
+            RejectDynamicAttributeValueCommand.lang = HeaderValue;
+
+            BaseResponse<object>? Response = await _Mediator.Send(RejectDynamicAttributeValueCommand);
 
             return Response.statusCode switch
             {

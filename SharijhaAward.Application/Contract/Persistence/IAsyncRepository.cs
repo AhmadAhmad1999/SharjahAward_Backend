@@ -49,5 +49,6 @@ namespace SharijhaAward.Application.Contract.Persistence
             Expression<Func<T, bool>> predicate);
         void SaveChanges();
         Task SaveChangesAsync();
+        Task<int> ExecuteUpdateAsync(string sql);
     }
 }

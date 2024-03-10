@@ -20,6 +20,7 @@ namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
         public bool IsUnique { get; set; } = false;
         public bool LinkedToAnotherAttribute { get; set; } = false;
         public DynamicAttributeStatus Status { get; set; } = DynamicAttributeStatus.Inactive;
+        public int? MaxSizeInKB { get; set; }
         public int AttributeDataTypeId { get; set; }
         public AttributeDataType? AttributeDataType { get; set; }
         public int DynamicAttributeSectionId { get; set; }

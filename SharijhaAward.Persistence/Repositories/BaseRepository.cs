@@ -27,7 +27,7 @@ namespace SharijhaAward.Persistence.Repositories
         {
             if (predicate == null)
                 return _DbSet.Count();
-
+            
             return _DbSet.AsNoTracking().Where(predicate).Count();
         }
         public virtual async Task<int> GetCountAsync(Expression<Func<T, bool>>? predicate)
@@ -245,6 +245,10 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+        public async Task<int> ExecuteUpdateAsync(string sql)
+        {
+            return await _dbContext.Database.ExecuteSqlRawAsync(sql);
         }
     }
 }
