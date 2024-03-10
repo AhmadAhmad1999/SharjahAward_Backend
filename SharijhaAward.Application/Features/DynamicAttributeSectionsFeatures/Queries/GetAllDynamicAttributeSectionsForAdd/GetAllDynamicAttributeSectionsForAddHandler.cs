@@ -6,6 +6,7 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDyn
 using SharijhaAward.Application.Helpers.Constants;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using System.Collections.Generic;
 using System.IO;
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd
 {
@@ -17,18 +18,20 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<AttributeDataType> _AttributeDataTypeRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
-
+        private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         public GetAllDynamicAttributeSectionsForAddHandler(IMapper Mapper,
             IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<AttributeDataType> AttributeDataTypeRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository)
         {
             _Mapper = Mapper;
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _AttributeDataTypeRepository = AttributeDataTypeRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _DynamicAttributeRepository = DynamicAttributeRepository;
         }
         public async Task<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>> Handle(GetAllDynamicAttributeSectionsForAddQuery Request,
             CancellationToken cancellationToken)
@@ -66,29 +69,30 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
             foreach (GetAllDynamicAttributeSectionsForAddListVM DynamicAttributeSection in DynamicAttributeSections)
             {
-                DynamicAttributeSection.DynamicAttributes = await _DynamicAttributeListValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Where(x => x.DynamicAttribute!.Status == Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active &&
-                        DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttribute!.DynamicAttributeSectionId) &&
-                        x.DynamicAttribute.DynamicAttributeSectionId == DynamicAttributeSection.Id)
-                    .GroupBy(x => x.DynamicAttribute)
+                DynamicAttributeSection.DynamicAttributes = await _DynamicAttributeRepository
+                    .Where(x => x.Status == Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active &&
+                        DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId) &&
+                        x.DynamicAttributeSectionId == DynamicAttributeSection.Id)
                     .Select(x => new DynamicAttributeListWithListValuesVM()
                     {
-                        Id = x.Key!.Id,
-                        Key = x.Key!.Key,
-                        AttributeDataTypeId = x.Key!.AttributeDataTypeId,
+                        Id = x.Id,
+                        Key = x.Key,
+                        AttributeDataTypeId = x.AttributeDataTypeId,
                         Label = Language.ToLower() == "ar"
-                            ? x.Key!.ArabicLabel
-                            : x.Key!.EnglishLabel,
+                            ? x.ArabicLabel
+                            : x.EnglishLabel,
                         PlaceHolder = Language.ToLower() == "ar"
-                            ? x.Key!.ArabicPlaceHolder
-                            : x.Key!.EnglishPlaceHolder,
-                        isRequired = x.Key!.IsRequired,
-                        DynamicAttributeListValues = _Mapper.Map<List<DynamicAttributeListValueListVM>>(x.ToList())
+                            ? x.ArabicPlaceHolder
+                            : x.EnglishPlaceHolder,
+                        isRequired = x.IsRequired,
                     }).ToListAsync();
 
-                DynamicAttributeSection.DynamicAttributes.ForEach(DynamicAttributeInSection =>
+                foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
                 {
+                    DynamicAttributeInSection.DynamicAttributeListValues = _Mapper.Map<List<DynamicAttributeListValueListVM>>(
+                        await _DynamicAttributeListValueRepository
+                            .Where(x => x.DynamicAttributeId == DynamicAttributeInSection.Id).ToListAsync());
+
                     DynamicAttributeInSection.AttributeDataTypeName = DataTypes
                         .FirstOrDefault(y => y.Id == DynamicAttributeInSection.AttributeDataTypeId)!.Name;
 
@@ -118,7 +122,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             }
                         }
                     }
-                });
+                }
             }
 
             return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, true, 200, DynamicAttributeSections);
