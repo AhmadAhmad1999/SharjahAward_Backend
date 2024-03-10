@@ -40,7 +40,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
                     : "الفئة غير موجودة";
                 return new BaseResponse<List<TermAndConditionListVM>>(msg, false, 404);
             }
-            var Terms = _termRepository.WhereThenInclude(t => t.CategoryId == category.Id, t => t.Attachments!).ToList();
+            var Terms = _termRepository.WhereThenInclude(t => t.CategoryId == category.Id, t => t.Attachments!).Where(t=>t.IsSpecial==false).ToList();
             
             var data = _mapper.Map<List<TermAndConditionListVM>>(Terms);
             for (int i = 0; i<data.Count; i++)

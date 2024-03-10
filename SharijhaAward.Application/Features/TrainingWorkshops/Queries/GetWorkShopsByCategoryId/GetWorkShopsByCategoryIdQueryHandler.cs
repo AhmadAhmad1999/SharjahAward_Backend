@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTrainingWorkshops;
 using SharijhaAward.Application.Responses;
@@ -17,13 +18,20 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
         : IRequestHandler<GetWorkShopsByCategoryIdQuery, BaseResponse<List<TrainingWorkshopListVm>>>
     {
         private readonly IAsyncRepository<TrainingWorkshop> _workShopRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IMapper _mapper;
 
-        public GetWorkShopsByCategoryIdQueryHandler(IAsyncRepository<TrainingWorkshop> workShopRepository, IAsyncRepository<Category> categoryRepository, IMapper mapper)
+        public GetWorkShopsByCategoryIdQueryHandler(
+            IAsyncRepository<TrainingWorkshop> workShopRepository, 
+            IAsyncRepository<Category> categoryRepository, 
+            IMapper mapper,
+            IHttpContextAccessor httpContextAccessor
+            )
         {
             _workShopRepository = workShopRepository;
             _categoryRepository = categoryRepository;
+            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
 
@@ -32,10 +40,22 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             if (category != null)
             {
-                var WorkShops = _workShopRepository.Where(w => w.CategoryId == request.CategoryId).ToList();
+                var WorkShops = _workShopRepository.WhereThenInclude(w => w.CategoryId == request.CategoryId, w => w.Attachments).ToList();
                 var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops);
+                 bool isHttps = _httpContextAccessor.HttpContext.Request.IsHttps;
+
                 for (int i = 0; i < data.Count; i++)
                 {
+                    data[i].Attachments =  _mapper.Map<List<WorkshopAttachmentListVM>>(data[i].Attachments);
+                    for(int j = 0; j < data[i].Attachments.Count; j++)
+                    {
+                        data[i].Attachments[j].Name = request.lang == "en"
+                            ? data[i].Attachments[j].EnglishName
+                            : data[i].Attachments[j].ArabicName;
+                        data[i].Attachments[j].AttachementURl = isHttps
+                            ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{WorkShops[i].Attachments[j].AttachementPath.Split('\\').LastOrDefault()}"
+                            : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{WorkShops[i].Attachments[j].AttachementPath.Split('\\').LastOrDefault()}";
+                    }
                     data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
                 }
 

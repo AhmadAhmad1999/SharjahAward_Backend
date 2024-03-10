@@ -1,15 +1,22 @@
 ﻿using Aspose.Pdf.Plugins;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using NPOI.HPSF;
 using PdfSharpCore.Pdf;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
+using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment;
 using SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTrainingWorkshop;
 using SharijhaAward.Application.Features.TrainingWorkshops.Command.DeleteTrainingWorkshop;
 using SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTrainingWrokshop;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTrainingWorkshops;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTrainingWorkshopById;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId;
+using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
+using System;
 using System.Text.Json.Nodes;
 
 namespace SharijhaAward.Api.Controllers
@@ -19,10 +26,14 @@ namespace SharijhaAward.Api.Controllers
     public class TrainingWorkshopController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IWebHostEnvironment _environment;
+        private readonly IFileService<TrainingWrokshopeAttachment> _fileService;
 
-        public TrainingWorkshopController(IMediator mediator)
+        public TrainingWorkshopController(IFileService<TrainingWrokshopeAttachment> fileService, IMediator mediator, IWebHostEnvironment environment)
         {
             _mediator = mediator;
+            _environment = environment;
+            _fileService = fileService;
         }
 
         [HttpPost(Name = "CreateTrainingWorkshop")]
@@ -166,5 +177,60 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpPost("AddAttachmentToTrainingWorkShop", Name ="AddAttachmentToTrainingWorkShop")]
+        public async Task<IActionResult> AddAttachmentToTrainingWorkShop([FromForm] CreateWorkshopeAttachmentCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+
+        }
+        [HttpGet("Video",Name = "Video")]
+        //public async Task<IActionResult> Video()
+        //{
+        //    var filename = "file_example.mp4";
+        //    string path = Path.Combine(_environment.WebRootPath, "UploadedFiles/") + "9f9adbfa-e681-4436-b70e-20021bd04da8.mp4";
+        //    var filestream = await _fileService.ReadFileAsync(path);
+        //    return File(filestream, contentType: "video/mp4", fileDownloadName: filename, enableRangeProcessing: true);
+        //}
+        public IActionResult GetVideo()
+        {
+            var videoFileName = $"video.mp4";
+
+            // Path to video file
+            var videoPath = Path.Combine(_environment.WebRootPath, "UploadedFiles/") + "9f9adbfa-e681-4436-b70e-20021bd04da8.mp4";
+
+            if (!System.IO.File.Exists(videoPath))
+            {
+                return NotFound();
+            }
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(videoPath, FileMode.Open))
+            {
+                stream.CopyTo(memory);
+            }
+
+            memory.Position = 0;
+
+            return File(memory, GetContentType(videoFileName), videoFileName);
+        }
+
+        private static string GetContentType(string file)
+        {
+            var types = new Dictionary<string, string>
+            {
+                {".mp4", "video/mp4"}
+            };
+
+            var ext = Path.GetExtension(file);
+
+            return types[ext.ToLower()];
+        }
+
     }
 }

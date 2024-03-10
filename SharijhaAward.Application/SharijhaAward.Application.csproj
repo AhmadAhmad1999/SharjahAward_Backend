@@ -52,7 +52,6 @@
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
     <Folder Include="Features\TermsAndConditions\Attacments\Queries\" />
-    <Folder Include="Features\TrainingWorkshops\Attacments\Commands\" />
     <Folder Include="Features\TrainingWorkshops\Attacments\Queries\" />
   </ItemGroup>
 

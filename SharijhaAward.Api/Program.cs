@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
@@ -48,6 +49,12 @@ if (app.Environment.IsDevelopment())
 {
     
 }
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "wwwroot/UploadedFiles")),
+    RequestPath = "/UploadedFiles"
+});
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
