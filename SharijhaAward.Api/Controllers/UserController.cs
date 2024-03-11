@@ -111,14 +111,17 @@ namespace SharijhaAward.Api.Controllers
         public async Task<ActionResult> ChangePassword([FromBody]ChangePasswordQuery query)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var Language = HttpContext.Request.Headers["lang"];
+
 
             var token = HttpContext.Request.Headers.Authorization;
-            
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+
             query.Token = token! ;
-            query.lang = headerValue!;
+            query.lang = Language!;
             var response = await _mediator.Send(query);
 
             if (response.statusCode == 404)

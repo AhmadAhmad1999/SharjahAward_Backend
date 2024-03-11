@@ -366,7 +366,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Arbitrator");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.AttachmentModel.ConditionsAttachment", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AttachmentModel.ConditionAttachment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -375,6 +375,9 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<string>("AttachementPath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ConditionsProvidedFormsId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -402,17 +405,14 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<int>("SizeOfAttachmentInKB")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TermAndConditionId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TermAndConditionId");
+                    b.HasIndex("ConditionsProvidedFormsId");
 
-                    b.ToTable("Attachments");
+                    b.ToTable("conditionAttachments");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CategoryArbitratorModel.CategoryArbitrator", b =>
@@ -661,6 +661,48 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasIndex("UpdatedById");
 
                     b.ToTable("Committee");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel.ConditionsProvidedForms", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAgree")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProvidedFormId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TermAndConditionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProvidedFormId");
+
+                    b.HasIndex("TermAndConditionId");
+
+                    b.ToTable("Attachments");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", b =>
@@ -997,56 +1039,56 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1750),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7526),
                             Name = "Text",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1753),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7529),
                             Name = "Email",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1755),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7531),
                             Name = "Image",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1756),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7533),
                             Name = "File",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1758),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7535),
                             Name = "Phone Number",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1760),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7537),
                             Name = "Number",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1762),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7539),
                             Name = "Date",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1764),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7541),
                             Name = "List",
                             isDeleted = false
                         });
@@ -1090,56 +1132,56 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1805),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7594),
                             OperationAsString = ">",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1807),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7597),
                             OperationAsString = ">=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1809),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7599),
                             OperationAsString = "<",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1810),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7601),
                             OperationAsString = "<=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1812),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7604),
                             OperationAsString = "=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1814),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7606),
                             OperationAsString = "!=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1815),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7608),
                             OperationAsString = "is Empty",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1817),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7610),
                             OperationAsString = "is not Empty",
                             isDeleted = false
                         });
@@ -1183,7 +1225,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 10, 7, 46, 7, 507, DateTimeKind.Utc).AddTicks(1505),
+                            CreatedAt = new DateTime(2024, 3, 11, 8, 26, 18, 667, DateTimeKind.Utc).AddTicks(7224),
                             Name = "Category",
                             isDeleted = false
                         });
@@ -1382,6 +1424,9 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.Property<bool>("LinkedToAnotherAttribute")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("MaxSizeInKB")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -1614,6 +1659,9 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isAccepted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
@@ -3236,15 +3284,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.AttachmentModel.ConditionsAttachment", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AttachmentModel.ConditionAttachment", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Entities.TermsAndConditionsModel.TermAndCondition", "TermAndCondition")
+                    b.HasOne("SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel.ConditionsProvidedForms", "ConditionsProvidedForms")
                         .WithMany("Attachments")
-                        .HasForeignKey("TermAndConditionId")
+                        .HasForeignKey("ConditionsProvidedFormsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TermAndCondition");
+                    b.Navigation("ConditionsProvidedForms");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CategoryArbitratorModel.CategoryArbitrator", b =>
@@ -3350,6 +3398,25 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("CreatedBy");
 
                     b.Navigation("UpdatedBy");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel.ConditionsProvidedForms", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
+                        .WithMany()
+                        .HasForeignKey("ProvidedFormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.TermsAndConditionsModel.TermAndCondition", "TermAndCondition")
+                        .WithMany("ConditionAttachments")
+                        .HasForeignKey("TermAndConditionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProvidedForm");
+
+                    b.Navigation("TermAndCondition");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", b =>
@@ -4133,6 +4200,11 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("CategoryCommittees");
                 });
 
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel.ConditionsProvidedForms", b =>
+                {
+                    b.Navigation("Attachments");
+                });
+
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", b =>
                 {
                     b.Navigation("CriterionItemScales");
@@ -4211,7 +4283,7 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.TermsAndConditionsModel.TermAndCondition", b =>
                 {
-                    b.Navigation("Attachments");
+                    b.Navigation("ConditionAttachments");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", b =>

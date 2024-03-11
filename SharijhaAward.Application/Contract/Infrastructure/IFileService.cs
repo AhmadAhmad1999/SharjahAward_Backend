@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Contract.Infrastructure
 {
-    public interface IFileService<T>
+    public interface IFileService
     {
         Task<string> SaveFileAsync(IFormFile file);
         Task<byte[]> ReadFileAsync(string filePath);

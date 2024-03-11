@@ -123,15 +123,22 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllTermsAndConditionsByCategoryId/{Id}", Name = "GetAllTermsAndConditionsByCategoryId")]
+        
         public async Task<IActionResult> GetAllTermsAndConditionsByCategoryId(Guid Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
-
+            var token = HttpContext.Request.Headers.Authorization;
+           
+            if(token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
             var response = await _mediator.Send(new GetAllTermsByCategoryIdQuery()
             {
                 lang = Language!,
                 CategoryId = Id,
+                token = token!
             });
 
             return response.statusCode switch
@@ -147,7 +154,12 @@ namespace SharijhaAward.Api.Controllers
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
 
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
             var response = await _mediator.Send(new GetAllSpecialConditionsByCategoryIdQuery()
             {
                 lang = Language!,
@@ -165,8 +177,15 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost("AgreeOnTermAndCondition",Name ="AgreeOnTermAndCondition")]
         public async Task<IActionResult> AgreeOnTermAndCondition(AgreeOnTermsAndConditionQuery query)
         {
-            var response = await _mediator.Send(query);
+            var token = HttpContext.Request.Headers.Authorization;
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+            query.token = token!;
 
+            var response = await _mediator.Send(query);
+            
             return response.statusCode switch
             {
                 200 => Ok(response),

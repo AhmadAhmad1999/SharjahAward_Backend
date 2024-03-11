@@ -5,6 +5,8 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AttachmentModel;
+using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
+using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using System;
 using System.Collections.Generic;
@@ -18,29 +20,42 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
     public class CreateAttachmentCommandHandler
         : IRequestHandler<CreateAttachmentCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<ConditionsAttachment> _attachmentsRepository;
+        private readonly IAsyncRepository<ConditionAttachment> _attachmentsRepository;
         private readonly IAsyncRepository<TermAndCondition> _termsRepository;
-        private readonly IFileService<ConditionsAttachment> _attachmentFileService;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formsRepository;
+        private readonly IAsyncRepository<ConditionsProvidedForms> _conditionFormsRepository;
+        private readonly IFileService _attachmentFileService;
+        private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
         public CreateAttachmentCommandHandler
             (
-                 IAsyncRepository<ConditionsAttachment> attachmentsRepository,
-                 IFileService<ConditionsAttachment> attachmentFileService,
+                 IAsyncRepository<ConditionAttachment> attachmentsRepository,
+                 IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formsRepository,
                  IAsyncRepository<TermAndCondition> termsRepository,
+                 IAsyncRepository<ConditionsProvidedForms> conditionFormsRepository,
+                 IFileService attachmentFileService,
+                 IJwtProvider jwtProvider,
                  IMapper mapper
             )
         {
             _attachmentsRepository = attachmentsRepository;
             _attachmentFileService = attachmentFileService;
+            _conditionFormsRepository = conditionFormsRepository;
+            _formsRepository = formsRepository; 
             _termsRepository = termsRepository;
+            _jwtProvider = jwtProvider;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateAttachmentCommand request, CancellationToken cancellationToken)
         {
-            var term = _termsRepository.WhereThenInclude(t => t.Id == request.TermAndConditionId, t => t.Attachments).FirstOrDefault();
+            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
+            var form = _formsRepository.Where(f => f.userId== new Guid(UserId)).FirstOrDefault();
+            var term = _termsRepository.WhereThenInclude(t => t.Id == request.TermAndConditionId, t => t.ConditionAttachments).FirstOrDefault();
+           
             string msg;
+           
             if (term == null)
             {
                 msg = request.lang == "en"
@@ -49,15 +64,30 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
 
                 return new BaseResponse<object>(msg, false, 404);
             }
-            var data = _mapper.Map<ConditionsAttachment>(request);
+            
+            var conditionsProvided = _conditionFormsRepository
+                .Where(c => c.TermAndConditionId == term.Id)
+                .Where(c => c.ProvidedFormId == form!.Id).FirstOrDefault();
+
+            if(conditionsProvided == null)
+            {
+                conditionsProvided = new ConditionsProvidedForms()
+                {
+                    ProvidedFormId = form!.Id,
+                    TermAndConditionId = term!.Id,
+                };
+                conditionsProvided = await _conditionFormsRepository.AddAsync(conditionsProvided);
+            }
+           
+            var data = _mapper.Map<ConditionAttachment>(request);
+            data.ConditionsProvidedFormsId = conditionsProvided.Id;
           
             if(term.NeedAttachment)
             {
-                if (term.RequiredAttachmentNumber > term.Attachments.Count || term.RequiredAttachmentNumber == 0)
+                if (term.RequiredAttachmentNumber > term.ConditionAttachments.Count || term.RequiredAttachmentNumber == 0)
                 {
                     data.AttachementPath = await _attachmentFileService.SaveFileAsync(request.attachment);
                     await _attachmentsRepository.AddAsync(data);
-                  
                 }
                 else
                 {

@@ -1,6 +1,7 @@
 ﻿using Aspose.Pdf;
 using AutoMapper;
 using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -18,15 +19,18 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
     {
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
         public CreateCategoryCommandHandler(
             IAsyncRepository<Category> categoryRepository,
             IAsyncRepository<Cycle> cycleRepository,
+            IFileService fileService,
             IMapper mapper)
         {
             _categoryRepository = categoryRepository;
             _cycleRepository = cycleRepository;
+            _fileService = fileService;
             _mapper = mapper;
         }
 
@@ -59,7 +63,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
                 }
             }
             var category = _mapper.Map<Category>(request);
-
+            category.Icon = await  _fileService.SaveFileAsync(request.Icon);
             await _categoryRepository.AddAsync(category);
             
             msg = request.lang == "en"

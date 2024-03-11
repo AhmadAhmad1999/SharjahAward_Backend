@@ -22,12 +22,13 @@ using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 using SharijhaAward.Domain.Entities.FAQModel;
 using SharijhaAward.Domain.Entities.NewsModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
-using SharijhaAward.Domain.Entities.AttachmentModel;
 using System.Net.Mail;
 using SharijhaAward.Domain.Entities.CategoryFAQ;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
 using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
+using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
+using SharijhaAward.Domain.Entities.AttachmentModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -69,13 +70,15 @@ namespace SharijhaAward.Persistence
         public DbSet<StaticAttribute> StaticAttributes { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<TermAndCondition> TermsAndConditions {  get; set; }
-        public DbSet<ConditionsAttachment> Attachments { get; set; }
+        public DbSet<ConditionsProvidedForms> Attachments { get; set; }
         public DbSet<DynamicAttributePattern> DynamicAttributePatterns {  get; set; }
         public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues {  get; set; }
         public DbSet<CategoryFAQ> categoryFAQs { get; set; }
         public DbSet<ExplanatoryGuide> explanatoryGuides { get; set; }
         public DbSet<CycleCondition> cycleCondition { get; set; }
         public DbSet<TrainingWrokshopeAttachment> TrainingWrokshopeAttachment { get; set; }
+        public DbSet<ConditionAttachment> conditionAttachments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -104,13 +107,14 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<DynamicAttributeValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<TermAndCondition>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<ConditionsAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ConditionsProvidedForms>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<DynamicAttributePattern>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<DynamicAttributePatternValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryFAQ>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ExplanatoryGuide>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CycleCondition>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AttributeTableName>()
                 .HasData(new AttributeTableName()

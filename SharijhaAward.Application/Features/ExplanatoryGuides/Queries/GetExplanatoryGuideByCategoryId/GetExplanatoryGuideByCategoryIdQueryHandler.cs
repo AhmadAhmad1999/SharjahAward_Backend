@@ -18,11 +18,11 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
     {
         private readonly IAsyncRepository<ExplanatoryGuide> _explanatoryGuideRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
-        private readonly IFileService<ExplanatoryGuide> _fileService;
+        private readonly IFileService _fileService;
         public GetExplanatoryGuideByCategoryIdQueryHandler(
             IAsyncRepository<ExplanatoryGuide> explanatoryGuideRepository,
             IAsyncRepository<Category> categoryRepository,
-            IFileService<ExplanatoryGuide> fileService)
+            IFileService fileService)
         {
             _fileService = fileService;
             _categoryRepository = categoryRepository;
@@ -43,15 +43,14 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
                  fileContent = request.lang == "en"
                ? await _fileService.ReadFileAsync(Guide!.EnglishFilePath)
                : await _fileService.ReadFileAsync(Guide!.ArabicFilePath);
-
             }
             else
             {
-                fileContent = null;
+                fileContent = null!;
             }
             var data = new ExplanatoryGuideDto()
             {
-                fileContent = fileContent,
+                fileContent = fileContent!,
                 fileContentType = "applection/pdf",
                 fileFileName = Guide!.EnglishTitle
             };

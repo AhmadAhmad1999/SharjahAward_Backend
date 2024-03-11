@@ -24,7 +24,7 @@ namespace SharijhaAward.Infrastructure
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IEmailCodesGenerator,EmailCodesGenerator>();
-            services.AddScoped(typeof(IFileService<>),typeof(FileService<>));
+            services.AddScoped<IFileService, FileService>();
             services.AddScoped(typeof(IExcelHelper<>), typeof(ExcelHelper<>));
 
             return services;

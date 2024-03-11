@@ -49,7 +49,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             ProvidedForm.Status = 0;
             ProvidedForm.CurrentStep = 1;
 
-           var data =  await _Providedrepository.AddAsync(ProvidedForm);
+            var data =  await _Providedrepository.AddAsync(ProvidedForm);
             
             return new BaseResponse<int>("", true, 200, data.Id);
         }
