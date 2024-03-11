@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -1409,6 +1410,13 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             {
                 try
                 {
+                    // Hard Delete On Dynamic Values..
+                    List<DynamicAttributeValue> DynamicValuesToDelete = await _DynamicAttributeValueRepository
+                        .Where(x => x.RecordId == Request.RecordId).ToListAsync();
+                    
+                    if (DynamicValuesToDelete.Count() > 0)
+                        await _DynamicAttributeValueRepository.RemoveListAsync(DynamicValuesToDelete);
+
                     List<AddDynamicAttributeValueMainCommand> DynamicAttributesAsFile = Request.DynamicAttributesWithValues
                         .Where(x => x.ValueAsBinaryFile != null).ToList();
 

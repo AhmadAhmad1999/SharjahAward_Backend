@@ -27,8 +27,12 @@ namespace SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _GeneralValidationRepository = GeneralValidationRepository;
         }
-        public async Task<BaseResponse<UpdateDynamicAttributeValueResponse>> Handle(UpdateDynamicAttributeValueCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<UpdateDynamicAttributeValueResponse>> Handle(UpdateDynamicAttributeValueCommand Request,
+            CancellationToken cancellationToken)
         {
+            List<DynamicAttributeValue> AlreadyInsertedDynamicValues = await _DynamicAttributeValueRepository
+                .Where(x => x.RecordId == Request.RecordId).ToListAsync();
+
             string ResponseMessage = string.Empty;
 
             foreach (UpdateDynamicAttributeValueMainCommand InputDynamicAttributeWithValues in Request.DynamicAttributesWithValues)
@@ -525,7 +529,21 @@ namespace SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue
                                 .FirstOrDefault(x => x.DynamicAttributeId == DependencyEntityInGroup.DynamicAttributeId);
 
                             if (CheckIfDependencyValueIsInserted == null)
-                                break;
+                            {
+                                DynamicAttributeValue? CheckIfDependencyValueIsInsertedInDatabase = AlreadyInsertedDynamicValues
+                                    .FirstOrDefault(x => x.RecordId == Request.RecordId &&
+                                        x.DynamicAttributeId == DependencyEntityInGroup.DynamicAttributeId &&
+                                        x.isAccepted);
+
+                                if (CheckIfDependencyValueIsInsertedInDatabase == null)
+                                    break;
+
+                                CheckIfDependencyValueIsInserted = new UpdateDynamicAttributeValueMainCommand()
+                                {
+                                    DynamicAttributeId = CheckIfDependencyValueIsInsertedInDatabase.DynamicAttributeId,
+                                    Value = CheckIfDependencyValueIsInsertedInDatabase.Value
+                                };
+                            }
 
                             string? InputDynamicAttributeValue = CheckIfDependencyValueIsInserted.Value;
 
@@ -1334,7 +1352,6 @@ namespace SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue
                 try
                 {
                     // Hard Delete On Dynamic Values..
-
                     List<DynamicAttributeValue> DynamicValuesToDelete = await _DynamicAttributeValueRepository
                         .Where(x => x.RecordId == Request.RecordId).ToListAsync();
 
