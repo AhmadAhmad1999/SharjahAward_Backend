@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 {
     public class GetAllDynamicAttributeSectionsForAddQuery : IRequest<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>>
     {
-        public Guid CategoryId { get; set; }
+        public int ProvidedFormId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

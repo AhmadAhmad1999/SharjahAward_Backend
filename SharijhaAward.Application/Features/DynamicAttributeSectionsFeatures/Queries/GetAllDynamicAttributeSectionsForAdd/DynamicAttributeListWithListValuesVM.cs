@@ -12,7 +12,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
     public class DynamicAttributeListWithListValuesVM
     {
         public int Id { get; set; }
-        public string Key { get; set; } = null!;
         public string Label { get; set; } = null!;
         public string PlaceHolder { get; set; } = null!;
         public int AttributeDataTypeId { get; set; }
@@ -21,6 +20,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         public string? InsertedValueAsString { get; set; }
         public string? InsertedValueAsBinaryFilePath { get; set; }
         public bool isAccepted { get; set; }
+        public int? MaxSizeInKB { get; set; }
         public List<DynamicAttributeListValueListVM>? DynamicAttributeListValues { get; set; }
     }
 }

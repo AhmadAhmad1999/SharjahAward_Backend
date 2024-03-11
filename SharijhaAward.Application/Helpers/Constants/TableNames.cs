@@ -8,6 +8,6 @@ namespace SharijhaAward.Application.Helpers.Constants
 {
     public enum TableNames
     {
-        Category
+        ProvidedForm
     }
 }

@@ -26,7 +26,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                 .Select(x => new DynamicAttributeListVM()
                 {
                     Id = x.Id,
-                    Key = x.Key,
                     AttributeDataTypeName = x.AttributeDataType!.Name,
                     Label = Language == "ar"
                         ? x.ArabicLabel

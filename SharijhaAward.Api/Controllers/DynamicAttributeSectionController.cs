@@ -167,7 +167,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllDynamicAttributeSectionsForAdd(Guid CategoryId)
+        public async Task<IActionResult> GetAllDynamicAttributeSectionsForAdd(int ProvidedFormId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -177,7 +177,7 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>> Response = await _Mediator.Send(new GetAllDynamicAttributeSectionsForAddQuery()
             {
                 lang = HeaderValue!,
-                CategoryId = CategoryId
+                ProvidedFormId = ProvidedFormId
             });
 
             return Response.statusCode switch

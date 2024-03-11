@@ -167,7 +167,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                         CreateDynamicAttributeDto = new CreateDynamicAttributeDto()
                         {
                             Id = NewDynamicAttributeEntity.Id,
-                            Key = NewDynamicAttributeEntity.Key,
                             ArabicLabel = NewDynamicAttributeEntity.ArabicLabel,
                             EnglishLabel = NewDynamicAttributeEntity.EnglishLabel
                         }
