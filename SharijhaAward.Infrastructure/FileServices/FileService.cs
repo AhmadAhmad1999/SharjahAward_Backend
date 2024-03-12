@@ -10,7 +10,7 @@ using SharijhaAward.Domain.Entities.AttachmentModel;
 
 namespace SharijhaAward.Infrastructure.FileServices
 {
-    public class FileService<T> : IFileService<T> where T : class
+    public class FileService : IFileService
     {
 
         private readonly string _SavePath;

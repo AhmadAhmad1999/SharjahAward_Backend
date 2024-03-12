@@ -24,7 +24,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name ="CreateCategory")]
-        public async Task<IActionResult> CreteCategory([FromBody] CreateCategoryCommand command)
+        public async Task<IActionResult> CreteCategory([FromForm] CreateCategoryCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];

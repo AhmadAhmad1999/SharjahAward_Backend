@@ -18,10 +18,10 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
     {
         private readonly IAsyncRepository<TrainingWorkshop> _workshopRepository;
         private readonly IAsyncRepository<TrainingWrokshopeAttachment> _attachmentRepository;
-        private readonly IFileService<TrainingWrokshopeAttachment> _fileService;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public CreateWorkshopeAttachmentCommandHandler(IAsyncRepository<TrainingWorkshop> workshopRepository, IAsyncRepository<TrainingWrokshopeAttachment> attachmentRepository, IFileService<TrainingWrokshopeAttachment> fileService, IMapper mapper)
+        public CreateWorkshopeAttachmentCommandHandler(IAsyncRepository<TrainingWorkshop> workshopRepository, IAsyncRepository<TrainingWrokshopeAttachment> attachmentRepository, IFileService fileService, IMapper mapper)
         {
             _workshopRepository = workshopRepository;
             _attachmentRepository = attachmentRepository;

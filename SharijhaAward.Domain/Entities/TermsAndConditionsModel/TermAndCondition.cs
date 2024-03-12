@@ -2,12 +2,12 @@
 using System.Net.Mail;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
-using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.Common;
+using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
-namespace SharijhaAward.Domain.Entities.TermsAndConditionsModel; 
+namespace SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 
 public class TermAndCondition: AuditableEntity {
     public Guid Id { get; set; } 
@@ -32,6 +32,6 @@ public class TermAndCondition: AuditableEntity {
     public Guid CategoryId { get; set; }
     public Category Category { get; set; } = null!;
 
-    public List<ConditionsAttachment> Attachments { get; set; } = null!;
+    public List<ConditionsProvidedForms> ConditionAttachments { get; set; } = null!;
 
 }

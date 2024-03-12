@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId
 {
-    public class GetAllTermsByCategoryIdQuery : IRequest<BaseResponse<List<TermAndConditionListVM>>>
+    public class GetAllTermsByCategoryIdQuery : IRequest<BaseResponse<List<PublicTremsAndConditionsListVm>>>
     {
         public Guid CategoryId { get; set; }
+        public string token { get; set; } = string.Empty;
         public string lang { get; set; } = string.Empty;
     }
 }

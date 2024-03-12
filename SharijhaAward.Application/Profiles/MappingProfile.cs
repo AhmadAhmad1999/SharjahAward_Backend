@@ -65,7 +65,7 @@ using SharijhaAward.Application.Features.Cycles.Queries.GetCycleById;
 using SharijhaAward.Application.Features.User.Commands.UpdateUser;
 using SharijhaAward.Application.Features.Categories.Command.UpdateCategory;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
+
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.UpdateDynamicAttribute;
 using SharijhaAward.Domain.Entities.AgendaModel;
@@ -90,7 +90,6 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAll
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllAttributeTablesNames;
 using SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.GetAllDynamicAttributePattern;
 using SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.GetDynamicAttributePatternById;
-using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.CreateAttachment;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionById;
@@ -104,6 +103,9 @@ using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriter
 using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId;
+using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
+using SharijhaAward.Domain.Entities.AttachmentModel;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -202,9 +204,12 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<TermAndCondition, UpdateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionDto>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionListVM>().ReverseMap();
+            CreateMap<TermAndCondition, PublicTremsAndConditionsListVm>().ReverseMap();
 
-            CreateMap<ConditionsAttachment, AttachmentListVM>().ReverseMap();
-            CreateMap<ConditionsAttachment, CreateAttachmentCommand>().ReverseMap();
+            CreateMap<ConditionAttachment, AttachmentListVM>().ReverseMap();
+            CreateMap<ConditionAttachment, CreateAttachmentCommand>().ReverseMap();
+            CreateMap<ConditionsProvidedForms, ConditionProvidedFormListVm>().ReverseMap();
+            CreateMap<ConditionsProvidedForms, CreateAttachmentCommand>().ReverseMap();
 
             CreateMap<ProvidedForm, CreateProvidedFormCommand>().ReverseMap();
 

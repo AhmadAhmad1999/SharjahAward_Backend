@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.CategoryConstants;
 using SharijhaAward.Domain.Constants.Common;
@@ -16,7 +17,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
-        public string Icon { get; set; } = string.Empty;
+        public IFormFile Icon { get; set; } = null!;
         public CategoryClassification CategoryClassification { get; set; }
         public DateTime? SubscriberPortalClosingDate { get; set; }
         public DateTime? InitialArbitrationStartDate { get; set; }

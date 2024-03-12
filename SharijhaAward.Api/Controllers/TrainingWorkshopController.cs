@@ -27,9 +27,9 @@ namespace SharijhaAward.Api.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IWebHostEnvironment _environment;
-        private readonly IFileService<TrainingWrokshopeAttachment> _fileService;
+        private readonly IFileService _fileService;
 
-        public TrainingWorkshopController(IFileService<TrainingWrokshopeAttachment> fileService, IMediator mediator, IWebHostEnvironment environment)
+        public TrainingWorkshopController(IFileService fileService, IMediator mediator, IWebHostEnvironment environment)
         {
             _mediator = mediator;
             _environment = environment;
