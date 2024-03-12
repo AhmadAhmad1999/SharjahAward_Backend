@@ -29,6 +29,8 @@ using SharijhaAward.Domain.Entities.CycleConditionModel;
 using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.AttachmentModel;
+using SharijhaAward.Domain.Entities.CriterionModel;
+using SharijhaAward.Domain.Entities.CriterionItemModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -78,12 +80,21 @@ namespace SharijhaAward.Persistence
         public DbSet<CycleCondition> cycleCondition { get; set; }
         public DbSet<TrainingWrokshopeAttachment> TrainingWrokshopeAttachment { get; set; }
         public DbSet<ConditionAttachment> conditionAttachments { get; set; }
+        public DbSet<CriterionAttachment> CriterionAttachments { get; set; }
+        public DbSet<Criterion> Criterions { get; set; }
+        public DbSet<CriterionItem> CriterionItems { get; set; }
+        public DbSet<CriterionItemAttachment> CriterionItemAttachments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             //Filter for Deleted items
+            modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => !p.isDeleted);
+
             modelBuilder.Entity<Event>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Cycle>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<GroupInvitee>().HasQueryFilter(p => !p.isDeleted);

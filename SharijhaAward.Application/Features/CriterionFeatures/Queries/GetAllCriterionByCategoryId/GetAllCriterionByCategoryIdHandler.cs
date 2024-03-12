@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
@@ -19,16 +20,26 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
     public class GetAllCriterionByCategoryIdHandler : IRequestHandler<GetAllCriterionByCategoryIdQuery,
         BaseResponse<List<MainCriterionListVM>>>
     {
+        private readonly IMapper _Mapper;
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
-        public GetAllCriterionByCategoryIdHandler(IAsyncRepository<Category> CategoryRepository,
+        private readonly IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository;
+        private readonly IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository;
+
+        public GetAllCriterionByCategoryIdHandler(IMapper Mapper,
+            IAsyncRepository<Category> CategoryRepository,
             IAsyncRepository<Criterion> CriterionRepository,
-            IAsyncRepository<CriterionItem> CriterionItemRepository)
+            IAsyncRepository<CriterionItem> CriterionItemRepository,
+            IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
+            IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository)
         {
+            _Mapper = Mapper;
             _CategoryRepository = CategoryRepository;
             _CriterionRepository = CriterionRepository;
             _CriterionItemRepository = CriterionItemRepository;
+            _CriterionAttachmentRepository = CriterionAttachmentRepository;
+            _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
         }
         public async Task<BaseResponse<List<MainCriterionListVM>>> Handle(GetAllCriterionByCategoryIdQuery Request, CancellationToken cancellationToken)
         {
@@ -76,6 +87,9 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
 
                 foreach (SubCriterionListVM SubCriterionObject in MainCriterionObject.SubCriterionListVM)
                 {
+                    SubCriterionObject.SubCriterionAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionAttachmentRepository
+                        .Where(x => x.CriterionId == SubCriterionObject.Id));
+
                     SubCriterionObject.CriterionItemListVM = _CriterionItemRepository
                         .Where(x => x.CriterionId == SubCriterionObject.Id)
                         .Select(x => new CriterionItemListVM()
@@ -85,6 +99,12 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                                 ? x.ArabicName
                                 : x.EnglishName
                         }).ToList();
+
+                    foreach (CriterionItemListVM CriterionItemObject in SubCriterionObject.CriterionItemListVM)
+                    {
+                        CriterionItemObject.CriterionItemAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionItemAttachmentRepository
+                            .Where(x => x.CriterionItemId == CriterionItemObject.Id));
+                    }
                 }
 
                 FullObjectResponse.Add(MainCriterionObject);

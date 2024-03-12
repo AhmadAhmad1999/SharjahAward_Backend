@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Domain.Entities.CriterionModel;
+﻿using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
+using SharijhaAward.Domain.Entities.CriterionModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        public List<AttachmentListVM> CriterionItemAttachments { get; set; } = new List<AttachmentListVM>();
     }
 }

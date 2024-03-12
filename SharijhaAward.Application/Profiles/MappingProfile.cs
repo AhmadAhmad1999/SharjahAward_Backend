@@ -106,6 +106,8 @@ using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriteri
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
 using SharijhaAward.Domain.Entities.AttachmentModel;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionItemAttachment;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionAttachment;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -230,6 +232,10 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Criterion, CreateCriterionCommand > ().ReverseMap();
             CreateMap<Criterion, CreateSubCriterionDto> ().ReverseMap();
             CreateMap<CriterionItem, CreateCriterionItemDto> ().ReverseMap();
+            CreateMap<CriterionAttachment, CreateCriterionAttachmentCommand>().ReverseMap();
+            CreateMap<CriterionItemAttachment, CreateCriterionItemAttachmentCommand> ().ReverseMap();
+            CreateMap<CriterionAttachment, CreateCriterionAttachmentVM> ().ReverseMap();
+            CreateMap<CriterionItemAttachment, CreateCriterionItemAttachmentVM> ().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -255,6 +261,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<DynamicAttributePattern, GetAllDynamicAttributePatternListVM>().ReverseMap();
             CreateMap<DynamicAttributePatternValue, GetDynamicAttributePatternByIdValues>().ReverseMap();
             CreateMap<DynamicAttributePattern, GetDynamicAttributePatternByIdDto>().ReverseMap();
+            CreateMap<CriterionAttachment, AttachmentListVM>().ReverseMap();
+            CreateMap<CriterionItemAttachment, AttachmentListVM>().ReverseMap();
         }
     }
 }
