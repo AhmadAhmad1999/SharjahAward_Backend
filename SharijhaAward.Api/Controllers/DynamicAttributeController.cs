@@ -282,7 +282,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult>
-            AddDynamicAttributeValue([FromBody] AddDynamicAttributeValueCommand AddDynamicAttributeValueCommand)
+            AddDynamicAttributeValue([FromForm] AddDynamicAttributeValueCommand AddDynamicAttributeValueCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             AddDynamicAttributeValueCommand.lang = !string.IsNullOrEmpty(HeaderValue)
@@ -308,7 +308,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult>
-            AddDynamicAttributeValueForSave([FromBody] AddDynamicAttributeValueForSaveCommand AddDynamicAttributeValueForSaveCommand)
+            AddDynamicAttributeValueForSave([FromForm] AddDynamicAttributeValueForSaveCommand AddDynamicAttributeValueForSaveCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             AddDynamicAttributeValueForSaveCommand.lang = !string.IsNullOrEmpty(HeaderValue)

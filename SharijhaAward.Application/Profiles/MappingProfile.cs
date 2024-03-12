@@ -100,6 +100,10 @@ using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateExplan
 using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterion;
+using SharijhaAward.Domain.Entities.CriterionModel;
+using SharijhaAward.Domain.Entities.CriterionItemModel;
+using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -218,6 +222,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Dependency, CreateDependency>().ReverseMap();
             CreateMap<DependencyValidation, CreateDependencyValidation>().ReverseMap();
             CreateMap<DynamicAttributeSection, CreateDynamicAttributeSectionCommand>().ReverseMap();
+            CreateMap<Criterion, CreateCriterionCommand > ().ReverseMap();
+            CreateMap<Criterion, CreateSubCriterionDto> ().ReverseMap();
+            CreateMap<CriterionItem, CreateCriterionItemDto> ().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
