@@ -52,9 +52,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
                         data[i].Attachments[j].Name = request.lang == "en"
                             ? data[i].Attachments[j].EnglishName
                             : data[i].Attachments[j].ArabicName;
-                        data[i].Attachments[j].AttachementURl = isHttps
-                            ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{WorkShops[i].Attachments[j].AttachementPath.Split('\\').LastOrDefault()}"
-                            : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{WorkShops[i].Attachments[j].AttachementPath.Split('\\').LastOrDefault()}";
+                        data[i].Attachments[j].AttachementURl = WorkShops[i].Attachments[j].AttachementPath;
                     }
                     data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
                 }

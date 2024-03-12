@@ -1,11 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
-using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 using SharijhaAward.Application.Features.Categories.Command.CreateCategory;
 using SharijhaAward.Application.Features.Categories.Command.UpdateCategory;
-using SharijhaAward.Application.Features.Categories.Queries.GatCategoryById;
+using SharijhaAward.Application.Features.Categories.Queries.GetCategoryById;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories;
 

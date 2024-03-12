@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Domain.Entities.Common;
+﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.Common;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
@@ -10,15 +11,10 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.EducationalEntityModel
 {
-    public class EducationalEntity: AuditInformation<User>
+    public class EducationalEntity: AuditableEntity
     {
         public Guid Id { get; set; }
-
         public string Name { get; set; }=string.Empty;
 
-        public EducationalInstitution EducationalInstitution { get; set; } = null!;
-        
-        [ForeignKey(nameof(EducationalInstitution))]
-        public int EducationalInstitutionId {  get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Domain.Entities.CoordinatorModel;
+﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.EducationCoordinatorModel
 {
-    public class EducationCoordinator
+    public class EducationCoordinator : AuditableEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public DateTime RelatedDate { get; set; }
 

@@ -112,42 +112,23 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetNewsByCycleId",Name = "GetNewsByCycleId")]
-        public async Task<IActionResult> GetNewsByCycleId(int page, int perPage, Guid CycleId)
+        public async Task<IActionResult> GetNewsByCycleId()
         {
             //get Language from header
-
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
-            int pageSize = perPage == 0 ? 10 : perPage;
+            var Language = HttpContext.Request.Headers["lang"];
 
             //get data from mediator
-            var dto = await _mediator.Send(new GetNewsByCycleIdQuery()
+            var response = await _mediator.Send(new GetNewsByCycleIdQuery()
             {
-                lang = headerValue!,
-                page = page,
-                pageSize = pageSize,
-                CycleId = CycleId
-                
+                lang = Language!,
+           
             });
-            int totalCount = dto.totalItem;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
-
-            return Ok(
-                new
-                {
-                    dto,
-                    pagination =
-                    new
-                    {
-                        current_page = page,
-                        last_page = totalPage,
-                        total_row = totalCount,
-                        per_page = pageSize,
-                        currentPageCount= dto.data!.Count
-                    }
-
-                });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
     }
 }

@@ -29,7 +29,7 @@ using SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvidedForm
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Application.Features.Categories.Command.CreateCategory;
-using SharijhaAward.Application.Features.Categories.Queries.GatCategoryById;
+using SharijhaAward.Application.Features.Categories.Queries.GetCategoryById;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupByInviteeNumber;
@@ -106,6 +106,12 @@ using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriteri
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
 using SharijhaAward.Domain.Entities.AttachmentModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEducationalEntities;
+using SharijhaAward.Application.Features.EducationalEntities.Command.CreateEducationalEntity;
+using SharijhaAward.Domain.Entities.CoordinatorModel;
+using SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinator;
+using SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoordinator;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionItemAttachment;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionAttachment;
 
@@ -219,6 +225,12 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<TrainingWrokshopeAttachment, WorkshopAttachmentListVM>().ReverseMap();
             CreateMap<TrainingWrokshopeAttachment, CreateWorkshopeAttachmentCommand>().ReverseMap();
+
+            CreateMap<EducationalEntity, EducationalEntitiesListVm>().ReverseMap();
+            CreateMap<EducationalEntity, CreateEducationalEntityCommand>().ReverseMap();
+           
+            CreateMap<Coordinator, CreateCoordinatorCommand>().ReverseMap();
+            CreateMap<Coordinator, CoordinatorSearchListVM>().ReverseMap();
             //
             // Dynamic Attribute..
             //

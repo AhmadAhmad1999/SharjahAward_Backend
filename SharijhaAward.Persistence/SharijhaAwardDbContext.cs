@@ -29,6 +29,10 @@ using SharijhaAward.Domain.Entities.CycleConditionModel;
 using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.AttachmentModel;
+using SharijhaAward.Domain.Entities.CoordinatorModel;
+using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
+using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 
@@ -57,7 +61,6 @@ namespace SharijhaAward.Persistence
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<ProvidedForm> ProvidedForms { get; set; }
-        public DbSet<EducationType> EducationTypes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<AttributeDataType> AttributeDataTypes { get; set; }
         public DbSet<AttributeOperation> AttributeOperations { get; set; }
@@ -77,8 +80,13 @@ namespace SharijhaAward.Persistence
         public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues {  get; set; }
         public DbSet<CategoryFAQ> categoryFAQs { get; set; }
         public DbSet<ExplanatoryGuide> explanatoryGuides { get; set; }
-        public DbSet<CycleCondition> cycleCondition { get; set; }
+        public DbSet<CycleCondition> CycleCondition { get; set; }
         public DbSet<TrainingWrokshopeAttachment> TrainingWrokshopeAttachment { get; set; }
+        public DbSet<ConditionAttachment> ConditionAttachments { get; set; }
+        public DbSet<Coordinator> Coordinators { get; set; }
+        public DbSet<EducationalEntity> EducationalEntities { get; set; }
+        public DbSet<EducationCoordinator> EducationCoordinators { get; set; }
+        public DbSet<EducationalInstitution> EducationalInstitutions { get; set; }
         public DbSet<ConditionAttachment> conditionAttachments { get; set; }
         public DbSet<CriterionAttachment> CriterionAttachments { get; set; }
         public DbSet<Criterion> Criterions { get; set; }
@@ -126,6 +134,10 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<ExplanatoryGuide>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CycleCondition>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Coordinator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EducationCoordinator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EducationalEntity>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AttributeTableName>()
                 .HasData(new AttributeTableName()
@@ -518,6 +530,13 @@ namespace SharijhaAward.Persistence
                     RoleName = "User"
 
                 });
+            modelBuilder.Entity<Role>().HasData(
+                new Role 
+                {
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21"),
+                    RoleName = "Coordinator"
+                });
+
             modelBuilder.Entity<User>()
                 .HasData(new User()
                 {

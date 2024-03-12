@@ -14,16 +14,18 @@ namespace SharijhaAward.Infrastructure.FileServices
     {
 
         private readonly string _SavePath;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FileService( IWebHostEnvironment environment)
+        public FileService( IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
         {
 
-            _SavePath = Path.Combine(environment.ContentRootPath+"/wwwroot", "UploadedFiles");
+            _SavePath = Path.Combine(environment.ContentRootPath + "/wwwroot", "UploadedFiles");
 
-            if(!Directory.Exists(_SavePath))
+            if (!Directory.Exists(_SavePath))
             {
                 Directory.CreateDirectory(_SavePath);
             }
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<string> SaveFileAsync(IFormFile file)
@@ -34,8 +36,11 @@ namespace SharijhaAward.Infrastructure.FileServices
             {
                 await file.CopyToAsync(stream);
             }
+            bool isHttps = _httpContextAccessor.HttpContext!.Request.IsHttps;
 
-            return filePath;
+            return isHttps
+                  ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}{filePath.Split('\\').LastOrDefault()}"
+                  : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}{filePath.Split('\\').LastOrDefault()}";
         }
 
 
