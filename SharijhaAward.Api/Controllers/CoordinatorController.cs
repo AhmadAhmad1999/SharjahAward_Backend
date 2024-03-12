@@ -19,7 +19,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name = "CreateCoordinator")]
-        public async Task<IActionResult> CreateCoordinator(CreateCoordinatorCommand command)
+        public async Task<IActionResult> CreateCoordinator([FromForm] CreateCoordinatorCommand command)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
