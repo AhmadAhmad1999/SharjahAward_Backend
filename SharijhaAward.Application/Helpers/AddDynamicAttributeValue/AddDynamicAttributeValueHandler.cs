@@ -18,18 +18,21 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         private readonly IAsyncRepository<DependencyValidation> _DependencyValidationRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public AddDynamicAttributeValueHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<Dependency> DependencyRepository,
             IAsyncRepository<DependencyValidation> DependencyValidationRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<GeneralValidation> GeneralValidationRepository)
+            IAsyncRepository<GeneralValidation> GeneralValidationRepository,
+            IHttpContextAccessor HttpContextAccessor)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DependencyRepository = DependencyRepository;
             _DependencyValidationRepository = DependencyValidationRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _GeneralValidationRepository = GeneralValidationRepository;
+            _HttpContextAccessor = HttpContextAccessor;
         }
         public async Task<BaseResponse<AddDynamicAttributeValueResponse>> Handle(AddDynamicAttributeValueCommand Request, 
             CancellationToken cancellationToken)
@@ -54,8 +57,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                 {
                     // Unique Constraint..
                     DynamicAttributeValue? CheckUnique = await _DynamicAttributeValueRepository
-                        .FirstOrDefaultAsync(x => x.DynamicAttributeId == DynamicAttributeEntity.Id &&
-                            x.RecordId != Request.RecordId &&
+                        .IncludeThenFirstOrDefaultAsync(x => x.DynamicAttribute!, x => x.DynamicAttributeId == DynamicAttributeEntity.Id &&
+                            x.RecordId != Request.RecordId && x.DynamicAttribute!.IsUnique &&
                             x.Value.ToLower() == InputDynamicAttributeWithValues.ValueAsString.ToLower());
 
                     if (CheckUnique != null)
@@ -64,7 +67,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                             ? $"{DynamicAttributeEntity.EnglishLabel}'s value is already used, please insert a different value"
                             : $"قيمة هذا الحقل: {DynamicAttributeEntity.ArabicLabel} مستخدمة مسبقاً, الرجاء إدخال قيمة مختلفة";
 
-                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 404);
+                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                     }
                 }
 
@@ -96,7 +99,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == "=")
@@ -109,7 +112,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -120,7 +123,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -131,7 +134,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                         }
@@ -145,7 +148,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -156,7 +159,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                         }
@@ -173,7 +176,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == "=")
@@ -184,7 +187,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -195,7 +198,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -206,7 +209,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == "<")
@@ -219,7 +222,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
 
                                 int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -230,7 +233,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsInteger}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsInteger}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == "<=")
@@ -243,7 +246,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
 
                                 int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -254,7 +257,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsInteger}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == ">")
@@ -267,7 +270,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
 
                                 int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -278,7 +281,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsInteger}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsInteger}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == ">=")
@@ -291,7 +294,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
 
                                 int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -302,7 +305,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsInteger}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                         }
@@ -316,7 +319,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -327,7 +330,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                         }
@@ -344,7 +347,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == "=")
@@ -355,7 +358,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -366,7 +369,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -377,7 +380,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == "<")
@@ -391,7 +394,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
 
                                 DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -402,7 +405,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsDateOnly}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsDateOnly}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == "<=")
@@ -416,7 +419,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
 
                                 DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -427,7 +430,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsDateOnly}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == ">")
@@ -441,7 +444,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
 
                                 DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -452,7 +455,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsDateOnly}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsDateOnly}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation == ">=")
@@ -466,7 +469,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
 
                                 DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -477,7 +480,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsDateOnly}"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                         }
@@ -491,7 +494,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -502,7 +505,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                 }
                             }
                         }
@@ -520,7 +523,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                     ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                     : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                             }
                         }
                         else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -531,7 +534,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                     ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                     : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                             }
                         }
                     }
@@ -670,7 +673,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
@@ -691,7 +694,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
@@ -712,7 +715,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
@@ -733,7 +736,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
@@ -812,7 +815,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -834,7 +837,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -856,7 +859,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -878,7 +881,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -964,7 +967,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "=")
@@ -975,7 +978,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -986,7 +989,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -997,7 +1000,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -1011,7 +1014,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1022,7 +1025,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -1039,7 +1042,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "=")
@@ -1050,7 +1053,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -1061,7 +1064,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1072,7 +1075,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "<")
@@ -1085,7 +1088,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -1096,7 +1099,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsInteger}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsInteger}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "<=")
@@ -1109,7 +1112,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -1120,7 +1123,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsInteger}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == ">")
@@ -1133,7 +1136,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -1144,7 +1147,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsInteger}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsInteger}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == ">=")
@@ -1157,7 +1160,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -1168,7 +1171,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsInteger}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -1182,7 +1185,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1193,7 +1196,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -1210,7 +1213,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "=")
@@ -1221,7 +1224,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -1232,7 +1235,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1243,7 +1246,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "<")
@@ -1257,7 +1260,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -1268,7 +1271,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsDateOnly}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsDateOnly}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "<=")
@@ -1282,7 +1285,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -1293,7 +1296,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsDateOnly}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == ">")
@@ -1307,7 +1310,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -1318,7 +1321,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsDateOnly}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsDateOnly}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == ">=")
@@ -1332,7 +1335,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -1343,7 +1346,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsDateOnly}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -1357,7 +1360,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1368,7 +1371,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -1386,7 +1389,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                             ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                             : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                     }
                                 }
                                 else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1397,7 +1400,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                             ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                             : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 422);
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                     }
                                 }
                             }
@@ -1422,22 +1425,32 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 
                     foreach (AddDynamicAttributeValueMainCommand DynamicAttributeAsFile in DynamicAttributesAsFile)
                     {
-                        string? FolderPath = Path.Combine(Request.WWWRootFilePath!, Request.RecordId.ToString());
+                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
 
-                        if (!Directory.Exists(FolderPath))
-                            Directory.CreateDirectory(FolderPath);
+                        string FolderPath = isHttps
+                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
+                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
 
-                        string? FileName = $"{Path.GetExtension(DynamicAttributeAsFile.ValueAsBinaryFile!.FileName)}";
+                        string? FileName = $"{Request.RecordId}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
 
-                        string? FilePath = Path.Combine(FolderPath, FileName);
-                            
-                        using (FileStream FileStream = new FileStream(FilePath, FileMode.Create))
+                        string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
+
+                        string? FolderPathToCreate = Request.WWWRootFilePath!;
+                        string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
+
+                        while (File.Exists(FilePathToSaveIntoDataBase))
+                        {
+                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
+                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
+                        }
+
+                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
                         {
                             DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(FileStream);
                         }
 
                         DynamicAttributeAsFile.ValueAsBinaryFile = null;
-                        DynamicAttributeAsFile.ValueAsString = FilePath;
+                        DynamicAttributeAsFile.ValueAsString = FilePathToSaveIntoDataBase;
                     }
 
                     List<DynamicAttributeValue> DynamicAttributeValuesEntities = Request.DynamicAttributesWithValues

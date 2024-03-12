@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
@@ -17,21 +18,16 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
         BaseResponse<AddDynamicAttributeValueForSaveResponse>>
     {
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
-        private readonly IAsyncRepository<Dependency> _DependencyRepository;
-        private readonly IAsyncRepository<DependencyValidation> _DependencyValidationRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
-        private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
+
         public AddDynamicAttributeValueForSaveHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
-            IAsyncRepository<Dependency> DependencyRepository,
-            IAsyncRepository<DependencyValidation> DependencyValidationRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<GeneralValidation> GeneralValidationRepository)
+            IHttpContextAccessor HttpContextAccessor)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
-            _DependencyRepository = DependencyRepository;
-            _DependencyValidationRepository = DependencyValidationRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
-            _GeneralValidationRepository = GeneralValidationRepository;
+            _HttpContextAccessor = HttpContextAccessor;
         }
 
         public async Task<BaseResponse<AddDynamicAttributeValueForSaveResponse>> Handle(AddDynamicAttributeValueForSaveCommand Request,
@@ -68,22 +64,32 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
 
                     foreach (AddDynamicAttributeValueForSaveMainCommand DynamicAttributeAsFile in DynamicAttributesAsFile)
                     {
-                        string? FolderPath = Path.Combine(Request.WWWRootFilePath!, Request.RecordId.ToString());
+                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
 
-                        if (!Directory.Exists(FolderPath))
-                            Directory.CreateDirectory(FolderPath);
+                        string FolderPath = isHttps
+                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
+                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
 
-                        string? FileName = $"{Path.GetExtension(DynamicAttributeAsFile.ValueAsBinaryFile!.FileName)}";
+                        string? FileName = $"{Request.RecordId}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
 
-                        string? FilePath = Path.Combine(FolderPath, FileName);
+                        string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
 
-                        using (FileStream FileStream = new FileStream(FilePath, FileMode.Create))
+                        string? FolderPathToCreate = Request.WWWRootFilePath!;
+                        string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
+
+                        while (File.Exists(FilePathToSaveIntoDataBase))
+                        {
+                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
+                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
+                        }
+
+                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
                         {
                             DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(FileStream);
                         }
 
                         DynamicAttributeAsFile.ValueAsBinaryFile = null;
-                        DynamicAttributeAsFile.ValueAsString = FilePath;
+                        DynamicAttributeAsFile.ValueAsString = FilePathToSaveIntoDataBase;
                     }
 
                     List<DynamicAttributeValue> DynamicAttributeValuesEntities = Request.DynamicAttributesWithValues
