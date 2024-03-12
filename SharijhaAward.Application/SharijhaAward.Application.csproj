@@ -49,6 +49,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Coordinators\Commands\DeleteCoordinator\" />
+    <Folder Include="Features\Coordinators\Commands\UpdateCoordinator\" />
+    <Folder Include="Features\Coordinators\Queries\GetAllCoordinators\" />
+    <Folder Include="Features\Coordinators\Queries\GetCoordinatorById\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
     <Folder Include="Features\TermsAndConditions\Attacments\Queries\" />

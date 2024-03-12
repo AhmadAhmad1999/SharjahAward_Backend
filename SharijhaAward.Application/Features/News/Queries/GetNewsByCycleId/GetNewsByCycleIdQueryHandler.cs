@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.NewsModel;
 using System;
 using System.Collections.Generic;
@@ -16,18 +18,19 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
         : IRequestHandler<GetNewsByCycleIdQuery, BaseResponse<List<NewsListVM>>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
+        private readonly IAsyncRepository<Cycle> _cycleRepository;
         private readonly IMapper _mapper;
         
-        public GetNewsByCycleIdQueryHandler(IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
+        public GetNewsByCycleIdQueryHandler(IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
         {
+            _cycleRepository = cycleRepository;
             _newsRepository = newsRepository;
             _mapper = mapper;
         }
         public async Task<BaseResponse<List<NewsListVM>>> Handle(GetNewsByCycleIdQuery request, CancellationToken cancellationToken)
         {
-            var NewsListByCycle = request.pageSize == -1 || request.page == 0
-                ? await _newsRepository.ListAllAsync()
-                : await _newsRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var Cycle = await _cycleRepository.OrderBy(c=>c.CreatedAt).LastOrDefaultAsync();
+            var NewsListByCycle = _newsRepository.Where(n => n.CycleId == Cycle!.Id).ToList();
             string msg;
 
             if (NewsListByCycle.Count == 0)
@@ -38,39 +41,24 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
 
                 return new BaseResponse<List<NewsListVM>>(msg, true, 200);
             }
-            List<NewsListVM> newsListVm = new List<NewsListVM>();
+            var data = _mapper.Map<List<NewsListVM>>(NewsListByCycle);
 
-            for (int i = 0; i < NewsListByCycle.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                NewsListVM newsVM = new NewsListVM();
-                if (NewsListByCycle[i].CycleId == request.CycleId)
-                {
-                    newsVM.Id = NewsListByCycle[i].Id;
-                    newsVM.ArabicTitle = NewsListByCycle[i].ArabicTitle;
-                    newsVM.ArabicDescription = NewsListByCycle[i].ArabicDescription;
-                    newsVM.EnglishTitle = NewsListByCycle[i].EnglishTitle;
-                    newsVM.EnglishDescription = NewsListByCycle[i].EnglishDescription;
-                    newsVM.CycleId = NewsListByCycle[i].CycleId;
-                    newsVM.Image = NewsListByCycle[i].Image;
-                    newsVM.Title = request.lang == "en"
+                data[i].Title = request.lang == "en"
                         ? NewsListByCycle[i].EnglishTitle
                         : NewsListByCycle[i].ArabicTitle;
 
-                    newsVM.Description = request.lang == "en"
+                data[i].Description = request.lang == "en"
                         ? NewsListByCycle[i].EnglishDescription!
                         : NewsListByCycle[i].ArabicDescription!;
-
-                    newsListVm.Add(newsVM);
-                }
             }
-            var Data = _mapper.Map<List<NewsListVM>>(newsListVm);
 
             msg = request.lang == "en"
                 ? "The News Retrieved Success"
                 : "تم إسترجاع الاأخبار بنجاح";
 
-
-            return new BaseResponse<List<NewsListVM>>(msg, false, 200, Data);
+            return new BaseResponse<List<NewsListVM>>(msg, false, 200, data);
         }
     }
 }

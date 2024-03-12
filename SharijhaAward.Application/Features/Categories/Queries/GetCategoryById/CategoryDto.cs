@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.Categories.Queries.GatCategoryById
+namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
 {
     public class CategoryDto
     {
