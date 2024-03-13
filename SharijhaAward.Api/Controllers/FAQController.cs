@@ -80,7 +80,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new DeleteFAQCommand()
+            var response = await _mediator.Send(new GetFAQByIdQuery()
             {
                 Id = Id,
                 lang = language!

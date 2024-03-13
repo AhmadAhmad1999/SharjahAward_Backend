@@ -114,6 +114,9 @@ using SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinator
 using SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoordinator;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionItemAttachment;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionAttachment;
+using SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForms;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFormById;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -220,6 +223,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ConditionsProvidedForms, CreateAttachmentCommand>().ReverseMap();
 
             CreateMap<ProvidedForm, CreateProvidedFormCommand>().ReverseMap();
+            CreateMap<ProvidedForm, FormListVm>().ReverseMap();
+            CreateMap<ProvidedForm, ProvidedFormDto>().ReverseMap();
 
             CreateMap<ExplanatoryGuide, CreateExplanatoryGuideCommand>().ReverseMap();
 
@@ -231,6 +236,8 @@ namespace SharijhaAward.Application.Profiles
            
             CreateMap<Coordinator, CreateCoordinatorCommand>().ReverseMap();
             CreateMap<Coordinator, CoordinatorSearchListVM>().ReverseMap();
+            CreateMap<Coordinator, CoordinatorDto>().ReverseMap();
+
             //
             // Dynamic Attribute..
             //

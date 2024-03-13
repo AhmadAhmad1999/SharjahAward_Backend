@@ -13,6 +13,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string SchoolName { get; set; } = string.Empty;
-
+        public string PersonalPhoto { get; set; } = string.Empty;
     }
 }

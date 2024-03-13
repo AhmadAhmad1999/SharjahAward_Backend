@@ -85,7 +85,7 @@ namespace SharijhaAward.Persistence
         public DbSet<ConditionAttachment> ConditionAttachments { get; set; }
         public DbSet<Coordinator> Coordinators { get; set; }
         public DbSet<EducationalEntity> EducationalEntities { get; set; }
-        public DbSet<EducationCoordinator> EducationCoordinators { get; set; }
+        public DbSet<EduEntitiesCoordinator> EducationCoordinators { get; set; }
         public DbSet<EducationalInstitution> EducationalInstitutions { get; set; }
         public DbSet<ConditionAttachment> conditionAttachments { get; set; }
         public DbSet<CriterionAttachment> CriterionAttachments { get; set; }
@@ -135,7 +135,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CycleCondition>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Coordinator>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<EducationCoordinator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EduEntitiesCoordinator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalEntity>().HasQueryFilter(p => !p.isDeleted);
 
@@ -323,108 +323,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Subscriber>().HasBaseType<User>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SharijhaAwardDbContext).Assembly);
-            modelBuilder.Entity<Criterion>()
-                .HasData(new Criterion()
-                {
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ArabicTitle = "معيار رئيسي 1",
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
-                    EnglishTitle = "Main Criterion 1",
-                    ParentId = null,
-                    Score = 100
-                }, new Criterion()
-                {
-                    Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ArabicTitle = "معيار فرعي 1",
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
-                    EnglishTitle = "Sub Criterion 1",
-                    ParentId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
-                    Score = 50
-                }, new Criterion()
-                {
-                    Id = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ArabicTitle = "معيار فرعي 2",
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
-                    EnglishTitle = "Sub Criterion 2",
-                    ParentId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
-                    Score = 50
-                });
-            modelBuilder.Entity<CriterionItem>()
-                .HasData(new CriterionItem()
-                {
-                    Id = new Guid("5542d87a-7f44-4163-5e3c-08dc427e4e9f"),
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ActualScore = 0,
-                    Score = 50,
-                    ArabicName = "بند معيار فرعي 11",
-                    CriterionId = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
-                    EnglishName = "Sub Criterion Item 11"
-                }, new CriterionItem()
-                {
-                    Id = new Guid("fea46b75-b836-4dcc-5e3d-08dc427e4e9f"),
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ActualScore = 0,
-                    Score = 50,
-                    ArabicName = "بند معيار فرعي 12",
-                    CriterionId = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
-                    EnglishName = "Sub Criterion Item 12"
-                }, new CriterionItem()
-                {
-                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e9f"),
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ActualScore = 0,
-                    Score = 50,
-                    ArabicName = "بند معيار فرعي 21",
-                    CriterionId = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
-                    EnglishName = "Sub Criterion Item 21"
-                }, new CriterionItem()
-                {
-                    Id = new Guid("06fc4cca-fe8f-4c01-5e3f-08dc427e4e9f"),
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ActualScore = 0,
-                    Score = 50,
-                    ArabicName = "بند معيار فرعي 22",
-                    CriterionId = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
-                    EnglishName = "Sub Criterion Item 22"
-                });
+
             modelBuilder.Entity<PersonalInvitee>()
                 .HasIndex(p => new { p.Email, p.isDeleted })
                 .HasFilter("[isDeleted] = 0")

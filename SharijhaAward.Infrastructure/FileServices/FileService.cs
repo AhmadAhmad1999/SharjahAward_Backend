@@ -39,8 +39,8 @@ namespace SharijhaAward.Infrastructure.FileServices
             bool isHttps = _httpContextAccessor.HttpContext!.Request.IsHttps;
 
             return isHttps
-                  ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}{filePath.Split('\\').LastOrDefault()}"
-                  : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}{filePath.Split('\\').LastOrDefault()}";
+                  ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{filePath.Split('\\').LastOrDefault()}"
+                  : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{filePath.Split('\\').LastOrDefault()}";
         }
 
 

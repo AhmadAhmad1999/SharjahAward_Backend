@@ -11,5 +11,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.ChangeStep
     public class ChangeStepQuery : IRequest<BaseResponse<object>>
     {
         public int FormId { get; set; }
+        public int step {  get; set; }
     }
 }

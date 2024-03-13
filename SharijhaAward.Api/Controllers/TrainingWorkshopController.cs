@@ -37,13 +37,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name = "CreateTrainingWorkshop")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
+
         public async Task<ActionResult> CreateTrainingWorkshop([FromBody] CreateTrainingWorkshopsCommand command)
         {
             var response = await _mediator.Send(command);
@@ -55,12 +49,7 @@ namespace SharijhaAward.Api.Controllers
                 });
         }
         [HttpPut(Name = "UpdateTringingWorkshop")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+
         public async Task<ActionResult> UpdateTringingWorkshop([FromBody] UpdateTrainingWorkshopCommand command)
         {
             var response = await _mediator.Send(command);
@@ -72,12 +61,7 @@ namespace SharijhaAward.Api.Controllers
                 });
         }
         [HttpDelete(Name = "DeleteTrainingWorkshop")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+
         public async Task<ActionResult> DeleteTrainingWorkshop(Guid Id)
         {
             var response = await _mediator.Send(new DeleteTrainingWorkshopCommand() {Id = Id });
@@ -89,12 +73,7 @@ namespace SharijhaAward.Api.Controllers
                 });
         }
         [HttpGet("{Id}", Name = "GetTrainingWorkshopById")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+
         public async Task<ActionResult> GetTrainingWorkshopById(Guid Id)
         {
             var headerValue = HttpContext.Request.Headers["lang"];
@@ -113,51 +92,26 @@ namespace SharijhaAward.Api.Controllers
                 });
         }
         [HttpGet(Name="GetAllTrainingWorkshops")]
-        public async Task<ActionResult> GetAllTrainingWorkshops(int page, int perPage)
+        public async Task<ActionResult> GetAllTrainingWorkshops(int page = 1, int perPage = 10)
         {
             //get Language from header
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            var Language = HttpContext.Request.Headers["lang"];
 
             //get data from mediator
-            var dto = await _mediator.Send(new GetAllTrainingWorkshopsQuery()
+            var response = await _mediator.Send(new GetAllTrainingWorkshopsQuery()
             {
-                lang = headerValue!
+                lang = Language!,
+                pageSize=perPage,
+                page = page
+                
             });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
 
-            // Pagenation
-            if (perPage == 0)
-                perPage = 10;
-            else if (perPage == -1)
-                return Ok(
-                new
-                {
-                    data = dto,
-                    status = true,
-                });
-
-            var totalCount = dto.Count;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
-            var dataPerPage = dto
-                .Skip((page - 1) * perPage)
-                .Take(perPage)
-                .ToList();
-
-            return Ok(
-                new
-                {
-                    data = dataPerPage,
-                    status = true,
-                    pagination =
-                    new
-                    {
-                        current_page = page,
-                        last_page = totalPage,
-                        total_row = totalCount,
-                        per_page = perPage
-                    }
-                });
         }
         [HttpGet("GetWorkShopsByCategoryId/{Id}",Name= "GetWorkShopsByCategoryId")]
         public async Task<IActionResult> GetTrainingWorkShopsByCategoryId(Guid Id)
