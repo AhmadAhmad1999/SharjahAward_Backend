@@ -44,10 +44,11 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             ProvidedForm.userId = new Guid(UserId);
             ProvidedForm.CycleNumber = cycle.CycleNumber;
             ProvidedForm.CycleYear = cycle.Year;
-            ProvidedForm.PercentCompletion = 5;
             ProvidedForm.Type = 0;
             ProvidedForm.Status = 0;
             ProvidedForm.CurrentStep = 1;
+            ProvidedForm.TotalStep = 7;
+            ProvidedForm.PercentCompletion = (ProvidedForm.CurrentStep * 100) / ProvidedForm.TotalStep;
 
             var data =  await _Providedrepository.AddAsync(ProvidedForm);
             

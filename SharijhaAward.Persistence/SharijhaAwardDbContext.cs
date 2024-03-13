@@ -89,7 +89,7 @@ namespace SharijhaAward.Persistence
         public DbSet<ConditionAttachment> ConditionAttachments { get; set; }
         public DbSet<Coordinator> Coordinators { get; set; }
         public DbSet<EducationalEntity> EducationalEntities { get; set; }
-        public DbSet<EducationCoordinator> EducationCoordinators { get; set; }
+        public DbSet<EduEntitiesCoordinator> EducationCoordinators { get; set; }
         public DbSet<EducationalInstitution> EducationalInstitutions { get; set; }
         public DbSet<ConditionAttachment> conditionAttachments { get; set; }
         public DbSet<CriterionAttachment> CriterionAttachments { get; set; }
@@ -141,7 +141,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CycleCondition>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Coordinator>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<EducationCoordinator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EduEntitiesCoordinator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalEntity>().HasQueryFilter(p => !p.isDeleted);
 
@@ -357,6 +357,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Subscriber>().HasBaseType<User>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SharijhaAwardDbContext).Assembly);
+
             modelBuilder.Entity<Criterion>()
                 .HasData(new Criterion()
                 {

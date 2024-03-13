@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.EducationCoordinatorModel
 {
-    public class EducationCoordinator : AuditableEntity
+    public class EduEntitiesCoordinator : AuditableEntity
     {
         public Guid Id { get; set; }
 

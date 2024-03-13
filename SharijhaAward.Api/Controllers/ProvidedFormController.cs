@@ -1,8 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvidedForm;
+using SharijhaAward.Application.Features.ProvidedForm.Command.DeleteProvidedForm;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.ChangeStep;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForms;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFormById;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm;
+using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SharijhaAward.Api.Controllers
@@ -36,6 +43,25 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpDelete(Name="DeleteProvidedForm")]
+        public async Task<IActionResult> DeleteProvidedForm(int Id)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new DeleteProvidedFormCommand()
+            {
+                lang =Language!,
+                providedFormId = Id
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
 
         [HttpPost("ChangeStep", Name= "ChangeStep")]
         public async Task<IActionResult> ChangeStep(ChangeStepQuery query)
@@ -45,6 +71,66 @@ namespace SharijhaAward.Api.Controllers
             return response.statusCode switch
             {
                 200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet(Name="GetAllProvidedForm")]
+        public async Task<IActionResult> GetAllProvidedForm([FromQuery] ProvidedFormType? Type)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+            var response = await _mediator.Send(new GetAllProvidedFormsQuery()
+            {
+                token = token!,
+                Type = Type
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                403 => Unauthorized(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("{Id}", Name="GetProvidedFormById")]
+        public async Task<IActionResult> GetProvidedFormById(int Id)
+        {
+            var response = await _mediator.Send(new GetProvidedFormByIdQuery()
+            {
+                Id = Id
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response), 
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpPost("SigningTheForm", Name= "SigningTheForm")]
+        public async Task<IActionResult> SigningTheForm(SigningTheFormQuery query)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+            query.token = token!;
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                403 => Unauthorized(response),
                 404 => NotFound(response),
                 _ => BadRequest(response)
             };

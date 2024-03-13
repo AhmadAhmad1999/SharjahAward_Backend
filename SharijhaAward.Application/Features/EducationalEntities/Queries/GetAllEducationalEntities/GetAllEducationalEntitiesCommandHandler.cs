@@ -26,6 +26,11 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
         public async Task<BaseResponse<List<EducationalEntitiesListVm>>> Handle(GetAllEducationalEntitiesCommand request, CancellationToken cancellationToken)
         {
             var EducationalEntities = await _eucationalEntityRepository.ListAllAsync();
+            if (request.Name != null && EducationalEntities.Count() > 0)
+            {
+                EducationalEntities = _eucationalEntityRepository.Where(e => e.Name.ToLower().Contains(request.Name!.ToLower())).ToList();
+            }
+            
             var data = _mapper.Map<List<EducationalEntitiesListVm>>(EducationalEntities);
 
             return new BaseResponse<List<EducationalEntitiesListVm>>("", true, 200, data);

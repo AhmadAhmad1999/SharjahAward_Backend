@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTrainingWorkshops
 {
     public class GetAllTrainingWorkshopQueryHandler
-        : IRequestHandler<GetAllTrainingWorkshopsQuery, List<TrainingWorkshopListVm>>
+        : IRequestHandler<GetAllTrainingWorkshopsQuery, BaseResponse<List<TrainingWorkshopListVm>>>
     {
         private readonly IAsyncRepository<TrainingWorkshop> _trainingWorkshopRepository;
         private readonly IMapper _mapper;
@@ -23,34 +24,23 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTra
             _mapper = mapper;
         }
 
-        public async Task<List<TrainingWorkshopListVm>> Handle(GetAllTrainingWorkshopsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<TrainingWorkshopListVm>>> Handle(GetAllTrainingWorkshopsQuery request, CancellationToken cancellationToken)
         {
-            var workShops = await _trainingWorkshopRepository.ListAllAsync();
+            var workShops = await _trainingWorkshopRepository.GetPagedReponseAsync(request.page, request.pageSize);
             if (workShops.Count == 0)
             {
-                return _mapper.Map<List<TrainingWorkshopListVm>>(workShops);
+                return new BaseResponse<List<TrainingWorkshopListVm>>("", true, 200);
             }
-            List<TrainingWorkshopListVm> trainingWorkshops = new List<TrainingWorkshopListVm>();
-            for(int i = 0 ; i < workShops.Count ; i++)
+            var data = _mapper.Map<List<TrainingWorkshopListVm>>(workShops);
+            for(int i = 0 ; i < data.Count ; i++)
             {
-                TrainingWorkshopListVm listVm = new TrainingWorkshopListVm()
-                {
-                    Id = workShops[i].Id,
-                    ArabicTitle = workShops[i].ArabicTitle,
-                    EnglishTitle = workShops[i].EnglishTitle,
-                   
-                    Thumbnail = workShops[i].Thumbnail,
-
-                    Title = request.lang=="ar"?
-                    workShops[i].ArabicTitle :
-                    workShops[i].EnglishTitle,
-
-                    
-                   
-                };
-                trainingWorkshops.Add(listVm);
+                data[i].Title = request.lang == "ar" ?
+                 data[i].ArabicTitle :
+                 data[i].EnglishTitle;
             }
-            return _mapper.Map<List<TrainingWorkshopListVm>>(trainingWorkshops);
+            int count = _trainingWorkshopRepository.GetCount(t =>!t.isDeleted);
+            var pagenation = new Pagination(request.page, request.pageSize, count);
+            return new BaseResponse<List<TrainingWorkshopListVm>>("", true, 200,data,pagenation);
         }
     }
 }
