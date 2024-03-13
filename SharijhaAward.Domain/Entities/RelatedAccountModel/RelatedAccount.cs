@@ -1,15 +1,14 @@
-﻿using SharijhaAward.Domain.Entities.Common;
-using SharijhaAward.Domain.Entities.IdentityModels;
+﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.SubscriberModel;
 
-namespace SharijhaAward.Domain.Entities.RelatedAccountModel; 
-
-public class RelatedAccount : AuditInformation<User> {
-    public Guid Id { get; set; }
-    // related email 
-    public string Email { get; set; } = string.Empty;
-    
-    // navigation property to the subscriber
-    public Subscriber Subscriber { get; set; } = null!;
-    public Guid SubscriberId { get; set; }
+namespace SharijhaAward.Domain.Entities.RelatedAccountModel
+{
+    public class RelatedAccount : AuditableEntity
+    {
+        public int Id { get; set; }
+        public Guid Subscriber1Id { get; set; }
+        public Subscriber? Subscriber1 { get; set; }
+        public Guid Subscriber2Id { get; set; }
+        public Subscriber? Subscriber2 { get; set; }
+    }
 }

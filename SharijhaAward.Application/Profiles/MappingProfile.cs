@@ -116,7 +116,8 @@ using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriter
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionAttachment;
 using SharijhaAward.Application.Features.GeneralFAQs.Commands.CreateGeneralFAQ;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
-
+using SharijhaAward.Domain.Entities.RelatedAccountModel;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllReceivedRequests;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -278,6 +279,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<DynamicAttributePattern, GetDynamicAttributePatternByIdDto>().ReverseMap();
             CreateMap<CriterionAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<CriterionItemAttachment, AttachmentListVM>().ReverseMap();
+            CreateMap<RelatedAccountRequest, GetAllReceivedRequestsListVM>().ReverseMap();
         }
     }
 }
