@@ -59,7 +59,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllCriterionByCategoryId(Guid CategoryId)
+        public async Task<IActionResult> GetAllCriterionByCategoryId(Guid CategoryId, int ProvidedFormId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -69,7 +69,8 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<List<MainCriterionListVM>> Response = await _Mediator.Send(new GetAllCriterionByCategoryIdQuery()
             {
                 CategoryId = CategoryId,
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                ProvidedFormId = ProvidedFormId
             });
 
             return Response.statusCode switch

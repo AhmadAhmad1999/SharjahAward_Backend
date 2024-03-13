@@ -1,5 +1,6 @@
 ﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
+using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,9 @@ namespace SharijhaAward.Domain.Entities.CriterionModel
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string AttachementPath { get; set; } = string.Empty;
-        public int SizeOfAttachmentInKB { get; set; }
         public Guid CriterionId { get; set; }
         public Criterion? Criterion { get; set; }
+        public int ProvidedFormId { get; set; }
+        public ProvidedForm? ProvidedForm { get; set; }
     }
 }

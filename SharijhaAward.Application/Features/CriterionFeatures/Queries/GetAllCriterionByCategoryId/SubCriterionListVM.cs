@@ -13,6 +13,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
     {
         public Guid Id { get; set; }
         public string Title { get; set; } = string.Empty;
+        public int? SizeOfAttachmentInKB { get; set; }
         public List<AttachmentListVM> SubCriterionAttachments { get; set; } = new List<AttachmentListVM>();
         public List<CriterionItemListVM> CriterionItemListVM { get; set; } = new List<CriterionItemListVM>();
     }

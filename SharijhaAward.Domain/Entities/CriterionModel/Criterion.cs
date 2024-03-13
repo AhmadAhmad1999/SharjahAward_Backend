@@ -15,6 +15,7 @@ public class Criterion: AuditableEntity
     public string ArabicTitle { get; set; } = string.Empty;
     public string EnglishTitle { get; set; } = string.Empty;
     public int Score { get; set; }
+    public int SizeOfAttachmentInKB { get; set; }
     public Guid? ParentId { get; set; }
     public Criterion? Parent { get; set; } = null!;
     public Guid CategoryId { get; set; }

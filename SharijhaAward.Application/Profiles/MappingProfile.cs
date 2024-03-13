@@ -117,6 +117,8 @@ using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriter
 using SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForms;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFormById;
+using SharijhaAward.Application.Features.GeneralFAQs.Commands.CreateGeneralFAQ;
+using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -248,13 +250,14 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Dependency, CreateDependency>().ReverseMap();
             CreateMap<DependencyValidation, CreateDependencyValidation>().ReverseMap();
             CreateMap<DynamicAttributeSection, CreateDynamicAttributeSectionCommand>().ReverseMap();
-            CreateMap<Criterion, CreateCriterionCommand > ().ReverseMap();
-            CreateMap<Criterion, CreateSubCriterionDto> ().ReverseMap();
-            CreateMap<CriterionItem, CreateCriterionItemDto> ().ReverseMap();
+            CreateMap<Criterion, CreateCriterionCommand>().ReverseMap();
+            CreateMap<Criterion, CreateSubCriterionDto>().ReverseMap();
+            CreateMap<CriterionItem, CreateCriterionItemDto>().ReverseMap();
             CreateMap<CriterionAttachment, CreateCriterionAttachmentCommand>().ReverseMap();
-            CreateMap<CriterionItemAttachment, CreateCriterionItemAttachmentCommand> ().ReverseMap();
-            CreateMap<CriterionAttachment, CreateCriterionAttachmentVM> ().ReverseMap();
-            CreateMap<CriterionItemAttachment, CreateCriterionItemAttachmentVM> ().ReverseMap();
+            CreateMap<CriterionItemAttachment, CreateCriterionItemAttachmentCommand>().ReverseMap();
+            CreateMap<CriterionAttachment, CreateCriterionAttachmentVM>().ReverseMap();
+            CreateMap<CriterionItemAttachment, CreateCriterionItemAttachmentVM>().ReverseMap();
+            CreateMap<GeneralFrequentlyAskedQuestion, CreateGeneralFAQCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();

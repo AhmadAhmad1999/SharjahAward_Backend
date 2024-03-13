@@ -41,7 +41,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
             _CriterionAttachmentRepository = CriterionAttachmentRepository;
             _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
         }
-        public async Task<BaseResponse<List<MainCriterionListVM>>> Handle(GetAllCriterionByCategoryIdQuery Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<MainCriterionListVM>>> Handle(GetAllCriterionByCategoryIdQuery Request, 
+            CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
@@ -62,7 +63,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
 
             List<MainCriterionListVM> FullObjectResponse = new List<MainCriterionListVM>();
 
-            List<Criterion> AllCriterionsEntities = await _CriterionRepository.Where(x => x.CategoryId == Request.CategoryId).ToListAsync();
+            List<Criterion> AllCriterionsEntities = await _CriterionRepository
+                .Where(x => x.CategoryId == Request.CategoryId).ToListAsync();
 
             List<MainCriterionListVM> MainCriterionObjects = AllCriterionsEntities.Where(x => x.ParentId == null)
                 .Select(x => new MainCriterionListVM()
@@ -82,13 +84,14 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         Id = x.Id,
                         Title = Language == "ar"
                             ? x.ArabicTitle
-                            : x.EnglishTitle
+                            : x.EnglishTitle,
+                        SizeOfAttachmentInKB = x.SizeOfAttachmentInKB
                     }).ToList();
 
                 foreach (SubCriterionListVM SubCriterionObject in MainCriterionObject.SubCriterionListVM)
                 {
                     SubCriterionObject.SubCriterionAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionAttachmentRepository
-                        .Where(x => x.CriterionId == SubCriterionObject.Id));
+                        .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
 
                     SubCriterionObject.CriterionItemListVM = _CriterionItemRepository
                         .Where(x => x.CriterionId == SubCriterionObject.Id)
@@ -97,13 +100,14 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                             Id = x.Id,
                             Name = Language == "ar"
                                 ? x.ArabicName
-                                : x.EnglishName
+                                : x.EnglishName,
+                            SizeOfAttachmentInKB = x.SizeOfAttachmentInKB
                         }).ToList();
 
                     foreach (CriterionItemListVM CriterionItemObject in SubCriterionObject.CriterionItemListVM)
                     {
                         CriterionItemObject.CriterionItemAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionItemAttachmentRepository
-                            .Where(x => x.CriterionItemId == CriterionItemObject.Id));
+                            .Where(x => x.CriterionItemId == CriterionItemObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
                     }
                 }
 
