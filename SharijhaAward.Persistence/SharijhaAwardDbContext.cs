@@ -35,6 +35,7 @@ using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
+using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -47,6 +48,7 @@ namespace SharijhaAward.Persistence
         }
         
         public DbSet<FrequentlyAskedQuestion> frequentlyAskedQuestions { get; set; }
+        public DbSet<GeneralFrequentlyAskedQuestion> GeneralFrequentlyAskedQuestions { get; set; }
         public DbSet<TrainingWorkshop> trainingWorkshops { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<PersonalInvitee> Personalnvitees { get; set; }
@@ -102,6 +104,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<GeneralFrequentlyAskedQuestion>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Event>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Cycle>().HasQueryFilter(p => !p.isDeleted);
@@ -139,6 +142,34 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalEntity>().HasQueryFilter(p => !p.isDeleted);
 
+            modelBuilder.Entity<GeneralFrequentlyAskedQuestion>()
+                .HasData(new GeneralFrequentlyAskedQuestion()
+                {
+                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    ArabicAnswer = "اختبار جواب 1",
+                    ArabicQuestion = "اختبار سؤال 1",
+                    EnglishAnswer = "Test Answer 1",
+                    EnglishQuestion = "Test Question 1",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new GeneralFrequentlyAskedQuestion()
+                {
+                    Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                    ArabicAnswer = "اختبار جواب 2",
+                    ArabicQuestion = "اختبار سؤال 2",
+                    EnglishAnswer = "Test Answer 2",
+                    EnglishQuestion = "Test Question 2",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                });
             modelBuilder.Entity<AttributeTableName>()
                 .HasData(new AttributeTableName()
                 {
@@ -351,7 +382,8 @@ namespace SharijhaAward.Persistence
                     CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
                     EnglishTitle = "Sub Criterion 1",
                     ParentId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
-                    Score = 50
+                    Score = 50,
+                    SizeOfAttachmentInKB = 5000
                 }, new Criterion()
                 {
                     Id = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
@@ -365,7 +397,8 @@ namespace SharijhaAward.Persistence
                     CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
                     EnglishTitle = "Sub Criterion 2",
                     ParentId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
-                    Score = 50
+                    Score = 50,
+                    SizeOfAttachmentInKB = 5000
                 });
             modelBuilder.Entity<CriterionItem>()
                 .HasData(new CriterionItem()
@@ -381,7 +414,8 @@ namespace SharijhaAward.Persistence
                     Score = 50,
                     ArabicName = "بند معيار فرعي 11",
                     CriterionId = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
-                    EnglishName = "Sub Criterion Item 11"
+                    EnglishName = "Sub Criterion Item 11",
+                    SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
                     Id = new Guid("fea46b75-b836-4dcc-5e3d-08dc427e4e9f"),
@@ -395,7 +429,8 @@ namespace SharijhaAward.Persistence
                     Score = 50,
                     ArabicName = "بند معيار فرعي 12",
                     CriterionId = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
-                    EnglishName = "Sub Criterion Item 12"
+                    EnglishName = "Sub Criterion Item 12",
+                    SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
                     Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e9f"),
@@ -409,7 +444,8 @@ namespace SharijhaAward.Persistence
                     Score = 50,
                     ArabicName = "بند معيار فرعي 21",
                     CriterionId = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
-                    EnglishName = "Sub Criterion Item 21"
+                    EnglishName = "Sub Criterion Item 21",
+                    SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
                     Id = new Guid("06fc4cca-fe8f-4c01-5e3f-08dc427e4e9f"),
@@ -423,7 +459,8 @@ namespace SharijhaAward.Persistence
                     Score = 50,
                     ArabicName = "بند معيار فرعي 22",
                     CriterionId = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
-                    EnglishName = "Sub Criterion Item 22"
+                    EnglishName = "Sub Criterion Item 22",
+                    SizeOfAttachmentInKB = 5000
                 });
             modelBuilder.Entity<PersonalInvitee>()
                 .HasIndex(p => new { p.Email, p.isDeleted })

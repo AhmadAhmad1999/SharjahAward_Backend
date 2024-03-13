@@ -92,6 +92,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> DeleteDynamicAttribute(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 

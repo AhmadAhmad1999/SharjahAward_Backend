@@ -15,6 +15,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public IFormFile Attachment { get; set; } = null!;
+        public int ProvidedFormId { get; set; }
         public string? lang { get; set; } = string.Empty;
     }
 }

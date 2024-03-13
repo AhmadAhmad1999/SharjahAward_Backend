@@ -14,6 +14,7 @@ public class CriterionItem : AuditableEntity
     public string EnglishName { get; set; } = string.Empty;
     public int Score { get; set; }
     public int ActualScore { get; set; }
+    public int? SizeOfAttachmentInKB { get; set; }
     public Guid CriterionId { get; set; }
     public Criterion Criterion { get; set; } = null!;
     //public virtual List<Scale> Scales { get; set; } = new();
