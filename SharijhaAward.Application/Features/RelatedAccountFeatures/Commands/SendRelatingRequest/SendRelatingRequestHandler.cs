@@ -1,16 +1,8 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.FAQs.Commands.DeleteFAQ;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.FAQModel;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
-using SharijhaAward.Domain.Entities.SubscriberModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.SendRelatingRequest
 {
@@ -33,13 +25,13 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
             string ResponseMessage = string.Empty;
 
             Domain.Entities.SubscriberModel.Subscriber? ReceiverUserEntity = await _SubscriberRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.ReceiverId);
+                .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.ReceiverEmail.ToLower());
 
             if (ReceiverUserEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Subscriber is not found"
-                    : "المشترك غير موجود";
+                    ? "Account is not found"
+                    : "الحساب غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }

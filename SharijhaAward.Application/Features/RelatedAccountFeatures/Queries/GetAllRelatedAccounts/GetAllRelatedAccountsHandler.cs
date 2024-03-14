@@ -17,27 +17,64 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
     public class GetAllRelatedAccountsHandler : IRequestHandler<GetAllRelatedAccountsQuery,
         BaseResponse<List<GetAllRelatedAccountsListVM>>>
     {
-        private readonly IMapper _Mapper;
         private readonly IAsyncRepository<RelatedAccount> _RelatedAccountRepository;
         private readonly IJwtProvider _JWTProvider;
-        public GetAllRelatedAccountsHandler(IMapper Mapper,
-            IAsyncRepository<RelatedAccount> RelatedAccountRepository,
+        public GetAllRelatedAccountsHandler(IAsyncRepository<RelatedAccount> RelatedAccountRepository,
             IJwtProvider JWTProvider)
         {
-            _Mapper = Mapper;
             _RelatedAccountRepository = RelatedAccountRepository;
             _JWTProvider = JWTProvider;
         }
         public async Task<BaseResponse<List<GetAllRelatedAccountsListVM>>> Handle(GetAllRelatedAccountsQuery Request,
             CancellationToken cancellationToken)
         {
+            string ResponseMessage = string.Empty;
+
             Guid UserId = new Guid(_JWTProvider.GetUserIdFromToken(Request.token!));
 
-            var ReceivedRequests = await _RelatedAccountRepository
-                .Where(x => x.Subscriber1Id == UserId || x.Subscriber2Id == UserId).ToListAsync();
-                    
+            List<RelatedAccount> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
+                ? await _RelatedAccountRepository
+                    .Where(x => x.Subscriber1Id == UserId || x.Subscriber2Id == UserId)
+                    .Include(x => x.Subscriber1).Include(x => x.Subscriber2).ToListAsync()
+                : await _RelatedAccountRepository
+                    .Where(x => x.Subscriber1Id == UserId || x.Subscriber2Id == UserId)
+                    .Skip((Request.page - 1) * Request.pageSize).Take(Request.pageSize)
+                    .Include(x => x.Subscriber1).Include(x => x.Subscriber2).ToListAsync();
 
-            return new BaseResponse<List<GetAllRelatedAccountsListVM>>(string.Empty, true, 200/*, ReceivedRequests*/);
+            IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber2Id = ReceivedRequests
+                .Where(x => x.Subscriber1Id == UserId)
+                .Select(x => new GetAllRelatedAccountsListVM()
+                {
+                    Id = x.Subscriber2Id,
+                    Name = Request.lang == "ar"
+                        ? x.Subscriber2!.ArabicName
+                        : x.Subscriber2!.EnglishName,
+                    Email = x.Subscriber2!.Email,
+                    Gender = x.Subscriber2!.Gender
+                });
+
+            IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber1Id = ReceivedRequests
+                .Where(x => x.Subscriber2Id == UserId)
+                .Select(x => new GetAllRelatedAccountsListVM()
+                {
+                    Id = x.Subscriber1Id,
+                    Name = Request.lang == "ar"
+                        ? x.Subscriber1!.ArabicName
+                        : x.Subscriber1!.EnglishName,
+                    Email = x.Subscriber1!.Email,
+                    Gender = x.Subscriber1!.Gender
+                });
+
+            List<GetAllRelatedAccountsListVM> RelatedAccounts = RelatedAccountsFromSubscriber2Id
+                .Concat(RelatedAccountsFromSubscriber1Id).ToList();
+
+            int TotalCount = await _RelatedAccountRepository
+                .GetCountAsync(x => x.Subscriber1Id == UserId || x.Subscriber2Id == UserId);
+
+            Pagination PaginationParameter = new Pagination(Request.page,
+                Request.pageSize, TotalCount);
+
+            return new BaseResponse<List<GetAllRelatedAccountsListVM>>(ResponseMessage, true, 200, RelatedAccounts, PaginationParameter);
         }
     }
 }

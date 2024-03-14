@@ -4,7 +4,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
 {
     public class SendRelatingRequestCommand : IRequest<BaseResponse<object>>
     {
-        public Guid ReceiverId { get; set; }
+        public string ReceiverEmail { get; set; } = null!;
         public string lang { get; set; } = string.Empty;
         public string? token { get; set; }
     }

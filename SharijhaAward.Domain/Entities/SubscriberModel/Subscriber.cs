@@ -25,7 +25,7 @@ public class Subscriber : User
     public string IdentityNumber { get; set; } = string.Empty;
 
     // navigation property to the related accounts.
-    public virtual List<RelatedAccount> RelatedAccounts { get; set; } = new();
+    // public virtual List<RelatedAccount> RelatedAccounts { get; set; } = new();
     
     public virtual List<ProvidedForm> ProvidedForms { get; set; } = new();
     
