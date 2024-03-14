@@ -37,6 +37,7 @@ using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
 using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
+using SharijhaAward.Domain.Entities.RelatedAccountModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -48,6 +49,7 @@ namespace SharijhaAward.Persistence
       
         }
         
+        public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
         public DbSet<FrequentlyAskedQuestion> frequentlyAskedQuestions { get; set; }
         public DbSet<GeneralFrequentlyAskedQuestion> GeneralFrequentlyAskedQuestions { get; set; }
         public DbSet<TrainingWorkshop> trainingWorkshops { get; set; }
@@ -103,6 +105,7 @@ namespace SharijhaAward.Persistence
 
             //Filter for Deleted items
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => !p.isDeleted);

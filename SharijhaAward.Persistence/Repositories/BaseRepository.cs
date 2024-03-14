@@ -94,6 +94,7 @@ namespace SharijhaAward.Persistence.Repositories
         {
             typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
             typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
+            _dbContext.Entry(entity).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
         public async Task DeleteListAsync(IEnumerable<T> entities)
@@ -102,6 +103,7 @@ namespace SharijhaAward.Persistence.Repositories
             {
                 typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
                 typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
+                _dbContext.Entry(entity).State = EntityState.Modified;
             });
             
             await _dbContext.SaveChangesAsync();

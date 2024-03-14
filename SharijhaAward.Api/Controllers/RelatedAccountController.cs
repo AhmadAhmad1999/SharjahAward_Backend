@@ -3,31 +3,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
-using SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfAllCritrionsHaveAttachment;
-using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterion;
-using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionAttachment;
-using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionItemAttachment;
-using SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCriterionAttachment;
-using SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCriterionItemAttachment;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
-using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.CreateAttachment;
-using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.DeleteAttachment;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.AcceptRelatingRequest;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.CancelRelating;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.RejectRelatingRequest;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.SendRelatingRequest;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllReceivedRequests;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllRelatedAccounts;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CriterionController : ControllerBase
+    public class RelatedAccountController : ControllerBase
     {
         private readonly IMediator _Mediator;
-        public CriterionController(IMediator Mediator)
+        public RelatedAccountController(IMediator Mediator)
         {
             _Mediator = Mediator;
         }
-        [HttpPost("CreateCriterion")]
+        [HttpPost("AcceptRelatingRequest")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -35,43 +31,107 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult>
-            CreateCriterion([FromBody] CreateCriterionCommand CreateCriterionCommand)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-            CreateCriterionCommand.lang = !string.IsNullOrEmpty(HeaderValue)
-                ? HeaderValue
-                : "en";
-
-            BaseResponse<CreateCriterionResponse>? Response = await _Mediator.Send(CreateCriterionCommand);
-
-            return Response.statusCode switch
-            {
-                404 => NotFound(Response),
-                200 => Ok(Response),
-                _ => BadRequest(Response)
-            };
-        }
-        [HttpGet("GetAllCriterionByCategoryId")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllCriterionByCategoryId(Guid CategoryId, int ProvidedFormId)
+        public async Task<IActionResult> AcceptRelatingRequest(int RelatingRequestId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<MainCriterionListVM>> Response = await _Mediator.Send(new GetAllCriterionByCategoryIdQuery()
+            BaseResponse<object> Response = await _Mediator.Send(new AcceptRelatingRequestCommand()
             {
-                CategoryId = CategoryId,
+                Id = RelatingRequestId,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpDelete("RejectRelatingRequest")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> RejectRelatingRequest(int RelatingRequestId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object> Response = await _Mediator.Send(new RejectRelatingRequestCommand()
+            {
+                Id = RelatingRequestId,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpDelete("CancelRelating")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> CancelRelating(int RelatingRequestId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object> Response = await _Mediator.Send(new CancelRelatingCommand()
+            {
+                Id = RelatingRequestId,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("SendRelatingRequest")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> SendRelatingRequest(string ReceiverEmail)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+            
+            if (string.IsNullOrEmpty(Token))
+                return BadRequest("You must send the token");
+
+            BaseResponse<object> Response = await _Mediator.Send(new SendRelatingRequestCommand()
+            {
+                ReceiverEmail = ReceiverEmail,
                 lang = HeaderValue!,
-                ProvidedFormId = ProvidedFormId
+                token = Token
             });
 
             return Response.statusCode switch
@@ -81,7 +141,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPost("CreateCriterionAttachment")]
+        [HttpGet("GetAllReceivedRequests")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -89,68 +149,24 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> CreateCriterionAttachment([FromForm] CreateCriterionAttachmentCommand CreateCriterionAttachmentCommand)
+        public async Task<IActionResult> GetAllReceivedRequests(int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            CreateCriterionAttachmentCommand.lang = !string.IsNullOrEmpty(HeaderValue)
-                ? HeaderValue
-                : "en";
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
 
-            BaseResponse<object> Response = await _Mediator.Send(CreateCriterionAttachmentCommand);
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+            
+            if (string.IsNullOrEmpty(Token))
+                return BadRequest("You must send the token");
 
-            return Response.statusCode switch
+            BaseResponse<List<GetAllReceivedRequestsListVM>> Response = await _Mediator.Send(new GetAllReceivedRequestsQuery()
             {
-                404 => NotFound(Response),
-                200 => Ok(Response),
-                _ => BadRequest(Response)
-            };
-        }
-        [HttpPost("CreateCriterionItemAttachment")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> CreateCriterionItemAttachment([FromForm] CreateCriterionItemAttachmentCommand CreateCriterionItemAttachmentCommand)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            CreateCriterionItemAttachmentCommand.lang = !string.IsNullOrEmpty(HeaderValue)
-                ? HeaderValue
-                : "en";
-
-            BaseResponse<object> Response = await _Mediator.Send(CreateCriterionItemAttachmentCommand);
-
-            return Response.statusCode switch
-            {
-                404 => NotFound(Response),
-                200 => Ok(Response),
-                _ => BadRequest(Response)
-            };
-        }
-        [HttpDelete("DeleteCriterionAttachment")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCriterionAttachment(Guid CriterionAttachmentId)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            string? Language = !string.IsNullOrEmpty(HeaderValue)
-                ? HeaderValue
-                : "en";
-
-            BaseResponse<object> Response = await _Mediator.Send(new DeleteCriterionAttachmentCommand()
-            {
-                CriterionAttachmentId = CriterionAttachmentId,
-                lang = Language!
+                lang = HeaderValue!,
+                token = Token,
+                page = Page,
+                pageSize = PerPage
             });
 
             return Response.statusCode switch
@@ -160,7 +176,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpDelete("DeleteCriterionItemAttachment")]
+        [HttpGet("GetAllRelatedAccounts")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -168,44 +184,25 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCriterionItemAttachment(Guid CriterionItemAttachmentId)
+        public async Task<IActionResult> GetAllRelatedAccounts(int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            string? Language = !string.IsNullOrEmpty(HeaderValue)
-                ? HeaderValue
-                : "en";
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
 
-            BaseResponse<object> Response = await _Mediator.Send(new DeleteCriterionItemAttachmentCommand()
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+            
+            if (string.IsNullOrEmpty(Token))
+                return BadRequest("You must send the token");
+
+            BaseResponse<List<GetAllRelatedAccountsListVM>> Response = await _Mediator.Send(new GetAllRelatedAccountsQuery()
             {
-                CriterionItemAttachmentId = CriterionItemAttachmentId,
-                lang = Language!
+                lang = HeaderValue!,
+                token = Token,
+                page = Page,
+                pageSize = PerPage
             });
-
-            return Response.statusCode switch
-            {
-                404 => NotFound(Response),
-                200 => Ok(Response),
-                _ => BadRequest(Response)
-            };
-        }
-        [HttpGet("CheckIfAllCritrionsHaveAttachment")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> CheckIfAllCritrionsHaveAttachment(CheckIfAllCritrionsHaveAttachmentCommand CheckIfAllCritrionsHaveAttachmentCommand)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            string? Language = !string.IsNullOrEmpty(HeaderValue)
-                ? HeaderValue
-                : "en";
-
-            BaseResponse<object> Response = await _Mediator.Send(CheckIfAllCritrionsHaveAttachmentCommand);
 
             return Response.statusCode switch
             {
