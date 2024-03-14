@@ -119,6 +119,9 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForm
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFormById;
 using SharijhaAward.Application.Features.GeneralFAQs.Commands.CreateGeneralFAQ;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
+using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
+using SharijhaAward.Application.Features.EducationalInstitutions.Commands.CreateEducationalInstitution;
+using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllEducationalInstitutions;
 
 
 namespace SharijhaAward.Application.Profiles
@@ -235,7 +238,10 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<EducationalEntity, EducationalEntitiesListVm>().ReverseMap();
             CreateMap<EducationalEntity, CreateEducationalEntityCommand>().ReverseMap();
-           
+
+            CreateMap<EducationalInstitution, CreateEducationalInstitutionCommand>().ReverseMap();
+            CreateMap<EducationalInstitution, EducationalInstitutionListVM>().ReverseMap();
+
             CreateMap<Coordinator, CreateCoordinatorCommand>().ReverseMap();
             CreateMap<Coordinator, CoordinatorSearchListVM>().ReverseMap();
             CreateMap<Coordinator, CoordinatorDto>().ReverseMap();

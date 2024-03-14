@@ -7,6 +7,7 @@ using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsB
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
         private readonly IAsyncRepository<ConditionAttachment> _conditionAttachmentRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<TermAndCondition> _termRepository;
+        private readonly IAsyncRepository<ConditionsProvidedForms> _conditionsProvidedFormsRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _providedFormRepository;
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
@@ -29,6 +31,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
 
         public CheckAllConditionsQueryHandler(
             IAsyncRepository<ConditionAttachment> conditionAttachmentRepository,
+            IAsyncRepository<ConditionsProvidedForms> conditionsProvidedFormsRepository,
             IAsyncRepository<Category> categoryRepository, 
             IAsyncRepository<TermAndCondition> termRepository,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository,
@@ -38,6 +41,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
             )
         {
             _conditionAttachmentRepository = conditionAttachmentRepository;
+            _conditionsProvidedFormsRepository = conditionsProvidedFormsRepository;
             _categoryRepository = categoryRepository;
             _termRepository = termRepository;
             _userRepository = userRepository;
@@ -53,20 +57,29 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
             {
                 return new BaseResponse<object>("", false, 404);
             }
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var user = await _userRepository.GetByIdAsync(new Guid(UserId));
-            var form = _providedFormRepository.FirstOrDefault(p => p.userId == user.Id);
-          
-            var terms = _termRepository
-                .WhereThenInclude(t => t.CategoryId == category.Id, t => t.ConditionAttachments)
-                .Where(t=>t.IsSpecial==request.IsSpecial)
-                .ToList();
+         
+            var form = _providedFormRepository.Where(p => p.Id == request.formId).FirstOrDefault();
 
-            List<AttachmentListVM> Attachmets = _mapper.Map<List<AttachmentListVM>>(await _conditionAttachmentRepository
-               .Include(x => x.ConditionsProvidedForms).Include(x => x.ConditionsProvidedForms.TermAndCondition)
-               .Where(x => x.ConditionsProvidedForms.TermAndCondition.CategoryId == category.Id &&
-                   x.ConditionsProvidedForms.TermAndCondition.IsSpecial == false &&
-                   x.ConditionsProvidedForms.ProvidedFormId == form!.Id).ToListAsync());
+            var terms = _termRepository.WhereThenInclude(t => t.CategoryId == category.Id, t => t.ConditionAttachments).Where(t => t.IsSpecial == false).ToList();
+
+            List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
+
+            for (int i = 0; i < terms.Count(); i++)
+            {
+                var conditionsProvidedsobject =
+                 _conditionsProvidedFormsRepository.WhereThenInclude(
+                     c => c.ProvidedFormId == form!.Id && c.TermAndConditionId == terms[i].Id,
+                     c => c.Attachments).FirstOrDefault();
+
+                if (conditionsProvidedsobject != null)
+                    conditionsProvideds.Add(conditionsProvidedsobject!);
+            }
+
+            //List<AttachmentListVM> Attachmets = _mapper.Map<List<AttachmentListVM>>(await _conditionAttachmentRepository
+            //   .Include(x => x.ConditionsProvidedForms).Include(x => x.ConditionsProvidedForms.TermAndCondition)
+            //   .Where(x => x.ConditionsProvidedForms.TermAndCondition.CategoryId == category.Id &&
+            //       x.ConditionsProvidedForms.TermAndCondition.IsSpecial == false &&
+            //       x.ConditionsProvidedForms.ProvidedFormId == form!.Id).ToListAsync());
 
             string msg;
             if(terms.Count() != 0)
@@ -74,11 +87,11 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
                 for(int i=0; i < terms.Count(); i++)
                 {
                     //Check on Terms that need Attachments
-                    if (terms[i].RequiredAttachmentNumber != Attachmets.Count 
+                    if (terms[i].RequiredAttachmentNumber != conditionsProvideds[i].Attachments.Count() 
                         && terms[i].RequiredAttachmentNumber != 0 )
                     {
                         msg = request.lang == "en"
-                            ? "Pleas Complete Uploading The File "
+                            ? "Please Complete Uploading The File "
                             : "الرجاء إكمال رفع الملفات";
 
                         return new BaseResponse<object>(msg, false, 400);

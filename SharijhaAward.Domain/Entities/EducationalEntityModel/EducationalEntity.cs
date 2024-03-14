@@ -14,7 +14,7 @@ namespace SharijhaAward.Domain.Entities.EducationalEntityModel
     public class EducationalEntity: AuditableEntity
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }=string.Empty;
-
+        public string Name { get; set; } = string.Empty;
+        public List<EducationalInstitution> Institutions { get; set; } = null!;
     }
 }

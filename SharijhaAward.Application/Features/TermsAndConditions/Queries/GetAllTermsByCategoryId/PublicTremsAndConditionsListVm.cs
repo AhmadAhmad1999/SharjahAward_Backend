@@ -22,6 +22,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
         public AttachmentType? AttachmentType { get; set; }
         public bool? IsSpecial { get; set; } = false;
         public Guid CategoryId { get; set; }
-        public List<ConditionProvidedFormListVm>? ConditionAttachments { get; set; }
+        public ConditionProvidedFormListVm? ConditionsAttachments { get; set; }
     }
 }

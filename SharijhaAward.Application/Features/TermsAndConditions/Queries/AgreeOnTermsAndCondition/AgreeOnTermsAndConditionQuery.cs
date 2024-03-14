@@ -13,5 +13,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnT
         public Guid TermId { get; set; }
         public bool IsAgree {  get; set; }
         public string token { get; set; } = string.Empty;
+        public int formId { get; set; }
     }
 }

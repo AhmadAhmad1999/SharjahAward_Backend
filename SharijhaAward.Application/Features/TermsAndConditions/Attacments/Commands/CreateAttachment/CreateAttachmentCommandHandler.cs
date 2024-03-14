@@ -51,7 +51,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
         public async Task<BaseResponse<object>> Handle(CreateAttachmentCommand request, CancellationToken cancellationToken)
         {
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var form = _formsRepository.Where(f => f.userId== new Guid(UserId)).FirstOrDefault();
+            var form = _formsRepository.FirstOrDefault(f => f.userId == new Guid(UserId) && f.Id == request.formId);
             var term = _termsRepository.WhereThenInclude(t => t.Id == request.TermAndConditionId, t => t.ConditionAttachments).FirstOrDefault();
            
             string msg;
@@ -66,25 +66,18 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
             }
             
             var conditionsProvided = _conditionFormsRepository
-                .Where(c => c.TermAndConditionId == term.Id)
-                .Where(c => c.ProvidedFormId == form!.Id).FirstOrDefault();
+                .WhereThenInclude(c => c.TermAndConditionId == term.Id 
+                && c.ProvidedFormId == form!.Id ,
+                c=>c.Attachments).FirstOrDefault();
 
-            if(conditionsProvided == null)
-            {
-                conditionsProvided = new ConditionsProvidedForms()
-                {
-                    ProvidedFormId = form!.Id,
-                    TermAndConditionId = term!.Id,
-                };
-                conditionsProvided = await _conditionFormsRepository.AddAsync(conditionsProvided);
-            }
+       
            
             var data = _mapper.Map<ConditionAttachment>(request);
-            data.ConditionsProvidedFormsId = conditionsProvided.Id;
+            data.ConditionsProvidedFormsId = conditionsProvided!.Id;
           
             if(term.NeedAttachment)
             {
-                if (term.RequiredAttachmentNumber > term.ConditionAttachments.Count || term.RequiredAttachmentNumber == 0)
+                if (term.RequiredAttachmentNumber > conditionsProvided.Attachments.Count || term.RequiredAttachmentNumber == 0)
                 {
                     data.AttachementPath = await _attachmentFileService.SaveFileAsync(request.attachment);
                     await _attachmentsRepository.AddAsync(data);

@@ -36,6 +36,7 @@ using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
+using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -89,6 +90,7 @@ namespace SharijhaAward.Persistence
         public DbSet<EducationalEntity> EducationalEntities { get; set; }
         public DbSet<EduEntitiesCoordinator> EducationCoordinators { get; set; }
         public DbSet<EducationalInstitution> EducationalInstitutions { get; set; }
+        public DbSet<EduInstitutionCoordinator> InstitutionCoordinators { get; set; }
         public DbSet<ConditionAttachment> conditionAttachments { get; set; }
         public DbSet<CriterionAttachment> CriterionAttachments { get; set; }
         public DbSet<Criterion> Criterions { get; set; }
@@ -141,7 +143,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<EduEntitiesCoordinator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalEntity>().HasQueryFilter(p => !p.isDeleted);
-
+            modelBuilder.Entity<EduInstitutionCoordinator>().HasQueryFilter(p => !p.isDeleted);
+            
             modelBuilder.Entity<GeneralFrequentlyAskedQuestion>()
                 .HasData(new GeneralFrequentlyAskedQuestion()
                 {

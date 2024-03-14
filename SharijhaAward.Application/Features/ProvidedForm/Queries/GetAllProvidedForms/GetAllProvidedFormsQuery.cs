@@ -13,5 +13,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
     {
         public ProvidedFormType? Type { get; set; }
         public string token { get; set; } = string.Empty;
+        public string lang { get; set; } = string.Empty;
     }
 }

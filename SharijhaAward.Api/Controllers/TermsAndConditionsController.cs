@@ -124,21 +124,18 @@ namespace SharijhaAward.Api.Controllers
 
         [HttpGet("GetAllTermsAndConditionsByCategoryId/{Id}", Name = "GetAllTermsAndConditionsByCategoryId")]
         
-        public async Task<IActionResult> GetAllTermsAndConditionsByCategoryId(Guid Id)
+        public async Task<IActionResult> GetAllTermsAndConditionsByCategoryId(Guid Id,[FromQuery]int formId)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
-            var token = HttpContext.Request.Headers.Authorization;
+           // var token = HttpContext.Request.Headers.Authorization;
            
-            if(token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
+           
             var response = await _mediator.Send(new GetAllTermsByCategoryIdQuery()
             {
                 lang = Language!,
                 CategoryId = Id,
-                token = token!
+                formId = formId
             });
 
             return response.statusCode switch
@@ -164,6 +161,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = Language!,
                 CategoryId = Id,
+                token = token!
             });
 
             return response.statusCode switch
@@ -178,10 +176,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> AgreeOnTermAndCondition(AgreeOnTermsAndConditionQuery query)
         {
             var token = HttpContext.Request.Headers.Authorization;
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
+       
             query.token = token!;
 
             var response = await _mediator.Send(query);

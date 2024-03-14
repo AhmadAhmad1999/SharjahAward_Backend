@@ -77,12 +77,14 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
             var data = _mapper.Map<List<PublicTremsAndConditionsListVm>>(Terms);
             for (int i = 0; i < data.Count; i++)
             {
-                data[i].ConditionAttachments = _mapper.Map<List<ConditionProvidedFormListVm>>(Terms[i].ConditionAttachments);
-
-                for (int j = 0; j < data[i].ConditionAttachments!.Count; j++)
-                {
-                    data[i].ConditionAttachments![j].Attachments = Attachmets;
-                }
+                //data[i].ConditionAttachments = _mapper.Map<List<ConditionProvidedFormListVm>>(Terms[i].ConditionAttachments);
+                //if (data[i].NeedAttachment)
+                //{
+                //    for (int j = 0; j < data[i].ConditionAttachments!.Count; j++)
+                //    {
+                //        data[i].ConditionAttachments![j].Attachments = Attachmets;
+                //    }
+                //}
 
                 data[i].Title = request.lang == "en"
                     ? data[i].EnglishTitle

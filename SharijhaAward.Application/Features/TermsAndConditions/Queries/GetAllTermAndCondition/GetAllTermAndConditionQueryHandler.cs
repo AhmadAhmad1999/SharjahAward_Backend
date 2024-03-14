@@ -30,6 +30,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
             var data = _mapper.Map<List<TermAndConditionListVM>>(termsAndConditions);
             if(data.Count != 0)
             {
+           
                 for(int i = 0; i < data.Count; i++)
                 {
                     data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;

@@ -19,5 +19,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
         public Guid TermAndConditionId { get; set; }
         public string? lang {get;set; } = string.Empty;
         public string token {  get; set; } = string.Empty;
+        public int formId {  get; set; }
     }
 }

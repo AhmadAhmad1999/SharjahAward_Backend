@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
     public class DeleteAttachmentCommandHandler 
         : IRequestHandler<DeleteAttachmentCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<ConditionsProvidedForms> _attachmentsRepository;
+        private readonly IAsyncRepository<ConditionAttachment> _attachmentsRepository;
 
-        public DeleteAttachmentCommandHandler(IAsyncRepository<ConditionsProvidedForms> attachmentsRepository)
+        public DeleteAttachmentCommandHandler(IAsyncRepository<ConditionAttachment> attachmentsRepository)
         {
             _attachmentsRepository = attachmentsRepository;
         }

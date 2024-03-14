@@ -16,5 +16,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
         public Guid CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
         public string token { get; set; } = string.Empty;
+        public int formId {  get; set; }
     }
 }

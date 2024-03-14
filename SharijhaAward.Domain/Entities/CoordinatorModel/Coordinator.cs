@@ -4,6 +4,7 @@ using SharijhaAward.Domain.Entities.Common;
 using SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
+using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace SharijhaAward.Domain.Entities.CoordinatorModel
         public Emirates Emirates { get; set; }
         public string PersonalPhoto { get; set; } = string.Empty;
 
-        public List<EduEntitiesCoordinator> EducationCoordinators { get; set; } = null!;
-
+        public List<EduEntitiesCoordinator>? EducationCoordinators { get; set; } 
+        public List<EduInstitutionCoordinator>? InstitutionCoordinators {  get; set; } 
     }
 }

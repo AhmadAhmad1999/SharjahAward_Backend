@@ -24,8 +24,9 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
         private readonly IAsyncRepository<TermAndCondition> _termRepository;
         private readonly IAsyncRepository<ConditionAttachment> _conditionAttachmentRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _providedFormRepository;
+        private readonly IAsyncRepository<ConditionsProvidedForms> _conditionsProvidedFormsRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IJwtProvider _jwtProvider;
+   
         private readonly IMapper _mapper;
 
         public GetAllTermsByCategoryIdQueryHandler(
@@ -33,16 +34,18 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
             IAsyncRepository<TermAndCondition> termRepository,
             IAsyncRepository<ConditionAttachment> conditionAttachmentRepository,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository,
+            IAsyncRepository<ConditionsProvidedForms> conditionsProvidedFormsRepository,
             IUserRepository userRepository,
-            IJwtProvider jwtProvider,
+         
             IMapper mapper)
         {
             _categoryRepository = categoryRepository;
             _providedFormRepository = providedFormRepository;
             _conditionAttachmentRepository = conditionAttachmentRepository;
+            _conditionsProvidedFormsRepository = conditionsProvidedFormsRepository;
             _termRepository = termRepository;
             _userRepository = userRepository;
-            _jwtProvider = jwtProvider;
+     
             _mapper = mapper;
         }
         public async Task<BaseResponse<List<PublicTremsAndConditionsListVm>>> Handle(GetAllTermsByCategoryIdQuery request, CancellationToken cancellationToken)
@@ -56,28 +59,45 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
                     : "الفئة غير موجودة";
                 return new BaseResponse<List<PublicTremsAndConditionsListVm>>(msg, false, 404);
             }
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var user = await _userRepository.GetByIdAsync(new Guid(UserId));
-            var form = _providedFormRepository.FirstOrDefault(p => p.userId == user.Id);
 
-            var Terms = _termRepository.WhereThenInclude(t => t.CategoryId==category.Id, t => t.ConditionAttachments ).Where(t=>t.IsSpecial==false).ToList();
+            var form = _providedFormRepository.FirstOrDefault(p => p.Id == request.formId);
 
+            var Terms = _termRepository.WhereThenInclude(t => t.CategoryId == category.Id,t => t.ConditionAttachments).Where(t => t.IsSpecial==false).ToList();
+            
+            List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
            
-            List<AttachmentListVM> Attachmets = _mapper.Map<List<AttachmentListVM>>(await _conditionAttachmentRepository
-                .Include(x => x.ConditionsProvidedForms).Include(x => x.ConditionsProvidedForms.TermAndCondition)
-                .Where(x => x.ConditionsProvidedForms.TermAndCondition.CategoryId == category.Id &&
-                    x.ConditionsProvidedForms.TermAndCondition.IsSpecial == false &&
-                    x.ConditionsProvidedForms.ProvidedFormId == form!.Id).ToListAsync());
+            for(int i = 0; i < Terms.Count(); i++)
+            {
+                var conditionsProvidedsobject =
+                 _conditionsProvidedFormsRepository.WhereThenInclude(
+                     c => c.ProvidedFormId == form!.Id && c.TermAndConditionId == Terms[i].Id,
+                     c => c.Attachments).FirstOrDefault();
+
+                if(conditionsProvidedsobject != null)
+                      conditionsProvideds.Add(conditionsProvidedsobject!);
+            }
+                
+
+            
+
+            //List<AttachmentListVM> Attachmets = _mapper.Map<List<AttachmentListVM>>(await _conditionAttachmentRepository
+            //    .Include(x => x.ConditionsProvidedForms).Include(x => x.ConditionsProvidedForms.TermAndCondition)
+            //    .Where(x => x.ConditionsProvidedForms.TermAndCondition.CategoryId == category.Id &&
+            //        x.ConditionsProvidedForms.TermAndCondition.IsSpecial == false &&
+            //        x.ConditionsProvidedForms.ProvidedFormId == form!.Id).ToListAsync());
             
             var data = _mapper.Map<List<PublicTremsAndConditionsListVm>>(Terms);
             for (int i = 0; i<data.Count; i++)
             {
-                data[i].ConditionAttachments = _mapper.Map<List<ConditionProvidedFormListVm>>(Terms[i].ConditionAttachments);
+                data[i].ConditionsAttachments = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
                
-                for (int j = 0; j < data[i].ConditionAttachments!.Count; j++)
+                if (data[i].NeedAttachment)
                 {
-                    data[i].ConditionAttachments![j].Attachments = Attachmets;
+                    
+                        data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<AttachmentListVM>>(conditionsProvideds[i].Attachments);
+                    
                 }
+              
                 
                 data[i].Title = request.lang == "en"
                     ? data[i].EnglishTitle

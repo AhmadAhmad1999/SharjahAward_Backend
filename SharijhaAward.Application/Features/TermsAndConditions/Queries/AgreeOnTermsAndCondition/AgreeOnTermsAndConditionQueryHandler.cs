@@ -42,7 +42,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnT
 
         public async Task<BaseResponse<object>> Handle(AgreeOnTermsAndConditionQuery request, CancellationToken cancellationToken)
         {
-            var ConditionForm = _conditionsProvidedFormsRepository.Where(c => c.TermAndConditionId == request.TermId).FirstOrDefault();
+            var ConditionForm = _conditionsProvidedFormsRepository.Where(c => c.TermAndConditionId == request.TermId && c.ProvidedFormId == request.formId).FirstOrDefault();
             if (ConditionForm != null)
             {
                 ConditionForm.IsAgree = request.IsAgree;
@@ -56,7 +56,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnT
                 {
                     return new BaseResponse<object>("", false, 404);
                 }
-                var form = _providedFormRepository.Where(f => f.userId == user.Id).FirstOrDefault();
+                var form = _providedFormRepository.Where(f => f.Id == request.formId).FirstOrDefault();
                 if (form == null)
                 {
                     return new BaseResponse<object>("", false, 404);
