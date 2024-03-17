@@ -94,14 +94,15 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet("CategoriesWithSubcategories",Name = "CategoriesWithSubcategories")]
-        public async Task<IActionResult> CategoriesWithSubcategories()
+        public async Task<IActionResult> CategoriesWithSubcategories(Guid? CycleId)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new GetCategoriesWithSubcategoriesQuery()
             {
-                lang = Language!
+                lang = Language!,
+                CycleId = CycleId
             });
             return response.statusCode switch
             {

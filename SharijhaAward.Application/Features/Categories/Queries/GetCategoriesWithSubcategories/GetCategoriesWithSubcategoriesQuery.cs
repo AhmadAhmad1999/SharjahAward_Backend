@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories
 {
-    public class GetCategoriesWithSubcategoriesQuery :IRequest<BaseResponse<List<CategoriesSubcategoriesDto>>>
+    public class GetCategoriesWithSubcategoriesQuery : IRequest<BaseResponse<List<CategoriesSubcategoriesDto>>>
     {
+        public Guid? CycleId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

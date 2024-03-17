@@ -27,7 +27,7 @@ public class Cycle : AuditableEntity
     public string EnglishName { get; set; } = string.Empty;
     // the status of the cycle (active, inactive)
     // the initial state of the cycle is inactive.
-    public Status Status { get; set; } = Status.InActive;
+    public Status Status { get; set; } = Status.Close;
     public DateTime RegistrationPortalOpeningDate { get; set; }
     public DateTime RegistrationPortalClosingDate { get; set; }
     // Number of individual categories in which subscriber can entitled.

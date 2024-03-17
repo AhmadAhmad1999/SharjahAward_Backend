@@ -124,6 +124,10 @@ using SharijhaAward.Application.Features.EducationalInstitutions.Commands.Create
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllEducationalInstitutions;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllReceivedRequests;
+using SharijhaAward.Application.Features.Cycles.Queries.GetLimteNumberOfCategories;
+using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
+using SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGeneralWorkshop;
+using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGeneralWorkshops;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -201,7 +205,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Cycle, CycleListVM>().ReverseMap();
             CreateMap<Cycle, UpdateCycleCommand>().ReverseMap();
             CreateMap<Cycle, CycleDto>().ReverseMap();
-
+            CreateMap<Cycle, LimitationDto>().ReverseMap();
             CreateMap<News, CreateNewsCommand>().ReverseMap();
             CreateMap<News, UpdateNewsCommand>().ReverseMap();
             CreateMap<News, NewsVM>().ReverseMap();
@@ -246,6 +250,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Coordinator, CreateCoordinatorCommand>().ReverseMap();
             CreateMap<Coordinator, CoordinatorSearchListVM>().ReverseMap();
             CreateMap<Coordinator, CoordinatorDto>().ReverseMap();
+
+            CreateMap<GeneralWorkshop, CreateGeneralWorkshopCommand>().ReverseMap();
+            CreateMap<GeneralWorkshop, GeneralWorkshopsListVM>().ReverseMap();
 
             //
             // Dynamic Attribute..

@@ -14,15 +14,17 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
     {
         private readonly IAsyncRepository<TrainingWorkshop> _trainingWorkshopRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
-      //  private readonly IFileService<>
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
         public CreateTrainingWorkshopsCommandHandler(
+            IFileService fileService,
             IAsyncRepository<TrainingWorkshop> trainingWorkshopRepository,
             IAsyncRepository<Category> categoryRepository,
             IMapper mapper
             )
         {
+            _fileService = fileService;
             _trainingWorkshopRepository = trainingWorkshopRepository;
             _categoryRepository = categoryRepository;
             _mapper = mapper;
@@ -30,12 +32,14 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
 
         public async Task<BaseResponse<Guid>> Handle(CreateTrainingWorkshopsCommand request, CancellationToken cancellationToken)
         {
-            TrainingWorkshop workshop = _mapper.Map<TrainingWorkshop>(request);
-            Category category = await _categoryRepository.GetByIdAsync(workshop.CategoryId);
+            Category category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             if (category == null)
             {
                 return new BaseResponse<Guid>("Category Not Found",false,404);
             }
+            TrainingWorkshop workshop = _mapper.Map<TrainingWorkshop>(request);
+            string ThumbnailPath = await _fileService.SaveFileAsync(request.Thumbnail);
+            workshop.Thumbnail = ThumbnailPath;
 
             var data = await _trainingWorkshopRepository.AddAsync(workshop);
 

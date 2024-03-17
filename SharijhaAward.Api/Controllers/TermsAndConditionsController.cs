@@ -147,7 +147,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllSpecialConditionsByCategoryId/{Id}", Name = "GetAllSpecialConditionsByCategoryId")]
-        public async Task<IActionResult> GetAllSpecialConditionsByCategoryId(Guid Id)
+        public async Task<IActionResult> GetAllSpecialConditionsByCategoryId(Guid Id,int formId)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -161,6 +161,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = Language!,
                 CategoryId = Id,
+                formId = formId,
                 token = token!
             });
 
@@ -188,8 +189,8 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpGet("CheckAllConditions/{Id}",Name= "CheckAllConditions")]
-        public async Task<IActionResult> CheckAllConditions(Guid Id,bool IsSpecial)
+        [HttpGet("CheckAllConditions/{Id}", Name= "CheckAllConditions")]
+        public async Task<IActionResult> CheckAllConditions(Guid Id, int formId ,bool IsSpecial)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -198,6 +199,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 CategoryId = Id,
                 IsSpecial = IsSpecial,
+                formId = formId,
                 lang = Language!
             });
 
