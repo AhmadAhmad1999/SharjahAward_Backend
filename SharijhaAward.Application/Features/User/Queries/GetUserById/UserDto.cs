@@ -13,5 +13,6 @@ namespace SharijhaAward.Application.Features.User.Queries.GetUserById
         public string EnglishName {  get; set; }=string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Role {  get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = null!;
     }
 }

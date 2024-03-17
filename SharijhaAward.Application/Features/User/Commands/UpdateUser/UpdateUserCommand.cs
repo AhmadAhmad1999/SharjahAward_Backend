@@ -11,6 +11,6 @@ namespace SharijhaAward.Application.Features.User.Commands.UpdateUser
     {
         public Guid Id { get; set; }
         public string ArabicName { get; set; } = string.Empty;
-        
+        public string PhoneNumber { get; set; } = null!;
     }
 }

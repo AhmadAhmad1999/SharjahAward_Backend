@@ -9,6 +9,7 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.Updat
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllAttributeOperations;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllAttributeTablesNames;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDataTypes;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributeForDependency;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
@@ -369,6 +370,35 @@ namespace SharijhaAward.Api.Controllers
             RejectDynamicAttributeValueCommand.lang = HeaderValue;
 
             BaseResponse<object>? Response = await _Mediator.Send(RejectDynamicAttributeValueCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllDynamicAttributeForDependency")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllDynamicAttributeForDependency(Guid CategoryId, int AttributeTableNameId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllDynamicAttributeForDependencyListVM>> Response = await _Mediator.Send(new GetAllDynamicAttributeForDependencyQuery()
+            {
+                CategoryId = CategoryId,
+                AttributeTableNameId = AttributeTableNameId,
+                lang = HeaderValue!
+            });
 
             return Response.statusCode switch
             {

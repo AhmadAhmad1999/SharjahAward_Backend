@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.DeleteGeneralF
             if (GeneralFAQEntityToDelete == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "General FAQ is Not Found"
+                    ? "General FAQ is not found"
                     : "السؤال الشائع العام غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
@@ -35,7 +35,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.DeleteGeneralF
                 ? "General FAQ has been Deleted successfully"
                 : "تم حذف السؤال الشائع العام بنجاح";
 
-            return new BaseResponse<object>(ResponseMessage, false, 404);
+            return new BaseResponse<object>(ResponseMessage, false, 200);
         }
     }
 }

@@ -76,7 +76,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     ? "There is no sections"
                     : "لا يوجد أقسام";
 
-                return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, true, 204, DynamicAttributeSections, 0);
+                return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, false, 204, DynamicAttributeSections, 0);
             }
 
             IReadOnlyList<AttributeDataType> DataTypes = await _AttributeDataTypeRepository.ListAllAsync();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
@@ -26,11 +27,17 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
         public async Task<AuthenticationResponse> Handle(SignUpCommand request, CancellationToken cancellationToken)
         {
-            var user = _mapper.Map<Domain.Entities.IdentityModels.User>(request);
+            Domain.Entities.IdentityModels.User User = _mapper.Map<Domain.Entities.IdentityModels.User>(request);
+            byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
 
-            
-            
-                var role = request.RoleName != null 
+            User.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: User.Password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+
+            var role = request.RoleName != null 
                     ? await _roleRepository.GetByName(request.RoleName)
                     : await _roleRepository.GetByName("User");
 
@@ -41,13 +48,13 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                         message = "the User is not Created , Role dose not Exsist"
                     };
                 }
-            await _userRepository.AsignRole(user.Id, role.RoleId);
-            var data = await _userRepository.AddAsync(user);
+            await _userRepository.AsignRole(User.Id, role.RoleId);
+            var data = await _userRepository.AddAsync(User);
             string token = await _userRepository.RegisterAsync(data);
             return new AuthenticationResponse() 
             {
                 token = token,
-                user = user,
+                // user = User,
                 message = "User has been Created"
             };
         }

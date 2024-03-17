@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -44,7 +45,15 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                 return new BaseResponse<object>("", false, 404);
             }
 
-            if (User.Password == request.password)
+            byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
+            string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: request.password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+
+            if (User.Password == CheckPassword)
             {
                 
                 form.PercentCompletion = 100;
