@@ -58,9 +58,9 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
                 return new BaseResponse<object>("", false, 404);
             }
          
-            var form = _providedFormRepository.Where(p => p.Id == request.formId).FirstOrDefault();
+            var form = await _providedFormRepository.Where(p => p.Id == request.formId).FirstOrDefaultAsync();
 
-            var terms = _termRepository.WhereThenInclude(t => t.CategoryId == category.Id, t => t.ConditionAttachments).Where(t => t.IsSpecial == false).ToList();
+            var terms = await _termRepository.WhereThenInclude(t => t.CategoryId == category.Id, t => t.ConditionAttachments).Where(t => t.IsSpecial == request.IsSpecial).ToListAsync();
 
             List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
 
@@ -98,13 +98,25 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
 
                     }
                     //Check on Terms that don't need Attachments
-                    else if (!terms[i].IsAgree && !terms[i].NeedAttachment)
+                    else if (!conditionsProvideds[i].IsAgree && !terms[i].NeedAttachment)
                     {
                         msg = request.lang == "en"
                             ? "Pleas Agree on All Terms and Conditions"
                             : "الرجاء الموافقة على جميع الشروط و الأحكام";
                         return new BaseResponse<object>(msg, false, 400);
 
+                    }
+                    else if (
+                        terms[i].RequiredAttachmentNumber == 0 && 
+                        conditionsProvideds[i].Attachments.Count() < 1 &&
+                        terms[i].NeedAttachment
+                        )
+                    {
+                        msg = request.lang == "en"
+                             ? "Please Complete Uploading The File "
+                             : "الرجاء إكمال رفع الملفات";
+
+                        return new BaseResponse<object>(msg, false, 400);
                     }
                 }
             }

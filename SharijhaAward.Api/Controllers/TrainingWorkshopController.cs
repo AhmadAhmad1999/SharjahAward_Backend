@@ -38,7 +38,7 @@ namespace SharijhaAward.Api.Controllers
 
         [HttpPost(Name = "CreateTrainingWorkshop")]
 
-        public async Task<ActionResult> CreateTrainingWorkshop([FromBody] CreateTrainingWorkshopsCommand command)
+        public async Task<ActionResult> CreateTrainingWorkshop([FromForm] CreateTrainingWorkshopsCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(

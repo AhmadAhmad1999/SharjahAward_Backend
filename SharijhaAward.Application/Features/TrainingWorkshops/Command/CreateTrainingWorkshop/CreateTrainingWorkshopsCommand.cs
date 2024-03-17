@@ -13,7 +13,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
     {
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
-        public string Thumbnail { get; set; } = string.Empty;
+        public IFormFile Thumbnail { get; set; } = null!;
         public Guid CategoryId { get; set; }
     }
 }

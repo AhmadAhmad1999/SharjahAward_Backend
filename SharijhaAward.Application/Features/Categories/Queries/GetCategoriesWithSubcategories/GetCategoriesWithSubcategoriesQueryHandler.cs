@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -35,7 +36,11 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
 
         public async Task<BaseResponse<List<CategoriesSubcategoriesDto>>> Handle(GetCategoriesWithSubcategoriesQuery request, CancellationToken cancellationToken)
         {
-            var CycleId = _cycleRepository.Where(c => c.isDeleted == false).OrderBy(c=>c.CreatedAt).Last().Id;
+            
+            var CycleId = request.CycleId != Guid.Empty 
+                ? request.CycleId
+                : _cycleRepository.FirstOrDefault(c => c.Status == Domain.Constants.Common.Status.Active)!.Id;
+                 
            
             var categories = _categoryRepository.Where(c => c.CycleId == CycleId).Where(c=>c.ParentId==null).ToList();
            

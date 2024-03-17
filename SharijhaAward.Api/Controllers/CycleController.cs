@@ -5,6 +5,7 @@ using SharijhaAward.Application.Features.Cycles.Commands.CreateCycle;
 using SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle;
 using SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles;
 using SharijhaAward.Application.Features.Cycles.Queries.GetCycleById;
+using SharijhaAward.Application.Features.Cycles.Queries.GetLimteNumberOfCategories;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 
 namespace SharijhaAward.Api.Controllers
@@ -84,6 +85,19 @@ namespace SharijhaAward.Api.Controllers
                 page = page,
                 pageSize = perPage
             });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpGet("GetLimitedNumberOfCategories", Name = "GetLimitedNumberOfCategories")]
+        public async Task<IActionResult> GetLimitedNumberOfCategories()
+        {
+            //get data from mediator
+            var response = await _mediator.Send(new GetLimteNumberOfCategoriesQuery());
 
             return response.statusCode switch
             {
