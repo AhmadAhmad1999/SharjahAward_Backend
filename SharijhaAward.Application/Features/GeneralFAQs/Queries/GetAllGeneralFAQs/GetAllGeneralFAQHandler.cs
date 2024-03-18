@@ -2,15 +2,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.FAQModel;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFAQs
 {
@@ -31,6 +24,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
             string ResponseMessage = string.Empty;
 
             List<GetAllGeneralFAQListVM> GeneralFAQs = await _GeneralFAQRepository
+                .Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId)
                 .Select(x => new GetAllGeneralFAQListVM()
                 {
                     Id = x.Id,

@@ -35,6 +35,7 @@ namespace SharijhaAward.Api.Controllers
                     Email = user.Email,
                     Password = user.Password 
                 });
+            
             if (response.user == null)
             {
                 return StatusCode(400,

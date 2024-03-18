@@ -1,15 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.FAQs.Queries.GetFAQById;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.FAQModel;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetGeneralFAQById
 {

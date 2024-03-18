@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Newtonsoft.Json.Linq;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
@@ -43,7 +44,16 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
 
                 return new BaseResponse<object>(msg,false,404);
             }
-            if(user.Password != request.OldPassword)
+
+            byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
+            string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: user.Password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+
+            if (CheckPassword != request.OldPassword)
             {
                 msg = request.lang == "en"
                     ? "old password is not matching"
@@ -54,10 +64,14 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
                    ? "The Password has been Changed"
                    : "تم تغيير كلمة المرور بنجاح";
 
-            user.Password = request.OldPassword;
+            request.NewPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: request.NewPassword,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
            
             await _userRepository.ChangePassword(user.Id,request.NewPassword);
-
 
             return new BaseResponse<object>(msg, true, 200);
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -58,7 +59,17 @@ namespace SharijhaAward.Persistence.Repositories
                     message = "User Not Found"
                 };
             }
-            if (userToLogin.Password == user.Password)
+
+            byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
+
+            string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: user.Password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+
+            if (CheckPassword == userToLogin.Password)
             {
                 var token = _jwtProvider.Generate(userToLogin);
                 userToLogin.Role = await _dbContext.Roles.FindAsync(userToLogin.RoleId);
@@ -75,7 +86,7 @@ namespace SharijhaAward.Persistence.Repositories
             }
             return new AuthenticationResponse()
             {
-                message = "Authentication Error"
+                message = "Authentication error, Wrong password"
             };
            
         }

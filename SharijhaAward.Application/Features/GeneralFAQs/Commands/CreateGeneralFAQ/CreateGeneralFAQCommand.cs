@@ -9,6 +9,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.CreateGeneralF
         public string EnglishQuestion { get; set; } = null!;
         public string ArabicAnswer { get; set; } = null!;
         public string EnglishAnswer { get; set; } = null!;
+        public int GeneralFrequentlyAskedQuestionCategoryId { get; set; }
         public string? lang { get; set; }
     }
 }

@@ -11,5 +11,6 @@ namespace SharijhaAward.Application.Contract.Infrastructure
     public interface IEmailSender
     {
         public Task SendEmail(EmailRequest EmailRequest, AlternateView AlternateView);
+        public Task SendEmail(EmailRequest EmailRequest);
     }
 }

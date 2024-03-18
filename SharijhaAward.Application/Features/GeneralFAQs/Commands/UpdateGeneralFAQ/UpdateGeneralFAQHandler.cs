@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.UpdateGeneralF
             if (GeneralFAQEntityToUpdate == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "General FAQ is Not Found"
+                    ? "General FAQ is not found"
                     : "السؤال الشائع العام غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);

@@ -54,6 +54,7 @@ namespace SharijhaAward.Persistence
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
         public DbSet<FrequentlyAskedQuestion> frequentlyAskedQuestions { get; set; }
         public DbSet<GeneralFrequentlyAskedQuestion> GeneralFrequentlyAskedQuestions { get; set; }
+        public DbSet<GeneralFrequentlyAskedQuestionCategory> GeneralFrequentlyAskedQuestionCategories { get; set; }
         public DbSet<TrainingWorkshop> trainingWorkshops { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<PersonalInvitee> Personalnvitees { get; set; }
@@ -114,6 +115,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<GeneralFrequentlyAskedQuestion>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<GeneralFrequentlyAskedQuestionCategory>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Event>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Cycle>().HasQueryFilter(p => !p.isDeleted);
@@ -155,6 +157,30 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<GeneralWorkshop>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);
 
+            modelBuilder.Entity<GeneralFrequentlyAskedQuestionCategory>()
+                .HasData(new GeneralFrequentlyAskedQuestionCategory()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = 1,
+                    ArabicName = "اختبار فئة أسئلة شائعة عامة 1",
+                    EnglishName = "Test General FAQ Category 1"
+                }, new GeneralFrequentlyAskedQuestionCategory()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = 2,
+                    ArabicName = "اختبار فئة أسئلة شائعة عامة 2",
+                    EnglishName = "Test General FAQ Category 2"
+                });
             modelBuilder.Entity<GeneralFrequentlyAskedQuestion>()
                 .HasData(new GeneralFrequentlyAskedQuestion()
                 {
@@ -168,7 +194,8 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     DeletedAt = null,
                     LastModifiedAt = null,
-                    LastModifiedBy = null
+                    LastModifiedBy = null,
+                    GeneralFrequentlyAskedQuestionCategoryId = 1
                 }, new GeneralFrequentlyAskedQuestion()
                 {
                     Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
@@ -181,7 +208,36 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     DeletedAt = null,
                     LastModifiedAt = null,
-                    LastModifiedBy = null
+                    LastModifiedBy = null,
+                    GeneralFrequentlyAskedQuestionCategoryId = 1
+                }, new GeneralFrequentlyAskedQuestion()
+                {
+                    Id = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
+                    ArabicAnswer = "اختبار جواب 3",
+                    ArabicQuestion = "اختبار سؤال 3",
+                    EnglishAnswer = "Test Answer 3",
+                    EnglishQuestion = "Test Question 3",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    GeneralFrequentlyAskedQuestionCategoryId = 2
+                }, new GeneralFrequentlyAskedQuestion()
+                {
+                    Id = new Guid("5542d87a-7f44-4163-5e3c-08dc427e4e9f"),
+                    ArabicAnswer = "اختبار جواب 4",
+                    ArabicQuestion = "اختبار سؤال 4",
+                    EnglishAnswer = "Test Answer 4",
+                    EnglishQuestion = "Test Question 4",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    GeneralFrequentlyAskedQuestionCategoryId = 2
                 });
             modelBuilder.Entity<AttributeTableName>()
                 .HasData(new AttributeTableName()
@@ -601,7 +657,7 @@ namespace SharijhaAward.Persistence
                     Email = "ahmad.a.ahmad.100011@gmail.com",
                     EnglishName = "Admin 123",
                     Gender = Gender.Male,
-                    Password = "QAZwsx!@1212",
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
                     RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d")
                 });

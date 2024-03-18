@@ -124,6 +124,11 @@ using SharijhaAward.Application.Features.EducationalInstitutions.Commands.Create
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllEducationalInstitutions;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllReceivedRequests;
+using SharijhaAward.Application.Features.GeneralFAQCategories.Commands.CreateGeneralFAQCategory;
+using SharijhaAward.Application.Features.GeneralFAQCategories.Commands.UpdateGeneralFAQCategory;
+using SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAllGeneralFAQCategory;
+using SharijhaAward.Application.Features.Settings.Queries.GetProfileById;
+using SharijhaAward.Domain.Entities.SubscriberModel;
 using SharijhaAward.Application.Features.Cycles.Queries.GetLimteNumberOfCategories;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 using SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGeneralWorkshop;
@@ -283,11 +288,13 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CriterionAttachment, CreateCriterionAttachmentVM>().ReverseMap();
             CreateMap<CriterionItemAttachment, CreateCriterionItemAttachmentVM>().ReverseMap();
             CreateMap<GeneralFrequentlyAskedQuestion, CreateGeneralFAQCommand>().ReverseMap();
+            CreateMap<GeneralFrequentlyAskedQuestionCategory, CreateGeneralFAQCategoryCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
             CreateMap<DynamicAttribute, UpdateDynamicAttributeCommand>().ReverseMap();
             CreateMap<DynamicAttributeListValue, UpdateDynamicAttributeListValueCommand>().ReverseMap();
+            CreateMap<GeneralFrequentlyAskedQuestionCategory, UpdateGeneralFAQCategoryCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -311,6 +318,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CriterionAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<CriterionItemAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<RelatedAccountRequest, GetAllReceivedRequestsListVM>().ReverseMap();
+            CreateMap<Subscriber, GetProfileByIdDto>().ReverseMap();
         }
     }
 }

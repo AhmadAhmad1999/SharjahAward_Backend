@@ -1,9 +1,4 @@
 ﻿using SharijhaAward.Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel
 {
@@ -14,5 +9,7 @@ namespace SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel
         public string EnglishQuestion { get; set; } = null!;
         public string ArabicAnswer { get; set; } = null!;
         public string EnglishAnswer { get; set; } = null!;
+        public int GeneralFrequentlyAskedQuestionCategoryId { get; set; }
+        public GeneralFrequentlyAskedQuestionCategory? GeneralFrequentlyAskedQuestionCategory { get; set; }
     }
 }
