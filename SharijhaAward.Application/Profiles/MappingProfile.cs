@@ -128,6 +128,11 @@ using SharijhaAward.Application.Features.Cycles.Queries.GetLimteNumberOfCategori
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 using SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGeneralWorkshop;
 using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGeneralWorkshops;
+using SharijhaAward.Domain.Entities.AboutAwardPageModel;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateAboutPage;
+using SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateGoal;
+using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetGeneralWorkshopById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -253,6 +258,12 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<GeneralWorkshop, CreateGeneralWorkshopCommand>().ReverseMap();
             CreateMap<GeneralWorkshop, GeneralWorkshopsListVM>().ReverseMap();
+            CreateMap<GeneralWorkshop, GeneralWorkshopDto>().ReverseMap();
+
+            CreateMap<AboutAwardPage, CreateAboutPageCommand>().ReverseMap();
+            CreateMap<AboutAwardPage, AboutPageDto>().ReverseMap();
+            CreateMap<OurGoal, CreateGoalCommand>().ReverseMap();
+            CreateMap<OurGoal, OurGoalsDto>().ReverseMap();
 
             //
             // Dynamic Attribute..

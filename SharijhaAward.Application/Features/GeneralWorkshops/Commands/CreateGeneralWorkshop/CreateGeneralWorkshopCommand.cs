@@ -20,6 +20,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGen
         public string Time { get; set; } = string.Empty;
         public IFormFile? Video { get; set; }
         public string? RegistrationUrl { get; set; } = string.Empty;
+        public IFormFile? AgendaImage { get; set; } = null!;
         public string lang { get; set; } = string.Empty;
     }
 }

@@ -1,24 +1,25 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGeneralWorkshop;
-using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGeneralWorkshops;
-using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetGeneralWorkshopById;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateAboutPage;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateGoal;
+using SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage;
 
 namespace SharijhaAward.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GeneralWorkshopeController : ControllerBase
+    public class AboutPageController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public GeneralWorkshopeController(IMediator mediator)
+        public AboutPageController(IMediator mediator)
         {
             _mediator = mediator;
         }
-        [HttpPost(Name = "CreateGeneralWorkshope")]
-        public async Task<IActionResult> CreateGeneralWorkshope([FromForm] CreateGeneralWorkshopCommand command)
+
+        [HttpPost(Name = "CreateAboutPage")]
+        public async Task<IActionResult> CreateAboutPage([FromForm] CreateAboutPageCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -33,19 +34,32 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(response),
                 _ => BadRequest(response)
             };
-
         }
-        [HttpGet(Name = "GetAllGeneralWorkshope")]
-        public async Task<IActionResult> GetAllGeneralWorkshope(int page = 1, int pageSize = 10)
+        [HttpPost("CreateGoal", Name ="CreateGoal")]
+        public async Task<IActionResult> CreateGoal( [FromBody] CreateGoalCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllGeneralWorkshopsQuery()
+            var response = await _mediator.Send(command);
+
+            return response.statusCode switch
             {
-                lang = language!,
-                page = page,
-                pageSize = pageSize
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+
+        }
+        [HttpGet(Name="GetAboutAwardPage")]
+        public async Task<IActionResult> GetAboutAwardPage()
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAboutPageQuery()
+            {
+                lang = language!
             });
 
             return response.statusCode switch
@@ -55,25 +69,5 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpGet("{Id}",Name= "GetGeneralWorkshopById")]
-        public async Task<IActionResult> GetGeneralWorkshopById(Guid Id)
-        {
-            //get Language from header
-            var language = HttpContext.Request.Headers["lang"];
-
-            var response = await _mediator.Send(new GetGeneralWorkshopByIdQuery()
-            {
-                Id = Id,
-                lang = language!,
-            });
-
-            return response.statusCode switch
-            {
-                200 => Ok(response),
-                404 => NotFound(response),
-                _ => BadRequest(response)
-            };
-        }
-
     }
 }

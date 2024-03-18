@@ -37,7 +37,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
         public async Task<BaseResponse<List<CategoriesSubcategoriesDto>>> Handle(GetCategoriesWithSubcategoriesQuery request, CancellationToken cancellationToken)
         {
             
-            var CycleId = request.CycleId != Guid.Empty 
+            var CycleId = request.CycleId != null 
                 ? request.CycleId
                 : _cycleRepository.FirstOrDefault(c => c.Status == Domain.Constants.Common.Status.Active)!.Id;
                  
@@ -50,9 +50,6 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
            
             for (int i=0; i<data.Count; i++)
             {
-                data[i].Icon = isHttps
-                            ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{categories[i].Icon.Split('\\').LastOrDefault()}"
-                            : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{categories[i].Icon.Split('\\').LastOrDefault()}";
                
                 data[i].Name = request.lang == "en" ? categories[i].EnglishName : categories[i].ArabicName;
                
@@ -62,10 +59,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
                 
                 for(int j=0; j < subCategories.Count; j++)
                 {
-                    data[i].subcategories![j].Icon = isHttps
-                            ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{categories[i].Icon.Split('\\').LastOrDefault()}"
-                            : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{categories[i].Icon.Split('\\').LastOrDefault()}";
-
+                    
                     data[i].subcategories![j].Name = request.lang == "en" ? subCategories[j].EnglishName : subCategories[j].ArabicName;
                 }
               

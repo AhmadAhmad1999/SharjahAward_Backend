@@ -54,8 +54,6 @@
     <Folder Include="Features\EducationalInstitutions\Queries\GetEducationalInstitutionsByEntityId\" />
     <Folder Include="Features\GeneralWorkshops\Commands\DeleteGeneralWorkshop\" />
     <Folder Include="Features\GeneralWorkshops\Commands\UpdateGeneralWorkshop\" />
-    <Folder Include="Features\GeneralWorkshops\Queries\GetGeneralWorkshopById\" />
-    <Folder Include="Features\GeneralWorkshops\Queries\GetGeneralWorkshopByCycle\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
     <Folder Include="Features\TermsAndConditions\Attacments\Queries\" />

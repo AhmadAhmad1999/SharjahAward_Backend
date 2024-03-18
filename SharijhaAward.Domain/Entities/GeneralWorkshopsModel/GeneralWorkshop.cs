@@ -20,5 +20,6 @@ namespace SharijhaAward.Domain.Entities.GeneralWorkshopsModel
         public string Time { get; set; } = string.Empty;
         public string? Video {  get; set; } = string.Empty;
         public string? RegistrationUrl { get; set; } = string.Empty;
+        public string? AgendaImage { get; set; } = string.Empty;
     }
 }
