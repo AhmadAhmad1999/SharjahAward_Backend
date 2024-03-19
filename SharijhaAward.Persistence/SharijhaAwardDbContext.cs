@@ -38,6 +38,8 @@ using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
 using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
+using SharijhaAward.Domain.Entities.AboutAwardPageModel;
+using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -99,7 +101,9 @@ namespace SharijhaAward.Persistence
         public DbSet<Criterion> Criterions { get; set; }
         public DbSet<CriterionItem> CriterionItems { get; set; }
         public DbSet<CriterionItemAttachment> CriterionItemAttachments { get; set; }
-
+        public DbSet<AboutAwardPage> AboutAwardPage { get; set; }
+        public DbSet<GeneralWorkshop> GeneralWorkshops { get; set; }
+        public DbSet<OurGoal> OurGoals { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -149,6 +153,10 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalEntity>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EduInstitutionCoordinator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AboutAwardPage>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<GeneralWorkshop>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);
+
             modelBuilder.Entity<GeneralFrequentlyAskedQuestionCategory>()
                 .HasData(new GeneralFrequentlyAskedQuestionCategory()
                 {

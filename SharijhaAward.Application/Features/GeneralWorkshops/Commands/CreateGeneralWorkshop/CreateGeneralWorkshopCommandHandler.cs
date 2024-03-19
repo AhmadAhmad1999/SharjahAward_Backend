@@ -36,6 +36,10 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGen
                 ? await _fileService.SaveFileAsync(request.Video) 
                 : string.Empty;
 
+            GeneralWorkshop.AgendaImage = request.AgendaImage != null
+                ? await _fileService.SaveFileAsync(request.AgendaImage)
+                : string.Empty;
+
             GeneralWorkshop.DayName = request.DateOfWorkShop.Day.ToString();
 
             var data = await _generalWorkshopeRepository.AddAsync(GeneralWorkshop);
