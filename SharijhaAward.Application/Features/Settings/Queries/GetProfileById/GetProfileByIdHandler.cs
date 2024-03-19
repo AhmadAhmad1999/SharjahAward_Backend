@@ -32,9 +32,9 @@ namespace SharijhaAward.Application.Features.Settings.Queries.GetProfileById
                 return new BaseResponse<GetProfileByIdDto>(ResponseMessage, false, 404);
             }
 
-            GetProfileByIdDto GeneralFAQDto = _Mapper.Map<GetProfileByIdDto>(SubscriberEntity);
+            GetProfileByIdDto GetProfileByIdDto = _Mapper.Map<GetProfileByIdDto>(SubscriberEntity);
 
-            return new BaseResponse<GetProfileByIdDto>(ResponseMessage, true, 200, GeneralFAQDto);
+            return new BaseResponse<GetProfileByIdDto>(ResponseMessage, true, 200, GetProfileByIdDto);
         }
     }
 }

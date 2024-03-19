@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
                     ? "Account is not found"
                     : "الحساب غير موجود";
 
-                return new BaseResponse<object>(ResponseMessage, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
             string SenderId = _JWTProvider.GetUserIdFromToken(Request.token!);

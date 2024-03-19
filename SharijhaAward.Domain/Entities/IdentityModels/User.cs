@@ -18,6 +18,7 @@ public class User : AuditableEntity  {
     [ForeignKey(nameof(Role))]
     public Guid? RoleId { get; set; }
     public int? ConfirmationCode { get; set; }
+    public string? ImageURL { get; set; }
     public virtual List<MeetingUser> MeetingUsers { get; set; } = null!;
     public virtual List<Note> Notes { get; set; } = null!;
 }

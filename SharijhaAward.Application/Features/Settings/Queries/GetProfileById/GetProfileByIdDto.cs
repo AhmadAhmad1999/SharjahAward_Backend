@@ -8,5 +8,6 @@ namespace SharijhaAward.Application.Features.Settings.Queries.GetProfileById
         public string Email { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
         public Gender Gender { get; set; }
+        public string? ImageURL { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
@@ -11,15 +10,12 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
     public class GetAllReceivedRequestsHandler : IRequestHandler<GetAllReceivedRequestsQuery, 
         BaseResponse<List<GetAllReceivedRequestsListVM>>>
     {
-        private readonly IMapper _Mapper;
         private readonly IAsyncRepository<RelatedAccountRequest> _RelatedAccountRequestRepository;
         private readonly IJwtProvider _JWTProvider;
 
-        public GetAllReceivedRequestsHandler(IMapper Mapper,
-            IAsyncRepository<RelatedAccountRequest> RelatedAccountRequestRepository,
+        public GetAllReceivedRequestsHandler(IAsyncRepository<RelatedAccountRequest> RelatedAccountRequestRepository,
             IJwtProvider JWTProvider)
         {
-            _Mapper = Mapper;
             _RelatedAccountRequestRepository = RelatedAccountRequestRepository;
             _JWTProvider = JWTProvider;
         }
@@ -31,15 +27,33 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
 
             Guid UserId = new Guid(_JWTProvider.GetUserIdFromToken(Request.token!));
 
-            List<GetAllReceivedRequestsListVM> ReceivedRequests = _Mapper.Map<List<GetAllReceivedRequestsListVM>>(
-                (Request.pageSize == -1 || Request.page == 0)
-                    ? await _RelatedAccountRequestRepository
-                        .Where(x => x.ReceiverId == UserId)
-                        .Include(x => x.Sender).ToListAsync()
-                    : await _RelatedAccountRequestRepository
-                        .Where(x => x.ReceiverId == UserId)
-                        .Include(x => x.Sender)
-                        .Skip((Request.page - 1) * Request.pageSize).Take(Request.pageSize).ToListAsync());
+            List<GetAllReceivedRequestsListVM> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
+                ? await _RelatedAccountRequestRepository
+                    .Where(x => x.ReceiverId == UserId)
+                    .Include(x => x.Sender)
+                    .Select(x => new GetAllReceivedRequestsListVM()
+                    {
+                        Id = x.Id,
+                        Email = x.Sender!.Email,
+                        Gender = x.Sender!.Gender,
+                        Name = Request.lang == "en"
+                            ? x.Sender!.EnglishName
+                            : x.Sender!.ArabicName
+                    })
+                    .ToListAsync()
+                : await _RelatedAccountRequestRepository
+                    .Where(x => x.ReceiverId == UserId)
+                    .Include(x => x.Sender)
+                    .Select(x => new GetAllReceivedRequestsListVM()
+                    {
+                        Id = x.Id,
+                        Email = x.Sender!.Email,
+                        Gender = x.Sender!.Gender,
+                        Name = Request.lang == "en"
+                            ? x.Sender!.EnglishName
+                            : x.Sender!.ArabicName
+                    })
+                    .Skip((Request.page - 1) * Request.pageSize).Take(Request.pageSize).ToListAsync();
 
             int TotalCount = await _RelatedAccountRequestRepository
                 .GetCountAsync(x => x.ReceiverId == UserId);
