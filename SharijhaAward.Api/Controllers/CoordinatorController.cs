@@ -39,9 +39,13 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("{CoordinatorId}" ,Name="GetCoordinatorById")]
         public async Task<IActionResult> GetCoordinatorById(Guid CoordinatorId)
         {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
             var response = await _mediator.Send(new GetCoordinatorByIdQuery()
             {
-                CoordinatorId = CoordinatorId
+                CoordinatorId = CoordinatorId,
+                lang = Language!
             });
 
             return response.statusCode switch

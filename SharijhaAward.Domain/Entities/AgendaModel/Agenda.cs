@@ -15,8 +15,9 @@ public class Agenda : AuditableEntity
     public string EnglishTitle { get; set; } = string.Empty;
     public string Icon { get; set; } = string.Empty;
     public DateTime Date { get; set; }
-    public bool IsActive { get; set; }
+    public AgendaStatus Status { get; set; }
+    public Cycle Cycle { get; set; } = null!;
     [ForeignKey(nameof(Cycle))]
     public Guid CycleId { get; set; }
-    public Cycle Cycle { get; set; } = null!;
+   
 }

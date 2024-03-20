@@ -6,6 +6,7 @@ using SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycleCon
 using SharijhaAward.Application.Features.CycleConditions.Commands.DeleteCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Commands.UpdateCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycleConditions;
+using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionById;
 
 namespace SharijhaAward.Api.Controllers
@@ -115,6 +116,25 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
 
+        }
+        [HttpGet("GetCycleConditionByCycleId/{CycleId}", Name = "GetCycleConditionByCycleId")]
+        public async Task<ActionResult> GetCycleConditionByCycleId(Guid CycleId)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetCycleConditionByCycleIdQuery()
+            {
+                CycleId = CycleId,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
         }
     }
 }

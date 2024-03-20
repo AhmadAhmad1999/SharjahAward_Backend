@@ -655,6 +655,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     ArabicName = "ادمن 123",
                     Email = "ahmad.a.ahmad.100011@gmail.com",
+                    PhoneNumber="0993521579",
                     EnglishName = "Admin 123",
                     Gender = Gender.Male,
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",

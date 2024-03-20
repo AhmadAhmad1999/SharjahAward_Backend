@@ -3,6 +3,7 @@ using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using SharijhaAward.Domain.Entities.NoteModel;
 using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.AchievementModel;
 
 namespace SharijhaAward.Domain.Entities.IdentityModels;
 public class User : AuditableEntity  {
@@ -18,6 +19,9 @@ public class User : AuditableEntity  {
     [ForeignKey(nameof(Role))]
     public Guid? RoleId { get; set; }
     public int? ConfirmationCode { get; set; }
+
+
+
     public virtual List<MeetingUser> MeetingUsers { get; set; } = null!;
     public virtual List<Note> Notes { get; set; } = null!;
 }

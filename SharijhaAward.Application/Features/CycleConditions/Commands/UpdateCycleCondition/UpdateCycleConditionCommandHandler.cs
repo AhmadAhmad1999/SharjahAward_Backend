@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Commands.UpdateCycl
                 ? "Cycle Condition has been Updated"
                 : "تم تعديل شرط الدورة بنجاح";
 
-            return new BaseResponse<object>(msg, false, 404);
+            return new BaseResponse<object>(msg, false, 200);
 
         }
     }
