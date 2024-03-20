@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Get
         public async Task<BaseResponse<List<EducationalInstitutionListVM>>> Handle(GetAllEducationalInstitutionsQuery request, CancellationToken cancellationToken)
         {
             var EducationalInstitution = await _educationalInstitutionRepository.ListAllAsync();
-            if (request.EducationalEntityId != null || EducationalInstitution.Count() > 0)
+            if (request.EducationalEntityId != null && EducationalInstitution.Count() > 0)
             {
                 EducationalInstitution = _educationalInstitutionRepository.Where(e => e.EducationalEntityId == request.EducationalEntityId).ToList();
             }

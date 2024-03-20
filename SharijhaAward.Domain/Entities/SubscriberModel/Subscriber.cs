@@ -1,5 +1,5 @@
 ﻿using SharijhaAward.Domain.Constants.Common;
-using SharijhaAward.Domain.Entities.AchievementModel;
+
 using SharijhaAward.Domain.Entities.Common;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.MeetingSubscriberModel;
@@ -38,7 +38,7 @@ public class Subscriber : User
 
     public virtual List<MeetingSubscriber>MeetingSubscribers { get; set; } = new();
 
-    public virtual List<Achievement> Achievements { get; set; } = new();
+
 
     public virtual List<SubscriberInterview> SubscriberInterviews { get; set; } = new();
 }

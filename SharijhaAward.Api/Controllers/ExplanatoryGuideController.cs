@@ -6,6 +6,7 @@ using MimeKit;
 using SelectPdf;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateExplanatoryGuide;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideByCategoryId;
+using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideDetailsByCategoryId;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -47,6 +48,25 @@ namespace SharijhaAward.Api.Controllers
 
             // Return the file as a downloadable response
             return File(response.data!.fileContent, "application/pdf", "ExplanatoryGuide.pdf");
+        }
+
+        [HttpGet("GetExplanatoryGuideDetailsByCategoryId/{Id}", Name = "GetExplanatoryGuideDetailsByCategoryId")]
+        public async Task<IActionResult> GetExplanatoryGuideDetailsByCategoryId(Guid Id)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+            var response = await _mediator.Send(new GetExplanatoryGuideDetailsByCategoryIdQuery()
+            {
+                CategoryId = Id,
+                lang = Language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
 
     }

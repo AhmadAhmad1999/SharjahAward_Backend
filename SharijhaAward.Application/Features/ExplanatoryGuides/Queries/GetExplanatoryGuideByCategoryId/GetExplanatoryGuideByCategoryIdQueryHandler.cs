@@ -19,6 +19,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
         private readonly IAsyncRepository<ExplanatoryGuide> _explanatoryGuideRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IFileService _fileService;
+        
         public GetExplanatoryGuideByCategoryIdQueryHandler(
             IAsyncRepository<ExplanatoryGuide> explanatoryGuideRepository,
             IAsyncRepository<Category> categoryRepository,
@@ -46,7 +47,8 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
             }
             else
             {
-                fileContent = null!;
+                return new BaseResponse<ExplanatoryGuideDto>("The Explanatory Guide not found", false, 404);
+                
             }
             var data = new ExplanatoryGuideDto()
             {

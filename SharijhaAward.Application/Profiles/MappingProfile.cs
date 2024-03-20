@@ -138,6 +138,8 @@ using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateAboutPag
 using SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateGoal;
 using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetGeneralWorkshopById;
+using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
+using SharijhaAward.Application.Features.Coordinators.Queries.AddCordinatorToEduEntity;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetRelatedAccoutProfileById;
 
 namespace SharijhaAward.Application.Profiles
@@ -255,6 +257,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalEntity, EducationalEntitiesListVm>().ReverseMap();
             CreateMap<EducationalEntity, CreateEducationalEntityCommand>().ReverseMap();
 
+            CreateMap<EduEntitiesCoordinator, AddCoordinatorToEduEntityQuery>().ReverseMap();
+            
             CreateMap<EducationalInstitution, CreateEducationalInstitutionCommand>().ReverseMap();
             CreateMap<EducationalInstitution, EducationalInstitutionListVM>().ReverseMap();
 

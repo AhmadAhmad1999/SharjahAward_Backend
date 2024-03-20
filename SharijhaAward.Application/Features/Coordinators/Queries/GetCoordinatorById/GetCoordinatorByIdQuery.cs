@@ -11,5 +11,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
     public class GetCoordinatorByIdQuery : IRequest<BaseResponse<CoordinatorDto>>
     {
         public Guid CoordinatorId { get; set; }
+        public string lang { get; set; } = string.Empty;
     }
 }

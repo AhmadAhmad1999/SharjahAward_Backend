@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AgendaConstants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
         public string EnglishTitle { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
         public DateTime Date { get; set; }
-        public bool IsActive { get; set; }
+        public AgendaStatus Status { get; set; }
         public Guid CycleId { get; set; }
     }
 }

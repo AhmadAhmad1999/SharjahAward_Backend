@@ -703,13 +703,14 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     ArabicName = "ادمن 123",
                     Email = "ahmad.a.ahmad.100011@gmail.com",
+                    PhoneNumber="0993521579",
                     EnglishName = "Admin 123",
                     Gender = Gender.Male,
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
                     RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
                     ConfirmationCode = null,
-                    PhoneNumber = "093517413"
+                    
                 });
             modelBuilder.Entity<ProvidedForm>()
                 .HasData(new ProvidedForm()

@@ -30,27 +30,28 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
 
         public async Task<BaseResponse<List<CoordinatorSearchListVM>>> Handle(SearchForCoordinatorQuery request, CancellationToken cancellationToken)
         {
-            List<Coordinator> Coordinators; 
+            List<Coordinator> Coordinators;
 
             if (
-                    request.Emirates==null &&
+                    request.Emirates == null &&
                     request.EducationType == null &&
-                    request.EducationalEntity == null && 
+                    request.EducationalEntity == null &&
                     request.Shcool == null
                 )
             {
-                 Coordinators = (List<Coordinator>) await _coordinatorRepository.ListAllAsync();
+                Coordinators = (List<Coordinator>)await _coordinatorRepository.ListAllAsync();
             }
-
-             Coordinators = _coordinatorRepository
-               .Include(c => c.EducationCoordinators)
-               .Where(c =>
-                  c.EducationCoordinators.Any(ec =>
-                     ec.EducationalEntityId == request.EducationalEntity) &&
-                  c.EducationType == request.EducationType &&
-                  c.Emirates == request.Emirates
-               ).ToList();
-
+            else
+            {
+                Coordinators = _coordinatorRepository
+                  .Include(c => c.EducationCoordinators)
+                  .Where(c =>
+                     c.EducationCoordinators.Any(ec =>
+                        ec.EducationalEntityId == request.EducationalEntity) &&
+                     c.EducationType == request.EducationType &&
+                     c.Emirates == request.Emirates
+                  ).ToList();
+            }
             var data = _mapper.Map<List<CoordinatorSearchListVM>>(Coordinators);
 
             for (int i = 0; i < data.Count; i++)

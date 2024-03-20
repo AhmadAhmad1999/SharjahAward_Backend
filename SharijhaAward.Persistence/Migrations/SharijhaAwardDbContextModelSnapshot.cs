@@ -188,41 +188,56 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementModel.Achievement", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ArabicTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Attachment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EnglishTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("classificationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("subscriberId")
+                    b.Property<Guid?>("AchievementClassificationId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Facebook")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FieldOfDiscrimination")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Instagram")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Linkedin")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Projects")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SkillsAndExperiences")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Snapchat")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("SubscriberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Tiktok")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Twitter")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Youtube")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("classificationId");
+                    b.HasIndex("AchievementClassificationId");
 
-                    b.HasIndex("subscriberId");
+                    b.HasIndex("SubscriberId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Achievement");
                 });
@@ -698,19 +713,19 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "اختبار وصف 1",
                             ArabicName = "اختبار اسم 1",
                             CategoryClassification = 0,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(1909),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(8709),
                             CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
                             EnglishDescription = "Test Description 1",
                             EnglishName = "Test Name 1",
                             ExpectedNumberOfWinners = 1,
-                            FinalArbitrationEndDate = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(1939),
+                            FinalArbitrationEndDate = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(8715),
                             FinalArbitrationQualificationMark = 0,
-                            FinalArbitrationStartDate = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(1945),
+                            FinalArbitrationStartDate = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(8721),
                             Icon = "string",
-                            InitialArbitrationStartDate = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(1947),
+                            InitialArbitrationStartDate = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(8723),
                             RelatedToClasses = false,
                             Status = 0,
-                            SubscriberPortalClosingDate = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(1949),
+                            SubscriberPortalClosingDate = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(8726),
                             WinningScore = 0,
                             isDeleted = false
                         },
@@ -720,20 +735,20 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "اختبار وصف 2",
                             ArabicName = "اختبار اسم 2",
                             CategoryClassification = 0,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(1957),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(8732),
                             CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
                             EnglishDescription = "Test Description 2",
                             EnglishName = "Test Name 2",
                             ExpectedNumberOfWinners = 1,
-                            FinalArbitrationEndDate = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(1959),
+                            FinalArbitrationEndDate = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(8734),
                             FinalArbitrationQualificationMark = 0,
-                            FinalArbitrationStartDate = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(1961),
+                            FinalArbitrationStartDate = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(8736),
                             Icon = "string",
-                            InitialArbitrationStartDate = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(1962),
+                            InitialArbitrationStartDate = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(8737),
                             ParentId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
                             RelatedToClasses = false,
                             Status = 0,
-                            SubscriberPortalClosingDate = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(1964),
+                            SubscriberPortalClosingDate = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(8739),
                             WinningScore = 0,
                             isDeleted = false
                         });
@@ -943,7 +958,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = new Guid("5542d87a-7f44-4163-5e3c-08dc427e4e9f"),
                             ActualScore = 0,
                             ArabicName = "بند معيار فرعي 11",
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(4856),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(367),
                             CriterionId = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
                             EnglishName = "Sub Criterion Item 11",
                             Score = 50,
@@ -955,7 +970,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = new Guid("fea46b75-b836-4dcc-5e3d-08dc427e4e9f"),
                             ActualScore = 0,
                             ArabicName = "بند معيار فرعي 12",
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(4863),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(375),
                             CriterionId = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
                             EnglishName = "Sub Criterion Item 12",
                             Score = 50,
@@ -967,7 +982,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e9f"),
                             ActualScore = 0,
                             ArabicName = "بند معيار فرعي 21",
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(4867),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(379),
                             CriterionId = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
                             EnglishName = "Sub Criterion Item 21",
                             Score = 50,
@@ -979,7 +994,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = new Guid("06fc4cca-fe8f-4c01-5e3f-08dc427e4e9f"),
                             ActualScore = 0,
                             ArabicName = "بند معيار فرعي 22",
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(4871),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(390),
                             CriterionId = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
                             EnglishName = "Sub Criterion Item 22",
                             Score = 50,
@@ -1155,7 +1170,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
                             ArabicTitle = "معيار رئيسي 1",
                             CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(4785),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(284),
                             EnglishTitle = "Main Criterion 1",
                             Score = 100,
                             SizeOfAttachmentInKB = 0,
@@ -1166,7 +1181,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
                             ArabicTitle = "معيار فرعي 1",
                             CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(4794),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(293),
                             EnglishTitle = "Sub Criterion 1",
                             ParentId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
                             Score = 50,
@@ -1178,7 +1193,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
                             ArabicTitle = "معيار فرعي 2",
                             CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(4801),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(300),
                             EnglishTitle = "Sub Criterion 2",
                             ParentId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
                             Score = 50,
@@ -1419,56 +1434,56 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1097),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6035),
                             Name = "Text",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1100),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6038),
                             Name = "Email",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1103),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6040),
                             Name = "Image",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1105),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6046),
                             Name = "File",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1107),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6048),
                             Name = "Phone Number",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1109),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6051),
                             Name = "Number",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1111),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6053),
                             Name = "Date",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1113),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6056),
                             Name = "List",
                             isDeleted = false
                         });
@@ -1512,56 +1527,56 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1161),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6106),
                             OperationAsString = ">",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1164),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6109),
                             OperationAsString = ">=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1166),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6111),
                             OperationAsString = "<",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1168),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6113),
                             OperationAsString = "<=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1170),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6116),
                             OperationAsString = "=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1172),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6118),
                             OperationAsString = "!=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1174),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6120),
                             OperationAsString = "is Empty",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1175),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(6122),
                             OperationAsString = "is not Empty",
                             isDeleted = false
                         });
@@ -1605,7 +1620,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(1050),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(5990),
                             Name = "ProvidedForm",
                             isDeleted = false
                         });
@@ -1825,7 +1840,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار نص 1",
                             ArabicPlaceHolder = "اختبار نص 1",
                             AttributeDataTypeId = 1,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2416),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9165),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Text 1",
                             EnglishPlaceHolder = "Test Text 1",
@@ -1841,7 +1856,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار ايميل 1",
                             ArabicPlaceHolder = "اختبار ايميل 1",
                             AttributeDataTypeId = 2,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2423),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9172),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Email 1",
                             EnglishPlaceHolder = "Test Email 1",
@@ -1857,7 +1872,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار صورة 1",
                             ArabicPlaceHolder = "اختبار صورة 1",
                             AttributeDataTypeId = 3,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2426),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9176),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Image 1",
                             EnglishPlaceHolder = "Test Image 1",
@@ -1874,7 +1889,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار ملف 1",
                             ArabicPlaceHolder = "اختبار ملف 1",
                             AttributeDataTypeId = 4,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2429),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9181),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test File 1",
                             EnglishPlaceHolder = "Test File 1",
@@ -1891,7 +1906,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار رقم متحرك 1",
                             ArabicPlaceHolder = "اختبار رقم متحرك 1",
                             AttributeDataTypeId = 5,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2433),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9185),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Phone Number 1",
                             EnglishPlaceHolder = "Test Phone Number 1",
@@ -1907,7 +1922,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار رقم 1",
                             ArabicPlaceHolder = "اختبار رقم 1",
                             AttributeDataTypeId = 6,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2436),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9189),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Number 1",
                             EnglishPlaceHolder = "Test Number 1",
@@ -1923,7 +1938,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار تاريخ 1",
                             ArabicPlaceHolder = "اختبار تاريخ 1",
                             AttributeDataTypeId = 7,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2439),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9193),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Date 1",
                             EnglishPlaceHolder = "Test Date 1",
@@ -1939,7 +1954,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار قائمة 1",
                             ArabicPlaceHolder = "اختبار قائمة 1",
                             AttributeDataTypeId = 8,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2443),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9197),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test List 1",
                             EnglishPlaceHolder = "Test List 1",
@@ -1994,7 +2009,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2486),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9250),
                             DynamicAttributeId = 8,
                             Value = "Test Value 1",
                             isDeleted = false
@@ -2002,7 +2017,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2489),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9252),
                             DynamicAttributeId = 8,
                             Value = "Test Value 2",
                             isDeleted = false
@@ -2010,7 +2025,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2491),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9255),
                             DynamicAttributeId = 8,
                             Value = "Test Value 3",
                             isDeleted = false
@@ -2018,7 +2033,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2494),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9257),
                             DynamicAttributeId = 8,
                             Value = "Test Value 4",
                             isDeleted = false
@@ -2026,7 +2041,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2496),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9260),
                             DynamicAttributeId = 8,
                             Value = "Test Value 5",
                             isDeleted = false
@@ -2182,7 +2197,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicName = "اختبار اسم 1",
                             AttributeTableNameId = 1,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2364),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9116),
                             EnglishName = "Test Name 1",
                             RecordIdOnRelation = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
                             isDeleted = false
@@ -2730,6 +2745,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("GeneralFrequentlyAskedQuestionCategoryId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -2741,7 +2759,9 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GeneralFrequentlyAskedQuestions");
+                    b.HasIndex("GeneralFrequentlyAskedQuestionCategoryId");
+
+                    b.ToTable("GeneralFrequentlyAskedQuestion");
 
                     b.HasData(
                         new
@@ -2749,9 +2769,10 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
                             ArabicAnswer = "اختبار جواب 1",
                             ArabicQuestion = "اختبار سؤال 1",
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(707),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(5926),
                             EnglishAnswer = "Test Answer 1",
                             EnglishQuestion = "Test Question 1",
+                            GeneralFrequentlyAskedQuestionCategoryId = 1,
                             isDeleted = false
                         },
                         new
@@ -2759,9 +2780,89 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
                             ArabicAnswer = "اختبار جواب 2",
                             ArabicQuestion = "اختبار سؤال 2",
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 780, DateTimeKind.Utc).AddTicks(712),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(5930),
                             EnglishAnswer = "Test Answer 2",
                             EnglishQuestion = "Test Question 2",
+                            GeneralFrequentlyAskedQuestionCategoryId = 1,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
+                            ArabicAnswer = "اختبار جواب 3",
+                            ArabicQuestion = "اختبار سؤال 3",
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(5934),
+                            EnglishAnswer = "Test Answer 3",
+                            EnglishQuestion = "Test Question 3",
+                            GeneralFrequentlyAskedQuestionCategoryId = 2,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("5542d87a-7f44-4163-5e3c-08dc427e4e9f"),
+                            ArabicAnswer = "اختبار جواب 4",
+                            ArabicQuestion = "اختبار سؤال 4",
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(5941),
+                            EnglishAnswer = "Test Answer 4",
+                            EnglishQuestion = "Test Question 4",
+                            GeneralFrequentlyAskedQuestionCategoryId = 2,
+                            isDeleted = false
+                        });
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel.GeneralFrequentlyAskedQuestionCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ArabicName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GeneralFrequentlyAskedQuestionCategory");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ArabicName = "اختبار فئة أسئلة شائعة عامة 1",
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(5152),
+                            EnglishName = "Test General FAQ Category 1",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ArabicName = "اختبار فئة أسئلة شائعة عامة 2",
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 595, DateTimeKind.Utc).AddTicks(5160),
+                            EnglishName = "Test General FAQ Category 2",
                             isDeleted = false
                         });
                 });
@@ -3046,9 +3147,15 @@ namespace SharijhaAward.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AchievementId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ArabicName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ConfirmationCode")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -3080,6 +3187,10 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
@@ -3087,6 +3198,8 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AchievementId");
 
                     b.HasIndex("RoleId");
 
@@ -3099,11 +3212,12 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
                             ArabicName = "ادمن 123",
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2250),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9019),
                             Email = "ahmad.a.ahmad.100011@gmail.com",
                             EnglishName = "Admin 123",
                             Gender = 0,
-                            Password = "QAZwsx!@1212",
+                            Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                            PhoneNumber = "0993521579",
                             RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
                             isDeleted = false
                         });
@@ -3576,7 +3690,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 18, 10, 42, 38, 781, DateTimeKind.Utc).AddTicks(2306),
+                            CreatedAt = new DateTime(2024, 3, 18, 12, 31, 36, 596, DateTimeKind.Utc).AddTicks(9067),
                             CurrentStep = 1,
                             CycleNumber = 1,
                             CycleYear = "2023-2024",
@@ -4061,21 +4175,21 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementModel.Achievement", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", "Classification")
+                    b.HasOne("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", null)
                         .WithMany("Achievements")
-                        .HasForeignKey("classificationId")
+                        .HasForeignKey("AchievementClassificationId");
+
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", null)
+                        .WithMany("Achievements")
+                        .HasForeignKey("SubscriberId");
+
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber")
-                        .WithMany("Achievements")
-                        .HasForeignKey("subscriberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Classification");
-
-                    b.Navigation("Subscriber");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AgendaModel.Agenda", b =>
@@ -4691,6 +4805,17 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel.GeneralFrequentlyAskedQuestion", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel.GeneralFrequentlyAskedQuestionCategory", "GeneralFrequentlyAskedQuestionCategory")
+                        .WithMany()
+                        .HasForeignKey("GeneralFrequentlyAskedQuestionCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GeneralFrequentlyAskedQuestionCategory");
+                });
+
             modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.Permission", b =>
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.RolePermission", "Role")
@@ -4711,9 +4836,15 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.User", b =>
                 {
+                    b.HasOne("SharijhaAward.Domain.Entities.AchievementModel.Achievement", "Achievement")
+                        .WithMany()
+                        .HasForeignKey("AchievementId");
+
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId");
+
+                    b.Navigation("Achievement");
 
                     b.Navigation("Role");
                 });

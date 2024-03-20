@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
 
         public async Task<BaseResponse<object>> Handle(CreateAgendaCommand request, CancellationToken cancellationToken)
         {
-            Agenda agenda = _mapper.Map<Agenda>( request );
+            Agenda agenda = _mapper.Map<Agenda>(request);
             Cycle cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
             string msg;
             if( cycle == null )
