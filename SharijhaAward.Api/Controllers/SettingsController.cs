@@ -3,10 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmationCode;
 using SharijhaAward.Application.Features.Settings.Commands.DeleteProfile;
+using SharijhaAward.Application.Features.Settings.Commands.EditPrivacyPolicy;
 using SharijhaAward.Application.Features.Settings.Commands.EditProfile;
+using SharijhaAward.Application.Features.Settings.Commands.EditTermsOfUse;
 using SharijhaAward.Application.Features.Settings.Commands.ResetPassword;
 using SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForChangePassword;
+using SharijhaAward.Application.Features.Settings.Queries.GetPrivacyPolicy;
 using SharijhaAward.Application.Features.Settings.Queries.GetProfileById;
+using SharijhaAward.Application.Features.Settings.Queries.GetTermsOfUse;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -207,27 +211,109 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPost("UpdatePrivacyPolicy")]
+        [HttpPut("EditPrivacyPolicy")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult UpdatePrivacyPolicy(string OldText, string NewText)
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> EditPrivacyPolicy([FromForm] EditPrivacyPolicyCommand EditPrivacyPolicyCommand)
         {
-            string FilePath = Path.Combine(_WebHostEnvironment.WebRootPath, "HtmlFilesToView", "PrivacyPolicy.html");
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            string HTMLContent = System.IO.File.ReadAllText(FilePath);
+            EditPrivacyPolicyCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
 
-            HTMLContent = HTMLContent.Replace(OldText, NewText);
+            BaseResponse<object>? Response = await _Mediator.Send(EditPrivacyPolicyCommand);
 
-            System.IO.File.WriteAllText(FilePath, HTMLContent);
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetPrivacyPolicy")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetPrivacyPolicy()
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            string HTMLBodyText = System.Text.RegularExpressions.Regex.Replace(HTMLContent, "<.*?>", "");
-            HTMLBodyText = System.Text.RegularExpressions.Regex.Replace(HTMLBodyText, @"\s+", " ");
-            HTMLBodyText = HTMLBodyText.Trim();
-            return Ok(new BaseResponse<object>(string.Empty, true, 200, HTMLBodyText));
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetPrivacyPolicyDto> Response = await _Mediator.Send(new GetPrivacyPolicyQuery()
+            {
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("EditTermsOfUse")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> EditTermsOfUse([FromForm] EditTermsOfUseCommand EditTermsOfUseCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            EditTermsOfUseCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(EditTermsOfUseCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetTermsOfUse")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetTermsOfUse()
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetTermsOfUseDto> Response = await _Mediator.Send(new GetTermsOfUseQuery()
+            {
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
     }
 }

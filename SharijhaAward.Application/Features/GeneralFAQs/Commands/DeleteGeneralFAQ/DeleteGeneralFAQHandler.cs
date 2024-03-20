@@ -35,7 +35,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.DeleteGeneralF
                 ? "General FAQ has been Deleted successfully"
                 : "تم حذف السؤال الشائع العام بنجاح";
 
-            return new BaseResponse<object>(ResponseMessage, false, 200);
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

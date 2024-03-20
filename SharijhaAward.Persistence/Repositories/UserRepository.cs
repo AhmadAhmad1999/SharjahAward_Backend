@@ -23,8 +23,8 @@ namespace SharijhaAward.Persistence.Repositories
 
         public async Task AsignRole(Guid userId, Guid roleId)
         {
-            var role = await _dbContext.Roles.Where(r => r.RoleId == roleId).FirstOrDefaultAsync();
-            var user = await _dbContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+            var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.RoleId == roleId);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
            
             if (user != null && role != null)
             {
@@ -72,7 +72,7 @@ namespace SharijhaAward.Persistence.Repositories
             if (CheckPassword == userToLogin.Password)
             {
                 var token = _jwtProvider.Generate(userToLogin);
-                userToLogin.Role = await _dbContext.Roles.FindAsync(userToLogin.RoleId);
+                // userToLogin.Role = await _dbContext.Roles.FindAsync(userToLogin.RoleId);
                 // var permissions = await _dbContext.RolePermissions.FindAsync(userToLogin.Role.RolePermissionId);
 
                 var response = new AuthenticationResponse()

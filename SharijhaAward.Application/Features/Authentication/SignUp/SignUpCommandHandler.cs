@@ -15,19 +15,31 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
     public class SignUpCommandHandler
         : IRequestHandler<SignUpCommand, AuthenticationResponse>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _UserRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
         public SignUpCommandHandler(IUserRepository userRepository,IRoleRepository roleRepository ,IMapper mapper)
         {
             _roleRepository = roleRepository;
-            _userRepository = userRepository;
+            _UserRepository = userRepository;
             _mapper = mapper;
         }
 
-        public async Task<AuthenticationResponse> Handle(SignUpCommand request, CancellationToken cancellationToken)
+        public async Task<AuthenticationResponse> Handle(SignUpCommand Request, CancellationToken cancellationToken)
         {
-            Domain.Entities.IdentityModels.User User = _mapper.Map<Domain.Entities.IdentityModels.User>(request);
+            Domain.Entities.IdentityModels.User? CheckEmail = await _UserRepository
+                .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());
+
+            if (CheckEmail is not null)
+            {
+                return new AuthenticationResponse()
+                {
+                    message = "This email is already used",
+                    isSucceed = false
+                };
+            }
+
+            Domain.Entities.IdentityModels.User User = _mapper.Map<Domain.Entities.IdentityModels.User>(Request);
             byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
 
             User.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
@@ -37,25 +49,30 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
 
-            var role = request.RoleName != null 
-                    ? await _roleRepository.GetByName(request.RoleName)
-                    : await _roleRepository.GetByName("User");
+            Role? CheckRoleId = Request.RoleName != null 
+                ? await _roleRepository.GetByName(Request.RoleName)
+                : await _roleRepository.GetByName("User");
 
-                if (role == null)
+            if (CheckRoleId == null)
+            {
+                return new AuthenticationResponse()
                 {
-                    return new AuthenticationResponse()
-                    {
-                        message = "the User is not Created , Role dose not Exsist"
-                    };
-                }
-            await _userRepository.AsignRole(User.Id, role.RoleId);
-            var data = await _userRepository.AddAsync(User);
-            string token = await _userRepository.RegisterAsync(data);
+                    message = "The user is not created , Role does not exist"
+                };
+            }
+
+            User.RoleId = CheckRoleId.RoleId;
+
+            await _UserRepository.AsignRole(User.Id, CheckRoleId.RoleId);
+
+            Domain.Entities.IdentityModels.User UserEntityAfterAdd = await _UserRepository.AddAsync(User);
+
+            string Token = await _UserRepository.RegisterAsync(UserEntityAfterAdd);
             return new AuthenticationResponse() 
             {
-                token = token,
-                // user = User,
-                message = "User has been Created"
+                token = Token,
+                isSucceed = true,
+                message = "User has been created"
             };
         }
     }

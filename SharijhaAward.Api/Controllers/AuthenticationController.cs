@@ -4,6 +4,8 @@ using OpenQA.Selenium.DevTools.V120.Browser;
 using SharijhaAward.Application.Features.Authentication;
 using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Features.Authentication.SignUp;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -33,9 +35,14 @@ namespace SharijhaAward.Api.Controllers
                 new LoginCommand()
                 { 
                     Email = user.Email,
-                    Password = user.Password 
+                    Password = user.Password
                 });
-            
+
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            };
+
             if (response.user == null)
             {
                 return StatusCode(400,
@@ -44,7 +51,7 @@ namespace SharijhaAward.Api.Controllers
                         message = response.message
                     });
             }
-            else 
+            else
                 return Ok(
                     new
                     {
@@ -52,8 +59,8 @@ namespace SharijhaAward.Api.Controllers
                         key = response.token,
                         permission = response.permissions,
                         message = response.message
-
-                    });
+                    }
+                );
         }
         [HttpPost("SignUp", Name = "SignUp")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -65,11 +72,11 @@ namespace SharijhaAward.Api.Controllers
                 Email = user.Email,
                 Password = user.Password,
                 RoleName = user.RoleName,
-                Gender = user.Gender
-                
+                Gender = user.Gender,
+                PhoneNumber = user.PhoneNumber
             });
 
-            if (response.user == null)
+            if (!response.isSucceed)
             {
                 return StatusCode(400,
                     new

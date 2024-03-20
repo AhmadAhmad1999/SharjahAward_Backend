@@ -40,6 +40,8 @@ using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
 using SharijhaAward.Domain.Entities.AboutAwardPageModel;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
+using SharijhaAward.Domain.Entities.PrivacyPolicy;
+using SharijhaAward.Domain.Entities.TermsOfUse;
 
 namespace SharijhaAward.Persistence
 {
@@ -52,6 +54,8 @@ namespace SharijhaAward.Persistence
         }
         
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
+        public DbSet<PrivacyPolicy> PrivacyPolicies { get; set; }
+        public DbSet<TermsOfUse> TermsOfUses { get; set; }
         public DbSet<RelatedAccount> RelatedAccounts { get; set; }
         public DbSet<FrequentlyAskedQuestion> frequentlyAskedQuestions { get; set; }
         public DbSet<GeneralFrequentlyAskedQuestion> GeneralFrequentlyAskedQuestions { get; set; }
@@ -112,6 +116,8 @@ namespace SharijhaAward.Persistence
             //Filter for Deleted items
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<PrivacyPolicy>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<TermsOfUse>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted);
@@ -159,6 +165,46 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<GeneralWorkshop>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);
 
+            modelBuilder.Entity<PrivacyPolicy>()
+                .Property(e => e.ArabicText)
+                .HasColumnType("nvarchar(max)");
+            modelBuilder.Entity<PrivacyPolicy>()
+                .Property(e => e.EnglishText)
+                .HasColumnType("nvarchar(max)");
+
+            modelBuilder.Entity<TermsOfUse>()
+                .Property(e => e.ArabicText)
+                .HasColumnType("nvarchar(max)");
+            modelBuilder.Entity<TermsOfUse>()
+                .Property(e => e.EnglishText)
+                .HasColumnType("nvarchar(max)");
+
+            modelBuilder.Entity<PrivacyPolicy>()
+                .HasData(new PrivacyPolicy()
+                {
+                    Id = 1,
+                    ArabicText = "سياسة الخصوصية",
+                    EnglishText = "Privacy Policy",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                });
+            modelBuilder.Entity<TermsOfUse>()
+                .HasData(new TermsOfUse()
+                {
+                    Id = 1,
+                    ArabicText = "شروط الاستخدام",
+                    EnglishText = "Terms Of Use",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                });
             modelBuilder.Entity<GeneralFrequentlyAskedQuestionCategory>()
                 .HasData(new GeneralFrequentlyAskedQuestionCategory()
                 {
