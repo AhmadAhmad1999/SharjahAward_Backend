@@ -10,6 +10,7 @@ using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.RejectR
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.SendRelatingRequest;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllReceivedRequests;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllRelatedAccounts;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetRelatedAccoutProfileById;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -125,7 +126,7 @@ namespace SharijhaAward.Api.Controllers
             StringValues? Token = HttpContext.Request.Headers.Authorization;
             
             if (string.IsNullOrEmpty(Token))
-                return BadRequest("You must send the token");
+                return Unauthorized("You must send the token");
 
             BaseResponse<object> Response = await _Mediator.Send(new SendRelatingRequestCommand()
             {
@@ -159,7 +160,7 @@ namespace SharijhaAward.Api.Controllers
             StringValues? Token = HttpContext.Request.Headers.Authorization;
             
             if (string.IsNullOrEmpty(Token))
-                return BadRequest("You must send the token");
+                return Unauthorized("You must send the token");
 
             BaseResponse<List<GetAllReceivedRequestsListVM>> Response = await _Mediator.Send(new GetAllReceivedRequestsQuery()
             {
@@ -194,7 +195,7 @@ namespace SharijhaAward.Api.Controllers
             StringValues? Token = HttpContext.Request.Headers.Authorization;
             
             if (string.IsNullOrEmpty(Token))
-                return BadRequest("You must send the token");
+                return Unauthorized("You must send the token");
 
             BaseResponse<List<GetAllRelatedAccountsListVM>> Response = await _Mediator.Send(new GetAllRelatedAccountsQuery()
             {
@@ -202,6 +203,41 @@ namespace SharijhaAward.Api.Controllers
                 token = Token,
                 page = Page,
                 pageSize = PerPage
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetRelatedAccoutProfileById")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetRelatedAccoutProfileById(int RelatedAccountId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
+            BaseResponse<GetRelatedAccoutProfileByIdResponse> Response = await _Mediator.Send(new GetRelatedAccoutProfileByIdQuery()
+            {
+                lang = HeaderValue,
+                token = Token,
+                Type = null,
+                RelatedAccountId = RelatedAccountId
             });
 
             return Response.statusCode switch

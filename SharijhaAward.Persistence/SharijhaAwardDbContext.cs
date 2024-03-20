@@ -40,6 +40,8 @@ using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
 using SharijhaAward.Domain.Entities.AboutAwardPageModel;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
+using SharijhaAward.Domain.Entities.PrivacyPolicy;
+using SharijhaAward.Domain.Entities.TermsOfUse;
 
 namespace SharijhaAward.Persistence
 {
@@ -52,6 +54,9 @@ namespace SharijhaAward.Persistence
         }
         
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
+        public DbSet<PrivacyPolicy> PrivacyPolicies { get; set; }
+        public DbSet<TermsOfUse> TermsOfUses { get; set; }
+        public DbSet<RelatedAccount> RelatedAccounts { get; set; }
         public DbSet<FrequentlyAskedQuestion> frequentlyAskedQuestions { get; set; }
         public DbSet<GeneralFrequentlyAskedQuestion> GeneralFrequentlyAskedQuestions { get; set; }
         public DbSet<GeneralFrequentlyAskedQuestionCategory> GeneralFrequentlyAskedQuestionCategories { get; set; }
@@ -111,6 +116,9 @@ namespace SharijhaAward.Persistence
             //Filter for Deleted items
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<PrivacyPolicy>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<TermsOfUse>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => !p.isDeleted);
@@ -157,6 +165,46 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<GeneralWorkshop>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);
 
+            modelBuilder.Entity<PrivacyPolicy>()
+                .Property(e => e.ArabicText)
+                .HasColumnType("nvarchar(max)");
+            modelBuilder.Entity<PrivacyPolicy>()
+                .Property(e => e.EnglishText)
+                .HasColumnType("nvarchar(max)");
+
+            modelBuilder.Entity<TermsOfUse>()
+                .Property(e => e.ArabicText)
+                .HasColumnType("nvarchar(max)");
+            modelBuilder.Entity<TermsOfUse>()
+                .Property(e => e.EnglishText)
+                .HasColumnType("nvarchar(max)");
+
+            modelBuilder.Entity<PrivacyPolicy>()
+                .HasData(new PrivacyPolicy()
+                {
+                    Id = 1,
+                    ArabicText = "سياسة الخصوصية",
+                    EnglishText = "Privacy Policy",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                });
+            modelBuilder.Entity<TermsOfUse>()
+                .HasData(new TermsOfUse()
+                {
+                    Id = 1,
+                    ArabicText = "شروط الاستخدام",
+                    EnglishText = "Terms Of Use",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                });
             modelBuilder.Entity<GeneralFrequentlyAskedQuestionCategory>()
                 .HasData(new GeneralFrequentlyAskedQuestionCategory()
                 {
@@ -660,7 +708,9 @@ namespace SharijhaAward.Persistence
                     Gender = Gender.Male,
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
                     RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d")
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    ConfirmationCode = null,
+                    PhoneNumber = "093517413"
                 });
             modelBuilder.Entity<ProvidedForm>()
                 .HasData(new ProvidedForm()

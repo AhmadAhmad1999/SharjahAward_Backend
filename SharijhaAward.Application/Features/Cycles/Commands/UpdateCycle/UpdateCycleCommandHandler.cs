@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle
                     ? "The Cycle is Not Found"
                     : "الدورة غير موجودة";
 
-                return new BaseResponse<object>(msg, true, 404);
+                return new BaseResponse<object>(msg, false, 404);
             }
             _mapper.Map(request, cycleToUpdate, typeof(UpdateCycleCommand), typeof(Cycle));
             

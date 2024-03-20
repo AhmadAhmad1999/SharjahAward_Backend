@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                 .Where(x => x.Subscriber1Id == UserId)
                 .Select(x => new GetAllRelatedAccountsListVM()
                 {
-                    Id = x.Subscriber2Id,
+                    Id = x.Id,
                     Name = Request.lang == "ar"
                         ? x.Subscriber2!.ArabicName
                         : x.Subscriber2!.EnglishName,
@@ -50,7 +50,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                 .Where(x => x.Subscriber2Id == UserId)
                 .Select(x => new GetAllRelatedAccountsListVM()
                 {
-                    Id = x.Subscriber1Id,
+                    Id = x.Id,
                     Name = Request.lang == "ar"
                         ? x.Subscriber1!.ArabicName
                         : x.Subscriber1!.EnglishName,

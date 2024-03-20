@@ -58,7 +58,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
                 ? "The News Retrieved Success"
                 : "تم إسترجاع الاأخبار بنجاح";
 
-            return new BaseResponse<List<NewsListVM>>(msg, false, 200, data);
+            return new BaseResponse<List<NewsListVM>>(msg, true, 200, data);
         }
     }
 }

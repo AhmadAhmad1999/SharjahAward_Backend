@@ -140,6 +140,7 @@ using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateGoal;
 using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetGeneralWorkshopById;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Application.Features.Coordinators.Queries.AddCordinatorToEduEntity;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetRelatedAccoutProfileById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -323,6 +324,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CriterionItemAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<RelatedAccountRequest, GetAllReceivedRequestsListVM>().ReverseMap();
             CreateMap<Subscriber, GetProfileByIdDto>().ReverseMap();
+            CreateMap<Subscriber, RelatedAccountProfileData>().ReverseMap();
+            CreateMap<ProvidedForm, RelatedAccountProvidedForms>().ReverseMap();
         }
     }
 }

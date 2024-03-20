@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 
             int count = _newsRepository.GetCount(n => n.isDeleted == false);
             Pagination pagination = new Pagination(request.page, request.pageSize, count);
-            return new BaseResponse<List<NewsListVM>>("", false, 200, data, pagination);
+            return new BaseResponse<List<NewsListVM>>("", true, 200, data, pagination);
         }
     }
 }

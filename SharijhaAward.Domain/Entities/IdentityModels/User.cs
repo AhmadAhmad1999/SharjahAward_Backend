@@ -22,6 +22,7 @@ public class User : AuditableEntity  {
 
 
 
+    public string? ImageURL { get; set; }
     public virtual List<MeetingUser> MeetingUsers { get; set; } = null!;
     public virtual List<Note> Notes { get; set; } = null!;
 }
