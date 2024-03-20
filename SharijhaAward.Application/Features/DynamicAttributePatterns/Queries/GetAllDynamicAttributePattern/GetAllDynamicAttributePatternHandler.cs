@@ -25,15 +25,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.Ge
             List<GetAllDynamicAttributePatternListVM> DynamicAttributePatterns = _Mapper.Map<List<GetAllDynamicAttributePatternListVM>>(
                 await _DynamicAttributePatternRepository.GetPagedReponseAsync(Request.page, Request.pageSize));
 
-            if (DynamicAttributePatterns.Count() == 0)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "There is no patterns"
-                    : "لا يوجد نماذج";
-
-                return new BaseResponse<List<GetAllDynamicAttributePatternListVM>>(ResponseMessage, true, 204, DynamicAttributePatterns, 0);
-            }
-
             int TotalCount = await _DynamicAttributePatternRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
