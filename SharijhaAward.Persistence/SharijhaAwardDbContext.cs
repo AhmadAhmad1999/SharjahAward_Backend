@@ -710,7 +710,7 @@ namespace SharijhaAward.Persistence
                     RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
                     ConfirmationCode = null,
-                    PhoneNumber = "093517413"
+                    
                 });
             modelBuilder.Entity<ProvidedForm>()
                 .HasData(new ProvidedForm()
