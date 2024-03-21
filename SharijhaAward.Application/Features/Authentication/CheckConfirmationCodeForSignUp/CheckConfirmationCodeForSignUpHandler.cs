@@ -1,29 +1,23 @@
 ﻿using MediatR;
-using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 
-namespace SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmationCode
+namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForSignUp
 {
-    public class CheckForConfirmationCodeHandler : IRequestHandler<CheckForConfirmationCodeCommand, BaseResponse<object>>
+    internal class CheckConfirmationCodeForSignUpHandler : IRequestHandler<CheckConfirmationCodeForSignUpCommand, BaseResponse<object>>
     {
         private readonly IUserRepository _UserRepository;
-        private readonly IJwtProvider _JWTProvider;
-        public CheckForConfirmationCodeHandler(IUserRepository UserRepository,
-            IJwtProvider JWTProvider)
+        public CheckConfirmationCodeForSignUpHandler(IUserRepository UserRepository)
         {
             _UserRepository = UserRepository;
-            _JWTProvider = JWTProvider;
         }
 
-        public async Task<BaseResponse<object>> Handle(CheckForConfirmationCodeCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CheckConfirmationCodeForSignUpCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
-            Guid UserID = new Guid(_JWTProvider.GetUserIdFromToken(Request.Token));
+            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository.FirstOrDefaultAsync(x => x.Id == Request.Id);
 
-            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository.FirstOrDefaultAsync(x => x.Id == UserID);
-            
             if (UserEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
@@ -41,6 +35,9 @@ namespace SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmat
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
+
+            UserEntity.ConfirmationCodeForSignUp = null;
+            await _UserRepository.UpdateAsync(UserEntity);
 
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }

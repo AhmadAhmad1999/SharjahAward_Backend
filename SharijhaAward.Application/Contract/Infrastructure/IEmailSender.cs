@@ -12,5 +12,6 @@ namespace SharijhaAward.Application.Contract.Infrastructure
     {
         public Task SendEmail(EmailRequest EmailRequest, AlternateView AlternateView);
         public Task SendEmail(EmailRequest EmailRequest);
+        public Task SendEmailForConfirmationCode(EmailRequest EmailRequest);
     }
 }

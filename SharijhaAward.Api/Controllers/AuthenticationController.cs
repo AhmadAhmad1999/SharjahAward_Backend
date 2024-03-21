@@ -1,9 +1,16 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
 using OpenQA.Selenium.DevTools.V120.Browser;
 using SharijhaAward.Application.Features.Authentication;
+using SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForSignUp;
 using SharijhaAward.Application.Features.Authentication.Login;
+using SharijhaAward.Application.Features.Authentication.SendConfirmationCodeForSignUp;
 using SharijhaAward.Application.Features.Authentication.SignUp;
+using SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmationCode;
+using SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForResetPassword;
+using SharijhaAward.Application.Responses;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -94,6 +101,55 @@ namespace SharijhaAward.Api.Controllers
                         message = response.message
 
                     });
+        }
+        [HttpPost("SendConfirmationCodeForSignUp")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> SendConfirmationCodeForSignUp([FromBody] SendConfirmationCodeForSignUpCommand SendConfirmationCodeForSignUpCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            SendConfirmationCodeForSignUpCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(SendConfirmationCodeForSignUpCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("CheckConfirmationCodeForSignUp")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> CheckConfirmationCodeForSignUp(CheckConfirmationCodeForSignUpCommand CheckConfirmationCodeForSignUpCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            CheckConfirmationCodeForSignUpCommand.lang = HeaderValue!;
+
+            BaseResponse<object>? Response = await _Mediator.Send(CheckConfirmationCodeForSignUpCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
     }
 }

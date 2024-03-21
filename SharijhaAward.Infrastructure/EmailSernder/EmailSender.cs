@@ -107,5 +107,45 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                 }
             }
         }
+        public async Task SendEmailForConfirmationCode(EmailRequest EmailRequest)
+        {
+            using (var client = new SmtpClient())
+            {
+                string SenderEmail = _Configuration.GetSection("SMTP:SenderEmail").Value!;
+                string Password = _Configuration.GetSection("SMTP:Password").Value!;
+                string Host = _Configuration.GetSection("SMTP:Host").Value!;
+                int.TryParse(_Configuration.GetSection("SMTP:Port").Value, out int Port);
+
+                string HtmlBody = EmailRequest.Body;
+                NetworkCredential Credentials = new NetworkCredential
+                {
+                    UserName = SenderEmail,
+                    Password = Password
+                };
+
+                client.Credentials = Credentials;
+                client.Host = Host;
+                client.Port = Port;
+                client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
+
+                MailMessage Message = new MailMessage
+                {
+                    From = new MailAddress(SenderEmail),
+                    Subject = EmailRequest.Subject,
+                    IsBodyHtml = true,
+                    Body = EmailRequest.Body
+                };
+
+                Message.To.Add(EmailRequest.ToEmail);
+                try
+                {
+                    await client.SendMailAsync(Message);
+                }
+                catch (SmtpException)
+                {
+                    throw;
+                }
+            }
+        }
     }
 }
