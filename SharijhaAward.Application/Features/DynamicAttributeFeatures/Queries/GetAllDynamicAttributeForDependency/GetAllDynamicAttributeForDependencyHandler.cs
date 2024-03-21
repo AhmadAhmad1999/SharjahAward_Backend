@@ -44,15 +44,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                             : x.EnglishLabel
                     }).ToListAsync();
 
-            if (DynamicAttributes.Count <= 0)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "There is no field"
-                    : "لا يوجد حقول";
-
-                return new BaseResponse<List<GetAllDynamicAttributeForDependencyListVM>>(ResponseMessage, false, 204, DynamicAttributes, 0);
-            }
-
             return new BaseResponse<List<GetAllDynamicAttributeForDependencyListVM>>(ResponseMessage, true, 200, DynamicAttributes, 0);
         }
     }

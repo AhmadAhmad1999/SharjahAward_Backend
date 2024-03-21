@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         public async Task<AuthenticationResponse> Handle(SignUpCommand Request, CancellationToken cancellationToken)
         {
             Domain.Entities.IdentityModels.User? CheckEmail = await _UserRepository
-                .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());
+                .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower() && x.isValidAccount);
 
             if (CheckEmail is not null)
             {
@@ -48,7 +48,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
-
+            User.isValidAccount = true;
             Role? CheckRoleId = Request.RoleName != null 
                 ? await _roleRepository.GetByName(Request.RoleName)
                 : await _roleRepository.GetByName("User");

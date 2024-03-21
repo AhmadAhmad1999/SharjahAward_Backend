@@ -7,7 +7,7 @@ using SharijhaAward.Application.Features.Settings.Commands.EditPrivacyPolicy;
 using SharijhaAward.Application.Features.Settings.Commands.EditProfile;
 using SharijhaAward.Application.Features.Settings.Commands.EditTermsOfUse;
 using SharijhaAward.Application.Features.Settings.Commands.ResetPassword;
-using SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForChangePassword;
+using SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForResetPassword;
 using SharijhaAward.Application.Features.Settings.Queries.GetPrivacyPolicy;
 using SharijhaAward.Application.Features.Settings.Queries.GetProfileById;
 using SharijhaAward.Application.Features.Settings.Queries.GetTermsOfUse;
@@ -55,7 +55,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPost("SendConfirmationCodeForChangePassword")]
+        [HttpPost("SendConfirmationCodeForResetPassword")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -63,14 +63,21 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> SendConfirmationCodeForChangePassword([FromBody] SendConfirmationCodeForChangePasswordCommand SendConfirmationCodeForChangePasswordCommand)
+        public async Task<IActionResult> SendConfirmationCodeForResetPassword([FromBody] SendConfirmationCodeForResetPasswordCommand SendConfirmationCodeForResetPasswordCommand)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
+            SendConfirmationCodeForResetPasswordCommand.token = Token;
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-            SendConfirmationCodeForChangePasswordCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+            SendConfirmationCodeForResetPasswordCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
 
-            BaseResponse<object>? Response = await _Mediator.Send(SendConfirmationCodeForChangePasswordCommand);
+            BaseResponse<object>? Response = await _Mediator.Send(SendConfirmationCodeForResetPasswordCommand);
 
             return Response.statusCode switch
             {
@@ -119,7 +126,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult> ResetPassword(string NewPassword)
+        public async Task<IActionResult> ResetPassword(string NewPassword)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
@@ -152,7 +159,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult> CheckForConfirmationCode(int ConfirmationCode)
+        public async Task<IActionResult> CheckForConfirmationCode(int ConfirmationCode)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 

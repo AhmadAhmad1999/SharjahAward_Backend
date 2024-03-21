@@ -4,36 +4,36 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 
-namespace SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForChangePassword
+namespace SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForResetPassword
 {
-    public class SendConfirmationCodeForChangePasswordHandler : IRequestHandler<SendConfirmationCodeForChangePasswordCommand,
+    public class SendConfirmationCodeForResetPasswordHandler : IRequestHandler<SendConfirmationCodeForResetPasswordCommand,
         BaseResponse<object>>
     {
-        private readonly IAsyncRepository<Domain.Entities.SubscriberModel.Subscriber> _SubscriberRepository;
+        private readonly IUserRepository _UserRepository;
         private readonly IJwtProvider _JWTProvider;
         private IEmailSender _EmailSender;
 
-        public SendConfirmationCodeForChangePasswordHandler(IAsyncRepository<Domain.Entities.SubscriberModel.Subscriber> SubscriberRepository,
+        public SendConfirmationCodeForResetPasswordHandler(IUserRepository UserRepository,
             IJwtProvider JWTProvider,
             IEmailSender EmailSender)
         {
-            _SubscriberRepository = SubscriberRepository;
+            _UserRepository = UserRepository;
             _JWTProvider = JWTProvider;
             _EmailSender = EmailSender;
         }
-        public async Task<BaseResponse<object>> Handle(SendConfirmationCodeForChangePasswordCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(SendConfirmationCodeForResetPasswordCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
             Guid UserId = new Guid(_JWTProvider.GetUserIdFromToken(Request.token!));
 
-            Domain.Entities.SubscriberModel.Subscriber? SubscriberEntity = await _SubscriberRepository
+            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Id == UserId);
 
-            if (SubscriberEntity == null)
+            if (UserEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Subscriber is not found"
+                    ? "User is not found"
                     : "المشترك غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
@@ -41,12 +41,12 @@ namespace SharijhaAward.Application.Features.Settings.Commands.SendConfirmationC
 
             int ConfirmationCode = new Random().Next(10000, 99999);
 
-            SubscriberEntity.ConfirmationCode = ConfirmationCode;
-            await _SubscriberRepository.UpdateAsync(SubscriberEntity);
+            UserEntity.ConfirmationCodeForResetPassword = ConfirmationCode;
+            await _UserRepository.UpdateAsync(UserEntity);
 
             EmailRequest EmailRequest = new EmailRequest()
             {
-                ToEmail = SubscriberEntity.Email,
+                ToEmail = UserEntity.Email,
                 Subject = Request.lang == "ar"
                     ? $"رمز تفعيل"
                     : "Confirmation Code",
@@ -55,7 +55,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.SendConfirmationC
                     : $"This is your account's confirmation code: {ConfirmationCode}"
             };
 
-            await _EmailSender.SendEmail(EmailRequest);
+            await _EmailSender.SendEmailForConfirmationCode(EmailRequest);
 
             ResponseMessage = Request.lang == "en"
                 ? "Confirmation code sent successfuly"

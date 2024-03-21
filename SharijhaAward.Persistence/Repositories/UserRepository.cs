@@ -45,7 +45,7 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task<User> GetByEmailAsync(string email)
         {
             User? user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.isValidAccount);
             return user;
         }
 
