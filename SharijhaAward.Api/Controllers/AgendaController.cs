@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda;
 using SharijhaAward.Application.Features.Agendas.Commands.DeleteAgenda;
 using SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda;
+using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 
@@ -21,7 +22,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name = "AddAgenda")]
-        public async Task<IActionResult> AddAgenda(CreateAgendaCommand command)
+        public async Task<IActionResult> AddAgenda([FromForm] CreateAgendaCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -40,7 +41,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPut(Name="UpdateAgenda")]
-        public async Task<IActionResult> UpdateAgenda([FromBody] UpdateAgendaCommand command)
+        public async Task<IActionResult> UpdateAgenda([FromForm] UpdateAgendaCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -117,6 +118,25 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
 
+        }
+        [HttpGet("GetAgendasByCycleId/{Id}",Name ="GetAgendasByCycleId")]
+        public async Task<IActionResult> GetAgendasByCycleId(Guid Id)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAgendaByCycleIdQuery()
+            {
+                CycleId = Id,
+                lang = Language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
     }
 }

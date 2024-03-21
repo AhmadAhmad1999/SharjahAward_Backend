@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetLimteNumberOfCate
 
         public async Task<BaseResponse<LimitationDto>> Handle(GetLimteNumberOfCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var cycle = await _cycleRepository.Where(c => c.Status == Status.Active).FirstOrDefaultAsync();
+            var cycle = await _cycleRepository.FirstOrDefaultAsync(c => c.Status == Status.Active);
 
             if (cycle == null)
             {

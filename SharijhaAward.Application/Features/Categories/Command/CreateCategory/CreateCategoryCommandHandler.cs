@@ -63,7 +63,9 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
                 }
             }
             var category = _mapper.Map<Category>(request);
+
             category.Icon = await  _fileService.SaveFileAsync(request.Icon);
+
             await _categoryRepository.AddAsync(category);
             
             msg = request.lang == "en"

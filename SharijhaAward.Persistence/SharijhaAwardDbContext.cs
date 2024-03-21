@@ -101,7 +101,6 @@ namespace SharijhaAward.Persistence
         public DbSet<EduEntitiesCoordinator> EducationCoordinators { get; set; }
         public DbSet<EducationalInstitution> EducationalInstitutions { get; set; }
         public DbSet<EduInstitutionCoordinator> InstitutionCoordinators { get; set; }
-        public DbSet<ConditionAttachment> conditionAttachments { get; set; }
         public DbSet<CriterionAttachment> CriterionAttachments { get; set; }
         public DbSet<Criterion> Criterions { get; set; }
         public DbSet<CriterionItem> CriterionItems { get; set; }
@@ -124,7 +123,6 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<GeneralFrequentlyAskedQuestion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<GeneralFrequentlyAskedQuestionCategory>().HasQueryFilter(p => !p.isDeleted);
-
             modelBuilder.Entity<Event>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Cycle>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<GroupInvitee>().HasQueryFilter(p => !p.isDeleted);

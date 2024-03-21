@@ -37,22 +37,24 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
             Coordinator.PersonalPhoto = await _fileService.SaveFileAsync(request.PersonalPhoto);
 
             var data = await _coordinatorRepository.AddAsync(Coordinator);
-            //var User = new Domain.Entities.IdentityModels.User()
-            //{
-            //    ArabicName = data.ArabicName,
-            //    EnglishName = data.EnglishName,
-            //    Email = data.Email,
-            //    Id = data.Id,
-            //    Password = "123456",
-            //    Gender = 0
-            //};
-            //await _userRepository.AddAsync(User);
+            var User = new Domain.Entities.IdentityModels.User()
+            {
+                ArabicName = data.ArabicName,
+                EnglishName = data.EnglishName,
+                Email = data.Email,
+                PhoneNumber = data.PhoneNumber,
+                ConfirmationCode = 0000,
+                Id = data.Id,
+                Password = "123456",
+                Gender = 0
+            };
+            await _userRepository.AddAsync(User);
 
-            //var role = await _roleRepository.GetByName("Coordinator");
-            //if(role != null)
-            //{
-            //    await _userRepository.AsignRole(User.Id, role.RoleId);
-            //}
+            var role = await _roleRepository.GetByName("Coordinator");
+            if (role != null)
+            {
+                await _userRepository.AsignRole(User.Id, role.RoleId);
+            }
             return new BaseResponse<Guid>("", true, 200, data.Id);
         }
     }

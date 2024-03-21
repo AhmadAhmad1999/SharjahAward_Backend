@@ -5,6 +5,7 @@ using SharijhaAward.Application.Features.Categories.Command.UpdateCategory;
 using SharijhaAward.Application.Features.Categories.Queries.GetCategoryById;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories;
+using SharijhaAward.Application.Features.Categories.Command.DeleteCategory;
 
 
 namespace SharijhaAward.Api.Controllers
@@ -54,6 +55,26 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpDelete(Name = "DeleteCategory")]
+        public async Task<IActionResult> DeleteCategory(Guid Id)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new DeleteCategoryCommand() 
+            {
+                CategoryId = Id,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
         [HttpGet(Name="GetAllCategories")]
         public async Task<IActionResult> GetAllCategories(int page = 1 , int perPage = 10)
         {

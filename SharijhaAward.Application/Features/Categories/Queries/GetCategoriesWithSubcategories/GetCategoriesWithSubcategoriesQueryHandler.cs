@@ -37,16 +37,14 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
         public async Task<BaseResponse<List<CategoriesSubcategoriesDto>>> Handle(GetCategoriesWithSubcategoriesQuery request, CancellationToken cancellationToken)
         {
             
-            var CycleId = request.CycleId != null 
+            var CycleId = request.CycleId != null
                 ? request.CycleId
-                : _cycleRepository.FirstOrDefault(c => c.Status == Domain.Constants.Common.Status.Active)!.Id;
+                : _cycleRepository.FirstOrDefault(c => c.Status == 0)!.Id;
                  
            
             var categories = _categoryRepository.Where(c => c.CycleId == CycleId).Where(c=>c.ParentId==null).ToList();
            
             var data = _mapper.Map<List<CategoriesSubcategoriesDto>>(categories);
-           
-            bool isHttps = _httpContextAccessor.HttpContext.Request.IsHttps;
            
             for (int i=0; i<data.Count; i++)
             {

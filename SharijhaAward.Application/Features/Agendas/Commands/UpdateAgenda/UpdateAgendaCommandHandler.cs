@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AgendaConstants;
 using SharijhaAward.Domain.Entities.AgendaModel;
 using System;
 using System.Collections.Generic;
@@ -15,11 +17,13 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
         : IRequestHandler<UpdateAgendaCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Agenda> _agendaRepository;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public UpdateAgendaCommandHandler(IAsyncRepository<Agenda> agendaRepository, IMapper mapper)
+        public UpdateAgendaCommandHandler(IFileService fileService, IAsyncRepository<Agenda> agendaRepository, IMapper mapper)
         {
             _agendaRepository = agendaRepository;
+            _fileService = fileService;
             _mapper = mapper;
         }
 
@@ -37,6 +41,17 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
                 return new BaseResponse<object>(msg,false,404);
             }
             _mapper.Map(request, agendaToUpdate, typeof(UpdateAgendaCommand), typeof(Agenda));
+           
+            if (request.UpdateOnIcone)
+                agendaToUpdate.Icon = await _fileService.SaveFileAsync(request.Icon!);
+          
+            // Set Satet of Agenda
+            if (agendaToUpdate.StartDate >= DateTime.Now && agendaToUpdate.EndDate <= DateTime.Now)
+                agendaToUpdate.Status = AgendaStatus.Active;
+            else if (agendaToUpdate.StartDate < DateTime.Now && agendaToUpdate.EndDate < DateTime.Now)
+                agendaToUpdate.Status = AgendaStatus.Previous;
+            else agendaToUpdate.Status = AgendaStatus.Later;
+
             await _agendaRepository.UpdateAsync(agendaToUpdate);
 
             msg = request.lang == "en"

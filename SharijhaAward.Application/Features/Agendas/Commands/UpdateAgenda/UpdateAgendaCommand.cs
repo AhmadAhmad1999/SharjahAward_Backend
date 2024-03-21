@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AgendaConstants;
 using SharijhaAward.Domain.Entities.CycleModel;
@@ -16,9 +17,12 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
         public Guid Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
-        public string Icon { get; set; } = string.Empty;
-        public DateTime Date { get; set; }
+        public bool UpdateOnIcone {  get; set; }
+        public IFormFile? Icon { get; set; } = null!;
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public AgendaStatus Status { get; set; }
+        public AgendaDateType DateType { get; set; }
         public Guid CycleId { get; set; }
         public string lang { get; set; } = string.Empty;
     }

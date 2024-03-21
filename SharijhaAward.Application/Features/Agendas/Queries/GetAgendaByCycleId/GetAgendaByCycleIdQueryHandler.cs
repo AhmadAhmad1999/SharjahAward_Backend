@@ -1,0 +1,54 @@
+﻿using AutoMapper;
+using MediatR;
+using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
+using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.AgendaModel;
+using SharijhaAward.Domain.Entities.CycleModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId
+{
+    public class GetAgendaByCycleIdQueryHandler
+        : IRequestHandler<GetAgendaByCycleIdQuery, BaseResponse<List<AgendaListVm>>>
+    {
+        private readonly IAsyncRepository<Agenda> _agendaRepository;
+        private readonly IAsyncRepository<Cycle> _cycleRepository;
+        private readonly IMapper _mapper;
+
+        public GetAgendaByCycleIdQueryHandler(IAsyncRepository<Agenda> agendaRepository, IAsyncRepository<Cycle> cycleRepository, IMapper mapper)
+        {
+            _agendaRepository = agendaRepository;
+            _cycleRepository = cycleRepository;
+            _mapper = mapper;
+        }
+
+        public async Task<BaseResponse<List<AgendaListVm>>> Handle(GetAgendaByCycleIdQuery request, CancellationToken cancellationToken)
+        {
+            var Cycle = request.CycleId == null
+                ? await _cycleRepository.FirstOrDefaultAsync(a => a.Status == 0)
+                : await _cycleRepository.FirstOrDefaultAsync(a => a.Id == request.CycleId);
+
+            if (Cycle == null)
+            {
+                return new BaseResponse<List<AgendaListVm>>("", false, 404);
+            }
+            var Agendas = _agendaRepository.Where(a => a.CycleId == Cycle.Id).ToList();
+            
+            var data = _mapper.Map<List<AgendaListVm>>(Agendas);
+
+            for(int i = 0; i < data.Count(); i++)
+            {
+                data[i].Title = request.lang == "en"
+                    ? data[i].EnglishTitle
+                    : data[i].ArabicTitle;
+            }
+
+            return new BaseResponse<List<AgendaListVm>>("", true, 200, data);
+        }
+    }
+}

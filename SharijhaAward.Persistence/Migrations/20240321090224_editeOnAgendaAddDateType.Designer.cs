@@ -12,8 +12,8 @@ using SharijhaAward.Persistence;
 namespace SharijhaAward.Persistence.Migrations
 {
     [DbContext(typeof(SharijhaAwardDbContext))]
-    [Migration("20240312084929_addCoordinatorTables")]
-    partial class addCoordinatorTables
+    [Migration("20240321090224_editeOnAgendaAddDateType")]
+    partial class editeOnAgendaAddDateType
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,19 +40,115 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("CategoryCommittee");
                 });
 
-            modelBuilder.Entity("CriterionItemScale", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AboutAwardPageModel.AboutAwardPage", b =>
                 {
-                    b.Property<Guid>("CriterionItemsId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ScalesId")
+                    b.Property<string>("AboutImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicAboutDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicAboutTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicOurVisionDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicOurVisionTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishAboutDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishAboutTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishOurVisionDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishOurVisionTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OurVisionImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AboutAwardPage");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AboutAwardPageModel.OurGoal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("CriterionItemsId", "ScalesId");
+                    b.Property<Guid>("AboutAwardPageId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("ScalesId");
+                    b.Property<string>("ArabicGoal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("CriterionItemScale");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishGoal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AboutAwardPageId");
+
+                    b.ToTable("OurGoals");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", b =>
@@ -95,41 +191,51 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementModel.Achievement", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ArabicTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Attachment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EnglishTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("classificationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("subscriberId")
+                    b.Property<Guid?>("AchievementClassificationId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Facebook")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FieldOfDiscrimination")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Instagram")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Linkedin")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Projects")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SkillsAndExperiences")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Snapchat")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tiktok")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Twitter")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Youtube")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("classificationId");
+                    b.HasIndex("AchievementClassificationId");
 
-                    b.HasIndex("subscriberId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Achievement");
                 });
@@ -153,10 +259,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<Guid>("CycleId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("DateType")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EnglishTitle")
@@ -167,14 +276,17 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
@@ -605,19 +717,19 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "اختبار وصف 1",
                             ArabicName = "اختبار اسم 1",
                             CategoryClassification = 0,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4268),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(4977),
                             CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
                             EnglishDescription = "Test Description 1",
                             EnglishName = "Test Name 1",
                             ExpectedNumberOfWinners = 1,
-                            FinalArbitrationEndDate = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4271),
+                            FinalArbitrationEndDate = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(4980),
                             FinalArbitrationQualificationMark = 0,
-                            FinalArbitrationStartDate = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4276),
+                            FinalArbitrationStartDate = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(4988),
                             Icon = "string",
-                            InitialArbitrationStartDate = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4278),
+                            InitialArbitrationStartDate = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(4990),
                             RelatedToClasses = false,
                             Status = 0,
-                            SubscriberPortalClosingDate = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4281),
+                            SubscriberPortalClosingDate = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(4993),
                             WinningScore = 0,
                             isDeleted = false
                         },
@@ -627,20 +739,20 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "اختبار وصف 2",
                             ArabicName = "اختبار اسم 2",
                             CategoryClassification = 0,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4287),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(4999),
                             CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
                             EnglishDescription = "Test Description 2",
                             EnglishName = "Test Name 2",
                             ExpectedNumberOfWinners = 1,
-                            FinalArbitrationEndDate = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4289),
+                            FinalArbitrationEndDate = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5001),
                             FinalArbitrationQualificationMark = 0,
-                            FinalArbitrationStartDate = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4290),
+                            FinalArbitrationStartDate = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5003),
                             Icon = "string",
-                            InitialArbitrationStartDate = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4291),
+                            InitialArbitrationStartDate = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5004),
                             ParentId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
                             RelatedToClasses = false,
                             Status = 0,
-                            SubscriberPortalClosingDate = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4292),
+                            SubscriberPortalClosingDate = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5005),
                             WinningScore = 0,
                             isDeleted = false
                         });
@@ -760,6 +872,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Emirates")
+                        .HasColumnType("int");
+
                     b.Property<string>("EnglishName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -768,6 +883,10 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonalPhoto")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -798,8 +917,8 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CriterionId")
                         .HasColumnType("uniqueidentifier");
@@ -811,24 +930,132 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ScaleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("SizeOfAttachmentInKB")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("UpdatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
-
                     b.HasIndex("CriterionId");
 
-                    b.HasIndex("UpdatedById");
+                    b.HasIndex("ScaleId");
 
-                    b.ToTable("CriterionItem");
+                    b.ToTable("CriterionItems");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5542d87a-7f44-4163-5e3c-08dc427e4e9f"),
+                            ActualScore = 0,
+                            ArabicName = "بند معيار فرعي 11",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(557),
+                            CriterionId = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                            EnglishName = "Sub Criterion Item 11",
+                            Score = 50,
+                            SizeOfAttachmentInKB = 5000,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("fea46b75-b836-4dcc-5e3d-08dc427e4e9f"),
+                            ActualScore = 0,
+                            ArabicName = "بند معيار فرعي 12",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(570),
+                            CriterionId = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                            EnglishName = "Sub Criterion Item 12",
+                            Score = 50,
+                            SizeOfAttachmentInKB = 5000,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e9f"),
+                            ActualScore = 0,
+                            ArabicName = "بند معيار فرعي 21",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(574),
+                            CriterionId = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
+                            EnglishName = "Sub Criterion Item 21",
+                            Score = 50,
+                            SizeOfAttachmentInKB = 5000,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("06fc4cca-fe8f-4c01-5e3f-08dc427e4e9f"),
+                            ActualScore = 0,
+                            ArabicName = "بند معيار فرعي 22",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(577),
+                            CriterionId = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
+                            EnglishName = "Sub Criterion Item 22",
+                            Score = 50,
+                            SizeOfAttachmentInKB = 5000,
+                            isDeleted = false
+                        });
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItemAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AttachementPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CriterionItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProvidedFormId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CriterionItemId");
+
+                    b.HasIndex("ProvidedFormId");
+
+                    b.ToTable("CriterionItemAttachments");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemScaleModel.CriterionItemScale", b =>
@@ -844,7 +1071,10 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedById")
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CriterionItemId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CriterionItemsId")
@@ -857,24 +1087,26 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ScaleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ScalesId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UpdatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
+                    b.HasIndex("CriterionItemId");
 
-                    b.HasIndex("CriterionItemsId");
-
-                    b.HasIndex("ScalesId");
-
-                    b.HasIndex("UpdatedById");
+                    b.HasIndex("ScaleId");
 
                     b.ToTable("criterionItemScales");
                 });
@@ -889,7 +1121,7 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ArbitrationProcedureId")
+                    b.Property<Guid?>("ArbitrationProcedureId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CategoryId")
@@ -898,8 +1130,8 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -908,17 +1140,23 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ParentId")
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("SizeOfAttachmentInKB")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("UpdatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -926,13 +1164,97 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("CreatedById");
-
                     b.HasIndex("ParentId");
 
-                    b.HasIndex("UpdatedById");
+                    b.ToTable("Criterions");
 
-                    b.ToTable("Criterion");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                            ArabicTitle = "معيار رئيسي 1",
+                            CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(505),
+                            EnglishTitle = "Main Criterion 1",
+                            Score = 100,
+                            SizeOfAttachmentInKB = 0,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                            ArabicTitle = "معيار فرعي 1",
+                            CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(511),
+                            EnglishTitle = "Sub Criterion 1",
+                            ParentId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                            Score = 50,
+                            SizeOfAttachmentInKB = 5000,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
+                            ArabicTitle = "معيار فرعي 2",
+                            CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(516),
+                            EnglishTitle = "Sub Criterion 2",
+                            ParentId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                            Score = 50,
+                            SizeOfAttachmentInKB = 5000,
+                            isDeleted = false
+                        });
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionModel.CriterionAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AttachementPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CriterionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProvidedFormId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CriterionId");
+
+                    b.HasIndex("ProvidedFormId");
+
+                    b.ToTable("CriterionAttachments");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CycleClassModel.CycleClass", b =>
@@ -1072,7 +1394,7 @@ namespace SharijhaAward.Persistence.Migrations
                             IndividualCategoryNumber = 0,
                             RegistrationPortalClosingDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RegistrationPortalOpeningDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
+                            Status = 2,
                             Year = "2023-2024",
                             isDeleted = false
                         });
@@ -1116,56 +1438,56 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7633),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8056),
                             Name = "Text",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7635),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8058),
                             Name = "Email",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7637),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8060),
                             Name = "Image",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7639),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8062),
                             Name = "File",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7640),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8063),
                             Name = "Phone Number",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7642),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8065),
                             Name = "Number",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7644),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8067),
                             Name = "Date",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7646),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8068),
                             Name = "List",
                             isDeleted = false
                         });
@@ -1209,56 +1531,56 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7684),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8101),
                             OperationAsString = ">",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7686),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8104),
                             OperationAsString = ">=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7688),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8106),
                             OperationAsString = "<",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7690),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8107),
                             OperationAsString = "<=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7691),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8109),
                             OperationAsString = "=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7693),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8111),
                             OperationAsString = "!=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7695),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8113),
                             OperationAsString = "is Empty",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7697),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8114),
                             OperationAsString = "is not Empty",
                             isDeleted = false
                         });
@@ -1302,7 +1624,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 202, DateTimeKind.Utc).AddTicks(7456),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(8028),
                             Name = "ProvidedForm",
                             isDeleted = false
                         });
@@ -1522,7 +1844,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار نص 1",
                             ArabicPlaceHolder = "اختبار نص 1",
                             AttributeDataTypeId = 1,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4550),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5323),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Text 1",
                             EnglishPlaceHolder = "Test Text 1",
@@ -1538,7 +1860,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار ايميل 1",
                             ArabicPlaceHolder = "اختبار ايميل 1",
                             AttributeDataTypeId = 2,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4555),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5328),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Email 1",
                             EnglishPlaceHolder = "Test Email 1",
@@ -1554,7 +1876,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار صورة 1",
                             ArabicPlaceHolder = "اختبار صورة 1",
                             AttributeDataTypeId = 3,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4558),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5331),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Image 1",
                             EnglishPlaceHolder = "Test Image 1",
@@ -1571,7 +1893,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار ملف 1",
                             ArabicPlaceHolder = "اختبار ملف 1",
                             AttributeDataTypeId = 4,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4561),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5334),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test File 1",
                             EnglishPlaceHolder = "Test File 1",
@@ -1588,7 +1910,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار رقم متحرك 1",
                             ArabicPlaceHolder = "اختبار رقم متحرك 1",
                             AttributeDataTypeId = 5,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4565),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5337),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Phone Number 1",
                             EnglishPlaceHolder = "Test Phone Number 1",
@@ -1604,7 +1926,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار رقم 1",
                             ArabicPlaceHolder = "اختبار رقم 1",
                             AttributeDataTypeId = 6,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4568),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5340),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Number 1",
                             EnglishPlaceHolder = "Test Number 1",
@@ -1620,7 +1942,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار تاريخ 1",
                             ArabicPlaceHolder = "اختبار تاريخ 1",
                             AttributeDataTypeId = 7,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4571),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5343),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Date 1",
                             EnglishPlaceHolder = "Test Date 1",
@@ -1636,7 +1958,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLabel = "اختبار قائمة 1",
                             ArabicPlaceHolder = "اختبار قائمة 1",
                             AttributeDataTypeId = 8,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4574),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5346),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test List 1",
                             EnglishPlaceHolder = "Test List 1",
@@ -1691,7 +2013,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4618),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5381),
                             DynamicAttributeId = 8,
                             Value = "Test Value 1",
                             isDeleted = false
@@ -1699,7 +2021,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4621),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5383),
                             DynamicAttributeId = 8,
                             Value = "Test Value 2",
                             isDeleted = false
@@ -1707,7 +2029,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4623),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5385),
                             DynamicAttributeId = 8,
                             Value = "Test Value 3",
                             isDeleted = false
@@ -1715,7 +2037,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4664),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5386),
                             DynamicAttributeId = 8,
                             Value = "Test Value 4",
                             isDeleted = false
@@ -1723,7 +2045,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4667),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5388),
                             DynamicAttributeId = 8,
                             Value = "Test Value 5",
                             isDeleted = false
@@ -1879,7 +2201,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicName = "اختبار اسم 1",
                             AttributeTableNameId = 1,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4513),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5289),
                             EnglishName = "Test Name 1",
                             RecordIdOnRelation = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
                             isDeleted = false
@@ -2029,7 +2351,46 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("StaticAttributes");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationCoordinatorModel.EducationCoordinator", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel.EduInstitutionCoordinator", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CoordinatorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EducationalInstitutionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CoordinatorId");
+
+                    b.HasIndex("EducationalInstitutionId");
+
+                    b.ToTable("InstitutionCoordinators");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationCoordinatorModel.EduEntitiesCoordinator", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2124,9 +2485,6 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("EducationalInstitutionId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -2141,8 +2499,6 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EducationalInstitutionId");
 
                     b.ToTable("EducationalEntities");
                 });
@@ -2153,6 +2509,10 @@ namespace SharijhaAward.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ArabicName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -2162,20 +2522,25 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("EducationalEntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EnglishName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EducationalEntityId");
 
                     b.ToTable("EducationalInstitutions");
                 });
@@ -2351,6 +2716,228 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("frequentlyAskedQuestions");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel.GeneralFrequentlyAskedQuestion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ArabicAnswer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicQuestion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishAnswer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishQuestion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GeneralFrequentlyAskedQuestionCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GeneralFrequentlyAskedQuestionCategoryId");
+
+                    b.ToTable("GeneralFrequentlyAskedQuestions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                            ArabicAnswer = "اختبار جواب 1",
+                            ArabicQuestion = "اختبار سؤال 1",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(7984),
+                            EnglishAnswer = "Test Answer 1",
+                            EnglishQuestion = "Test Question 1",
+                            GeneralFrequentlyAskedQuestionCategoryId = 1,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                            ArabicAnswer = "اختبار جواب 2",
+                            ArabicQuestion = "اختبار سؤال 2",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(7988),
+                            EnglishAnswer = "Test Answer 2",
+                            EnglishQuestion = "Test Question 2",
+                            GeneralFrequentlyAskedQuestionCategoryId = 1,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
+                            ArabicAnswer = "اختبار جواب 3",
+                            ArabicQuestion = "اختبار سؤال 3",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(7991),
+                            EnglishAnswer = "Test Answer 3",
+                            EnglishQuestion = "Test Question 3",
+                            GeneralFrequentlyAskedQuestionCategoryId = 2,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("5542d87a-7f44-4163-5e3c-08dc427e4e9f"),
+                            ArabicAnswer = "اختبار جواب 4",
+                            ArabicQuestion = "اختبار سؤال 4",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(7994),
+                            EnglishAnswer = "Test Answer 4",
+                            EnglishQuestion = "Test Question 4",
+                            GeneralFrequentlyAskedQuestionCategoryId = 2,
+                            isDeleted = false
+                        });
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel.GeneralFrequentlyAskedQuestionCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ArabicName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GeneralFrequentlyAskedQuestionCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ArabicName = "اختبار فئة أسئلة شائعة عامة 1",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(7924),
+                            EnglishName = "Test General FAQ Category 1",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ArabicName = "اختبار فئة أسئلة شائعة عامة 2",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(7926),
+                            EnglishName = "Test General FAQ Category 2",
+                            isDeleted = false
+                        });
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.GeneralWorkshopsModel.GeneralWorkshop", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AgendaImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfWorkShop")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegistrationUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Thumbnale")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Video")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GeneralWorkshops");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.Permission", b =>
@@ -2535,6 +3122,13 @@ namespace SharijhaAward.Persistence.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoleName = "User",
                             isDeleted = false
+                        },
+                        new
+                        {
+                            RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RoleName = "Coordinator",
+                            isDeleted = false
                         });
                 });
 
@@ -2561,6 +3155,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ConfirmationCode")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -2581,6 +3178,9 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
+                    b.Property<string>("ImageURL")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -2588,6 +3188,10 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -2610,11 +3214,12 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
                             ArabicName = "ادمن 123",
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4431),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5221),
                             Email = "ahmad.a.ahmad.100011@gmail.com",
                             EnglishName = "Admin 123",
                             Gender = 0,
-                            Password = "QAZwsx!@1212",
+                            Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                            PhoneNumber = "0993521579",
                             RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
                             isDeleted = false
                         });
@@ -3006,6 +3611,53 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("Note");
                 });
 
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.PrivacyPolicy.PrivacyPolicy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ArabicText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PrivacyPolicies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ArabicText = "سياسة الخصوصية",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(7695),
+                            EnglishText = "Privacy Policy",
+                            isDeleted = false
+                        });
+                });
+
             modelBuilder.Entity("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", b =>
                 {
                     b.Property<int>("Id")
@@ -3033,6 +3685,9 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<float>("FinalScore")
+                        .HasColumnType("real");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -3047,6 +3702,12 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.Property<Guid?>("SubscriberId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SubscriberType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalStep")
+                        .HasColumnType("int");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -3078,12 +3739,15 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 3, 12, 8, 49, 25, 203, DateTimeKind.Utc).AddTicks(4465),
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 768, DateTimeKind.Utc).AddTicks(5254),
                             CurrentStep = 1,
                             CycleNumber = 1,
                             CycleYear = "2023-2024",
+                            FinalScore = 0f,
                             PercentCompletion = 1,
                             Status = 0,
+                            SubscriberType = 0,
+                            TotalStep = 7,
                             Type = 0,
                             categoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
                             isDeleted = false,
@@ -3093,41 +3757,84 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.RelatedAccountModel.RelatedAccount", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("SubscriberId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedById")
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("Subscriber1Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Subscriber2Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
+                    b.HasIndex("Subscriber1Id");
 
-                    b.HasIndex("SubscriberId");
+                    b.HasIndex("Subscriber2Id");
 
-                    b.HasIndex("UpdatedById");
+                    b.ToTable("RelatedAccounts");
+                });
 
-                    b.ToTable("RelatedAccount");
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.RelatedAccountModel.RelatedAccountRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("RelatedAccountRequests");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.ScaleModel.Scale", b =>
@@ -3143,8 +3850,8 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CriterionId")
                         .HasColumnType("uniqueidentifier");
@@ -3156,25 +3863,24 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MaxScore")
                         .HasColumnType("int");
 
                     b.Property<int>("MinScore")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UpdatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
-
                     b.HasIndex("CriterionId");
-
-                    b.HasIndex("UpdatedById");
 
                     b.ToTable("Scale");
                 });
@@ -3326,6 +4032,53 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("TermsAndConditions");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.TermsOfUse.TermsOfUse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ArabicText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TermsOfUses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ArabicText = "شروط الاستخدام",
+                            CreatedAt = new DateTime(2024, 3, 21, 9, 2, 19, 767, DateTimeKind.Utc).AddTicks(7891),
+                            EnglishText = "Terms Of Use",
+                            isDeleted = false
+                        });
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", b =>
@@ -3527,19 +4280,15 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CriterionItemScale", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AboutAwardPageModel.OurGoal", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", null)
-                        .WithMany()
-                        .HasForeignKey("CriterionItemsId")
+                    b.HasOne("SharijhaAward.Domain.Entities.AboutAwardPageModel.AboutAwardPage", "AboutAwardPage")
+                        .WithMany("OurGoals")
+                        .HasForeignKey("AboutAwardPageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Entities.ScaleModel.Scale", null)
-                        .WithMany()
-                        .HasForeignKey("ScalesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("AboutAwardPage");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", b =>
@@ -3563,21 +4312,17 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementModel.Achievement", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", "Classification")
+                    b.HasOne("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", null)
                         .WithMany("Achievements")
-                        .HasForeignKey("classificationId")
+                        .HasForeignKey("AchievementClassificationId");
+
+                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber")
-                        .WithMany("Achievements")
-                        .HasForeignKey("subscriberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Classification");
-
-                    b.Navigation("Subscriber");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AgendaModel.Agenda", b =>
@@ -3823,73 +4568,62 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
                         .WithMany()
                         .HasForeignKey("CriterionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
+                    b.HasOne("SharijhaAward.Domain.Entities.ScaleModel.Scale", null)
+                        .WithMany("CriterionItems")
+                        .HasForeignKey("ScaleId");
 
                     b.Navigation("Criterion");
+                });
 
-                    b.Navigation("UpdatedBy");
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItemAttachment", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", "CriterionItem")
+                        .WithMany()
+                        .HasForeignKey("CriterionItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
+                        .WithMany()
+                        .HasForeignKey("ProvidedFormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CriterionItem");
+
+                    b.Navigation("ProvidedForm");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemScaleModel.CriterionItemScale", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", "CriterionItem")
-                        .WithMany("CriterionItemScales")
-                        .HasForeignKey("CriterionItemsId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .WithMany()
+                        .HasForeignKey("CriterionItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.ScaleModel.Scale", "Scale")
                         .WithMany("CriterionItemScales")
-                        .HasForeignKey("ScalesId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasForeignKey("ScaleId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
 
                     b.Navigation("CriterionItem");
 
                     b.Navigation("Scale");
-
-                    b.Navigation("UpdatedBy");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionModel.Criterion", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Entities.ArbitrationProcedureModel.ArbitrationProcedure", "ArbitrationProcedure")
+                    b.HasOne("SharijhaAward.Domain.Entities.ArbitrationProcedureModel.ArbitrationProcedure", null)
                         .WithMany("Criteria")
-                        .HasForeignKey("ArbitrationProcedureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ArbitrationProcedureId");
 
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany("Criterions")
@@ -3897,33 +4631,32 @@ namespace SharijhaAward.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Parent")
                         .WithMany()
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("ArbitrationProcedure");
+                        .HasForeignKey("ParentId");
 
                     b.Navigation("Category");
 
-                    b.Navigation("CreatedBy");
-
                     b.Navigation("Parent");
+                });
 
-                    b.Navigation("UpdatedBy");
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionModel.CriterionAttachment", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
+                        .WithMany()
+                        .HasForeignKey("CriterionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
+                        .WithMany()
+                        .HasForeignKey("ProvidedFormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Criterion");
+
+                    b.Navigation("ProvidedForm");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CycleClassModel.CycleClass", b =>
@@ -4115,10 +4848,29 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("AttributeTableName");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationCoordinatorModel.EducationCoordinator", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel.EduInstitutionCoordinator", b =>
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.CoordinatorModel.Coordinator", "Coordinator")
+                        .WithMany("InstitutionCoordinators")
+                        .HasForeignKey("CoordinatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.EducationalInstitutionModel.EducationalInstitution", "EducationalInstitution")
                         .WithMany()
+                        .HasForeignKey("EducationalInstitutionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Coordinator");
+
+                    b.Navigation("EducationalInstitution");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationCoordinatorModel.EduEntitiesCoordinator", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.CoordinatorModel.Coordinator", "Coordinator")
+                        .WithMany("EducationCoordinators")
                         .HasForeignKey("CoordinatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -4153,15 +4905,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationalEntityModel.EducationalEntity", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationalInstitutionModel.EducationalInstitution", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Entities.EducationalInstitutionModel.EducationalInstitution", "EducationalInstitution")
-                        .WithMany()
-                        .HasForeignKey("EducationalInstitutionId")
+                    b.HasOne("SharijhaAward.Domain.Entities.EducationalEntityModel.EducationalEntity", "EducationalEntity")
+                        .WithMany("Institutions")
+                        .HasForeignKey("EducationalEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("EducationalInstitution");
+                    b.Navigation("EducationalEntity");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.ExplanatoryGuideModel.ExplanatoryGuide", b =>
@@ -4184,6 +4936,17 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel.GeneralFrequentlyAskedQuestion", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel.GeneralFrequentlyAskedQuestionCategory", "GeneralFrequentlyAskedQuestionCategory")
+                        .WithMany()
+                        .HasForeignKey("GeneralFrequentlyAskedQuestionCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GeneralFrequentlyAskedQuestionCategory");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.IdentityModels.Permission", b =>
@@ -4385,56 +5148,51 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.RelatedAccountModel.RelatedAccount", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber1")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber")
-                        .WithMany("RelatedAccounts")
-                        .HasForeignKey("SubscriberId")
+                        .HasForeignKey("Subscriber1Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Subscriber2")
                         .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasForeignKey("Subscriber2Id")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CreatedBy");
+                    b.Navigation("Subscriber1");
 
-                    b.Navigation("Subscriber");
+                    b.Navigation("Subscriber2");
+                });
 
-                    b.Navigation("UpdatedBy");
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.RelatedAccountModel.RelatedAccountRequest", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.ScaleModel.Scale", b =>
                 {
-                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
                         .WithMany("Scales")
                         .HasForeignKey("CriterionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
-
                     b.Navigation("Criterion");
-
-                    b.Navigation("UpdatedBy");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.SubscriberAchievementModel.SubscriberAchievement", b =>
@@ -4583,6 +5341,11 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.AboutAwardPageModel.AboutAwardPage", b =>
+                {
+                    b.Navigation("OurGoals");
+                });
+
             modelBuilder.Entity("SharijhaAward.Domain.Entities.AchievementClassificationModel.AchievementClassification", b =>
                 {
                     b.Navigation("Achievements");
@@ -4637,9 +5400,11 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("Attachments");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.CoordinatorModel.Coordinator", b =>
                 {
-                    b.Navigation("CriterionItemScales");
+                    b.Navigation("EducationCoordinators");
+
+                    b.Navigation("InstitutionCoordinators");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.CriterionModel.Criterion", b =>
@@ -4661,6 +5426,11 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("CycleConditions");
 
                     b.Navigation("News");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.EducationalEntityModel.EducationalEntity", b =>
+                {
+                    b.Navigation("Institutions");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.EventModel.Event", b =>
@@ -4711,6 +5481,8 @@ namespace SharijhaAward.Persistence.Migrations
             modelBuilder.Entity("SharijhaAward.Domain.Entities.ScaleModel.Scale", b =>
                 {
                     b.Navigation("CriterionItemScales");
+
+                    b.Navigation("CriterionItems");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.TermsAndConditionsModel.TermAndCondition", b =>
@@ -4727,13 +5499,9 @@ namespace SharijhaAward.Persistence.Migrations
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.SubscriberModel.Subscriber", b =>
                 {
-                    b.Navigation("Achievements");
-
                     b.Navigation("MeetingSubscribers");
 
                     b.Navigation("ProvidedForms");
-
-                    b.Navigation("RelatedAccounts");
 
                     b.Navigation("SubscriberAchievements");
 
