@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
 {
     public class ChangePasswordQueryHandler
-        :IRequestHandler<ChangePasswordQuery, BaseResponse<object>>
+        : IRequestHandler<ChangePasswordQuery, BaseResponse<object>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;

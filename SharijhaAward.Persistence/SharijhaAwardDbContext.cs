@@ -164,6 +164,55 @@ namespace SharijhaAward.Persistence
                 .Property(e => e.EnglishText)
                 .HasColumnType("nvarchar(max)");
 
+            modelBuilder.Entity<AboutAwardPage>()
+                .HasData(new AboutAwardPage()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    AboutImage = "https://backend.stg.award-shj.ae/UploadedFiles/3d648088-d708-468c-a351-e1249765dd8a.jpg",
+                    ArabicAboutDescription = "تأسست جائزة الشارقة للتفوق والتميز التربوي عام 1994-1995 برعاية كريمة من صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي عضو المجلس الاعلى حاكم إمارة الشارقة حفظه الله ورعاه... وتعتبر أول جائزة تربوية على مستوى الدولة",
+                    ArabicAboutTitle = "نبذة عن الجائزة",
+                    ArabicOurVisionDescription = "تأسست جائزة الشارقة للتفوق والتميز التربوي عام 1994-1995 برعاية كريمة من صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي عضو المجلس الاعلى حاكم إمارة الشارقة حفظه الله ورعاه... وتعتبر أول جائزة تربوية على مستوى الدولة",
+                    ArabicOurVisionTitle = "رؤيتنا",
+                    EnglishAboutDescription = "The Sharjah Award for Educational Excellence and Excellence was established in 1994-1995 under the generous patronage of His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of the Emirate of Sharjah, may God protect and preserve him... It is considered the first educational award at the state level.",
+                    EnglishAboutTitle = "About the award",
+                    EnglishOurVisionDescription = "The Sharjah Award for Educational Excellence and Excellence was established in 1994-1995 under the generous patronage of His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of the Emirate of Sharjah, may God protect and preserve him... It is considered the first educational award at the state level.",
+                    EnglishOurVisionTitle = "Our Vision",
+                    OurVisionImage = "https://backend.stg.award-shj.ae/UploadedFiles/32115b92-e36a-41bd-aa25-b09331c6f591.jpg"
+                });
+
+            modelBuilder.Entity<OurGoal>()
+                .HasData(new OurGoal()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    AboutAwardPageId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    ArabicGoal = "تطوير القطاع التربوي من خلال بث روح التنافس بينهم؛ لتحقيق أفضل الممارسات التربوية.",
+                    EnglishGoal = "Developing the educational sector by spreading the spirit of competition among them; To achieve best educational practices."
+                }, new OurGoal()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                    AboutAwardPageId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    ArabicGoal = "طوير أعمال الجائزة ومنهجياتها، ورفع الكفايات المهنية للعاملين بها.",
+                    EnglishGoal = "Developing the Award’s work and methodologies, and raising the professional competencies of its employees."
+                });
+
             modelBuilder.Entity<OnePageText>()
                 .HasData(new OnePageText()
                 {

@@ -1,13 +1,17 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForResetPassword;
 using SharijhaAward.Application.Features.User.Commands.DeleteUser;
 using SharijhaAward.Application.Features.User.Commands.UpdateUser;
 using SharijhaAward.Application.Features.User.Queries.AsignRoleToUser;
 using SharijhaAward.Application.Features.User.Queries.ChangePassword;
 using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
 using SharijhaAward.Application.Features.User.Queries.GetUserById;
+using SharijhaAward.Application.Responses;
+
 
  
 namespace SharijhaAward.Api.Controllers
@@ -106,40 +110,29 @@ namespace SharijhaAward.Api.Controllers
                 });
 
         }
-        //[Authorize]
         [HttpPost("ChangePassword", Name = "ChangePassword")]
-        public async Task<ActionResult> ChangePassword([FromBody]ChangePasswordQuery query)
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordQuery query)
         {
-            //get Language from header
-            var Language = HttpContext.Request.Headers["lang"];
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
 
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
 
-            var token = HttpContext.Request.Headers.Authorization;
-            if (token.IsNullOrEmpty())
+            query.Token = Token!;
+
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            query.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue!
+                : "en";
+
+            BaseResponse<object>? Response = await _mediator.Send(query);
+
+            return Response.statusCode switch
             {
-                return Unauthorized();
-            }
-
-            query.Token = token! ;
-            query.lang = Language!;
-            var response = await _mediator.Send(query);
-
-            if (response.statusCode == 404)
-            {
-                return NotFound(new { response });
-            }
-            else if (response.statusCode == 400)
-            {
-                return BadRequest(new { response });
-            }
-            else
-                return Ok(
-                    new 
-                    {
-                        response.message,
-                        response.success,
-                        response.statusCode,
-                    });
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
     }
 }
