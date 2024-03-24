@@ -239,7 +239,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     Type = Domain.Constants.OnePageText.OnePageTextType.TermsOfUse
                 });
-            
+
             modelBuilder.Entity<GeneralFAQCategory>()
                 .HasData(new GeneralFAQCategory()
                 {
@@ -692,6 +692,24 @@ namespace SharijhaAward.Persistence
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
                     ParentId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d")
                 });
+
+            modelBuilder.Entity<FrequentlyAskedQuestion>()
+                .HasData(new FrequentlyAskedQuestion()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                    ArabicQuestion = "كيف يمكنني الاشتراك بجائزة الشارقة للتفوق والتميز التربوي",
+                    ArabicAnswer = "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة.",
+                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    EnglishQuestion = "How can I participate in the Sharjah Award for Excellence and Educational Excellence?",
+                    EnglishAnswer = "You can participate in the award by following the following steps:\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria."
+                });
+
             modelBuilder.Entity<Role>().HasData(
                 new Role
                 {
