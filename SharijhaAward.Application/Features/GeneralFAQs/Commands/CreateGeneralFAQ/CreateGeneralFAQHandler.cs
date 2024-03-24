@@ -8,11 +8,11 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.CreateGeneralF
 {
     public class CreateGeneralFAQHandler : IRequestHandler<CreateGeneralFAQCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestion> _GeneralFAQRepository;
+        private readonly IAsyncRepository<GeneralFAQ> _GeneralFAQRepository;
         private readonly IMapper _Mapper;
 
         public CreateGeneralFAQHandler(IMapper Mapper,
-            IAsyncRepository<GeneralFrequentlyAskedQuestion> GeneralFrequentlyAskedQuestionRepository)
+            IAsyncRepository<GeneralFAQ> GeneralFrequentlyAskedQuestionRepository)
         {
             _Mapper = Mapper;
             _GeneralFAQRepository = GeneralFrequentlyAskedQuestionRepository;
@@ -22,7 +22,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.CreateGeneralF
         {
             string ResponseMessage = string.Empty;
 
-            GeneralFrequentlyAskedQuestion GeneralFAQEntity = _Mapper.Map<GeneralFrequentlyAskedQuestion>(Request);
+            GeneralFAQ GeneralFAQEntity = _Mapper.Map<GeneralFAQ>(Request);
 
             await _GeneralFAQRepository.AddAsync(GeneralFAQEntity);
 

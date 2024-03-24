@@ -8,15 +8,15 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
 {
     public class SendRelatingRequestHandler : IRequestHandler<SendRelatingRequestCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<Domain.Entities.SubscriberModel.Subscriber> _SubscriberRepository;
+        private readonly IUserRepository _UserRepository;
         private readonly IAsyncRepository<RelatedAccountRequest> _RelatedAccountRequestRepository;
         private readonly IJwtProvider _JWTProvider;
 
-        public SendRelatingRequestHandler(IAsyncRepository<Domain.Entities.SubscriberModel.Subscriber> SubscriberRepository,
+        public SendRelatingRequestHandler(IUserRepository UserRepository,
             IAsyncRepository<RelatedAccountRequest> RelatedAccountRequestRepository,
             IJwtProvider JWTProvider)
         {
-            _SubscriberRepository = SubscriberRepository;
+            _UserRepository = UserRepository;
             _RelatedAccountRequestRepository = RelatedAccountRequestRepository;
             _JWTProvider = JWTProvider;
         }
@@ -24,7 +24,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
         {
             string ResponseMessage = string.Empty;
 
-            Domain.Entities.SubscriberModel.Subscriber? ReceiverUserEntity = await _SubscriberRepository
+            Domain.Entities.IdentityModels.User? ReceiverUserEntity = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.ReceiverEmail.ToLower());
 
             if (ReceiverUserEntity == null)

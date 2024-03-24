@@ -2,24 +2,24 @@
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Settings.Queries.GetProfileById;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.PrivacyPolicy;
+using SharijhaAward.Domain.Entities.OnePageTextModel;
 
 namespace SharijhaAward.Application.Features.Settings.Queries.GetPrivacyPolicy
 {
     public class GetPrivacyPolicyHandler : IRequestHandler<GetPrivacyPolicyQuery, BaseResponse<GetPrivacyPolicyDto>>
     {
-        private readonly IAsyncRepository<PrivacyPolicy> _PrivacyPolicyRepository;
-        public GetPrivacyPolicyHandler(IAsyncRepository<PrivacyPolicy> PrivacyPolicyRepository)
+        private readonly IAsyncRepository<OnePageText> _OnePageTextRepository;
+        public GetPrivacyPolicyHandler(IAsyncRepository<OnePageText> OnePageTextRepository)
         {
-            _PrivacyPolicyRepository = PrivacyPolicyRepository;
+            _OnePageTextRepository = OnePageTextRepository;
         }
         public async Task<BaseResponse<GetPrivacyPolicyDto>> Handle(GetPrivacyPolicyQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
-            PrivacyPolicy? PrivacyPolicyEntity = await _PrivacyPolicyRepository.FirstOrDefaultAsync(x => x.Id == 1);
+            OnePageText? OnePageTextEntity = await _OnePageTextRepository.FirstOrDefaultAsync(x => x.Id == 1);
 
-            if (PrivacyPolicyEntity == null)
+            if (OnePageTextEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Privacy policy is not found"
@@ -31,8 +31,8 @@ namespace SharijhaAward.Application.Features.Settings.Queries.GetPrivacyPolicy
             GetPrivacyPolicyDto GetPrivacyPolicyDto = new GetPrivacyPolicyDto()
             {
                 Text = Request.lang == "en"
-                    ? PrivacyPolicyEntity.EnglishText
-                    : PrivacyPolicyEntity.ArabicText
+                    ? OnePageTextEntity.EnglishText
+                    : OnePageTextEntity.ArabicText
             };
 
             return new BaseResponse<GetPrivacyPolicyDto>(ResponseMessage, true, 200, GetPrivacyPolicyDto);

@@ -3,7 +3,6 @@ using SharijhaAward.Domain.Constants.SubscriberAchievementConstants;
 using SharijhaAward.Domain.Entities.AchievementClassificationModel;
 using SharijhaAward.Domain.Entities.Common;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using SharijhaAward.Domain.Entities.SubscriberModel;
 
 namespace SharijhaAward.Domain.Entities.SubscriberAchievementModel; 
 
@@ -36,8 +35,7 @@ public class SubscriberAchievement: AuditInformation<User> {
 
    
    
-   // navigation property to the Subscriber
-   public Subscriber Subscriber { get; set; } = null!;
-   [ForeignKey(nameof(Subscriber))]
-   public Guid SubscriberId { get; set; }
+   public User User { get; set; } = null!;
+   [ForeignKey(nameof(User))]
+   public Guid UserId { get; set; }
 }

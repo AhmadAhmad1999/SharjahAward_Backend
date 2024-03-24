@@ -8,11 +8,11 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.UpdateGeneralF
 {
     public class UpdateGeneralFAQHandler : IRequestHandler<UpdateGeneralFAQCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestion> _GeneralFAQRepository;
+        private readonly IAsyncRepository<GeneralFAQ> _GeneralFAQRepository;
         private readonly IMapper _Mapper;
 
         public UpdateGeneralFAQHandler(IMapper Mapper,
-            IAsyncRepository<GeneralFrequentlyAskedQuestion> GeneralFAQRepository)
+            IAsyncRepository<GeneralFAQ> GeneralFAQRepository)
         {
             _GeneralFAQRepository = GeneralFAQRepository;
             _Mapper = Mapper;
@@ -21,7 +21,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.UpdateGeneralF
         {
             string ResponseMessage = string.Empty;
 
-            GeneralFrequentlyAskedQuestion? GeneralFAQEntityToUpdate = await _GeneralFAQRepository
+            GeneralFAQ? GeneralFAQEntityToUpdate = await _GeneralFAQRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (GeneralFAQEntityToUpdate == null)
@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.UpdateGeneralF
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            _Mapper.Map(Request, GeneralFAQEntityToUpdate, typeof(UpdateGeneralFAQCommand), typeof(GeneralFrequentlyAskedQuestion));
+            _Mapper.Map(Request, GeneralFAQEntityToUpdate, typeof(UpdateGeneralFAQCommand), typeof(GeneralFAQ));
 
             await _GeneralFAQRepository.UpdateAsync(GeneralFAQEntityToUpdate);
 

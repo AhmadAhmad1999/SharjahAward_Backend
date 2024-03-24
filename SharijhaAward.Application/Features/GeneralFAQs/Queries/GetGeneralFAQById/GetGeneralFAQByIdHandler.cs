@@ -8,11 +8,11 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetGeneralFAQBy
 {
     public class GetGeneralFAQByIdHandler : IRequestHandler<GetGeneralFAQByIdQuery, BaseResponse<GeneralFAQDto>>
     {
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestion> _GeneralFAQRepository;
+        private readonly IAsyncRepository<GeneralFAQ> _GeneralFAQRepository;
         private readonly IMapper _Mapper;
 
         public GetGeneralFAQByIdHandler(IMapper Mapper,
-            IAsyncRepository<GeneralFrequentlyAskedQuestion> GeneralFAQRepository)
+            IAsyncRepository<GeneralFAQ> GeneralFAQRepository)
         {
             _GeneralFAQRepository = GeneralFAQRepository;
             _Mapper = Mapper;
@@ -22,7 +22,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetGeneralFAQBy
         {
             string ResponseMessage = string.Empty;
 
-            GeneralFrequentlyAskedQuestion? GeneralFAQEntity = await _GeneralFAQRepository
+            GeneralFAQ? GeneralFAQEntity = await _GeneralFAQRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (GeneralFAQEntity == null)

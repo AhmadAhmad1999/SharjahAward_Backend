@@ -27,42 +27,42 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
 
             List<RelatedAccount> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
                 ? await _RelatedAccountRepository
-                    .Where(x => x.Subscriber1Id == UserId || x.Subscriber2Id == UserId)
-                    .Include(x => x.Subscriber1).Include(x => x.Subscriber2).ToListAsync()
+                    .Where(x => x.User1Id == UserId || x.User2Id == UserId)
+                    .Include(x => x.User1).Include(x => x.User2).ToListAsync()
                 : await _RelatedAccountRepository
-                    .Where(x => x.Subscriber1Id == UserId || x.Subscriber2Id == UserId)
+                    .Where(x => x.User1Id == UserId || x.User2Id == UserId)
                     .Skip((Request.page - 1) * Request.pageSize).Take(Request.pageSize)
-                    .Include(x => x.Subscriber1).Include(x => x.Subscriber2).ToListAsync();
+                    .Include(x => x.User1).Include(x => x.User2).ToListAsync();
 
             IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber2Id = ReceivedRequests
-                .Where(x => x.Subscriber1Id == UserId)
+                .Where(x => x.User1Id == UserId)
                 .Select(x => new GetAllRelatedAccountsListVM()
                 {
                     Id = x.Id,
                     Name = Request.lang == "ar"
-                        ? x.Subscriber2!.ArabicName
-                        : x.Subscriber2!.EnglishName,
-                    Email = x.Subscriber2!.Email,
-                    Gender = x.Subscriber2!.Gender
+                        ? x.User2!.ArabicName
+                        : x.User2!.EnglishName,
+                    Email = x.User2!.Email,
+                    Gender = x.User2!.Gender
                 });
 
             IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber1Id = ReceivedRequests
-                .Where(x => x.Subscriber2Id == UserId)
+                .Where(x => x.User2Id == UserId)
                 .Select(x => new GetAllRelatedAccountsListVM()
                 {
                     Id = x.Id,
                     Name = Request.lang == "ar"
-                        ? x.Subscriber1!.ArabicName
-                        : x.Subscriber1!.EnglishName,
-                    Email = x.Subscriber1!.Email,
-                    Gender = x.Subscriber1!.Gender
+                        ? x.User1!.ArabicName
+                        : x.User1!.EnglishName,
+                    Email = x.User1!.Email,
+                    Gender = x.User1!.Gender
                 });
 
             List<GetAllRelatedAccountsListVM> RelatedAccounts = RelatedAccountsFromSubscriber2Id
                 .Concat(RelatedAccountsFromSubscriber1Id).ToList();
 
             int TotalCount = await _RelatedAccountRepository
-                .GetCountAsync(x => x.Subscriber1Id == UserId || x.Subscriber2Id == UserId);
+                .GetCountAsync(x => x.User1Id == UserId || x.User2Id == UserId);
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.pageSize, TotalCount);

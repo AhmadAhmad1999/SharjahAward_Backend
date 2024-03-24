@@ -21,9 +21,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.DeleteProfile
         {
             string ResponseMessage = string.Empty;
 
-            Guid UserID = new Guid(_JWTProvider.GetUserIdFromToken(Request.Token!));
-
-            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository.FirstOrDefaultAsync(x => x.Id == UserID);
+            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository.FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());
 
             if (UserEntity == null)
             {

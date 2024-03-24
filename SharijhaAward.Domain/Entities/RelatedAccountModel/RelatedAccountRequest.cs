@@ -1,5 +1,5 @@
 ﻿using SharijhaAward.Domain.Common;
-using SharijhaAward.Domain.Entities.SubscriberModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Domain.Entities.RelatedAccountModel
 {
@@ -7,8 +7,8 @@ namespace SharijhaAward.Domain.Entities.RelatedAccountModel
     {
         public int Id { get; set; }
         public Guid SenderId { get; set; }
-        public Subscriber? Sender { get; set; }
+        public User? Sender { get; set; }
         public Guid ReceiverId { get; set; }
-        public Subscriber? Receiver { get; set; }
+        public User? Receiver { get; set; }
     }
 }

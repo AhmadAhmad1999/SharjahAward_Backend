@@ -13,19 +13,19 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
     {
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _FormRepository;
-        private readonly IAsyncRepository<Domain.Entities.SubscriberModel.Subscriber> _SubscriberRepository;
+        private readonly IUserRepository _UserRepository;
         private readonly IAsyncRepository<RelatedAccount> _RelatedAccountRepository;
         private readonly IJwtProvider _JWTProvider;
 
         public GetRelatedAccoutProfileByIdHandler(IMapper Mapper,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> FormRepository,
-            IAsyncRepository<Domain.Entities.SubscriberModel.Subscriber> SubscriberRepository,
+            IUserRepository UserRepository,
             IAsyncRepository<RelatedAccount> RelatedAccountRepository,
             IJwtProvider JWTProvider)
         {
             _Mapper = Mapper;
             _FormRepository = FormRepository;
-            _SubscriberRepository = SubscriberRepository;
+            _UserRepository = UserRepository;
             _RelatedAccountRepository = RelatedAccountRepository;
             _JWTProvider = JWTProvider;
         }
@@ -56,11 +56,11 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
             Guid UserId = new Guid(_JWTProvider.GetUserIdFromToken(Request.token!));
             Guid RelatedAccountSubscriberId;
 
-            if (RelatedAccountEntity.Subscriber1Id == UserId)
-                RelatedAccountSubscriberId = RelatedAccountEntity.Subscriber2Id;
+            if (RelatedAccountEntity.User1Id == UserId)
+                RelatedAccountSubscriberId = RelatedAccountEntity.User2Id;
 
-            else if (RelatedAccountEntity.Subscriber2Id == UserId)
-                RelatedAccountSubscriberId = RelatedAccountEntity.Subscriber1Id;
+            else if (RelatedAccountEntity.User2Id == UserId)
+                RelatedAccountSubscriberId = RelatedAccountEntity.User1Id;
 
             else
             {
@@ -69,10 +69,10 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
                 return new BaseResponse<GetRelatedAccoutProfileByIdResponse>(ResponseMessage, false, 400);
             }
 
-            Domain.Entities.SubscriberModel.Subscriber? RelatedAccountSubscriberEntity = await _SubscriberRepository
+            Domain.Entities.IdentityModels.User? RelatedAccountUserEntity = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Id == RelatedAccountSubscriberId);
 
-            if (RelatedAccountSubscriberEntity == null)
+            if (RelatedAccountUserEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Profile is not found"
@@ -81,11 +81,11 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
                 return new BaseResponse<GetRelatedAccoutProfileByIdResponse>(ResponseMessage, false, 404);
             }
 
-            RelatedAccountProfileData ProfileData = _Mapper.Map<RelatedAccountProfileData>(RelatedAccountSubscriberEntity);
+            RelatedAccountProfileData ProfileData = _Mapper.Map<RelatedAccountProfileData>(RelatedAccountUserEntity);
             
             ProfileData.Name = Request.lang == "en"
-                ? RelatedAccountSubscriberEntity.EnglishName
-                : RelatedAccountSubscriberEntity.ArabicName;
+                ? RelatedAccountUserEntity.EnglishName
+                : RelatedAccountUserEntity.ArabicName;
 
             List <RelatedAccountProvidedForms> ProvidedForms = _Mapper.Map<List<RelatedAccountProvidedForms>>(Request.Type == null
                 ? await _FormRepository.Where(x => x.userId == RelatedAccountSubscriberId).ToListAsync()

@@ -1,23 +1,23 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.TermsOfUse;
+using SharijhaAward.Domain.Entities.OnePageTextModel;
 
 namespace SharijhaAward.Application.Features.Settings.Commands.EditTermsOfUse
 {
     public class EditTermsOfUseHandler : IRequestHandler<EditTermsOfUseCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<TermsOfUse> _TermsOfUseRepository;
-        public EditTermsOfUseHandler(IAsyncRepository<TermsOfUse> TermsOfUseRepository)
+        private readonly IAsyncRepository<OnePageText> _OnePageTextRepository;
+        public EditTermsOfUseHandler(IAsyncRepository<OnePageText> OnePageTextRepository)
         {
-            _TermsOfUseRepository = TermsOfUseRepository;
+            _OnePageTextRepository = OnePageTextRepository;
         }
         public async Task<BaseResponse<object>> Handle(EditTermsOfUseCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
-            TermsOfUse? TermsOfUseEntity = await _TermsOfUseRepository
-                .FirstOrDefaultAsync(x => x.Id == 1);
+            OnePageText? TermsOfUseEntity = await _OnePageTextRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (TermsOfUseEntity == null)
             {
@@ -31,7 +31,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditTermsOfUse
             TermsOfUseEntity.ArabicText = Request.ArabicText;
             TermsOfUseEntity.EnglishText = Request.EnglishText;
 
-            await _TermsOfUseRepository.UpdateAsync(TermsOfUseEntity);
+            await _OnePageTextRepository.UpdateAsync(TermsOfUseEntity);
 
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }

@@ -8,11 +8,11 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetGen
 {
     public class GetGeneralFAQCategoryByIdHandler : IRequestHandler<GetGeneralFAQCategoryByIdQuery, BaseResponse<GetGeneralFAQCategoryByIdDto>>
     {
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestion> _GeneralFAQRepository;
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestionCategory> _GeneralFAQCategoryRepository;
+        private readonly IAsyncRepository<GeneralFAQ> _GeneralFAQRepository;
+        private readonly IAsyncRepository<GeneralFAQCategory> _GeneralFAQCategoryRepository;
 
-        public GetGeneralFAQCategoryByIdHandler(IAsyncRepository<GeneralFrequentlyAskedQuestion> GeneralFAQRepository,
-            IAsyncRepository<GeneralFrequentlyAskedQuestionCategory> GeneralFAQCategoryRepository)
+        public GetGeneralFAQCategoryByIdHandler(IAsyncRepository<GeneralFAQ> GeneralFAQRepository,
+            IAsyncRepository<GeneralFAQCategory> GeneralFAQCategoryRepository)
         {
             _GeneralFAQRepository = GeneralFAQRepository;
             _GeneralFAQCategoryRepository = GeneralFAQCategoryRepository;
@@ -21,7 +21,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetGen
         {
             string ResponseMessage = string.Empty;
 
-            GeneralFrequentlyAskedQuestionCategory? GeneralFAQCategory = await _GeneralFAQCategoryRepository
+            GeneralFAQCategory? GeneralFAQCategory = await _GeneralFAQCategoryRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (GeneralFAQCategory == null)

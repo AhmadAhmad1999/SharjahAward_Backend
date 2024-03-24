@@ -8,11 +8,11 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Commands.Updat
 {
     public class UpdateGeneralFAQCategoryHandler : IRequestHandler<UpdateGeneralFAQCategoryCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestionCategory> _GeneralFAQCategoryRepository;
+        private readonly IAsyncRepository<GeneralFAQCategory> _GeneralFAQCategoryRepository;
         private readonly IMapper _Mapper;
 
         public UpdateGeneralFAQCategoryHandler(IMapper Mapper,
-            IAsyncRepository<GeneralFrequentlyAskedQuestionCategory> GeneralFAQCategoryRepository)
+            IAsyncRepository<GeneralFAQCategory> GeneralFAQCategoryRepository)
         {
             _GeneralFAQCategoryRepository = GeneralFAQCategoryRepository;
             _Mapper = Mapper;
@@ -21,7 +21,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Commands.Updat
         {
             string ResponseMessage = string.Empty;
 
-            GeneralFrequentlyAskedQuestionCategory? GeneralFAQCategoryEntityToUpdate = await _GeneralFAQCategoryRepository
+            GeneralFAQCategory? GeneralFAQCategoryEntityToUpdate = await _GeneralFAQCategoryRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (GeneralFAQCategoryEntityToUpdate == null)
@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Commands.Updat
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            _Mapper.Map(Request, GeneralFAQCategoryEntityToUpdate, typeof(UpdateGeneralFAQCategoryCommand), typeof(GeneralFrequentlyAskedQuestionCategory));
+            _Mapper.Map(Request, GeneralFAQCategoryEntityToUpdate, typeof(UpdateGeneralFAQCategoryCommand), typeof(GeneralFAQCategory));
 
             await _GeneralFAQCategoryRepository.UpdateAsync(GeneralFAQCategoryEntityToUpdate);
 

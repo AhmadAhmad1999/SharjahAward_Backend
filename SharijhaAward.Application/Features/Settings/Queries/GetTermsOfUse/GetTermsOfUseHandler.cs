@@ -1,24 +1,24 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.TermsOfUse;
+using SharijhaAward.Domain.Entities.OnePageTextModel;
 
 namespace SharijhaAward.Application.Features.Settings.Queries.GetTermsOfUse
 {
     public class GetTermsOfUseHandler : IRequestHandler<GetTermsOfUseQuery, BaseResponse<GetTermsOfUseDto>>
     {
-        private readonly IAsyncRepository<TermsOfUse> _TermsOfUseRepository;
-        public GetTermsOfUseHandler(IAsyncRepository<TermsOfUse> TermsOfUseRepository)
+        private readonly IAsyncRepository<OnePageText> OnePageTextRepository;
+        public GetTermsOfUseHandler(IAsyncRepository<OnePageText> OnePageTextRepository)
         {
-            _TermsOfUseRepository = TermsOfUseRepository;
+            this.OnePageTextRepository = OnePageTextRepository;
         }
         public async Task<BaseResponse<GetTermsOfUseDto>> Handle(GetTermsOfUseQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
-            TermsOfUse? TermsOfUseEntity = await _TermsOfUseRepository.FirstOrDefaultAsync(x => x.Id == 1);
+            OnePageText? OnePageTextEntity = await OnePageTextRepository.FirstOrDefaultAsync(x => x.Id == 1);
 
-            if (TermsOfUseEntity == null)
+            if (OnePageTextEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Terms of use is not found"
@@ -30,8 +30,8 @@ namespace SharijhaAward.Application.Features.Settings.Queries.GetTermsOfUse
             GetTermsOfUseDto GetTermsOfUseDto = new GetTermsOfUseDto()
             {
                 Text = Request.lang == "en"
-                    ? TermsOfUseEntity.EnglishText
-                    : TermsOfUseEntity.ArabicText
+                    ? OnePageTextEntity.EnglishText
+                    : OnePageTextEntity.ArabicText
             };
 
             return new BaseResponse<GetTermsOfUseDto>(ResponseMessage, true, 200, GetTermsOfUseDto);

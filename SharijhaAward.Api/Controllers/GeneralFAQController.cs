@@ -19,10 +19,10 @@ namespace SharijhaAward.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GeneralFAQGeneralController : ControllerBase
+    public class GeneralFAQController : ControllerBase
     {
         private readonly IMediator _Mediator;
-        public GeneralFAQGeneralController(IMediator mediator)
+        public GeneralFAQController(IMediator mediator)
         {
             _Mediator = mediator;
         }
