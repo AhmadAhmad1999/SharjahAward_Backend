@@ -34,7 +34,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(response),
                 404 => NotFound(response),
-                403 => Unauthorized(),
+                401 => Unauthorized(),
                 _ => BadRequest(response)
             };
         }
@@ -57,7 +57,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(response),
                 404 => NotFound(response),
-                403 => Unauthorized(),
+                401 => Unauthorized(),
                 _ => BadRequest(response)
             };
         }

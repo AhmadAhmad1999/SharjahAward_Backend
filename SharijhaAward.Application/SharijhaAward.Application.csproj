@@ -49,6 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\ContactUsPages\Queries\" />
     <Folder Include="Features\Coordinators\Commands\DeleteCoordinator\" />
     <Folder Include="Features\EducationalInstitutions\Queries\GetEducationalInstitutionsByEntityId\" />
     <Folder Include="Features\GeneralWorkshops\Commands\DeleteGeneralWorkshop\" />
