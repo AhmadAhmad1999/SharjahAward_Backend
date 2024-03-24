@@ -39,7 +39,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmat
                     ? "Invalid confirmation code"
                     : "رقم تحقق غير فعال";
 
-                return new BaseResponse<object>(ResponseMessage, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
             return new BaseResponse<object>(ResponseMessage, true, 200);
