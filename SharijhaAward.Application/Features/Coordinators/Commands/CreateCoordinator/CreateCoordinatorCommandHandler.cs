@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                 EnglishName = data.EnglishName,
                 Email = data.Email,
                 PhoneNumber = data.PhoneNumber,
-                ConfirmationCode = 0000,
+                //ConfirmationCode = 0000,
                 Id = data.Id,
                 Password = "123456",
                 Gender = 0

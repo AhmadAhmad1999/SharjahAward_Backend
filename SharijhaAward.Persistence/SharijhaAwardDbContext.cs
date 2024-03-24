@@ -57,18 +57,18 @@ namespace SharijhaAward.Persistence
         public DbSet<PrivacyPolicy> PrivacyPolicies { get; set; }
         public DbSet<TermsOfUse> TermsOfUses { get; set; }
         public DbSet<RelatedAccount> RelatedAccounts { get; set; }
-        public DbSet<FrequentlyAskedQuestion> frequentlyAskedQuestions { get; set; }
+        public DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; }
         public DbSet<GeneralFrequentlyAskedQuestion> GeneralFrequentlyAskedQuestions { get; set; }
         public DbSet<GeneralFrequentlyAskedQuestionCategory> GeneralFrequentlyAskedQuestionCategories { get; set; }
-        public DbSet<TrainingWorkshop> trainingWorkshops { get; set; }
+        public DbSet<TrainingWorkshop> TrainingWorkshops { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<PersonalInvitee> Personalnvitees { get; set; }
         public DbSet<GroupInvitee> GroupInvitees { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<CategoryCommittee> categoryCommittees { get; set; }
-        public DbSet<CriterionItemScale> criterionItemScales { get; set; }
-        public DbSet<TrainingWorkshopSubscriber> trainingWorkshopSubscribers { get; set; }
-        public DbSet<Cycle> cycles { get; set; }
+        public DbSet<CategoryCommittee> CategoryCommittees { get; set; }
+        public DbSet<CriterionItemScale> CriterionItemScales { get; set; }
+        public DbSet<TrainingWorkshopSubscriber> TrainingWorkshopSubscribers { get; set; }
+        public DbSet<Cycle> Cycles { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
@@ -91,8 +91,8 @@ namespace SharijhaAward.Persistence
         public DbSet<ConditionsProvidedForms> Attachments { get; set; }
         public DbSet<DynamicAttributePattern> DynamicAttributePatterns {  get; set; }
         public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues {  get; set; }
-        public DbSet<CategoryFAQ> categoryFAQs { get; set; }
-        public DbSet<ExplanatoryGuide> explanatoryGuides { get; set; }
+        public DbSet<CategoryFAQ> CategoryFAQs { get; set; }
+        public DbSet<ExplanatoryGuide> ExplanatoryGuides { get; set; }
         public DbSet<CycleCondition> CycleCondition { get; set; }
         public DbSet<TrainingWrokshopeAttachment> TrainingWrokshopeAttachment { get; set; }
         public DbSet<ConditionAttachment> ConditionAttachments { get; set; }
