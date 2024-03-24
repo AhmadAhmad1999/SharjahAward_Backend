@@ -264,6 +264,7 @@ namespace SharijhaAward.Persistence
                     ArabicName = "اختبار فئة أسئلة شائعة عامة 2",
                     EnglishName = "Test General FAQ Category 2"
                 });
+
             modelBuilder.Entity<GeneralFAQ>()
                 .HasData(new GeneralFAQ()
                 {
@@ -501,7 +502,7 @@ namespace SharijhaAward.Persistence
                     OperationAsString = "is not Empty"
                 });
 
-            modelBuilder.Entity<User>().ToTable("users");
+            // modelBuilder.Entity<User>().ToTable("users");
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SharijhaAwardDbContext).Assembly);
 
@@ -551,6 +552,7 @@ namespace SharijhaAward.Persistence
                     Score = 50,
                     SizeOfAttachmentInKB = 5000
                 });
+
             modelBuilder.Entity<CriterionItem>()
                 .HasData(new CriterionItem()
                 {
@@ -613,6 +615,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Sub Criterion Item 22",
                     SizeOfAttachmentInKB = 5000
                 });
+
             modelBuilder.Entity<PersonalInvitee>()
                 .HasIndex(p => new { p.Email, p.isDeleted })
                 .HasFilter("[isDeleted] = 0")
@@ -708,6 +711,264 @@ namespace SharijhaAward.Persistence
                     CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
                     EnglishQuestion = "How can I participate in the Sharjah Award for Excellence and Educational Excellence?",
                     EnglishAnswer = "You can participate in the award by following the following steps:\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria."
+                }, new FrequentlyAskedQuestion()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    ArabicQuestion = "كيف يمكنني الاشتراك بجائزة الشارقة للتفوق والتميز التربوي 2",
+                    ArabicAnswer = "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة. 2",
+                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    EnglishQuestion = "How can I participate in the Sharjah Award for Excellence and Educational Excellence? 2",
+                    EnglishAnswer = "You can participate in the award by following the following steps:\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria 2."
+                });
+
+            modelBuilder.Entity<Coordinator>()
+                .HasData(new Coordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    ArabicName = "منسق 1",
+                    EducationType = EducationType.Government,
+                    Email = "Coordinator@Coordinator.com",
+                    Emirates = Emirates.Sharjah,
+                    EnglishName = "Coordinator 1",
+                    PersonalPhoto = "https://backend.stg.award-shj.ae/UploadedFiles/3d648088-d708-468c-a351-e1249765dd8a.jpg",
+                    PhoneNumber = "0993521579"
+                });
+
+            modelBuilder.Entity<User>()
+                .HasData(new User()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    Email = "Coordinator@Coordinator.com",
+                    PhoneNumber = "0993521579",
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    EnglishName = "Coordinator 1",
+                    ArabicName = "منسق 1",
+                    ConfirmationCodeForResetPassword = null,
+                    ConfirmationCodeForSignUp = null,
+                    isValidAccount = true,
+                    Gender = Gender.Male,
+                    ImageURL = null,
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                });
+
+            modelBuilder.Entity<EducationalEntity>()
+                .HasData(new EducationalEntity()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    Name = "Educational Entity 1"
+                }, new EducationalEntity()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Name = "Educational Entity 2"
+                });
+
+            modelBuilder.Entity<EducationalInstitution>()
+                .HasData(new EducationalInstitution()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    ArabicName = "مؤسسة تعليمية 1",
+                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    EnglishName = "Educational Entity 1"
+                }, new EducationalInstitution()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    ArabicName = "مؤسسة تعليمية 2",
+                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    EnglishName = "Educational Entity 2"
+                });
+
+            modelBuilder.Entity<EduEntitiesCoordinator>()
+                .HasData(new EduEntitiesCoordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    RelatedDate = DateTime.Now,
+                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20")
+                });
+
+            modelBuilder.Entity<EduInstitutionCoordinator>()
+                .HasData(new EduInstitutionCoordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    EducationalInstitutionId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20")
+                });
+
+            modelBuilder.Entity<TermAndCondition>()
+                .HasData(new TermAndCondition()
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicDescription = "الموافقة على سياسة الخصوصية لهذه الفئة",
+                    ArabicTitle = "الموافقة على سياسة الخصوصة",
+                    AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.Pic,
+                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    EnglishDescription = "Accept on Privacy Term",
+                    EnglishTitle = "Accept on Privacy Term",
+                    IsAgree = false,
+                    IsSpecial = true,
+                    NeedAttachment = false,
+                    RequiredAttachmentNumber = 0,
+                    SizeOfAttachmentInKB = 0
+                }, new TermAndCondition()
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicDescription = "الموافقة على سياسة الخصوصية لهذه الفئة",
+                    ArabicTitle = "الموافقة على سياسة الخصوصة",
+                    AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.Pic,
+                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    EnglishDescription = "Accept on Privacy Term",
+                    EnglishTitle = "Accept on Privacy Term",
+                    IsAgree = false,
+                    IsSpecial = false,
+                    NeedAttachment = false,
+                    RequiredAttachmentNumber = 0,
+                    SizeOfAttachmentInKB = 0
+                }, new TermAndCondition()
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db19"),
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicDescription = "الهوية الشخصية",
+                    ArabicTitle = "رفع صورة الهوية الشخصية (الامامي و الخلفي)",
+                    AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.Pic,
+                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    EnglishDescription = "Id Card",
+                    EnglishTitle = "Upload Photos of Id Card (Front and Back)",
+                    IsAgree = false,
+                    IsSpecial = false,
+                    NeedAttachment = true,
+                    RequiredAttachmentNumber = 2,
+                    SizeOfAttachmentInKB = 1000
+                }, new TermAndCondition()
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicDescription = "الهوية الشخصية",
+                    ArabicTitle = "رفع صورة الهوية الشخصية (الامامي و الخلفي)",
+                    AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.Pic,
+                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    EnglishDescription = "Id Card",
+                    EnglishTitle = "Upload Photos of Id Card (Front and Back)",
+                    IsAgree = false,
+                    IsSpecial = true,
+                    NeedAttachment = true,
+                    RequiredAttachmentNumber = 2,
+                    SizeOfAttachmentInKB = 1000
+                }, new TermAndCondition()
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21"),
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicDescription = "رفع الاثباتات العلمية",
+                    ArabicTitle = "رفع الاثباتات العلمية",
+                    AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.PDF,
+                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    EnglishDescription = "Upload Confirmation Documents",
+                    EnglishTitle = "Upload Confirmation Documents",
+                    IsAgree = false,
+                    IsSpecial = true,
+                    NeedAttachment = true,
+                    RequiredAttachmentNumber = 0,
+                    SizeOfAttachmentInKB = 1000
+                }, new TermAndCondition()
+                {
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db22"),
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicDescription = "رفع الاثباتات العلمية",
+                    ArabicTitle = "رفع الاثباتات العلمية",
+                    AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.PDF,
+                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    EnglishDescription = "Upload Confirmation Documents",
+                    EnglishTitle = "Upload Confirmation Documents",
+                    IsAgree = false,
+                    IsSpecial = false,
+                    NeedAttachment = true,
+                    RequiredAttachmentNumber = 0,
+                    SizeOfAttachmentInKB = 1000
                 });
 
             modelBuilder.Entity<Role>().HasData(
@@ -764,7 +1025,138 @@ namespace SharijhaAward.Persistence
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
                     ImageURL = null
+                }, new User()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "ادمن 123 #",
+                    Email = "Ahmad@Ahmad.com",
+                    PhoneNumber = "0993521579",
+                    EnglishName = "Admin 123 #",
+                    Gender = Gender.Male,
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e78d"),
+                    ConfirmationCodeForResetPassword = null,
+                    ConfirmationCodeForSignUp = null,
+                    isValidAccount = true,
+                    ImageURL = null
+                }, new User()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "ادمن 123 ##",
+                    Email = "Ahmad2@Ahmad2.com",
+                    PhoneNumber = "0993521579",
+                    EnglishName = "Admin 123 ##",
+                    Gender = Gender.Male,
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e77d"),
+                    ConfirmationCodeForResetPassword = null,
+                    ConfirmationCodeForSignUp = null,
+                    isValidAccount = true,
+                    ImageURL = null
+                }, new User()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "ادمن 123 ##@",
+                    Email = "Ahmad3@Ahmad3.com",
+                    PhoneNumber = "0993521579",
+                    EnglishName = "Admin 123 ##@",
+                    Gender = Gender.Male,
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e76d"),
+                    ConfirmationCodeForResetPassword = null,
+                    ConfirmationCodeForSignUp = null,
+                    isValidAccount = true,
+                    ImageURL = null
+                }, new User()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "ادمن 123 ##@@",
+                    Email = "Ahmad4@Ahmad4.com",
+                    PhoneNumber = "0993521579",
+                    EnglishName = "Admin 123 ##@@",
+                    Gender = Gender.Male,
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e75d"),
+                    ConfirmationCodeForResetPassword = null,
+                    ConfirmationCodeForSignUp = null,
+                    isValidAccount = true,
+                    ImageURL = null
                 });
+
+            modelBuilder.Entity<RelatedAccountRequest>()
+                .HasData(new RelatedAccountRequest()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = 1,
+                    ReceiverId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    SenderId = new Guid("81a2c75e-c71c-4213-a372-7626db57e78d"),
+                }, new RelatedAccountRequest()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = 2,
+                    ReceiverId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    SenderId = new Guid("81a2c75e-c71c-4213-a372-7626db57e77d"),
+                });
+
+            modelBuilder.Entity<RelatedAccount>()
+                .HasData(new RelatedAccount()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = 1,
+                    User1Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    User2Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e76d"),
+                }, new RelatedAccount()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = 2,
+                    User1Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    User2Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e75d"),
+                });
+
             modelBuilder.Entity<ProvidedForm>()
                 .HasData(new ProvidedForm()
                 {

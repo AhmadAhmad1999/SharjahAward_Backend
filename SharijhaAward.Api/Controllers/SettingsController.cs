@@ -194,13 +194,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteProfile()
+        public async Task<IActionResult> DeleteProfile(string Email)
         {
-            StringValues? Token = HttpContext.Request.Headers.Authorization;
-
-            if (string.IsNullOrEmpty(Token))
-                return Unauthorized("You must send the token");
-
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
@@ -209,7 +204,7 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<object>? Response = await _Mediator.Send(new DeleteProfileCommand()
             {
                 lang = HeaderValue!,
-                Token = Token
+                Email = Email
             });
 
             return Response.statusCode switch
