@@ -1,5 +1,5 @@
-﻿using SharijhaAward.Domain.Entities.InterviewModel;
-using SharijhaAward.Domain.Entities.SubscriberModel;
+﻿using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.InterviewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,10 +13,10 @@ namespace SharijhaAward.Domain.Entities.SubscriberInterviewModel
     {
         public int Id { get; set; }
 
-        public Subscriber Subscriber { get; set; } = null!;
+        public User User { get; set; } = null!;
 
-        [ForeignKey(nameof(Subscriber))]
-        public Guid SubscriberId { get; set; }
+        [ForeignKey(nameof(User))]
+        public Guid UserId { get; set; }
 
         public Interview Interview { get; set; } = null!;
 

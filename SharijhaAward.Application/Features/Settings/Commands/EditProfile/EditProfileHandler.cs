@@ -9,15 +9,15 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditProfile
     public class EditProfileHandler : IRequestHandler<EditProfileCommand,
         BaseResponse<object>>
     {
-        private IAsyncRepository<Domain.Entities.SubscriberModel.Subscriber> _SubscriberRepository;
+        private IUserRepository _UserRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
         private readonly IJwtProvider _JWTProvider;
 
-        public EditProfileHandler(IAsyncRepository<Domain.Entities.SubscriberModel.Subscriber> SubscriberRepository,
+        public EditProfileHandler(IUserRepository UserRepository,
             IHttpContextAccessor HttpContextAccessor,
             IJwtProvider JWTProvider)
         {
-            _SubscriberRepository = SubscriberRepository;
+            _UserRepository = UserRepository;
             _HttpContextAccessor = HttpContextAccessor;
             _JWTProvider = JWTProvider;
         }
@@ -28,10 +28,10 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditProfile
 
             Guid UserID = new Guid(_JWTProvider.GetUserIdFromToken(Request.Token!));
 
-            Domain.Entities.SubscriberModel.Subscriber? SubscriberEntity = await _SubscriberRepository
+            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Id == UserID);
 
-            if (SubscriberEntity == null)
+            if (UserEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Subscriber profile is not found"
@@ -65,14 +65,14 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditProfile
                     Request.ProfileImage!.CopyTo(FileStream);
                 }
 
-                SubscriberEntity.ImageURL = FilePathToSaveIntoDataBase;
-                SubscriberEntity.PhoneNumber = Request.PhoneNumber;
+                UserEntity.ImageURL = FilePathToSaveIntoDataBase;
+                UserEntity.PhoneNumber = Request.PhoneNumber;
             }
             else
-                SubscriberEntity.PhoneNumber = Request.PhoneNumber;
+                UserEntity.PhoneNumber = Request.PhoneNumber;
 
 
-            await _SubscriberRepository.UpdateAsync(SubscriberEntity);
+            await _UserRepository.UpdateAsync(UserEntity);
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }

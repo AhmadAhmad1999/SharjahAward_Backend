@@ -1,5 +1,5 @@
-﻿using SharijhaAward.Domain.Entities.NotificationModel;
-using SharijhaAward.Domain.Entities.SubscriberModel;
+﻿using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.NotificationModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,10 +18,10 @@ namespace SharijhaAward.Domain.Entities.SubscriberNotificationModel
         [ForeignKey(nameof(Notification))]
         public Guid notificationId { get; set; }
 
-        public Subscriber Subscriber { get; set; }
+        public User User { get; set; }
 
-        [ForeignKey(nameof(Subscriber))]
-        public Guid SubscriberId { get; set;}
+        [ForeignKey(nameof(User))]
+        public Guid UserId { get; set;}
 
     }
 }

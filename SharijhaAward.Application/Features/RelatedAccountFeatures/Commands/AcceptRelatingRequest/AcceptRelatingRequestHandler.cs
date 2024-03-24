@@ -51,8 +51,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Acc
                         DeletedAt = null,
                         LastModifiedAt = null,
                         LastModifiedBy = null,
-                        Subscriber1Id = RelatedAccountRequestEntity.SenderId,
-                        Subscriber2Id = RelatedAccountRequestEntity.ReceiverId
+                        User1Id = RelatedAccountRequestEntity.SenderId,
+                        User2Id = RelatedAccountRequestEntity.ReceiverId
                     };
 
                     await _RelatedAccountRequestRepository.DeleteAsync(RelatedAccountRequestEntity);

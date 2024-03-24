@@ -7,7 +7,6 @@ using SharijhaAward.Domain.Entities.InvitationModels;
 using SharijhaAward.Domain.Entities.CategoryCommitteeModel;
 using SharijhaAward.Domain.Entities.CriterionItemScaleModel;
 using SharijhaAward.Domain.Entities.CycleModel;
-using SharijhaAward.Domain.Entities.SubscriberModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopSubscriberModel;
 using System;
 using System.Collections.Generic;
@@ -69,7 +68,6 @@ namespace SharijhaAward.Persistence
         public DbSet<CriterionItemScale> criterionItemScales { get; set; }
         public DbSet<TrainingWorkshopSubscriber> trainingWorkshopSubscribers { get; set; }
         public DbSet<Cycle> cycles { get; set; }
-        public DbSet<Subscriber> Subscribers { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
@@ -465,8 +463,6 @@ namespace SharijhaAward.Persistence
                 });
 
             modelBuilder.Entity<User>().ToTable("users");
-            modelBuilder.Entity<Subscriber>().ToTable("subscribers");
-            modelBuilder.Entity<Subscriber>().HasBaseType<User>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SharijhaAwardDbContext).Assembly);
 

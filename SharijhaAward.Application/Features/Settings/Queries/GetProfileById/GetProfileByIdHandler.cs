@@ -7,23 +7,23 @@ namespace SharijhaAward.Application.Features.Settings.Queries.GetProfileById
 {
     public class GetProfileByIdHandler : IRequestHandler<GetProfileByIdQuery, BaseResponse<GetProfileByIdDto>>
     {
-        private readonly IAsyncRepository<Domain.Entities.SubscriberModel.Subscriber> _SubscriberRepository;
+        private readonly IUserRepository _UserRepository;
         private readonly IMapper _Mapper;
 
         public GetProfileByIdHandler(IMapper Mapper,
-            IAsyncRepository<Domain.Entities.SubscriberModel.Subscriber> SubscriberRepository)
+            IUserRepository UserRepository)
         {
-            _SubscriberRepository = SubscriberRepository;
+            _UserRepository = UserRepository;
             _Mapper = Mapper;
         }
         public async Task<BaseResponse<GetProfileByIdDto>> Handle(GetProfileByIdQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
-            Domain.Entities.SubscriberModel.Subscriber? SubscriberEntity = await _SubscriberRepository
+            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
-            if (SubscriberEntity == null)
+            if (UserEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Profile is not found"
@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.Settings.Queries.GetProfileById
                 return new BaseResponse<GetProfileByIdDto>(ResponseMessage, false, 404);
             }
 
-            GetProfileByIdDto GetProfileByIdDto = _Mapper.Map<GetProfileByIdDto>(SubscriberEntity);
+            GetProfileByIdDto GetProfileByIdDto = _Mapper.Map<GetProfileByIdDto>(UserEntity);
 
             return new BaseResponse<GetProfileByIdDto>(ResponseMessage, true, 200, GetProfileByIdDto);
         }

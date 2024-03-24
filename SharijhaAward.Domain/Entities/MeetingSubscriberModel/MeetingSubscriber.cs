@@ -1,5 +1,5 @@
-﻿using SharijhaAward.Domain.Entities.MeetingModel;
-using SharijhaAward.Domain.Entities.SubscriberModel;
+﻿using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.MeetingModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,10 +13,10 @@ namespace SharijhaAward.Domain.Entities.MeetingSubscriberModel
     {
         public int Id { get; set; }
 
-        public Subscriber Subscriber { get; set; }
+        public User? User { get; set; }
 
-        [ForeignKey(nameof(Subscriber))]
-        public Guid subscriberId { get; set; }
+        [ForeignKey(nameof(User))]
+        public Guid UserId { get; set; }
 
         public Meeting Meeting { get; set; }
 

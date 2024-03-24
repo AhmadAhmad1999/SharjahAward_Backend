@@ -128,7 +128,6 @@ using SharijhaAward.Application.Features.GeneralFAQCategories.Commands.CreateGen
 using SharijhaAward.Application.Features.GeneralFAQCategories.Commands.UpdateGeneralFAQCategory;
 using SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAllGeneralFAQCategory;
 using SharijhaAward.Application.Features.Settings.Queries.GetProfileById;
-using SharijhaAward.Domain.Entities.SubscriberModel;
 using SharijhaAward.Application.Features.Cycles.Queries.GetLimteNumberOfCategories;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 using SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGeneralWorkshop;
@@ -323,8 +322,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CriterionAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<CriterionItemAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<RelatedAccountRequest, GetAllReceivedRequestsListVM>().ReverseMap();
-            CreateMap<Subscriber, GetProfileByIdDto>().ReverseMap();
-            CreateMap<Subscriber, RelatedAccountProfileData>().ReverseMap();
+            CreateMap<User, GetProfileByIdDto>().ReverseMap();
+            CreateMap<User, RelatedAccountProfileData>().ReverseMap();
             CreateMap<ProvidedForm, RelatedAccountProvidedForms>().ReverseMap();
         }
     }

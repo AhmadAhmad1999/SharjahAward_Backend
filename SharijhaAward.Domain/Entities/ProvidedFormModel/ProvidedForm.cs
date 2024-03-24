@@ -8,7 +8,6 @@ using SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.FormConditionModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using SharijhaAward.Domain.Entities.SubscriberModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;

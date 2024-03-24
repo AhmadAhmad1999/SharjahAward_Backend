@@ -1,7 +1,6 @@
 ﻿using SharijhaAward.Domain.Constants.AchievementConstant;
 using SharijhaAward.Domain.Entities.AchievementClassificationModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using SharijhaAward.Domain.Entities.SubscriberModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharijhaAward.Domain.Entities.AchievementModel
