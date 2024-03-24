@@ -10,13 +10,13 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
     public class GetAllGeneralFAQCategoryHandler : IRequestHandler<GetAllGeneralFAQCategoryQuery, 
         BaseResponse<List<GetAllGeneralFAQCategoryListVM>>>
     {
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestion> _GeneralFAQRepository;
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestionCategory> _GeneralFAQCategoryRepository;
+        private readonly IAsyncRepository<GeneralFAQ> _GeneralFAQRepository;
+        private readonly IAsyncRepository<GeneralFAQCategory> _GeneralFAQCategoryRepository;
         private readonly IMapper _Mapper;
 
         public GetAllGeneralFAQCategoryHandler(IMapper Mapper,
-            IAsyncRepository<GeneralFrequentlyAskedQuestion> GeneralFAQRepository,
-            IAsyncRepository<GeneralFrequentlyAskedQuestionCategory> GeneralFAQCategoryRepository)
+            IAsyncRepository<GeneralFAQ> GeneralFAQRepository,
+            IAsyncRepository<GeneralFAQCategory> GeneralFAQCategoryRepository)
         {
             _Mapper = Mapper;
             _GeneralFAQRepository = GeneralFAQRepository;

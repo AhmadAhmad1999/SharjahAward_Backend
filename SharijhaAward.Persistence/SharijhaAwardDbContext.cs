@@ -39,8 +39,7 @@ using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
 using SharijhaAward.Domain.Entities.AboutAwardPageModel;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
-using SharijhaAward.Domain.Entities.PrivacyPolicy;
-using SharijhaAward.Domain.Entities.TermsOfUse;
+using SharijhaAward.Domain.Entities.OnePageTextModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -53,12 +52,10 @@ namespace SharijhaAward.Persistence
         }
         
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
-        public DbSet<PrivacyPolicy> PrivacyPolicies { get; set; }
-        public DbSet<TermsOfUse> TermsOfUses { get; set; }
         public DbSet<RelatedAccount> RelatedAccounts { get; set; }
         public DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; }
-        public DbSet<GeneralFrequentlyAskedQuestion> GeneralFrequentlyAskedQuestions { get; set; }
-        public DbSet<GeneralFrequentlyAskedQuestionCategory> GeneralFrequentlyAskedQuestionCategories { get; set; }
+        public DbSet<GeneralFAQ> GeneralFAQs { get; set; }
+        public DbSet<GeneralFAQCategory> GeneralFAQCategories { get; set; }
         public DbSet<TrainingWorkshop> TrainingWorkshops { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<PersonalInvitee> Personalnvitees { get; set; }
@@ -113,14 +110,13 @@ namespace SharijhaAward.Persistence
             //Filter for Deleted items
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<PrivacyPolicy>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<TermsOfUse>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<OnePageText>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<GeneralFrequentlyAskedQuestion>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<GeneralFrequentlyAskedQuestionCategory>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<GeneralFAQ>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<GeneralFAQCategory>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Event>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Cycle>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<GroupInvitee>().HasQueryFilter(p => !p.isDeleted);
@@ -161,22 +157,15 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<GeneralWorkshop>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<PrivacyPolicy>()
+            modelBuilder.Entity<OnePageText>()
                 .Property(e => e.ArabicText)
                 .HasColumnType("nvarchar(max)");
-            modelBuilder.Entity<PrivacyPolicy>()
+            modelBuilder.Entity<OnePageText>()
                 .Property(e => e.EnglishText)
                 .HasColumnType("nvarchar(max)");
 
-            modelBuilder.Entity<TermsOfUse>()
-                .Property(e => e.ArabicText)
-                .HasColumnType("nvarchar(max)");
-            modelBuilder.Entity<TermsOfUse>()
-                .Property(e => e.EnglishText)
-                .HasColumnType("nvarchar(max)");
-
-            modelBuilder.Entity<PrivacyPolicy>()
-                .HasData(new PrivacyPolicy()
+            modelBuilder.Entity<OnePageText>()
+                .HasData(new OnePageText()
                 {
                     Id = 1,
                     ArabicText = "سياسة الخصوصية",
@@ -186,12 +175,11 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     DeletedAt = null,
                     LastModifiedAt = null,
-                    LastModifiedBy = null
-                });
-            modelBuilder.Entity<TermsOfUse>()
-                .HasData(new TermsOfUse()
+                    LastModifiedBy = null,
+                    Type = Domain.Constants.OnePageText.OnePageTextType.PrivacyPolicy
+                }, new OnePageText()
                 {
-                    Id = 1,
+                    Id = 2,
                     ArabicText = "شروط الاستخدام",
                     EnglishText = "Terms Of Use",
                     isDeleted = false,
@@ -199,10 +187,12 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     DeletedAt = null,
                     LastModifiedAt = null,
-                    LastModifiedBy = null
+                    LastModifiedBy = null,
+                    Type = Domain.Constants.OnePageText.OnePageTextType.TermsOfUse
                 });
-            modelBuilder.Entity<GeneralFrequentlyAskedQuestionCategory>()
-                .HasData(new GeneralFrequentlyAskedQuestionCategory()
+            
+            modelBuilder.Entity<GeneralFAQCategory>()
+                .HasData(new GeneralFAQCategory()
                 {
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -213,7 +203,7 @@ namespace SharijhaAward.Persistence
                     Id = 1,
                     ArabicName = "اختبار فئة أسئلة شائعة عامة 1",
                     EnglishName = "Test General FAQ Category 1"
-                }, new GeneralFrequentlyAskedQuestionCategory()
+                }, new GeneralFAQCategory()
                 {
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -225,8 +215,8 @@ namespace SharijhaAward.Persistence
                     ArabicName = "اختبار فئة أسئلة شائعة عامة 2",
                     EnglishName = "Test General FAQ Category 2"
                 });
-            modelBuilder.Entity<GeneralFrequentlyAskedQuestion>()
-                .HasData(new GeneralFrequentlyAskedQuestion()
+            modelBuilder.Entity<GeneralFAQ>()
+                .HasData(new GeneralFAQ()
                 {
                     Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
                     ArabicAnswer = "اختبار جواب 1",
@@ -240,7 +230,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     GeneralFrequentlyAskedQuestionCategoryId = 1
-                }, new GeneralFrequentlyAskedQuestion()
+                }, new GeneralFAQ()
                 {
                     Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
                     ArabicAnswer = "اختبار جواب 2",
@@ -254,7 +244,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     GeneralFrequentlyAskedQuestionCategoryId = 1
-                }, new GeneralFrequentlyAskedQuestion()
+                }, new GeneralFAQ()
                 {
                     Id = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
                     ArabicAnswer = "اختبار جواب 3",
@@ -268,7 +258,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     GeneralFrequentlyAskedQuestionCategoryId = 2
-                }, new GeneralFrequentlyAskedQuestion()
+                }, new GeneralFAQ()
                 {
                     Id = new Guid("5542d87a-7f44-4163-5e3c-08dc427e4e9f"),
                     ArabicAnswer = "اختبار جواب 4",

@@ -14,11 +14,11 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Commands.Creat
 {
     public class CreateGeneralFAQCategoryHandler : IRequestHandler<CreateGeneralFAQCategoryCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestionCategory> _GeneralFAQCategoryRepository;
+        private readonly IAsyncRepository<GeneralFAQCategory> _GeneralFAQCategoryRepository;
         private readonly IMapper _Mapper;
 
         public CreateGeneralFAQCategoryHandler(IMapper Mapper,
-            IAsyncRepository<GeneralFrequentlyAskedQuestionCategory> GeneralFAQCategoryRepository)
+            IAsyncRepository<GeneralFAQCategory> GeneralFAQCategoryRepository)
         {
             _Mapper = Mapper;
             _GeneralFAQCategoryRepository = GeneralFAQCategoryRepository;
@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Commands.Creat
 
         public async Task<BaseResponse<object>> Handle(CreateGeneralFAQCategoryCommand Request, CancellationToken cancellationToken)
         {
-            GeneralFrequentlyAskedQuestionCategory NewGeneralFAQCategoryEntity = _Mapper.Map<GeneralFrequentlyAskedQuestionCategory>(Request);
+            GeneralFAQCategory NewGeneralFAQCategoryEntity = _Mapper.Map<GeneralFAQCategory>(Request);
 
             await _GeneralFAQCategoryRepository.AddAsync(NewGeneralFAQCategoryEntity);
 

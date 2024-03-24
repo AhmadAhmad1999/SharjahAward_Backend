@@ -13,8 +13,8 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Commands.Delet
 {
     public class DeleteGeneralFAQCategoryHandler : IRequestHandler<DeleteGeneralFAQCategoryCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestionCategory> _GeneralFAQCategoryRepository;
-        public DeleteGeneralFAQCategoryHandler(IAsyncRepository<GeneralFrequentlyAskedQuestionCategory> GeneralFAQCategoryRepository)
+        private readonly IAsyncRepository<GeneralFAQCategory> _GeneralFAQCategoryRepository;
+        public DeleteGeneralFAQCategoryHandler(IAsyncRepository<GeneralFAQCategory> GeneralFAQCategoryRepository)
         {
             _GeneralFAQCategoryRepository = GeneralFAQCategoryRepository;
         }
@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Commands.Delet
         {
             string ResponseMessage = string.Empty;
 
-            GeneralFrequentlyAskedQuestionCategory? GeneralFAQCategoryEntityToDelete = await _GeneralFAQCategoryRepository
+            GeneralFAQCategory? GeneralFAQCategoryEntityToDelete = await _GeneralFAQCategoryRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (GeneralFAQCategoryEntityToDelete == null)

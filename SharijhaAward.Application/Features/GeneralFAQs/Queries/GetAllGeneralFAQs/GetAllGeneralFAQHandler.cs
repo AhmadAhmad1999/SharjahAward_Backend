@@ -9,11 +9,11 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
 {
     public class GetAllGeneralFAQHandler : IRequestHandler<GetAllGeneralFAQQuery, BaseResponse<List<GetAllGeneralFAQListVM>>>
     {
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestion> _GeneralFAQRepository;
+        private readonly IAsyncRepository<GeneralFAQ> _GeneralFAQRepository;
         private readonly IMapper _Mapper;
 
         public GetAllGeneralFAQHandler(IMapper Mapper,
-            IAsyncRepository<GeneralFrequentlyAskedQuestion> GeneralFAQRepository)
+            IAsyncRepository<GeneralFAQ> GeneralFAQRepository)
         {
             _Mapper = Mapper;
             _GeneralFAQRepository = GeneralFAQRepository;

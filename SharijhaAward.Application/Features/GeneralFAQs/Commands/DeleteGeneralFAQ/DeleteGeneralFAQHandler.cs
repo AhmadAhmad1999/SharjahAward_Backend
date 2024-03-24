@@ -7,8 +7,8 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.DeleteGeneralF
 {
     public class DeleteGeneralFAQHandler : IRequestHandler<DeleteGeneralFAQCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<GeneralFrequentlyAskedQuestion> _GeneralFAQRepository;
-        public DeleteGeneralFAQHandler(IAsyncRepository<GeneralFrequentlyAskedQuestion> GeneralFAQRepository)
+        private readonly IAsyncRepository<GeneralFAQ> _GeneralFAQRepository;
+        public DeleteGeneralFAQHandler(IAsyncRepository<GeneralFAQ> GeneralFAQRepository)
         {
             _GeneralFAQRepository = GeneralFAQRepository;
         }
@@ -17,7 +17,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.DeleteGeneralF
         {
             string ResponseMessage = string.Empty;
 
-            GeneralFrequentlyAskedQuestion? GeneralFAQEntityToDelete = await _GeneralFAQRepository
+            GeneralFAQ? GeneralFAQEntityToDelete = await _GeneralFAQRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (GeneralFAQEntityToDelete == null)

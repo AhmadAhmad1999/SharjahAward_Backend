@@ -291,14 +291,14 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CriterionItemAttachment, CreateCriterionItemAttachmentCommand>().ReverseMap();
             CreateMap<CriterionAttachment, CreateCriterionAttachmentVM>().ReverseMap();
             CreateMap<CriterionItemAttachment, CreateCriterionItemAttachmentVM>().ReverseMap();
-            CreateMap<GeneralFrequentlyAskedQuestion, CreateGeneralFAQCommand>().ReverseMap();
-            CreateMap<GeneralFrequentlyAskedQuestionCategory, CreateGeneralFAQCategoryCommand>().ReverseMap();
+            CreateMap<GeneralFAQ, CreateGeneralFAQCommand>().ReverseMap();
+            CreateMap<GeneralFAQCategory, CreateGeneralFAQCategoryCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
             CreateMap<DynamicAttribute, UpdateDynamicAttributeCommand>().ReverseMap();
             CreateMap<DynamicAttributeListValue, UpdateDynamicAttributeListValueCommand>().ReverseMap();
-            CreateMap<GeneralFrequentlyAskedQuestionCategory, UpdateGeneralFAQCategoryCommand>().ReverseMap();
+            CreateMap<GeneralFAQCategory, UpdateGeneralFAQCategoryCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
