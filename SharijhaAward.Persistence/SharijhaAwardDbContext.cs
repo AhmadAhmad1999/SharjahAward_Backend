@@ -68,7 +68,6 @@ namespace SharijhaAward.Persistence
         public DbSet<CriterionItemScale> CriterionItemScales { get; set; }
         public DbSet<TrainingWorkshopSubscriber> TrainingWorkshopSubscribers { get; set; }
         public DbSet<Cycle> Cycles { get; set; }
-        public DbSet<Subscriber> Subscribers { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
