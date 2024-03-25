@@ -157,12 +157,100 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<GeneralWorkshop>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);
 
+            modelBuilder.Entity<Event>()
+                .HasData(new Event()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    ArabicDescription = "اختبار وصف حدث 1",
+                    ArabicLocation = "اختبار موقع الفعالية 1",
+                    ArabicName = "اختبار اسم حدث 1",
+                    ArabicSiteName = "اختبار اسم مكان الحدث 1",
+                    EndDate = DateTime.UtcNow.AddDays(5),
+                    EnglishDescription = "Test Event Description 1",
+                    EnglishLocation = "Test Event Location 1",
+                    EnglishName = "Test Event Name 1",
+                    EnglishSiteName = "Test Event Site Name 1",
+                    EventDate = DateTime.UtcNow.AddDays(2),
+                    StartDate = DateTime.UtcNow.AddDays(3),
+                    UniqueIntegerId = 1
+                }, new Event()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e74"),
+                    ArabicDescription = "اختبار وصف حدث 2",
+                    ArabicLocation = "اختبار موقع الفعالية 2",
+                    ArabicName = "اختبار اسم حدث 2",
+                    ArabicSiteName = "اختبار اسم مكان الحدث 2",
+                    EndDate = DateTime.UtcNow.AddDays(8),
+                    EnglishDescription = "Test Event Description 2",
+                    EnglishLocation = "Test Event Location 2",
+                    EnglishName = "Test Event Name 2",
+                    EnglishSiteName = "Test Event Site Name 2",
+                    EventDate = DateTime.UtcNow.AddDays(5),
+                    StartDate = DateTime.UtcNow.AddDays(6),
+                    UniqueIntegerId = 2
+                });
+
             modelBuilder.Entity<OnePageText>()
                 .Property(e => e.ArabicText)
                 .HasColumnType("nvarchar(max)");
             modelBuilder.Entity<OnePageText>()
                 .Property(e => e.EnglishText)
                 .HasColumnType("nvarchar(max)");
+
+            modelBuilder.Entity<GeneralWorkshop>()
+                .HasData(new GeneralWorkshop()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e74"),
+                    EnglishTitle = "Test General Workshop Title 1",
+                    EnglishDescription = "Test General Workshop Description 1",
+                    ArabicTitle = "اختبار عنوان الورش العامة 1",
+                    ArabicDescription = "اختبار وصف الورش العامة 1",
+                    AgendaImage = null,
+                    DateOfWorkShop = DateTime.UtcNow.AddDays(10),
+                    DayName = DateTime.UtcNow.AddDays(10).DayOfWeek.ToString(),
+                    RegistrationUrl = null,
+                    Thumbnale = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg",
+                    Time = DateTime.UtcNow.TimeOfDay.ToString(),
+                    Video = null
+                }, new GeneralWorkshop()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e75"),
+                    EnglishTitle = "Test General Workshop Title 2",
+                    EnglishDescription = "Test General Workshop Description 2",
+                    ArabicTitle = "اختبار عنوان الورش العامة 2",
+                    ArabicDescription = "اختبار وصف الورش العامة 2",
+                    AgendaImage = null,
+                    DateOfWorkShop = DateTime.UtcNow.AddDays(20),
+                    DayName = DateTime.UtcNow.AddDays(20).DayOfWeek.ToString(),
+                    RegistrationUrl = null,
+                    Thumbnale = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg",
+                    Time = DateTime.UtcNow.TimeOfDay.ToString(),
+                    Video = null
+                });
 
             modelBuilder.Entity<AboutAwardPage>()
                 .HasData(new AboutAwardPage()
@@ -174,7 +262,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
-                    AboutImage = "https://backend.stg.award-shj.ae/UploadedFiles/3d648088-d708-468c-a351-e1249765dd8a.jpg",
+                    AboutImage = "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg",
                     ArabicAboutDescription = "تأسست جائزة الشارقة للتفوق والتميز التربوي عام 1994-1995 برعاية كريمة من صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي عضو المجلس الاعلى حاكم إمارة الشارقة حفظه الله ورعاه... وتعتبر أول جائزة تربوية على مستوى الدولة",
                     ArabicAboutTitle = "نبذة عن الجائزة",
                     ArabicOurVisionDescription = "تأسست جائزة الشارقة للتفوق والتميز التربوي عام 1994-1995 برعاية كريمة من صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي عضو المجلس الاعلى حاكم إمارة الشارقة حفظه الله ورعاه... وتعتبر أول جائزة تربوية على مستوى الدولة",
@@ -183,7 +271,7 @@ namespace SharijhaAward.Persistence
                     EnglishAboutTitle = "About the award",
                     EnglishOurVisionDescription = "The Sharjah Award for Educational Excellence and Excellence was established in 1994-1995 under the generous patronage of His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of the Emirate of Sharjah, may God protect and preserve him... It is considered the first educational award at the state level.",
                     EnglishOurVisionTitle = "Our Vision",
-                    OurVisionImage = "https://backend.stg.award-shj.ae/UploadedFiles/32115b92-e36a-41bd-aa25-b09331c6f591.jpg"
+                    OurVisionImage = "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg"
                 });
 
             modelBuilder.Entity<OurGoal>()
@@ -639,6 +727,40 @@ namespace SharijhaAward.Persistence
                  ArabicName ="جائزة الشارقة",    
                  Year = "2023-2024",
             });
+
+            modelBuilder.Entity<News>()
+                .HasData(new News()
+                {
+                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e9f"),
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicDescription = "اختبار وصف أخبار 1",
+                    ArabicTitle = "اختبار عنوان أخبار 1",
+                    EnglishDescription = "Test News Description 1",
+                    EnglishTitle = "Test News Title 1",
+                    Image = "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg"
+                }, new News()
+                {
+                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e8f"),
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicDescription = "اختبار وصف أخبار 2",
+                    ArabicTitle = "اختبار عنوان أخبار 2",
+                    EnglishDescription = "Test News Description 2",
+                    EnglishTitle = "Test News Title 2",
+                    Image = "https://backend.stg.award-shj.ae/UploadedFiles/1dd2958e-d80c-48d0-9a28-899d66fded8d.jpg"
+                });
+
             modelBuilder.Entity<Category>()
                 .HasData(new Category()
                 {
@@ -696,6 +818,39 @@ namespace SharijhaAward.Persistence
                     ParentId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d")
                 });
 
+            modelBuilder.Entity<TrainingWorkshop>()
+                .HasData(new TrainingWorkshop()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e74"),
+                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    ArabicDescription = "اختبار وصف ورشة تدريبية 1",
+                    ArabicTitle = "اختبار عنوان ورشة تدريبية 1",
+                    EnglishDescription = "Test Training Workshop Description 1",
+                    EnglishTitle = "Test Training Workshop Title 1",
+                    Thumbnail = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg"
+                }, new TrainingWorkshop()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e75"),
+                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    ArabicDescription = "اختبار وصف ورشة تدريبية 2",
+                    ArabicTitle = "اختبار عنوان ورشة تدريبية 2",
+                    EnglishDescription = "Test Training Workshop Description 2",
+                    EnglishTitle = "Test Training Workshop Title 2",
+                    Thumbnail = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg"
+                });
+
             modelBuilder.Entity<FrequentlyAskedQuestion>()
                 .HasData(new FrequentlyAskedQuestion()
                 {
@@ -742,7 +897,55 @@ namespace SharijhaAward.Persistence
                     Email = "Coordinator@Coordinator.com",
                     Emirates = Emirates.Sharjah,
                     EnglishName = "Coordinator 1",
-                    PersonalPhoto = "https://backend.stg.award-shj.ae/UploadedFiles/3d648088-d708-468c-a351-e1249765dd8a.jpg",
+                    PersonalPhoto = "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg",
+                    PhoneNumber = "0993521579"
+                }, new Coordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21"),
+                    ArabicName = "منسق 2",
+                    EducationType = EducationType.Government,
+                    Email = "Coordinator2@Coordinator2.com",
+                    Emirates = Emirates.Dubai,
+                    EnglishName = "Coordinator 2",
+                    PersonalPhoto = "https://backend.stg.award-shj.ae/UploadedFiles/e6258b6f-5ca5-4168-bb7c-fe1f24a6e553.jpg",
+                    PhoneNumber = "0993521579"
+                }, new Coordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db22"),
+                    ArabicName = "منسق 3",
+                    EducationType = EducationType.Private,
+                    Email = "Coordinator3@Coordinator3.com",
+                    Emirates = Emirates.Ajman,
+                    EnglishName = "Coordinator 3",
+                    PersonalPhoto = "https://backend.stg.award-shj.ae/UploadedFiles/eecad556-2d56-4010-b10a-780f7500f693.png",
+                    PhoneNumber = "0993521579"
+                }, new Coordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db23"),
+                    ArabicName = "منسق 4",
+                    EducationType = EducationType.Private,
+                    Email = "Coordinator4@Coordinator4.com",
+                    Emirates = Emirates.Dubai,
+                    EnglishName = "Coordinator 4",
+                    PersonalPhoto = "https://backend.stg.award-shj.ae/UploadedFiles/eecad556-2d56-4010-b10a-780f7500f693.png",
                     PhoneNumber = "0993521579"
                 });
 
@@ -761,6 +964,66 @@ namespace SharijhaAward.Persistence
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
                     EnglishName = "Coordinator 1",
                     ArabicName = "منسق 1",
+                    ConfirmationCodeForResetPassword = null,
+                    ConfirmationCodeForSignUp = null,
+                    isValidAccount = true,
+                    Gender = Gender.Male,
+                    ImageURL = null,
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                }, new User()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21"),
+                    Email = "Coordinator2@Coordinator2.com",
+                    PhoneNumber = "0993521579",
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    EnglishName = "Coordinator 2",
+                    ArabicName = "منسق 2",
+                    ConfirmationCodeForResetPassword = null,
+                    ConfirmationCodeForSignUp = null,
+                    isValidAccount = true,
+                    Gender = Gender.Male,
+                    ImageURL = null,
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                }, new User()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db22"),
+                    Email = "Coordinator3@Coordinator3.com",
+                    PhoneNumber = "0993521579",
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    EnglishName = "Coordinator 3",
+                    ArabicName = "منسق 3",
+                    ConfirmationCodeForResetPassword = null,
+                    ConfirmationCodeForSignUp = null,
+                    isValidAccount = true,
+                    Gender = Gender.Male,
+                    ImageURL = null,
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                }, new User()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db23"),
+                    Email = "Coordinator4@Coordinator4.com",
+                    PhoneNumber = "0993521579",
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    EnglishName = "Coordinator 4",
+                    ArabicName = "منسق 4",
                     ConfirmationCodeForResetPassword = null,
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
