@@ -2,18 +2,11 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
-using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId
 {
@@ -55,7 +48,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
             if (CheckIfCategoryIdIsExist == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Category is not Found"
+                    ? "Category is not found"
                     : "الفئة غير موجود";
 
                 return new BaseResponse<List<MainCriterionListVM>>(ResponseMessage, false, 404);

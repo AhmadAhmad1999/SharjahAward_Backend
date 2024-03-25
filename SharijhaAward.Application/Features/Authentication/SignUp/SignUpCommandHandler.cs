@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Authentication.Login;
+using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Authentication.SignUp
 {
@@ -19,11 +16,15 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         private readonly IUserRepository _UserRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
-        public SignUpCommandHandler(IUserRepository userRepository,IRoleRepository roleRepository ,IMapper mapper)
+        private IEmailSender _EmailSender;
+
+        public SignUpCommandHandler(IUserRepository userRepository,IRoleRepository roleRepository ,IMapper mapper,
+            IEmailSender EmailSender)
         {
             _roleRepository = roleRepository;
             _UserRepository = userRepository;
             _mapper = mapper;
+            _EmailSender = EmailSender;
         }
 
         public async Task<AuthenticationResponse> Handle(SignUpCommand Request, CancellationToken cancellationToken)
@@ -68,12 +69,27 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
             await _UserRepository.AsignRole(User.Id, CheckRoleId.RoleId);
 
+            int ConfirmationCode = new Random().Next(10000, 99999);
+
+            User.ConfirmationCodeForSignUp = ConfirmationCode;
+
             Domain.Entities.IdentityModels.User UserEntityAfterAdd = await _UserRepository.AddAsync(User);
 
-            string Token = await _UserRepository.RegisterAsync(UserEntityAfterAdd);
+            EmailRequest EmailRequest = new EmailRequest()
+            {
+                ToEmail = User.Email,
+                Subject = Request.lang == "ar"
+                    ? $"رمز تفعيل"
+                    : "Confirmation Code",
+                Body = Request.lang == "ar"
+                    ? $"رمز التفعيل الخاص بحسابك: {ConfirmationCode}"
+                    : $"This is your account's confirmation code: {ConfirmationCode}"
+            };
+
+            await _EmailSender.SendEmailForConfirmationCode(EmailRequest);
+
             return new AuthenticationResponse() 
             {
-                // token = Token,
                 isSucceed = true,
                 message = "User has been created",
                 user = _mapper.Map<UserDataResponse>(User)

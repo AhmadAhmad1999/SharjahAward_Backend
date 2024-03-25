@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCr
             if (CriterionAttachmentEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "File is Not Found"
+                    ? "File is not found"
                     : "الملف الملحق غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);

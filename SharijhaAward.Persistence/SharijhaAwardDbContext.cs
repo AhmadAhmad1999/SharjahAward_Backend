@@ -40,6 +40,7 @@ using SharijhaAward.Domain.Entities.RelatedAccountModel;
 using SharijhaAward.Domain.Entities.AboutAwardPageModel;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 using SharijhaAward.Domain.Entities.OnePageTextModel;
+using SharijhaAward.Domain.Entities.AgendaModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -52,6 +53,7 @@ namespace SharijhaAward.Persistence
         }
         
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
+        public DbSet<Agenda> Agendas { get; set; }
         public DbSet<RelatedAccount> RelatedAccounts { get; set; }
         public DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; }
         public DbSet<GeneralFAQ> GeneralFAQs { get; set; }
@@ -110,6 +112,7 @@ namespace SharijhaAward.Persistence
             //Filter for Deleted items
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Agenda>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OnePageText>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
@@ -728,6 +731,60 @@ namespace SharijhaAward.Persistence
                  Year = "2023-2024",
             });
 
+            modelBuilder.Entity<Agenda>()
+                .HasData(new Agenda()
+                {
+                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e9f"),
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicTitle = "اختبار عنوان جدول أعمال 1",
+                    DateType = Domain.Constants.AgendaConstants.AgendaDateType.Date,
+                    EndDate = DateTime.UtcNow.AddDays(10),
+                    EnglishTitle = "Test Agenda Titile 1",
+                    Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (1).png",
+                    StartDate = DateTime.UtcNow.AddDays(5),
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Active
+                }, new Agenda()
+                {
+                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e8f"),
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicTitle = "اختبار عنوان جدول أعمال 2",
+                    DateType = Domain.Constants.AgendaConstants.AgendaDateType.Full,
+                    EndDate = DateTime.UtcNow.AddDays(15),
+                    EnglishTitle = "Test Agenda Titile 2",
+                    Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (2).png",
+                    StartDate = DateTime.UtcNow.AddDays(10),
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later
+                }, new Agenda()
+                {
+                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e7f"),
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicTitle = "اختبار عنوان جدول أعمال 3",
+                    DateType = Domain.Constants.AgendaConstants.AgendaDateType.YearMonth,
+                    EndDate = DateTime.UtcNow.AddDays(20),
+                    EnglishTitle = "Test Agenda Titile 3",
+                    Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png",
+                    StartDate = DateTime.UtcNow.AddDays(15),
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous
+                });
+
             modelBuilder.Entity<News>()
                 .HasData(new News()
                 {
@@ -1095,6 +1152,42 @@ namespace SharijhaAward.Persistence
                     RelatedDate = DateTime.Now,
                     EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
                     CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20")
+                }, new EduEntitiesCoordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
+                    RelatedDate = DateTime.Now,
+                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                }, new EduEntitiesCoordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db19"),
+                    RelatedDate = DateTime.Now,
+                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db22")
+                }, new EduEntitiesCoordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    RelatedDate = DateTime.Now,
+                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db23")
                 });
 
             modelBuilder.Entity<EduInstitutionCoordinator>()
@@ -1109,6 +1202,39 @@ namespace SharijhaAward.Persistence
                     Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
                     EducationalInstitutionId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
                     CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20")
+                }, new EduInstitutionCoordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
+                    EducationalInstitutionId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                }, new EduInstitutionCoordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db19"),
+                    EducationalInstitutionId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db22")
+                }, new EduInstitutionCoordinator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    EducationalInstitutionId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db23")
                 });
 
             modelBuilder.Entity<TermAndCondition>()

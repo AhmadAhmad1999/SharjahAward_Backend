@@ -70,15 +70,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         : x.EnglishName
                 }).ToList();
 
-            if (DynamicAttributeSections.Count <= 0)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "There is no sections"
-                    : "لا يوجد أقسام";
-
-                return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, false, 204, DynamicAttributeSections, 0);
-            }
-
             IReadOnlyList<AttributeDataType> DataTypes = await _AttributeDataTypeRepository.ListAllAsync();
 
             List<DynamicAttributeValue> AlreadyInsertedDynamicAttributeValues = await _DynamicAttributeValueRepository

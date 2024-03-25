@@ -50,15 +50,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
             string ResponseMessage = string.Empty;
 
-            if (DynamicAttributeSections.Count <= 0)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "There is no sections"
-                    : "لا يوجد أقسام";
-
-                return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 204, DynamicAttributeSections, 0);
-            }
-
             foreach (DynamicAttributeSectionListVM DynamicAttributeSection in DynamicAttributeSections)
             {
                 DynamicAttributeSection.DynamicAttributes = _DynamicAttributeRepository
