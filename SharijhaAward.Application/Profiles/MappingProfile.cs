@@ -144,6 +144,9 @@ using SharijhaAward.Domain.Entities.ContactUsModels;
 using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMessageById;
+using SharijhaAward.Domain.Entities.AchievementModel;
+using SharijhaAward.Application.Features.Achievements.Commands.CreateAchievement;
+using SharijhaAward.Application.Features.Achievements.Queries.GetAchievementsPage;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterion;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionItem;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterionItem;
@@ -286,6 +289,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EmailMessage, CreateMessageCommand>().ReverseMap();
             CreateMap<EmailMessage, EmailMessageListVM>().ReverseMap();
             CreateMap<EmailMessage, EmailMessageDto>().ReverseMap();
+
+            CreateMap<Achievement, CreateAchievementCommand>().ReverseMap();
+            CreateMap<Achievement, AchievementsDto>().ReverseMap();
 
             //
             // Dynamic Attribute..

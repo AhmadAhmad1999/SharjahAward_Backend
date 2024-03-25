@@ -119,7 +119,7 @@ namespace SharijhaAward.Api.Controllers
             };
 
         }
-        [HttpGet("GetAgendasByCycleId/{Id}",Name ="GetAgendasByCycleId")]
+        [HttpGet("GetAgendasByCycleId",Name ="GetAgendasByCycleId")]
         public async Task<IActionResult> GetAgendasByCycleId(Guid? Id)
         {
             //get Language from header

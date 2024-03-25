@@ -16,6 +16,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
         public string Icon { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public DateTime CurrentDate { get; set; }
         public AgendaStatus Status { get; set; }
         public AgendaDateType DateType { get; set; }
         public Guid CycleId { get; set; }

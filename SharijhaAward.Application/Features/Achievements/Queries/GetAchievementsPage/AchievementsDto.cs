@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.Achievements.Queries.GetAchievement
 {
     public class AchievementsDto
     {
-        public string? FieldOfDiscrimination { get; set; } = string.Empty;
+        public string? DistinctionField { get; set; } = string.Empty;
         public string? Projects { get; set; } = string.Empty;
         public string? SkillsAndExperiences { get; set; } = string.Empty;
         public string? Facebook { get; set; } = string.Empty;

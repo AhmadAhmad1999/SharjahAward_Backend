@@ -102,7 +102,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = Language!,
                 pageSize=perPage,
-                page = page
+                page = page,
+                
                 
             });
             return response.statusCode switch

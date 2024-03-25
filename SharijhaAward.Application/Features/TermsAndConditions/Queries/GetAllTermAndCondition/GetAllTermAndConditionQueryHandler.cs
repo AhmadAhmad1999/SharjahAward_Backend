@@ -25,8 +25,13 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
 
         public async Task<BaseResponse<List<TermAndConditionListVM>>> Handle(GetAllTermAndConditionQuery request, CancellationToken cancellationToken)
         {
-            var termsAndConditions = await _termAndConditionRepository.GetPagedReponseAsync(request.page, request.pageSize);
-
+            var termsAndConditions = await _termAndConditionRepository.ListAllAsync();
+            
+            if (request.CategoryId != null)
+                termsAndConditions = _termAndConditionRepository.Where(t => t.CategoryId == request.CategoryId).ToList();
+            else
+               termsAndConditions = await _termAndConditionRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            
             var data = _mapper.Map<List<TermAndConditionListVM>>(termsAndConditions);
             if(data.Count != 0)
             {
