@@ -18,7 +18,6 @@ public class TrainingWorkshop : AuditableEntity
     public string ArabicDescription { get; set; } = string.Empty;
     
     public string EnglishDescription { get; set; } = string.Empty;
-    public string TypeOfAttachment {  get; set; } = string.Empty;
     
  
     public string Thumbnail { get; set; } = string.Empty;
