@@ -29,9 +29,11 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPag
         public async Task<BaseResponse<AboutPageDto>> Handle(GetAboutPageQuery request, CancellationToken cancellationToken)
         {
             var AboutPage = await _aboutPageRepository.WhereThenInclude(a=>!a.isDeleted,a => a.OurGoals).FirstOrDefaultAsync();
+            
             if(AboutPage == null)
             {
-                return new BaseResponse<AboutPageDto>("Can't Reach This Page", false, 404);
+                var NoData = _mapper.Map<AboutPageDto>(AboutPage);
+                return new BaseResponse<AboutPageDto>("Can't Reach This Page", true, 200, NoData);
             }
             var ourGols = _mapper.Map<List<OurGoalsDto>>(AboutPage.OurGoals);
 

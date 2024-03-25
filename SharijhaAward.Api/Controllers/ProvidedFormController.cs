@@ -97,7 +97,7 @@ namespace SharijhaAward.Api.Controllers
             return response.statusCode switch
             {
                 200 => Ok(response),
-                403 => Unauthorized(response),
+                401 => Unauthorized(response),
                 404 => NotFound(response),
                 _ => BadRequest(response)
             };
@@ -133,7 +133,7 @@ namespace SharijhaAward.Api.Controllers
             return response.statusCode switch
             {
                 200 => Ok(response),
-                403 => Unauthorized(response),
+                401 => Unauthorized(response),
                 404 => NotFound(response),
                 _ => BadRequest(response)
             };
