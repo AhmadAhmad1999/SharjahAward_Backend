@@ -19,7 +19,6 @@ public class TrainingWorkshop : AuditableEntity
     
     public string EnglishDescription { get; set; } = string.Empty;
     
- 
     public string Thumbnail { get; set; } = string.Empty;
 
     public Category Category { get; set; } = null!;
