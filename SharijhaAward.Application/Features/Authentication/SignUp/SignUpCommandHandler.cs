@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
@@ -48,7 +49,9 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
-            User.isValidAccount = true;
+
+            User.isValidAccount = false;
+
             Role? CheckRoleId = Request.RoleName != null 
                 ? await _roleRepository.GetByName(Request.RoleName)
                 : await _roleRepository.GetByName("User");
@@ -70,9 +73,10 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
             string Token = await _UserRepository.RegisterAsync(UserEntityAfterAdd);
             return new AuthenticationResponse() 
             {
-                token = Token,
+                // token = Token,
                 isSucceed = true,
-                message = "User has been created"
+                message = "User has been created",
+                user = _mapper.Map<UserDataResponse>(User)
             };
         }
     }
