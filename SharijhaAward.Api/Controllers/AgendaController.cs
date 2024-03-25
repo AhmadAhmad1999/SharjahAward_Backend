@@ -120,7 +120,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpGet("GetAgendasByCycleId/{Id}",Name ="GetAgendasByCycleId")]
-        public async Task<IActionResult> GetAgendasByCycleId(Guid Id)
+        public async Task<IActionResult> GetAgendasByCycleId(Guid? Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];

@@ -12,7 +12,7 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
     {
         public Guid Id { get; set; }
         public string AttachmentUrl {  get; set; } = string.Empty;
-        public Message Message { get; set; } = null!;
+        public EmailMessage Message { get; set; } = null!;
 
         [ForeignKey(nameof(Message))]
         public Guid MessageId { get; set; }

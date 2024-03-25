@@ -140,6 +140,10 @@ using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetGeneralWork
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Application.Features.Coordinators.Queries.AddCordinatorToEduEntity;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetRelatedAccoutProfileById;
+using SharijhaAward.Domain.Entities.ContactUsModels;
+using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
+using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
+using SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMessageById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -273,6 +277,10 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AboutAwardPage, AboutPageDto>().ReverseMap();
             CreateMap<OurGoal, CreateGoalCommand>().ReverseMap();
             CreateMap<OurGoal, OurGoalsDto>().ReverseMap();
+            
+            CreateMap<EmailMessage, CreateMessageCommand>().ReverseMap();
+            CreateMap<EmailMessage, EmailMessageListVM>().ReverseMap();
+            CreateMap<EmailMessage, EmailMessageDto>().ReverseMap();
 
             //
             // Dynamic Attribute..
