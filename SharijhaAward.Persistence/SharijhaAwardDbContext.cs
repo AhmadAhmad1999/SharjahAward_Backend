@@ -40,6 +40,7 @@ using SharijhaAward.Domain.Entities.RelatedAccountModel;
 using SharijhaAward.Domain.Entities.AboutAwardPageModel;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 using SharijhaAward.Domain.Entities.OnePageTextModel;
+using SharijhaAward.Domain.Entities.AchievementModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -103,11 +104,14 @@ namespace SharijhaAward.Persistence
         public DbSet<AboutAwardPage> AboutAwardPage { get; set; }
         public DbSet<GeneralWorkshop> GeneralWorkshops { get; set; }
         public DbSet<OurGoal> OurGoals { get; set; }
+        public DbSet<Achievement> Achievements {  get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             //Filter for Deleted items
+            modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OnePageText>().HasQueryFilter(p => !p.isDeleted);

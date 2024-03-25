@@ -50,12 +50,52 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
             }
             agenda.Icon = await _fileService.SaveFileAsync(request.Icon);
 
-            // Set Satet of Agenda
-            if (agenda.StartDate >= DateTime.Now && agenda.EndDate <= DateTime.Now)
-                agenda.Status = AgendaStatus.Active;
-            else if (agenda.StartDate < DateTime.Now && agenda.EndDate < DateTime.Now)
-                agenda.Status = AgendaStatus.Previous;
-            else agenda.Status = AgendaStatus.Later;
+            var countOfAgenda = await _agendaRepository.GetCountAsync(a => !a.isDeleted);
+           
+            if (countOfAgenda > 0)
+            {
+                var LastAgenda = await _agendaRepository.LastOrDefaultAsync(a => true);
+                var FirstAgenda = await _agendaRepository.FirstOrDefaultAsync(a => true);
+
+                if (agenda.StartDate != null && agenda.EndDate != null)
+                {
+                    if (agenda.StartDate.Value.Date! <= LastAgenda!.EndDate!.Value.Date
+                        || agenda.EndDate!.Value.Date >= FirstAgenda!.StartDate!.Value.Date)
+                    {
+                        msg = request.lang == "en"
+                            ? "Edite The Date to be In Range"
+                            : " الرجاء تعديل التاريخ ليكون ضمن المجال ";
+
+                        return new BaseResponse<object>(msg, false, 400);
+                    }
+
+                    // Set Satet of Agenda
+                    if (agenda.StartDate.Value.Date <= DateTime.Now.Date && agenda.EndDate.Value.Date >= DateTime.Now.Date)
+                        agenda.Status = AgendaStatus.Active;
+                    else if (agenda.StartDate.Value.Date < DateTime.Now.Date && agenda.EndDate.Value.Date < DateTime.Now.Date)
+                        agenda.Status = AgendaStatus.Previous;
+                    else agenda.Status = AgendaStatus.Later;
+                }
+                else
+                {
+                    if( agenda.CurrentDate!.Value.Date <= LastAgenda!.EndDate!.Value.Date 
+                        || agenda.CurrentDate!.Value.Date >= FirstAgenda!.StartDate!.Value.Date )
+                    {
+                        msg = request.lang == "en"
+                           ? "Edite The Date to be In Range"
+                           : " الرجاء تعديل التاريخ ليكون ضمن المجال ";
+
+                        return new BaseResponse<object>(msg, false, 400);
+                    }
+
+                    if (agenda.CurrentDate != null && agenda.CurrentDate.Value.Date == DateTime.Now.Date)
+                        agenda.Status = AgendaStatus.Active;
+                    else if (agenda.CurrentDate!.Value.Date < DateTime.Now.Date)
+                        agenda.Status = AgendaStatus.Previous;
+                    else
+                        agenda.Status = AgendaStatus.Later;
+                }
+            }
 
             await _agendaRepository.AddAsync(agenda);
             msg = request.lang == "en"

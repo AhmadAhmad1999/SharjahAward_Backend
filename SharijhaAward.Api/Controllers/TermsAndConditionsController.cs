@@ -102,7 +102,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name="GetAllTermsAndConditions")]
-        public async Task<IActionResult> GetAllTermsAndConditions(int page = 1 , int perPage = 10)
+        public async Task<IActionResult> GetAllTermsAndConditions([FromQuery] Guid? CategoryId, int page = 1 , int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -113,6 +113,7 @@ namespace SharijhaAward.Api.Controllers
                 page = page,
                 pageSize =  perPage ,
                 lang = Language!,
+                CategoryId = CategoryId
             });
 
             return response.statusCode switch
