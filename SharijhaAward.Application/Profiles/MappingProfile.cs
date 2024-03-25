@@ -325,6 +325,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<User, GetProfileByIdDto>().ReverseMap();
             CreateMap<User, RelatedAccountProfileData>().ReverseMap();
             CreateMap<ProvidedForm, RelatedAccountProvidedForms>().ReverseMap();
+            CreateMap<User, UserDataResponse>().ReverseMap();
         }
     }
 }

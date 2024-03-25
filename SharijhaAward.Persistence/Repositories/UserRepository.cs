@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
@@ -15,10 +17,13 @@ namespace SharijhaAward.Persistence.Repositories
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
         private readonly IJwtProvider _jwtProvider;
-        
-        public UserRepository(SharijhaAwardDbContext dbContext , IJwtProvider jwtProvider) : base(dbContext)
+        private readonly IMapper _Mapper;
+
+        public UserRepository(SharijhaAwardDbContext dbContext , IJwtProvider jwtProvider,
+            IMapper Mapper) : base(dbContext)
         {
             _jwtProvider = jwtProvider;
+            _Mapper = Mapper;
         }
 
         public async Task AsignRole(Guid userId, Guid roleId)
@@ -78,7 +83,7 @@ namespace SharijhaAward.Persistence.Repositories
                 var response = new AuthenticationResponse()
                 {
                     token = token,
-                    user = userToLogin,
+                    user = _Mapper.Map<UserDataResponse>(userToLogin),
                     //permissions = permissions.Permission
                     message = "Login Sucsses"
                 };
