@@ -733,6 +733,7 @@ namespace SharijhaAward.Persistence
                  EnglishName = "SharijhaAward",
                  ArabicName ="جائزة الشارقة",    
                  Year = "2023-2024",
+                 Status = Domain.Constants.Common.Status.Active
             });
 
             modelBuilder.Entity<Agenda>()
@@ -1494,6 +1495,46 @@ namespace SharijhaAward.Persistence
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
                     RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e75d"),
+                    ConfirmationCodeForResetPassword = null,
+                    ConfirmationCodeForSignUp = null,
+                    isValidAccount = true,
+                    ImageURL = null
+                }, new User()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "تامر",
+                    Email = "tamer@gmail.com",
+                    PhoneNumber = "0993521579",
+                    EnglishName = "Tamer",
+                    Gender = Gender.Male,
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e74d"),
+                    ConfirmationCodeForResetPassword = null,
+                    ConfirmationCodeForSignUp = null,
+                    isValidAccount = true,
+                    ImageURL = null
+                }, new User()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "تامر 2",
+                    Email = "ta.mer@gmail.com",
+                    PhoneNumber = "0993521579",
+                    EnglishName = "Tamer 2",
+                    Gender = Gender.Male,
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e73d"),
                     ConfirmationCodeForResetPassword = null,
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,

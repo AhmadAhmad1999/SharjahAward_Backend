@@ -16,7 +16,7 @@ namespace SharijhaAward.Application.Features.Settings.Queries.GetTermsOfUse
         {
             string ResponseMessage = string.Empty;
 
-            OnePageText? OnePageTextEntity = await OnePageTextRepository.FirstOrDefaultAsync(x => x.Id == 1);
+            OnePageText? OnePageTextEntity = await OnePageTextRepository.FirstOrDefaultAsync(x => x.Id == 2);
 
             if (OnePageTextEntity == null)
             {
