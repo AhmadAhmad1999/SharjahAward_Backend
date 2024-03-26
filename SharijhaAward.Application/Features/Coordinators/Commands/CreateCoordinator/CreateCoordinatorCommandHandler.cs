@@ -1502,6 +1502,23 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                         DynamicAttributeAsFile.ValueAsString = FilePathToSaveIntoDataBase;
                     }
 
+                    List<DynamicAttributeValue> DynamicAttributeValuesEntities = Request.DynamicAttributesWithValues
+                        .Where(x => !string.IsNullOrEmpty(x.ValueAsString))
+                        .Select(x => new DynamicAttributeValue()
+                        {
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            DeletedAt = null,
+                            DynamicAttributeId = x.DynamicAttributeId,
+                            isDeleted = false,
+                            RecordIdAsGuid = User.Id,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            Value = x.ValueAsString!
+                        }).ToList();
+
+                    await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
+
                     Transaction.Complete();
 
                     return new BaseResponse<Guid>("", true, 200, data.Id);

@@ -38,7 +38,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                         Gender = x.Sender!.Gender,
                         Name = Request.lang == "en"
                             ? x.Sender!.EnglishName
-                            : x.Sender!.ArabicName
+                            : x.Sender!.ArabicName,
+                        ImageURL = x.Sender!.ImageURL
                     })
                     .ToListAsync()
                 : await _RelatedAccountRequestRepository
@@ -51,7 +52,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                         Gender = x.Sender!.Gender,
                         Name = Request.lang == "en"
                             ? x.Sender!.EnglishName
-                            : x.Sender!.ArabicName
+                            : x.Sender!.ArabicName,
+                        ImageURL = x.Sender!.ImageURL
                     })
                     .Skip((Request.page - 1) * Request.pageSize).Take(Request.pageSize).ToListAsync();
 

@@ -776,7 +776,7 @@ namespace SharijhaAward.Persistence
                     EnglishTitle = "Test Agenda Titile 1",
                     Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (1).png",
                     StartDate = DateTime.UtcNow.AddDays(5),
-                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Active
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous
                 }, new Agenda()
                 {
                     CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
@@ -793,7 +793,7 @@ namespace SharijhaAward.Persistence
                     EnglishTitle = "Test Agenda Titile 2",
                     Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (2).png",
                     StartDate = DateTime.UtcNow.AddDays(10),
-                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Active
                 }, new Agenda()
                 {
                     CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
@@ -810,7 +810,41 @@ namespace SharijhaAward.Persistence
                     EnglishTitle = "Test Agenda Titile 3",
                     Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png",
                     StartDate = DateTime.UtcNow.AddDays(15),
-                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later
+                }, new Agenda()
+                {
+                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e6f"),
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicTitle = "اختبار عنوان جدول أعمال 4",
+                    DateType = Domain.Constants.AgendaConstants.AgendaDateType.YearMonth,
+                    EndDate = DateTime.UtcNow.AddDays(25),
+                    EnglishTitle = "Test Agenda Titile 4",
+                    Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png",
+                    StartDate = DateTime.UtcNow.AddDays(20),
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later
+                }, new Agenda()
+                {
+                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e5f"),
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    ArabicTitle = "اختبار عنوان جدول أعمال 5",
+                    DateType = Domain.Constants.AgendaConstants.AgendaDateType.YearMonth,
+                    EndDate = DateTime.UtcNow.AddDays(30),
+                    EnglishTitle = "Test Agenda Titile 5",
+                    Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png",
+                    StartDate = DateTime.UtcNow.AddDays(25),
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later
                 });
 
             modelBuilder.Entity<News>()
@@ -1538,26 +1572,6 @@ namespace SharijhaAward.Persistence
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
                     RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e74d"),
-                    ConfirmationCodeForResetPassword = null,
-                    ConfirmationCodeForSignUp = null,
-                    isValidAccount = true,
-                    ImageURL = null
-                }, new User()
-                {
-                    isDeleted = false,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    ArabicName = "تامر 2",
-                    Email = "ta.mer@gmail.com",
-                    PhoneNumber = "0993521579",
-                    EnglishName = "Tamer 2",
-                    Gender = Gender.Male,
-                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e73d"),
                     ConfirmationCodeForResetPassword = null,
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,

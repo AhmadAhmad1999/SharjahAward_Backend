@@ -43,7 +43,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                         ? x.User2!.ArabicName
                         : x.User2!.EnglishName,
                     Email = x.User2!.Email,
-                    Gender = x.User2!.Gender
+                    Gender = x.User2!.Gender,
+                    ImageURL = x.User2!.ImageURL
                 });
 
             IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber1Id = ReceivedRequests
@@ -55,7 +56,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                         ? x.User1!.ArabicName
                         : x.User1!.EnglishName,
                     Email = x.User1!.Email,
-                    Gender = x.User1!.Gender
+                    Gender = x.User1!.Gender,
+                    ImageURL = x.User1!.ImageURL
                 });
 
             List<GetAllRelatedAccountsListVM> RelatedAccounts = RelatedAccountsFromSubscriber2Id
