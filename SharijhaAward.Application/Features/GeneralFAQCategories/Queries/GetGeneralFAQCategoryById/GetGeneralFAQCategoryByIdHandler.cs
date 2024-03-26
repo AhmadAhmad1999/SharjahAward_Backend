@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetGen
             {
                 ResponseMessage = Request.lang == "en"
                     ? "General FAQ category is not found"
-                    : "فئة السؤال الشائع العام غير موجود";
+                    : "فئة السؤال الشائع العام غير موجودة";
 
                 return new BaseResponse<GetGeneralFAQCategoryByIdDto>(ResponseMessage, false, 404);
             }

@@ -54,7 +54,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Provided form is not Found"
-                    : "الاستمارة المقدمة غير موجود";
+                    : "الاستمارة المقدمة غير موجودة";
 
                 return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, false, 404);
             }
@@ -69,15 +69,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         ? x.ArabicName
                         : x.EnglishName
                 }).ToList();
-
-            if (DynamicAttributeSections.Count <= 0)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "There is no sections"
-                    : "لا يوجد أقسام";
-
-                return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, false, 204, DynamicAttributeSections, 0);
-            }
 
             IReadOnlyList<AttributeDataType> DataTypes = await _AttributeDataTypeRepository.ListAllAsync();
 

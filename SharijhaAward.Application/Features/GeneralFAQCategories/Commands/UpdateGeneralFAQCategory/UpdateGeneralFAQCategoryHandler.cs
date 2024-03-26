@@ -10,7 +10,6 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Commands.Updat
     {
         private readonly IAsyncRepository<GeneralFAQCategory> _GeneralFAQCategoryRepository;
         private readonly IMapper _Mapper;
-
         public UpdateGeneralFAQCategoryHandler(IMapper Mapper,
             IAsyncRepository<GeneralFAQCategory> GeneralFAQCategoryRepository)
         {

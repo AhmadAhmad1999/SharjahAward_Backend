@@ -46,14 +46,15 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
             }
 
             byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
+
             string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: user.Password,
+                password: request.OldPassword,
                 salt: salt,
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
 
-            if (CheckPassword != request.OldPassword)
+            if (CheckPassword != user.Password)
             {
                 msg = request.lang == "en"
                     ? "old password is not matching"

@@ -14,7 +14,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
         }
-        public async Task<BaseResponse<List<DynamicAttributeListVM>>> Handle(GetAllDynamicAttributesBySectionIdQuery Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<DynamicAttributeListVM>>> Handle(GetAllDynamicAttributesBySectionIdQuery Request, 
+            CancellationToken cancellationToken)
         {
             string Language = !string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() : "ar";

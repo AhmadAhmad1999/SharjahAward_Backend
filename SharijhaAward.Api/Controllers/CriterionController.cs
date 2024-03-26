@@ -6,12 +6,21 @@ using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfAllCritrionsHaveAttachment;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterion;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionAttachment;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionItem;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionItemAttachment;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSubCriterion;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCriterion;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCriterionAttachment;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCriterionItem;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCriterionItemAttachment;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterion;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterionItem;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId;
+using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionsForDashBoardByCategoryId;
+using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCriterionById;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
+using SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetGeneralFAQCategoryById;
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.CreateAttachment;
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.DeleteAttachment;
 using SharijhaAward.Application.Responses;
@@ -206,6 +215,225 @@ namespace SharijhaAward.Api.Controllers
                 : "en";
 
             BaseResponse<object> Response = await _Mediator.Send(CheckIfAllCritrionsHaveAttachmentCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("CreateCriterionItem")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            CreateCriterionItem([FromBody] CreateCriterionItemCommand CreateCriterionItemCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            CreateCriterionItemCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(CreateCriterionItemCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("CreateSubCriterion")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            CreateSubCriterion([FromBody] CreateSubCriterionCommand CreateSubCriterionCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            CreateSubCriterionCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(CreateSubCriterionCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpDelete("DeleteCriterion/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> DeleteCriterion(Guid Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            string? Language = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object> Response = await _Mediator.Send(new DeleteCriterionCommand()
+            {
+                Id = Id,
+                lang = Language!                
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpDelete("DeleteCriterionItem/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> DeleteCriterionItem(Guid Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            string? Language = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object> Response = await _Mediator.Send(new DeleteCriterionItemCommand()
+            {
+                Id = Id,
+                lang = Language!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("UpdateCriterion")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> UpdateCriterion([FromBody] UpdateCriterionCommand UpdateCriterionCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            UpdateCriterionCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(UpdateCriterionCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("UpdateCriterionItem")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> UpdateCriterionItem([FromBody] UpdateCriterionItemCommand UpdateCriterionItemCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            UpdateCriterionItemCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(UpdateCriterionItemCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetMainCriterionById/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetMainCriterionById(Guid Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetMainCriterionByIdDto> Response = await _Mediator.Send(new GetMainCriterionByIdQuery()
+            {
+                Id = Id,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllCriterionsForDashBoardByCategoryId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllCriterionsForDashBoardByCategoryId(Guid CategoryId, int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllCriterionsForDashBoardCategoryIdDto>> Response = await _Mediator
+                .Send(new GetAllCriterionsForDashBoardCategoryIdQuery()
+            {
+                CategoryId = CategoryId,
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage
+            });
 
             return Response.statusCode switch
             {

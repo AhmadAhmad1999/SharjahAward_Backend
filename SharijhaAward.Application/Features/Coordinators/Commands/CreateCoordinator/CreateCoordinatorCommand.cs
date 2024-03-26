@@ -1,12 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinator
 {
@@ -20,5 +16,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         public Emirates Emirates { get; set; }
         public IFormFile PersonalPhoto { get; set; } = null!;
         public string lang { get; set; } = string.Empty;
+        public List<AddDynamicAttributeValueMainCommand> DynamicAttributesWithValues { get; set; } = new List<AddDynamicAttributeValueMainCommand>();
+        public string? WWWRootFilePath { get; set; }
     }
 }

@@ -16,5 +16,6 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         public string RoleName { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         public string PhoneNumber { get; set; } = null!;
+        public string? lang { get; set; }
     }
 }

@@ -148,6 +148,11 @@ using SharijhaAward.Domain.Entities.AchievementModel;
 using SharijhaAward.Application.Features.Achievements.Commands.CreateAchievement;
 using SharijhaAward.Application.Features.Achievements.Queries.GetAchievementsPage;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideDetailsByCategoryId;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterion;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionItem;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterionItem;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSubCriterion;
+using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCriterionById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -309,12 +314,16 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CriterionItemAttachment, CreateCriterionItemAttachmentVM>().ReverseMap();
             CreateMap<GeneralFAQ, CreateGeneralFAQCommand>().ReverseMap();
             CreateMap<GeneralFAQCategory, CreateGeneralFAQCategoryCommand>().ReverseMap();
+            CreateMap<CriterionItem, CreateCriterionItemCommand>().ReverseMap();
+            CreateMap<Criterion, CreateSubCriterionCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
             CreateMap<DynamicAttribute, UpdateDynamicAttributeCommand>().ReverseMap();
             CreateMap<DynamicAttributeListValue, UpdateDynamicAttributeListValueCommand>().ReverseMap();
             CreateMap<GeneralFAQCategory, UpdateGeneralFAQCategoryCommand>().ReverseMap();
+            CreateMap<Criterion, UpdateCriterionCommand>().ReverseMap();
+            CreateMap<CriterionItem, UpdateCriterionItemCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -342,6 +351,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<User, RelatedAccountProfileData>().ReverseMap();
             CreateMap<ProvidedForm, RelatedAccountProvidedForms>().ReverseMap();
             CreateMap<User, UserDataResponse>().ReverseMap();
+            CreateMap<Criterion, GetMainCriterionByIdDto>().ReverseMap();
+            CreateMap<Criterion, SubCriterionListDto>().ReverseMap();
+            CreateMap<CriterionItem, CriterionItemListDto>().ReverseMap();
         }
     }
 }

@@ -6,7 +6,6 @@ using OpenQA.Selenium.DevTools.V120.Browser;
 using SharijhaAward.Application.Features.Authentication;
 using SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForSignUp;
 using SharijhaAward.Application.Features.Authentication.Login;
-using SharijhaAward.Application.Features.Authentication.SendConfirmationCodeForSignUp;
 using SharijhaAward.Application.Features.Authentication.SignUp;
 using SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmationCode;
 using SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForResetPassword;
@@ -74,13 +73,19 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<string>> SignUp([FromBody] SignUpCommand user)
         {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
             var response = await _Mediator.Send(new SignUpCommand()
             {
                 Email = user.Email,
                 Password = user.Password,
                 RoleName = user.RoleName,
                 Gender = user.Gender,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                lang = HeaderValue
             });
 
             if (!response.isSucceed)
@@ -101,33 +106,6 @@ namespace SharijhaAward.Api.Controllers
                         message = response.message
 
                     });
-        }
-        [HttpGet("SendConfirmationCodeForSignUp")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> SendConfirmationCodeForSignUp(Guid Id)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            BaseResponse<object>? Response = await _Mediator.Send(new SendConfirmationCodeForSignUpCommand()
-            {
-                Id = Id,
-                lang = !string.IsNullOrEmpty(HeaderValue)
-                    ? HeaderValue
-                    : "en"
-            });
-
-            return Response.statusCode switch
-            {
-                404 => NotFound(Response),
-                200 => Ok(Response),
-                _ => BadRequest(Response)
-            };
         }
         [HttpPost("CheckConfirmationCodeForSignUp")]
         [ProducesResponseType(StatusCodes.Status201Created)]
