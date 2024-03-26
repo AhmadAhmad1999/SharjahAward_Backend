@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharijhaAward.Application.Helpers.Constants
+﻿namespace SharijhaAward.Application.Helpers.Constants
 {
     public enum TableNames
     {
-        ProvidedForm
+        ProvidedForm = 1,
+        Coordinator = 2,
+        Arbitrator = 3
     }
 }

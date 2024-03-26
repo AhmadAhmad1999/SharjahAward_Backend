@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Domain.Entities.ArbitrationModel;
+﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 using SharijhaAward.Domain.Entities.ArbitratorInterviewModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.ArbitratorModel
 {
-    public class Arbitrator:AuditInformation<User>
+    public class Arbitrator : AuditableEntity
     {
         public Guid Id { get; set; }
 

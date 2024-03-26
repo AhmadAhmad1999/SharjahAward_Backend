@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCod
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            if (UserEntity.ConfirmationCodeForResetPassword != Request.ConfirmationCode)
+            if (UserEntity.ConfirmationCodeForSignUp != Request.ConfirmationCode)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Invalid confirmation code"

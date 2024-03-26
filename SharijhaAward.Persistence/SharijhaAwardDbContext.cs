@@ -42,6 +42,7 @@ using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 using SharijhaAward.Domain.Entities.OnePageTextModel;
 using SharijhaAward.Domain.Entities.AchievementModel;
 using SharijhaAward.Domain.Entities.AgendaModel;
+using SharijhaAward.Domain.Entities.ArbitratorModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -54,6 +55,7 @@ namespace SharijhaAward.Persistence
         }
         
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
+        public DbSet<Arbitrator> Arbitrators { get; set; }
         public DbSet<Agenda> Agendas { get; set; }
         public DbSet<RelatedAccount> RelatedAccounts { get; set; }
         public DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; }
@@ -117,6 +119,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Agenda>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Arbitrator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OnePageText>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
@@ -423,6 +426,26 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 1,
                     Name = "ProvidedForm",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new AttributeTableName()
+                {
+                    Id = 2,
+                    Name = "Coordinator",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new AttributeTableName()
+                {
+                    Id = 3,
+                    Name = "Arbitrator",
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -1642,8 +1665,8 @@ namespace SharijhaAward.Persistence
                     DynamicAttributeSectionId = 1,
                     EnglishLabel = "Test Text 1",
                     EnglishPlaceHolder = "Test Text 1",
-                    IsRequired = false,
-                    IsUnique = false,
+                    IsRequired = true,
+                    IsUnique = true,
                     MaxSizeInKB = null,
                     Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
                     LinkedToAnotherAttribute = false
@@ -1662,8 +1685,8 @@ namespace SharijhaAward.Persistence
                     DynamicAttributeSectionId = 1,
                     EnglishLabel = "Test Email 1",
                     EnglishPlaceHolder = "Test Email 1",
-                    IsRequired = false,
-                    IsUnique = false,
+                    IsRequired = true,
+                    IsUnique = true,
                     MaxSizeInKB = null,
                     Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
                     LinkedToAnotherAttribute = false

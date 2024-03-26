@@ -54,7 +54,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Provided form is not Found"
-                    : "الاستمارة المقدمة غير موجود";
+                    : "الاستمارة المقدمة غير موجودة";
 
                 return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, false, 404);
             }
