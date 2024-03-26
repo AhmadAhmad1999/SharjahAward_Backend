@@ -147,6 +147,7 @@ using SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMessageB
 using SharijhaAward.Domain.Entities.AchievementModel;
 using SharijhaAward.Application.Features.Achievements.Commands.CreateAchievement;
 using SharijhaAward.Application.Features.Achievements.Queries.GetAchievementsPage;
+using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideDetailsByCategoryId;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterion;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionItem;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterionItem;
@@ -261,6 +262,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ProvidedForm, ProvidedFormDto>().ReverseMap();
 
             CreateMap<ExplanatoryGuide, CreateExplanatoryGuideCommand>().ReverseMap();
+            CreateMap<ExplanatoryGuide, ExplanatoryGuideDetailsDto>().ReverseMap();
 
             CreateMap<TrainingWrokshopeAttachment, WorkshopAttachmentListVM>().ReverseMap();
             CreateMap<TrainingWrokshopeAttachment, CreateWorkshopeAttachmentCommand>().ReverseMap();

@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.Achievements.Queries.GetAchievement
             
             if(UserId.IsNullOrEmpty())
             {
-                return new BaseResponse<AchievementsDto>("Un Auth", false, 403);
+                return new BaseResponse<AchievementsDto>("Un Auth", false, 401);
             }
             var User = await _userRepository.GetByIdAsync(new Guid (UserId));
 

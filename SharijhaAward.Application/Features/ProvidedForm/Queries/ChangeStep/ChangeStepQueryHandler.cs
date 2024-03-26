@@ -26,8 +26,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.ChangeStep
             {
                 return new BaseResponse<object>("", false, 404);
             }
-            form.CurrentStep = request.step - 1;
-            form.PercentCompletion = (form.CurrentStep * 100) / form.TotalStep;
+            form.CurrentStep = request.step;
+            form.PercentCompletion = (form.CurrentStep - 1 * 100) / form.TotalStep;
             await _providedFormRepository.UpdateAsync(form);
             return new BaseResponse<object>("", true, 200);
         }

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGeneralWorkshop;
+using SharijhaAward.Application.Features.GeneralWorkshops.Commands.DeleteGeneralWorkshop;
+using SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGeneralWorkshop;
 using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGeneralWorkshops;
 using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetGeneralWorkshopById;
 
@@ -66,6 +68,44 @@ namespace SharijhaAward.Api.Controllers
                 Id = Id,
                 lang = language!,
             });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpDelete(Name = "DeleteGeneralWorkshop")]
+        public async Task<IActionResult> DeleteGeneralWorkshop(Guid Id)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new DeleteGeneralWorkshopCommand()
+            {
+                Id = Id,
+                lang = language!,
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPut (Name= "UpdateGeneralWorkshop")]
+        public async Task<IActionResult> UpdateGeneralWorkshop(UpdateGeneralWorkshopCommand command)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            command.lang = language!;
+
+            var response = await _mediator.Send(command);
 
             return response.statusCode switch
             {

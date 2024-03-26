@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.Achievements.Commands.UpdateDistinctionField
+namespace SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievement
 {
     public class UpdateAchievementCommand : IRequest<BaseResponse<object>>
     {
@@ -20,6 +20,12 @@ namespace SharijhaAward.Application.Features.Achievements.Commands.UpdateDistinc
         public string? Linkedin { get; set; } = string.Empty;
         public string? Snapchat { get; set; } = string.Empty;
         public string? Tiktok { get; set; } = string.Empty;
+        public bool EditeOnDistinctionField { get; set; } = false;
+        public bool EditeOnProjects { get; set; } = false;
+        public bool EditeOnSkillsAndExperiences { get; set; } = false;
+        public bool EditeOnSocialMedia { get; set; } = false;
         public string token { get; set; } = string.Empty;
+        public string lang { get; set; } = string.Empty;
+      
     }
 }

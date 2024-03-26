@@ -13,5 +13,6 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
         public string lang { get; set; } = string.Empty;
         public int page { get; set; }
         public int pageSize { get; set; }
+        public string query { get; set; } = string.Empty;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -54,13 +55,13 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
            
             if (countOfAgenda > 0)
             {
-                var LastAgenda = await _agendaRepository.LastOrDefaultAsync(a => true);
-                var FirstAgenda = await _agendaRepository.FirstOrDefaultAsync(a => true);
+                var LastAgenda = await _agendaRepository.OrderBy(a=>a.CreatedAt).LastOrDefaultAsync(a =>true);
+                var FirstAgenda = await _agendaRepository.OrderBy(a => a.CreatedAt).FirstOrDefaultAsync(a => true);
 
                 if (agenda.StartDate != null && agenda.EndDate != null)
                 {
                     if (agenda.StartDate.Value.Date! <= LastAgenda!.EndDate!.Value.Date
-                        || agenda.EndDate!.Value.Date >= FirstAgenda!.StartDate!.Value.Date)
+                        && agenda.EndDate!.Value.Date >= FirstAgenda!.StartDate!.Value.Date)
                     {
                         msg = request.lang == "en"
                             ? "Edite The Date to be In Range"
@@ -78,16 +79,31 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
                 }
                 else
                 {
-                    if( agenda.CurrentDate!.Value.Date <= LastAgenda!.EndDate!.Value.Date 
-                        || agenda.CurrentDate!.Value.Date >= FirstAgenda!.StartDate!.Value.Date )
+                    if (LastAgenda!.EndDate != null || FirstAgenda!.StartDate != null)
                     {
-                        msg = request.lang == "en"
-                           ? "Edite The Date to be In Range"
-                           : " الرجاء تعديل التاريخ ليكون ضمن المجال ";
 
-                        return new BaseResponse<object>(msg, false, 400);
+                        if (agenda.CurrentDate!.Value.Date <= LastAgenda!.EndDate!.Value.Date
+                            && agenda.CurrentDate!.Value.Date >= FirstAgenda!.StartDate!.Value.Date)
+                        {
+                            msg = request.lang == "en"
+                               ? "Edite The Date to be In Range"
+                               : " الرجاء تعديل التاريخ ليكون ضمن المجال ";
+
+                            return new BaseResponse<object>(msg, false, 400);
+                        }
                     }
+                    else
+                    {
+                        if (agenda.CurrentDate!.Value.Date <= LastAgenda!.CurrentDate!.Value.Date
+                           && agenda.CurrentDate!.Value.Date >= FirstAgenda!.CurrentDate!.Value.Date)
+                        {
+                            msg = request.lang == "en"
+                               ? "Edite The Date to be In Range"
+                               : " الرجاء تعديل التاريخ ليكون ضمن المجال ";
 
+                            return new BaseResponse<object>(msg, false, 400);
+                        }
+                    }
                     if (agenda.CurrentDate != null && agenda.CurrentDate.Value.Date == DateTime.Now.Date)
                         agenda.Status = AgendaStatus.Active;
                     else if (agenda.CurrentDate!.Value.Date < DateTime.Now.Date)

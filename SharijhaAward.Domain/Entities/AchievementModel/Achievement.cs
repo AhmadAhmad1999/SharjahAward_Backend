@@ -19,10 +19,6 @@ namespace SharijhaAward.Domain.Entities.AchievementModel
         public string? Linkedin { get; set; } = string.Empty;
         public string? Snapchat { get; set; } = string.Empty;
         public string? Tiktok { get; set; } = string.Empty;
-        public bool EditeOnDistinctionField { get; set; } = false;
-        public bool EditeOnProjects { get; set; } = false;
-        public bool EditeOnSkillsAndExperiences { get; set; } = false;
-        public bool EditeOnSocialMedia { get; set; } = false;
         public DateTime? UpdateDistinctionField { get; set; }
         public DateTime? UpdateProjects { get; set; }
         public DateTime? UpdateSkillsAndExperiences { get; set; }

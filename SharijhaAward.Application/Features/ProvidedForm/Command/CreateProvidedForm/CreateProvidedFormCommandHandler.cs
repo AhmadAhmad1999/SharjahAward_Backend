@@ -50,6 +50,11 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
         public async Task<BaseResponse<int>> Handle(CreateProvidedFormCommand request, CancellationToken cancellationToken)
         {
             var UserId = _JwtProvider.GetUserIdFromToken(request.token);
+
+            if(UserId == null)
+            {
+                return new BaseResponse<int>("Invalid Token", false, 400);
+            }
             var category =await _CategoryRepository.GetByIdAsync(request.categoryId);
             var cycle = await _CycleRepository.GetByIdAsync(category.CycleId);
 
