@@ -157,6 +157,7 @@ using SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievement
 using SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGeneralWorkshop;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAboutPage;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateGoal;
+using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.UpdateExplanatoryGuide;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -267,6 +268,7 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<ExplanatoryGuide, CreateExplanatoryGuideCommand>().ReverseMap();
             CreateMap<ExplanatoryGuide, ExplanatoryGuideDetailsDto>().ReverseMap();
+            CreateMap<ExplanatoryGuide, UpdateExplanatoryGuideCommand>().ReverseMap();
 
             CreateMap<TrainingWrokshopeAttachment, WorkshopAttachmentListVM>().ReverseMap();
             CreateMap<TrainingWrokshopeAttachment, CreateWorkshopeAttachmentCommand>().ReverseMap();

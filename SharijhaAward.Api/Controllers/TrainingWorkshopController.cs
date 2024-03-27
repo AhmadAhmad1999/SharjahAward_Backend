@@ -53,12 +53,13 @@ namespace SharijhaAward.Api.Controllers
         public async Task<ActionResult> UpdateTringingWorkshop([FromBody] UpdateTrainingWorkshopCommand command)
         {
             var response = await _mediator.Send(command);
-            return Ok(
-                new
-                {
-                    data = response,
-                    message = "تم تعديل الدورة التدريبية بنجاح"
-                });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
         [HttpDelete(Name = "DeleteTrainingWorkshop")]
 

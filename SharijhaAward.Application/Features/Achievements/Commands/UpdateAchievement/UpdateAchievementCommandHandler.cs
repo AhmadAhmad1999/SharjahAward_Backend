@@ -59,16 +59,16 @@ namespace SharijhaAward.Application.Features.Achievements.Commands.UpdateAchieve
             _mapper.Map(request, Achievement, typeof(UpdateAchievementCommand), typeof(Achievement));
 
             if (request.EditeOnDistinctionField)
-                Achievement.UpdateDistinctionField = DateTime.Now;
+                Achievement.UpdateDistinctionField = DateTime.Now.Date;
 
             if (request.EditeOnProjects)
-                Achievement.UpdateProjects = DateTime.Now;
+                Achievement.UpdateProjects = DateTime.Now.Date;
 
             if (request.EditeOnSkillsAndExperiences)
-                Achievement.UpdateSkillsAndExperiences = DateTime.Now;
+                Achievement.UpdateSkillsAndExperiences = DateTime.Now.Date;
 
             if (request.EditeOnSocialMedia)
-                Achievement.UpdateSocialMedia = DateTime.Now;
+                Achievement.UpdateSocialMedia = DateTime.Now.Date;
 
 
             await _achievementsRepository.UpdateAsync(Achievement);

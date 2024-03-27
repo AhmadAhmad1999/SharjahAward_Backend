@@ -42,7 +42,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle
             }
             if (request.Status == 0)
             {
-                var ActiveCycle = await _cycleRepository.Where(c => c.Status == 0).FirstOrDefaultAsync();
+                var ActiveCycle = await _cycleRepository.Where(c => c.Status == 0 && c.Id != cycleToUpdate.Id).FirstOrDefaultAsync();
                 if (ActiveCycle != null)
                 {
                     msg = request.lang == "en"

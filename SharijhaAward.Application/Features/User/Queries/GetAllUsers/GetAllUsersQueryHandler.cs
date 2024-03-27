@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
 {
     public class GetAllUsersQueryHandler
-        : IRequestHandler<GetAllUsersQuery , List<UserListVm>>
+        : IRequestHandler<GetAllUsersQuery , BaseResponse<List<UserListVm>>>
     {
         private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _userRepository;
         private readonly IAsyncRepository<Role> _roleRepository;
@@ -29,34 +30,17 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
             _roleRepository = roleRepository;
         }
 
-        public async Task<List<UserListVm>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<UserListVm>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            var allUser = await _userRepository.ListAllAsync();
-            if (allUser == null)
-            {
-                throw new OpenQA.Selenium.NotFoundException("There is No Users");
-            }
-            List<UserListVm> userList = new List<UserListVm>();
+            var Users = await _userRepository.GetPagedReponseAsync(request.page, request.pageSize);
 
-            for (int i = 0; i < allUser.Count; i++)
-            {
-                var role = allUser[i].RoleId == null
-                    ? null
-                    : await _roleRepository.GetByIdAsync((Guid)allUser[i].RoleId);
+            var data = _mapper.Map<List<UserListVm>>(Users );
 
-                UserListVm userListVm = new UserListVm()
-                {
-                    UserId = allUser[i].Id,
-                    ArabicName = allUser[i].ArabicName,
-                    EnglishName = allUser[i].EnglishName,
-                    Email = allUser[i].Email,
-                    Gender = allUser[i].Gender,
-                    Role = role == null ? "User Has No Role" : role.RoleName
-                };
-                userList.Add(userListVm);
-            }
-
-            return _mapper.Map<List<UserListVm>>(userList);
+            var count = _userRepository.GetCount(u => true);
+           
+            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+           
+            return new BaseResponse<List<UserListVm>>("", true, 200, data, pagination);
         }
     }
 }

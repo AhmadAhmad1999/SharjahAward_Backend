@@ -32,9 +32,11 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
         public async Task<BaseResponse<object>> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
         {
 
-            var UserID = _jwtProvider.GetUserIdFromToken(request.Token);
-
-            var user = await _userRepository.GetByIdAsync(new Guid(UserID));
+            var UserID = request.Id == null
+                ? _jwtProvider.GetUserIdFromToken(request.Token)
+                : request.Id.ToString();
+          
+            var user = await _userRepository.GetByIdAsync(new Guid(UserID!));
             string msg;
             if (user == null)
             {
