@@ -39,15 +39,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
 
             string ResponseMessage = string.Empty;
 
-            if (DynamicAttributes.Count <= 0)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "There is no fields"
-                    : "لا يوجد حقول";
-
-                return new BaseResponse<List<DynamicAttributeListVM>>(ResponseMessage, true, 204, DynamicAttributes, 0);
-            }
-
             int TotalCount = await _DynamicAttributeRepository
                 .GetCountAsync(x => x.DynamicAttributeSectionId == Request.SectionId);
 

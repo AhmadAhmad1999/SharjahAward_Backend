@@ -38,6 +38,19 @@ namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCod
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            Domain.Entities.IdentityModels.User? CheckIfEmailIsAlreadyUsed = await _UserRepository
+                .FirstOrDefaultAsync(x => string.Equals(x.Email, UserEntity.Email, StringComparison.OrdinalIgnoreCase) &&
+                    x.Id != UserEntity.Id);
+
+            if (CheckIfEmailIsAlreadyUsed != null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "This email is already used"
+                    : "البريد الإلكتروني مستخدم مسبقاً";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             if (UserEntity.ConfirmationCodeForSignUp != Request.ConfirmationCode)
             {
                 ResponseMessage = Request.lang == "en"

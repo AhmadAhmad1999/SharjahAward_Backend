@@ -2,49 +2,44 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
-using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System.Transactions;
 
-namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinator
+namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator
 {
-    public class CreateCoordinatorCommandHandler
-         : IRequestHandler<CreateCoordinatorCommand, BaseResponse<Guid>>
+    public class CreateArbitratorHandler
+         : IRequestHandler<CreateArbitratorCommand, BaseResponse<Guid>>
     {
-        private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
-        private readonly IRoleRepository _roleRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IFileService _fileService;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IRoleRepository _RoleRepository;
+        private readonly IUserRepository _UserRepository;
+        private readonly IMapper _Mapper;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<Dependency> _DependencyRepository;
         private readonly IAsyncRepository<DependencyValidation> _DependencyValidationRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
-
-        public CreateCoordinatorCommandHandler(IRoleRepository roleRepository, 
-            IAsyncRepository<Coordinator> coordinatorRepository, 
-            IFileService fileService, 
-            IUserRepository userRepository, 
-            IMapper Mapper,
-            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
-            IAsyncRepository<Dependency> DependencyRepository,
-            IAsyncRepository<DependencyValidation> DependencyValidationRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<GeneralValidation> GeneralValidationRepository,
+        public CreateArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository, 
+            IRoleRepository RoleRepository, 
+            IUserRepository UserRepository, 
+            IMapper Mapper, 
+            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository, 
+            IAsyncRepository<Dependency> DependencyRepository, 
+            IAsyncRepository<DependencyValidation> DependencyValidationRepository, 
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository, 
+            IAsyncRepository<GeneralValidation> GeneralValidationRepository, 
             IHttpContextAccessor HttpContextAccessor)
         {
-            _roleRepository = roleRepository;
-            _coordinatorRepository = coordinatorRepository;
-            _userRepository = userRepository;
-            _fileService = fileService;
-            _mapper = Mapper;
+            _ArbitratorRepository = ArbitratorRepository;
+            _RoleRepository = RoleRepository;
+            _UserRepository = UserRepository;
+            _Mapper = Mapper;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DependencyRepository = DependencyRepository;
             _DependencyValidationRepository = DependencyValidationRepository;
@@ -53,7 +48,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
             _HttpContextAccessor = HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<Guid>> Handle(CreateCoordinatorCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<Guid>> Handle(CreateArbitratorCommand Request, CancellationToken cancellationToken)
         {
             TransactionOptions TransactionOptions = new TransactionOptions
             {
@@ -68,7 +63,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                 {
                     string ResponseMessage = string.Empty;
 
-                    Domain.Entities.IdentityModels.User? CheckEmailIfAlreadyUsedInUser = await _userRepository
+                    Domain.Entities.IdentityModels.User? CheckEmailIfAlreadyUsedInUser = await _UserRepository
                         .FirstOrDefaultAsync(x => string.Equals(x.Email, Request.Email, StringComparison.OrdinalIgnoreCase) && x.isValidAccount);
 
                     if (CheckEmailIfAlreadyUsedInUser is not null)
@@ -80,10 +75,10 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                         return new BaseResponse<Guid>(ResponseMessage, false, 400);
                     }
 
-                    Coordinator? CheckEmailIfAlreadyUsedInCoordinator = await _coordinatorRepository
+                    Arbitrator? CheckEmailIfAlreadyUsedInArbitrator = await _ArbitratorRepository
                         .FirstOrDefaultAsync(x => string.Equals(x.Email, Request.Email, StringComparison.OrdinalIgnoreCase));
 
-                    if (CheckEmailIfAlreadyUsedInCoordinator is not null)
+                    if (CheckEmailIfAlreadyUsedInArbitrator is not null)
                     {
                         ResponseMessage = Request.lang == "en"
                             ? "This email is already used"
@@ -92,9 +87,9 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                         return new BaseResponse<Guid>(ResponseMessage, false, 400);
                     }
 
-                    Guid NewCoordinatorEntityId = Guid.NewGuid();
+                    Guid NewArbitratorEntityId = Guid.NewGuid(); 
 
-                    IEnumerable<Guid> CheckIfThereIsUserWithTheSameId = _userRepository
+                    IEnumerable<Guid> CheckIfThereIsUserWithTheSameId = _UserRepository
                         .ListAllAsync()
                         .Result.Select(x => x.Id);
 
@@ -102,44 +97,60 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
 
                     while (WhileLoopBreaker)
                     {
-                        if (!CheckIfThereIsUserWithTheSameId.Contains(NewCoordinatorEntityId))
+                        if (!CheckIfThereIsUserWithTheSameId.Contains(NewArbitratorEntityId))
                         {
                             WhileLoopBreaker = false;
                             break;
                         }
 
-                        NewCoordinatorEntityId = Guid.NewGuid();
+                        NewArbitratorEntityId = Guid.NewGuid();
                     }
 
-                    var Coordinator = _mapper.Map<Coordinator>(Request);
-                    Coordinator.Id = NewCoordinatorEntityId;
-                    Coordinator.PersonalPhoto = await _fileService.SaveFileAsync(Request.PersonalPhoto);
+                    Arbitrator NewArbitratorEntity = _Mapper.Map<Arbitrator>(Request);
+                    NewArbitratorEntity.Id = NewArbitratorEntityId;
 
-                    var data = await _coordinatorRepository.AddAsync(Coordinator);
-                    var User = new Domain.Entities.IdentityModels.User()
+                    await _ArbitratorRepository.AddAsync(NewArbitratorEntity);
+
+                    Role? Role = await _RoleRepository.GetByName("Arbitrator");
+
+                    if (Role is null)
                     {
-                        ArabicName = data.ArabicName,
-                        EnglishName = data.EnglishName,
-                        Email = data.Email,
-                        PhoneNumber = data.PhoneNumber,
-                        //ConfirmationCode = 0000,
-                        Id = data.Id,
-                        Password = "123456",
+                        ResponseMessage = Request.lang == "en"
+                            ? "Arbitrator role is not found"
+                            : "دور المحكم غير موجود";
+
+                        return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                    }
+
+                    Domain.Entities.IdentityModels.User NewUserEntity = new Domain.Entities.IdentityModels.User()
+                    {
+                        Id = NewArbitratorEntityId,
+                        isDeleted = false,
+                        CreatedAt = DateTime.UtcNow,
+                        CreatedBy = null,
+                        DeletedAt = null,
+                        LastModifiedAt = null,
+                        LastModifiedBy = null,
+                        ArabicName = Request.ArabicName,
+                        EnglishName = Request.EnglishName,
+                        ConfirmationCodeForResetPassword = null,
+                        ConfirmationCodeForSignUp = null,
+                        Email = Request.Email,
                         Gender = 0,
-                        isValidAccount = true
+                        ImageURL = null,
+                        isValidAccount = true,
+                        Password = "123456",
+                        lang = null,
+                        PhoneNumber = Request.PhoneNumber,
+                        RoleId = Role.RoleId
                     };
-                    await _userRepository.AddAsync(User);
 
-                    var role = await _roleRepository.GetByName("Coordinator");
-                    if (role != null)
-                    {
-                        await _userRepository.AsignRole(User.Id, role.RoleId);
-                    }
+                    await _UserRepository.AddAsync(NewUserEntity);
 
                     foreach (AddDynamicAttributeValueMainCommand InputDynamicAttributeWithValues in Request.DynamicAttributesWithValues)
                     {
                         DynamicAttribute? DynamicAttributeEntity = await _DynamicAttributeRepository
-                            .IncludeThenFirstOrDefaultAsync(x => x.AttributeDataType!, 
+                            .IncludeThenFirstOrDefaultAsync(x => x.AttributeDataType!,
                                 x => x.Id == InputDynamicAttributeWithValues.DynamicAttributeId);
 
                         if (DynamicAttributeEntity == null)
@@ -156,7 +167,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                             // Unique Constraint..
                             DynamicAttributeValue? CheckUnique = await _DynamicAttributeValueRepository
                                 .IncludeThenFirstOrDefaultAsync(x => x.DynamicAttribute!, x => x.DynamicAttributeId == DynamicAttributeEntity.Id &&
-                                    x.RecordIdAsGuid != User.Id && x.DynamicAttribute!.IsUnique &&
+                                    x.RecordIdAsGuid != NewArbitratorEntityId && x.DynamicAttribute!.IsUnique &&
                                     x.Value.ToLower() == InputDynamicAttributeWithValues.ValueAsString.ToLower());
 
                             if (CheckUnique != null)
@@ -171,7 +182,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
 
                         // Check General Validation..
                         GeneralValidation? GeneralValidationEntity = await _GeneralValidationRepository
-                            .IncludeThenFirstOrDefaultAsync(x => x.AttributeOperation!, 
+                            .IncludeThenFirstOrDefaultAsync(x => x.AttributeOperation!,
                                 x => x.DynamicAttributeId == InputDynamicAttributeWithValues.DynamicAttributeId);
 
                         if (GeneralValidationEntity != null)
@@ -1510,7 +1521,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
 
                     // Hard Delete On Dynamic Values..
                     List<DynamicAttributeValue> DynamicValuesToDelete = await _DynamicAttributeValueRepository
-                        .Where(x => x.RecordIdAsGuid == User.Id).ToListAsync();
+                        .Where(x => x.RecordIdAsGuid == NewArbitratorEntityId).ToListAsync();
 
                     if (DynamicValuesToDelete.Count() > 0)
                         await _DynamicAttributeValueRepository.RemoveListAsync(DynamicValuesToDelete);
@@ -1526,7 +1537,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                             ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
                             : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
 
-                        string? FileName = $"{User.Id}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
+                        string? FileName = $"{NewArbitratorEntityId}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
 
                         string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
 
@@ -1557,7 +1568,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                             DeletedAt = null,
                             DynamicAttributeId = x.DynamicAttributeId,
                             isDeleted = false,
-                            RecordIdAsGuid = User.Id,
+                            RecordIdAsGuid = NewArbitratorEntityId,
                             LastModifiedAt = null,
                             LastModifiedBy = null,
                             Value = x.ValueAsString!
@@ -1567,7 +1578,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
 
                     Transaction.Complete();
 
-                    return new BaseResponse<Guid>("", true, 200, data.Id);
+                    return new BaseResponse<Guid>(ResponseMessage, true, 200, NewArbitratorEntityId);
                 }
                 catch (Exception)
                 {
