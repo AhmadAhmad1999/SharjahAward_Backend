@@ -34,9 +34,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     .Select(x => new GetDynamicAttributeSectionByIdDto()
                     {
                         Id = x.Id,
-                        Name = Language == "ar"
-                            ? x.ArabicName
-                            : x.EnglishName
+                        ArabicName = x.ArabicName,
+                        EnglishName = x.EnglishName,
                     }).FirstOrDefaultAsync());
 
             if (DynamicAttributeSection == null)
