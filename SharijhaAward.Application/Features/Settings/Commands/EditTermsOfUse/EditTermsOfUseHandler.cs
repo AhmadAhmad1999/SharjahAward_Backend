@@ -33,6 +33,10 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditTermsOfUse
 
             await _OnePageTextRepository.UpdateAsync(TermsOfUseEntity);
 
+            ResponseMessage = Request.lang == "en"
+                ? "Terms of use has been updated successfully"
+                : "تم تعديل شروط الاستخدام بنجاح";
+
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }

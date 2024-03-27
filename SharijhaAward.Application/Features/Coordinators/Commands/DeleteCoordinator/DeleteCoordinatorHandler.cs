@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
+using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinator
@@ -10,11 +12,15 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordin
     {
         private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
         private readonly IUserRepository _UserRepository;
+        private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+
         public DeleteCoordinatorHandler(IAsyncRepository<Coordinator> CoordinatorRepository,
-            IUserRepository UserRepository)
+            IUserRepository UserRepository,
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
         {
             _CoordinatorRepository = CoordinatorRepository;
             _UserRepository = UserRepository;
+            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(DeleteCoordinatorCommand Request, CancellationToken cancellationToken)
@@ -45,12 +51,19 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordin
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            using(TransactionScope Transaction = new TransactionScope())
+            List<DynamicAttributeValue> DynamicAttributeValues = await _DynamicAttributeValueRepository
+                .Where(x => x.RecordIdAsGuid == Request.Id)
+                .ToListAsync();
+
+            using (TransactionScope Transaction = new TransactionScope())
             {
                 try
                 {
                     await _CoordinatorRepository.DeleteAsync(CoordinatorEntityToDelete);
                     await _UserRepository.DeleteAsync(UserEntityToDelete);
+
+                    if (DynamicAttributeValues.Count() > 0)
+                        await _DynamicAttributeValueRepository.DeleteListAsync(DynamicAttributeValues);
 
                     ResponseMessage = Request.lang == "en"
                         ? "Coordinator has been deleted successfully"

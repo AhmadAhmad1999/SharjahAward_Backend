@@ -22,6 +22,7 @@ public class User : AuditableEntity  {
     public int? ConfirmationCodeForSignUp { get; set; }
     public bool isValidAccount { get; set; }
     public string? ImageURL { get; set; }
+    public string? lang { get; set; }
     public virtual List<MeetingUser> MeetingUsers { get; set; } = null!;
     public virtual List<Note> Notes { get; set; } = null!;
 }

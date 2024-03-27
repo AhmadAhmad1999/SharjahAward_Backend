@@ -42,6 +42,10 @@ namespace SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmat
                 return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
+            ResponseMessage = Request.lang == "en"
+                ? "Confirmation code has been verified successfully"
+                : "تم التحقق من رمز التأكيد بنجاح";
+
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.Settings.Commands.ChangeUserAccountLanguage;
 using SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmationCode;
 using SharijhaAward.Application.Features.Settings.Commands.DeleteProfile;
 using SharijhaAward.Application.Features.Settings.Commands.EditPrivacyPolicy;
@@ -315,6 +316,39 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<GetTermsOfUseDto> Response = await _Mediator.Send(new GetTermsOfUseQuery()
             {
                 lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("ChangeUserAccountLanguage")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ChangeUserAccountLanguage(string NewLanguage)
+        {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            BaseResponse<object>? Response = await _Mediator.Send(new ChangeUserAccountLanguageCommand()
+            {
+                lang = !string.IsNullOrEmpty(HeaderValue)
+                    ? HeaderValue
+                    : "en",
+                Token = Token,
+                NewLanguage = NewLanguage
             });
 
             return Response.statusCode switch
