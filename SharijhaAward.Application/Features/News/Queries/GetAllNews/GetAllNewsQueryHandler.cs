@@ -26,33 +26,40 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 
         public async Task<BaseResponse<List<NewsListVM>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
-            if (request.query.IsNullOrEmpty())
+            var newsList = await _newsRepository.GetPagedReponseAsync(request.page, request.pageSize);
+           
+            int count = _newsRepository.GetCount(n => n.isDeleted == false);
+            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            
+            if (!request.query.IsNullOrEmpty())
             {
-
-                var newsList = await _newsRepository.GetPagedReponseAsync(request.page, request.pageSize);
-
-                var data = _mapper.Map<List<NewsListVM>>(newsList);
-
-                if (data.Count != 0)
+                newsList = _newsRepository.Where(n => n.EnglishTitle.ToLower().Contains(request.query.ToLower())).ToList();
+                if (newsList.Count() == 0)
                 {
-                    for (int i = 0; i < data.Count; i++)
-                    {
-                        data[i].Title = request.lang == "en"
-                            ? data[i].EnglishTitle
-                            : data[i].ArabicTitle;
+                    newsList = _newsRepository.Where(n => n.ArabicTitle.ToLower().Contains(request.query.ToLower())).ToList();
+                }
+            }
+            var data = _mapper.Map<List<NewsListVM>>(newsList);
 
-                        data[i].Description = request.lang == "en"
-                            ? data[i].EnglishDescription!
-                            : data[i].ArabicDescription!;
-                    }
+            if (data.Count != 0)
+            {
+                for (int i = 0; i < data.Count; i++)
+                {
+                    data[i].Title = request.lang == "en"
+                        ? data[i].EnglishTitle
+                        : data[i].ArabicTitle;
 
+                    data[i].Description = request.lang == "en"
+                        ? data[i].EnglishDescription!
+                        : data[i].ArabicDescription!;
                 }
 
-                int count = _newsRepository.GetCount(n => n.isDeleted == false);
-                Pagination pagination = new Pagination(request.page, request.pageSize, count);
-                return new BaseResponse<List<NewsListVM>>("", true, 200, data, pagination);
             }
-            return new BaseResponse<List<NewsListVM>>("", true, 200);
+            if (!request.query.IsNullOrEmpty())
+                return new BaseResponse<List<NewsListVM>>("", true, 200, data);
+            
+            return new BaseResponse<List<NewsListVM>>("", true, 200, data, pagination);
+           
         }
     }
 }

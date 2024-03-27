@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CycleModel;
@@ -25,12 +26,26 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
 
         public async Task<BaseResponse<object>> Handle(CreateCycleCommand request, CancellationToken cancellationToken)
         {
-            var cycle = _mapper.Map<Cycle>(request);
-
-            var data = await _cycleRepository.AddAsync(cycle);
             string msg = request.lang == "en"
-                ? "Cycle has been Created"
-                : "تم إنشاء الدورة بنجاح";
+               ? "Cycle has been Created"
+               : "تم إنشاء الدورة بنجاح";
+
+            var cycle = _mapper.Map<Cycle>(request);
+            if(cycle.Status == 0)
+            {
+                var ActiveCycle = await _cycleRepository.Where(c => c.Status == 0).FirstOrDefaultAsync();
+                if(ActiveCycle != null)
+                {
+                     msg = request.lang == "en"
+                       ? "You can't add to Active Cycle"
+                       :  "لا يمكن إضافة أكثر من دورة فعالة";
+
+                    return new BaseResponse<object>(msg,false, 400);
+                }
+                
+            }
+            var data = await _cycleRepository.AddAsync(cycle);
+           
 
             return new BaseResponse<object>(msg, true, 200, data.Id);
            

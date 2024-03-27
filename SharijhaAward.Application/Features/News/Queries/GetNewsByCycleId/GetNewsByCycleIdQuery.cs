@@ -11,9 +11,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
 {
     public class GetNewsByCycleIdQuery : IRequest<BaseResponse<List<NewsListVM>>>
     {
-        public Guid CycleId { get; set; }
+        public Guid? CycleId { get; set; }
         public string lang { get; set; } = string.Empty;
-        public int page {  get; set; }
-        public int pageSize { get; set; }
     }
 }

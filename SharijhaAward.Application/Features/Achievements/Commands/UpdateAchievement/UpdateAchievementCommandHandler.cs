@@ -42,7 +42,7 @@ namespace SharijhaAward.Application.Features.Achievements.Commands.UpdateAchieve
                 : null;
             if (User == null)
             {
-                return new BaseResponse<object>();
+                return new BaseResponse<object>("User Not Found",false,401);
             }
 
             var Achievement =await _achievementsRepository.Where(a => a.UserId == User.Id).FirstOrDefaultAsync();

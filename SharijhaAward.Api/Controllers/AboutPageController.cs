@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateAboutPage;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateGoal;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAboutPage;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateGoal;
 using SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage;
 
 namespace SharijhaAward.Api.Controllers
@@ -61,6 +63,41 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!
             });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPut(Name="UpdateAboutPage")]
+        public async Task<IActionResult> UpdateAboutPage(UpdateAboutPageCommand command)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            command.lang = language!;
+
+            var response = await _mediator.Send(command);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpPut("UpadteGoal",Name="UpdateGoal")]
+        public async Task<IActionResult> UpdateGoal(UpdateGoalCommand command)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            command.lang = language!;
+
+            var response = await _mediator.Send(command);
 
             return response.statusCode switch
             {

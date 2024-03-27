@@ -153,6 +153,10 @@ using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriter
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterionItem;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSubCriterion;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCriterionById;
+using SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievement;
+using SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGeneralWorkshop;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAboutPage;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateGoal;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -280,12 +284,16 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Coordinator, CoordinatorDto>().ReverseMap();
 
             CreateMap<GeneralWorkshop, CreateGeneralWorkshopCommand>().ReverseMap();
+            CreateMap<GeneralWorkshop, UpdateGeneralWorkshopCommand>().ReverseMap();
             CreateMap<GeneralWorkshop, GeneralWorkshopsListVM>().ReverseMap();
             CreateMap<GeneralWorkshop, GeneralWorkshopDto>().ReverseMap();
 
             CreateMap<AboutAwardPage, CreateAboutPageCommand>().ReverseMap();
             CreateMap<AboutAwardPage, AboutPageDto>().ReverseMap();
+            CreateMap<AboutAwardPage, UpdateAboutPageCommand>().ReverseMap();
+
             CreateMap<OurGoal, CreateGoalCommand>().ReverseMap();
+            CreateMap<OurGoal, UpdateGoalCommand>().ReverseMap();
             CreateMap<OurGoal, OurGoalsDto>().ReverseMap();
             
             CreateMap<EmailMessage, CreateMessageCommand>().ReverseMap();
@@ -293,6 +301,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EmailMessage, EmailMessageDto>().ReverseMap();
 
             CreateMap<Achievement, CreateAchievementCommand>().ReverseMap();
+            CreateMap<Achievement, UpdateAchievementCommand>().ReverseMap();
             CreateMap<Achievement, AchievementsDto>().ReverseMap();
 
             //

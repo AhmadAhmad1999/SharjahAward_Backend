@@ -35,7 +35,11 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId
 
             if (Cycle == null)
             {
-                return new BaseResponse<List<AgendaListVm>>("", false, 404);
+               string msg = request.lang == "en"
+                ? "There is no Active Cycle yet"
+                : "لا يوجد دورات فعالة ";
+
+                return new BaseResponse<List<AgendaListVm>>(msg, false, 400);
             }
             var Agendas = _agendaRepository.Where(a => a.CycleId == Cycle.Id).ToList().OrderBy(a=>a.CreatedAt);
             
