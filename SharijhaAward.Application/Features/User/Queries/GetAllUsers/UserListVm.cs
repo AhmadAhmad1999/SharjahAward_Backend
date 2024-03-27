@@ -9,13 +9,14 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
 {
     public class UserListVm
     {
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public Gender Gender {  get; set; }
-        public string Role { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public Gender Gender { get; set; }
         public string PhoneNumber { get; set; } = null!;
+        public string? ImageURL { get; set; }
         public bool isValidAccount { get; set; }
     }
 }

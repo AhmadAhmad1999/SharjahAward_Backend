@@ -8,12 +8,14 @@ using SharijhaAward.Application.Features.User.Commands.DeleteUser;
 using SharijhaAward.Application.Features.User.Commands.UpdateUser;
 using SharijhaAward.Application.Features.User.Queries.AsignRoleToUser;
 using SharijhaAward.Application.Features.User.Queries.ChangePassword;
+using SharijhaAward.Application.Features.User.Queries.GetAllSubscribers;
 using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
 using SharijhaAward.Application.Features.User.Queries.GetUserById;
 using SharijhaAward.Application.Responses;
+using System.Reflection.Metadata.Ecma335;
 
 
- 
+
 namespace SharijhaAward.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -44,54 +46,44 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("{id}", Name = "GetUserById")]
 
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetUserById(Guid id)
+        public async Task<ActionResult> GetUserById(Guid? id)
         {
-           var user =  await _mediator.Send(new GetUserByIdQuery { Id = id});
-            return Ok(
-                new 
-                { 
-                    data = user, 
-                    status = true 
-                });
+            var Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
+            var response =  await _mediator.Send(new GetUserByIdQuery
+            {
+                Id = id,
+                token =Token!
+            });
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
 
         }
         [HttpGet(Name = "GetAllUsers")]
 
         public async Task<ActionResult> GetAllUsers(int page , int perPage)
         {
-            var dto = await _mediator.Send(new GetAllUsersQuery());
-            // Pagenation
-            if (perPage == 0)
-                perPage = 10;
-            else if (perPage == -1)
-                return Ok(
-                new
-                {
-                    data = dto,
-                    status = true,
-                });
+            var response = await _mediator.Send(new GetAllUsersQuery()
+            {
+                page = page,
+                pageSize = perPage
+            });
 
-            var totalCount = dto.Count;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
-            var dataPerPage = dto
-                .Skip((page - 1) * perPage)
-                .Take(perPage)
-                .ToList();
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
 
-            return Ok(
-                new
-                {
-                    data = dataPerPage,
-                    status = true,
-                    pagination =
-                    new
-                    {
-                        current_page = page,
-                        last_page = totalPage,
-                        total_row = totalCount,
-                        per_page = perPage
-                    }
-                });
         }
         [HttpPost("AsignRole",Name = "AsignRole")]
 
@@ -133,6 +125,20 @@ namespace SharijhaAward.Api.Controllers
                 200 => Ok(Response),
                 _ => BadRequest(Response)
             };
+        }
+
+        [HttpGet("GetAllSubscribers", Name= "GetAllSubscribers")]
+        public async Task<IActionResult> GetAllSubscribers()
+        {
+            var response = await _mediator.Send(new GetAllSubscribersQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
+
         }
     }
 }
