@@ -155,6 +155,8 @@ using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSubCri
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCriterionById;
 using SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievement;
 using SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGeneralWorkshop;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAboutPage;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateGoal;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -288,7 +290,10 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<AboutAwardPage, CreateAboutPageCommand>().ReverseMap();
             CreateMap<AboutAwardPage, AboutPageDto>().ReverseMap();
+            CreateMap<AboutAwardPage, UpdateAboutPageCommand>().ReverseMap();
+
             CreateMap<OurGoal, CreateGoalCommand>().ReverseMap();
+            CreateMap<OurGoal, UpdateGoalCommand>().ReverseMap();
             CreateMap<OurGoal, OurGoalsDto>().ReverseMap();
             
             CreateMap<EmailMessage, CreateMessageCommand>().ReverseMap();
