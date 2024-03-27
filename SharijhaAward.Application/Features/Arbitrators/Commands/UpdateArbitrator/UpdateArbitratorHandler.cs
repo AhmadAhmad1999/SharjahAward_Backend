@@ -62,7 +62,23 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                 return new BaseResponse<object>(msg, false, 404);
             }
 
+            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository.FirstOrDefaultAsync(x => x.Id == Request.Id);
+
+            if (UserEntity == null)
+            {
+                msg = Request.lang == "en"
+                    ? "User not found"
+                    : "المستخدم غير موجود";
+
+                return new BaseResponse<object>(msg, false, 404);
+            }
+
             _Mapper.Map(Request, ArbitratorToUpdate, typeof(UpdateArbitratorCommand), typeof(Arbitrator));
+
+            UserEntity.Email = Request.Email;
+            UserEntity.ArabicName = Request.ArabicName;
+            UserEntity.EnglishName = Request.EnglishName;
+            UserEntity.PhoneNumber = Request.PhoneNumber;
 
             List<DynamicAttributeValue> AlreadyInsertedDynamicValues = await _DynamicAttributeValueRepository
                 .Where(x => x.RecordIdAsGuid == Request.Id).ToListAsync();
@@ -1509,6 +1525,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
 
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
                     await _ArbitratorRepository.UpdateAsync(ArbitratorToUpdate);
+                    await _UserRepository.UpdateAsync(UserEntity);
 
                     Transaction.Complete();
                 }
