@@ -50,6 +50,8 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Commands.UpdateEx
             if (request.UpdateOnArabicFile)
                 GuideToUpdate.ArabicFilePath = await _fileService.SaveFileAsync(request.ArabicFile!);
 
+            await _explanatoryGuideRepository.UpdateAsync(GuideToUpdate);
+
             return new BaseResponse<object>(msg,true, 200);
         }
     }

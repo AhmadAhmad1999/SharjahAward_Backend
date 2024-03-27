@@ -60,8 +60,8 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
 
                 if (agenda.StartDate != null && agenda.EndDate != null)
                 {
-                    if (agenda.StartDate.Value.Date! <= LastAgenda!.EndDate!.Value.Date
-                        && agenda.EndDate!.Value.Date >= FirstAgenda!.StartDate!.Value.Date)
+                    if (agenda.StartDate <= LastAgenda!.EndDate
+                        && agenda.EndDate >= FirstAgenda!.StartDate)
                     {
                         msg = request.lang == "en"
                             ? "Edite The Date to be In Range"
