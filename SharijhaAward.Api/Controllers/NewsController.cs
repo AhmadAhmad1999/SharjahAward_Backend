@@ -91,7 +91,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet(Name ="GetAllNews")]
-        public async Task<IActionResult> GetAllNews(int page = 1 , int perPage = 10)
+        public async Task<IActionResult> GetAllNews(string? query,int page = 1 , int perPage = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -100,7 +100,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 page = page,
                 pageSize = perPage,
-                lang = language!
+                lang = language!,
+                query = query
             });
 
             return response.statusCode switch
@@ -112,7 +113,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetNewsByCycleId",Name = "GetNewsByCycleId")]
-        public async Task<IActionResult> GetNewsByCycleId()
+        public async Task<IActionResult> GetNewsByCycleId(Guid? CycleId)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -121,7 +122,8 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetNewsByCycleIdQuery()
             {
                 lang = Language!,
-           
+                CycleId = CycleId
+
             });
             return response.statusCode switch
             {

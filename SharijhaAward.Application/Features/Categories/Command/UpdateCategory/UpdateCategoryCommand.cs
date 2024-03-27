@@ -18,7 +18,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
-        public bool UpdateOnIcon {  get; set; }
+        public bool UpdateOnIcon { get; set; } = false;
         public IFormFile? Icon { get; set; } = null!;
         public CategoryClassification CategoryClassification { get; set; }
         public DateTime? SubscriberPortalClosingDate { get; set; }

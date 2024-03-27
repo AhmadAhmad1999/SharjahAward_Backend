@@ -24,7 +24,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<ConditionsProvidedForms> _conditionFormsRepository;
         private readonly IAsyncRepository<TermAndCondition> _termRepository;       
-        private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _UserRepository;
+        private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _userRepository;
         private readonly IJwtProvider _JwtProvider;
         private readonly IMapper _mapper;
 
@@ -32,8 +32,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             IJwtProvider JwtProvider, 
             IAsyncRepository<ConditionsProvidedForms> conditionFormsRepository,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedrepository,
-            IAsyncRepository<Cycle> cyclerepository, IAsyncRepository<Category> categoryrepository,
-            IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository, IMapper mapper,
+            IAsyncRepository<Cycle> cyclerepository,
+            IAsyncRepository<Category> categoryrepository,
+            IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository,
+            IMapper mapper,
             IAsyncRepository<TermAndCondition> termRepository
             )
         {
@@ -42,20 +44,36 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             _JwtProvider = JwtProvider;
             _CategoryRepository = categoryrepository;
             _conditionFormsRepository = conditionFormsRepository;
-            _UserRepository = userRepository;
+            _userRepository = userRepository;
             _termRepository = termRepository;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<int>> Handle(CreateProvidedFormCommand request, CancellationToken cancellationToken)
         {
+            
             var UserId = _JwtProvider.GetUserIdFromToken(request.token);
 
             if(UserId == null)
             {
                 return new BaseResponse<int>("Invalid Token", false, 400);
             }
+
+            var FormsOfUser = _Providedrepository.Where(p => p.userId == new Guid(UserId)).ToList();
+            
             var category =await _CategoryRepository.GetByIdAsync(request.categoryId);
+            
+            for(int i=0; i < FormsOfUser.Count(); i++)
+            {
+                if (FormsOfUser[i].categoryId == category.Id)
+                {
+                    string msg = request.lang == "en"
+                        ? "You have already subscribed to this category"
+                        : "لقد اشتركت بهذه الفئة بالفعل";
+
+                    return new BaseResponse<int>(msg, false, 400);
+                }
+            }
             var cycle = await _CycleRepository.GetByIdAsync(category.CycleId);
 
             var ProvidedForm = _mapper.Map<Domain.Entities.ProvidedFormModel.ProvidedForm>(request);

@@ -18,6 +18,10 @@ namespace SharijhaAward.Application.Features.Achievements.Queries.GetAchievement
         public string? Linkedin { get; set; } = string.Empty;
         public string? Snapchat { get; set; } = string.Empty;
         public string? Tiktok { get; set; } = string.Empty;
+        public DateTime? UpdateDistinctionField { get; set; }
+        public DateTime? UpdateProjects { get; set; }
+        public DateTime? UpdateSkillsAndExperiences { get; set; }
+        public DateTime? UpdateSocialMedia { get; set; }
         public DateTime CreatedAt {  get; set; } 
         public DateTime UpdatedAt { get; set; }
     }

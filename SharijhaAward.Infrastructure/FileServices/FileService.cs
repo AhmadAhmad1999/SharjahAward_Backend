@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Domain.Entities.AttachmentModel;
+using System.Net;
 
 namespace SharijhaAward.Infrastructure.FileServices
 {
@@ -46,9 +47,9 @@ namespace SharijhaAward.Infrastructure.FileServices
 
         public async Task<byte[]> ReadFileAsync(string filePath)
         {
-            return await File.ReadAllBytesAsync(filePath);
+            var path = _SavePath +'/'+ filePath.Split('/').LastOrDefault();
+            return await File.ReadAllBytesAsync(path);
         }
 
-      
     }
 }
