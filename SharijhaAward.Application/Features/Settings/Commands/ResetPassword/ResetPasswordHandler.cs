@@ -47,6 +47,10 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ResetPassword
 
             await _UserRepository.UpdateAsync(UserEntity);
 
+            ResponseMessage = Request.lang == "en"
+                ? "Your password has been updated successfully"
+                : "تم تحديث كلمة المرور الخاصة بك بنجاح";
+
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }

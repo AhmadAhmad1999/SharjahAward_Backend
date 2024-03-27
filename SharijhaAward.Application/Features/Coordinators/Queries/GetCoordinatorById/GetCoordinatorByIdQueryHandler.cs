@@ -104,7 +104,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
             IReadOnlyList<AttributeDataType> DataTypes = await _AttributeDataTypeRepository.ListAllAsync();
 
             List<DynamicAttributeValue> AlreadyInsertedDynamicAttributeValues = await _DynamicAttributeValueRepository
-                .Where(x => x.RecordId != null
+                .Where(x => x.RecordIdAsGuid != null
                     ? x.RecordIdAsGuid == Request.CoordinatorId
                     : false).ToListAsync();
 

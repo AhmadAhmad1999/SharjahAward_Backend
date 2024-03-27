@@ -34,6 +34,10 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditPrivacyPolicy
 
             await _OnePageTextRepository.UpdateAsync(OnePageTextEntity);
 
+            ResponseMessage = Request.lang == "en"
+                ? "Privay policy has been updated successfully"
+                : "تم تعديل سياسة الخصوصية بنجاح";
+
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }

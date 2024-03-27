@@ -37,6 +37,10 @@ namespace SharijhaAward.Application.Features.Settings.Commands.DeleteProfile
 
             await _UserRepository.DeleteAsync(UserEntity);
 
+            ResponseMessage = Request.lang == "en"
+                ? "Profile has been deleted successfully"
+                : "تم حذف الحساب الشخصي بنجاح";
+
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }

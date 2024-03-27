@@ -71,8 +71,12 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditProfile
             else
                 UserEntity.PhoneNumber = Request.PhoneNumber;
 
-
             await _UserRepository.UpdateAsync(UserEntity);
+
+            ResponseMessage = Request.lang == "en"
+                ? "Profile data has been updated successfully"
+                : "تم تعديل معلومات الحساب الشخصي بنجاح";
+
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
