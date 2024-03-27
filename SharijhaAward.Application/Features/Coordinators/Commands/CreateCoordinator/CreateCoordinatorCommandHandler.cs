@@ -69,25 +69,25 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                     string ResponseMessage = string.Empty;
 
                     Domain.Entities.IdentityModels.User? CheckEmailIfAlreadyUsedInUser = await _userRepository
-                        .FirstOrDefaultAsync(x => string.Equals(x.Email, Request.Email, StringComparison.OrdinalIgnoreCase) && x.isValidAccount);
+                        .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower() && x.isValidAccount);
 
                     if (CheckEmailIfAlreadyUsedInUser is not null)
                     {
                         ResponseMessage = Request.lang == "en"
-                            ? "This email is already used"
-                            : "البريد الإلكتروني مستخدم مسبقاً";
+                            ? "Invalid email or password"
+                            : "خطأ في البريد الإلكتروني او كلمة المرور";
 
                         return new BaseResponse<Guid>(ResponseMessage, false, 400);
                     }
 
                     Coordinator? CheckEmailIfAlreadyUsedInCoordinator = await _coordinatorRepository
-                        .FirstOrDefaultAsync(x => string.Equals(x.Email, Request.Email, StringComparison.OrdinalIgnoreCase));
+                        .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());
 
                     if (CheckEmailIfAlreadyUsedInCoordinator is not null)
                     {
                         ResponseMessage = Request.lang == "en"
-                            ? "This email is already used"
-                            : "البريد الإلكتروني مستخدم مسبقاً";
+                            ? "Invalid email or password"
+                            : "خطأ في البريد الإلكتروني او كلمة المرور";
 
                         return new BaseResponse<Guid>(ResponseMessage, false, 400);
                     }

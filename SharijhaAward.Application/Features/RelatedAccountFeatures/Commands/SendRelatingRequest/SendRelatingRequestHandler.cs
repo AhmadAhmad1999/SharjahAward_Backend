@@ -29,8 +29,10 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
 
             Guid SenderId = new Guid(_JWTProvider.GetUserIdFromToken(Request.token!));
 
-            Domain.Entities.IdentityModels.User? ReceiverUserEntity = await _UserRepository
-                .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.ReceiverEmail.ToLower());
+            Domain.Entities.IdentityModels.User? ReceiverUserEntity = _UserRepository
+                .Include(x => x.Role!)
+                .FirstOrDefault(x => x.Email.ToLower() == Request.ReceiverEmail.ToLower() && x.isValidAccount &&
+                    x.Role!.RoleName.ToLower() == "Subscriber".ToLower());
 
             if (ReceiverUserEntity == null)
             {

@@ -1,26 +1,15 @@
-﻿using SharijhaAward.Domain.Entities.ArbitratorModel;
+﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.CategoryArbitratorModel
 {
-    public class CategoryArbitrator
+    public class CategoryArbitrator : AuditableEntity
     {
-        public int Id { get; set; } 
-
-        public Category Category { get; set; } = null!;
-        
-        [ForeignKey(nameof(Category))]
+        public int Id { get; set; }
         public Guid CategoryId { get; set; }
-
-        public Arbitrator Arbitrator { get; set; } = null!;
-
-        [ForeignKey(nameof(Arbitrator))]
+        public Category? Category { get; set; }
         public Guid ArbitratorId { get; set; }
+        public Arbitrator? Arbitrator { get; set; }
     }
 }

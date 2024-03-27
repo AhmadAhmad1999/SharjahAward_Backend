@@ -6,6 +6,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System.Transactions;
@@ -16,6 +17,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
          : IRequestHandler<CreateArbitratorCommand, BaseResponse<Guid>>
     {
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
         private readonly IRoleRepository _RoleRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IMapper _Mapper;
@@ -25,7 +27,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
-        public CreateArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository, 
+        public CreateArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
             IRoleRepository RoleRepository, 
             IUserRepository UserRepository, 
             IMapper Mapper, 
@@ -37,6 +40,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             IHttpContextAccessor HttpContextAccessor)
         {
             _ArbitratorRepository = ArbitratorRepository;
+            _CategoryArbitratorRepository = CategoryArbitratorRepository;
             _RoleRepository = RoleRepository;
             _UserRepository = UserRepository;
             _Mapper = Mapper;
@@ -64,25 +68,25 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                     string ResponseMessage = string.Empty;
 
                     Domain.Entities.IdentityModels.User? CheckEmailIfAlreadyUsedInUser = await _UserRepository
-                        .FirstOrDefaultAsync(x => string.Equals(x.Email, Request.Email, StringComparison.OrdinalIgnoreCase) && x.isValidAccount);
+                        .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower() && x.isValidAccount);
 
                     if (CheckEmailIfAlreadyUsedInUser is not null)
                     {
                         ResponseMessage = Request.lang == "en"
-                            ? "This email is already used"
-                            : "البريد الإلكتروني مستخدم مسبقاً";
+                            ? "Invalid email or password"
+                            : "خطأ في البريد الإلكتروني او كلمة المرور";
 
                         return new BaseResponse<Guid>(ResponseMessage, false, 400);
                     }
 
                     Arbitrator? CheckEmailIfAlreadyUsedInArbitrator = await _ArbitratorRepository
-                        .FirstOrDefaultAsync(x => string.Equals(x.Email, Request.Email, StringComparison.OrdinalIgnoreCase));
+                        .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());
 
                     if (CheckEmailIfAlreadyUsedInArbitrator is not null)
                     {
                         ResponseMessage = Request.lang == "en"
-                            ? "This email is already used"
-                            : "البريد الإلكتروني مستخدم مسبقاً";
+                            ? "Invalid email or password"
+                            : "خطأ في البريد الإلكتروني او كلمة المرور";
 
                         return new BaseResponse<Guid>(ResponseMessage, false, 400);
                     }
@@ -146,6 +150,21 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                     };
 
                     await _UserRepository.AddAsync(NewUserEntity);
+
+                    List<CategoryArbitrator> ListOfCategoriesArbitrators = Request.Categories
+                        .Select(x => new CategoryArbitrator()
+                        {
+                            CategoryId = x,
+                            ArbitratorId = NewArbitratorEntityId,
+                            isDeleted = false,
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            DeletedAt = null,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null
+                        }).ToList();
+
+                    await _CategoryArbitratorRepository.AddRangeAsync(ListOfCategoriesArbitrators);
 
                     foreach (AddDynamicAttributeValueMainCommand InputDynamicAttributeWithValues in Request.DynamicAttributesWithValues)
                     {

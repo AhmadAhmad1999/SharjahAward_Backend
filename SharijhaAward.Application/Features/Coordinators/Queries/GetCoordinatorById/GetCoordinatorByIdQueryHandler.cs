@@ -91,8 +91,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
 
             List<GetAllDynamicAttributeSectionsForAddListVMAdminDashboard> DynamicAttributeSections = _DynamicAttributeSectionRepository
                 .IncludeThenWhere(x => x.AttributeTableName!, x => x.RecordIdOnRelation == CoordinatorEntity.Id &&
-                    string.Equals(x.AttributeTableName!.Name, nameof(Helpers.Constants.TableNames.Coordinator),
-                        StringComparison.OrdinalIgnoreCase))
+                    x.AttributeTableName!.Name.ToLower() == Helpers.Constants.TableNames.Coordinator.ToString().ToLower())
                 .Select(x => new GetAllDynamicAttributeSectionsForAddListVMAdminDashboard()
                 {
                     Id = x.Id,

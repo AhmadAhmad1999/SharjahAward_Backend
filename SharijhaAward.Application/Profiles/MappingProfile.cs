@@ -158,6 +158,8 @@ using SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGeneral
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAboutPage;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateGoal;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.UpdateExplanatoryGuide;
+using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -327,6 +329,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GeneralFAQCategory, CreateGeneralFAQCategoryCommand>().ReverseMap();
             CreateMap<CriterionItem, CreateCriterionItemCommand>().ReverseMap();
             CreateMap<Criterion, CreateSubCriterionCommand>().ReverseMap();
+            CreateMap<Arbitrator, CreateArbitratorCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();

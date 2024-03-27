@@ -2,23 +2,21 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.CoordinatorModel;
+using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using System.Transactions;
 
-namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator
+namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrator
 {
-    public class UpdateCoordinatorCommandHandler
-        : IRequestHandler<UpdateCoordinatorCommand, BaseResponse<object>>
+    public class UpdateArbitratorCommandHandler
+        : IRequestHandler<UpdateArbitratorCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IFileService _fileService;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IUserRepository _UserRepository;
+        private readonly IMapper _Mapper;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<Dependency> _DependencyRepository;
         private readonly IAsyncRepository<DependencyValidation> _DependencyValidationRepository;
@@ -26,10 +24,9 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public UpdateCoordinatorCommandHandler(IUserRepository userRepository, 
-            IAsyncRepository<Coordinator> coordinatorRepository, 
-            IFileService fileService, 
-            IMapper mapper,
+        public UpdateArbitratorCommandHandler(IUserRepository userRepository,
+            IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IMapper Mapper,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<Dependency> DependencyRepository,
             IAsyncRepository<DependencyValidation> DependencyValidationRepository,
@@ -37,10 +34,9 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
             IAsyncRepository<GeneralValidation> GeneralValidationRepository,
             IHttpContextAccessor HttpContextAccessor)
         {
-            _coordinatorRepository = coordinatorRepository;
-            _userRepository = userRepository;
-            _fileService = fileService;
-            _mapper = mapper;
+            _ArbitratorRepository = ArbitratorRepository;
+            _UserRepository = userRepository;
+            _Mapper = Mapper;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DependencyRepository = DependencyRepository;
             _DependencyValidationRepository = DependencyValidationRepository;
@@ -49,43 +45,24 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
             _HttpContextAccessor = HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<object>> Handle(UpdateCoordinatorCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(UpdateArbitratorCommand Request, CancellationToken cancellationToken)
         {
-            var CoordinatorToUpdate = await _coordinatorRepository.GetByIdAsync(Request.Id);
-            
+            var ArbitratorToUpdate = await _ArbitratorRepository.GetByIdAsync(Request.Id);
+
             string msg = Request.lang == "en"
-                ? "Coordinator has been Updated"
+                ? "Arbitrator has been Updated"
                 : "تم تعديل المنسق";
 
-            if(CoordinatorToUpdate == null)
+            if (ArbitratorToUpdate == null)
             {
                 msg = Request.lang == "en"
-                    ? "Coordinator not found"
+                    ? "Arbitrator not found"
                     : "المنسق غير موجود";
 
                 return new BaseResponse<object>(msg, false, 404);
             }
 
-            _mapper.Map(Request, CoordinatorToUpdate, typeof(UpdateCoordinatorCommand), typeof(Coordinator));
-
-            if (Request.UpdateOnPersonalPhoto)
-                CoordinatorToUpdate.PersonalPhoto = await _fileService.SaveFileAsync(Request.PersonalPhoto);
-
-            Domain.Entities.IdentityModels.User? UserEntity = await _userRepository.FirstOrDefaultAsync(x => x.Id == Request.Id);
-
-            if (UserEntity == null)
-            {
-                msg = Request.lang == "en"
-                    ? "User not found"
-                    : "المستخدم غير موجود";
-
-                return new BaseResponse<object>(msg, false, 404);
-            }
-
-            UserEntity.Email = Request.Email;
-            UserEntity.ArabicName = Request.ArabicName;
-            UserEntity.EnglishName = Request.EnglishName;
-            UserEntity.PhoneNumber = Request.PhoneNumber;
+            _Mapper.Map(Request, ArbitratorToUpdate, typeof(UpdateArbitratorCommand), typeof(Arbitrator));
 
             List<DynamicAttributeValue> AlreadyInsertedDynamicValues = await _DynamicAttributeValueRepository
                 .Where(x => x.RecordIdAsGuid == Request.Id).ToListAsync();
@@ -1531,8 +1508,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
                         }).ToList();
 
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
-                    await _coordinatorRepository.UpdateAsync(CoordinatorToUpdate);
-                    await _userRepository.UpdateAsync(UserEntity);
+                    await _ArbitratorRepository.UpdateAsync(ArbitratorToUpdate);
 
                     Transaction.Complete();
                 }
