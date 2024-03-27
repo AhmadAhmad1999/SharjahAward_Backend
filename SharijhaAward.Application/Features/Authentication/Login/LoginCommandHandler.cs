@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         {
             var user =  _mapper.Map<Domain.Entities.IdentityModels.User>(request);
          
-            var response = await _userRepository.LogInAsync(user);
+            var response = await _userRepository.LogInAsync(user, request.lang);
 
             return response;
             

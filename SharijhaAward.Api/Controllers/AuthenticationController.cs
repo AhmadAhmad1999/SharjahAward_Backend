@@ -37,11 +37,17 @@ namespace SharijhaAward.Api.Controllers
 
         public async Task<ActionResult<string>> Login([FromBody] LoginCommand user)
         {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
             var response = await _Mediator.Send(
                 new LoginCommand()
                 { 
                     Email = user.Email,
-                    Password = user.Password
+                    Password = user.Password,
+                    lang = HeaderValue
                 });
 
             var options = new JsonSerializerOptions

@@ -50,18 +50,22 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task<User> GetByEmailAsync(string email)
         {
             User? user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.isValidAccount);
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.isValidAccount && 
+                    string.Equals(u.Role!.RoleName, "Subscriber", StringComparison.OrdinalIgnoreCase));
+
             return user;
         }
 
-        public async Task<AuthenticationResponse> LogInAsync(User user)
+        public async Task<AuthenticationResponse> LogInAsync(User user, string? lang)
         {
             User? userToLogin = await GetByEmailAsync(user.Email);
             if (userToLogin == null)
             {
                 return new AuthenticationResponse()
                 {
-                    message = "User Not Found"
+                    message = lang == "en"
+                        ? "Invalid email or password"
+                        : "خطأ في الإيميل أو كلمة المرور"
                 };
             }
 
@@ -85,13 +89,17 @@ namespace SharijhaAward.Persistence.Repositories
                     token = token,
                     user = _Mapper.Map<UserDataResponse>(userToLogin),
                     //permissions = permissions.Permission
-                    message = "Login Sucsses"
+                    message = lang == "en"
+                        ? "Login Sucsses"
+                        : "تمت عملية تسجيل الدخول بنجاح"
                 };
                 return response;
             }
             return new AuthenticationResponse()
             {
-                message = "Authentication error, Wrong password"
+                message = lang == "en"
+                    ? "Invalid email or password"
+                    : "خطأ في الإيميل أو كلمة المرور"
             };
            
         }
