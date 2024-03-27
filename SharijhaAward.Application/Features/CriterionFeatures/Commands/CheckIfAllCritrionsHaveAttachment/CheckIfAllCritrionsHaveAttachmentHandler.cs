@@ -29,7 +29,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
 
             List<Criterion> SubCriterionEntities = await _CriterionRepository
                 .Where(x => x.CategoryId == Request.CategoryId &&
-                    x.ParentId == null).ToListAsync();
+                    x.ParentId != null).ToListAsync();
 
             List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
                 .Where(x => SubCriterionEntities.Select(y => y.Id).Contains(x.CriterionId)).ToListAsync();
@@ -37,28 +37,37 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
             List<Criterion> SubCriterionEntitiesWithNoItems = SubCriterionEntities
                 .Where(x => !CriterionItemEntities.Select(y => y.CriterionId).Contains(x.Id)).ToList();
 
-            List<CriterionAttachment> SubCriterionEntitiesWithNoItemsWithNoAttachments = await _CriterionAttachmentRepository
-                .Where(x => !SubCriterionEntitiesWithNoItems.Select(y => y.Id).Contains(x.CriterionId))
-                .Include(x => x.Criterion).ToListAsync();
+            List<CriterionAttachment> InsertedSubCriterionAttachment = await _CriterionAttachmentRepository
+                .Include(x => x.Criterion!)
+                .Where(x => x.Criterion!.CategoryId == Request.CategoryId)
+                .Include(x => x.Criterion)
+                .ToListAsync();
 
-            if (SubCriterionEntitiesWithNoItemsWithNoAttachments.Count() > 0)
+            List<Criterion> CriterionEntitiesWithNoAttachments = SubCriterionEntitiesWithNoItems
+                .Where(x => !InsertedSubCriterionAttachment.Select(y => y.CriterionId).Contains(x.Id)).ToList();
+
+            if (CriterionEntitiesWithNoAttachments.Count() > 0)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? $"You have to attach one file at least to this criterion: {SubCriterionEntitiesWithNoItemsWithNoAttachments[0].Criterion!.EnglishTitle}"
-                    : $"يجب أن يتم إدخال ملحق واحد على الأقل للمعيار: {SubCriterionEntitiesWithNoItemsWithNoAttachments[0].Criterion!.ArabicTitle}";
+                    ? $"You have to attach one file at least to this criterion: {CriterionEntitiesWithNoAttachments[0].EnglishTitle}"
+                    : $"يجب أن يتم إدخال ملحق واحد على الأقل للمعيار: {CriterionEntitiesWithNoAttachments[0].ArabicTitle}";
 
                 return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
-            List<CriterionItemAttachment> CriterionItemEntitiesWithNoAttachments = await _CriterionItemAttachmentRepository
-                .Where(x => !CriterionItemEntities.Select(y => y.Id).Contains(x.CriterionItemId))
-                .Include(x => x.CriterionItem).ToListAsync();
+            List<CriterionItemAttachment> InsertedCriterionItemAttachment = await _CriterionItemAttachmentRepository
+                .Include(x => x.CriterionItem!).Include(x => x.CriterionItem!.Criterion!)
+                .Where(x => x.CriterionItem!.Criterion!.CategoryId == Request.CategoryId)
+                .ToListAsync();
+
+            List<CriterionItem> CriterionItemEntitiesWithNoAttachments = CriterionItemEntities
+                .Where(x => !InsertedCriterionItemAttachment.Select(y => y.CriterionItemId).Contains(x.Id)).ToList();
 
             if (CriterionItemEntitiesWithNoAttachments.Count() > 0)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? $"You have to attach one file at least to this criterion item: {CriterionItemEntitiesWithNoAttachments[0].CriterionItem!.EnglishName}"
-                    : $"يجب أن يتم إدخال ملحق واحد على الأقل لعنصر المعيار: {CriterionItemEntitiesWithNoAttachments[0].CriterionItem!.ArabicName}";
+                    ? $"You have to attach one file at least to this criterion item: {CriterionItemEntitiesWithNoAttachments[0].EnglishName}"
+                    : $"يجب أن يتم إدخال ملحق واحد على الأقل لعنصر المعيار: {CriterionItemEntitiesWithNoAttachments[0].ArabicName}";
 
                 return new BaseResponse<object>(ResponseMessage, false, 400);
             }

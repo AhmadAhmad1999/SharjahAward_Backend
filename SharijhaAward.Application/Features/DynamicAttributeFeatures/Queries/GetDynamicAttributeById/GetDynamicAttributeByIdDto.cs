@@ -17,6 +17,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
         public string? AttributeDataTypeName { get; set; }
         public int DynamicAttributeSectionId { get; set; }
         public string? DynamicAttributeSectionName { get; set; }
+        public int? MaxSizeInKB { get; set; }
         public GeneralValidationDto? GeneralValidation { get; set; }
         public List<DependencyValidationDto> ListOfDependencies { get; set; } = new List<DependencyValidationDto>();
         public List<DynamicAttributeListValueListVM>? Values { get; set; }
