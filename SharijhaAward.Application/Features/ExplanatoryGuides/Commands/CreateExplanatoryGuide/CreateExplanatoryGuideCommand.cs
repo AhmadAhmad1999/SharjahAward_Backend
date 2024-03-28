@@ -16,5 +16,6 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateEx
         public string ArabicTitle { get; set; } = string.Empty;
         public IFormFile EnglishFile { get; set; } = null!;
         public IFormFile ArabicFile { get; set; } = null!;
+        public string lang {  get; set; } = string.Empty;
     }
 }

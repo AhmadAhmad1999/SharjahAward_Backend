@@ -16,6 +16,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
         public string Password { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         public string PhoneNumber { get; set; } = null!;
+        public DateTime CreatedAt { get; set; }
         public string? ImageURL { get; set; }
         public bool isValidAccount { get; set; }
     }

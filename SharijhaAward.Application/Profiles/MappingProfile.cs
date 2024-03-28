@@ -238,6 +238,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Cycle, UpdateCycleCommand>().ReverseMap();
             CreateMap<Cycle, CycleDto>().ReverseMap();
             CreateMap<Cycle, LimitationDto>().ReverseMap();
+
             CreateMap<News, CreateNewsCommand>().ReverseMap();
             CreateMap<News, UpdateNewsCommand>().ReverseMap();
             CreateMap<News, NewsVM>().ReverseMap();
