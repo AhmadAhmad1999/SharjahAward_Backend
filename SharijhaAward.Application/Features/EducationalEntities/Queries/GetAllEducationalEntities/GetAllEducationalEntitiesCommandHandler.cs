@@ -26,11 +26,22 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
         public async Task<BaseResponse<List<EducationalEntitiesListVm>>> Handle(GetAllEducationalEntitiesCommand request, CancellationToken cancellationToken)
         {
             var EducationalEntities = await _eucationalEntityRepository.ListAllAsync();
-            if (request.Name != null && EducationalEntities.Count() > 0)
+            if (request.ArabicName != null && request.EnglishName != null && EducationalEntities.Count() > 0)
             {
-                EducationalEntities = _eucationalEntityRepository.Where(e => e.Name.ToLower().Contains(request.Name!.ToLower())).ToList();
+                EducationalEntities = _eucationalEntityRepository
+                    .Where(e => e.ArabicName.ToLower().Contains(request.ArabicName!.ToLower()) &&
+                        e.EnglishName.ToLower().Contains(request.EnglishName!.ToLower())).ToList();
             }
-            
+            else if (request.EnglishName != null && EducationalEntities.Count() > 0)
+            {
+                EducationalEntities = _eucationalEntityRepository
+                    .Where(e => e.EnglishName.ToLower().Contains(request.EnglishName!.ToLower())).ToList();
+            }
+            else if (request.ArabicName != null && EducationalEntities.Count() > 0)
+            {
+                EducationalEntities = _eucationalEntityRepository
+                    .Where(e => e.ArabicName.ToLower().Contains(request.ArabicName!.ToLower())).ToList();
+            }
             var data = _mapper.Map<List<EducationalEntitiesListVm>>(EducationalEntities);
 
             return new BaseResponse<List<EducationalEntitiesListVm>>("", true, 200, data);

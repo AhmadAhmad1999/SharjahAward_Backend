@@ -8,6 +8,8 @@ using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
+using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator
@@ -16,6 +18,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
         : IRequestHandler<UpdateCoordinatorCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
+        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
+        private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
         private readonly IUserRepository _userRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
@@ -26,7 +30,9 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public UpdateCoordinatorCommandHandler(IUserRepository userRepository, 
+        public UpdateCoordinatorCommandHandler(IUserRepository userRepository,
+            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
+            IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
             IAsyncRepository<Coordinator> coordinatorRepository, 
             IFileService fileService, 
             IMapper mapper,
@@ -38,6 +44,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
             IHttpContextAccessor HttpContextAccessor)
         {
             _coordinatorRepository = coordinatorRepository;
+            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
+            _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
             _userRepository = userRepository;
             _fileService = fileService;
             _mapper = mapper;
@@ -1533,6 +1541,49 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
                     await _coordinatorRepository.UpdateAsync(CoordinatorToUpdate);
                     await _userRepository.UpdateAsync(UserEntity);
+
+                    List<EduEntitiesCoordinator> AlreadyInsertedEduEntitiesCoordinators = await _EduEntitiesCoordinatorRepository
+                        .Where(x => x.CoordinatorId == Request.Id)
+                        .ToListAsync();
+
+                    await _EduEntitiesCoordinatorRepository.RemoveListAsync(AlreadyInsertedEduEntitiesCoordinators);
+
+                    IEnumerable<EduEntitiesCoordinator> NewEducationalEntities = Request.EducationalEntitiesIds
+                        .Select(x => new EduEntitiesCoordinator()
+                        {
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            DeletedAt = null,
+                            isDeleted = false,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            CoordinatorId = Request.Id,
+                            EducationalEntityId = x,
+                            RelatedDate = DateTime.UtcNow
+                        });
+
+                    await _EduEntitiesCoordinatorRepository.AddRangeAsync(NewEducationalEntities);
+
+                    List<EduInstitutionCoordinator> AlreadyInsertedEduInstitutionCoordinators = await _EduInstitutionCoordinatorRepository
+                        .Where(x => x.CoordinatorId == Request.Id)
+                        .ToListAsync();
+
+                    await _EduInstitutionCoordinatorRepository.RemoveListAsync(AlreadyInsertedEduInstitutionCoordinators);
+
+                    IEnumerable<EduInstitutionCoordinator> NewEducationalInstitutions = Request.EducationalInstitutionsIds
+                        .Select(x => new EduInstitutionCoordinator()
+                        {
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            DeletedAt = null,
+                            isDeleted = false,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            CoordinatorId = Request.Id,
+                            EducationalInstitutionId = x
+                        });
+
+                    await _EduInstitutionCoordinatorRepository.AddRangeAsync(NewEducationalInstitutions);
 
                     Transaction.Complete();
                 }

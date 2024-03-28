@@ -160,6 +160,7 @@ using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateGoal;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.UpdateExplanatoryGuide;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
+using SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -369,6 +370,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Criterion, GetMainCriterionByIdDto>().ReverseMap();
             CreateMap<Criterion, SubCriterionListDto>().ReverseMap();
             CreateMap<CriterionItem, CriterionItemListDto>().ReverseMap();
+            CreateMap<Coordinator, GetAllCoordinatorsListVM>().ReverseMap();
         }
     }
 }

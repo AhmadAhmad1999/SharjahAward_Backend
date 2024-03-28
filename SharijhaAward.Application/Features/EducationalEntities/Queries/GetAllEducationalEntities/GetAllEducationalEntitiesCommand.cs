@@ -10,6 +10,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
 {
     public class GetAllEducationalEntitiesCommand :IRequest<BaseResponse<List<EducationalEntitiesListVm>>>
     {
-        public string? Name { get; set; } = string.Empty;
+        public string? ArabicName { get; set; } = string.Empty;
+        public string? EnglishName { get; set; } = string.Empty;
     }
 }

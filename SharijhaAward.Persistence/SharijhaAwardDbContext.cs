@@ -1164,7 +1164,8 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
-                    Name = "Educational Entity 1"
+                    EnglishName = "Educational Entity 1",
+                    ArabicName = "جهة تعليمية 1"
                 }, new EducationalEntity()
                 {
                     isDeleted = false,
@@ -1174,7 +1175,8 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    Name = "Educational Entity 2"
+                    EnglishName = "Educational Entity 2",
+                    ArabicName = "جهة تعليمية 2"
                 });
 
             modelBuilder.Entity<EducationalInstitution>()
