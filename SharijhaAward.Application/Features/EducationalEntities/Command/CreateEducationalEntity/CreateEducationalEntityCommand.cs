@@ -10,7 +10,8 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateE
 {
     public class CreateEducationalEntityCommand : IRequest<BaseResponse<Guid>>
     {
-        public string Name { get; set; } = string.Empty;
+        public string ArabicName { get; set; } = string.Empty;
+        public string EnglishName { get; set; } = string.Empty;
         public string lang { get; set; } = string.Empty;
     }
 }

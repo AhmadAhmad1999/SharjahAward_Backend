@@ -34,11 +34,12 @@ namespace SharijhaAward.Api.Controllers
             
         }
         [HttpGet(Name = "GetAllEducationalEntities")]
-        public async Task<IActionResult> GetAllEducationalEntities([FromQuery] string? Name)
+        public async Task<IActionResult> GetAllEducationalEntities(string? ArabicName, string? EnglishName)
         {
             var response = await _mediator.Send(new GetAllEducationalEntitiesCommand()
             {
-                Name = Name
+                ArabicName = ArabicName,
+                EnglishName = EnglishName
             });
 
             return response.statusCode switch

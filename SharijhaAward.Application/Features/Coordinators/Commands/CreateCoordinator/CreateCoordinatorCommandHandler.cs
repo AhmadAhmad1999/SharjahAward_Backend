@@ -9,6 +9,10 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
+using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
+using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinator
@@ -17,6 +21,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
          : IRequestHandler<CreateCoordinatorCommand, BaseResponse<Guid>>
     {
         private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
+        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
+        private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRepository _userRepository;
         private readonly IFileService _fileService;
@@ -28,7 +34,9 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public CreateCoordinatorCommandHandler(IRoleRepository roleRepository, 
+        public CreateCoordinatorCommandHandler(IRoleRepository roleRepository,
+            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
+            IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
             IAsyncRepository<Coordinator> coordinatorRepository, 
             IFileService fileService, 
             IUserRepository userRepository, 
@@ -41,6 +49,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
             IHttpContextAccessor HttpContextAccessor)
         {
             _roleRepository = roleRepository;
+            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
+            _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
             _coordinatorRepository = coordinatorRepository;
             _userRepository = userRepository;
             _fileService = fileService;
@@ -1564,6 +1574,37 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                         }).ToList();
 
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
+
+                    IEnumerable<EduEntitiesCoordinator> NewEducationalEntities = Request.EducationalEntitiesIds
+                        .Select(x => new EduEntitiesCoordinator()
+                    {
+                        CreatedAt = DateTime.UtcNow,
+                        CreatedBy = null,
+                        DeletedAt = null,
+                        isDeleted = false,
+                        LastModifiedAt = null,
+                        LastModifiedBy = null,
+                        CoordinatorId = User.Id,
+                        EducationalEntityId = x,
+                        RelatedDate = DateTime.UtcNow
+                    });
+
+                    await _EduEntitiesCoordinatorRepository.AddRangeAsync(NewEducationalEntities);
+
+                    IEnumerable<EduInstitutionCoordinator> NewEducationalInstitutions = Request.EducationalInstitutionsIds
+                        .Select(x => new EduInstitutionCoordinator()
+                        {
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            DeletedAt = null,
+                            isDeleted = false,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            CoordinatorId = User.Id,
+                            EducationalInstitutionId = x
+                        });
+
+                    await _EduInstitutionCoordinatorRepository.AddRangeAsync(NewEducationalInstitutions);
 
                     Transaction.Complete();
 

@@ -6,6 +6,7 @@ using SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinator
 using SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinator;
 using SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator;
 using SharijhaAward.Application.Features.Coordinators.Queries.AddCordinatorToEduEntity;
+using SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators;
 using SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById;
 using SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoordinator;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute;
@@ -136,6 +137,35 @@ namespace SharijhaAward.Api.Controllers
             {
                 Id = Id,
                 lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllCoordinators")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllCoordinators(int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllCoordinatorsListVM>> Response = await _mediator.Send(new GetAllCoordinatorsQuery()
+            {
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage
             });
 
             return Response.statusCode switch

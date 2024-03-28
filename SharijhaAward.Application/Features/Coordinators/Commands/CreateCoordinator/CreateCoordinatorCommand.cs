@@ -16,6 +16,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         public Emirates Emirates { get; set; }
         public IFormFile PersonalPhoto { get; set; } = null!;
         public string lang { get; set; } = string.Empty;
+        public List<Guid> EducationalEntitiesIds { get; set; } = new List<Guid>();
+        public List<Guid> EducationalInstitutionsIds { get; set; } = new List<Guid>();
         public List<AddDynamicAttributeValueMainCommand> DynamicAttributesWithValues { get; set; } = new List<AddDynamicAttributeValueMainCommand>();
         public string? WWWRootFilePath { get; set; }
     }
