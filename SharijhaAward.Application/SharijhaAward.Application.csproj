@@ -49,8 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Arbitrators\Commands\DeleteArbitrator\" />
-    <Folder Include="Features\Arbitrators\Commands\UpdateArbitrator\" />
     <Folder Include="Features\Arbitrators\Queries\GetAllArbitrators\" />
     <Folder Include="Features\Arbitrators\Queries\GetArbitratorById\" />
     <Folder Include="Features\EducationalInstitutions\Queries\GetEducationalInstitutionsByEntityId\" />

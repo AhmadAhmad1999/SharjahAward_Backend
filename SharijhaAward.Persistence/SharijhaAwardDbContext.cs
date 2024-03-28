@@ -43,6 +43,7 @@ using SharijhaAward.Domain.Entities.OnePageTextModel;
 using SharijhaAward.Domain.Entities.AchievementModel;
 using SharijhaAward.Domain.Entities.AgendaModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -56,6 +57,7 @@ namespace SharijhaAward.Persistence
         
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
         public DbSet<Arbitrator> Arbitrators { get; set; }
+        public DbSet<CategoryArbitrator> CategoriesArbitrators { get; set; }
         public DbSet<Agenda> Agendas { get; set; }
         public DbSet<RelatedAccount> RelatedAccounts { get; set; }
         public DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; }
@@ -120,6 +122,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Agenda>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Arbitrator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CategoryArbitrator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OnePageText>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
