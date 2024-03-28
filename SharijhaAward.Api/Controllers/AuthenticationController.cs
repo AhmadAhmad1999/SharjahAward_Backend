@@ -47,7 +47,8 @@ namespace SharijhaAward.Api.Controllers
                 { 
                     Email = user.Email,
                     Password = user.Password,
-                    lang = HeaderValue
+                    lang = HeaderValue,
+                    intoAdminDashboard = user.intoAdminDashboard
                 });
 
             var options = new JsonSerializerOptions

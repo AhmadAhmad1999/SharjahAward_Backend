@@ -47,19 +47,21 @@ namespace SharijhaAward.Persistence.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<User> GetByEmailAsync(string email, bool intoAdminDashboard)
         {
             User? user = await _dbContext.Users
                 .Include(x => x.Role!)
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.isValidAccount && 
-                    u.Role!.RoleName.ToLower() == "Subscriber".ToLower());
+                    (intoAdminDashboard 
+                        ? u.Role!.RoleName.ToLower() != "Subscriber".ToLower()
+                        : u.Role!.RoleName.ToLower() == "Subscriber".ToLower()));
 
             return user;
         }
 
-        public async Task<AuthenticationResponse> LogInAsync(User user, string? lang)
+        public async Task<AuthenticationResponse> LogInAsync(User user, string? lang, bool intoAdminDashboard)
         {
-            User? userToLogin = await GetByEmailAsync(user.Email);
+            User? userToLogin = await GetByEmailAsync(user.Email, intoAdminDashboard);
             if (userToLogin == null)
             {
                 return new AuthenticationResponse()
