@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using System;
@@ -28,8 +29,13 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
 
             var data = _mapper.Map<List<CategoryListVM>>(categories);
 
+           
+           
             for (int i = 0; i < data.Count; i++)
             {
+                List<Category> subCategories = _categoryRepository.Where(c => c.ParentId == data[i].Id).ToList();
+               
+                data[i].subcategories = _mapper.Map<List<SubcategoriesListVM>>(subCategories);
                 data[i].Name = request.lang == "ar" ? data[i].ArabicName : data[i].EnglishName;
                 data[i].Description = request.lang == "ar" ? data[i].ArabicDescription : data[i].EnglishDescription;
             }

@@ -30,6 +30,11 @@ public class Cycle : AuditableEntity
     public Status Status { get; set; } = Status.Close;
     public DateTime RegistrationPortalOpeningDate { get; set; }
     public DateTime RegistrationPortalClosingDate { get; set; }
+    public DateTime? SubscriberPortalClosingDate { get; set; }
+    public DateTime? InitialArbitrationStartDate { get; set; }
+    public DateTime? InitialArbitrationEndDate { get; set; }
+    public DateTime? FinalArbitrationStartDate { get; set; }
+    public DateTime? FinalArbitrationEndDate { get; set; }
     // Number of individual categories in which subscriber can entitled.
     [Range(ValidationConstants.IndividualCategoryNumberMinValue, ValidationConstants.IndividualCategoryNumberMaxValue)]
     public int IndividualCategoryNumber { get; set; } = 0; 

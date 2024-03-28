@@ -19,16 +19,11 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         public string EnglishDescription { get; set; } = string.Empty;
         public IFormFile Icon { get; set; } = null!;
         public CategoryClassification CategoryClassification { get; set; }
-        public DateTime? SubscriberPortalClosingDate { get; set; }
-        public DateTime? InitialArbitrationStartDate { get; set; }
-        public DateTime? InitialArbitrationEndDate { get; set; }
-        public DateTime? FinalArbitrationStartDate { get; set; }
-        public DateTime? FinalArbitrationEndDate { get; set; }
-        public int FinalArbitrationQualificationMark { get; set; }
-        public int WinningScore { get; set; }
+        public int? FinalArbitrationQualificationMark { get; set; }
+        public int? WinningScore { get; set; }
         public Status Status { get; set; } = Status.InActive;
-        public bool RelatedToClasses { get; set; }
-        public int ExpectedNumberOfWinners { get; set; }
+        public bool? RelatedToClasses { get; set; }
+        public int? ExpectedNumberOfWinners { get; set; }
         public Guid? ParentId { get; set; }
         public Guid? CycleId { get; set; }
         public string lang {  get; set; } = string.Empty;
