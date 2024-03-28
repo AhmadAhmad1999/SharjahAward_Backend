@@ -1,5 +1,7 @@
-﻿using SharijhaAward.Domain.Constants.CategoryConstants;
+﻿using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories;
+using SharijhaAward.Domain.Constants.CategoryConstants;
 using SharijhaAward.Domain.Constants.Common;
+using SharijhaAward.Domain.Entities.CategoryModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +21,9 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
         public string EnglishDescription { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
         public CategoryClassification CategoryClassification { get; set; }
-        public DateTime? SubscriberPortalClosingDate { get; set; }
-        public DateTime? InitialArbitrationStartDate { get; set; }
-        public DateTime? InitialArbitrationEndDate { get; set; }
-        public DateTime? FinalArbitrationStartDate { get; set; }
-        public DateTime? FinalArbitrationEndDate { get; set; }
         public int FinalArbitrationQualificationMark { get; set; }
         public int WinningScore { get; set; }
-        public Status Status { get; set; } = Status.InActive;
+        public List<SubcategoriesListVM> subcategories { get; set; } = null!;
         public bool RelatedToClasses { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
         

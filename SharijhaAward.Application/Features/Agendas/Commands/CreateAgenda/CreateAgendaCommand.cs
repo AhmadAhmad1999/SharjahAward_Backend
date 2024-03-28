@@ -16,9 +16,9 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public IFormFile Icon { get; set; } = null!;
-        public DateTime? StartDate { get; set; }
-        public DateTime? CurrentDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime CurrentDate { get; set; }
+        public DateTime EndDate { get; set; }
         public AgendaDateType DateType { get; set; }
         public Guid CycleId { get; set; }
     }

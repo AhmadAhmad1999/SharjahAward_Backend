@@ -20,6 +20,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
         public bool UpdateOnIcone {  get; set; }
         public IFormFile? Icon { get; set; } = null!;
         public DateTime StartDate { get; set; }
+        public DateTime CurrentDate { get; set; }
         public DateTime EndDate { get; set; }
         public AgendaStatus Status { get; set; }
         public AgendaDateType DateType { get; set; }
