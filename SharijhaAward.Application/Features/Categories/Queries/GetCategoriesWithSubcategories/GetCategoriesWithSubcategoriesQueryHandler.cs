@@ -51,11 +51,15 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
             }
             var Cycle = await _cycleRepository.GetByIdAsync(CycleId);
          
-            var categories = _categoryRepository.Where(c => c.CycleId == CycleId && c.Status != Domain.Constants.Common.Status.Close).Where(c=>c.ParentId==null).ToList();
+            var categories = _categoryRepository.Where(c => c.CycleId == CycleId && c.Status == Domain.Constants.Common.Status.Active).Where(c=>c.ParentId==null).ToList();
             
             if (Cycle.GroupCategoryNumber == 0)
             {
-                categories = _categoryRepository.Where(c => c.CycleId == CycleId && c.Status != Domain.Constants.Common.Status.Close).Where(c => c.ParentId == null && c.CategoryClassification != Domain.Constants.CategoryConstants.CategoryClassification.Group).ToList();
+                categories = _categoryRepository.Where(c => c.CycleId == CycleId && c.Status == Domain.Constants.Common.Status.Active).Where(c => c.ParentId == null && c.CategoryClassification != Domain.Constants.CategoryConstants.CategoryClassification.Group).ToList();
+            }
+            if(Cycle.IndividualCategoryNumber == 0)
+            {
+                categories = _categoryRepository.Where(c => c.CycleId == CycleId && c.Status == Domain.Constants.Common.Status.Active).Where(c => c.ParentId == null && c.CategoryClassification != Domain.Constants.CategoryConstants.CategoryClassification.Individual).ToList();
             }
            
             var data = _mapper.Map<List<CategoriesSubcategoriesDto>>(categories);
@@ -67,10 +71,15 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
                
                 List<Category> subCategories = _categoryRepository.Where(c => c.ParentId == data[i].Id && c.Status != Domain.Constants.Common.Status.Close).ToList();
                
+                if(Cycle.GroupCategoryNumber == 0)
+                {
+                    subCategories = _categoryRepository.Where(c => c.ParentId == data[i].Id && c.Status == Domain.Constants.Common.Status.Active && c.CategoryClassification != Domain.Constants.CategoryConstants.CategoryClassification.Group).ToList();
+                }
                 if(Cycle.IndividualCategoryNumber == 0)
                 {
-                    subCategories = _categoryRepository.Where(c => c.ParentId == data[i].Id && c.Status != Domain.Constants.Common.Status.Close && c.CategoryClassification != Domain.Constants.CategoryConstants.CategoryClassification.Individual).ToList();
+                    subCategories = _categoryRepository.Where(c => c.ParentId == data[i].Id && c.Status == Domain.Constants.Common.Status.Active && c.CategoryClassification != Domain.Constants.CategoryConstants.CategoryClassification.Individual).ToList();
                 }
+
                 data[i].subcategories = _mapper.Map<List<SubcategoriesListVM>>(subCategories);
                 
                 for(int j=0; j < subCategories.Count; j++)

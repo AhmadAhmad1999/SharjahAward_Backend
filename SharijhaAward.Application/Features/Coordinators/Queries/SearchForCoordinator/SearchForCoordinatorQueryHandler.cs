@@ -37,7 +37,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
         public async Task<BaseResponse<List<CoordinatorSearchListVM>>> Handle(SearchForCoordinatorQuery request, CancellationToken cancellationToken)
         {
             var Coordinators = await _coordinatorRepository.Include(c=>c.EducationCoordinators!).Include(c => c.InstitutionCoordinators).ToListAsync();
-            if (request.Emirates != null && request.EducationType != null)
+            if (request.Emirates != null || request.EducationType != null)
             {
 
                 var CoordinatorParam = Expression.Parameter(typeof(Coordinator), "c");
