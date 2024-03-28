@@ -59,13 +59,14 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
             if (CheckPassword != user.Password)
             {
                 msg = request.lang == "en"
-                    ? "old password is not matching"
-                    : "كلمة المرور غير متطابقة";
+                    ? "Old password is not correct"
+                    : "كلمة المرور القديمة غير صحيحة";
+
                 return new BaseResponse<object>(msg, false, 400);
             }
             msg = request.lang == "en"
-                   ? "The Password has been Changed"
-                   : "تم تغيير كلمة المرور بنجاح";
+                ? "Old password is not correct"
+                : "كلمة المرور القديمة غير صحيحة";
 
             request.NewPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: request.NewPassword,
