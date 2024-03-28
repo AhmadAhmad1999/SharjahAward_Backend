@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
         public DateTime? FinalArbitrationEndDate { get; set; }
         public int FinalArbitrationQualificationMark { get; set; }
         public int WinningScore { get; set; }
-        public Status Status { get; set; } = Status.InActive;
+        public Status Status { get; set; } = Status.Open;
         public bool RelatedToClasses { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
         public string lang { get; set; } = string.Empty;

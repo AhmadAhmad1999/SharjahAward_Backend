@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
             _mapper.Map(request, categoryToUpdate, typeof(UpdateCategoryCommand), typeof(Category));
            
             if (request.UpdateOnIcon)
-                categoryToUpdate.Icon = await _fileService.SaveFileAsync(request.Icon);
+                categoryToUpdate.Icon = await _fileService.SaveFileAsync(request.Icon!);
             else
                 categoryToUpdate.Icon = categoryObject.Icon;
 

@@ -51,7 +51,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
 
         public async Task<BaseResponse<int>> Handle(CreateProvidedFormCommand request, CancellationToken cancellationToken)
         {
-            
+            string msg = request.lang == "en"
+                        ? "Provided Form has been Added"
+                        : "تم إنشاء إستمارة التسجيل";
+
             var UserId = _JwtProvider.GetUserIdFromToken(request.token);
 
             if(UserId == null)
@@ -67,16 +70,44 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             {
                 if (FormsOfUser[i].categoryId == category.Id)
                 {
-                    string msg = request.lang == "en"
+                    msg = request.lang == "en"
                         ? "You have already subscribed to this category"
                         : "لقد اشتركت بهذه الفئة بالفعل";
 
                     return new BaseResponse<int>(msg, false, 400);
                 }
             }
+            var User = await _userRepository.GetByIdAsync(new Guid(UserId));
             var cycle = await _CycleRepository.GetByIdAsync(category.CycleId);
 
+            if (category.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Individual)
+            {
+                if(User.NumberOfIndividualCategories >= cycle.IndividualCategoryNumber)
+                {
+                    msg = request.lang == "en"
+                         ? "You cannot subscribe to more Individual Categories"
+                         : "لا يمكنك الاشتراك بالمزيد من الفئات الفردية";
+
+                    return new BaseResponse<int>(msg, false, 400);
+                }
+                User.NumberOfIndividualCategories++;
+            }
+            else
+            {
+                if (User.NumberOfGroupCategories >= cycle.GroupCategoryNumber)
+                {
+                    msg = request.lang == "en"
+                        ? "You cannot subscribe to more Group Categories"
+                        : "لا يمكنك الاشتراك بالمزيد من الفئات الجماعية";
+
+                    return new BaseResponse<int>(msg, false, 400);
+                }
+                User.NumberOfGroupCategories++;
+            }
+            
+
             var ProvidedForm = _mapper.Map<Domain.Entities.ProvidedFormModel.ProvidedForm>(request);
+          
             ProvidedForm.userId = new Guid(UserId);
             ProvidedForm.CycleNumber = cycle.CycleNumber;
             ProvidedForm.CycleYear = cycle.Year;
@@ -86,8 +117,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             ProvidedForm.TotalStep = 7;
             ProvidedForm.PercentCompletion = (ProvidedForm.CurrentStep * 100) / ProvidedForm.TotalStep;
 
-            
             var data =  await _Providedrepository.AddAsync(ProvidedForm);
+
+            await _userRepository.UpdateAsync(User);
 
             var terms = _termRepository.Where(t => t.CategoryId == category.Id).ToList();
             for (int i = 0; i < terms.Count(); i++)
@@ -102,7 +134,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
                 };
                 await _conditionFormsRepository.AddAsync(ConditionsProvidedForms);
             }
-            return new BaseResponse<int>("", true, 200, data.Id);
+            return new BaseResponse<int>(msg, true, 200, data.Id);
         }
     }
 }
