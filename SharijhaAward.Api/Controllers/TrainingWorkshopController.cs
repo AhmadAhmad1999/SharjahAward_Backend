@@ -9,6 +9,7 @@ using PdfSharpCore.Pdf;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment;
+using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.UpdateWorkshopAttachment;
 using SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTrainingWorkshop;
 using SharijhaAward.Application.Features.TrainingWorkshops.Command.DeleteTrainingWorkshop;
 using SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTrainingWrokshop;
@@ -145,14 +146,24 @@ namespace SharijhaAward.Api.Controllers
             };
 
         }
+        [HttpPut("UpdateAttachmentOfTrainingWorkShop",Name= "UpdateAttachmentOfTrainingWorkShop")]
+        public async Task<IActionResult> UpdateAttachmentOfTrainingWorkShop(UpdateWorkshopAttachmentCommand command)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+           
+            command.lang = language!;
+
+            var response = await _mediator.Send(command);
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
         [HttpGet("Video",Name = "Video")]
-        //public async Task<IActionResult> Video()
-        //{
-        //    var filename = "file_example.mp4";
-        //    string path = Path.Combine(_environment.WebRootPath, "UploadedFiles/") + "9f9adbfa-e681-4436-b70e-20021bd04da8.mp4";
-        //    var filestream = await _fileService.ReadFileAsync(path);
-        //    return File(filestream, contentType: "video/mp4", fileDownloadName: filename, enableRangeProcessing: true);
-        //}
         public IActionResult GetVideo()
         {
             var videoFileName = $"video.mp4";

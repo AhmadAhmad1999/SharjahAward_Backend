@@ -42,7 +42,7 @@ namespace SharijhaAward.Application.Features.FAQs.Commands.DeleteFAQ
                    ? "FAQ has been Deleted"
                    : "تم حذف السؤال الشائع";
 
-            return new BaseResponse<object>(msg, false, 404);
+            return new BaseResponse<object>(msg, true, 200);
         }
     }
 }

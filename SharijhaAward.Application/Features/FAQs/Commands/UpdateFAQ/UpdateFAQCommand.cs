@@ -15,7 +15,6 @@ namespace SharijhaAward.Application.Features.FAQs.Commands.UpdateFAQ
         public string EnglishQuestion { get; set; } = string.Empty;
         public string ArabicAnswer { get; set; } = string.Empty;
         public string EnglishAnswer { get; set; } = string.Empty;
-        public Guid CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

@@ -28,6 +28,10 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost(Name = "CreateExplanatoryGuide")]
         public async Task<IActionResult> CreateExplanatoryGuide([FromForm] CreateExplanatoryGuideCommand command)
         {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            command.lang = Language!;
             var response = await _mediator.Send(command);
 
             return response.statusCode switch
@@ -47,9 +51,14 @@ namespace SharijhaAward.Api.Controllers
                 CategoryId = Id,
                 lang = Language!
             });
-
-            // Return the file as a downloadable response
-            return File(response.data!.fileContent, "application/pdf", "ExplanatoryGuide.pdf");
+            return response.statusCode switch
+            {
+                // Return the file as a downloadable response
+                200 => File(response.data!.fileContent, "application/pdf", "ExplanatoryGuide.pdf"),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+          
         }
 
         [HttpGet("GetExplanatoryGuideDetailsByCategoryId/{Id}", Name = "GetExplanatoryGuideDetailsByCategoryId")]

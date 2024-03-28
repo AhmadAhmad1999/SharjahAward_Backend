@@ -34,10 +34,18 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateEx
 
         public async Task<BaseResponse<object>> Handle(CreateExplanatoryGuideCommand request, CancellationToken cancellationToken)
         {
+            string msg = request.lang == "en"
+                ? "The Explanatory has been Added"
+                : "تم إضافة الدليل التفسيري";
+
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             if(category == null)
             {
-                return new BaseResponse<object>("Not Found", false, 404);
+                msg = request.lang == "en"
+                ? "The Explanatory Not found"
+                : " الدليل التفسيري غير موجود ";
+
+                return new BaseResponse<object>(msg, false, 404);
             }
             var data = _mapper.Map<ExplanatoryGuide>(request);
             data.ArabicFilePath = await _attachmentFileService.SaveFileAsync(request.ArabicFile);
@@ -45,7 +53,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateEx
             
             await _explanatoryGuideRepository.AddAsync(data);
 
-            return new BaseResponse<object>("", true, 200);
+            return new BaseResponse<object>(msg, true, 200);
             
         }
     }
