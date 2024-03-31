@@ -91,30 +91,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                         return new BaseResponse<Guid>(ResponseMessage, false, 400);
                     }
 
-                    Guid NewArbitratorEntityId = Guid.NewGuid(); 
-
-                    IEnumerable<Guid> CheckIfThereIsUserWithTheSameId = _UserRepository
-                        .ListAllAsync()
-                        .Result.Select(x => x.Id);
-
-                    bool WhileLoopBreaker = true;
-
-                    while (WhileLoopBreaker)
-                    {
-                        if (!CheckIfThereIsUserWithTheSameId.Contains(NewArbitratorEntityId))
-                        {
-                            WhileLoopBreaker = false;
-                            break;
-                        }
-
-                        NewArbitratorEntityId = Guid.NewGuid();
-                    }
-
-                    Arbitrator NewArbitratorEntity = _Mapper.Map<Arbitrator>(Request);
-                    NewArbitratorEntity.Id = NewArbitratorEntityId;
-
-                    await _ArbitratorRepository.AddAsync(NewArbitratorEntity);
-
                     Role? Role = await _RoleRepository.GetByName("Arbitrator");
 
                     if (Role is null)
@@ -128,7 +104,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 
                     Domain.Entities.IdentityModels.User NewUserEntity = new Domain.Entities.IdentityModels.User()
                     {
-                        Id = NewArbitratorEntityId,
                         isDeleted = false,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
@@ -151,11 +126,16 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 
                     await _UserRepository.AddAsync(NewUserEntity);
 
+                    Arbitrator NewArbitratorEntity = _Mapper.Map<Arbitrator>(Request);
+                    NewArbitratorEntity.Id = NewUserEntity.Id;
+
+                    await _ArbitratorRepository.AddAsync(NewArbitratorEntity);
+
                     List<CategoryArbitrator> ListOfCategoriesArbitrators = Request.Categories
                         .Select(x => new CategoryArbitrator()
                         {
                             CategoryId = x,
-                            ArbitratorId = NewArbitratorEntityId,
+                            ArbitratorId = NewUserEntity.Id,
                             isDeleted = false,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
@@ -186,7 +166,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                             // Unique Constraint..
                             DynamicAttributeValue? CheckUnique = await _DynamicAttributeValueRepository
                                 .IncludeThenFirstOrDefaultAsync(x => x.DynamicAttribute!, x => x.DynamicAttributeId == DynamicAttributeEntity.Id &&
-                                    x.RecordIdAsGuid != NewArbitratorEntityId && x.DynamicAttribute!.IsUnique &&
+                                    x.RecordIdAsGuid != NewUserEntity.Id && x.DynamicAttribute!.IsUnique &&
                                     x.Value.ToLower() == InputDynamicAttributeWithValues.ValueAsString.ToLower());
 
                             if (CheckUnique != null)
@@ -1540,7 +1520,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 
                     // Hard Delete On Dynamic Values..
                     List<DynamicAttributeValue> DynamicValuesToDelete = await _DynamicAttributeValueRepository
-                        .Where(x => x.RecordIdAsGuid == NewArbitratorEntityId).ToListAsync();
+                        .Where(x => x.RecordIdAsGuid == NewUserEntity.Id).ToListAsync();
 
                     if (DynamicValuesToDelete.Count() > 0)
                         await _DynamicAttributeValueRepository.RemoveListAsync(DynamicValuesToDelete);
@@ -1556,7 +1536,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                             ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
                             : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
 
-                        string? FileName = $"{NewArbitratorEntityId}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
+                        string? FileName = $"{NewUserEntity.Id}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
 
                         string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
 
@@ -1587,7 +1567,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                             DeletedAt = null,
                             DynamicAttributeId = x.DynamicAttributeId,
                             isDeleted = false,
-                            RecordIdAsGuid = NewArbitratorEntityId,
+                            RecordIdAsGuid = NewUserEntity.Id,
                             LastModifiedAt = null,
                             LastModifiedBy = null,
                             Value = x.ValueAsString!
@@ -1597,7 +1577,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 
                     Transaction.Complete();
 
-                    return new BaseResponse<Guid>(ResponseMessage, true, 200, NewArbitratorEntityId);
+                    return new BaseResponse<Guid>(ResponseMessage, true, 200, NewUserEntity.Id);
                 }
                 catch (Exception)
                 {
