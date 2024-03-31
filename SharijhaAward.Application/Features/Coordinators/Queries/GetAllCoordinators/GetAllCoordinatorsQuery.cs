@@ -6,7 +6,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
 {
     public class GetAllCoordinatorsQuery : IRequest<BaseResponse<List<GetAllCoordinatorsListVM>>>
     {
-        public string lang { get; set; } = string.Empty;
+        public string? lang { get; set; }
         public int page { get; set; }
         public int pageSize { get; set; }
     }

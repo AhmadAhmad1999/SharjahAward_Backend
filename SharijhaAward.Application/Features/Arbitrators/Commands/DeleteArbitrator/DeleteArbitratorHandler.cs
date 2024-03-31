@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using System.Transactions;
 
@@ -11,14 +12,17 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitrat
     public class DeleteArbitratorHandler : IRequestHandler<DeleteArbitratorCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
 
         public DeleteArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
             IUserRepository UserRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
         {
             _ArbitratorRepository = ArbitratorRepository;
+            _CategoryArbitratorRepository = CategoryArbitratorRepository;
             _UserRepository = UserRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
         }
@@ -55,6 +59,10 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitrat
                 .Where(x => x.RecordIdAsGuid == Request.Id)
                 .ToListAsync();
 
+            List<CategoryArbitrator> AlreadyInsertedCategoryArbitrators = await _CategoryArbitratorRepository
+                .Where(x => x.ArbitratorId == Request.Id)
+                .ToListAsync();
+
             using (TransactionScope Transaction = new TransactionScope())
             {
                 try
@@ -64,6 +72,9 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitrat
 
                     if (DynamicAttributeValues.Count() > 0)
                         await _DynamicAttributeValueRepository.DeleteListAsync(DynamicAttributeValues);
+
+                    if (AlreadyInsertedCategoryArbitrators.Count() > 0)
+                        await _CategoryArbitratorRepository.DeleteListAsync(AlreadyInsertedCategoryArbitrators);
 
                     ResponseMessage = Request.lang == "en"
                         ? "Arbitrator has been deleted successfully"

@@ -61,17 +61,17 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
         {
             var CoordinatorToUpdate = await _coordinatorRepository.GetByIdAsync(Request.Id);
             
-            string msg = Request.lang == "en"
+            string ResponseMessage = Request.lang == "en"
                 ? "Coordinator has been Updated"
                 : "تم تعديل المنسق";
 
             if(CoordinatorToUpdate == null)
             {
-                msg = Request.lang == "en"
+                ResponseMessage = Request.lang == "en"
                     ? "Coordinator not found"
                     : "المنسق غير موجود";
 
-                return new BaseResponse<object>(msg, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
             _mapper.Map(Request, CoordinatorToUpdate, typeof(UpdateCoordinatorCommand), typeof(Coordinator));
@@ -83,11 +83,11 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
 
             if (UserEntity == null)
             {
-                msg = Request.lang == "en"
+                ResponseMessage = Request.lang == "en"
                     ? "User not found"
                     : "المستخدم غير موجود";
 
-                return new BaseResponse<object>(msg, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
             UserEntity.Email = Request.Email;
@@ -97,8 +97,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
 
             List<DynamicAttributeValue> AlreadyInsertedDynamicValues = await _DynamicAttributeValueRepository
                 .Where(x => x.RecordIdAsGuid == Request.Id).ToListAsync();
-
-            string ResponseMessage = string.Empty;
 
             foreach (AddDynamicAttributeValueMainCommand InputDynamicAttributeWithValues in Request.DynamicAttributesWithValues)
             {
@@ -1594,7 +1592,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
                 }
             }
 
-            return new BaseResponse<object>(msg, true, 200);
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }
