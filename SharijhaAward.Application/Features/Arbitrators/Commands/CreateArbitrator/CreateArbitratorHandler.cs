@@ -1577,6 +1577,10 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 
                     Transaction.Complete();
 
+                    ResponseMessage = Request.lang == "en"
+                        ? "Created successfully"
+                        : "تم إنشاء المحكم بنجاح";
+
                     return new BaseResponse<Guid>(ResponseMessage, true, 200, NewUserEntity.Id);
                 }
                 catch (Exception)

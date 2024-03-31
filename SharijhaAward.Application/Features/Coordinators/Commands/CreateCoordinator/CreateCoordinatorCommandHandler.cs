@@ -1589,7 +1589,11 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
 
                     Transaction.Complete();
 
-                    return new BaseResponse<Guid>("", true, 200, data.Id);
+                    ResponseMessage = Request.lang == "en"
+                        ? "Created successfully"
+                        : "تم إنشاء المنسق بنجاح";
+
+                    return new BaseResponse<Guid>(ResponseMessage, true, 200, data.Id);
                 }
                 catch (Exception)
                 {

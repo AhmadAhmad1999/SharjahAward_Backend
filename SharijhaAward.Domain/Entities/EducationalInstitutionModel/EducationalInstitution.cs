@@ -1,11 +1,6 @@
 ﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.EducationalInstitutionModel
 {

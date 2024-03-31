@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.DeleteGeneralF
             await _GeneralFAQRepository.DeleteAsync(GeneralFAQEntityToDelete);
 
             ResponseMessage = Request.lang == "en"
-                ? "General FAQ has been Deleted successfully"
+                ? "General FAQ has been deleted successfully"
                 : "تم حذف السؤال الشائع العام بنجاح";
 
             return new BaseResponse<object>(ResponseMessage, true, 200);
