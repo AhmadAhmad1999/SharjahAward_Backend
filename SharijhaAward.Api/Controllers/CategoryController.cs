@@ -76,7 +76,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name="GetAllCategories")]
-        public async Task<IActionResult> GetAllCategories(int page = 1 , int perPage = 10)
+        public async Task<IActionResult> GetAllCategories(Guid? CycleId, int page = 1 , int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -85,7 +85,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = Language!,
                 page = page,
-                pageSize = perPage
+                pageSize = perPage,
+                CycleId = CycleId
             });
 
             return response.statusCode switch
