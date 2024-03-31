@@ -6,6 +6,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using System.Transactions;
 
@@ -15,6 +16,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         : IRequestHandler<UpdateArbitratorCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
@@ -24,8 +26,9 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public UpdateArbitratorCommandHandler(IUserRepository userRepository,
-            IAsyncRepository<Arbitrator> ArbitratorRepository,
+        public UpdateArbitratorCommandHandler(IAsyncRepository<Arbitrator> ArbitratorRepository, 
+            IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
+            IUserRepository UserRepository,
             IMapper Mapper,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<Dependency> DependencyRepository,
@@ -35,7 +38,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
             IHttpContextAccessor HttpContextAccessor)
         {
             _ArbitratorRepository = ArbitratorRepository;
-            _UserRepository = userRepository;
+            _CategoryArbitratorRepository = CategoryArbitratorRepository;
+            _UserRepository = UserRepository;
             _Mapper = Mapper;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DependencyRepository = DependencyRepository;
@@ -49,28 +53,29 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         {
             var ArbitratorToUpdate = await _ArbitratorRepository.GetByIdAsync(Request.Id);
 
-            string msg = Request.lang == "en"
+            string ResponseMessage = Request.lang == "en"
                 ? "Arbitrator has been Updated"
                 : "تم تعديل المنسق";
 
             if (ArbitratorToUpdate == null)
             {
-                msg = Request.lang == "en"
+                ResponseMessage = Request.lang == "en"
                     ? "Arbitrator not found"
                     : "المنسق غير موجود";
 
-                return new BaseResponse<object>(msg, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository.FirstOrDefaultAsync(x => x.Id == Request.Id);
+            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (UserEntity == null)
             {
-                msg = Request.lang == "en"
+                ResponseMessage = Request.lang == "en"
                     ? "User not found"
                     : "المستخدم غير موجود";
 
-                return new BaseResponse<object>(msg, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
             _Mapper.Map(Request, ArbitratorToUpdate, typeof(UpdateArbitratorCommand), typeof(Arbitrator));
@@ -82,8 +87,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
 
             List<DynamicAttributeValue> AlreadyInsertedDynamicValues = await _DynamicAttributeValueRepository
                 .Where(x => x.RecordIdAsGuid == Request.Id).ToListAsync();
-
-            string ResponseMessage = string.Empty;
 
             foreach (AddDynamicAttributeValueMainCommand InputDynamicAttributeWithValues in Request.DynamicAttributesWithValues)
             {
@@ -1508,7 +1511,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                         DynamicAttributeAsFile.ValueAsString = FilePathToSaveIntoDataBase;
                     }
 
-                    List<DynamicAttributeValue> DynamicAttributeValuesEntities = Request.DynamicAttributesWithValues
+                    IEnumerable<DynamicAttributeValue> DynamicAttributeValuesEntities = Request.DynamicAttributesWithValues
                         .Where(x => !string.IsNullOrEmpty(x.ValueAsString))
                         .Select(x => new DynamicAttributeValue()
                         {
@@ -1521,11 +1524,32 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                             LastModifiedAt = null,
                             LastModifiedBy = null,
                             Value = x.ValueAsString!
-                        }).ToList();
+                        });
 
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
                     await _ArbitratorRepository.UpdateAsync(ArbitratorToUpdate);
                     await _UserRepository.UpdateAsync(UserEntity);
+
+                    List<CategoryArbitrator> AlreadyInsertedCategoryArbitrators = await _CategoryArbitratorRepository
+                        .Where(x => x.ArbitratorId == Request.Id)
+                        .ToListAsync();
+
+                    await _CategoryArbitratorRepository.RemoveListAsync(AlreadyInsertedCategoryArbitrators);
+
+                    IEnumerable<CategoryArbitrator> NewCategoryArbitrators = Request.Categories
+                        .Select(x => new CategoryArbitrator()
+                        {
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            DeletedAt = null,
+                            isDeleted = false,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            CategoryId = x,
+                            ArbitratorId = Request.Id
+                        });
+
+                    await _CategoryArbitratorRepository.AddRangeAsync(NewCategoryArbitrators);
 
                     Transaction.Complete();
                 }
@@ -1536,7 +1560,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                 }
             }
 
-            return new BaseResponse<object>(msg, true, 200);
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById
+﻿namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById
 {
-    public class EduEntitiesCoordinatorDto
+    public class ArbitratorCategoryDto
     {
         public Guid Id { get; set; }
         public string ArabicName { get; set; } = null!;

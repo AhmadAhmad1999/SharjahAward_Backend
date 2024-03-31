@@ -6,88 +6,65 @@ using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDyn
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionForAddAdminDashboard;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
-using SharijhaAward.Domain.Entities.CoordinatorModel;
+using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
-using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
-using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 
-namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById
+namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById
 {
-    public class GetCoordinatorByIdQueryHandler
-        : IRequestHandler<GetCoordinatorByIdQuery, BaseResponse<GetCoordinatorByIdResponse>>
+    public class GetArbitratorByIdHandler : IRequestHandler<GetArbitratorByIdQuery, BaseResponse<GetArbitratorByIdResponse>>
     {
-        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
-        private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<AttributeDataType> _AttributeDataTypeRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
-        private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
-
-        public GetCoordinatorByIdQueryHandler(IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
-            IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
+        public GetArbitratorByIdHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
             IMapper Mapper,
             IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<AttributeDataType> AttributeDataTypeRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
-            IAsyncRepository<Coordinator> CoordinatorRepository)
+            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository)
         {
-            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
-            _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
+            _ArbitratorRepository = ArbitratorRepository;
+            _CategoryArbitratorRepository = CategoryArbitratorRepository;
             _Mapper = Mapper;
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _AttributeDataTypeRepository = AttributeDataTypeRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
-            _CoordinatorRepository = CoordinatorRepository;
         }
-
-        public async Task<BaseResponse<GetCoordinatorByIdResponse>> Handle(GetCoordinatorByIdQuery Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<GetArbitratorByIdResponse>> Handle(GetArbitratorByIdQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
-            Coordinator? CoordinatorEntity = await _CoordinatorRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.CoordinatorId);
+            Arbitrator? ArbitratorEntity = await _ArbitratorRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.ArbitratorId);
 
-            if (CoordinatorEntity == null)
+            if (ArbitratorEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Coordinator is not Found"
-                    : "المنسق غير موجود";
+                    ? "Arbitrator is not Found"
+                    : "المحكم غير موجود";
 
-                return new BaseResponse<GetCoordinatorByIdResponse>(ResponseMessage, false, 404);
+                return new BaseResponse<GetArbitratorByIdResponse>(ResponseMessage, false, 404);
             }
 
-            CoordinatorDto data = _Mapper.Map<CoordinatorDto>(CoordinatorEntity);
-            
-            data.Name = Request.lang == "en"
-                ? data.EnglishName
-                : data.ArabicName;
+            ArbitratorDto ArbitratorDto = _Mapper.Map<ArbitratorDto>(ArbitratorEntity);
 
-            data.EducationalEntities = await _EduEntitiesCoordinatorRepository
-                .Where(x => x.CoordinatorId == CoordinatorEntity.Id)
-                .Include(x => x.EducationalEntity)
-                .Select(x => new EduEntitiesCoordinatorDto()
+            ArbitratorDto.ArbitratorCategories = await _CategoryArbitratorRepository
+                .Where(x => x.ArbitratorId == Request.ArbitratorId)
+                .Include(x => x.Category!)
+                .Select(x => new ArbitratorCategoryDto()
                 {
-                    Id = x.EducationalEntity.Id,
-                    ArabicName = x.EducationalEntity.ArabicName,
-                    EnglishName = x.EducationalEntity.EnglishName
-                }).ToListAsync();
-
-            data.InstitutionEntities = await _EduInstitutionCoordinatorRepository
-                .Where(x => x.CoordinatorId == CoordinatorEntity.Id)
-                .Include(x => x.EducationalInstitution)
-                .Select(x => new EduInstitutionCoordinatorDto()
-                {
-                    Id = x.EducationalInstitution.Id,
-                    ArabicName = x.EducationalInstitution.ArabicName,
-                    EnglishName = x.EducationalInstitution.EnglishName
+                    Id = x.Category!.Id,
+                    ArabicName = x.Category!.ArabicName,
+                    EnglishName = x.Category!.EnglishName
                 }).ToListAsync();
 
             //
@@ -98,7 +75,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                 ? Request.lang.ToLower() : "ar";
 
             List<GetAllDynamicAttributeSectionsForAddListVMAdminDashboard> DynamicAttributeSections = _DynamicAttributeSectionRepository
-                .IncludeThenWhere(x => x.AttributeTableName!, x => x.RecordIdOnRelation == CoordinatorEntity.Id &&
+                .IncludeThenWhere(x => x.AttributeTableName!, x => x.RecordIdOnRelation == ArbitratorEntity.Id &&
                     x.AttributeTableName!.Name.ToLower() == Helpers.Constants.TableNames.Coordinator.ToString().ToLower())
                 .Select(x => new GetAllDynamicAttributeSectionsForAddListVMAdminDashboard()
                 {
@@ -112,7 +89,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
 
             List<DynamicAttributeValue> AlreadyInsertedDynamicAttributeValues = await _DynamicAttributeValueRepository
                 .Where(x => x.RecordIdAsGuid != null
-                    ? x.RecordIdAsGuid == Request.CoordinatorId
+                    ? x.RecordIdAsGuid == Request.ArbitratorId
                     : false).ToListAsync();
 
             foreach (GetAllDynamicAttributeSectionsForAddListVMAdminDashboard DynamicAttributeSection in DynamicAttributeSections)
@@ -173,13 +150,13 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                 }
             }
 
-            GetCoordinatorByIdResponse Response = new GetCoordinatorByIdResponse()
+            GetArbitratorByIdResponse Response = new GetArbitratorByIdResponse()
             {
-                CoordinatorDto = data,
+                ArbitratorDto = ArbitratorDto,
                 DynamicAttributesSections = DynamicAttributeSections
             };
 
-            return new BaseResponse<GetCoordinatorByIdResponse>(ResponseMessage, true, 200, Response);
+            return new BaseResponse<GetArbitratorByIdResponse>(ResponseMessage, true, 200, Response);
         }
     }
 }
