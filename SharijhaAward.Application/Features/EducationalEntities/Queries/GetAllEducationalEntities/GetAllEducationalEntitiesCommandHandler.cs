@@ -3,11 +3,6 @@ using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEducationalEntities
 {
@@ -15,12 +10,10 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
         : IRequestHandler<GetAllEducationalEntitiesCommand, BaseResponse<List<EducationalEntitiesListVm>>>
     {
         private readonly IAsyncRepository<EducationalEntity> _eucationalEntityRepository;
-        private readonly IMapper _mapper;
 
-        public GetAllEducationalEntitiesCommandHandler(IAsyncRepository<EducationalEntity> eucationalEntityRepository, IMapper mapper)
+        public GetAllEducationalEntitiesCommandHandler(IAsyncRepository<EducationalEntity> eucationalEntityRepository)
         {
             _eucationalEntityRepository = eucationalEntityRepository;
-            _mapper = mapper;
         }
 
         public async Task<BaseResponse<List<EducationalEntitiesListVm>>> Handle(GetAllEducationalEntitiesCommand request, CancellationToken cancellationToken)
@@ -42,8 +35,13 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
                 EducationalEntities = _eucationalEntityRepository
                     .Where(e => e.ArabicName.ToLower().Contains(request.ArabicName!.ToLower())).ToList();
             }
-            var data = _mapper.Map<List<EducationalEntitiesListVm>>(EducationalEntities);
-
+            var data = EducationalEntities.Select(x => new EducationalEntitiesListVm()
+            {
+                Id = x.Id,
+                Name = request.lang == "en"
+                    ? x.EnglishName
+                    : x.ArabicName
+            }).ToList();
             return new BaseResponse<List<EducationalEntitiesListVm>>("", true, 200, data);
         }
     }

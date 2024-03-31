@@ -163,6 +163,9 @@ using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
 using SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById;
+using SharijhaAward.Application.Features.EducationalEntities.Command.UpdateEducationalEntity;
+using SharijhaAward.Application.Features.EducationalEntities.Queries.GetEducationalEntityById;
+using SharijhaAward.Application.Features.EducationalInstitutions.Commands.UpdateEducationalInstitutions;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -342,6 +345,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GeneralFAQCategory, UpdateGeneralFAQCategoryCommand>().ReverseMap();
             CreateMap<Criterion, UpdateCriterionCommand>().ReverseMap();
             CreateMap<CriterionItem, UpdateCriterionItemCommand>().ReverseMap();
+            CreateMap<EducationalEntity, UpdateEducationalEntityCommand>().ReverseMap();
+            CreateMap<EducationalInstitution, UpdateEducationalInstitutionsCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -375,6 +380,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Coordinator, GetAllCoordinatorsListVM>().ReverseMap();
             CreateMap<Arbitrator, GetAllArbitratorsListVM>().ReverseMap();
             CreateMap<Arbitrator, ArbitratorDto>().ReverseMap();
+            CreateMap<EducationalEntity, GetEducationalEntityByIdDto>().ReverseMap();
         }
     }
 }
