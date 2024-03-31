@@ -55,62 +55,47 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
            
             if (countOfAgenda > 0)
             {
+                var AllAgenda = await _agendaRepository.ListAllAsync();
                 var LastAgenda = await _agendaRepository.OrderBy(a=>a.CreatedAt).LastOrDefaultAsync(a =>true);
                 var FirstAgenda = await _agendaRepository.OrderBy(a => a.CreatedAt).FirstOrDefaultAsync(a => true);
-
-                if (agenda.StartDate != null && agenda.EndDate != null)
+               
+                if(request.CurrentDate > request.EndDate || request.CurrentDate < request.StartDate)
                 {
-                    if (agenda.StartDate <= LastAgenda!.EndDate
-                        && agenda.EndDate >= FirstAgenda!.StartDate)
+                    msg = request.lang == "en"
+                        ? "Invalid Input in date"
+                        : "الوقت المدخل غير صحيح";
+
+                    return new BaseResponse<object>(msg, false, 400);
+                }
+
+                if(request.StartDate >= FirstAgenda!.StartDate && request.EndDate <= LastAgenda!.EndDate)
+                {
+                    msg = request.lang == "en"
+                      ? "Please Edite The Date To be In Range"
+                      : "الرجاء تعديل التاريخ ليكون ضمن المجال";
+
+                    return new BaseResponse<object>(msg, false, 400);
+                }
+
+                for (int i = 0; i < AllAgenda.Count(); i++)
+                {
+                    if (request.CurrentDate == AllAgenda[i].CurrentDate)
                     {
                         msg = request.lang == "en"
-                            ? "Edite The Date to be In Range"
-                            : " الرجاء تعديل التاريخ ليكون ضمن المجال ";
+                            ? "This Date is already exist"
+                            : "وقت الفعالية محجوز بالفعل";
 
                         return new BaseResponse<object>(msg, false, 400);
                     }
+                }
 
-                    // Set Satet of Agenda
-                    if (agenda.StartDate.Value.Date <= DateTime.Now.Date && agenda.EndDate.Value.Date >= DateTime.Now.Date)
+                // Set Satet of Agenda
+                if (agenda.StartDate.Date <= DateTime.Now.Date && agenda.EndDate.Date >= DateTime.Now.Date)
                         agenda.Status = AgendaStatus.Active;
-                    else if (agenda.StartDate.Value.Date < DateTime.Now.Date && agenda.EndDate.Value.Date < DateTime.Now.Date)
+                    else if (agenda.StartDate.Date < DateTime.Now.Date && agenda.EndDate.Date < DateTime.Now.Date)
                         agenda.Status = AgendaStatus.Previous;
                     else agenda.Status = AgendaStatus.Later;
-                }
-                else
-                {
-                    if (LastAgenda!.EndDate != null || FirstAgenda!.StartDate != null)
-                    {
-
-                        if (agenda.CurrentDate!.Value.Date <= LastAgenda!.EndDate!.Value.Date
-                            && agenda.CurrentDate!.Value.Date >= FirstAgenda!.StartDate!.Value.Date)
-                        {
-                            msg = request.lang == "en"
-                               ? "Edite The Date to be In Range"
-                               : " الرجاء تعديل التاريخ ليكون ضمن المجال ";
-
-                            return new BaseResponse<object>(msg, false, 400);
-                        }
-                    }
-                    else
-                    {
-                        if (agenda.CurrentDate!.Value.Date <= LastAgenda!.CurrentDate!.Value.Date
-                           && agenda.CurrentDate!.Value.Date >= FirstAgenda!.CurrentDate!.Value.Date)
-                        {
-                            msg = request.lang == "en"
-                               ? "Edite The Date to be In Range"
-                               : " الرجاء تعديل التاريخ ليكون ضمن المجال ";
-
-                            return new BaseResponse<object>(msg, false, 400);
-                        }
-                    }
-                    if (agenda.CurrentDate != null && agenda.CurrentDate.Value.Date == DateTime.Now.Date)
-                        agenda.Status = AgendaStatus.Active;
-                    else if (agenda.CurrentDate!.Value.Date < DateTime.Now.Date)
-                        agenda.Status = AgendaStatus.Previous;
-                    else
-                        agenda.Status = AgendaStatus.Later;
-                }
+                
             }
 
             await _agendaRepository.AddAsync(agenda);

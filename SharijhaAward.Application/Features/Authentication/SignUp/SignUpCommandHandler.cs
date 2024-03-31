@@ -31,12 +31,19 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         {
             Domain.Entities.IdentityModels.User? CheckEmail = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower() && x.isValidAccount);
+            string msg = Request.lang == "en"
+                ? "User has been created"
+                : "تم التسجيل بنجاح";
 
             if (CheckEmail is not null)
             {
+                msg = Request.lang == "en"
+                ? "This email is already used"
+                : "البريد الألكتروني مستخدم بالفعل";
+
                 return new AuthenticationResponse()
                 {
-                    message = "This email is already used",
+                    message = msg,
                     isSucceed = false
                 };
             }
@@ -59,9 +66,13 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
             if (CheckRoleId == null)
             {
+                msg = Request.lang == "en"
+                       ? "The user is not created , Role does not exist"
+                       : "لم يتم إنشاء المستخدم خطأ في الدور";
+
                 return new AuthenticationResponse()
                 {
-                    message = "The user is not created , Role does not exist"
+                   message = msg
                 };
             }
 
@@ -91,7 +102,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
             return new AuthenticationResponse() 
             {
                 isSucceed = true,
-                message = "User has been created",
+                message = msg,
                 user = _mapper.Map<UserDataResponse>(User)
             };
         }
