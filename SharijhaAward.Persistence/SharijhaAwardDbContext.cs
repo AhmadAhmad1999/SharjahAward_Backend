@@ -250,7 +250,7 @@ namespace SharijhaAward.Persistence
                     DayName = DateTime.UtcNow.AddDays(10).DayOfWeek.ToString(),
                     RegistrationUrl = null,
                     Thumbnale = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg",
-                    Time = DateTime.UtcNow.TimeOfDay.ToString(),
+                    Time = "10:00 - 12:00",
                     Video = null
                 }, new GeneralWorkshop()
                 {
@@ -270,7 +270,7 @@ namespace SharijhaAward.Persistence
                     DayName = DateTime.UtcNow.AddDays(20).DayOfWeek.ToString(),
                     RegistrationUrl = null,
                     Thumbnale = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg",
-                    Time = DateTime.UtcNow.TimeOfDay.ToString(),
+                    Time = "2:00 - 3:00",
                     Video = null
                 });
 
