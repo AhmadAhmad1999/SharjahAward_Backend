@@ -16,7 +16,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateT
         public string ArabicDescription { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
         public bool NeedAttachment { get; set; } = false;
-        public bool? IsSpecial { get; set; } = false;
+        public bool? IsSpecial { get; set; } = true;
         public int? RequiredAttachmentNumber { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public AttachmentType? AttachmentType { get; set; }

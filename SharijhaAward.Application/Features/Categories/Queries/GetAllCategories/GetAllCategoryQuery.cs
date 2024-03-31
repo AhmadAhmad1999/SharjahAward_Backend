@@ -13,5 +13,6 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
         public int page {  get; set; }
         public int pageSize { get; set; }
         public string lang { get; set; } = string.Empty;
+        public Guid? CycleId { get; set; }
     }
 }

@@ -44,6 +44,8 @@ using SharijhaAward.Domain.Entities.AchievementModel;
 using SharijhaAward.Domain.Entities.AgendaModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
+using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
+using SharijhaAward.Domain.Entities.SystemAttachmentModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -111,6 +113,8 @@ namespace SharijhaAward.Persistence
         public DbSet<GeneralWorkshop> GeneralWorkshops { get; set; }
         public DbSet<OurGoal> OurGoals { get; set; }
         public DbSet<Achievement> Achievements {  get; set; }
+        public DbSet<CycleConditionsProvidedForm> CycleConditionsProvidedForms { get; set; }
+        public DbSet<CycleConditionAttachment> CycleConditionAttachments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -169,6 +173,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<AboutAwardPage>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<GeneralWorkshop>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CycleConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CycleConditionsProvidedForm>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Event>()
                 .HasData(new Event()

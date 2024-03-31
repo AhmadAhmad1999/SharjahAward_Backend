@@ -18,6 +18,11 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
         public Status Status { get; set; } = Status.Close;
         public DateTime RegistrationPortalOpeningDate { get; set; }
         public DateTime RegistrationPortalClosingDate { get; set; }
+        public DateTime? SubscriberPortalClosingDate { get; set; }
+        public DateTime? InitialArbitrationStartDate { get; set; }
+        public DateTime? InitialArbitrationEndDate { get; set; }
+        public DateTime? FinalArbitrationStartDate { get; set; }
+        public DateTime? FinalArbitrationEndDate { get; set; }
         public int IndividualCategoryNumber { get; set; } = 0;
         public int GroupCategoryNumber { get; set; } = 0;
         public string lang {  get; set; } = string.Empty;

@@ -1,5 +1,4 @@
 ﻿using SharijhaAward.Domain.Common;
-using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using System;
 using System.Collections.Generic;
@@ -8,20 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Domain.Entities.AttachmentModel
+namespace SharijhaAward.Domain.Entities.SystemAttachmentModel
 {
-    public class ConditionAttachment : AuditableEntity
+    public class CycleConditionAttachment : AuditableEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string AttachementPath { get; set; } = string.Empty;
         public int SizeOfAttachmentInKB { get; set; }
+        public CycleConditionsProvidedForm CycleConditionsProvidedForm { get; set; } = null!;
 
-        public ConditionsProvidedForms ConditionsProvidedForms { get; set; } = null!;
-       
-        [ForeignKey(nameof(ConditionsProvidedForms))]
-        public Guid? ConditionsProvidedFormsId {  get; set; }
-
+        [ForeignKey(nameof(CycleConditionsProvidedForm))]
+        public Guid? CycleConditionsProvidedFormId { get; set; }
     }
 }

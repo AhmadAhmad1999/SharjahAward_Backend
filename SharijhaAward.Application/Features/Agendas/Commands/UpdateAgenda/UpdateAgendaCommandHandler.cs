@@ -31,18 +31,18 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
         public async Task<BaseResponse<object>> Handle(UpdateAgendaCommand request, CancellationToken cancellationToken)
         {
             var agendaToUpdate = await _agendaRepository.GetByIdAsync(request.Id);
-            string msg; 
+            string msg;
 
-            if(agendaToUpdate == null)
+            if (agendaToUpdate == null)
             {
                 msg = request.lang == "en"
                     ? "Agenda is not Found"
                     : "الأجندة غير موجودة";
 
-                return new BaseResponse<object>(msg,false,404);
+                return new BaseResponse<object>(msg, false, 404);
             }
             _mapper.Map(request, agendaToUpdate, typeof(UpdateAgendaCommand), typeof(Agenda));
-           
+
             if (request.UpdateOnIcone)
                 agendaToUpdate.Icon = await _fileService.SaveFileAsync(request.Icon!);
 
@@ -92,15 +92,14 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
                     else agendaToUpdate.Status = AgendaStatus.Later;
                 }
 
-       
+            }
+            await _agendaRepository.UpdateAsync(agendaToUpdate);
 
-                await _agendaRepository.UpdateAsync(agendaToUpdate);
+            msg = request.lang == "en"
+                ? "Agenda has been Updated"
+                : "تم تعديل الأجندة بنجاح";
 
-                msg = request.lang == "en"
-                    ? "Agenda has been Updated"
-                    : "تم تعديل الأجندة بنجاح";
-
-                return new BaseResponse<object>(msg, true, 200);
+            return new BaseResponse<object>(msg, true, 200);
         }
     }
 }
