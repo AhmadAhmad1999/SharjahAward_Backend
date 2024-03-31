@@ -46,6 +46,7 @@ using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using SharijhaAward.Domain.Entities.SystemAttachmentModel;
+using SharijhaAward.Domain.Entities.EducationalClassModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -58,6 +59,7 @@ namespace SharijhaAward.Persistence
         }
         
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
+        public DbSet<EducationalClass> EducationalClasses { get; set; }
         public DbSet<Arbitrator> Arbitrators { get; set; }
         public DbSet<CategoryArbitrator> CategoriesArbitrators { get; set; }
         public DbSet<Agenda> Agendas { get; set; }
@@ -124,6 +126,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EducationalClass>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Agenda>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Arbitrator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryArbitrator>().HasQueryFilter(p => !p.isDeleted);
@@ -1577,6 +1580,140 @@ namespace SharijhaAward.Persistence
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
                     ImageURL = null
+                });
+            modelBuilder.Entity<EducationalClass>()
+                .HasData(new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e74d"),
+                    ArabicName = "الصف الأول",
+                    EnglishName = "First class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e75d"),
+                    ArabicName = "الصف الثاني",
+                    EnglishName = "Second class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e76d"),
+                    ArabicName = "الصف الثالث",
+                    EnglishName = "Third class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e77d"),
+                    ArabicName = "الصف الرابع",
+                    EnglishName = "Forth class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e78d"),
+                    ArabicName = "الصف الخامس",
+                    EnglishName = "Fifth class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    ArabicName = "الصف السادس",
+                    EnglishName = "Sixth class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e80d"),
+                    ArabicName = "الصف السابع",
+                    EnglishName = "Seventh class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e81d"),
+                    ArabicName = "الصف الثامن",
+                    EnglishName = "Eighth class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e82d"),
+                    ArabicName = "الصف التاسع",
+                    EnglishName = "Ninth class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e83d"),
+                    ArabicName = "الصف العاشر",
+                    EnglishName = "Tenth class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e84d"),
+                    ArabicName = "الصف الحادي عشر",
+                    EnglishName = "Eleventh class"
+                }, new EducationalClass()
+                {
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e85d"),
+                    ArabicName = "الصف الحادي عشر",
+                    EnglishName = "Twelveth class"
                 });
 
             modelBuilder.Entity<RelatedAccountRequest>()

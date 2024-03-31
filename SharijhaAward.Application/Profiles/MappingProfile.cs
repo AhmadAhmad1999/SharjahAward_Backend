@@ -166,6 +166,11 @@ using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById;
 using SharijhaAward.Application.Features.EducationalEntities.Command.UpdateEducationalEntity;
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetEducationalEntityById;
 using SharijhaAward.Application.Features.EducationalInstitutions.Commands.UpdateEducationalInstitutions;
+using SharijhaAward.Application.Features.Classes.Commands.CreateClass;
+using SharijhaAward.Domain.Entities.EducationalClassModel;
+using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
+using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
+using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -337,6 +342,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CriterionItem, CreateCriterionItemCommand>().ReverseMap();
             CreateMap<Criterion, CreateSubCriterionCommand>().ReverseMap();
             CreateMap<Arbitrator, CreateArbitratorCommand>().ReverseMap();
+            CreateMap<EducationalClass, CreateClassCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -347,6 +353,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CriterionItem, UpdateCriterionItemCommand>().ReverseMap();
             CreateMap<EducationalEntity, UpdateEducationalEntityCommand>().ReverseMap();
             CreateMap<EducationalInstitution, UpdateEducationalInstitutionsCommand>().ReverseMap();
+            CreateMap<EducationalClass, UpdateClassCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -381,6 +388,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Arbitrator, GetAllArbitratorsListVM>().ReverseMap();
             CreateMap<Arbitrator, ArbitratorDto>().ReverseMap();
             CreateMap<EducationalEntity, GetEducationalEntityByIdDto>().ReverseMap();
+            CreateMap<EducationalClass, GetAllClassesListVM>().ReverseMap();
+            CreateMap<EducationalClass, GetClassByIdDto>().ReverseMap();
         }
     }
 }

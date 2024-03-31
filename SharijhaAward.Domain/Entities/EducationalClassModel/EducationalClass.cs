@@ -1,12 +1,10 @@
-﻿using SharijhaAward.Domain.Entities.Common;
-using SharijhaAward.Domain.Entities.IdentityModels;
+﻿using SharijhaAward.Domain.Common;
 
 namespace SharijhaAward.Domain.Entities.EducationalClassModel; 
 
-public class EducationalClass : AuditInformation<User>{
+public class EducationalClass : AuditableEntity
+{
     public Guid Id { get; set; }
-    // the arabic name of the educational class 
-    public string ArabicName { get; set; } = string.Empty;
-    // the english name of educational class
-    public string EnglishName { get; set; } = string.Empty;
+    public string ArabicName { get; set; } = null!;
+    public string EnglishName { get; set; } = null!;
 }
