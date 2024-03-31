@@ -102,38 +102,13 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                         return new BaseResponse<Guid>(ResponseMessage, false, 400);
                     }
 
-                    Guid NewCoordinatorEntityId = Guid.NewGuid();
-
-                    IEnumerable<Guid> CheckIfThereIsUserWithTheSameId = _userRepository
-                        .ListAllAsync()
-                        .Result.Select(x => x.Id);
-
-                    bool WhileLoopBreaker = true;
-
-                    while (WhileLoopBreaker)
-                    {
-                        if (!CheckIfThereIsUserWithTheSameId.Contains(NewCoordinatorEntityId))
-                        {
-                            WhileLoopBreaker = false;
-                            break;
-                        }
-
-                        NewCoordinatorEntityId = Guid.NewGuid();
-                    }
-
-                    var Coordinator = _mapper.Map<Coordinator>(Request);
-                    Coordinator.Id = NewCoordinatorEntityId;
-                    Coordinator.PersonalPhoto = await _fileService.SaveFileAsync(Request.PersonalPhoto);
-
-                    var data = await _coordinatorRepository.AddAsync(Coordinator);
                     var User = new Domain.Entities.IdentityModels.User()
                     {
-                        ArabicName = data.ArabicName,
-                        EnglishName = data.EnglishName,
-                        Email = data.Email,
-                        PhoneNumber = data.PhoneNumber,
+                        ArabicName = Request.ArabicName,
+                        EnglishName = Request.EnglishName,
+                        Email = Request.Email,
+                        PhoneNumber = Request.PhoneNumber,
                         //ConfirmationCode = 0000,
-                        Id = data.Id,
                         Password = "123456",
                         Gender = 0,
                         isValidAccount = true
@@ -146,6 +121,12 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                         await _userRepository.AsignRole(User.Id, role.RoleId);
                     }
 
+                    var Coordinator = _mapper.Map<Coordinator>(Request);
+                    Coordinator.Id = User.Id;
+                    Coordinator.PersonalPhoto = await _fileService.SaveFileAsync(Request.PersonalPhoto);
+
+                    var data = await _coordinatorRepository.AddAsync(Coordinator);
+                    
                     foreach (AddDynamicAttributeValueMainCommand InputDynamicAttributeWithValues in Request.DynamicAttributesWithValues)
                     {
                         DynamicAttribute? DynamicAttributeEntity = await _DynamicAttributeRepository
