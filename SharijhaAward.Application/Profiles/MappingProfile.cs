@@ -165,6 +165,7 @@ using SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById;
 using SharijhaAward.Application.Features.EducationalEntities.Command.UpdateEducationalEntity;
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetEducationalEntityById;
+using SharijhaAward.Application.Features.EducationalInstitutions.Commands.UpdateEducationalInstitutions;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -345,6 +346,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Criterion, UpdateCriterionCommand>().ReverseMap();
             CreateMap<CriterionItem, UpdateCriterionItemCommand>().ReverseMap();
             CreateMap<EducationalEntity, UpdateEducationalEntityCommand>().ReverseMap();
+            CreateMap<EducationalInstitution, UpdateEducationalInstitutionsCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
