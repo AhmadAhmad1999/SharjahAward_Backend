@@ -20,6 +20,7 @@ public class TermAndCondition: AuditableEntity {
     public AttachmentType? AttachmentType { get; set; }
     public int? SizeOfAttachmentInKB { get; set; }
     public bool IsAgree { get; set; } = false;
+    public bool? IsSpecial {  get; set; } = false;
 
     [ForeignKey(nameof(Category))]
     public Guid CategoryId { get; set; }
