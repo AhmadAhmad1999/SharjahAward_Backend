@@ -13,8 +13,8 @@ public class TermAndCondition: AuditableEntity {
     public Guid Id { get; set; } 
     public string ArabicTitle { get; set; } = string.Empty;
     public string EnglishTitle { get; set; } = string.Empty;
-    public string ArabicDescription { get; set; } = string.Empty;
-    public string EnglishDescription { get; set; } = string.Empty;
+    public string? ArabicDescription { get; set; } = string.Empty;
+    public string? EnglishDescription { get; set; } = string.Empty;
     public bool NeedAttachment { get; set; } = false;
     public int? RequiredAttachmentNumber { get; set; }
     public AttachmentType? AttachmentType { get; set; }

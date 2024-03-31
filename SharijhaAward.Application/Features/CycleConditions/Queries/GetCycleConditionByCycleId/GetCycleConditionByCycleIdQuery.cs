@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId
 {
-    public class GetCycleConditionByCycleIdQuery : IRequest<BaseResponse<List<CycleConditionDto>>>
+    public class GetCycleConditionByCycleIdQuery : IRequest<BaseResponse<List<CyclePublicConditionListVm>>>
     {
         public Guid CycleId { get; set; }
+        public string token { get; set; } = string.Empty;
         public string lang { get; set; } = string.Empty;
+        public int formId { get; set; }
     }
 }
