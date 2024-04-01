@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -31,8 +32,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
             if (CheckIfCategoryIdDoesExist == null)
             {
                 ResponseMessage = Request.lang == "en"
-                  ? "Category is not Found"
-                  : "الفئة الفرعية غير موجود";
+                    ? "Category is not Found"
+                    : "الفئة الفرعية غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
@@ -43,10 +44,23 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
             if (CheckIfMainCriterionIdDoesExist == null)
             {
                 ResponseMessage = Request.lang == "en"
-                  ? "Main criterion is not Found"
-                  : "المعيار الرئيسي غير موجود";
+                    ? "Main criterion is not found"
+                    : "المعيار الرئيسي غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
+
+            int OldTotalScoreForMainCategory = _CriterionRepository
+                .Where(x => x.ParentId != null ? x.ParentId == CheckIfMainCriterionIdDoesExist.Id : false)
+                .Select(x => x.Score).Sum();
+
+            if (OldTotalScoreForMainCategory + Request.Score > CheckIfMainCriterionIdDoesExist.Score)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? $"The maximum score of this main criterion : {CheckIfMainCriterionIdDoesExist.EnglishTitle} cannot be exceeded"
+                    : $"لا يمكن تجاوز العلامة العظمى للمعيار الرئيسي: {CheckIfMainCriterionIdDoesExist.ArabicTitle}";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
             Criterion NewSubCriterionEntity = _Mapper.Map<Criterion>(Request);

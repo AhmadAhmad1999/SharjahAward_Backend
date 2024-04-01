@@ -38,8 +38,8 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
             if (CheckEmail is not null)
             {
                 msg = Request.lang == "en"
-                ? "This email is already used"
-                : "البريد الألكتروني مستخدم بالفعل";
+                    ? "This email is already used"
+                    : "البريد الألكتروني مستخدم بالفعل";
 
                 return new AuthenticationResponse()
                 {

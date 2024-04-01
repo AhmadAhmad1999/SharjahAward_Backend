@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetClassById
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Class is not Found"
-                    : "الصف غير موجودة";
+                    : "الصف غير موجود";
 
                 return new BaseResponse<GetClassByIdDto>(ResponseMessage, false, 404);
             }

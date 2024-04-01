@@ -37,6 +37,19 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            int OldTotalScoreForSubCategory = _CriterionItemRepository
+                .Where(x => x.CriterionId == CheckIfSubCriterionIdDoesExist.Id)
+                .Select(x => x.Score).Sum();
+
+            if (OldTotalScoreForSubCategory + Request.Score > CheckIfSubCriterionIdDoesExist.Score)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? $"The maximum score of this sub criterion : {CheckIfSubCriterionIdDoesExist.EnglishTitle} cannot be exceeded"
+                    : $"لا يمكن تجاوز العلامة العظمى للمعيار الفرعي: {CheckIfSubCriterionIdDoesExist.ArabicTitle}";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             CriterionItem NewCriterionItemEntity = _Mapper.Map<CriterionItem>(Request);
 
             await _CriterionItemRepository.AddAsync(NewCriterionItemEntity);

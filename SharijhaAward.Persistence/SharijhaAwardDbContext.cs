@@ -47,6 +47,8 @@ using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using SharijhaAward.Domain.Entities.SystemAttachmentModel;
 using SharijhaAward.Domain.Entities.EducationalClassModel;
+using SharijhaAward.Domain.Entities.CommitteeModel;
+using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -59,6 +61,9 @@ namespace SharijhaAward.Persistence
         }
         
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
+        public DbSet<Committee> Committees { get; set; }
+        public DbSet<CategoryCommittee> CategoryCommittees { get; set; }
+        public DbSet<CategoryEducationalClass> CategoryEducationalClasses { get; set; }
         public DbSet<EducationalClass> EducationalClasses { get; set; }
         public DbSet<Arbitrator> Arbitrators { get; set; }
         public DbSet<CategoryArbitrator> CategoriesArbitrators { get; set; }
@@ -72,7 +77,6 @@ namespace SharijhaAward.Persistence
         public DbSet<PersonalInvitee> Personalnvitees { get; set; }
         public DbSet<GroupInvitee> GroupInvitees { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<CategoryCommittee> CategoryCommittees { get; set; }
         public DbSet<CriterionItemScale> CriterionItemScales { get; set; }
         public DbSet<TrainingWorkshopSubscriber> TrainingWorkshopSubscribers { get; set; }
         public DbSet<Cycle> Cycles { get; set; }
@@ -126,6 +130,9 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Committee>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CategoryEducationalClass>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalClass>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Agenda>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Arbitrator>().HasQueryFilter(p => !p.isDeleted);

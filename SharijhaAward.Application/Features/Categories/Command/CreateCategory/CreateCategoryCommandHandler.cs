@@ -1,16 +1,12 @@
-﻿using Aspose.Pdf;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CycleModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
 {
@@ -18,17 +14,20 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         : IRequestHandler<CreateCategoryCommand , BaseResponse<object>>
     {
         private readonly IAsyncRepository<Category> _categoryRepository;
+        private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
         public CreateCategoryCommandHandler(
             IAsyncRepository<Category> categoryRepository,
+            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
             IAsyncRepository<Cycle> cycleRepository,
             IFileService fileService,
             IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _cycleRepository = cycleRepository;
             _fileService = fileService;
             _mapper = mapper;
@@ -66,13 +65,58 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
 
             category.Icon = await  _fileService.SaveFileAsync(request.Icon);
 
-            await _categoryRepository.AddAsync(category);
-            
-            msg = request.lang == "en"
-                ? "Created successfully"
-                : "تم إنشاء الفئة بنجاح";
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
-            return new BaseResponse<object>(msg, true, 200, category.Id);
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    await _categoryRepository.AddAsync(category);
+
+                    if (request.RelatedToClasses != null
+                            ? request.RelatedToClasses.Value
+                            : false)
+                    {
+                        if (request.EducationalClasses != null
+                                ? request.EducationalClasses.Count() > 0
+                                : false)
+                        {
+                            IEnumerable<CategoryEducationalClass> CategoryEducationalClasses = request.EducationalClasses!
+                                .Select(x => new CategoryEducationalClass()
+                                {
+                                    CategoryId = category.Id,
+                                    isDeleted = false,
+                                    CreatedAt = DateTime.UtcNow,
+                                    CreatedBy = null,
+                                    DeletedAt = null,
+                                    LastModifiedAt = null,
+                                    LastModifiedBy = null,
+                                    EducationalClassId = x
+                                });
+
+                            await _CategoryEducationalClassRepository.AddRangeAsync(CategoryEducationalClasses);
+                        }
+                    }
+
+                    msg = request.lang == "en"
+                        ? "Created successfully"
+                        : "تم إنشاء الفئة بنجاح";
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<object>(msg, true, 200, category.Id);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }
