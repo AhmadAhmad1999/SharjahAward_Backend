@@ -22,7 +22,6 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
         public DateTime StartDate { get; set; }
         public DateTime CurrentDate { get; set; }
         public DateTime EndDate { get; set; }
-        public AgendaStatus Status { get; set; }
         public AgendaDateType DateType { get; set; }
         public Guid CycleId { get; set; }
         public string lang { get; set; } = string.Empty;

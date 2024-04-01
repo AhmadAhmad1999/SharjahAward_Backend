@@ -166,6 +166,10 @@ using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById;
 using SharijhaAward.Application.Features.EducationalEntities.Command.UpdateEducationalEntity;
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetEducationalEntityById;
 using SharijhaAward.Application.Features.EducationalInstitutions.Commands.UpdateEducationalInstitutions;
+using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId;
+using SharijhaAward.Domain.Entities.SystemAttachmentModel;
+using SharijhaAward.Application.Features.CycleConditions.Attachments.Commands.CreateAttachment;
+using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using SharijhaAward.Application.Features.Classes.Commands.CreateClass;
 using SharijhaAward.Domain.Entities.EducationalClassModel;
 using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
@@ -264,6 +268,12 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CycleCondition, UpdateCycleConditionCommand>().ReverseMap();
             CreateMap<CycleCondition, CycleConditionDto>().ReverseMap();
             CreateMap<CycleCondition, CycleConditionListVM>().ReverseMap();
+            CreateMap<CycleCondition, CyclePublicConditionListVm>().ReverseMap();
+            CreateMap<CycleCondition, CycleConditionProvidedFormListVm>().ReverseMap();
+
+            CreateMap<CycleConditionAttachment, CreateCycleConditionAttachmentCommand>().ReverseMap();
+            CreateMap<CycleConditionAttachment, CycleConditionAttachmentListVm>().ReverseMap();
+            CreateMap<CycleConditionsProvidedForm, CyclePublicConditionListVm>().ReverseMap();
 
             CreateMap<TermAndCondition, CreateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, UpdateTermAndConditionCommand>().ReverseMap();
@@ -274,7 +284,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ConditionAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<ConditionAttachment, CreateAttachmentCommand>().ReverseMap();
             CreateMap<ConditionsProvidedForms, ConditionProvidedFormListVm>().ReverseMap();
-            CreateMap<ConditionsProvidedForms, CreateAttachmentCommand>().ReverseMap();
+
 
             CreateMap<ProvidedForm, CreateProvidedFormCommand>().ReverseMap();
             CreateMap<ProvidedForm, FormListVm>().ReverseMap();

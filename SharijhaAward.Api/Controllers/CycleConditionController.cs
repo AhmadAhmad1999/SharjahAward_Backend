@@ -97,7 +97,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name="GetAllCycleCondition")] 
-        public async Task<ActionResult> GetAllCycleCondition(int page = 1, int perPage = 10)
+        public async Task<ActionResult> GetAllCycleCondition( int page = 1, int perPage = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -106,7 +106,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 page = page,
-                pageSize = perPage
+                pageSize = perPage,
+                
             });
 
             return response.statusCode switch
