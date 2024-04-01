@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,6 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTraini
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicWorkshopAttachment { get; set; } = string.Empty;
         public string EnglishWorkshopAttachment { get; set; } = string.Empty;
+        public List<WorkshopAttachmentListVM> Attachments { get; set; } = null!;
     }
 }

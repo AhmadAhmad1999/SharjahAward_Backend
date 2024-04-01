@@ -66,8 +66,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
 
                 return new BaseResponse<object>("", true, 200);
             }
-            
-            return new BaseResponse<object>("Password Is Not Correct", false, 400);
+            msg = request.lang == "en"
+                ? "Password Is Not Correct"
+                : "كلمة المرور غير صحيحة";
+            return new BaseResponse<object>(msg, false, 400);
         }
     }
 }

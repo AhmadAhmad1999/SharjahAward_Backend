@@ -78,20 +78,21 @@ namespace SharijhaAward.Api.Controllers
 
         public async Task<ActionResult> GetTrainingWorkshopById(Guid Id)
         {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
 
-            var respons = await _mediator.Send(new GetTrainingWorkshopByIdQuery()
+            var response = await _mediator.Send(new GetTrainingWorkshopByIdQuery()
             { 
                 Id = Id,
-                lang = headerValue
+                lang = Language!
             });
-            return Ok(
-                new
-                {
-                    data = respons,
-                });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
         [HttpGet(Name="GetAllTrainingWorkshops")]
         public async Task<ActionResult> GetAllTrainingWorkshops(int page = 1, int perPage = 10)

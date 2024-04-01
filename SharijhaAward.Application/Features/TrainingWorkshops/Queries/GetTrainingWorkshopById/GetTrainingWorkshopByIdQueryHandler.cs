@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 using System;
 using System.Collections.Generic;
@@ -11,7 +14,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTrainingWorkshopById
 {
     public class GetTrainingWorkshopByIdQueryHandler 
-        : IRequestHandler<GetTrainingWorkshopByIdQuery, TrainingWorkshopDto>
+        : IRequestHandler<GetTrainingWorkshopByIdQuery, BaseResponse<TrainingWorkshopDto>>
     {
         private readonly IAsyncRepository<TrainingWorkshop> _trainingWorkshopRepository;
         private readonly IMapper _mapper;
@@ -22,25 +25,27 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTraini
             _mapper = mapper;
         }
 
-        public async Task<TrainingWorkshopDto> Handle(GetTrainingWorkshopByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<TrainingWorkshopDto>> Handle(GetTrainingWorkshopByIdQuery request, CancellationToken cancellationToken)
         {
-            TrainingWorkshop trainingWorkshop = await _trainingWorkshopRepository.GetByIdAsync(request.Id);
+            var trainingWorkshop = await _trainingWorkshopRepository.WhereThenInclude(t => t.Id == request.Id, t => t.Attachments).FirstOrDefaultAsync();
             if (trainingWorkshop == null)
             {
-                throw new OpenQA.Selenium.NotFoundException("Training Workshope Not Found");
+                return new BaseResponse<TrainingWorkshopDto>("not Found", false, 404);
             }
-            TrainingWorkshopDto workshopDto = new()
+            var data = _mapper.Map<TrainingWorkshopDto>(trainingWorkshop);
+
+            data.Attachments = _mapper.Map<List<WorkshopAttachmentListVM>>(data.Attachments);
+            for (int j = 0; j < data.Attachments.Count; j++)
             {
-                Id = trainingWorkshop.Id,
-                ArabicTitle = trainingWorkshop.ArabicTitle,
-                EnglishTitle = trainingWorkshop.EnglishTitle,
-               
-                Thumbnail = trainingWorkshop.Thumbnail,
-                Title = request.lang == "ar" ? trainingWorkshop.ArabicTitle : trainingWorkshop.EnglishTitle,
+                data.Attachments[j].Name = request.lang == "en"
+                    ? data.Attachments[j].EnglishName
+                    : data.Attachments[j].ArabicName;
+                data.Attachments[j].AttachementURl = trainingWorkshop.Attachments[j].AttachementPath;
+            }
+            data.Title = request.lang == "ar" ? trainingWorkshop.ArabicTitle : trainingWorkshop.EnglishTitle;
 
-            };
 
-            return _mapper.Map<TrainingWorkshopDto>(workshopDto);
+            return new BaseResponse<TrainingWorkshopDto>("", true, 200, data);
         }
     }
 }

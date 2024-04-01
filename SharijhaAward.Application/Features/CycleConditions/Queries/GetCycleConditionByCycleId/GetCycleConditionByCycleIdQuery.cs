@@ -11,7 +11,6 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
 {
     public class GetCycleConditionByCycleIdQuery : IRequest<BaseResponse<List<CyclePublicConditionListVm>>>
     {
-        public Guid CycleId { get; set; }
         public string token { get; set; } = string.Empty;
         public string lang { get; set; } = string.Empty;
         public int formId { get; set; }

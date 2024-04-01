@@ -115,7 +115,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             ProvidedForm.Status = 0;
             ProvidedForm.CurrentStep = 1;
             ProvidedForm.TotalStep = 7;
-            ProvidedForm.PercentCompletion = (ProvidedForm.CurrentStep * 100) / ProvidedForm.TotalStep;
+            ProvidedForm.PercentCompletion = 0;
 
             var data =  await _Providedrepository.AddAsync(ProvidedForm);
 

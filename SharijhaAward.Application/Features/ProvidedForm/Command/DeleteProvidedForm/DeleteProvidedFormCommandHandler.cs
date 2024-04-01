@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.CategoryModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,13 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.DeleteProvided
         : IRequestHandler<DeleteProvidedFormCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formRepository;
-
-        public DeleteProvidedFormCommandHandler(IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository)
+        private readonly IAsyncRepository<Category> _categoryRepository;
+        private readonly IUserRepository _userRepository;
+        public DeleteProvidedFormCommandHandler(IAsyncRepository<Category> categoryRepository,  IUserRepository userRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository)
         {
             _formRepository = formRepository;
+            _userRepository = userRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(DeleteProvidedFormCommand request, CancellationToken cancellationToken)
@@ -24,7 +28,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.DeleteProvided
             string msg;
 
             var form = await _formRepository.GetByIdAsync(request.providedFormId);
-            
+            var category = await _categoryRepository.GetByIdAsync(form!.categoryId);
+            var user = await _userRepository.GetByIdAsync(form.userId);
+
             if(form == null)
             {
                 msg = request.lang == "en"
@@ -33,7 +39,13 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.DeleteProvided
                 
                 return new BaseResponse<object>(msg,false,404);
             }
+            if (category.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Individual)
+                user.NumberOfIndividualCategories--;
+            else
+                user.NumberOfGroupCategories--;
+
             await _formRepository.DeleteAsync(form);
+
             msg = request.lang == "en"
                    ? "Provided Form has been Deleted"
                    : "تم حذف الإستمارة بنجاح";

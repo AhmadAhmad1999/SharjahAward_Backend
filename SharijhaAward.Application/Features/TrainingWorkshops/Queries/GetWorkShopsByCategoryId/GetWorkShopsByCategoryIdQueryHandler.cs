@@ -42,7 +42,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
             {
                 var WorkShops = _workShopRepository.WhereThenInclude(w => w.CategoryId == request.CategoryId, w => w.Attachments).ToList();
                 var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops);
-                 bool isHttps = _httpContextAccessor.HttpContext.Request.IsHttps;
+              
 
                 for (int i = 0; i < data.Count; i++)
                 {

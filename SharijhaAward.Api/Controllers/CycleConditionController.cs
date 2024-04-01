@@ -5,9 +5,11 @@ using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Commands.DeleteCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Commands.UpdateCycleCondition;
+using SharijhaAward.Application.Features.CycleConditions.Queries.AgreeOnCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycleConditions;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionById;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnTermsAndCondition;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -118,15 +120,18 @@ namespace SharijhaAward.Api.Controllers
             };
 
         }
-        [HttpGet("GetCycleConditionByCycleId/{CycleId}", Name = "GetCycleConditionByCycleId")]
-        public async Task<ActionResult> GetCycleConditionByCycleId(Guid CycleId)
+        [HttpGet("GetCycleConditionByCycleId", Name = "GetCycleConditionByCycleId")]
+        public async Task<ActionResult> GetCycleConditionByCycleId([FromQuery] int formId)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
 
             var response = await _mediator.Send(new GetCycleConditionByCycleIdQuery()
             {
-                CycleId = CycleId,
+                
+                formId = formId,
+                token = token!,
                 lang = language!
             });
 
@@ -134,6 +139,22 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(response),
                 200 => Ok(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpPost("AgreeOnCycleCondition", Name = "AgreeOnCycleCondition")]
+        public async Task<IActionResult> AgreeOnCycleCondition(AgreeOnCycleConditionQuery query)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            query.token = token!;
+
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
                 _ => BadRequest(response)
             };
         }

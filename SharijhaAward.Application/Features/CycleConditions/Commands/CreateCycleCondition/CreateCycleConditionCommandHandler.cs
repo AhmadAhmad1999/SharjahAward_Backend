@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycl
             string msg;
             if(cycle == null)
             {
-                msg = request.lang.ToLower() == "en"
+                msg = request.lang == "en"
                     ? "The Cycle is not Found"
                     : "الدورة غير موجودة";
 
@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycl
             }
             await _cycleConditionRepository.AddAsync(cycleCondition);
 
-            msg = request.lang.ToLower() == "en"
+            msg = request.lang == "en"
                 ? "The Cycle Condition has been Created"
                 : "تم إضافة شرط الدورة بنجاح";
 

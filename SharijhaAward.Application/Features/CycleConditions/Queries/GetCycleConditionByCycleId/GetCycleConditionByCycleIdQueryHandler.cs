@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
 
         public async Task<BaseResponse<List<CyclePublicConditionListVm>>> Handle(GetCycleConditionByCycleIdQuery request, CancellationToken cancellationToken)
         {
-            var Cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
+            var Cycle = await _cycleRepository.FirstOrDefaultAsync(c=>c.Status == Domain.Constants.Common.Status.Active);
             if(Cycle == null)
             {
                 return new BaseResponse<List<CyclePublicConditionListVm>>("", false, 404);
@@ -79,12 +79,13 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
             var data = _mapper.Map<List<CyclePublicConditionListVm>>(Terms);
             for (int i = 0; i < data.Count; i++)
             {
-                data[i].ConditionsAttachments = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvideds[i]);
+                if(conditionsProvideds.Count() > 0)
+                    data[i].ConditionsAttachments = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvideds[i]);
 
                 if (data[i].NeedAttachment)
                 {
-
-                    data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<CycleConditionAttachmentListVm>>(conditionsProvideds[i].Attachments);
+                    if (conditionsProvideds.Count() > 0)
+                        data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<CycleConditionAttachmentListVm>>(conditionsProvideds[i].Attachments);
 
                 }
 
