@@ -59,36 +59,51 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
                 var LastAgenda = await _agendaRepository.OrderBy(a=>a.CreatedAt).LastOrDefaultAsync(a =>true);
                 var FirstAgenda = await _agendaRepository.OrderBy(a => a.CreatedAt).FirstOrDefaultAsync(a => true);
                
-                if(request.CurrentDate > request.EndDate || request.CurrentDate < request.StartDate)
+                if (request.DateType == AgendaDateType.Full || request.DateType == AgendaDateType.Date)
                 {
-                    msg = request.lang == "en"
-                        ? "Invalid Input in date"
-                        : "الوقت المدخل غير صحيح";
+                    if (request.CurrentDate > request.EndDate || request.CurrentDate < request.StartDate)
+                    {
+                        msg = request.lang == "en"
+                            ? "Invalid Input in date"
+                            : "الوقت المدخل غير صحيح";
 
-                    return new BaseResponse<object>(msg, false, 400);
+                        return new BaseResponse<object>(msg, false, 400);
+                    }
+                }
+                else if (request.DateType == AgendaDateType.YearMonth)
+                {
+                    if (request.CurrentDate.Month != request.StartDate.Month)
+                    {
+                        msg = request.lang == "en"
+                            ? "Invalid Input in date"
+                            : "الوقت المدخل غير صحيح";
+
+                        return new BaseResponse<object>(msg, false, 400);
+                    }
                 }
 
-                if(request.StartDate >= FirstAgenda!.StartDate && request.EndDate <= LastAgenda!.EndDate)
+                if (request.StartDate >= FirstAgenda!.StartDate && request.EndDate <= LastAgenda!.EndDate)
                 {
-                    msg = request.lang == "en"
-                      ? "Please Edite The Date To be In Range"
-                      : "الرجاء تعديل التاريخ ليكون ضمن المجال";
+                        msg = request.lang == "en"
+                          ? "Please Edite The Date To be In Range"
+                          : "الرجاء تعديل التاريخ ليكون ضمن المجال";
 
-                    return new BaseResponse<object>(msg, false, 400);
+                        return new BaseResponse<object>(msg, false, 400);
                 }
 
                 for (int i = 0; i < AllAgenda.Count(); i++)
                 {
                     if (request.CurrentDate == AllAgenda[i].CurrentDate)
                     {
-                        msg = request.lang == "en"
-                            ? "This Date is already exist"
-                            : "وقت الفعالية محجوز بالفعل";
+                         msg = request.lang == "en"
+                             ? "This Date is already exist"
+                             : "وقت الفعالية محجوز بالفعل";
 
-                        return new BaseResponse<object>(msg, false, 400);
+                         return new BaseResponse<object>(msg, false, 400);
                     }
                 }
-
+             
+                
                 // Set Satet of Agenda
                 if (agenda.StartDate.Date <= DateTime.Now.Date && agenda.EndDate.Date >= DateTime.Now.Date)
                         agenda.Status = AgendaStatus.Active;
