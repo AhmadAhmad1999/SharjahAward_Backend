@@ -1591,8 +1591,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e74d"),
-                    ArabicName = "الصف الأول",
-                    EnglishName = "First class"
+                    Name = "الصف الأول",
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1602,8 +1601,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e75d"),
-                    ArabicName = "الصف الثاني",
-                    EnglishName = "Second class"
+                    Name = "الصف الثاني"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1613,8 +1611,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e76d"),
-                    ArabicName = "الصف الثالث",
-                    EnglishName = "Third class"
+                    Name = "الصف الثالث"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1624,8 +1621,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e77d"),
-                    ArabicName = "الصف الرابع",
-                    EnglishName = "Forth class"
+                    Name = "الصف الرابع"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1635,8 +1631,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e78d"),
-                    ArabicName = "الصف الخامس",
-                    EnglishName = "Fifth class"
+                    Name = "الصف الخامس"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1646,8 +1641,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
-                    ArabicName = "الصف السادس",
-                    EnglishName = "Sixth class"
+                    Name = "الصف السادس"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1657,8 +1651,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e80d"),
-                    ArabicName = "الصف السابع",
-                    EnglishName = "Seventh class"
+                    Name = "الصف السابع"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1668,8 +1661,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e81d"),
-                    ArabicName = "الصف الثامن",
-                    EnglishName = "Eighth class"
+                    Name = "الصف الثامن"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1679,8 +1671,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e82d"),
-                    ArabicName = "الصف التاسع",
-                    EnglishName = "Ninth class"
+                    Name = "الصف التاسع"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1690,8 +1681,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e83d"),
-                    ArabicName = "الصف العاشر",
-                    EnglishName = "Tenth class"
+                    Name = "الصف العاشر"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1701,8 +1691,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e84d"),
-                    ArabicName = "الصف الحادي عشر",
-                    EnglishName = "Eleventh class"
+                    Name = "الصف الحادي عشر"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1712,8 +1701,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e85d"),
-                    ArabicName = "الصف الحادي عشر",
-                    EnglishName = "Twelveth class"
+                    Name = "الصف الثاني عشر"
                 });
 
             modelBuilder.Entity<RelatedAccountRequest>()
