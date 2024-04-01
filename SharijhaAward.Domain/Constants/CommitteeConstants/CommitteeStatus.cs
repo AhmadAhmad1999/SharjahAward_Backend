@@ -1,6 +1,6 @@
 ﻿namespace SharijhaAward.Domain.Constants.CommitteeConstants; 
 
 public enum CommitteeStatus {
-    Active,
-    InActive
+    InActive = 0,
+    Active = 1
 }
