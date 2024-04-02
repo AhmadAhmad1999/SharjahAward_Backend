@@ -68,25 +68,15 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
             }
 
 
-
-
-            //List<AttachmentListVM> Attachmets = _mapper.Map<List<AttachmentListVM>>(await _conditionAttachmentRepository
-            //    .Include(x => x.ConditionsProvidedForms).Include(x => x.ConditionsProvidedForms.TermAndCondition)
-            //    .Where(x => x.ConditionsProvidedForms.TermAndCondition.CategoryId == category.Id &&
-            //        x.ConditionsProvidedForms.TermAndCondition.IsSpecial == false &&
-            //        x.ConditionsProvidedForms.ProvidedFormId == form!.Id).ToListAsync());
-
             var data = _mapper.Map<List<CyclePublicConditionListVm>>(Terms);
             for (int i = 0; i < data.Count; i++)
             {
-                if(conditionsProvideds.Count() > 0)
-                    data[i].ConditionsAttachments = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvideds[i]);
-
+             
+                data[i].ConditionsAttachments = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvideds[i]);
+               
                 if (data[i].NeedAttachment)
                 {
-                    if (conditionsProvideds.Count() > 0)
-                        data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<CycleConditionAttachmentListVm>>(conditionsProvideds[i].Attachments);
-
+                    data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<CycleConditionAttachmentListVm>>(conditionsProvideds[i].Attachments);
                 }
 
                 data[i].Title = request.lang == "en"

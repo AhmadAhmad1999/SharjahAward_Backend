@@ -274,6 +274,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CycleConditionAttachment, CreateCycleConditionAttachmentCommand>().ReverseMap();
             CreateMap<CycleConditionAttachment, CycleConditionAttachmentListVm>().ReverseMap();
             CreateMap<CycleConditionsProvidedForm, CyclePublicConditionListVm>().ReverseMap();
+            CreateMap<CycleConditionsProvidedForm, CycleConditionProvidedFormListVm>().ReverseMap();
 
             CreateMap<TermAndCondition, CreateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, UpdateTermAndConditionCommand>().ReverseMap();

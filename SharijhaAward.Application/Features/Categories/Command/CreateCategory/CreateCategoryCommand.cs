@@ -18,7 +18,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         public string ArabicDescription { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
         public IFormFile Icon { get; set; } = null!;
-        public CategoryClassification CategoryClassification { get; set; }
+        public CategoryClassification? CategoryClassification { get; set; }
         public int? FinalArbitrationQualificationMark { get; set; }
         public int? WinningScore { get; set; }
         public Status Status { get; set; } = Status.InActive;

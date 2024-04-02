@@ -23,9 +23,9 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
         public CategoryClassification CategoryClassification { get; set; }
         public int FinalArbitrationQualificationMark { get; set; }
         public int WinningScore { get; set; }
-        public List<SubcategoriesListVM> subcategories { get; set; } = null!;
         public bool RelatedToClasses { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
-        
+        public List<SubcategoriesListVM> subcategories { get; set; } = null!;
+
     }
 }

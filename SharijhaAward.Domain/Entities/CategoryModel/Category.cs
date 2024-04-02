@@ -29,7 +29,7 @@ public class Category : AuditableEntity
     public string EnglishDescription { get; set; } = string.Empty;
     public string Icon { get; set; } = string.Empty;
     public Status Status { get; set; } = Status.InActive;
-    public CategoryClassification CategoryClassification { get; set; }
+    public CategoryClassification? CategoryClassification { get; set; }
 
     public int? FinalArbitrationQualificationMark { get; set; }
     public int? WinningScore { get; set; }
