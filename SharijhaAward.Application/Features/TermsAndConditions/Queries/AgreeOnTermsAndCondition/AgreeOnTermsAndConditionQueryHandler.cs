@@ -66,12 +66,18 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnT
                 {
                     return new BaseResponse<object>("", false, 404);
                 }
-                ConditionsProvidedForms conditionsProvided = new ConditionsProvidedForms();
-                conditionsProvided.IsAgree = request.IsAgree;
+                //ConditionsProvidedForms conditionsProvided = new ConditionsProvidedForms();
+                //conditionsProvided.IsAgree = request.IsAgree;
+                //conditionsProvided.TermAndConditionId = term.Id;
+                //conditionsProvided.ProvidedFormId = form!.Id;
+
+                //await _conditionsProvidedFormsRepository.AddAsync(conditionsProvided);
+                var conditionsProvided = await _conditionsProvidedFormsRepository.FirstOrDefaultAsync(
+                    c => c.ProvidedFormId == form.Id && c.TermAndConditionId == request.TermId);
+              
+                conditionsProvided!.IsAgree = request.IsAgree;
                 conditionsProvided.TermAndConditionId = term.Id;
                 conditionsProvided.ProvidedFormId = form!.Id;
-
-                await _conditionsProvidedFormsRepository.AddAsync(conditionsProvided);
             }
 
             return new BaseResponse<object>("", true, 200);

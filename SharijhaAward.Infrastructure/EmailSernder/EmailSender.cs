@@ -14,9 +14,6 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats.Png;
 using Microsoft.Extensions.Configuration;
 
 namespace SharijhaAward.Infrastructure.EmailSernder
