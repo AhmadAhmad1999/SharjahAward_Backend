@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
 
-namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForSignUp
+namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForForgettonPassword
 {
-    public class CheckConfirmationCodeForSignUpCommand : IRequest<BaseResponse<object>>
+    public class CheckConfirmationCodeForForgettonPasswordCommand : IRequest<BaseResponse<object>>
     {
         public Guid Id { get; set; }
         public int ConfirmationCode { get; set; }

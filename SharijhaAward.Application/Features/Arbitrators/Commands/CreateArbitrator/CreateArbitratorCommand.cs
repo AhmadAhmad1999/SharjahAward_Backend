@@ -13,6 +13,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         public string? lang { get; set; }
         public List<Guid> Categories { get; set; } = new List<Guid>();
         public List<AddDynamicAttributeValueMainCommand> DynamicAttributesWithValues { get; set; } = new List<AddDynamicAttributeValueMainCommand>();
+        public List<Guid> ArbitratorClasses { get; set; } = new List<Guid>();
         public string? WWWRootFilePath { get; set; }
     }
 }
