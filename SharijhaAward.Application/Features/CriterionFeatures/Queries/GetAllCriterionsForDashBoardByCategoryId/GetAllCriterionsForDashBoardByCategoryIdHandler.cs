@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionsForDashBoardByCategoryId
@@ -12,12 +13,15 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
     {
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
 
         public GetAllCriterionsForDashBoardByCategoryIdHandler(IAsyncRepository<Criterion> CriterionRepository,
-            IAsyncRepository<Category> CategoryRepository)
+            IAsyncRepository<Category> CategoryRepository,
+            IAsyncRepository<CriterionItem> CriterionItemRepository)
         {
             _CriterionRepository = CriterionRepository;
             _CategoryRepository = CategoryRepository;
+            _CriterionItemRepository = CriterionItemRepository;
         }
         public async Task<BaseResponse<List<GetAllCriterionsForDashBoardCategoryIdDto>>> Handle(GetAllCriterionsForDashBoardCategoryIdQuery Request, 
             CancellationToken cancellationToken)
@@ -36,33 +40,51 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                 return new BaseResponse<List<GetAllCriterionsForDashBoardCategoryIdDto>>(ResponseMessage, false, 404);
             }
 
-            List<GetAllCriterionsForDashBoardCategoryIdDto> MainCriterions = await _CriterionRepository
-                .Where(x => x.CategoryId == Request.CategoryId)
+            List<GetAllCriterionsForDashBoardCategoryIdDto> MainCriterions = _CriterionRepository
+                .GetWhereThenPagedReponseAsync(x => x.CategoryId == Request.CategoryId && x.ParentId == null,
+                    Request.page, Request.pageSize).Result
                 .Select(x => new GetAllCriterionsForDashBoardCategoryIdDto()
                 {
                     Id = x.Id,
                     Score = x.Score,
-                    Title = Request.lang == "en"
-                        ? x.EnglishTitle
-                        : x.ArabicTitle
-                }).ToListAsync();
+                    ArabicTitle = x.ArabicTitle,
+                    EnglishTitle = x.EnglishTitle
+                }).ToList();
 
             foreach (GetAllCriterionsForDashBoardCategoryIdDto MainCriterion in MainCriterions)
             {
                 List<GetAllSubCriterion> SubCriterions = await _CriterionRepository
-                    .Where(x => x.ParentId == MainCriterion.Id)
+                    .Where(x => x.ParentId != null 
+                        ? x.ParentId == MainCriterion.Id
+                        : false)
                     .Select(x => new GetAllSubCriterion()
                     {
                         Id = x.Id,
                         Score = x.Score,
-                        Title = Request.lang == "en"
-                            ? x.EnglishTitle
-                            : x.ArabicTitle
+                        ArabicTitle = x.ArabicTitle,
+                        EnglishTitle = x.EnglishTitle
                     }).ToListAsync();
+
+                MainCriterion.SubCriterions = SubCriterions;
+
+                foreach (GetAllSubCriterion SubCriterion in MainCriterion.SubCriterions)
+                {
+                    List<GetAllSubCriterionItems> CriterionItems = await _CriterionItemRepository
+                        .Where(x => x.CriterionId == SubCriterion.Id)
+                        .Select(x => new GetAllSubCriterionItems()
+                        {
+                            Id = x.Id,
+                            ArabicName = x.ArabicName,
+                            EnglishName = x.EnglishName,
+                            Score = x.Score
+                        }).ToListAsync();
+
+                    SubCriterion.CriterionItems = CriterionItems;
+                }
             }
 
             int TotalCount = await _CriterionRepository
-                .GetCountAsync(x => x.CategoryId == Request.CategoryId);
+                .GetCountAsync(x => x.CategoryId == Request.CategoryId && x.ParentId != null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.pageSize, TotalCount);

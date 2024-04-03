@@ -12,31 +12,16 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
         BaseResponse<object>>
     {
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
-        private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IMapper _Mapper;
         public CreateSubCriterionHandler(IAsyncRepository<Criterion> CriterionRepository,
-            IAsyncRepository<Category> CategoryRepository,
             IMapper Mapper)
         {
             _CriterionRepository = CriterionRepository;
-            _CategoryRepository = CategoryRepository;
             _Mapper = Mapper;
         }
         public async Task<BaseResponse<object>> Handle(CreateSubCriterionCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
-
-            Category? CheckIfCategoryIdDoesExist = await _CategoryRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.CategoryId);
-
-            if (CheckIfCategoryIdDoesExist == null)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "Category is not Found"
-                    : "الفئة الفرعية غير موجود";
-
-                return new BaseResponse<object>(ResponseMessage, false, 404);
-            }
 
             Criterion? CheckIfMainCriterionIdDoesExist = await _CriterionRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.ParentId && x.ParentId == null);
@@ -64,6 +49,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
             }
 
             Criterion NewSubCriterionEntity = _Mapper.Map<Criterion>(Request);
+            NewSubCriterionEntity.CategoryId = CheckIfMainCriterionIdDoesExist.CategoryId;
 
             await _CriterionRepository.AddAsync(NewSubCriterionEntity);
 
