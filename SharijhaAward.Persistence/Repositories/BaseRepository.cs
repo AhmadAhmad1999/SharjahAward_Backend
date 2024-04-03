@@ -51,7 +51,15 @@ namespace SharijhaAward.Persistence.Repositories
         {
             return await _DbSet.AsNoTracking().ToListAsync();
         }
-        public async virtual Task<IReadOnlyList<T>> GetPagedReponseAsync(int page, int size)
+        public async virtual Task<IReadOnlyList<T>> GetPagedReponseWithPredicateAsync(Expression<Func<T, bool>>? predicate,int page, int size)
+        {
+            if (size == -1 || page == 0)
+                return await _DbSet.AsNoTracking().Where(predicate!).ToListAsync();
+            if (size == 0)
+                size = 10;
+            return await _DbSet.AsNoTracking().Where(predicate!).Skip((page - 1) * size).Take(size).ToListAsync();
+        }
+        public async virtual Task<IReadOnlyList<T>> GetPagedReponseAsync( int page, int size)
         {
             if (size == -1 || page == 0)
                 return await _DbSet.AsNoTracking().ToListAsync();

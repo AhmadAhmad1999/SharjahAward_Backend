@@ -117,7 +117,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllFAQsByCategoryId/{Id}", Name = "GetAllFAQsByCategoryId")]
-        public async Task<IActionResult> GetAllFAQsByCategoryId(Guid Id)
+        public async Task<IActionResult> GetAllFAQsByCategoryId(Guid Id,int page , int pageSize)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -126,6 +126,8 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAllFAQsByCategoryIdQuery()
             {
                 lang = language!,
+                page= page,
+                pageSize = pageSize,
                 CategoryId = Id
             });
 

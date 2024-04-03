@@ -15,6 +15,11 @@ namespace SharijhaAward.Application.Features.Categories.Command.DeleteCategory
     {
         private readonly IAsyncRepository<Category> _categoryRepository;
 
+        public DeleteCategoryCommandHandler(IAsyncRepository<Category> categoryRepository)
+        {
+            _categoryRepository = categoryRepository;
+        }
+
         public async Task<BaseResponse<object>> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);

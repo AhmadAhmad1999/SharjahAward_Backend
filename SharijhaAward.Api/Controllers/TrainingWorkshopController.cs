@@ -51,7 +51,7 @@ namespace SharijhaAward.Api.Controllers
         }
         [HttpPut(Name = "UpdateTringingWorkshop")]
 
-        public async Task<ActionResult> UpdateTringingWorkshop([FromBody] UpdateTrainingWorkshopCommand command)
+        public async Task<ActionResult> UpdateTringingWorkshop([FromForm] UpdateTrainingWorkshopCommand command)
         {
             var response = await _mediator.Send(command);
 

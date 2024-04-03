@@ -41,11 +41,13 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
 
                 return new BaseResponse<object>(msg, false, 404);
             }
+            var Icon = agendaToUpdate.Icon;
             _mapper.Map(request, agendaToUpdate, typeof(UpdateAgendaCommand), typeof(Agenda));
 
             if (request.UpdateOnIcone)
                 agendaToUpdate.Icon = await _fileService.SaveFileAsync(request.Icon!);
-
+            else
+                agendaToUpdate.Icon = Icon;
 
             var countOfAgenda = await _agendaRepository.GetCountAsync(a => !a.isDeleted);
 
