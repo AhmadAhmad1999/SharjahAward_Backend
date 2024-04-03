@@ -49,6 +49,7 @@ using SharijhaAward.Domain.Entities.SystemAttachmentModel;
 using SharijhaAward.Domain.Entities.EducationalClassModel;
 using SharijhaAward.Domain.Entities.CommitteeModel;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
+using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -61,6 +62,7 @@ namespace SharijhaAward.Persistence
         }
         
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
+        public DbSet<ArbitratorClass> ArbitratorClasses { get; set; }
         public DbSet<Committee> Committees { get; set; }
         public DbSet<CategoryCommittee> CategoryCommittees { get; set; }
         public DbSet<CategoryEducationalClass> CategoryEducationalClasses { get; set; }
@@ -130,6 +132,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Committee>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryEducationalClass>().HasQueryFilter(p => !p.isDeleted);

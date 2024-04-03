@@ -2,9 +2,11 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionForAddAdminDashboard;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
@@ -21,6 +23,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
         private readonly IAsyncRepository<AttributeDataType> _AttributeDataTypeRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
+        private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
         public GetArbitratorByIdHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
             IMapper Mapper,
@@ -28,7 +31,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<AttributeDataType> AttributeDataTypeRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository)
+            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
+            IAsyncRepository<ArbitratorClass> ArbitratorClassRepository)
         {
             _ArbitratorRepository = ArbitratorRepository;
             _CategoryArbitratorRepository = CategoryArbitratorRepository;
@@ -38,6 +42,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
             _AttributeDataTypeRepository = AttributeDataTypeRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
+            _ArbitratorClassRepository = ArbitratorClassRepository;
         }
         public async Task<BaseResponse<GetArbitratorByIdResponse>> Handle(GetArbitratorByIdQuery Request, CancellationToken cancellationToken)
         {
@@ -150,10 +155,23 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                 }
             }
 
+            // Classes..
+            List<GetAllClassesListVM> ArbitratorClasses = await _ArbitratorClassRepository
+                .Where(x => x.ArbitratorId == Request.ArbitratorId)
+                .Include(x => x.EducationalClass!)
+                .Select(x => x.EducationalClass!)
+                .Select(x => new GetAllClassesListVM()
+                {
+                    Id = x.Id,
+                    ArabicName = x.ArabicName,
+                    EnglishName = x.EnglishName
+                }).ToListAsync();
+
             GetArbitratorByIdResponse Response = new GetArbitratorByIdResponse()
             {
                 ArbitratorDto = ArbitratorDto,
-                DynamicAttributesSections = DynamicAttributeSections
+                DynamicAttributesSections = DynamicAttributeSections,
+                ArbitratorClasses = ArbitratorClasses
             };
 
             return new BaseResponse<GetArbitratorByIdResponse>(ResponseMessage, true, 200, Response);

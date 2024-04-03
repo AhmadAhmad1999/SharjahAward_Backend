@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
@@ -26,6 +27,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         private readonly IAsyncRepository<DependencyValidation> _DependencyValidationRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
+        private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
         public CreateArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
@@ -36,7 +38,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             IAsyncRepository<Dependency> DependencyRepository, 
             IAsyncRepository<DependencyValidation> DependencyValidationRepository, 
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository, 
-            IAsyncRepository<GeneralValidation> GeneralValidationRepository, 
+            IAsyncRepository<GeneralValidation> GeneralValidationRepository,
+            IAsyncRepository<ArbitratorClass> ArbitratorClassRepository,
             IHttpContextAccessor HttpContextAccessor)
         {
             _ArbitratorRepository = ArbitratorRepository;
@@ -49,6 +52,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             _DependencyValidationRepository = DependencyValidationRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _GeneralValidationRepository = GeneralValidationRepository;
+            _ArbitratorClassRepository = ArbitratorClassRepository;
             _HttpContextAccessor = HttpContextAccessor;
         }
 
@@ -1574,6 +1578,21 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                         }).ToList();
 
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
+
+                    IEnumerable<ArbitratorClass> ArbitratorClassesEntities = Request.ArbitratorClasses
+                        .Select(x => new ArbitratorClass()
+                        {
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            DeletedAt = null,
+                            isDeleted = false,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            EducationalClassId = x,
+                            ArbitratorId = NewArbitratorEntity.Id
+                        });
+
+                    await _ArbitratorClassRepository.AddRangeAsync(ArbitratorClassesEntities);
 
                     Transaction.Complete();
 
