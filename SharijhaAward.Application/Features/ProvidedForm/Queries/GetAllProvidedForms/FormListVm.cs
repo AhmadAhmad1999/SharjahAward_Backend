@@ -17,8 +17,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public ProvidedFormStatus Status { get; set; }
         public SubscriberType SubscriberType { get; set; }
         public int CurrentStep { get; set; }
+        public int TotalStep {  get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public float FinalScore { get; set; }
+        public Guid categoryId { get; set; }
         public DateTime CreatedAt { get; set; }
 
     }

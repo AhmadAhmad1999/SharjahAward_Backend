@@ -16,6 +16,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
         public string EnglishTitle { get; set; } = string.Empty;
         public string? ArabicDescription { get; set; }
         public string? EnglishDescription { get; set; }
+        public DateTime CreatedAt { get; set; }
         public Guid CycleId { get; set; }
     }
 }

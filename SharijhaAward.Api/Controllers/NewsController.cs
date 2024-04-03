@@ -57,7 +57,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpPut(Name = "UpdateNews")]
-        public async Task<IActionResult> UpdateNews(UpdateNewsCommand command)
+        public async Task<IActionResult> UpdateNews([FromForm] UpdateNewsCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];

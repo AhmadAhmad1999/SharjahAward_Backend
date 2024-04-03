@@ -1,0 +1,28 @@
+﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
+using SharijhaAward.Domain.Entities.ProvidedFormModel;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel
+{
+    public class ExtraAttachmentProvidedForm : AuditableEntity
+    {
+        public Guid Id {  get; set; }
+        public string FileUrl { get; set; } = string.Empty;
+
+        public ExtraAttachment? ExtraAttachments { get; set; }
+        [ForeignKey(nameof(ExtraAttachments))]
+        public Guid ExtraAttachmentId { get; set; }
+
+        public ProvidedForm? ProvidedForm { get; set; }
+        [ForeignKey(nameof(ProvidedForm))]
+        public int  ProvidedFormId { get; set; }
+
+    }
+}

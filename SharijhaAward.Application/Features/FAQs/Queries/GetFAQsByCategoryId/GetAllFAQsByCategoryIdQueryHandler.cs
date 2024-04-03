@@ -39,7 +39,8 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId
 
                 return new BaseResponse<List<FAQListVm>>(msg, false, 404);
             }
-            var FAQs = _faqRepository.Where(f => f.CategoryId == category.Id).ToList();
+            var FAQs = await _faqRepository.GetPagedReponseWithPredicateAsync(f => f.CategoryId == category.Id, request.page, request.pageSize);
+               
             var data = _mapper.Map<List<FAQListVm>>(FAQs);
             for(int i = 0; i < data.Count; i++)
             {

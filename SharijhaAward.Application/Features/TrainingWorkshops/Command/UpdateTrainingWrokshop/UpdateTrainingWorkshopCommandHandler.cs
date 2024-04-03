@@ -36,13 +36,13 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTra
                 return new BaseResponse<object>("", false, 404);
             }
 
-            var workShop = worksopToUpdate;
+            var thumbnail = worksopToUpdate.Thumbnail;
             _mapper.Map(request, worksopToUpdate, typeof(UpdateTrainingWorkshopCommand), typeof(TrainingWorkshop));
            
             if (request.EditeOnThumbnail)
                 worksopToUpdate.Thumbnail = await _fileService.SaveFileAsync(request.Thumbnail!);
             else
-                worksopToUpdate.Thumbnail = workShop.Thumbnail;
+                worksopToUpdate.Thumbnail = thumbnail;
             
             await _trainingWorkshopRepository.UpdateAsync(worksopToUpdate);
 

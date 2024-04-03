@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,8 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
     public class UpdateNewsCommand : IRequest<BaseResponse<object>>
     {
         public Guid Id { get; set; }
-        public string? Image { get; set; }
+        public IFormFile? Image { get; set; }
+        public bool EditeOnImage { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string? ArabicDescription { get; set; }

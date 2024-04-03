@@ -39,7 +39,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpPut(Name="UpdateCycle")]
+        [HttpPut(Name = "UpdateCycle")]
         public async Task<IActionResult> UpdateCycle(UpdateCycleCommand command)
         {
             //get Language from header
@@ -47,7 +47,7 @@ namespace SharijhaAward.Api.Controllers
 
             command.lang = Language!;
 
-            var response =await _mediator.Send(command);
+            var response = await _mediator.Send(command);
             return response.statusCode switch
             {
                 200 => Ok(response),
@@ -56,7 +56,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet("{Id}",Name="GetCycleById")]
+        [HttpGet("{Id}", Name = "GetCycleById")]
         public async Task<IActionResult> GetCycleById(Guid Id)
         {
             //get Language from header
@@ -76,8 +76,8 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet(Name ="GetAllCycle")]
-        public async Task<IActionResult> GetAllCycle(int page = 1 , int perPage = 10)
+        [HttpGet(Name = "GetAllCycle")]
+        public async Task<IActionResult> GetAllCycle(int page = 1, int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -110,14 +110,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpDelete]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
+        [HttpDelete("{id}" ,Name="DeleteCycle")]
         public async Task<IActionResult> DeleteCycle(Guid id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];

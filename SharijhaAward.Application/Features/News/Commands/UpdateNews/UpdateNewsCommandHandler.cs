@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.NewsModel;
@@ -15,11 +16,13 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
         : IRequestHandler<UpdateNewsCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public UpdateNewsCommandHandler(IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
+        public UpdateNewsCommandHandler(IFileService fileService, IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
         {
             _newsRepository = newsRepository;
+            _fileService = fileService;
             _mapper = mapper;
         }
 
@@ -36,8 +39,14 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
 
                 return new BaseResponse<object>(msg,false,404);
             }
+            var news = newsToUpdate;
             _mapper.Map(request,newsToUpdate,typeof(UpdateNewsCommand),typeof(Domain.Entities.NewsModel.News));
-            
+           
+            if (request.EditeOnImage)
+                newsToUpdate.Image = await _fileService.SaveFileAsync(request.Image!);
+            else
+                newsToUpdate.Image = news.Image;
+
             await _newsRepository.UpdateAsync(newsToUpdate);
 
             msg = request.lang == "en"

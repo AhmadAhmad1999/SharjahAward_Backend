@@ -12,6 +12,8 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId
     public class GetAllFAQsByCategoryIdQuery : IRequest<BaseResponse<List<FAQListVm>>>
     {
         public Guid CategoryId { get; set; }
+        public int page {  get; set; }
+        public int pageSize { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }
