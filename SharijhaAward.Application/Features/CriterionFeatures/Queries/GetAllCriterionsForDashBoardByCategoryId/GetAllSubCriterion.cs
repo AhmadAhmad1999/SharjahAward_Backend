@@ -3,7 +3,9 @@
     public class GetAllSubCriterion
     {
         public Guid Id { get; set; }
-        public string Title { get; set; } = null!;
+        public string EnglishTitle { get; set; } = null!;
+        public string ArabicTitle { get; set; } = null!;
         public int Score { get; set; }
+        public List<GetAllSubCriterionItems> CriterionItems { get; set; } = new List<GetAllSubCriterionItems>();
     }
 }

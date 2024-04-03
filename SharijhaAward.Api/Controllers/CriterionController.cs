@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfAllCritrionsHaveAttachment;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterion;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionAttachment;
@@ -17,12 +15,8 @@ using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriter
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterionItem;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionsForDashBoardByCategoryId;
+using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetCriterionItemById;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCriterionById;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
-using SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetGeneralFAQCategoryById;
-using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.CreateAttachment;
-using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.DeleteAttachment;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -333,7 +327,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPut("UpdateCriterion")]
+        [HttpPut("UpdateCriterion/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -341,13 +335,15 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> UpdateCriterion([FromBody] UpdateCriterionCommand UpdateCriterionCommand)
+        public async Task<IActionResult> UpdateCriterion(Guid Id, [FromBody] UpdateCriterionCommand UpdateCriterionCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             UpdateCriterionCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            UpdateCriterionCommand.Id = Id;
 
             BaseResponse<object>? Response = await _Mediator.Send(UpdateCriterionCommand);
 
@@ -358,7 +354,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPut("UpdateCriterionItem")]
+        [HttpPut("UpdateCriterionItem/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -366,13 +362,15 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> UpdateCriterionItem([FromBody] UpdateCriterionItemCommand UpdateCriterionItemCommand)
+        public async Task<IActionResult> UpdateCriterionItem(Guid Id, [FromBody] UpdateCriterionItemCommand UpdateCriterionItemCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             UpdateCriterionItemCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            UpdateCriterionItemCommand.Id = Id;
 
             BaseResponse<object>? Response = await _Mediator.Send(UpdateCriterionItemCommand);
 
@@ -433,6 +431,34 @@ namespace SharijhaAward.Api.Controllers
                 lang = HeaderValue!,
                 page = Page,
                 pageSize = PerPage
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetCriterionItemById/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetCriterionItemById(Guid Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetCriterionItemByIdDto> Response = await _Mediator.Send(new GetCriterionItemByIdQuery()
+            {
+                Id = Id,
+                lang = HeaderValue!
             });
 
             return Response.statusCode switch

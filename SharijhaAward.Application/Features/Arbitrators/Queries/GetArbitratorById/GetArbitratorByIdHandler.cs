@@ -49,7 +49,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
             if (ArbitratorEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Arbitrator is not Found"
+                    ? "Arbitrator is not found"
                     : "المحكم غير موجود";
 
                 return new BaseResponse<GetArbitratorByIdResponse>(ResponseMessage, false, 404);

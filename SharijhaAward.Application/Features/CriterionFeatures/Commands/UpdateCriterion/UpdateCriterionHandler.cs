@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCr
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            if (CriterionEntityToUpdate.ParentId is null)
+            if (CriterionEntityToUpdate.ParentId is not null)
             {
                 Criterion? CheckIfMainCriterionIdDoesExist = await _CriterionRepository
                     .FirstOrDefaultAsync(x => x.Id == CriterionEntityToUpdate.ParentId && x.ParentId == null);

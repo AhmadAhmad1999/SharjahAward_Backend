@@ -11,6 +11,7 @@ using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd
 {
     public class GetAllDynamicAttributeSectionsForAddHandler : IRequestHandler<GetAllDynamicAttributeSectionsForAddQuery,
@@ -102,6 +103,14 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     DynamicAttributeInSection.DynamicAttributeListValues = _Mapper.Map<List<DynamicAttributeListValueListVM>>(
                         await _DynamicAttributeListValueRepository
                             .Where(x => x.DynamicAttributeId == DynamicAttributeInSection.Id).ToListAsync());
+
+                    if (Language.ToLower() == "en")
+                        DynamicAttributeInSection.DynamicAttributeListValues = DynamicAttributeInSection.DynamicAttributeListValues
+                            .Where(x => !Regex.IsMatch(x.Value, @"\p{IsArabic}")).ToList();
+
+                    else
+                        DynamicAttributeInSection.DynamicAttributeListValues = DynamicAttributeInSection.DynamicAttributeListValues
+                            .Where(x => Regex.IsMatch(x.Value, @"\p{IsArabic}")).ToList();
 
                     DynamicAttributeInSection.AttributeDataTypeName = DataTypes
                         .FirstOrDefault(y => y.Id == DynamicAttributeInSection.AttributeDataTypeId)!.Name;
