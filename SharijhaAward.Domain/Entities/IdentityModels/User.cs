@@ -20,6 +20,7 @@ public class User : AuditableEntity  {
     public Guid? RoleId { get; set; }
     public int? ConfirmationCodeForResetPassword { get; set; }
     public int? ConfirmationCodeForSignUp { get; set; }
+    public int? ConfirmationCodeForForgetPassword { get; set; }
     public bool isValidAccount { get; set; }
     public string? ImageURL { get; set; }
     public int? NumberOfIndividualCategories { get; set; } = 0;
