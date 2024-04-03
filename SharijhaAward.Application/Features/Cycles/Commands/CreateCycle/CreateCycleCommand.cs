@@ -15,7 +15,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
         public string Year { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
-        public Status Status { get; set; } = Status.Close;
+        public Status Status { get; set; } 
         public DateTime RegistrationPortalOpeningDate { get; set; }
         public DateTime RegistrationPortalClosingDate { get; set; }
         public DateTime? SubscriberPortalClosingDate { get; set; }

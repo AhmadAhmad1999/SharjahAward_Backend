@@ -5,6 +5,8 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
+using SharijhaAward.Domain.Entities.CycleConditionModel;
+using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
@@ -23,13 +25,17 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
         private readonly IAsyncRepository<Cycle> _CycleRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<ConditionsProvidedForms> _conditionFormsRepository;
+        private readonly IAsyncRepository<CycleConditionsProvidedForm> _cycleConditionsProvidedFormRepository;
+        private readonly IAsyncRepository<CycleCondition> _cycleConditionRepository;
         private readonly IAsyncRepository<TermAndCondition> _termRepository;       
         private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _userRepository;
         private readonly IJwtProvider _JwtProvider;
         private readonly IMapper _mapper;
 
         public CreateProvidedFormCommandHandler(
-            IJwtProvider JwtProvider, 
+            IJwtProvider JwtProvider,
+            IAsyncRepository<CycleConditionsProvidedForm> cycleConditionsProvidedFormRepository,
+            IAsyncRepository<CycleCondition> cycleConditionRepository,
             IAsyncRepository<ConditionsProvidedForms> conditionFormsRepository,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedrepository,
             IAsyncRepository<Cycle> cyclerepository,
@@ -41,6 +47,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
         {
             _Providedrepository = providedrepository;
             _CycleRepository = cyclerepository;
+            _cycleConditionsProvidedFormRepository = cycleConditionsProvidedFormRepository;
+            _cycleConditionRepository = cycleConditionRepository;
             _JwtProvider = JwtProvider;
             _CategoryRepository = categoryrepository;
             _conditionFormsRepository = conditionFormsRepository;
@@ -133,6 +141,20 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
 
                 };
                 await _conditionFormsRepository.AddAsync(ConditionsProvidedForms);
+            }
+            var CycleConditions = _cycleConditionRepository.Where(c => c.CycleId == cycle.Id).ToList();
+            
+            for (int i = 0; i < CycleConditions.Count(); i++)
+            {
+                var CycleConditionsProvidedForms = new CycleConditionsProvidedForm()
+                {
+                    CycleConditionId = CycleConditions[i].Id,
+                    ProvidedFormId = data.Id,
+                    IsAgree = false,
+                    Attachments = null!
+
+                };
+                await _cycleConditionsProvidedFormRepository.AddAsync(CycleConditionsProvidedForms);
             }
             return new BaseResponse<int>(msg, true, 200, data.Id);
         }

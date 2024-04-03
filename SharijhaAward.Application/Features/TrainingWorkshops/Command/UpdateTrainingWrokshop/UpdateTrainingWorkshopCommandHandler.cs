@@ -40,11 +40,15 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTra
             _mapper.Map(request, worksopToUpdate, typeof(UpdateTrainingWorkshopCommand), typeof(TrainingWorkshop));
            
             if (request.EditeOnThumbnail)
-                worksopToUpdate.Thumbnail = await _fileService.SaveFileAsync(request.Thumbnail);
+                worksopToUpdate.Thumbnail = await _fileService.SaveFileAsync(request.Thumbnail!);
             else
                 worksopToUpdate.Thumbnail = workShop.Thumbnail;
             
             await _trainingWorkshopRepository.UpdateAsync(worksopToUpdate);
+
+            string msg = request.lang == "en"
+                ? "Workshop has been Updated"
+                : "تم تعديل الورشة التدريبية";
 
             return new BaseResponse<object>("Workshop has been Updated", true, 200);
         }

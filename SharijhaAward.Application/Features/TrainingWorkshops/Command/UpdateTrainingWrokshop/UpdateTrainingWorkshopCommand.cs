@@ -14,10 +14,9 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTra
         public Guid Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
-        public string ArabicWorkshopAttachment { get; set; } = string.Empty;
-        public string EnglishWorkshopAttachment { get; set; } = string.Empty;
-        public IFormFile Thumbnail { get; set; } = null!;
+        public IFormFile? Thumbnail { get; set; } = null!;
         public bool EditeOnThumbnail {  get; set; }
         public Guid CategoryId { get; set; }
+        public string lang { get; set; } = string.Empty;
     }
 }

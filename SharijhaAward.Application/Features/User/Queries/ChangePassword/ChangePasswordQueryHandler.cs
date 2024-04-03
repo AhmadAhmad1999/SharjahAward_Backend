@@ -65,8 +65,8 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
                 return new BaseResponse<object>(msg, false, 400);
             }
             msg = request.lang == "en"
-                ? "Old password is not correct"
-                : "كلمة المرور القديمة غير صحيحة";
+                ? "Password has been Changed"
+                : "تم تعديل كلمة المرور";
 
             request.NewPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: request.NewPassword,

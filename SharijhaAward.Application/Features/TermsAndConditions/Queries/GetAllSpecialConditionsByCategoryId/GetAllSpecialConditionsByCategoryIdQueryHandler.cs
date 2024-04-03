@@ -59,6 +59,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                 msg = request.lang == "en"
                     ? "Category Not Found"
                     : "الفئة غير موجودة";
+
                 return new BaseResponse<List<PublicTremsAndConditionsListVm>>(msg, false, 404);
             }
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);

@@ -1,13 +1,14 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
+using SharijhaAward.Domain.Entities.CycleConditionModel;
+using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
+using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.SystemAttachmentModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using System;
 using System.Collections.Generic;
@@ -15,60 +16,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAllConditions
+namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCycleConditions
 {
-    public class CheckAllConditionsQueryHandler
-        : IRequestHandler<CheckAllConditionsQuery, BaseResponse<object>>
+    public class CheckAllCycleConditionsQueryHandler
+        : IRequestHandler<CheckAllCycleConditionsQuery, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<ConditionAttachment> _conditionAttachmentRepository;
-        private readonly IAsyncRepository<Category> _categoryRepository;
-        private readonly IAsyncRepository<TermAndCondition> _termRepository;
-        private readonly IAsyncRepository<ConditionsProvidedForms> _conditionsProvidedFormsRepository;
+        private readonly IAsyncRepository<CycleConditionAttachment> _conditionAttachmentRepository;
+        private readonly IAsyncRepository<Cycle> _cycleRepository;
+        private readonly IAsyncRepository<CycleCondition> _termRepository;
+        private readonly IAsyncRepository<CycleConditionsProvidedForm> _conditionsProvidedFormsRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _providedFormRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IMapper _mapper;
 
-        public CheckAllConditionsQueryHandler(
-            IAsyncRepository<ConditionAttachment> conditionAttachmentRepository,
-            IAsyncRepository<ConditionsProvidedForms> conditionsProvidedFormsRepository,
-            IAsyncRepository<Category> categoryRepository, 
-            IAsyncRepository<TermAndCondition> termRepository,
-            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository,
-            IUserRepository userRepository,
-            IJwtProvider jwtProvider,
-            IMapper mapper
-            )
+        public CheckAllCycleConditionsQueryHandler(IAsyncRepository<CycleConditionAttachment> conditionAttachmentRepository, IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<CycleCondition> termRepository, IAsyncRepository<CycleConditionsProvidedForm> conditionsProvidedFormsRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository)
         {
             _conditionAttachmentRepository = conditionAttachmentRepository;
-            _conditionsProvidedFormsRepository = conditionsProvidedFormsRepository;
-            _categoryRepository = categoryRepository;
+            _cycleRepository = cycleRepository;
             _termRepository = termRepository;
-            _userRepository = userRepository;
-            _jwtProvider = jwtProvider;
-            _mapper = mapper;
+            _conditionsProvidedFormsRepository = conditionsProvidedFormsRepository;
             _providedFormRepository = providedFormRepository;
         }
 
-        public async Task<BaseResponse<object>> Handle(CheckAllConditionsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CheckAllCycleConditionsQuery request, CancellationToken cancellationToken)
         {
-           var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
-            if(category == null)
+            var cycle = _cycleRepository.Where(c => c.Status == 0).FirstOrDefault();
+            if(cycle == null)
             {
-                return new BaseResponse<object>("", false, 404);
+                return new BaseResponse<object>("There is no Active Cycle", false, 404);
             }
-         
+
             var form = await _providedFormRepository.Where(p => p.Id == request.formId).FirstOrDefaultAsync();
 
-            var terms = await _termRepository.WhereThenInclude(t => t.CategoryId == category.Id, t => t.ConditionAttachments).ToListAsync();
+            var terms = await _termRepository.WhereThenInclude(t => t.CycleId == cycle.Id, t => t.ConditionAttachments).ToListAsync();
 
-            List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
+            List<CycleConditionsProvidedForm> conditionsProvideds = new List<CycleConditionsProvidedForm>();
 
             for (int i = 0; i < terms.Count(); i++)
             {
                 var conditionsProvidedsobject =
                  _conditionsProvidedFormsRepository.WhereThenInclude(
-                     c => c.ProvidedFormId == form!.Id && c.TermAndConditionId == terms[i].Id,
+                     c => c.ProvidedFormId == form!.Id && c.CycleConditionId == terms[i].Id,
                      c => c.Attachments).FirstOrDefault();
 
                 if (conditionsProvidedsobject != null)
@@ -76,13 +62,13 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
             }
 
             string msg;
-            if(terms.Count() != 0)
+            if (terms.Count() != 0)
             {
-                for(int i=0; i < terms.Count(); i++)
+                for (int i = 0; i < terms.Count(); i++)
                 {
                     //Check on Terms that need Attachments
-                    if (terms[i].RequiredAttachmentNumber != conditionsProvideds[i].Attachments.Count() 
-                        && terms[i].RequiredAttachmentNumber != 0 )
+                    if (terms[i].RequiredAttachmentNumber != conditionsProvideds[i].Attachments.Count()
+                        && terms[i].RequiredAttachmentNumber != 0)
                     {
                         msg = request.lang == "en"
                             ? "Please Complete Uploading The File "
@@ -101,7 +87,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
 
                     }
                     else if (
-                        terms[i].RequiredAttachmentNumber == 0 && 
+                        terms[i].RequiredAttachmentNumber == 0 &&
                         conditionsProvideds[i].Attachments.Count() < 1 &&
                         terms[i].NeedAttachment
                         )

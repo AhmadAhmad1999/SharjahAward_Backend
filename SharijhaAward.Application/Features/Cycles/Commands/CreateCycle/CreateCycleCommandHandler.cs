@@ -31,9 +31,9 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                : "تم إنشاء الدورة بنجاح";
 
             var cycle = _mapper.Map<Cycle>(request);
-            if(cycle.Status == 0)
+            if(cycle.Status == Domain.Constants.Common.Status.Active)
             {
-                var ActiveCycle = await _cycleRepository.Where(c => c.Status == 0).FirstOrDefaultAsync();
+                var ActiveCycle = await _cycleRepository.Where(c => c.Status == Domain.Constants.Common.Status.Active).FirstOrDefaultAsync();
                 if(ActiveCycle != null)
                 {
                      msg = request.lang == "en"

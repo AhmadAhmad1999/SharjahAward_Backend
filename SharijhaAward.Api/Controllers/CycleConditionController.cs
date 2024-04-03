@@ -6,10 +6,12 @@ using SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycleCon
 using SharijhaAward.Application.Features.CycleConditions.Commands.DeleteCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Commands.UpdateCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Queries.AgreeOnCycleCondition;
+using SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCycleConditions;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycleConditions;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionById;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnTermsAndCondition;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAllConditions;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -24,7 +26,7 @@ namespace SharijhaAward.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost(Name ="AddCycleCondition")]
+        [HttpPost(Name = "AddCycleCondition")]
         public async Task<ActionResult> AddCycleCondition(CreateCycleConditionCommand command)
         {
             //get Language from header
@@ -40,9 +42,9 @@ namespace SharijhaAward.Api.Controllers
                 200 => Ok(response),
                 _ => BadRequest(response)
             };
-           
+
         }
-        [HttpPut(Name="UpdateCycleCondition")]
+        [HttpPut(Name = "UpdateCycleCondition")]
         public async Task<ActionResult> UpdateCycleCondition(UpdateCycleConditionCommand command)
         {
             //get Language from header
@@ -68,7 +70,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new DeleteCycleConditionCommand()
             {
                 Id = Id,
-                lang =language!
+                lang = language!
             });
 
             return response.statusCode switch
@@ -98,8 +100,8 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet(Name="GetAllCycleCondition")] 
-        public async Task<ActionResult> GetAllCycleCondition( int page = 1, int perPage = 10)
+        [HttpGet(Name = "GetAllCycleCondition")]
+        public async Task<ActionResult> GetAllCycleCondition(int page = 1, int perPage = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -109,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
                 lang = language!,
                 page = page,
                 pageSize = perPage,
-                
+
             });
 
             return response.statusCode switch
@@ -129,7 +131,7 @@ namespace SharijhaAward.Api.Controllers
 
             var response = await _mediator.Send(new GetCycleConditionByCycleIdQuery()
             {
-                
+
                 formId = formId,
                 token = token!,
                 lang = language!
@@ -150,6 +152,25 @@ namespace SharijhaAward.Api.Controllers
             query.token = token!;
 
             var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpGet("CheckAllCycleConditions", Name = "CheckAllCycleConditions")]
+        public async Task<IActionResult> CheckAllCycleConditions(int formId)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new CheckAllCycleConditionsQuery()
+            {
+                formId = formId,
+                lang = Language!
+            });
 
             return response.statusCode switch
             {
