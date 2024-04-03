@@ -175,6 +175,7 @@ using SharijhaAward.Domain.Entities.EducationalClassModel;
 using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
+using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetCriterionItemById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -401,6 +402,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalEntity, GetEducationalEntityByIdDto>().ReverseMap();
             CreateMap<EducationalClass, GetAllClassesListVM>().ReverseMap();
             CreateMap<EducationalClass, GetClassByIdDto>().ReverseMap();
+            CreateMap<CriterionItem, GetCriterionItemByIdDto>().ReverseMap();
         }
     }
 }

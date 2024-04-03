@@ -45,7 +45,9 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllCategoryClass
                 .Select(x => new GetAllCategoryClassesByCategoryIdDto()
                 {
                     Id = x.EducationalClass!.Id,
-                    Name = x.EducationalClass!.Name
+                    Name = Request.lang == "en"
+                        ? x.EducationalClass!.EnglishName
+                        : x.EducationalClass!.ArabicName
                 }).ToListAsync();
 
             return new BaseResponse<List<GetAllCategoryClassesByCategoryIdDto>>(ResponseMessage, true, 200, CategoryClasses);
