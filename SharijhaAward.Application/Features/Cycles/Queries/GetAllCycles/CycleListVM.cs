@@ -20,5 +20,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles
         public DateTime RegistrationPortalClosingDate { get; set; }
         public int IndividualCategoryNumber { get; set; } = 0;
         public int GroupCategoryNumber { get; set; } = 0;
+        public int TheUpperLimitForObtainingInformation { get; set; }
+        public int MarginOfDifferenceBetweenArbitrators { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants.Common;
 using SharijhaAward.Domain.Entities.AgendaModel;
@@ -38,7 +39,9 @@ public class Cycle : AuditableEntity
     // Number of individual categories in which subscriber can entitled.
     [Range(ValidationConstants.IndividualCategoryNumberMinValue, ValidationConstants.IndividualCategoryNumberMaxValue)]
     public int IndividualCategoryNumber { get; set; } = 0; 
-    
+    public int TheUpperLimitForObtainingInformation {  get; set; }
+    public int MarginOfDifferenceBetweenArbitrators {  get; set; }
+
     // Number of group categories in which subscriber can entitled.
     [Range(ValidationConstants.GroupCategoryNumberMinValue, ValidationConstants.GroupCategoryNumberMaxValue)]
     public int GroupCategoryNumber { get; set; } = 0;

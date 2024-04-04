@@ -26,12 +26,12 @@ namespace SharijhaAward.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost(Name= "AddTermAndCondition")]
+        [HttpPost(Name = "AddTermAndCondition")]
         public async Task<IActionResult> AddTermAndCondition(CreateTermAndConditionCommand command)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
-      
+
             command.lang = Language!;
             var response = await _mediator.Send(command);
 
@@ -43,7 +43,7 @@ namespace SharijhaAward.Api.Controllers
             };
 
         }
-        [HttpDelete(Name = "DeleteTermAndCondition")]
+        [HttpDelete("{Id}", Name = "DeleteTermAndCondition")]
         public async Task<IActionResult> DeleteTermAndCondition(Guid Id)
         {
              //get Language from header

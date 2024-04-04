@@ -26,6 +26,8 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle
         public DateTime? FinalArbitrationEndDate { get; set; }
         public int IndividualCategoryNumber { get; set; } = 0;
         public int GroupCategoryNumber { get; set; } = 0;
+        public int TheUpperLimitForObtainingInformation { get; set; }
+        public int MarginOfDifferenceBetweenArbitrators { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }
