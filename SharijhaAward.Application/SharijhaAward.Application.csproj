@@ -50,6 +50,7 @@
 
   <ItemGroup>
     <Folder Include="Features\EducationalInstitutions\Queries\GetEducationalInstitutionsByEntityId\" />
+    <Folder Include="Features\ExtraAttachments\Queries\GetAllExtraAttachment\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
     <Folder Include="Features\TermsAndConditions\Attacments\Queries\" />

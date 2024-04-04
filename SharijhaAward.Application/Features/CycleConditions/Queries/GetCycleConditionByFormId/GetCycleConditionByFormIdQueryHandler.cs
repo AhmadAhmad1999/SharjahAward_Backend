@@ -20,8 +20,8 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId
 {
-    public class GetCycleConditionByCycleIdQueryHandler
-        : IRequestHandler<GetCycleConditionByCycleIdQuery, BaseResponse<List<CyclePublicConditionListVm>>>
+    public class GetCycleConditionByFormIdQueryHandler
+        : IRequestHandler<GetCycleConditionByFormIdQuery, BaseResponse<List<CyclePublicConditionListVm>>>
     {
         private readonly IAsyncRepository<CycleCondition> _cycleConditionRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
         private readonly IUserRepository _userRepository;
        
      
-        public GetCycleConditionByCycleIdQueryHandler(IAsyncRepository<CycleCondition> cycleConditionRepository, IAsyncRepository<Cycle> cycleRepository, IMapper mapper, IAsyncRepository<CycleConditionAttachment> conditionAttachmentRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository, IAsyncRepository<CycleConditionsProvidedForm> conditionsProvidedFormsRepository, IUserRepository userRepository)
+        public GetCycleConditionByFormIdQueryHandler(IAsyncRepository<CycleCondition> cycleConditionRepository, IAsyncRepository<Cycle> cycleRepository, IMapper mapper, IAsyncRepository<CycleConditionAttachment> conditionAttachmentRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository, IAsyncRepository<CycleConditionsProvidedForm> conditionsProvidedFormsRepository, IUserRepository userRepository)
         {
             _cycleConditionRepository = cycleConditionRepository;
             _cycleRepository = cycleRepository;
@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
             _userRepository = userRepository;
         }
 
-        public async Task<BaseResponse<List<CyclePublicConditionListVm>>> Handle(GetCycleConditionByCycleIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<CyclePublicConditionListVm>>> Handle(GetCycleConditionByFormIdQuery request, CancellationToken cancellationToken)
         {
             var Cycle = await _cycleRepository.FirstOrDefaultAsync(c=>c.Status == Domain.Constants.Common.Status.Active);
             if(Cycle == null)

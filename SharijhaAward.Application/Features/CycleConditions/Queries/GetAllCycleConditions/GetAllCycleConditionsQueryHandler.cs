@@ -26,6 +26,8 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
         public async Task<BaseResponse<List<CycleConditionListVM>>> Handle(GetAllCycleConditionsQuery request, CancellationToken cancellationToken)
         {
             var allCycleCondition = await _cycleConditionRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            if (request.CycleId != null)
+                allCycleCondition = await _cycleConditionRepository.GetWhereThenPagedReponseAsync(c => c.CycleId == request.CycleId, request.page, request.pageSize);
             var data = _mapper.Map<List<CycleConditionListVM>>(allCycleCondition);
 
             for (int i = 0; i < data.Count; i++)

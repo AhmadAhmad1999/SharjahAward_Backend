@@ -39,14 +39,14 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
 
                 return new BaseResponse<object>(msg, false, 404);
             }
-            var categoryObject = categoryToUpdate;
+            var categoryIcon = categoryToUpdate.Icon;
            
             _mapper.Map(request, categoryToUpdate, typeof(UpdateCategoryCommand), typeof(Category));
            
             if (request.UpdateOnIcon)
                 categoryToUpdate.Icon = await _fileService.SaveFileAsync(request.Icon!);
             else
-                categoryToUpdate.Icon = categoryObject.Icon;
+                categoryToUpdate.Icon = categoryIcon;
 
             await _categoryRepository.UpdateAsync(categoryToUpdate);
            

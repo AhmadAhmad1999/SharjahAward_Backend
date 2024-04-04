@@ -40,7 +40,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpPut(Name = "UpdateCategory")]
-        public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryCommand command)
+        public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];

@@ -38,13 +38,18 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
 
         public async Task<BaseResponse<object>> Handle(CheckAllCycleConditionsQuery request, CancellationToken cancellationToken)
         {
+            string msg;
             var cycle = _cycleRepository.Where(c => c.Status == 0).FirstOrDefault();
             if(cycle == null)
             {
-                return new BaseResponse<object>("There is no Active Cycle", false, 404);
+                msg = request.lang == "en"
+                            ? "There is no Active Cycle"
+                            : "لا يوجد دورات فعالة";
+
+                return new BaseResponse<object>(msg, false, 404);
             }
 
-            var form = await _providedFormRepository.Where(p => p.Id == request.formId).FirstOrDefaultAsync();
+            var form = await _providedFormRepository.FirstOrDefaultAsync(p => p.Id == request.formId);
 
             var terms = await _termRepository.WhereThenInclude(t => t.CycleId == cycle.Id, t => t.ConditionAttachments).ToListAsync();
 
@@ -61,7 +66,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
                     conditionsProvideds.Add(conditionsProvidedsobject!);
             }
 
-            string msg;
+           
             if (terms.Count() != 0)
             {
                 for (int i = 0; i < terms.Count(); i++)

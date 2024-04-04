@@ -41,8 +41,8 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId
 
                 return new BaseResponse<List<AgendaListVm>>(msg, false, 400);
             }
-            var Agendas = _agendaRepository.Where(a => a.CycleId == Cycle.Id).ToList().OrderBy(a=>a.CreatedAt);
-            
+            var Agendas = _agendaRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id,request.page,request.pageSize);
+             
             var data = _mapper.Map<List<AgendaListVm>>(Agendas);
 
             for(int i = 0; i < data.Count(); i++)
@@ -51,7 +51,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId
                     ? data[i].EnglishTitle
                     : data[i].ArabicTitle;
             }
-
+            
             return new BaseResponse<List<AgendaListVm>>("", true, 200, data);
         }
     }

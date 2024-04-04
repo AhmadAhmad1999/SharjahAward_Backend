@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId
 {
-    public class GetCycleConditionByCycleIdQuery : IRequest<BaseResponse<List<CyclePublicConditionListVm>>>
+    public class GetCycleConditionByFormIdQuery : IRequest<BaseResponse<List<CyclePublicConditionListVm>>>
     {
         public string token { get; set; } = string.Empty;
         public string lang { get; set; } = string.Empty;

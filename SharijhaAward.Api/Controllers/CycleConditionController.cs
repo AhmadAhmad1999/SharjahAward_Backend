@@ -101,7 +101,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllCycleCondition")]
-        public async Task<ActionResult> GetAllCycleCondition(int page = 1, int perPage = 10)
+        public async Task<ActionResult> GetAllCycleCondition(Guid? CycleId, int page = 1, int perPage = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -111,6 +111,7 @@ namespace SharijhaAward.Api.Controllers
                 lang = language!,
                 page = page,
                 pageSize = perPage,
+                CycleId = CycleId
 
             });
 
@@ -122,14 +123,14 @@ namespace SharijhaAward.Api.Controllers
             };
 
         }
-        [HttpGet("GetCycleConditionByCycleId", Name = "GetCycleConditionByCycleId")]
-        public async Task<ActionResult> GetCycleConditionByCycleId([FromQuery] int formId)
+        [HttpGet("GetCycleConditionByFormId", Name = "GetCycleConditionByFormId")]
+        public async Task<ActionResult> GetCycleConditionByFormId([FromQuery] int formId)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
 
-            var response = await _mediator.Send(new GetCycleConditionByCycleIdQuery()
+            var response = await _mediator.Send(new GetCycleConditionByFormIdQuery()
             {
 
                 formId = formId,

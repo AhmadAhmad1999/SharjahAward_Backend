@@ -15,6 +15,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById
         public string EnglishTitle { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
+        public DateTime CurrentDate { get; set; }
         public DateTime EndDate { get; set; }
         public AgendaStatus Status { get; set; }
         public AgendaDateType DateType { get; set; }
