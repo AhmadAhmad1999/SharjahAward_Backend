@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharijhaAward.Application.Features.Classes.Queries.GetAllCategoryClassesByCategoryId;
 
 namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories
 {
@@ -11,5 +7,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
         public Guid Id {  get; set; }
         public string Icon { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+        public bool? RelatedToClasses { get; set; }
+        public List<GetAllCategoryClassesByCategoryIdDto> SubCategoryClasses { get; set; } = new List<GetAllCategoryClassesByCategoryIdDto>();
     }
 }

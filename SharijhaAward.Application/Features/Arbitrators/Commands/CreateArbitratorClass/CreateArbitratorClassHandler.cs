@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             if (CheckIfArbitratorIdIsExist is null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Arbitrator is not fount"
+                    ? "Arbitrator is not found"
                     : "المحكم غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 204);
@@ -44,10 +44,23 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             if (CheckIfEducationalClassIdIsExist is null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Class is not fount"
+                    ? "Class is not found"
                     : "الصف غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 204);
+            }
+
+            ArbitratorClass? CheckIfArbitratorDoesConnectWithClass = await _ArbitratorClassRepository
+                .FirstOrDefaultAsync(x => x.ArbitratorId == CheckIfArbitratorIdIsExist.Id &&
+                    x.EducationalClassId == CheckIfEducationalClassIdIsExist.Id);
+
+            if (CheckIfArbitratorDoesConnectWithClass is not null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "This arbitrator already is already arbitrating on this class"
+                    : "هذا المحكم يحكم مسبقاً على هذا الصف";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
             ArbitratorClass NewArbitratorClassEntity = new ArbitratorClass()

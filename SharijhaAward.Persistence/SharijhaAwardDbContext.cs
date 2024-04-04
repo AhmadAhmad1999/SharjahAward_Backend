@@ -778,7 +778,9 @@ namespace SharijhaAward.Persistence
                  EnglishName = "SharijhaAward",
                  ArabicName ="جائزة الشارقة",    
                  Year = "2023-2024",
-                 Status = Domain.Constants.Common.Status.Active
+                 Status = Domain.Constants.Common.Status.Active,
+                 IndividualCategoryNumber = 10,
+                 GroupCategoryNumber = 10
             });
 
             modelBuilder.Entity<Agenda>()

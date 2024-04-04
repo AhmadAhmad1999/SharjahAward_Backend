@@ -1,86 +1,96 @@
-﻿using AutoMapper;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Classes.Queries.GetAllCategoryClassesByCategoryId;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CycleModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories
 {
     public class GetCategoriesWithSubcategoriesQueryHandler
         : IRequestHandler<GetCategoriesWithSubcategoriesQuery, BaseResponse<List<CategoriesSubcategoriesDto>>>
     {
-        private readonly IAsyncRepository<Category> _categoryRepository;
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
 
-        public GetCategoriesWithSubcategoriesQueryHandler(
-            IAsyncRepository<Category> categoryRepository,
-            IAsyncRepository<Cycle> cycleRepository,
-            IHttpContextAccessor httpContextAccessor,
-            IMapper mapper)
+        public GetCategoriesWithSubcategoriesQueryHandler(IAsyncRepository<Category> CategoryRepository,
+            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
+            IAsyncRepository<Cycle> CycleRepository)
         {
-            _categoryRepository = categoryRepository;
-            _cycleRepository = cycleRepository;
-            _httpContextAccessor = httpContextAccessor;
-            _mapper = mapper;
+            _CategoryRepository = CategoryRepository;
+            _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
+            _CycleRepository = CycleRepository;
         }
 
-        public async Task<BaseResponse<List<CategoriesSubcategoriesDto>>> Handle(GetCategoriesWithSubcategoriesQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<CategoriesSubcategoriesDto>>> Handle(GetCategoriesWithSubcategoriesQuery Request, CancellationToken cancellationToken)
         {
-            var Cycle = request.CycleId != null
-                ? await _cycleRepository.GetByIdAsync(request.CycleId)
-                : await _cycleRepository.FirstOrDefaultAsync(c => c.Status == 0);
-            
+            string ResponseMessage = string.Empty;
+
+            Cycle? CycleEntity = Request.CycleId != null
+                ? await _CycleRepository.GetByIdAsync(Request.CycleId)
+                : await _CycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active);
                  
-            if(Cycle == null)
+            if(CycleEntity == null)
             {
-                string msg = request.lang == "en"
-                    ? "There is no Active Cycle yet"
+                ResponseMessage = Request.lang == "en"
+                    ? "There is no active cycle yet"
                     : "لا يوجد دورات للمشاركة";
 
-                return new BaseResponse<List<CategoriesSubcategoriesDto>>(msg, false, 404);
+                return new BaseResponse<List<CategoriesSubcategoriesDto>>(ResponseMessage, false, 404);
             }
-           
          
-            var categories = _categoryRepository.Where(c => c.CycleId == Cycle.Id && c.Status == Domain.Constants.Common.Status.Active).Where(c=>c.ParentId==null).ToList();
-            
-            if (Cycle.GroupCategoryNumber == 0)
-            {
-                categories = _categoryRepository.Where(c => c.CycleId == Cycle.Id && c.Status == Domain.Constants.Common.Status.Active).Where(c => c.ParentId == null && c.CategoryClassification != Domain.Constants.CategoryConstants.CategoryClassification.Group).ToList();
-            }
-            if(Cycle.IndividualCategoryNumber == 0)
-            {
-                categories = _categoryRepository.Where(c => c.CycleId == Cycle.Id && c.Status == Domain.Constants.Common.Status.Active).Where(c => c.ParentId == null && c.CategoryClassification != Domain.Constants.CategoryConstants.CategoryClassification.Individual).ToList();
-            }
-           
-            var data = _mapper.Map<List<CategoriesSubcategoriesDto>>(categories);
-           
-            for (int i=0; i<data.Count; i++)
-            {
-               
-                data[i].Name = request.lang == "en" ? categories[i].EnglishName : categories[i].ArabicName;
-               
-                List<Category> subCategories = _categoryRepository.Where(c => c.ParentId == data[i].Id && c.Status != Domain.Constants.Common.Status.Close).ToList();
-               
-                data[i].subcategories = _mapper.Map<List<SubcategoriesListVM>>(subCategories);
-                
-                for(int j=0; j < subCategories.Count; j++)
+            List<CategoriesSubcategoriesDto> MainCategories = await _CategoryRepository
+                .Where(x => x.CycleId == CycleEntity.Id && x.Status == Domain.Constants.Common.Status.Active && x.ParentId == null &&
+                    (CycleEntity.GroupCategoryNumber == 0 
+                        ? x.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Individual
+                        : x.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Group))
+                .Select(x => new CategoriesSubcategoriesDto()
                 {
-                    
-                    data[i].subcategories![j].Name = request.lang == "en" ? subCategories[j].EnglishName : subCategories[j].ArabicName;
+                    Id = x.Id,
+                    Name = Request.lang == "en"
+                        ? x.EnglishName
+                        : x.ArabicName,
+                    Icon = x.Icon
+                }).ToListAsync();
+
+            foreach (CategoriesSubcategoriesDto MainCategory in MainCategories)
+            {
+                MainCategory.subcategories = await _CategoryRepository
+                    .Where(x => x.ParentId != null 
+                        ? (x.ParentId == MainCategory.Id && x.Status != Domain.Constants.Common.Status.Close) 
+                        : false)
+                    .Select(x => new SubcategoriesListVM()
+                    {
+                        Id = x.Id,
+                        Name = Request.lang == "en"
+                            ? x.EnglishName
+                            : x.ArabicName,
+                        Icon = x.Icon,
+                        RelatedToClasses = x.RelatedToClasses
+                    }).ToListAsync();
+
+                foreach (SubcategoriesListVM SubCategory in MainCategory.subcategories
+                    .Where(x => x.RelatedToClasses != null 
+                        ? x.RelatedToClasses.Value 
+                        : false))
+                {
+                    SubCategory.SubCategoryClasses = await _CategoryEducationalClassRepository
+                        .Where(x => x.CategoryId == SubCategory.Id)
+                        .Include(x => x.EducationalClass!)
+                        .Select(x => new GetAllCategoryClassesByCategoryIdDto()
+                        {
+                            Id = x.Id,
+                            Name = Request.lang == "en"
+                                ? x.EducationalClass!.EnglishName
+                                : x.EducationalClass!.ArabicName
+                        }).ToListAsync();
                 }
-              
             }
-            return new BaseResponse<List<CategoriesSubcategoriesDto>>("",true,200,data);
+
+            return new BaseResponse<List<CategoriesSubcategoriesDto>>(ResponseMessage, true, 200, MainCategories);
         }
     }
 }

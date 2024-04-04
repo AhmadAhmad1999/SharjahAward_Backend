@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators;
 using SharijhaAward.Application.Features.Classes.Commands.CreateClass;
 using SharijhaAward.Application.Features.Classes.Commands.DeleteClass;
 using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
+using SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsByClassId;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllCategoryClassesByCategoryId;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
@@ -176,6 +178,32 @@ namespace SharijhaAward.Api.Controllers
                 CategoryId = CategoryId,
                 lang = HeaderValue!
             });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllArbitratorsByClassId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllArbitratorsByClassId(GetAllArbitratorsByClassIdQuery GetAllArbitratorsByClassIdQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllArbitratorsByClassIdQuery.lang = HeaderValue;
+
+            BaseResponse<List<GetAllArbitratorsListVM>> Response = await _Mediator.Send(GetAllArbitratorsByClassIdQuery);
 
             return Response.statusCode switch
             {
