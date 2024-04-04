@@ -2,6 +2,7 @@
 using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.Common;
 using SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel;
@@ -38,11 +39,13 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
 
         [ForeignKey(nameof(Category))]
         public Guid categoryId { get; set; }
+        public int? CategoryEducationalClassId { get; set; }
+        public CategoryEducationalClass? CategoryEducationalClass { get; set; }
 
         //public virtual List<Arbitration> Arbitrations { get; set; } = new();
 
-       // public virtual List<FormCondition> FormConditions { get; set; } = new();
-    
+        // public virtual List<FormCondition> FormConditions { get; set; } = new();
+
         //public virtual List<CoordinatorProvidedForm> CoordinatorProvidedForms { get; set; } = new();
     }
 }

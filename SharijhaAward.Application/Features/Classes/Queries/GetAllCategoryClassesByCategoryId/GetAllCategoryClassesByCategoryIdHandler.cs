@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -13,14 +12,11 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllCategoryClass
     {
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
-        private readonly IMapper _Mapper;
         public GetAllCategoryClassesByCategoryIdHandler(IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
-            IAsyncRepository<Category> CategoryRepository,
-            IMapper Mapper)
+            IAsyncRepository<Category> CategoryRepository)
         {
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _CategoryRepository = CategoryRepository;
-            _Mapper = Mapper;
         }
         public async Task<BaseResponse<List<GetAllCategoryClassesByCategoryIdDto>>> Handle(GetAllCategoryClassesByCategoryIdQuery Request, 
             CancellationToken cancellationToken)
@@ -44,7 +40,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllCategoryClass
                 .Include(x => x.EducationalClass!)
                 .Select(x => new GetAllCategoryClassesByCategoryIdDto()
                 {
-                    Id = x.EducationalClass!.Id,
+                    Id = x.Id,
                     Name = Request.lang == "en"
                         ? x.EducationalClass!.EnglishName
                         : x.EducationalClass!.ArabicName

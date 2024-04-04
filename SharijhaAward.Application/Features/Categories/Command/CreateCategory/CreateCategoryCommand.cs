@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         public int? WinningScore { get; set; }
         public Status Status { get; set; } = Status.InActive;
         public bool? RelatedToClasses { get; set; }
-        public List<Guid>? EducationalClasses { get; set; }
+        public List<CreateCategoryEducationalClassDto>? EducationalClasses { get; set; }
         public int? ExpectedNumberOfWinners { get; set; }
         public Guid? ParentId { get; set; }
         public Guid? CycleId { get; set; }

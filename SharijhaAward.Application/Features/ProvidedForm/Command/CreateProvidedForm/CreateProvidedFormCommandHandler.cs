@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvidedForm
 {
@@ -125,38 +127,75 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             ProvidedForm.TotalStep = 7;
             ProvidedForm.PercentCompletion = 0;
 
-            var data =  await _Providedrepository.AddAsync(ProvidedForm);
-
-            await _userRepository.UpdateAsync(User);
-
-            var terms = _termRepository.Where(t => t.CategoryId == category.Id).ToList();
-            for (int i = 0; i < terms.Count(); i++)
+            TransactionOptions TransactionOptions = new TransactionOptions
             {
-                var ConditionsProvidedForms = new ConditionsProvidedForms()
-                {
-                    TermAndConditionId = terms[i].Id,
-                    ProvidedFormId = data.Id,
-                    IsAgree = false,
-                    Attachments = null!
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
-                };
-                await _conditionFormsRepository.AddAsync(ConditionsProvidedForms);
-            }
-            var CycleConditions = _cycleConditionRepository.Where(c => c.CycleId == cycle.Id).ToList();
-            
-            for (int i = 0; i < CycleConditions.Count(); i++)
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
             {
-                var CycleConditionsProvidedForms = new CycleConditionsProvidedForm()
+                try
                 {
-                    CycleConditionId = CycleConditions[i].Id,
-                    ProvidedFormId = data.Id,
-                    IsAgree = false,
-                    Attachments = null!
+                    if (category.RelatedToClasses != null
+                        ? category.RelatedToClasses.Value
+                        : false)
+                    {
+                        if (request.CategoryEducationalClassId is null)
+                        {
+                            string ResponseMessage = request.lang == "en"
+                                ? "You have to select one class"
+                                : "يجب عليك اختيار صف";
 
-                };
-                await _cycleConditionsProvidedFormRepository.AddAsync(CycleConditionsProvidedForms);
+                            return new BaseResponse<int>(ResponseMessage, false, 400);
+                        }
+
+                        ProvidedForm.CategoryEducationalClassId = request.CategoryEducationalClassId;
+                    }
+                    var data = await _Providedrepository.AddAsync(ProvidedForm);
+
+                    await _userRepository.UpdateAsync(User);
+
+                    var terms = _termRepository.Where(t => t.CategoryId == category.Id).ToList();
+                    for (int i = 0; i < terms.Count(); i++)
+                    {
+                        var ConditionsProvidedForms = new ConditionsProvidedForms()
+                        {
+                            TermAndConditionId = terms[i].Id,
+                            ProvidedFormId = data.Id,
+                            IsAgree = false,
+                            Attachments = null!
+
+                        };
+                        await _conditionFormsRepository.AddAsync(ConditionsProvidedForms);
+                    }
+
+                    var CycleConditions = _cycleConditionRepository.Where(c => c.CycleId == cycle.Id).ToList();
+
+                    for (int i = 0; i < CycleConditions.Count(); i++)
+                    {
+                        var CycleConditionsProvidedForms = new CycleConditionsProvidedForm()
+                        {
+                            CycleConditionId = CycleConditions[i].Id,
+                            ProvidedFormId = data.Id,
+                            IsAgree = false,
+                            Attachments = null!
+
+                        };
+                        await _cycleConditionsProvidedFormRepository.AddAsync(CycleConditionsProvidedForms);
+                    }
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<int>(msg, true, 200, data.Id);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
             }
-            return new BaseResponse<int>(msg, true, 200, data.Id);
         }
     }
 }

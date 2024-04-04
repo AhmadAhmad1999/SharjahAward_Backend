@@ -96,7 +96,8 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
                                     DeletedAt = null,
                                     LastModifiedAt = null,
                                     LastModifiedBy = null,
-                                    EducationalClassId = x
+                                    EducationalClassId = x.EducationalClassId,
+                                    NumberOfExpectedWinners = x.NumberOfExpectedWinners
                                 });
 
                             await _CategoryEducationalClassRepository.AddRangeAsync(CategoryEducationalClasses);

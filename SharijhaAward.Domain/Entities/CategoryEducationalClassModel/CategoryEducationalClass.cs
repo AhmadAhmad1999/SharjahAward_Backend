@@ -11,5 +11,6 @@ namespace SharijhaAward.Domain.Entities.CategoryEducationalClassModel
         public EducationalClass? EducationalClass { get; set; }
         public Guid CategoryId { get; set; }
         public Category? Category { get; set; }
+        public int NumberOfExpectedWinners { get; set; }
     }
 }
