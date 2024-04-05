@@ -34,12 +34,8 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
             {
                 return new BaseResponse<ExplanatoryGuideDetailsDto>("", false, 404);
             }
-            var Guide = _explanatoryGuideRepository.Where(e=>e.CategoryId == Category.Id).FirstOrDefault();
-            if(Guide == null)
-            {
-                return new BaseResponse<ExplanatoryGuideDetailsDto>("The Explanatory Guide not found", false, 404);
+            var Guide = _explanatoryGuideRepository.Where(e => e.CategoryId == Category.Id).FirstOrDefault();
 
-            }
             var data = _mapper.Map<ExplanatoryGuideDetailsDto>(Guide);
             
             data.Title = request.lang == "en"

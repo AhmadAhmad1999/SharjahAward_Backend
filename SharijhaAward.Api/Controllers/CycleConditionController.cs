@@ -61,7 +61,7 @@ namespace SharijhaAward.Api.Controllers
             };
 
         }
-        [HttpDelete(Name = "DeleteCycleCondition")]
+        [HttpDelete("{Id}",Name = "DeleteCycleCondition")]
         public async Task<ActionResult> DeleteCycleCondition(Guid Id)
         {
             //get Language from header
