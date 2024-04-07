@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExtraAttachment
 {
-    public class CreateExtraAttachmentQuery : IRequest<BaseResponse<Guid>>
+    public class CreateExtraAttachmentCommand : IRequest<BaseResponse<Guid>>
     {
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
@@ -18,7 +18,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExt
         public int RequiredAttachmentNumber { get; set; }
         public AttachmentType AttachmentType { get; set; }
         public int SizeOfAttachmentInKB { get; set; }
-        public int formId { get; set; }
+        public int ProvidedFormId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

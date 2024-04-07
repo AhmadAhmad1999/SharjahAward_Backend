@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel
 {
-    public class ExtraAttachmentProvidedForm : AuditableEntity
+    public class ExtraAttachmentFiles : AuditableEntity
     {
         public Guid Id {  get; set; }
         public string FileUrl { get; set; } = string.Empty;
@@ -19,10 +19,6 @@ namespace SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel
         public ExtraAttachment? ExtraAttachment { get; set; }
         [ForeignKey(nameof(ExtraAttachment))]
         public Guid ExtraAttachmentId { get; set; }
-
-        public ProvidedForm? ProvidedForm { get; set; }
-        [ForeignKey(nameof(ProvidedForm))]
-        public int  ProvidedFormId { get; set; }
 
     }
 }

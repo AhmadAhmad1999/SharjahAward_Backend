@@ -179,6 +179,9 @@ using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetCriterionI
 using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExtraAttachment;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAttachment;
+using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachment;
+using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
+using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachmentByFormId;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -335,8 +338,10 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Achievement, UpdateAchievementCommand>().ReverseMap();
             CreateMap<Achievement, AchievementsDto>().ReverseMap();
 
-            CreateMap<ExtraAttachment, CreateExtraAttachmentQuery>().ReverseMap();
-            CreateMap<ExtraAttachment, UpdateExtraAttachmentQuery>().ReverseMap();
+            CreateMap<ExtraAttachment, CreateExtraAttachmentCommand>().ReverseMap();
+            CreateMap<ExtraAttachment, UpdateExtraAttachmentCommand>().ReverseMap();
+            CreateMap<ExtraAttachment, ExtraAttachmentListVM>().ReverseMap();
+            CreateMap<ExtraAttachmentFiles, AttachmentDto>().ReverseMap();
 
             //
             // Dynamic Attribute..

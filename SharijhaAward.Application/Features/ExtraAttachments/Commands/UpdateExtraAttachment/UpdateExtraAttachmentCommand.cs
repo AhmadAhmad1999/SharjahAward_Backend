@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAttachment
 {
-    public class UpdateExtraAttachmentQuery : IRequest<BaseResponse<object>>
+    public class UpdateExtraAttachmentCommand : IRequest<BaseResponse<object>>
     {
         public Guid Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;

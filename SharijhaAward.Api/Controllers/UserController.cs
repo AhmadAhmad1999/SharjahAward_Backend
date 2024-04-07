@@ -128,9 +128,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllSubscribers", Name= "GetAllSubscribers")]
-        public async Task<IActionResult> GetAllSubscribers()
+        public async Task<IActionResult> GetAllSubscribers(int page , int perPage)
         {
-            var response = await _mediator.Send(new GetAllSubscribersQuery());
+            var response = await _mediator.Send(new GetAllSubscribersQuery()
+            {
+                page = page,
+                pageSize = perPage
+            });
 
             return response.statusCode switch
             {

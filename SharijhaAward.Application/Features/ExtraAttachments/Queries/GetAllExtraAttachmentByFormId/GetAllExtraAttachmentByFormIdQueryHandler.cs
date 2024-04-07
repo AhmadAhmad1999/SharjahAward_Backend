@@ -1,7 +1,9 @@
 ﻿using Aspose.Pdf.LogicalStructure;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachmentByFormId;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
 using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
@@ -18,10 +20,10 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
     {
         private readonly IAsyncRepository<ExtraAttachment> _extraAttachmentRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formModelRepository;
-        private readonly IAsyncRepository<ExtraAttachmentProvidedForm> _AttachmentRepository;
+        private readonly IAsyncRepository<ExtraAttachmentFiles> _AttachmentRepository;
         private readonly IMapper _mapper;
 
-        public GetAllExtraAttachmentByFormIdQueryHandler(IAsyncRepository<ExtraAttachmentProvidedForm> AttachmentRepository,IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formModelRepository,IAsyncRepository<ExtraAttachment> extraAttachmentRepository, IMapper mapper)
+        public GetAllExtraAttachmentByFormIdQueryHandler(IAsyncRepository<ExtraAttachmentFiles> AttachmentRepository,IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formModelRepository,IAsyncRepository<ExtraAttachment> extraAttachmentRepository, IMapper mapper)
         {
             _extraAttachmentRepository = extraAttachmentRepository;
             _AttachmentRepository = AttachmentRepository;
@@ -29,10 +31,19 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
             _mapper = mapper;
         }
 
-        public Task<BaseResponse<List<ExtraAttachmentListVM>>> Handle(GetAllExtraAttachmentByFormIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<ExtraAttachmentListVM>>> Handle(GetAllExtraAttachmentByFormIdQuery request, CancellationToken cancellationToken)
         {
-            var ExtraAttachments = _AttachmentRepository.WhereThenInclude(a => a.ProvidedFormId == request.formId, a => a.ExtraAttachment!).ToList();
-            throw new NotImplementedException();
+            var ExtraAttachments = await _extraAttachmentRepository.WhereThenInclude(e => e.ProvidedFormId == request.formId, e => e.ExtraAttachmentFiles!).ToListAsync();
+            
+            var data = _mapper.Map<List<ExtraAttachmentListVM>>(ExtraAttachments);
+            for(int i = 0; i<ExtraAttachments.Count(); i++)
+            {
+                data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
+                data[i].Description = request.lang == "en" ? data[i].EnglishDescription : data[i].ArabicDescription;
+
+                data[i].AttachmentList = _mapper.Map<List<AttachmentDto>>(ExtraAttachments[i].ExtraAttachmentFiles);
+            }
+            return new BaseResponse<List<ExtraAttachmentListVM>>("", true, 200, data);
         }
     }
 }

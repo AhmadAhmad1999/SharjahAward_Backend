@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.DeleteExtraAttachment
 {
-    public class DeleteExtraAttachmentQueryHandler
-        : IRequestHandler<DeleteExtraAttachmentQuery, BaseResponse<object>>
+    public class DeleteExtraAttachmentCommandHandler
+        : IRequestHandler<DeleteExtraAttachmentCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<ExtraAttachment> _extraAttachmentsRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formModelRepository;
 
-        public DeleteExtraAttachmentQueryHandler(IAsyncRepository<ExtraAttachment> extraAttachmentsRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formModelRepository)
+        public DeleteExtraAttachmentCommandHandler(IAsyncRepository<ExtraAttachment> extraAttachmentsRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formModelRepository)
         {
             _extraAttachmentsRepository = extraAttachmentsRepository;
             _formModelRepository = formModelRepository;
         }
 
-        public async Task<BaseResponse<object>> Handle(DeleteExtraAttachmentQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(DeleteExtraAttachmentCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"
                 ? "Extra Attachment has been Deleted"

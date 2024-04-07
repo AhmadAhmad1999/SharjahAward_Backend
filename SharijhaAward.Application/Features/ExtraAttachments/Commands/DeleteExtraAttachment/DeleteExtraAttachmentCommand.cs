@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.DeleteExtraAttachment
 {
-    public class DeleteExtraAttachmentQuery : IRequest<BaseResponse<object>>
+    public class DeleteExtraAttachmentCommand : IRequest<BaseResponse<object>>
     {
         public Guid Id { get; set; }
         public int formId {  get; set; }

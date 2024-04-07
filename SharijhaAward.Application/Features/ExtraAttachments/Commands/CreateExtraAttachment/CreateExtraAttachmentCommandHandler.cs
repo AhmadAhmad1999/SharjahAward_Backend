@@ -12,27 +12,27 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExtraAttachment
 {
-    public class CreateExtraAttachmentQueryHandler
-        : IRequestHandler<CreateExtraAttachmentQuery, BaseResponse<Guid>>
+    public class CreateExtraAttachmentCommandHandler
+        : IRequestHandler<CreateExtraAttachmentCommand, BaseResponse<Guid>>
     {
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formRepository;
         private readonly IAsyncRepository<ExtraAttachment> _extraAttachmentRepository;
         private readonly IMapper _mapper;
 
-        public CreateExtraAttachmentQueryHandler(IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository, IAsyncRepository<ExtraAttachment> extraAttachmentRepository, IMapper mapper)
+        public CreateExtraAttachmentCommandHandler(IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository, IAsyncRepository<ExtraAttachment> extraAttachmentRepository, IMapper mapper)
         {
             _formRepository = formRepository;
             _extraAttachmentRepository = extraAttachmentRepository;
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<Guid>> Handle(CreateExtraAttachmentQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<Guid>> Handle(CreateExtraAttachmentCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"
                 ? "Extra Attachment has been Added"
                 : "تم إضافة الملحق الإضافي";
 
-            var providedForm = await _formRepository.GetByIdAsync(request.formId);
+            var providedForm = await _formRepository.GetByIdAsync(request.ProvidedFormId);
             if(providedForm == null)
             {
                 msg = request.lang == "en"

@@ -126,7 +126,7 @@ namespace SharijhaAward.Persistence
         public DbSet<CycleConditionsProvidedForm> CycleConditionsProvidedForms { get; set; }
         public DbSet<CycleConditionAttachment> CycleConditionAttachments { get; set; }
         public DbSet<ExtraAttachment> ExtraAttachments { get; set; }
-        public DbSet<ExtraAttachmentProvidedForm> ExtraAttachmentsProvidedForms { get; set; }
+        public DbSet<ExtraAttachmentFiles> ExtraAttachmentsProvidedForms { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -1607,8 +1607,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e74d"),
                     ArabicName = "الصف الأول",
-                    EnglishName = "First class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "First class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1619,8 +1618,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e75d"),
                     ArabicName = "الصف الثاني",
-                    EnglishName = "Second class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Second class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1631,8 +1629,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e76d"),
                     ArabicName = "الصف الثالث",
-                    EnglishName = "Third class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Third class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1643,8 +1640,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e77d"),
                     ArabicName = "الصف الرابع",
-                    EnglishName = "Forth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Forth class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1655,8 +1651,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e78d"),
                     ArabicName = "الصف الخامس",
-                    EnglishName = "Fifth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Fifth class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1667,8 +1662,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
                     ArabicName = "الصف السادس",
-                    EnglishName = "Sixth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Sixth class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1679,8 +1673,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e80d"),
                     ArabicName = "الصف السابع",
-                    EnglishName = "Seventh class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Seventh class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1691,8 +1684,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e81d"),
                     ArabicName = "الصف الثامن",
-                    EnglishName = "Eighth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Eighth class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1703,8 +1695,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e82d"),
                     ArabicName = "الصف التاسع",
-                    EnglishName = "Ninth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Ninth class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1715,8 +1706,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e83d"),
                     ArabicName = "الصف العاشر",
-                    EnglishName = "Tenth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Tenth class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1727,8 +1717,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e84d"),
                     ArabicName = "الصف الحادي عشر",
-                    EnglishName = "Eleventh class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Eleventh class"
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1739,8 +1728,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e85d"),
                     ArabicName = "الصف الثاني عشر",
-                    EnglishName = "Twelfth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    EnglishName = "Twelfth class"
                 });
 
             modelBuilder.Entity<RelatedAccountRequest>()

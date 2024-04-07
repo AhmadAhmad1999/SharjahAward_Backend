@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAttachment
 {
-    public class UpdateExtraAttachmentQueryHandler
-         : IRequestHandler<UpdateExtraAttachmentQuery, BaseResponse<object>>
+    public class UpdateExtraAttachmentCommandHandler
+         : IRequestHandler<UpdateExtraAttachmentCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<ExtraAttachment> _extraAttachmentsRepository;
         private readonly IMapper _mapper;
 
-        public UpdateExtraAttachmentQueryHandler(IAsyncRepository<ExtraAttachment> extraAttachmentsRepository, IMapper mapper)
+        public UpdateExtraAttachmentCommandHandler(IAsyncRepository<ExtraAttachment> extraAttachmentsRepository, IMapper mapper)
         {
             _extraAttachmentsRepository = extraAttachmentsRepository;
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<object>> Handle(UpdateExtraAttachmentQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(UpdateExtraAttachmentCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"
                 ? "Extra Attachment has been Updated"
@@ -39,7 +39,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExt
                 return new BaseResponse<object>(msg, false, 404);
             }
 
-            _mapper.Map(request, ExtraAttachment, typeof(UpdateExtraAttachmentQuery), typeof(ExtraAttachment));
+            _mapper.Map(request, ExtraAttachment, typeof(UpdateExtraAttachmentCommand), typeof(ExtraAttachment));
 
             await _extraAttachmentsRepository.UpdateAsync(ExtraAttachment);
 

@@ -11,6 +11,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
 {
     public class GetAllSubscribersQuery : IRequest<BaseResponse<List<UserListVm>>>
     {
-
+        public int page {  get; set; }
+        public int pageSize { get; set; }
     }
 }

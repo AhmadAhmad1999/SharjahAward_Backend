@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId
         public async Task<BaseResponse<List<AgendaListVm>>> Handle(GetAgendaByCycleIdQuery request, CancellationToken cancellationToken)
         {
             var Cycle = request.CycleId == null
-                ? await _cycleRepository.FirstOrDefaultAsync(a => a.Status == 0)
+                ? await _cycleRepository.FirstOrDefaultAsync(a => a.Status == Domain.Constants.Common.Status.Active)
                 : await _cycleRepository.FirstOrDefaultAsync(a => a.Id == request.CycleId);
 
             if (Cycle == null)

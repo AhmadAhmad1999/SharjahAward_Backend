@@ -36,11 +36,13 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
                 return new BaseResponse<List<UserListVm>>("faild in roles", false,  400);
             }
 
-            var Subscribers = _userRepository.Where(u => u.RoleId == SubscriberRole.RoleId);
+            var Subscribers = await _userRepository.GetWhereThenPagedReponseAsync(u => u.RoleId == SubscriberRole.RoleId ,request.page, request.pageSize);
 
             var data = _mapper.Map<List<UserListVm>>(Subscribers);
 
-            return new BaseResponse<List<UserListVm>>("", true, 200);
+            int Count = await _userRepository.GetCountAsync(u => u.RoleId == SubscriberRole.RoleId);
+            Pagination pagination = new Pagination(request.page, request.pageSize, Count);
+            return new BaseResponse<List<UserListVm>>("", true, 200, data, pagination);
         }
     }
 }

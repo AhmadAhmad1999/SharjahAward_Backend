@@ -1,8 +1,10 @@
 ﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
+using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +21,9 @@ namespace SharijhaAward.Domain.Entities.ExtraAttachmentModel
         public int RequiredAttachmentNumber { get; set; }
         public AttachmentType AttachmentType { get; set; }
         public int SizeOfAttachmentInKB { get; set; }
-
-        public List<ExtraAttachmentProvidedForm>? ExtraAttachmentProvidedForms { get; set; }
+        public ProvidedForm ProvidedForm { get; set; }
+        [ForeignKey(nameof(ProvidedForm))]
+        public int ProvidedFormId {  get; set; }
+        public List<ExtraAttachmentFiles>? ExtraAttachmentFiles { get; set; }
     }
 }
