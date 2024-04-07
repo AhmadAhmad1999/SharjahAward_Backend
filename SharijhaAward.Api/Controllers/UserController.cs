@@ -27,20 +27,44 @@ namespace SharijhaAward.Api.Controllers
         {
             _mediator = mediator;
         }
-        [HttpPut(Name = "UpdateUser")]
+        [HttpPut("{Id}",Name = "UpdateUser")]
 
-        public async Task<ActionResult> UpdateUser([FromBody] UpdateUserCommand updateUserCommand)
+        public async Task<ActionResult> UpdateUser(Guid Id ,[FromBody] UpdateUserCommand updateUserCommand)
         {
-            await _mediator.Send(updateUserCommand);
-            return Ok(new {message = Response });
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            updateUserCommand.lang = language!;
+            updateUserCommand.Id = Id;
+
+            var response = await _mediator.Send(updateUserCommand);
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
         }
 
-        [HttpDelete(Name = "DeleteUser")]
+        [HttpDelete("{Id}",Name = "DeleteUser")]
 
-        public async Task<ActionResult> DeleteUser([FromBody] DeleteUserCommand deleteUser)
+        public async Task<ActionResult> DeleteUser(Guid Id)
         {
-            await _mediator.Send(deleteUser);
-            return Ok(new {message = Response});
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new DeleteUserCommand()
+            {
+                lang = language!,
+                Id = Id
+            });
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
         }
 
         [HttpGet("{id}", Name = "GetUserById")]

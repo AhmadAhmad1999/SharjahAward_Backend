@@ -1,6 +1,5 @@
 ﻿using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
-using SharijhaAward.Domain.Entities.AttachmentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +21,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
         public int? RequiredAttachmentNumber { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public AttachmentType? AttachmentType { get; set; }
-        public bool IsAgree { get; set; }
         public bool? IsSpecial { get; set; } = false;
         public Guid CategoryId { get; set; }
-        public List<AttachmentListVM>? ConditionAttachments { get; set; }
+        public ConditionProvidedFormListVm? ConditionsAttachments { get; set; }
     }
 }

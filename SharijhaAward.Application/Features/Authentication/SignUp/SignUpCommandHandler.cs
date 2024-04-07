@@ -39,7 +39,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
             {
                 msg = Request.lang == "en"
                     ? "This email is already used"
-                    : "البريد الألكتروني مستخدم بالفعل";
+                    : "البريد الإلكتروني مستخدم بالفعل";
 
                 return new AuthenticationResponse()
                 {
