@@ -41,7 +41,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
             {
 
                 var CoordinatorParam = Expression.Parameter(typeof(Coordinator), "c");
-               
+                
                 var filters = new List<Expression>();
 
                 if (request.Emirates != null)
