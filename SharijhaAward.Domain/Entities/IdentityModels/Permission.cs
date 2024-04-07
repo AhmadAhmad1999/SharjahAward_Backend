@@ -1,14 +1,8 @@
-﻿
-using SharijhaAward.Domain.Entities.IdentityModels;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using SharijhaAward.Domain.Common;
 
 namespace SharijhaAward.Domain.Entities.IdentityModels; 
-
-public class Permission  {
+public class Permission : AuditableEntity
+{
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
-
-    public RolePermission? Role { get; set; } = null!;
-    [ForeignKey(nameof(Role))]
-    public int? RolePermissionId { get; set; }
 }

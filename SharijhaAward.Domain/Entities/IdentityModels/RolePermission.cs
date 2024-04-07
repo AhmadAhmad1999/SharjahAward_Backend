@@ -1,18 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharijhaAward.Domain.Common;
 
 namespace SharijhaAward.Domain.Entities.IdentityModels
 {
-    public class RolePermission
+    public class RolePermission : AuditableEntity
     {
         public int Id { get; set; }
-        public List<Role>? Roles { get; set; } = new();
-        public List<Permission>? Permission { get; set; } = new();
+        public Guid PermissionId { get; set; }
+        public Permission? Permission { get; set; }
+        public Guid RoleRoleId { get; set; }
+        public Role? Role { get; set; }
     }
 }
