@@ -44,9 +44,12 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
          
             List<CategoriesSubcategoriesDto> MainCategories = await _CategoryRepository
                 .Where(x => x.CycleId == CycleEntity.Id && x.Status == Domain.Constants.Common.Status.Active && x.ParentId == null &&
-                    (CycleEntity.GroupCategoryNumber == 0 
+                    ((CycleEntity.GroupCategoryNumber != 0 
+                        ? x.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Group
+                        : false) ||
+                    (CycleEntity.IndividualCategoryNumber != 0
                         ? x.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Individual
-                        : x.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Group))
+                        : false)))
                 .Select(x => new CategoriesSubcategoriesDto()
                 {
                     Id = x.Id,
