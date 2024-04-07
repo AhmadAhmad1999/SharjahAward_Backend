@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
 using SharijhaAward.Application.Helpers.Constants;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -141,6 +142,23 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             }
                         }
                     }
+                }
+            }
+
+            GetAllDynamicAttributeSectionsForAddListVM? MainInformationDynamicSection = DynamicAttributeSections
+                .FirstOrDefault(x => x.Name.ToLower() == "Main Information".ToLower() ||
+                    x.Name == "المعلومات الأساسية");
+
+            if (MainInformationDynamicSection is not null)
+            {
+                int IndexOfMainInformationSection = DynamicAttributeSections.IndexOf(MainInformationDynamicSection);
+
+                GetAllDynamicAttributeSectionsForAddListVM? FirstDynamicSection = DynamicAttributeSections.FirstOrDefault();
+
+                if (FirstDynamicSection is not null)
+                {
+                    DynamicAttributeSections[0] = MainInformationDynamicSection;
+                    DynamicAttributeSections[IndexOfMainInformationSection] = FirstDynamicSection;
                 }
             }
 

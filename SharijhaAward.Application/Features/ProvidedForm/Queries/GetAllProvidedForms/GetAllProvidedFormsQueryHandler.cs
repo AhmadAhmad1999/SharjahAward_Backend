@@ -4,12 +4,6 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
-using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 
 namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForms
 {

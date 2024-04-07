@@ -1,8 +1,8 @@
 ﻿using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 
-namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForms
+namespace SharijhaAward.Application.Features.Classes.Queries.GetAllProvidedFormByClassId
 {
-    public class FormListVm
+    public class GetAllProvidedFormByClassIdListVM
     {
         public int Id { get; set; }
         public int PercentCompletion { get; set; }
@@ -12,11 +12,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public ProvidedFormStatus Status { get; set; }
         public SubscriberType SubscriberType { get; set; }
         public int CurrentStep { get; set; }
-        public int TotalStep {  get; set; }
+        public int TotalStep { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public float FinalScore { get; set; }
         public Guid categoryId { get; set; }
         public DateTime CreatedAt { get; set; }
-
     }
 }

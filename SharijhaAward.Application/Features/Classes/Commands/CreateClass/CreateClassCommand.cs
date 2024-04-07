@@ -7,6 +7,7 @@ namespace SharijhaAward.Application.Features.Classes.Commands.CreateClass
     {
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
+        public Guid CycleId { get; set; }
         public string? lang { get; set; }
     }
 }

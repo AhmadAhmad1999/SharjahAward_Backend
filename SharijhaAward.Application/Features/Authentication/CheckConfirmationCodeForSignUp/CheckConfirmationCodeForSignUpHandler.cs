@@ -4,6 +4,7 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.CycleModel;
 
 namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForSignUp
 {
@@ -12,19 +13,25 @@ namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCod
         private readonly IUserRepository _UserRepository;
         private readonly IJwtProvider _JWTProvider;
         private readonly IMapper _Mapper;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
 
         public CheckConfirmationCodeForSignUpHandler(IUserRepository UserRepository,
             IJwtProvider JWTProvider,
-            IMapper Mapper)
+            IMapper Mapper,
+            IAsyncRepository<Cycle> CycleRepository)
         {
             _UserRepository = UserRepository;
             _JWTProvider = JWTProvider;
             _Mapper = Mapper;
+            _CycleRepository = CycleRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(CheckConfirmationCodeForSignUpCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            Cycle? ActiveCycleEntity = await _CycleRepository
+                .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
 
             Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
@@ -73,7 +80,8 @@ namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCod
                 user = _Mapper.Map<UserDataResponse>(UserEntity),
                 message = "Account confirmed successfully",
                 isSucceed = true,
-                permissions = null
+                permissions = null,
+                ActiveCycleId = ActiveCycleEntity?.Id
             };
 
             return new BaseResponse<object>(ResponseMessage, true, 200, Response);
