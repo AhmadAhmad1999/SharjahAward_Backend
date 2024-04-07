@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId
 {
-    public class GetAllTermsByCategoryIdQuery : IRequest<BaseResponse<List<PublicTremsAndConditionsListVm>>>
+    public class GetAllTermsByCategoryIdQuery : IRequest<BaseResponse<List<TermAndConditionListVM>>>
     {
         public Guid CategoryId { get; set; }
         public string token { get; set; } = string.Empty;

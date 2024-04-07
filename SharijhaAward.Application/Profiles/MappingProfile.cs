@@ -228,11 +228,10 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<User, LoginCommand>().ReverseMap();
             CreateMap<User, SignUpCommand>().ReverseMap();
-            CreateMap<User, UpdateUserCommand>();
-            CreateMap<User, DeleteUserCommand>();
+            CreateMap<User, UpdateUserCommand>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserListVm>().ReverseMap();
-            CreateMap<User, AsignRoleToUserQuery>();
+            CreateMap<User, AsignRoleToUserQuery>().ReverseMap();
 
             CreateMap<Role, RoleListVm>().ReverseMap();
 
@@ -288,8 +287,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<TermAndCondition, CreateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, UpdateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionDto>().ReverseMap();
+            CreateMap<TermAndCondition, Features.TermsAndConditions.Queries.GetAllTermAndCondition.TermAndConditionListVM>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionListVM>().ReverseMap();
-            CreateMap<TermAndCondition, PublicTremsAndConditionsListVm>().ReverseMap();
 
             CreateMap<ConditionAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<ConditionAttachment, CreateAttachmentCommand>().ReverseMap();

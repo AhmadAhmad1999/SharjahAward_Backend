@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId
 {
     public class GetAllTermsByCategoryIdQueryHandler
-        : IRequestHandler<GetAllTermsByCategoryIdQuery, BaseResponse<List<PublicTremsAndConditionsListVm>>>
+        : IRequestHandler<GetAllTermsByCategoryIdQuery, BaseResponse<List<TermAndConditionListVM>>>
     {
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<TermAndCondition> _termRepository;
@@ -48,7 +48,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
      
             _mapper = mapper;
         }
-        public async Task<BaseResponse<List<PublicTremsAndConditionsListVm>>> Handle(GetAllTermsByCategoryIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<TermAndConditionListVM>>> Handle(GetAllTermsByCategoryIdQuery request, CancellationToken cancellationToken)
         {
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             string msg;
@@ -57,7 +57,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
                 msg = request.lang == "en"
                     ? "Category Not Found"
                     : "الفئة غير موجودة";
-                return new BaseResponse<List<PublicTremsAndConditionsListVm>>(msg, false, 404);
+                return new BaseResponse<List<TermAndConditionListVM>>(msg, false, 404);
             }
 
             var form = _providedFormRepository.FirstOrDefault(p => p.Id == request.formId);
@@ -86,7 +86,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
             //        x.ConditionsProvidedForms.TermAndCondition.IsSpecial == false &&
             //        x.ConditionsProvidedForms.ProvidedFormId == form!.Id).ToListAsync());
             
-            var data = _mapper.Map<List<PublicTremsAndConditionsListVm>>(Terms);
+            var data = _mapper.Map<List<TermAndConditionListVM>>(Terms);
             for (int i = 0; i<data.Count; i++)
             {
                 data[i].ConditionsAttachments = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
@@ -107,7 +107,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
                     ? data[i].EnglishDescription
                     : data[i].ArabicDescription;
             }
-            return new BaseResponse<List<PublicTremsAndConditionsListVm>>("", true, 200, data);
+            return new BaseResponse<List<TermAndConditionListVM>>("", true, 200, data);
         }
     }
 }

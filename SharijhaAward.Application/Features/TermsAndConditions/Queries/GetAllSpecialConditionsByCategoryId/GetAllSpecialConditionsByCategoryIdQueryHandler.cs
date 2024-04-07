@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSpecialConditionsByCategoryId
 {
     public class GetAllSpecialConditionsByCategoryIdQueryHandler
-        : IRequestHandler<GetAllSpecialConditionsByCategoryIdQuery, BaseResponse<List<PublicTremsAndConditionsListVm>>>
+        : IRequestHandler<GetAllSpecialConditionsByCategoryIdQuery, BaseResponse<List<TermAndConditionListVM>>>
     {
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<TermAndCondition> _termRepository;
@@ -50,7 +50,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<List<PublicTremsAndConditionsListVm>>> Handle(GetAllSpecialConditionsByCategoryIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<TermAndConditionListVM>>> Handle(GetAllSpecialConditionsByCategoryIdQuery request, CancellationToken cancellationToken)
         {
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             string msg;
@@ -60,7 +60,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                     ? "Category Not Found"
                     : "الفئة غير موجودة";
 
-                return new BaseResponse<List<PublicTremsAndConditionsListVm>>(msg, false, 404);
+                return new BaseResponse<List<TermAndConditionListVM>>(msg, false, 404);
             }
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
             var user = await _userRepository.GetByIdAsync(new Guid(UserId));
@@ -81,7 +81,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                     conditionsProvideds.Add(conditionsProvidedsobject!);
             }
 
-            var data = _mapper.Map<List<PublicTremsAndConditionsListVm>>(Terms);
+            var data = _mapper.Map<List<TermAndConditionListVM>>(Terms);
             for (int i = 0; i < data.Count; i++)
             {
                 data[i].ConditionsAttachments = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
@@ -102,7 +102,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                     ? data[i].EnglishDescription
                     : data[i].ArabicDescription;
             }
-            return new BaseResponse<List<PublicTremsAndConditionsListVm>>("", true, 200, data);
+            return new BaseResponse<List<TermAndConditionListVM>>("", true, 200, data);
         }
     }
 }

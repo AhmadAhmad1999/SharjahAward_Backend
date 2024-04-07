@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
-using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSpecialConditionsByCategoryId
 {
     public class GetAllSpecialConditionsByCategoryIdQuery 
-        : IRequest<BaseResponse<List<PublicTremsAndConditionsListVm>>>
+        : IRequest<BaseResponse<List<TermAndConditionListVM>>>
     {
         public Guid CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
