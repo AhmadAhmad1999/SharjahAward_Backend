@@ -182,6 +182,8 @@ using SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAt
 using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachment;
 using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
 using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachmentByFormId;
+using SharijhaAward.Domain.Entities.AppVersioningModel;
+using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetLastAppVersion;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -414,6 +416,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalClass, GetAllClassesListVM>().ReverseMap();
             CreateMap<EducationalClass, GetClassByIdDto>().ReverseMap();
             CreateMap<CriterionItem, GetCriterionItemByIdDto>().ReverseMap();
+            CreateMap<AppVersion, GetLastAppVersionDto>().ReverseMap();
         }
     }
 }
