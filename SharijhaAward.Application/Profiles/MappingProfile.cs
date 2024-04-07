@@ -179,6 +179,8 @@ using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetCriterionI
 using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExtraAttachment;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAttachment;
+using SharijhaAward.Domain.Entities.AppVersioningModel;
+using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetLastAppVersion;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -409,6 +411,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalClass, GetAllClassesListVM>().ReverseMap();
             CreateMap<EducationalClass, GetClassByIdDto>().ReverseMap();
             CreateMap<CriterionItem, GetCriterionItemByIdDto>().ReverseMap();
+            CreateMap<AppVersion, GetLastAppVersionDto>().ReverseMap();
         }
     }
 }
