@@ -8,6 +8,7 @@ using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsByClassId;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllCategoryClassesByCategoryId;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
+using SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByClassId;
 using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 using SharijhaAward.Application.Responses;
 
@@ -204,6 +205,36 @@ namespace SharijhaAward.Api.Controllers
             GetAllArbitratorsByClassIdQuery.lang = HeaderValue;
 
             BaseResponse<List<GetAllArbitratorsListVM>> Response = await _Mediator.Send(GetAllArbitratorsByClassIdQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllStudentsByClassId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllStudentsByClassId(Guid EducationalClassId, int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllStudentsByClassIdListVM>> Response = await _Mediator.Send(new GetAllStudentsByClassIdQuery()
+            {
+                EducationalClassId = EducationalClassId,
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage
+            });
 
             return Response.statusCode switch
             {

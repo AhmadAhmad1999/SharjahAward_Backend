@@ -46,7 +46,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            BaseResponse<CreateCriterionResponse>? Response = await _Mediator.Send(CreateCriterionCommand);
+            BaseResponse<Guid>? Response = await _Mediator.Send(CreateCriterionCommand);
 
             return Response.statusCode switch
             {
@@ -260,7 +260,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            BaseResponse<object>? Response = await _Mediator.Send(CreateSubCriterionCommand);
+            BaseResponse<Guid> Response = await _Mediator.Send(CreateSubCriterionCommand);
 
             return Response.statusCode switch
             {
