@@ -16,8 +16,8 @@ namespace SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel
         public Guid Id {  get; set; }
         public string FileUrl { get; set; } = string.Empty;
 
-        public ExtraAttachment? ExtraAttachments { get; set; }
-        [ForeignKey(nameof(ExtraAttachments))]
+        public ExtraAttachment? ExtraAttachment { get; set; }
+        [ForeignKey(nameof(ExtraAttachment))]
         public Guid ExtraAttachmentId { get; set; }
 
         public ProvidedForm? ProvidedForm { get; set; }
