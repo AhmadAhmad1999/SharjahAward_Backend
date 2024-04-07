@@ -31,6 +31,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
 
         public Task<BaseResponse<List<ExtraAttachmentListVM>>> Handle(GetAllExtraAttachmentByFormIdQuery request, CancellationToken cancellationToken)
         {
+            var ExtraAttachments = _AttachmentRepository.WhereThenInclude(a => a.ProvidedFormId == request.formId, a => a.ExtraAttachment!).ToList();
             throw new NotImplementedException();
         }
     }

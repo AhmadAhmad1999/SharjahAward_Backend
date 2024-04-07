@@ -50,6 +50,8 @@ using SharijhaAward.Domain.Entities.EducationalClassModel;
 using SharijhaAward.Domain.Entities.CommitteeModel;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.ArbitratorClassModel;
+using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
+using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
 using SharijhaAward.Domain.Entities.AppVersioningModel;
 
 namespace SharijhaAward.Persistence
@@ -125,7 +127,8 @@ namespace SharijhaAward.Persistence
         public DbSet<Achievement> Achievements {  get; set; }
         public DbSet<CycleConditionsProvidedForm> CycleConditionsProvidedForms { get; set; }
         public DbSet<CycleConditionAttachment> CycleConditionAttachments { get; set; }
-
+        public DbSet<ExtraAttachment> ExtraAttachments { get; set; }
+        public DbSet<ExtraAttachmentProvidedForm> ExtraAttachmentsProvidedForms { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

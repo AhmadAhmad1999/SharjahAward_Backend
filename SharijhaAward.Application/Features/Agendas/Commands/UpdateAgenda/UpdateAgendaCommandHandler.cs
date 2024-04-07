@@ -74,26 +74,27 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
 
                     return new BaseResponse<object>(msg, false, 400);
                 }
-
-                for (int i = 0; i < AllAgenda.Count(); i++)
+                if (request.CurrentDate != agendaToUpdate.CurrentDate)
                 {
-                    if (request.CurrentDate == AllAgenda[i].CurrentDate)
+                    for (int i = 0; i < AllAgenda.Count(); i++)
                     {
-                        msg = request.lang == "en"
-                            ? "This Date is already exist"
-                            : "وقت الفعالية محجوز بالفعل";
+                        if (request.CurrentDate == AllAgenda[i].CurrentDate)
+                        {
+                            msg = request.lang == "en"
+                                ? "This Date is already exist"
+                                : "وقت الفعالية محجوز بالفعل";
 
-                        return new BaseResponse<object>(msg, false, 400);
+                            return new BaseResponse<object>(msg, false, 400);
+                        }
+
+                        // Set Satet of Agenda
+                        if (agendaToUpdate.StartDate >= DateTime.Now && agendaToUpdate.EndDate <= DateTime.Now)
+                            agendaToUpdate.Status = AgendaStatus.Active;
+                        else if (agendaToUpdate.StartDate < DateTime.Now && agendaToUpdate.EndDate < DateTime.Now)
+                            agendaToUpdate.Status = AgendaStatus.Previous;
+                        else agendaToUpdate.Status = AgendaStatus.Later;
                     }
-
-                    // Set Satet of Agenda
-                    if (agendaToUpdate.StartDate >= DateTime.Now && agendaToUpdate.EndDate <= DateTime.Now)
-                        agendaToUpdate.Status = AgendaStatus.Active;
-                    else if (agendaToUpdate.StartDate < DateTime.Now && agendaToUpdate.EndDate < DateTime.Now)
-                        agendaToUpdate.Status = AgendaStatus.Previous;
-                    else agendaToUpdate.Status = AgendaStatus.Later;
                 }
-
             }
             await _agendaRepository.UpdateAsync(agendaToUpdate);
 
