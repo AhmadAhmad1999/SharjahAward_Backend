@@ -3,7 +3,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSubCriterion
 {
-    public class CreateSubCriterionCommand : IRequest<BaseResponse<object>>
+    public class CreateSubCriterionCommand : IRequest<BaseResponse<Guid>>
     {
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;

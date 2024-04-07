@@ -2,7 +2,7 @@
 using SharijhaAward.Application.Responses;
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterion
 {
-    public class CreateCriterionCommand : IRequest<BaseResponse<CreateCriterionResponse>>
+    public class CreateCriterionCommand : IRequest<BaseResponse<Guid>>
     {
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;

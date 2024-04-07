@@ -53,6 +53,7 @@ using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
 using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
 using SharijhaAward.Domain.Entities.AppVersioningModel;
+using SharijhaAward.Domain.Entities.InstructionModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -64,6 +65,7 @@ namespace SharijhaAward.Persistence
       
         }
         
+        public DbSet<Instruction> Instructions { get; set; }
         public DbSet<AppVersion> AppVersions { get; set; }
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
         public DbSet<ArbitratorClass> ArbitratorClasses { get; set; }
@@ -138,6 +140,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AppVersion>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Instruction>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Committee>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => !p.isDeleted);
