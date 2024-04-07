@@ -1,9 +1,8 @@
-﻿using SharijhaAward.Domain.Common;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace SharijhaAward.Domain.Entities.InstructionModel
+namespace SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetInstructionBySlugId
 {
-    public class Instruction : AuditableEntity
+    public class GetInstructionBySlugIdDto
     {
         public int Id { get; set; }
         public string Slug { get; set; } = null!;

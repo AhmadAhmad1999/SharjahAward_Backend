@@ -184,6 +184,10 @@ using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
 using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachmentByFormId;
 using SharijhaAward.Domain.Entities.AppVersioningModel;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetLastAppVersion;
+using SharijhaAward.Domain.Entities.InstructionModel;
+using SharijhaAward.Application.Features.InstructionsFeatures.Commands.UpdateInstruction;
+using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAllInstructions;
+using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetInstructionBySlugId;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -379,6 +383,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalEntity, UpdateEducationalEntityCommand>().ReverseMap();
             CreateMap<EducationalInstitution, UpdateEducationalInstitutionsCommand>().ReverseMap();
             CreateMap<EducationalClass, UpdateClassCommand>().ReverseMap();
+            CreateMap<Instruction, UpdateInstructionCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -417,6 +422,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalClass, GetClassByIdDto>().ReverseMap();
             CreateMap<CriterionItem, GetCriterionItemByIdDto>().ReverseMap();
             CreateMap<AppVersion, GetLastAppVersionDto>().ReverseMap();
+            CreateMap<Instruction, GetAllInstructionsListVM>().ReverseMap();
+            CreateMap<Instruction, GetInstructionBySlugIdDto>().ReverseMap();
         }
     }
 }

@@ -31,6 +31,10 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCr
 
             await _CriterionItemRepository.DeleteAsync(CriterionItemEntity);
 
+            ResponseMessage = Request.lang == "en"
+                ? "Criterion item has been deleted successfully"
+                : "تم حذف عنصر المعيار الفرعي بنجاح";
+
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }

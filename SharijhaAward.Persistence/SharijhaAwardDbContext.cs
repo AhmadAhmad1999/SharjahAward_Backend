@@ -198,6 +198,10 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CycleConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CycleConditionsProvidedForm>().HasQueryFilter(p => !p.isDeleted);
 
+            modelBuilder.Entity<Instruction>()
+                .HasIndex(x => x.Slug)
+                .IsUnique();
+
             modelBuilder.Entity<Event>()
                 .HasData(new Event()
                 {
