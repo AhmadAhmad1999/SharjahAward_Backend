@@ -4,17 +4,8 @@ using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
-using SharijhaAward.Domain.Entities.Common;
-using SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel;
-using SharijhaAward.Domain.Entities.CycleModel;
-using SharijhaAward.Domain.Entities.FormConditionModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.ProvidedFormModel
 {

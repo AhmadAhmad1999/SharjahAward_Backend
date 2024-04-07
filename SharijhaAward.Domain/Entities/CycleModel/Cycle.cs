@@ -6,6 +6,7 @@ using SharijhaAward.Domain.Entities.AgendaModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.Common;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
+using SharijhaAward.Domain.Entities.EducationalClassModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.NewsModel;
 
@@ -56,5 +57,6 @@ public class Cycle : AuditableEntity
     
     // navigation property to the News
     public virtual List<News> News { get; set; } = new();
+    public virtual List<EducationalClass> EducationalClasses { get; set; } = new();
    
 }

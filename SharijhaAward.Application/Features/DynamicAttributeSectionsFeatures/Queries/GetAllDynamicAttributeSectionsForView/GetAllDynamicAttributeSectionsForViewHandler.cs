@@ -352,6 +352,23 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     }).ToList();
             }
 
+            DynamicAttributeSectionListVM? MainInformationDynamicSection = DynamicAttributeSections
+                .FirstOrDefault(x => x.Name.ToLower() == "Main Information".ToLower() ||
+                    x.Name == "المعلومات الأساسية");
+
+            if (MainInformationDynamicSection is not null)
+            {
+                int IndexOfMainInformationSection = DynamicAttributeSections.IndexOf(MainInformationDynamicSection);
+
+                DynamicAttributeSectionListVM? FirstDynamicSection = DynamicAttributeSections.FirstOrDefault();
+
+                if (FirstDynamicSection is not null)
+                {
+                    DynamicAttributeSections[0] = MainInformationDynamicSection;
+                    DynamicAttributeSections[IndexOfMainInformationSection] = FirstDynamicSection;
+                }
+            }
+
             int TotalCount = await _DynamicAttributeSectionRepository.GetCountAsync(null);
             
             Pagination PaginationParameter = new Pagination(Request.page, 
@@ -367,9 +384,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
     }
     public class Translations
     {
-        public ara ara { get; set; } = null!;
+        public Ara ara { get; set; } = null!;
     }
-    public class ara
+    public class Ara
     {
         public string official { get; set; } = null!;
         public string common { get; set; } = null!;
