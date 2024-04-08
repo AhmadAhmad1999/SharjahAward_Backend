@@ -110,7 +110,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllDynamicAttributeSectionsForView(Guid CategoryId, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllDynamicAttributeSectionsForView(Guid? CategoryId,
+            Guid? CycleId, bool? isArbitrator, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -120,6 +121,8 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<List<DynamicAttributeSectionListVM>> Response = await _Mediator.Send(new GetAllDynamicAttributeSectionsForViewQuery()
             {
                 CategoryId = CategoryId,
+                CycleId = CycleId,
+                isArbitrator = isArbitrator != null ? isArbitrator.Value : false,
                 lang = HeaderValue!,
                 page = Page,
                 pageSize = PerPage
@@ -167,7 +170,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllDynamicAttributeSectionsForAdd(int ProvidedFormId)
+        public async Task<IActionResult> GetAllDynamicAttributeSectionsForAdd(int? ProvidedFormId,
+            Guid? ArbitratorId, Guid? CoordinatorId, Guid? CycleId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -177,7 +181,10 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>> Response = await _Mediator.Send(new GetAllDynamicAttributeSectionsForAddQuery()
             {
                 lang = HeaderValue!,
-                ProvidedFormId = ProvidedFormId
+                ProvidedFormId = ProvidedFormId,
+                ArbitratorId = ArbitratorId,
+                CoordinatorId = CoordinatorId,
+                CycleId = CycleId
             });
 
             return Response.statusCode switch

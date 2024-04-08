@@ -57,7 +57,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             if (CheckIfArbitratorDoesConnectWithClass is not null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "This arbitrator already is already arbitrating on this class"
+                    ? "This arbitrator is already arbitrating on this class"
                     : "هذا المحكم يحكم مسبقاً على هذا الصف";
 
                 return new BaseResponse<object>(ResponseMessage, false, 400);
@@ -79,7 +79,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 
             ResponseMessage = Request.lang == "en"
                 ? "Created successfully"
-                : "تم ربط المحكم بصف جديد بنجاح";
+                : "تم ربط المحكم بالصف بنجاح";
 
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }

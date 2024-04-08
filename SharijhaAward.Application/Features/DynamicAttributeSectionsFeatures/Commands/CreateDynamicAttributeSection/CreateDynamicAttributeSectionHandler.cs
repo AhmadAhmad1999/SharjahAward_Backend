@@ -36,10 +36,30 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
             if (CheckIfAttributeTableNameIdDoesExist == null)
             {
                 ResponseMessage = Request.lang == "en"
-                  ? "Attribute data type is not Found"
-                  : "نوع الحقل غير موجود";
+                  ? "Attribute table name is not Found"
+                  : "اسم الجدول غير موجود";
 
                 return new BaseResponse<CreateDynamicAttributeSectionResponse>(ResponseMessage, false, 404);
+            }
+
+            DynamicAttributeSection? CheckIfSectionNameIsAlreadyUsed = await _DynamicAttributeSectionRepository
+                .FirstOrDefaultAsync(x => x.AttributeTableNameId == Request.AttributeTableNameId &&
+                    x.RecordIdOnRelation == Request.RecordIdOnRelation && 
+                    (x.ArabicName.ToLower() == Request.ArabicName.ToLower() || x.EnglishName.ToLower() == Request.EnglishName.ToLower()));
+
+            if (CheckIfSectionNameIsAlreadyUsed is not null)
+            {
+                if (CheckIfSectionNameIsAlreadyUsed.ArabicName.ToLower() == Request.ArabicName.ToLower())
+                    ResponseMessage = Request.lang == "en"
+                        ? "This section arabic name is already used"
+                        : "اسم هذا القسم باللغة العربية مستخدم مسبقاً";
+
+                else if (CheckIfSectionNameIsAlreadyUsed.EnglishName.ToLower() == Request.EnglishName.ToLower())
+                    ResponseMessage = Request.lang == "en"
+                        ? "This section english name is already used"
+                        : "اسم هذا القسم باللغة الإنكليزية مستخدم مسبقاً";
+
+                return new BaseResponse<CreateDynamicAttributeSectionResponse>(ResponseMessage, false, 400);
             }
 
             DynamicAttributeSection NewDynamicAttributeSectionEntity = _Mapper.Map<DynamicAttributeSection>(Request);

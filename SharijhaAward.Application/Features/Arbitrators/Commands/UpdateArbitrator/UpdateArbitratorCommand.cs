@@ -12,7 +12,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string? lang { get; set; }
-        public List<Guid> Categories { get; set; } = new List<Guid>();
         public string? WWWRootFilePath { get; set; }
         public List<AddDynamicAttributeValueMainCommand> DynamicAttributesWithValues { get; set; } = new List<AddDynamicAttributeValueMainCommand>();
     }

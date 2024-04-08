@@ -76,6 +76,26 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                 return new BaseResponse<CreateDynamicAttributeResponse>(ResponseMessage, false, 404);
             }
 
+            DynamicAttribute? CheckIfDynamicAttributeNameIsUsed = await _DynamicAttributeRepository
+                .FirstOrDefaultAsync(x => x.DynamicAttributeSectionId == Request.DynamicAttributeSectionId &&
+                    (x.ArabicLabel.ToLower() == Request.ArabicLabel.ToLower() ||
+                        x.EnglishLabel.ToLower() == Request.EnglishLabel.ToLower()));
+
+            if (CheckIfDynamicAttributeNameIsUsed is not null)
+            {
+                if (CheckIfDynamicAttributeNameIsUsed.ArabicLabel.ToLower() == Request.ArabicLabel.ToLower())
+                    ResponseMessage = Request.lang == "en"
+                        ? "This dynamic field's arabic name is already used"
+                        : "اسم هذا الحقل باللغة العربية مستخدم مسبقاً";
+
+                else if (CheckIfDynamicAttributeNameIsUsed.ArabicLabel.ToLower() == Request.ArabicLabel.ToLower())
+                    ResponseMessage = Request.lang == "en"
+                        ? "This dynamic field's english name is already used"
+                        : "اسم هذا الحقل باللغة العربية مستخدم مسبقاً";
+
+                return new BaseResponse<CreateDynamicAttributeResponse>(ResponseMessage, false, 400);
+            }
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,

@@ -16,7 +16,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         : IRequestHandler<UpdateArbitratorCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
-        private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
@@ -27,7 +26,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public UpdateArbitratorCommandHandler(IAsyncRepository<Arbitrator> ArbitratorRepository, 
-            IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
             IUserRepository UserRepository,
             IMapper Mapper,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
@@ -38,7 +36,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
             IHttpContextAccessor HttpContextAccessor)
         {
             _ArbitratorRepository = ArbitratorRepository;
-            _CategoryArbitratorRepository = CategoryArbitratorRepository;
             _UserRepository = UserRepository;
             _Mapper = Mapper;
             _DynamicAttributeRepository = DynamicAttributeRepository;
@@ -1529,27 +1526,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
                     await _ArbitratorRepository.UpdateAsync(ArbitratorToUpdate);
                     await _UserRepository.UpdateAsync(UserEntity);
-
-                    List<CategoryArbitrator> AlreadyInsertedCategoryArbitrators = await _CategoryArbitratorRepository
-                        .Where(x => x.ArbitratorId == Request.Id)
-                        .ToListAsync();
-
-                    await _CategoryArbitratorRepository.RemoveListAsync(AlreadyInsertedCategoryArbitrators);
-
-                    IEnumerable<CategoryArbitrator> NewCategoryArbitrators = Request.Categories
-                        .Select(x => new CategoryArbitrator()
-                        {
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            DeletedAt = null,
-                            isDeleted = false,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CategoryId = x,
-                            ArbitratorId = Request.Id
-                        });
-
-                    await _CategoryArbitratorRepository.AddRangeAsync(NewCategoryArbitrators);
 
                     Transaction.Complete();
                 }
