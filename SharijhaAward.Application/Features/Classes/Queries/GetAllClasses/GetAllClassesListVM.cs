@@ -2,7 +2,7 @@
 {
     public class GetAllClassesListVM
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
     }
