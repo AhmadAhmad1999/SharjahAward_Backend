@@ -254,6 +254,19 @@ namespace SharijhaAward.Persistence
                 .Property(e => e.EnglishText)
                 .HasColumnType("nvarchar(max)");
 
+            modelBuilder.Entity<Arbitrator>()
+                .HasData(new Arbitrator()
+                {
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e74"),
+                    
+                });
+
             modelBuilder.Entity<GeneralWorkshop>()
                 .HasData(new GeneralWorkshop()
                 {
