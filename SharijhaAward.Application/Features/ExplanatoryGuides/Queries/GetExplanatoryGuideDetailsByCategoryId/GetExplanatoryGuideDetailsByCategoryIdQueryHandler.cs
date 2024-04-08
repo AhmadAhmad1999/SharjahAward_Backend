@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation.Resources;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideByCategoryId;
@@ -29,13 +30,25 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
 
         public async Task<BaseResponse<ExplanatoryGuideDetailsDto>> Handle(GetExplanatoryGuideDetailsByCategoryIdQuery request, CancellationToken cancellationToken)
         {
+            string msg = request.lang == "en"
+                    ? "There is no Explanatory Guide"
+                    : "لا يوجد ملف تفسيري";
+
             var Category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             if(Category == null)
             {
-                return new BaseResponse<ExplanatoryGuideDetailsDto>("", false, 404);
+                 msg = request.lang == "en"
+                    ? "Category Not Found"
+                    :"الفئة غير مطلوبة" ;
+                return new BaseResponse<ExplanatoryGuideDetailsDto>(msg, false, 404);
             }
-            var Guide = _explanatoryGuideRepository.Where(e => e.CategoryId == Category.Id).FirstOrDefault();
-
+          
+            var Guide = await _explanatoryGuideRepository.FirstOrDefaultAsync(e => e.CategoryId == Category.Id);
+           
+            if(Guide == null)
+            {
+                return new BaseResponse<ExplanatoryGuideDetailsDto>(msg, false, 404);
+            }
             var data = _mapper.Map<ExplanatoryGuideDetailsDto>(Guide);
             
             data.Title = request.lang == "en"

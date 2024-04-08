@@ -29,11 +29,19 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTra
 
         public async Task<BaseResponse<object>> Handle(UpdateTrainingWorkshopCommand request, CancellationToken cancellationToken)
         {
+            string msg = request.lang == "en"
+               ? "Workshop has been Updated"
+               : "تم تعديل الورشة التدريبية";
+
             var worksopToUpdate = await _trainingWorkshopRepository.GetByIdAsync(request.Id);
            
             if(worksopToUpdate == null)
             {
-                return new BaseResponse<object>("", false, 404);
+                msg = request.lang == "en"
+                     ? "Workshop not found"
+                     : "الورشة التدريبية غير موجودة";
+
+                return new BaseResponse<object>(msg, false, 404);
             }
 
             var thumbnail = worksopToUpdate.Thumbnail;
@@ -46,11 +54,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTra
             
             await _trainingWorkshopRepository.UpdateAsync(worksopToUpdate);
 
-            string msg = request.lang == "en"
-                ? "Workshop has been Updated"
-                : "تم تعديل الورشة التدريبية";
-
-            return new BaseResponse<object>("Workshop has been Updated", true, 200);
+            return new BaseResponse<object>(msg, true, 200);
         }
     }
 }

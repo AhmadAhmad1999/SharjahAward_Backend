@@ -28,7 +28,8 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
             var allCycleCondition = await _cycleConditionRepository.GetPagedReponseAsync(request.page, request.pageSize);
             if (request.CycleId != null)
                 allCycleCondition = await _cycleConditionRepository.GetWhereThenPagedReponseAsync(c => c.CycleId == request.CycleId, request.page, request.pageSize);
-            var data = _mapper.Map<List<CycleConditionListVM>>(allCycleCondition);
+           
+            var data = _mapper.Map<List<CycleConditionListVM>>(allCycleCondition).OrderBy(a => a.CreatedAt).ToList();
 
             for (int i = 0; i < data.Count; i++)
             {

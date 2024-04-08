@@ -16,6 +16,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTra
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicWorkshopAttachment { get; set; } = string.Empty;
         public string EnglishWorkshopAttachment { get; set; } = string.Empty;
+        public DateTime CreatedAt {  get; set; }
         public List<WorkshopAttachmentListVM> Attachments { get; set; } = null!;
     }
 }

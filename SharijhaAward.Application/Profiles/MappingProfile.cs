@@ -306,6 +306,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ExplanatoryGuide, CreateExplanatoryGuideCommand>().ReverseMap();
             CreateMap<ExplanatoryGuide, ExplanatoryGuideDetailsDto>().ReverseMap();
             CreateMap<ExplanatoryGuide, UpdateExplanatoryGuideCommand>().ReverseMap();
+           
 
             CreateMap<TrainingWrokshopeAttachment, WorkshopAttachmentListVM>().ReverseMap();
             CreateMap<TrainingWrokshopeAttachment, CreateWorkshopeAttachmentCommand>().ReverseMap();

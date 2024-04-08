@@ -118,13 +118,15 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpGet("GetWorkShopsByCategoryId/{Id}",Name= "GetWorkShopsByCategoryId")]
-        public async Task<IActionResult> GetTrainingWorkShopsByCategoryId(Guid Id)
+        public async Task<IActionResult> GetTrainingWorkShopsByCategoryId(Guid Id,int page = 1, int pageSize = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new GetWorkShopsByCategoryIdQuery()
             {
+                page = page,
+                pageSize = pageSize,
                 CategoryId = Id,
                 lang = language!
             });

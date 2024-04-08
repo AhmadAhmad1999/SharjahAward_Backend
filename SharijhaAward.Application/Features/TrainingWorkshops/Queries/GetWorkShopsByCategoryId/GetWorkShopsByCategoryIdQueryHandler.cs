@@ -40,8 +40,12 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             if (category != null)
             {
-                var WorkShops = _workShopRepository.WhereThenInclude(w => w.CategoryId == request.CategoryId, w => w.Attachments).ToList();
-                var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops);
+                var WorkShops = _workShopRepository.WhereThenIncludeThenPagination(
+                    w => w.CategoryId == request.CategoryId,
+                    request.page, request.pageSize,
+                    w => w.Attachments).ToList();
+
+                var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops).OrderBy(t => t.CreatedAt).ToList();
                 
 
                 for (int i = 0; i < data.Count; i++)
@@ -57,7 +61,10 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
                     data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
                 }
 
-                return new BaseResponse<List<TrainingWorkshopListVm>>("", true, 200, data);
+                var count = await _workShopRepository.GetCountAsync(w => w.CategoryId == category.Id);
+                Pagination pagination = new Pagination(request.page, request.pageSize, count);
+               
+                return new BaseResponse<List<TrainingWorkshopListVm>>("", true, 200, data,pagination);
             }
             return new BaseResponse<List<TrainingWorkshopListVm>>("", false, 404);
         }

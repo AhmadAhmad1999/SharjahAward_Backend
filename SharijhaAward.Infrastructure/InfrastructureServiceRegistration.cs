@@ -8,6 +8,7 @@ using SharijhaAward.Infrastructure.Authentication;
 using SharijhaAward.Infrastructure.EmailSernder;
 using SharijhaAward.Infrastructure.ExcelHelper;
 using SharijhaAward.Infrastructure.FileServices;
+using SharijhaAward.Infrastructure.JobServices;
 using SharijhaAward.Infrastructure.QRGenerator;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace SharijhaAward.Infrastructure
             services.AddScoped<IEmailCodesGenerator,EmailCodesGenerator>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped(typeof(IExcelHelper<>), typeof(ExcelHelper<>));
+            services.AddScoped<IBackGroundJobService, BackGroundJobService>();
 
             return services;
         }
