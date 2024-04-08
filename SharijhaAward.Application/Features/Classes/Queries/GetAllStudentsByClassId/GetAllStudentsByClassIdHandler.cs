@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Classes.Queries.GetAllClassesByCategoriesIds;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 
@@ -56,8 +57,10 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByCla
                 .Where(x => x.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
                 .CountAsync();
 
+            Pagination PaginationParameter = new Pagination(Request.page,
+                Request.pageSize, TotalCount);
 
-            return new BaseResponse<List<GetAllStudentsByClassIdListVM>>(ResponseMessage, true, 200, Response);
+            return new BaseResponse<List<GetAllStudentsByClassIdListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
         }
     }
 }
