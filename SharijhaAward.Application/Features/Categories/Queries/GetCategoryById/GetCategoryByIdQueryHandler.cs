@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using System;
 using System.Collections.Generic;
@@ -15,11 +17,15 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
         : IRequestHandler<GetCategoryByIdQuery , BaseResponse<CategoryDto>>
     {
         private readonly IAsyncRepository<Category> _categoryRepository;
+        private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IMapper _mapper;
 
-        public GetCategoryByIdQueryHandler(IAsyncRepository<Category> categoryRepository, IMapper mapper)
+        public GetCategoryByIdQueryHandler(IAsyncRepository<Category> categoryRepository,
+            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
+            IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _mapper = mapper;
         }
 
@@ -44,6 +50,20 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
             if (mainCategory != null)
             {
                 data.MainCategoryName = request.lang == "ar" ? mainCategory!.ArabicName : mainCategory!.EnglishName;
+            }
+
+            if (data.RelatedToClasses)
+            {
+                data.EducationalClasses = await _CategoryEducationalClassRepository
+                    .Where(x => x.CategoryId == request.Id)
+                    .Include(x => x.EducationalClass!)
+                    .Select(x => new CategoryEducationalClassesDto()
+                    {
+                        Id = x.EducationalClassId,
+                        Name = request.lang == "en"
+                            ? x.EducationalClass!.EnglishName
+                            : x.EducationalClass!.ArabicName
+                    }).ToListAsync();
             }
 
             return new BaseResponse<CategoryDto>("",true, 200, data);

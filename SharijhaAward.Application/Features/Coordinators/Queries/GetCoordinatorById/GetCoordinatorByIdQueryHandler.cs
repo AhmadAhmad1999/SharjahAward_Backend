@@ -77,7 +77,10 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                 {
                     Id = x.EducationalEntity.Id,
                     ArabicName = x.EducationalEntity.ArabicName,
-                    EnglishName = x.EducationalEntity.EnglishName
+                    EnglishName = x.EducationalEntity.EnglishName,
+                    Name = Request.lang == "en"
+                        ? x.EducationalEntity.EnglishName
+                        : x.EducationalEntity.ArabicName
                 }).ToListAsync();
 
             data.InstitutionEntities = await _EduInstitutionCoordinatorRepository
@@ -87,7 +90,10 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                 {
                     Id = x.EducationalInstitution.Id,
                     ArabicName = x.EducationalInstitution.ArabicName,
-                    EnglishName = x.EducationalInstitution.EnglishName
+                    EnglishName = x.EducationalInstitution.EnglishName,
+                    Name = Request.lang == "en"
+                        ? x.EducationalInstitution.EnglishName
+                        : x.EducationalInstitution.ArabicName
                 }).ToListAsync();
 
             //
