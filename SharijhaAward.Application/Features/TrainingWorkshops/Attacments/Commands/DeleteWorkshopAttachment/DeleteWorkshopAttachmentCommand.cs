@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.DeleteTrainingWorkshop
+namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.DeleteWorkshopAttachment
 {
-    public class DeleteTrainingWorkshopCommand :IRequest<BaseResponse<object>>
+    public class DeleteWorkshopAttachmentCommand : IRequest<BaseResponse<object>>
     {
         public Guid Id { get; set; }
         public string lang { get; set; } = string.Empty;

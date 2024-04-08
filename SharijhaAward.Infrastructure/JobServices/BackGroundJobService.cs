@@ -39,11 +39,11 @@ namespace SharijhaAward.Infrastructure.JobServices
                 }
                 else if(DateTime.Now > agenda.StartDate && DateTime.Now > agenda.EndDate)
                 {
-                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Later;
+                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous;
                 }
                 else if(DateTime.Now < agenda.StartDate && DateTime.Now < agenda.EndDate)
                 {
-                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous;
+                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Later;
                 }
                 await _agendaRepository.UpdateAsync(agenda);
             }

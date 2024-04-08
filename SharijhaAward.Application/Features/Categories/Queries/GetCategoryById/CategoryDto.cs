@@ -31,5 +31,6 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
         public List<CategoryEducationalClassesDto>? EducationalClasses { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
         public string MainCategoryName { get; set; } = string.Empty;
+        public bool isHasFile { get; set; }
     }
 }

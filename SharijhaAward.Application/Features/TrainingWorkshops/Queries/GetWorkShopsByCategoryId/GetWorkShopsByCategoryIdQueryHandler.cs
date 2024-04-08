@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
                     request.page, request.pageSize,
                     w => w.Attachments).ToList();
 
-                var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops).OrderBy(t => t.CreatedAt).ToList();
+                var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops);
                 
 
                 for (int i = 0; i < data.Count; i++)
@@ -60,6 +60,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
                     }
                     data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
                 }
+                data = data.OrderByDescending(t => t.CreatedAt).ToList();
 
                 var count = await _workShopRepository.GetCountAsync(w => w.CategoryId == category.Id);
                 Pagination pagination = new Pagination(request.page, request.pageSize, count);

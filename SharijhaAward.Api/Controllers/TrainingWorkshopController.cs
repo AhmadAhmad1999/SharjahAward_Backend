@@ -9,6 +9,7 @@ using PdfSharpCore.Pdf;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment;
+using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.DeleteWorkshopAttachment;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.UpdateWorkshopAttachment;
 using SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTrainingWorkshop;
 using SharijhaAward.Application.Features.TrainingWorkshops.Command.DeleteTrainingWorkshop;
@@ -62,17 +63,20 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpDelete(Name = "DeleteTrainingWorkshop")]
 
+        [HttpDelete(Name = "DeleteTrainingWorkshop")]
         public async Task<ActionResult> DeleteTrainingWorkshop(Guid Id)
         {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
             var response = await _mediator.Send(new DeleteTrainingWorkshopCommand() {Id = Id });
-            return Ok(
-                new
-                {
-                    data = response,
-                    message = "تم حذف الدورة التدريبية بنجاح"
-                });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
         [HttpGet("{Id}", Name = "GetTrainingWorkshopById")]
 
@@ -166,40 +170,24 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet("Video",Name = "Video")]
-        public IActionResult GetVideo()
+        [HttpDelete("DeleteAttachmentOfTrainingWorkShop/{Id}", Name = "DeleteAttachmentOfTrainingWorkShop")]
+        public async Task<IActionResult> DeleteAttachmentOfTrainingWorkShop(Guid Id)
         {
-            var videoFileName = $"video.mp4";
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
 
-            // Path to video file
-            var videoPath = Path.Combine(_environment.WebRootPath, "UploadedFiles/") + "e519392e-bdaa-4aaa-9cbb-a423738c55cc.mp4";
-
-            if (!System.IO.File.Exists(videoPath))
+            var response = await _mediator.Send(new DeleteWorkshopAttachmentCommand()
             {
-                return NotFound();
-            }
+                Id = Id ,
+                lang = language!
+            });
 
-            var memory = new MemoryStream();
-            using (var stream = new FileStream(videoPath, FileMode.Open))
+            return response.statusCode switch
             {
-                stream.CopyTo(memory);
-            }
-
-            memory.Position = 0;
-
-            return File(memory, GetContentType(videoFileName), videoFileName);
-        }
-
-        private static string GetContentType(string file)
-        {
-            var types = new Dictionary<string, string>
-            {
-                {".mp4", "video/mp4"}
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
             };
-
-            var ext = Path.GetExtension(file);
-
-            return types[ext.ToLower()];
         }
 
     }
