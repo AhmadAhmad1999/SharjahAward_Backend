@@ -81,7 +81,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                     conditionsProvideds.Add(conditionsProvidedsobject!);
             }
 
-            var data = _mapper.Map<List<TermAndConditionListVM>>(Terms).OrderBy(a => a.CreateAt).ToList();
+            var data = _mapper.Map<List<TermAndConditionListVM>>(Terms);
             
             for (int i = 0; i < data.Count; i++)
             {
@@ -103,6 +103,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                     ? data[i].EnglishDescription
                     : data[i].ArabicDescription;
             }
+            data = data.OrderByDescending(a => a.CreateAt).ToList();
+
             return new BaseResponse<List<TermAndConditionListVM>>("", true, 200, data);
         }
     }

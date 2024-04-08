@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateT
         public string EnglishDescription { get; set; } = string.Empty;
         public bool NeedAttachment { get; set; } = false;
         public int? RequiredAttachmentNumber { get; set; }
+        public int? SizeOfAttachmentInKB { get; set; }
+        public AttachmentType? AttachmentType { get; set; }
         public bool? IsSpecial { get; set; } = false;
         public Guid CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
