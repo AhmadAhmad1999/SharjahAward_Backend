@@ -5,8 +5,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
 {
     public class CreateCoordinatorInstitutionCommand : IRequest<BaseResponse<object>>
     {
-        public Guid CoordinatorId { get; set; }
-        public Guid EducationalInstitutionId { get; set; }
+        public int CoordinatorId { get; set; }
+        public int EducationalInstitutionId { get; set; }
         public string? lang { get; set; }
     }
 }

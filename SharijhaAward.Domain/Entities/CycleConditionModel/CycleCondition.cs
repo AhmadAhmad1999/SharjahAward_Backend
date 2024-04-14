@@ -12,7 +12,7 @@ namespace SharijhaAward.Domain.Entities.CycleConditionModel;
 
 public class CycleCondition : AuditableEntity
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string ArabicTitle { get; set; } = string.Empty;
     public string EnglishTitle { get; set; } = string.Empty;
     public string ArabicDescription { get; set; } = string.Empty;
@@ -24,7 +24,7 @@ public class CycleCondition : AuditableEntity
     public bool IsAgree { get; set; } = false;
     public Cycle Cycle { get; set; } = null!;
     [ForeignKey(nameof(Cycle))]
-    public Guid CycleId { get; set; }
+    public int CycleId { get; set; }
 
     public List<CycleConditionsProvidedForm> ConditionAttachments { get; set; } = null!;
 }

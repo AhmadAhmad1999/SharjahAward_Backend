@@ -16,11 +16,11 @@ namespace SharijhaAward.Domain.Entities.SubscriberInterviewModel
         public User User { get; set; } = null!;
 
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
 
         public Interview Interview { get; set; } = null!;
 
         [ForeignKey(nameof(Interview))]
-        public Guid InterviewId { get; set;} 
+        public int InterviewId { get; set;} 
     }
 }

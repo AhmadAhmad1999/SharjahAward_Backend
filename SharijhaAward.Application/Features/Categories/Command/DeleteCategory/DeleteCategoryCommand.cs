@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.DeleteCategory
 {
     public class DeleteCategoryCommand : IRequest<BaseResponse<object>>
     {
-        public Guid CategoryId {  get; set; }
+        public int CategoryId {  get; set; }
         public string lang {  get; set; } = string.Empty;
     }
 }

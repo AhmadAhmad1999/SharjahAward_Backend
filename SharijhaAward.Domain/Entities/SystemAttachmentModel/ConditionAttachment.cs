@@ -12,7 +12,7 @@ namespace SharijhaAward.Domain.Entities.AttachmentModel
 {
     public class ConditionAttachment : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string AttachementPath { get; set; } = string.Empty;
@@ -21,7 +21,7 @@ namespace SharijhaAward.Domain.Entities.AttachmentModel
         public ConditionsProvidedForms ConditionsProvidedForms { get; set; } = null!;
        
         [ForeignKey(nameof(ConditionsProvidedForms))]
-        public Guid? ConditionsProvidedFormsId {  get; set; }
+        public int? ConditionsProvidedFormsId {  get; set; }
 
     }
 }

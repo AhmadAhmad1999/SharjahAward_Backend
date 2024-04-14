@@ -9,7 +9,7 @@ using SharijhaAward.Domain.Entities.CriterionModel;
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSubCriterion
 {
     public class CreateSubCriterionHandler : IRequestHandler<CreateSubCriterionCommand,
-        BaseResponse<Guid>>
+        BaseResponse<int>>
     {
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IMapper _Mapper;
@@ -19,7 +19,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
             _CriterionRepository = CriterionRepository;
             _Mapper = Mapper;
         }
-        public async Task<BaseResponse<Guid>> Handle(CreateSubCriterionCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateSubCriterionCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
                     ? "Main criterion is not found"
                     : "المعيار الرئيسي غير موجود";
 
-                return new BaseResponse<Guid>(ResponseMessage, false, 404);
+                return new BaseResponse<int>(ResponseMessage, false, 404);
             }
 
             int OldTotalScoreForMainCategory = _CriterionRepository
@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
                     ? $"The maximum score of this main criterion : {CheckIfMainCriterionIdDoesExist.EnglishTitle} cannot be exceeded"
                     : $"لا يمكن تجاوز العلامة العظمى للمعيار الرئيسي: {CheckIfMainCriterionIdDoesExist.ArabicTitle}";
 
-                return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                return new BaseResponse<int>(ResponseMessage, false, 400);
             }
 
             Criterion NewSubCriterionEntity = _Mapper.Map<Criterion>(Request);
@@ -57,7 +57,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
                 ? "Created successfully"
                 : "تم إنشاء المعيار الفرعي بنجاح";
 
-            return new BaseResponse<Guid>(ResponseMessage, true, 200, NewSubCriterionEntity.Id);
+            return new BaseResponse<int>(ResponseMessage, true, 200, NewSubCriterionEntity.Id);
         }
     }
 }

@@ -12,18 +12,18 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage
 {
     public class CreateMessageCommandHandler
-        : IRequestHandler<CreateMessageCommand, BaseResponse<Guid>>
+        : IRequestHandler<CreateMessageCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<EmailMessage> _messageRepository;
         private readonly IMapper _mapper;
-        public async Task<BaseResponse<Guid>> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
         {
             var message = _mapper.Map<EmailMessage>(request);
             message.IsRead = false;
             message.Status = Domain.Constants.ContactUsConstants.MessageStatus.New;
             var data = await _messageRepository.AddAsync(message);
 
-            return new BaseResponse<Guid>("", true, 200, data.Id);
+            return new BaseResponse<int>("", true, 200, data.Id);
         }
     }
 }

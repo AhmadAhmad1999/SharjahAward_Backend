@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
 {
     public class UpdateWorkshopAttachmentCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id {  get; set; }
+        public int Id {  get; set; }
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
         public IFormFile attachment { get; set; } = null!;

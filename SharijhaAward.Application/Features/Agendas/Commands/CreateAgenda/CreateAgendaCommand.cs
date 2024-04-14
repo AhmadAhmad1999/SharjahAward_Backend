@@ -20,6 +20,6 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
         public DateTime CurrentDate { get; set; }
         public DateTime EndDate { get; set; }
         public AgendaDateType DateType { get; set; }
-        public Guid CycleId { get; set; }
+        public int CycleId { get; set; }
     }
 }

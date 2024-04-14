@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupB
 {
     public class GroupDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public int UniqueIntegerId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;

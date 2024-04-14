@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
 {
     public class UserListVm
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

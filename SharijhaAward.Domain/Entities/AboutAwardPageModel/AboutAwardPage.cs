@@ -9,7 +9,7 @@ namespace SharijhaAward.Domain.Entities.AboutAwardPageModel
 {
     public class AboutAwardPage : AuditableEntity 
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicAboutTitle { get; set; } = string.Empty;
         public string EnglishAboutTitle { get; set; } = string.Empty;
         public string ArabicAboutDescription { get; set; } = string.Empty;

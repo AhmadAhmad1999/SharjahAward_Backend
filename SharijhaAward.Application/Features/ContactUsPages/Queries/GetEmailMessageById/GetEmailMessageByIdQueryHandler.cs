@@ -22,7 +22,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
         public async Task<BaseResponse<EmailMessageDto>> Handle(GetEmailMessageByIdQuery request, CancellationToken cancellationToken)
         {
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var User = await _userRepository.GetByIdAsync(new Guid(UserId));
+            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
 
             if(User == null)
             {

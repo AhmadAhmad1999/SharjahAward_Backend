@@ -14,6 +14,6 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId
         public int page { get; set; }
         public int pageSize { get; set; }
         public string lang { get; set; } = string.Empty;
-        public Guid? CycleId { get; set; }
+        public int? CycleId { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet("{Id}" ,Name = "GetExplanatoryGuideByCategoryId")]
-        public async Task<IActionResult> GetExplanatoryGuideByCategoryId(Guid Id)
+        public async Task<IActionResult> GetExplanatoryGuideByCategoryId(int Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -62,7 +62,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetExplanatoryGuideDetailsByCategoryId/{Id}", Name = "GetExplanatoryGuideDetailsByCategoryId")]
-        public async Task<IActionResult> GetExplanatoryGuideDetailsByCategoryId(Guid Id)
+        public async Task<IActionResult> GetExplanatoryGuideDetailsByCategoryId(int Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -80,7 +80,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpDelete(Name= "DeleteExplanatoryGuide")]
-        public async Task<IActionResult> DeleteExplanatoryGuide(Guid Id)
+        public async Task<IActionResult> DeleteExplanatoryGuide(int Id)
         {
             var Language = HttpContext.Request.Headers["lang"];
             var response = await _mediator.Send(new DeleteExplanatoryGuideCommand()

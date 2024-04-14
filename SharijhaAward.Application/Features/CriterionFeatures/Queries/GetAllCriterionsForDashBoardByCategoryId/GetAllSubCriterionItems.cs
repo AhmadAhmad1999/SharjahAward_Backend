@@ -2,7 +2,7 @@
 {
     public class GetAllSubCriterionItems
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
         public int Score { get; set; }

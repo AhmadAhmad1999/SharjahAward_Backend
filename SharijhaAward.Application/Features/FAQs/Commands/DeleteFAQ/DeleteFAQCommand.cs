@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.FAQs.Commands.DeleteFAQ
 {
     public class DeleteFAQCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

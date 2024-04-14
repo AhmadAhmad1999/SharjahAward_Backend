@@ -6,9 +6,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
     public class GetAllDynamicAttributeSectionsForAddQuery : IRequest<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>>
     {
         public int? ProvidedFormId { get; set; }
-        public Guid? ArbitratorId { get; set; }
-        public Guid? CoordinatorId { get; set; }
-        public Guid? CycleId { get; set; }
+        public int? ArbitratorId { get; set; }
+        public int? CoordinatorId { get; set; }
+        public int? CycleId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

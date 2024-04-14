@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsById
 {
     public class GetNewsByIdQuery : IRequest<BaseResponse<NewsVM>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string lang { get; set; } =string.Empty;
     }
 }

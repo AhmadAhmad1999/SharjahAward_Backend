@@ -8,7 +8,7 @@ namespace SharijhaAward.Domain.Entities.NewsModel;
 
 public class News : AuditableEntity
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     // arabic title of the news 
     public string ArabicTitle { get; set; } = string.Empty;
     // english title of the news
@@ -21,6 +21,6 @@ public class News : AuditableEntity
     public string? Image { get; set; }
     // navigation property to the cycle table
     public Cycle Cycle { get; set; } = null!;
-    public Guid CycleId { get; set; }
+    public int CycleId { get; set; }
 
 }

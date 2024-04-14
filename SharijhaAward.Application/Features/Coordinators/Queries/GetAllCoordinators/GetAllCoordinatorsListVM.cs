@@ -4,7 +4,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
 {
     public class GetAllCoordinatorsListVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
         public string Email { get; set; } = null!;

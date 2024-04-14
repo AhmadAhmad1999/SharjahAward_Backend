@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
 {
     public class AttachmentDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string FileUrl { get; set; } = string.Empty;
     }
 }

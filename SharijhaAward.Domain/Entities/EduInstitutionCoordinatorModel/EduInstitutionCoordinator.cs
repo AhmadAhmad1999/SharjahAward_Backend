@@ -13,14 +13,14 @@ namespace SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel
 {
     public class EduInstitutionCoordinator : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public Coordinator Coordinator { get; set; } = null!;
         [ForeignKey(nameof(Coordinator))]
-        public Guid CoordinatorId { get; set; }
+        public int CoordinatorId { get; set; }
 
         public EducationalInstitution EducationalInstitution { get; set; } = null!;
         [ForeignKey(nameof(EducationalInstitution))]
-        public Guid EducationalInstitutionId { get; set; }
+        public int EducationalInstitutionId { get; set; }
     }
 }

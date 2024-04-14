@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
 {
     public class GetAllGeneralFAQListVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Question { get; set; } = null!;
         public string Answer { get; set; } = null!;
     }

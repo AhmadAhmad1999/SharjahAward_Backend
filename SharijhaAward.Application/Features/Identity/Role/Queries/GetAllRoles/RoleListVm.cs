@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.Identity.Role.Queries.GetAllRoles
 {
     public class RoleListVm
     {
-        public Guid RoleId {  get; set; }
+        public int RoleId {  get; set; }
         public string RoleName { get; set; } = string.Empty;
 
     }

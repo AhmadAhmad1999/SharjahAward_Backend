@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
 
 namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.SendRelatingRequest
@@ -12,29 +14,33 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
         private readonly IAsyncRepository<RelatedAccountRequest> _RelatedAccountRequestRepository;
         private readonly IAsyncRepository<RelatedAccount> _RelatedAccountRepository;
         private readonly IJwtProvider _JWTProvider;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
         public SendRelatingRequestHandler(IUserRepository UserRepository,
             IAsyncRepository<RelatedAccountRequest> RelatedAccountRequestRepository,
             IAsyncRepository<RelatedAccount> RelatedAccountRepository,
-            IJwtProvider JWTProvider)
+            IJwtProvider JWTProvider,
+            IAsyncRepository<UserRole> UserRoleRepository)
         {
             _UserRepository = UserRepository;
             _RelatedAccountRequestRepository = RelatedAccountRequestRepository;
             _RelatedAccountRepository = RelatedAccountRepository;
             _JWTProvider = JWTProvider;
+            _UserRoleRepository = UserRoleRepository;
         }
         public async Task<BaseResponse<object>> Handle(SendRelatingRequestCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
-            Guid SenderId = new Guid(_JWTProvider.GetUserIdFromToken(Request.token!));
+            int SenderId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
-            Domain.Entities.IdentityModels.User? ReceiverUserEntity = _UserRepository
+            UserRole? UserRole = await _UserRoleRepository
                 .Include(x => x.Role!)
-                .FirstOrDefault(x => x.Email.ToLower() == Request.ReceiverEmail.ToLower() && x.isValidAccount &&
+                .Include(x => x.User!)
+                .FirstOrDefaultAsync(x => x.User!.Email.ToLower() == Request.ReceiverEmail.ToLower() && x.User!.isValidAccount &&
                     x.Role!.RoleName.ToLower() == "Subscriber".ToLower());
 
-            if (ReceiverUserEntity == null)
+            if (UserRole == null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Account is not found"
@@ -42,7 +48,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
 
                 return new BaseResponse<object>(ResponseMessage, false, 400);
             }
-            else if (ReceiverUserEntity.Id == SenderId)
+            else if (UserRole.UserId == SenderId)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "This is your account's email so you can't send a request to yourself"
@@ -52,7 +58,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
             }
 
             RelatedAccountRequest? CheckIfRelatedAccountRequestIsAlreadyExist = await _RelatedAccountRequestRepository
-                .FirstOrDefaultAsync(x => x.SenderId == SenderId && x.ReceiverId == ReceiverUserEntity.Id);
+                .FirstOrDefaultAsync(x => x.SenderId == SenderId && x.ReceiverId == UserRole.UserId);
 
             if (CheckIfRelatedAccountRequestIsAlreadyExist is not null)
             {
@@ -65,7 +71,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
 
             RelatedAccount? CheckIfRelatedAccountIsAlreadyExist = await _RelatedAccountRepository
                 .FirstOrDefaultAsync(x => (x.User1Id == SenderId || x.User2Id == SenderId) &&
-                    (x.User1Id == ReceiverUserEntity.Id || x.User2Id == ReceiverUserEntity.Id));
+                    (x.User1Id == UserRole.UserId || x.User2Id == UserRole.UserId));
 
             if (CheckIfRelatedAccountIsAlreadyExist is not null)
             {
@@ -85,7 +91,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
                 LastModifiedAt = null,
                 LastModifiedBy = null,
                 SenderId = SenderId,
-                ReceiverId = ReceiverUserEntity.Id
+                ReceiverId = UserRole.UserId
             };
 
             await _RelatedAccountRequestRepository.AddAsync(NewRelatedAccountRequestEntity);

@@ -11,7 +11,7 @@ namespace SharijhaAward.Domain.Entities.ExplanatoryGuideModel
 {
     public class ExplanatoryGuide : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishFilePath { get; set; } = string.Empty;
@@ -19,6 +19,6 @@ namespace SharijhaAward.Domain.Entities.ExplanatoryGuideModel
         public Category Category { get; set; } = null!;
 
         [ForeignKey(nameof(Category))]
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
     }
 }

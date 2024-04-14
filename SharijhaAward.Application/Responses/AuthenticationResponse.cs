@@ -10,6 +10,6 @@ namespace SharijhaAward.Application.Responses
         public List<Permission>? permissions { get; set; } = null!;
         public string message { get; set; } = string.Empty;
         public bool isSucceed { get; set; } = false;
-        public Guid? ActiveCycleId { get; set; }
+        public int? ActiveCycleId { get; set; }
     }
 }

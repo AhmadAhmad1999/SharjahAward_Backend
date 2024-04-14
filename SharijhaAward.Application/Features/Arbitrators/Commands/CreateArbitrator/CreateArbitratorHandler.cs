@@ -15,7 +15,7 @@ using System.Transactions;
 namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator
 {
     public class CreateArbitratorHandler
-         : IRequestHandler<CreateArbitratorCommand, BaseResponse<Guid>>
+         : IRequestHandler<CreateArbitratorCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
         private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
@@ -29,6 +29,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
         private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+
         public CreateArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
             IRoleRepository RoleRepository, 
@@ -40,7 +42,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository, 
             IAsyncRepository<GeneralValidation> GeneralValidationRepository,
             IAsyncRepository<ArbitratorClass> ArbitratorClassRepository,
-            IHttpContextAccessor HttpContextAccessor)
+            IHttpContextAccessor HttpContextAccessor,
+            IAsyncRepository<UserRole> UserRoleRepository)
         {
             _ArbitratorRepository = ArbitratorRepository;
             _CategoryArbitratorRepository = CategoryArbitratorRepository;
@@ -54,9 +57,10 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             _GeneralValidationRepository = GeneralValidationRepository;
             _ArbitratorClassRepository = ArbitratorClassRepository;
             _HttpContextAccessor = HttpContextAccessor;
+            _UserRoleRepository = UserRoleRepository;
         }
 
-        public async Task<BaseResponse<Guid>> Handle(CreateArbitratorCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateArbitratorCommand Request, CancellationToken cancellationToken)
         {
             TransactionOptions TransactionOptions = new TransactionOptions
             {
@@ -80,7 +84,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                             ? "Invalid email or password"
                             : "خطأ في البريد الإلكتروني او كلمة المرور";
 
-                        return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                        return new BaseResponse<int>(ResponseMessage, false, 400);
                     }
 
                     Arbitrator? CheckEmailIfAlreadyUsedInArbitrator = await _ArbitratorRepository
@@ -92,7 +96,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                             ? "Invalid email or password"
                             : "خطأ في البريد الإلكتروني او كلمة المرور";
 
-                        return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                        return new BaseResponse<int>(ResponseMessage, false, 400);
                     }
 
                     Role? Role = await _RoleRepository.GetByName("Arbitrator");
@@ -103,7 +107,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                             ? "Arbitrator role is not found"
                             : "دور المحكم غير موجود";
 
-                        return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                        return new BaseResponse<int>(ResponseMessage, false, 400);
                     }
 
                     Domain.Entities.IdentityModels.User NewUserEntity = new Domain.Entities.IdentityModels.User()
@@ -124,11 +128,18 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                         isValidAccount = true,
                         Password = "123456",
                         lang = null,
-                        PhoneNumber = Request.PhoneNumber,
-                        RoleId = Role.RoleId
+                        PhoneNumber = Request.PhoneNumber
                     };
 
                     await _UserRepository.AddAsync(NewUserEntity);
+
+                    UserRole NewUserRoleEntity = new UserRole()
+                    {
+                        UserId = NewUserEntity.Id,
+                        RoleId = Role.Id
+                    };
+
+                    await _UserRoleRepository.AddAsync(NewUserRoleEntity);
 
                     Arbitrator NewArbitratorEntity = _Mapper.Map<Arbitrator>(Request);
                     NewArbitratorEntity.Id = NewUserEntity.Id;
@@ -162,7 +173,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                 ? "Field is not found"
                                 : "الحقل غير موجود";
 
-                            return new BaseResponse<Guid>(ResponseMessage, false, 404);
+                            return new BaseResponse<int>(ResponseMessage, false, 404);
                         }
 
                         if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString))
@@ -179,7 +190,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                     ? $"{DynamicAttributeEntity.EnglishLabel}'s value is already used, please insert a different value"
                                     : $"قيمة هذا الحقل: {DynamicAttributeEntity.ArabicLabel} مستخدمة مسبقاً, الرجاء إدخال قيمة مختلفة";
 
-                                return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                return new BaseResponse<int>(ResponseMessage, false, 400);
                             }
                         }
 
@@ -212,7 +223,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "=")
@@ -225,7 +236,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -236,7 +247,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -247,7 +258,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -261,7 +272,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -272,7 +283,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -289,7 +300,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "=")
@@ -300,7 +311,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -311,7 +322,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -322,7 +333,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "<")
@@ -335,7 +346,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -346,7 +357,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsInteger}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsInteger}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "<=")
@@ -359,7 +370,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -370,7 +381,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsInteger}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == ">")
@@ -383,7 +394,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -394,7 +405,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsInteger}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsInteger}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == ">=")
@@ -407,7 +418,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
 
                                         int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -418,7 +429,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsInteger}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -432,7 +443,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -443,7 +454,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -460,7 +471,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "=")
@@ -471,7 +482,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -482,7 +493,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -493,7 +504,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "<")
@@ -507,7 +518,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -518,7 +529,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsDateOnly}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsDateOnly}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == "<=")
@@ -532,7 +543,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -543,7 +554,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsDateOnly}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == ">")
@@ -557,7 +568,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -568,7 +579,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsDateOnly}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsDateOnly}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation == ">=")
@@ -582,7 +593,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
 
                                         DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -593,7 +604,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsDateOnly}"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -607,7 +618,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                     else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -618,7 +629,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                 ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                 : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                            return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                            return new BaseResponse<int>(ResponseMessage, false, 400);
                                         }
                                     }
                                 }
@@ -636,7 +647,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                             ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                             : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                        return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                        return new BaseResponse<int>(ResponseMessage, false, 400);
                                     }
                                 }
                                 else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -647,7 +658,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                             ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                             : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                        return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                        return new BaseResponse<int>(ResponseMessage, false, 400);
                                     }
                                 }
                             }
@@ -786,7 +797,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
@@ -807,7 +818,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
@@ -828,7 +839,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
@@ -849,7 +860,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
@@ -928,7 +939,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -950,7 +961,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -972,7 +983,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -994,7 +1005,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -1080,7 +1091,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == "=")
@@ -1091,7 +1102,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -1102,7 +1113,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1113,7 +1124,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                         }
@@ -1127,7 +1138,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1138,7 +1149,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                         }
@@ -1155,7 +1166,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == "=")
@@ -1166,7 +1177,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -1177,7 +1188,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1188,7 +1199,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == "<")
@@ -1201,7 +1212,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -1212,7 +1223,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsInteger}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsInteger}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == "<=")
@@ -1225,7 +1236,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -1236,7 +1247,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsInteger}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == ">")
@@ -1249,7 +1260,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -1260,7 +1271,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsInteger}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsInteger}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == ">=")
@@ -1273,7 +1284,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
@@ -1284,7 +1295,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsInteger}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                         }
@@ -1298,7 +1309,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1309,7 +1320,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                         }
@@ -1326,7 +1337,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == "=")
@@ -1337,7 +1348,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation.ToLower() == "is Empty".ToLower())
@@ -1348,7 +1359,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1359,7 +1370,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == "<")
@@ -1373,7 +1384,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -1384,7 +1395,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsDateOnly}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsDateOnly}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == "<=")
@@ -1398,7 +1409,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -1409,7 +1420,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsDateOnly}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == ">")
@@ -1423,7 +1434,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -1434,7 +1445,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsDateOnly}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsDateOnly}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation == ">=")
@@ -1448,7 +1459,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
 
                                                 DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
@@ -1459,7 +1470,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsDateOnly}"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                         }
@@ -1473,7 +1484,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                             else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1484,7 +1495,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                         ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                         : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                                    return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                    return new BaseResponse<int>(ResponseMessage, false, 400);
                                                 }
                                             }
                                         }
@@ -1502,7 +1513,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                     ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
                                                     : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
 
-                                                return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                return new BaseResponse<int>(ResponseMessage, false, 400);
                                             }
                                         }
                                         else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
@@ -1513,7 +1524,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                                                     ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                                     : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
-                                                return new BaseResponse<Guid>(ResponseMessage, false, 400);
+                                                return new BaseResponse<int>(ResponseMessage, false, 400);
                                             }
                                         }
                                     }
@@ -1600,7 +1611,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                         ? "Created successfully"
                         : "تم إنشاء المحكم بنجاح";
 
-                    return new BaseResponse<Guid>(ResponseMessage, true, 200, NewUserEntity.Id);
+                    return new BaseResponse<int>(ResponseMessage, true, 200, NewUserEntity.Id);
                 }
                 catch (Exception)
                 {

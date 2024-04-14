@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
 {
     public class DeleteAttachmentCommand : IRequest<BaseResponse<object>>
     {
-        public Guid AttachmentId { get; set; }
+        public int AttachmentId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

@@ -56,7 +56,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpDelete(Name = "DeleteFAQ")]
-        public async Task<IActionResult> DeleteFAQ(Guid Id)
+        public async Task<IActionResult> DeleteFAQ(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -75,7 +75,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("{Id}",Name="GetFAQById")]
-        public async Task<IActionResult> GetFAQById(Guid Id)
+        public async Task<IActionResult> GetFAQById(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -117,7 +117,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllFAQsByCategoryId/{Id}", Name = "GetAllFAQsByCategoryId")]
-        public async Task<IActionResult> GetAllFAQsByCategoryId(Guid Id,int page , int pageSize)
+        public async Task<IActionResult> GetAllFAQsByCategoryId(int Id,int page , int pageSize)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];

@@ -10,7 +10,7 @@ namespace SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 
 public class TrainingWorkshop : AuditableEntity
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     
     public string ArabicTitle { get; set; } = string.Empty;
     
@@ -24,7 +24,7 @@ public class TrainingWorkshop : AuditableEntity
     public Category Category { get; set; } = null!;
 
     [ForeignKey(nameof(Category))]
-    public Guid CategoryId { get; set; }
+    public int CategoryId { get; set; }
 
 
 

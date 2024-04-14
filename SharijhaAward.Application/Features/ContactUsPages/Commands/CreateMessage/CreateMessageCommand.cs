@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage
 {
-    public class CreateMessageCommand : IRequest<BaseResponse<Guid>>
+    public class CreateMessageCommand : IRequest<BaseResponse<int>>
     {
         public string From { get; set; } = string.Empty;
         public string To { get; set; } = string.Empty;
@@ -17,6 +17,6 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
         public string Body { get; set; } = string.Empty;
         public MessageType Type { get; set; }
         public MessageStatus? Status { get; set; } = MessageStatus.New;
-        public Guid? MessageId { get; set; }
+        public int? MessageId { get; set; }
     }
 }

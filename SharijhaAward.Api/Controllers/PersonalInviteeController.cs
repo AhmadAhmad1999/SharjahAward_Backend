@@ -93,7 +93,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> DeletePersonalInvitee(Guid id)
+        public async Task<ActionResult> DeletePersonalInvitee(int id)
         {
             DeletePersonalInviteeCommand deletePersonalInviteeCommand = new DeletePersonalInviteeCommand()
             {
@@ -111,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GetPersonalInviteeByIdQuery>> GetById(Guid id)
+        public async Task<ActionResult<GetPersonalInviteeByIdQuery>> GetById(int id)
         {
             PersonalInviteeVM? Personal = await _mediator
                 .Send(new GetPersonalInviteeByIdQuery

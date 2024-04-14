@@ -6,9 +6,9 @@ namespace SharijhaAward.Domain.Entities.RelatedAccountModel
     public class RelatedAccountRequest : AuditableEntity
     {
         public int Id { get; set; }
-        public Guid SenderId { get; set; }
+        public int SenderId { get; set; }
         public User? Sender { get; set; }
-        public Guid ReceiverId { get; set; }
+        public int ReceiverId { get; set; }
         public User? Receiver { get; set; }
     }
 }

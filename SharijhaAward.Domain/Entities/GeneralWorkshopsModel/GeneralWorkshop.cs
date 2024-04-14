@@ -9,7 +9,7 @@ namespace SharijhaAward.Domain.Entities.GeneralWorkshopsModel
 {
     public class GeneralWorkshop : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicTitle {  get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string EnglishDescription { get; set;} = string.Empty;

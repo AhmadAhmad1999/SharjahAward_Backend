@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExtraAttachment
 {
     public class CreateExtraAttachmentCommandHandler
-        : IRequestHandler<CreateExtraAttachmentCommand, BaseResponse<Guid>>
+        : IRequestHandler<CreateExtraAttachmentCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formRepository;
         private readonly IAsyncRepository<ExtraAttachment> _extraAttachmentRepository;
@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExt
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<Guid>> Handle(CreateExtraAttachmentCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateExtraAttachmentCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"
                 ? "Extra Attachment has been Added"
@@ -39,7 +39,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExt
                 ? "Provided Form Not Found"
                 : "الإستمارة غير موجودة";
 
-                return new BaseResponse<Guid>(msg, false, 404);
+                return new BaseResponse<int>(msg, false, 404);
             }
             providedForm.TotalStep = 8;
             
@@ -51,7 +51,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExt
             var data = await _extraAttachmentRepository.AddAsync(extraAttachment);
             await _formRepository.UpdateAsync(providedForm);
 
-            return new BaseResponse<Guid>(msg, true, 200, data.Id);
+            return new BaseResponse<int>(msg, true, 200, data.Id);
         }
     }
 }

@@ -72,7 +72,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpDelete(Name="DeleteAttachment")]
-        public async Task<IActionResult> DeleteAttachment(Guid Id)
+        public async Task<IActionResult> DeleteAttachment(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];

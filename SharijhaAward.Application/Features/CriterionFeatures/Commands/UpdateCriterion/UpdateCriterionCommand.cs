@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCr
 {
     public class UpdateCriterionCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public int Score { get; set; }

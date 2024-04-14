@@ -12,7 +12,7 @@ namespace SharijhaAward.Domain.Entities.InterviewModel
 {
     public class Interview:AuditInformation<User>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

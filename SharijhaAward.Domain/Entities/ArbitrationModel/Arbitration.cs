@@ -17,7 +17,7 @@ namespace SharijhaAward.Domain.Entities.ArbitrationModel
         public Arbitrator Arbitrator { get; set; }
 
         [ForeignKey(nameof(Arbitrator))]
-        public Guid ArbitratorId { get; set; }
+        public int ArbitratorId { get; set; }
 
 
         public ProvidedForm ProvidedForm { get; set; }

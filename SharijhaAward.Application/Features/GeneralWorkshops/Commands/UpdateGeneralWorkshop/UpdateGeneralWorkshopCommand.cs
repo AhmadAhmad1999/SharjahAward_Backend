@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGeneralWorkshop
 {
-    public class UpdateGeneralWorkshopCommand : IRequest<BaseResponse<Guid>>
+    public class UpdateGeneralWorkshopCommand : IRequest<BaseResponse<int>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;

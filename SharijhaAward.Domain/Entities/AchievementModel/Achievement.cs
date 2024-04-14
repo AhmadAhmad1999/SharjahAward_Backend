@@ -8,7 +8,7 @@ namespace SharijhaAward.Domain.Entities.AchievementModel
 {
     public class Achievement : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string? DistinctionField { get; set; } =string.Empty;
         public string? Projects { get; set; } = string.Empty;
         public string? SkillsAndExperiences { get; set; } = string.Empty;
@@ -26,7 +26,7 @@ namespace SharijhaAward.Domain.Entities.AchievementModel
 
         public User? User { get; set; } = null!;
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
 
 
     }

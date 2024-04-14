@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTraini
 {
     public class TrainingWorkshopDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string WorkshopAttachment { get; set; } = string.Empty;
         public string Thumbnail { get; set; } = string.Empty;

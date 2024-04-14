@@ -16,11 +16,11 @@ namespace SharijhaAward.Domain.Entities.CycleClassModel
 
         public Cycle Cycle { get; set; }
         [ForeignKey(nameof(Cycle))]
-        public Guid CycleId { get; set; }
+        public int CycleId { get; set; }
 
         public EducationalClass EducationalClass { get; set; }
         [ForeignKey(nameof(EducationalClass))]
-        public Guid EducationalClassId { get; set; }
+        public int EducationalClassId { get; set; }
 
 
         public virtual List<ArbitratorClass> ArbitratorClasses { get; set; } = new();

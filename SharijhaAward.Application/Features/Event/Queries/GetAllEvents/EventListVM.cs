@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
 {
     public class EventListVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string SiteName { get; set; } = string.Empty;

@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.User.Queries.AsignRoleToUser
 {
     public class AsignRoleToUserQuery : IRequest<Unit>
     {
-        public Guid userId {  get; set; }
-        public Guid roleId { get; set; }
+        public int userId {  get; set; }
+        public int roleId { get; set; }
     }
 }

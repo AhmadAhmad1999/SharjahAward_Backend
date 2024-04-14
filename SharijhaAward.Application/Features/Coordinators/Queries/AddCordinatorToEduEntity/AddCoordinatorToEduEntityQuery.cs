@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Coordinators.Queries.AddCordinatorToEduEntity
 {
-    public class AddCoordinatorToEduEntityQuery : IRequest<BaseResponse<Guid>>
+    public class AddCoordinatorToEduEntityQuery : IRequest<BaseResponse<int>>
     {
-        public Guid CoordinatorId { get; set; }
-        public Guid EducationalEntityId { get; set; }
+        public int CoordinatorId { get; set; }
+        public int EducationalEntityId { get; set; }
         public DateTime RelatedDate { get; set; }
     }
 }

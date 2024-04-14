@@ -13,7 +13,7 @@ namespace SharijhaAward.Domain.Entities.InvitationModels
 {
     public class PersonalInvitee : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public int UniqueIntegerId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
@@ -25,6 +25,6 @@ namespace SharijhaAward.Domain.Entities.InvitationModels
 
         public Event Event { get; set; } = null!;
         [ForeignKey(nameof(Event))]
-        public Guid EventId { get; set; }
+        public int EventId { get; set; }
     }
 }

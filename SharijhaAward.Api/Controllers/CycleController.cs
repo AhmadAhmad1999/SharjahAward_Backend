@@ -57,7 +57,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("{Id}", Name = "GetCycleById")]
-        public async Task<IActionResult> GetCycleById(Guid Id)
+        public async Task<IActionResult> GetCycleById(int Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -111,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpDelete("{id}" ,Name="DeleteCycle")]
-        public async Task<IActionResult> DeleteCycle(Guid id)
+        public async Task<IActionResult> DeleteCycle(int id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

@@ -110,8 +110,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllDynamicAttributeSectionsForView(Guid? CategoryId,
-            Guid? CycleId, bool? isArbitrator, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllDynamicAttributeSectionsForView(int? CategoryId,
+            int? CycleId, bool? isArbitrator, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -171,7 +171,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAllDynamicAttributeSectionsForAdd(int? ProvidedFormId,
-            Guid? ArbitratorId, Guid? CoordinatorId, Guid? CycleId)
+            int? ArbitratorId, int? CoordinatorId, int? CycleId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

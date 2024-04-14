@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
 {
     public class CheckAllConditionsQuery : IRequest<BaseResponse<object>>
     {
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
         public bool IsSpecial {  get; set; }
         public string token { get; set; } = string.Empty;

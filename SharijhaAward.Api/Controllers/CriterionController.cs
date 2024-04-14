@@ -46,7 +46,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            BaseResponse<Guid>? Response = await _Mediator.Send(CreateCriterionCommand);
+            BaseResponse<int>? Response = await _Mediator.Send(CreateCriterionCommand);
 
             return Response.statusCode switch
             {
@@ -63,7 +63,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllCriterionByCategoryId(Guid CategoryId, int ProvidedFormId)
+        public async Task<IActionResult> GetAllCriterionByCategoryId(int CategoryId, int ProvidedFormId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -142,7 +142,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCriterionAttachment(Guid CriterionAttachmentId)
+        public async Task<IActionResult> DeleteCriterionAttachment(int CriterionAttachmentId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -171,7 +171,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCriterionItemAttachment(Guid CriterionItemAttachmentId)
+        public async Task<IActionResult> DeleteCriterionItemAttachment(int CriterionItemAttachmentId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -260,7 +260,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            BaseResponse<Guid> Response = await _Mediator.Send(CreateSubCriterionCommand);
+            BaseResponse<int> Response = await _Mediator.Send(CreateSubCriterionCommand);
 
             return Response.statusCode switch
             {
@@ -277,7 +277,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCriterion(Guid Id)
+        public async Task<IActionResult> DeleteCriterion(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -306,7 +306,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCriterionItem(Guid Id)
+        public async Task<IActionResult> DeleteCriterionItem(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -335,7 +335,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> UpdateCriterion(Guid Id, [FromBody] UpdateCriterionCommand UpdateCriterionCommand)
+        public async Task<IActionResult> UpdateCriterion(int Id, [FromBody] UpdateCriterionCommand UpdateCriterionCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -362,7 +362,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> UpdateCriterionItem(Guid Id, [FromBody] UpdateCriterionItemCommand UpdateCriterionItemCommand)
+        public async Task<IActionResult> UpdateCriterionItem(int Id, [FromBody] UpdateCriterionItemCommand UpdateCriterionItemCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -389,7 +389,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetMainCriterionById(Guid Id)
+        public async Task<IActionResult> GetMainCriterionById(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -417,7 +417,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllCriterionsForDashBoardByCategoryId(Guid CategoryId, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllCriterionsForDashBoardByCategoryId(int CategoryId, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -448,7 +448,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetCriterionItemById(Guid Id)
+        public async Task<IActionResult> GetCriterionItemById(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

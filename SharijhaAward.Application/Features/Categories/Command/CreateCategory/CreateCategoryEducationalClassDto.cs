@@ -2,7 +2,7 @@
 {
     public class CreateCategoryEducationalClassDto
     {
-        public Guid EducationalClassId { get; set; }
+        public int EducationalClassId { get; set; }
         public int NumberOfExpectedWinners { get; set; }
     }
 }

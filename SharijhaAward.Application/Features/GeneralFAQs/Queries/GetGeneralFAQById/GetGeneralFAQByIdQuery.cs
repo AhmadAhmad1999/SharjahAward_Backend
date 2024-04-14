@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetGeneralFAQBy
 {
     public class GetGeneralFAQByIdQuery : IRequest<BaseResponse<GeneralFAQDto>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string? lang { get; set; }
     }
 }

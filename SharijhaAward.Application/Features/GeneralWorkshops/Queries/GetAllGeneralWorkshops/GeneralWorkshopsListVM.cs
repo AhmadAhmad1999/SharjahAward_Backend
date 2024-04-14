@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGene
 {
     public class GeneralWorkshopsListVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;

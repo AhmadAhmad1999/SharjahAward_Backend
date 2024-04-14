@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
 {
     public class GetCategoriesWithSubcategoriesQuery : IRequest<BaseResponse<List<CategoriesSubcategoriesDto>>>
     {
-        public Guid? CycleId { get; set; }
+        public int? CycleId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

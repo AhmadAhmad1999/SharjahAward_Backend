@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Commands.DeleteGeneralF
 {
     public class DeleteGeneralFAQCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string? lang { get; set; }
     }
 }

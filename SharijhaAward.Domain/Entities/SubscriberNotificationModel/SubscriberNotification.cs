@@ -16,12 +16,12 @@ namespace SharijhaAward.Domain.Entities.SubscriberNotificationModel
         public Notification Notification { get; set; }
 
         [ForeignKey(nameof(Notification))]
-        public Guid notificationId { get; set; }
+        public int notificationId { get; set; }
 
         public User User { get; set; }
 
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set;}
+        public int UserId { get; set;}
 
     }
 }

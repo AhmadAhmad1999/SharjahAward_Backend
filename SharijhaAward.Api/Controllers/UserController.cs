@@ -29,7 +29,7 @@ namespace SharijhaAward.Api.Controllers
         }
         [HttpPut("{Id}",Name = "UpdateUser")]
 
-        public async Task<ActionResult> UpdateUser(Guid Id ,[FromBody] UpdateUserCommand updateUserCommand)
+        public async Task<ActionResult> UpdateUser(int Id ,[FromBody] UpdateUserCommand updateUserCommand)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -49,7 +49,7 @@ namespace SharijhaAward.Api.Controllers
 
         [HttpDelete("{Id}",Name = "DeleteUser")]
 
-        public async Task<ActionResult> DeleteUser(Guid Id)
+        public async Task<ActionResult> DeleteUser(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -70,7 +70,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("{id}", Name = "GetUserById")]
 
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetUserById(Guid? id)
+        public async Task<ActionResult> GetUserById(int? id)
         {
             var Token = HttpContext.Request.Headers.Authorization;
 

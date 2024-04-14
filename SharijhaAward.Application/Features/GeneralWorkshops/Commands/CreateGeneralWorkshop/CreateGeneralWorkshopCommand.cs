@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGeneralWorkshop
 {
-    public class CreateGeneralWorkshopCommand : IRequest<BaseResponse<Guid>>
+    public class CreateGeneralWorkshopCommand : IRequest<BaseResponse<int>>
     {
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;

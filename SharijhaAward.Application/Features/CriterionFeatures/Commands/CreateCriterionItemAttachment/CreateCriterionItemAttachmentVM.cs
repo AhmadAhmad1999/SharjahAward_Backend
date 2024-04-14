@@ -8,11 +8,11 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
 {
     public class CreateCriterionItemAttachmentVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string AttachementPath { get; set; } = string.Empty;
         public int SizeOfAttachmentInKB { get; set; }
-        public Guid CriterionItemId { get; set; }
+        public int CriterionItemId { get; set; }
     }
 }

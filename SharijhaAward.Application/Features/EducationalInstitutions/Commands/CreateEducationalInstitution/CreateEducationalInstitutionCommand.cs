@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.CreateEducationalInstitution
 {
-    public class CreateEducationalInstitutionCommand :IRequest<BaseResponse<Guid>>
+    public class CreateEducationalInstitutionCommand :IRequest<BaseResponse<int>>
     {
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
-        public Guid EducationalEntityId { get; set; }
+        public int EducationalEntityId { get; set; }
         public string lang { get; set; }= string.Empty;
     }
 }

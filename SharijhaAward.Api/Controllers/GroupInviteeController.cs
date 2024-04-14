@@ -47,7 +47,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<Guid>> AddGroupInvitee([FromBody] CreateGroupInviteeCommand CreateGroupInviteeCommand)
+        public async Task<ActionResult<int>> AddGroupInvitee([FromBody] CreateGroupInviteeCommand CreateGroupInviteeCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             if (!string.IsNullOrWhiteSpace(HeaderValue))
@@ -95,7 +95,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> DeleteGroupInvitee(Guid id)
+        public async Task<ActionResult> DeleteGroupInvitee(int id)
         {
             DeleteGroupInviteeCommand deleteGroupInviteeCommand = new DeleteGroupInviteeCommand()
             {
@@ -113,7 +113,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GetGroupInviteeByIdQuery>> GetById(Guid id)
+        public async Task<ActionResult<GetGroupInviteeByIdQuery>> GetById(int id)
         {
             GroupInviteeVM? Group = await _mediator
                 .Send(new GetGroupInviteeByIdQuery

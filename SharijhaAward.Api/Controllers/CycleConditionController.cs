@@ -62,7 +62,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpDelete("{Id}",Name = "DeleteCycleCondition")]
-        public async Task<ActionResult> DeleteCycleCondition(Guid Id)
+        public async Task<ActionResult> DeleteCycleCondition(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -81,7 +81,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet("{Id}", Name = "GetCycleConditionById")]
-        public async Task<ActionResult> GetCycleConditionById(Guid Id)
+        public async Task<ActionResult> GetCycleConditionById(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -101,7 +101,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllCycleCondition")]
-        public async Task<ActionResult> GetAllCycleCondition(Guid? CycleId, int page = 1, int perPage = 10)
+        public async Task<ActionResult> GetAllCycleCondition(int? CycleId, int page = 1, int perPage = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];

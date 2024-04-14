@@ -14,7 +14,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
         public int AttributeTableNameId { get; set; }
-        public Guid? RecordIdOnRelation { get; set; }
+        public int? RecordIdOnRelation { get; set; }
         public string? lang { get; set; }
     }
 }

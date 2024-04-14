@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetUserById
 {
     public class GetUserByIdQuery : IRequest<BaseResponse<UserDto>>
     {
-        public Guid? Id {  get; set; }
+        public int? Id {  get; set; }
         public string token {  get; set; } = string.Empty;
     }
 }

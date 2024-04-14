@@ -4,7 +4,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetEduc
 {
     public class GetEducationalEntityByIdDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string EnglishName { get; set; } = null!;
         public string ArabicName { get; set; } = null!;
         public List<EducationalInstitutionListVM> EducationalInstitutions { get; set; } = new List<EducationalInstitutionListVM>();

@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
     {
         public bool IsAgree { get; set; } = false;
         public List<CycleConditionAttachmentListVm> Attachments { get; set; } = null!;
-        public Guid CycleConditionId { get; set; }
+        public int CycleConditionId { get; set; }
         public int ProvidedFormId { get; set; }
     }
 }

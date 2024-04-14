@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTrainingWorkshop
 {
-    public class CreateTrainingWorkshopsCommand : IRequest<BaseResponse<Guid>>
+    public class CreateTrainingWorkshopsCommand : IRequest<BaseResponse<int>>
     {
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public IFormFile Thumbnail { get; set; } = null!;
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
     }
 }

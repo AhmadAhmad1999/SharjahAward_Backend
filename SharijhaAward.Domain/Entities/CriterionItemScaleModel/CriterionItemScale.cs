@@ -9,10 +9,10 @@ namespace SharijhaAward.Domain.Entities.CriterionItemScaleModel;
 
 public class CriterionItemScale : AuditableEntity
 {
-    public Guid Id {  get; set; }
-    public Guid ScalesId { get; set; }
+    public int Id {  get; set; }
+    public int ScalesId { get; set; }
     public Scale Scale { get; set; } = null!;
-    public Guid CriterionItemsId { get; set; }
+    public int CriterionItemsId { get; set; }
     public CriterionItem CriterionItem { get; set; } = null!;
     public string ArabicDescription { get; set; } = string.Empty;
     public string EnglishDescription { get; set; } = string.Empty;

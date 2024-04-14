@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
         public async Task<BaseResponse<List<EmailMessageListVM>>> Handle(GetAllEmailMessageQuery request, CancellationToken cancellationToken)
         {
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var User = await _userRepository.GetByIdAsync(new Guid(UserId));
+            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
             if(User == null)
             {
                 return new BaseResponse<List<EmailMessageListVM>>("There is no User", false, 401);

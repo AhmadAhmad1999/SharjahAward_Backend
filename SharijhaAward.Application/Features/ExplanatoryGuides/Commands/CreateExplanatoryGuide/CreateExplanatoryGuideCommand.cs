@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateEx
 {
     public class CreateExplanatoryGuideCommand : IRequest<BaseResponse<object>>
     {
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public IFormFile EnglishFile { get; set; } = null!;

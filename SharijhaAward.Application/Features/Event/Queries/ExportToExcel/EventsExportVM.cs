@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.ExportToExcel
 {
     public class EventsExportVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicName { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public string ArabicSiteName { get; set; } = string.Empty;

@@ -10,7 +10,7 @@ using SharijhaAward.Domain.Entities.IdentityModels;
 namespace SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 
 public class TermAndCondition: AuditableEntity {
-    public Guid Id { get; set; } 
+    public int Id { get; set; } 
     public string ArabicTitle { get; set; } = string.Empty;
     public string EnglishTitle { get; set; } = string.Empty;
     public string? ArabicDescription { get; set; } = string.Empty;
@@ -23,7 +23,7 @@ public class TermAndCondition: AuditableEntity {
     public bool? IsSpecial {  get; set; } = false;
 
     [ForeignKey(nameof(Category))]
-    public Guid CategoryId { get; set; }
+    public int CategoryId { get; set; }
     public Category Category { get; set; } = null!;
 
     public List<ConditionsProvidedForms> ConditionAttachments { get; set; } = null!;

@@ -9,7 +9,7 @@ using System.Transactions;
 namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateEducationalEntity
 {
     public class CreateEducationalEntityCommandHandler :
-        IRequestHandler<CreateEducationalEntityCommand, BaseResponse<Guid>>
+        IRequestHandler<CreateEducationalEntityCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
         private readonly IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository;
@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateE
             _EducationalInstitutionRepository = EducationalInstitutionRepository;
             _Mapper = Mapper;
         }
-        public async Task<BaseResponse<Guid>> Handle(CreateEducationalEntityCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateEducationalEntityCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
@@ -64,7 +64,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateE
 
                     Transaction.Complete();
 
-                    return new BaseResponse<Guid>(ResponseMessage, true, 200, NewEducationalEntity.Id);
+                    return new BaseResponse<int>(ResponseMessage, true, 200, NewEducationalEntity.Id);
                 }
                 catch (Exception)
                 {

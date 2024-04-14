@@ -3,10 +3,10 @@
 namespace SharijhaAward.Domain.Entities.Common; 
 
 public class AuditInformation<TModel> : ITimeStamp {
-    public Guid CreatedById { get; set; }
+    public int CreatedById { get; set; }
     [DeleteBehavior(DeleteBehavior.NoAction)]
     public TModel CreatedBy { get; set; } = default!;
-    public Guid UpdatedById { get; set; }
+    public int UpdatedById { get; set; }
     [DeleteBehavior(DeleteBehavior.NoAction)]
     public TModel UpdatedBy { get; set; } = default!;
 

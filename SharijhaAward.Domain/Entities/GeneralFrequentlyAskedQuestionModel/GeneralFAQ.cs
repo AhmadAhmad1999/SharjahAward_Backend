@@ -4,7 +4,7 @@ namespace SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel
 {
     public class GeneralFAQ : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicQuestion { get; set; } = null!;
         public string EnglishQuestion { get; set; } = null!;
         public string ArabicAnswer { get; set; } = null!;

@@ -9,6 +9,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupI
 {
     public class GetGroupInviteeByIdQuery : IRequest<GroupInviteeVM>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExt
 {
     public class UpdateExtraAttachmentCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;

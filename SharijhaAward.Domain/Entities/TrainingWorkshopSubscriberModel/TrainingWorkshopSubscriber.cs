@@ -11,11 +11,11 @@ public class TrainingWorkshopSubscriber : AuditInformation<User> {
     public int Id {  get; set; }
     public User User { get; set; } = null!;
     [ForeignKey(nameof(User))]
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
     
     // navigation property to the TrainingWorkshop
     public TrainingWorkshop TrainingWorkshop { get; set; } = null!;
     [ForeignKey(nameof(TrainingWorkshop))]
-    public Guid TrainingWorkshopsId { get; set; }
+    public int TrainingWorkshopsId { get; set; }
 
 }

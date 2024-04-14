@@ -11,12 +11,12 @@ namespace SharijhaAward.Domain.Entities.CategoryFAQ
 {
     public class CategoryFAQ : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string EnglishFile {  get; set; } = string.Empty;
         public string ArabicFile {  get; set; } = string.Empty;
         public Category Category { get; set; }
         [ForeignKey(nameof(Category))]
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
     }
 }

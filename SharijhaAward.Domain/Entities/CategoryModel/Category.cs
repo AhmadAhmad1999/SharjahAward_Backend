@@ -22,7 +22,7 @@ namespace SharijhaAward.Domain.Entities.CategoryModel;
 
 public class Category : AuditableEntity
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string ArabicName { get; set; } = string.Empty;
     public string EnglishName { get; set; } = string.Empty;
     public string ArabicDescription { get; set; } = string.Empty;
@@ -38,7 +38,7 @@ public class Category : AuditableEntity
     public int? ExpectedNumberOfWinners { get; set; }
     public Category? Parent { get; set; }
     [ForeignKey(nameof(Parent))]
-    public Guid? ParentId { get; set; }
+    public int? ParentId { get; set; }
     
     
     public  List<CategoryCommittee> CategoryCommittees { get; set; } = new();
@@ -48,7 +48,7 @@ public class Category : AuditableEntity
     
     public Cycle Cycle { get; set; } = null!;
     [ForeignKey(nameof(Cycle))]
-    public Guid CycleId { get; set; }
+    public int CycleId { get; set; }
     
     public virtual List<TermAndCondition> TermsAndConditions { get; set; } = new();
     public virtual List<TrainingWorkshop> TrainingWorkshops { get; set; } = new();

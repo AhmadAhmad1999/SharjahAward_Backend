@@ -7,8 +7,8 @@ namespace SharijhaAward.Domain.Entities.CategoryCommitteeModel;
 public class CategoryCommittee : AuditableEntity
 {
     public int Id { get; set; }
-    public Guid CategoriesId { get; set; }
+    public int CategoriesId { get; set; }
     public Category? Category { get; set; }
-    public Guid CommitteesId { get; set; }
+    public int CommitteesId { get; set; }
     public Committee? Committee { get; set; }
 }

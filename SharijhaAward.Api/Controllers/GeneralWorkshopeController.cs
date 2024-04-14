@@ -58,7 +58,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet("{Id}",Name= "GetGeneralWorkshopById")]
-        public async Task<IActionResult> GetGeneralWorkshopById(Guid Id)
+        public async Task<IActionResult> GetGeneralWorkshopById(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -78,7 +78,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpDelete(Name = "DeleteGeneralWorkshop")]
-        public async Task<IActionResult> DeleteGeneralWorkshop(Guid Id)
+        public async Task<IActionResult> DeleteGeneralWorkshop(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];

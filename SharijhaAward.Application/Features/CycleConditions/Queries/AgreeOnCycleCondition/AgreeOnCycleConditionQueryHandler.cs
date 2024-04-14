@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.AgreeOnCycl
             else
             {
                 var UserID = _jwtProvider.GetUserIdFromToken(request.token);
-                var user = await _userRepository.GetByIdAsync(new Guid(UserID));
+                var user = await _userRepository.GetByIdAsync(int.Parse(UserID));
                 if (user == null)
                 {
                     return new BaseResponse<object>("", false, 404);

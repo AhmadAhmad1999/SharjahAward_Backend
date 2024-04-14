@@ -6,7 +6,7 @@ using SharijhaAward.Domain.Entities.SubscriberAchievementModel;
 namespace SharijhaAward.Domain.Entities.AchievementClassificationModel; 
 
 public class AchievementClassification : AuditInformation<User> {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     // the arabic title of the classification
     public string ArabicTitle { get; set; } = string.Empty;
     

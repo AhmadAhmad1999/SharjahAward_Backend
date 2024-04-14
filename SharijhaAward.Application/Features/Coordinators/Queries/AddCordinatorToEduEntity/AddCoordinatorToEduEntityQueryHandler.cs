@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.Coordinators.Queries.AddCordinatorToEduEntity
 {
     public class AddCoordinatorToEduEntityQueryHandler
-        : IRequestHandler<AddCoordinatorToEduEntityQuery, BaseResponse<Guid>>
+        : IRequestHandler<AddCoordinatorToEduEntityQuery, BaseResponse<int>>
     {
         private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
         private readonly IAsyncRepository<EducationalEntity> _educationalEntityRepository;
@@ -29,19 +29,19 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.AddCordinatorT
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<Guid>> Handle(AddCoordinatorToEduEntityQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(AddCoordinatorToEduEntityQuery request, CancellationToken cancellationToken)
         {
             var coordinator = await _coordinatorRepository.GetByIdAsync(request.CoordinatorId);
             var entity = await _educationalEntityRepository.GetByIdAsync(request.EducationalEntityId);
             if(coordinator == null || entity == null)
             {
-                return new BaseResponse<Guid>("", false, 404);
+                return new BaseResponse<int>("", false, 404);
             }
             var EntitiesCoordinator = _mapper.Map<EduEntitiesCoordinator>(request);
            
             var data = await _entitiesCoordinatorRepository.AddAsync(EntitiesCoordinator);
            
-            return new BaseResponse<Guid>("", true, 200, data.Id);
+            return new BaseResponse<int>("", true, 200, data.Id);
 
         }
     }

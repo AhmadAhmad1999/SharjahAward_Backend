@@ -14,7 +14,7 @@ namespace SharijhaAward.Domain.Entities.MeetingModel
 {
     public class Meeting:AuditInformation<User>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicTitle { get; set; }
 
         public string EnglishTitle { get; set; } 
@@ -26,7 +26,7 @@ namespace SharijhaAward.Domain.Entities.MeetingModel
         public Category Category { get; set; }
 
         [ForeignKey (nameof(Category))]
-        public Guid categoryId {  get; set; }
+        public int categoryId {  get; set; }
 
 
         public virtual List<MeetingUser> MeetingUsers { get; set; } = null!;

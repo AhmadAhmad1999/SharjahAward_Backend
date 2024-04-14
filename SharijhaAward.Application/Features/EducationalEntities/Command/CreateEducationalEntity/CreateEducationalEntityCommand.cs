@@ -3,7 +3,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateEducationalEntity
 {
-    public class CreateEducationalEntityCommand : IRequest<BaseResponse<Guid>>
+    public class CreateEducationalEntityCommand : IRequest<BaseResponse<int>>
     {
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;

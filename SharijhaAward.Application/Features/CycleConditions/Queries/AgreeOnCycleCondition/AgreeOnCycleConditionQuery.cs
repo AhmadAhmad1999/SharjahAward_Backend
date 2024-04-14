@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.AgreeOnCycl
 {
     public class AgreeOnCycleConditionQuery : IRequest<BaseResponse<object>>
     {
-        public Guid TermId { get; set; }
+        public int TermId { get; set; }
         public bool IsAgree { get; set; }
         public string token { get; set; } = string.Empty;
         public int formId { get; set; }

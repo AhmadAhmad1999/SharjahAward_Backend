@@ -15,7 +15,7 @@ namespace SharijhaAward.Persistence.Repositories
         {
         }
 
-        public async Task<Event> GetEventWithInvitees(Guid ID)
+        public async Task<Event> GetEventWithInvitees(int ID)
         {
             var Event = await _dbContext.Events.Include(x => x.PersonalInvitees)
                 .FirstOrDefaultAsync(x => x.Id == ID);

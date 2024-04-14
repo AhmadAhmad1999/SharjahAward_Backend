@@ -21,7 +21,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateT
         public int? SizeOfAttachmentInKB { get; set; }
         public AttachmentType? AttachmentType { get; set; }
         public bool IsAgree { get; set; } = false;
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

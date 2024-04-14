@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Commands.UpdateEx
 {
     public class UpdateExplanatoryGuideCommand : IRequest<BaseResponse<object>>
     {
-        public Guid GuideId { get; set; }
+        public int GuideId { get; set; }
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public bool UpdateOnEnglishFile {  get; set; }

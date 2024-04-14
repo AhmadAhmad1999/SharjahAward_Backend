@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
 {
     public class CheckIfAllCritrionsHaveAttachmentCommand : IRequest<BaseResponse<object>>
     {
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public int ProvidedFormId { get; set; }
         public string? lang { get; set; }
     }

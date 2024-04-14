@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.Event.Commands.UpdateEvent
 {
     public class UpdateEventCommand : IRequest<Unit>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;

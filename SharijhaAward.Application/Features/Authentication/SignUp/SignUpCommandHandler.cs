@@ -17,20 +17,24 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
         private IEmailSender _EmailSender;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
         public SignUpCommandHandler(IUserRepository userRepository,IRoleRepository roleRepository ,IMapper mapper,
-            IEmailSender EmailSender)
+            IEmailSender EmailSender,
+            IAsyncRepository<UserRole> UserRoleRepository)
         {
             _roleRepository = roleRepository;
             _UserRepository = userRepository;
             _mapper = mapper;
             _EmailSender = EmailSender;
+            _UserRoleRepository = UserRoleRepository;
         }
 
         public async Task<AuthenticationResponse> Handle(SignUpCommand Request, CancellationToken cancellationToken)
         {
             Domain.Entities.IdentityModels.User? CheckEmail = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower() && x.isValidAccount);
+
             string msg = Request.lang == "en"
                 ? "User has been created"
                 : "تم التسجيل بنجاح";
@@ -76,15 +80,47 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                 };
             }
 
-            User.RoleId = CheckRoleId.RoleId;
-
-            await _UserRepository.AsignRole(User.Id, CheckRoleId.RoleId);
-
             int ConfirmationCode = new Random().Next(10000, 99999);
 
             User.ConfirmationCodeForSignUp = ConfirmationCode;
 
+            var random = new Random();
+            const string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            var numbers = string.Concat(Enumerable.Range(0, 3)
+                .Select(_ => random.Next(0, 10).ToString()));
+
+            var letters = new string(Enumerable.Range(0, 3)
+                .Select(_ => alphabet[random.Next(0, alphabet.Length)])
+                .ToArray());
+
+            var combined = numbers + letters;
+            var shuffledString = new string(combined.ToCharArray().OrderBy(_ => random.Next()).ToArray());
+
+            bool LoopStopper = true;
+            while (LoopStopper)
+            {
+                Domain.Entities.IdentityModels.User? CheckSubscriberId = await _UserRepository
+                    .FirstOrDefaultAsync(x => !string.IsNullOrEmpty(x.SubscriberId)
+                        ? x.SubscriberId.ToLower() == shuffledString.ToLower()
+                        : false);
+
+                if (CheckSubscriberId is null)
+                {
+                    User.SubscriberId = shuffledString;
+                    LoopStopper = false;
+                }
+            }
+
             Domain.Entities.IdentityModels.User UserEntityAfterAdd = await _UserRepository.AddAsync(User);
+
+            UserRole NewUserRoleEntity = new UserRole()
+            {
+                UserId = UserEntityAfterAdd.Id,
+                RoleId = CheckRoleId.Id
+            };
+
+            await _UserRoleRepository.AddAsync(NewUserRoleEntity);
 
             EmailRequest EmailRequest = new EmailRequest()
             {

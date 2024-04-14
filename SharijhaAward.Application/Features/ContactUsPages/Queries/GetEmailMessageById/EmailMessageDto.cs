@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
 {
     public class EmailMessageDto 
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string From { get; set; } = string.Empty;
         public string To { get; set; } = string.Empty;
@@ -17,7 +17,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
         public string Subject { get; set; } = string.Empty;
         public MessageType Type { get; set; }
         public MessageStatus? Status { get; set; } = MessageStatus.New;
-        public Guid? MessageId { get; set; }
+        public int? MessageId { get; set; }
         public bool IsReplay { get; set; }
         public DateTime CreatedAt { get; set; }
     }

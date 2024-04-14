@@ -56,7 +56,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpDelete(Name = "DeleteCategory")]
-        public async Task<IActionResult> DeleteCategory(Guid Id)
+        public async Task<IActionResult> DeleteCategory(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -76,7 +76,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name="GetAllCategories")]
-        public async Task<IActionResult> GetAllCategories(Guid? CycleId, int page = 1 , int perPage = 10)
+        public async Task<IActionResult> GetAllCategories(int? CycleId, int page = 1 , int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -97,7 +97,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet("{Id}",Name ="GetCategoryById")]
-        public async Task<IActionResult> GetCategoryById(Guid Id)
+        public async Task<IActionResult> GetCategoryById(int Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -116,7 +116,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet("CategoriesWithSubcategories",Name = "CategoriesWithSubcategories")]
-        public async Task<IActionResult> CategoriesWithSubcategories(Guid? CycleId)
+        public async Task<IActionResult> CategoriesWithSubcategories(int? CycleId)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];

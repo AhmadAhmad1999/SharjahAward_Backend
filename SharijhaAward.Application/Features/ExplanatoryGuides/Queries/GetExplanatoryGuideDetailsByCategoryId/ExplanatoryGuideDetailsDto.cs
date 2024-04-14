@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
 {
     public class ExplanatoryGuideDetailsDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Title {  get; set; } =string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;

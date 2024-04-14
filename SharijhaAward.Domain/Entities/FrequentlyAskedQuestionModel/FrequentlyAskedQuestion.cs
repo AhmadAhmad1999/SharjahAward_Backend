@@ -9,7 +9,7 @@ namespace SharijhaAward.Domain.Entities.FAQModel;
 
 public class FrequentlyAskedQuestion : AuditableEntity
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     // the arabic question 
     public string ArabicQuestion { get; set; } = string.Empty;
     // the english question
@@ -22,6 +22,6 @@ public class FrequentlyAskedQuestion : AuditableEntity
     
     // navigation property to the category
     [ForeignKey(nameof(Category))]
-    public Guid CategoryId { get; set; }
+    public int CategoryId { get; set; }
     public Category Category { get; set; } = null!;
 }

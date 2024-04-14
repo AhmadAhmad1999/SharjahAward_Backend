@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -18,17 +19,20 @@ namespace SharijhaAward.Application.Features.User.Queries.GetUserById
         private readonly IAsyncRepository<Role> _roleRepository;
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
         public GetUserByIdQueryHandler(
             IMapper mapper ,
             IJwtProvider jwtProvider ,
             IUserRepository userRepository,
-            IAsyncRepository<Role> roleRepository)
+            IAsyncRepository<Role> roleRepository,
+            IAsyncRepository<UserRole> UserRoleRepository)
         {
             _mapper = mapper;
             _jwtProvider = jwtProvider;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _UserRoleRepository = UserRoleRepository;
         }
 
         public async Task<BaseResponse<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
@@ -37,20 +41,21 @@ namespace SharijhaAward.Application.Features.User.Queries.GetUserById
                 ? _jwtProvider.GetUserIdFromToken(request.token)
                 : request.Id.ToString();
 
-            var User = await _userRepository.GetByIdAsync(new Guid(UserId!));
+            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
 
             if(User == null)
             {
                 return new BaseResponse<UserDto>("", false, 404);
             }
 
-            var Role = await _roleRepository.GetByIdAsync(User.RoleId);
+            List<string> UserRoles = await _UserRoleRepository.Where(x => x.UserId == User.Id)
+                .Include(x => x.Role!)
+                .Select(x => x.Role!.RoleName)
+                .ToListAsync();
 
             var data = _mapper.Map<UserDto>(User);
 
-            data.Role = Role == null
-                ? "Has no Role"
-                : Role.RoleName;
+            data.UserRoles = UserRoles;
 
             return new BaseResponse<UserDto>("", true, 200, data);
         }

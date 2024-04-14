@@ -68,7 +68,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e74d"),
+                            Id = 1,
                             ArabicName = "الصف الأول",
                             EnglishName = "First class",
                             CycleId = cycle.Id
@@ -80,7 +80,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e75d"),
+                            Id = 2,
                             ArabicName = "الصف الثاني",
                             EnglishName = "Second class",
                             CycleId = cycle.Id
@@ -92,7 +92,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e76d"),
+                            Id = 3,
                             ArabicName = "الصف الثالث",
                             EnglishName = "Third class",
                             CycleId = cycle.Id
@@ -104,7 +104,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e77d"),
+                            Id = 4,
                             ArabicName = "الصف الرابع",
                             EnglishName = "Forth class",
                             CycleId = cycle.Id
@@ -116,7 +116,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e78d"),
+                            Id = 5,
                             ArabicName = "الصف الخامس",
                             EnglishName = "Fifth class",
                             CycleId = cycle.Id
@@ -128,7 +128,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                            Id = 6,
                             ArabicName = "الصف السادس",
                             EnglishName = "Sixth class",
                             CycleId = cycle.Id
@@ -140,7 +140,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e80d"),
+                            Id = 7,
                             ArabicName = "الصف السابع",
                             EnglishName = "Seventh class",
                             CycleId = cycle.Id
@@ -152,7 +152,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e81d"),
+                            Id = 8,
                             ArabicName = "الصف الثامن",
                             EnglishName = "Eighth class",
                             CycleId = cycle.Id
@@ -164,7 +164,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e82d"),
+                            Id = 9,
                             ArabicName = "الصف التاسع",
                             EnglishName = "Ninth class",
                             CycleId = cycle.Id
@@ -176,7 +176,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e83d"),
+                            Id = 10,
                             ArabicName = "الصف العاشر",
                             EnglishName = "Tenth class",
                             CycleId = cycle.Id
@@ -188,7 +188,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e84d"),
+                            Id = 11,
                             ArabicName = "الصف الحادي عشر",
                             EnglishName = "Eleventh class",
                             CycleId = cycle.Id
@@ -200,7 +200,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
                             LastModifiedBy = null,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
-                            Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e85d"),
+                            Id = 12,
                             ArabicName = "الصف الثاني عشر",
                             EnglishName = "Twelfth class",
                             CycleId = cycle.Id

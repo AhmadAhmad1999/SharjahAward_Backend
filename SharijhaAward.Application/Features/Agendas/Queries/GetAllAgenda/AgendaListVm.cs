@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
 {
     public class AgendaListVm
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
@@ -19,6 +19,6 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
         public DateTime CurrentDate { get; set; }
         public AgendaStatus Status { get; set; }
         public AgendaDateType DateType { get; set; }
-        public Guid CycleId { get; set; }
+        public int CycleId { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
 {
     public class GetEmailMessageByIdQuery : IRequest<BaseResponse<EmailMessageDto>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string token { get; set; } = string.Empty;
     }
 }

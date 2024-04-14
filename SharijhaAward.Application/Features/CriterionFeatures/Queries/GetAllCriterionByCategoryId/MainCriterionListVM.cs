@@ -2,7 +2,7 @@
 {
     public class MainCriterionListVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public List<SubCriterionListVM> SubCriterionListVM { get; set; } = new List<SubCriterionListVM>();
     }

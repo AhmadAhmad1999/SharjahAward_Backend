@@ -38,7 +38,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            BaseResponse<Guid>? Response = await _Mediator.Send(CreateEducationalEntityCommand);
+            BaseResponse<int>? Response = await _Mediator.Send(CreateEducationalEntityCommand);
 
             return Response.statusCode switch
             {
@@ -84,7 +84,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteEducationalEntity(Guid Id)
+        public async Task<IActionResult> DeleteEducationalEntity(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -167,7 +167,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetEducationEntityById(Guid EducationEntityId)
+        public async Task<IActionResult> GetEducationEntityById(int EducationEntityId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

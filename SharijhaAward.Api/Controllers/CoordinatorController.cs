@@ -49,7 +49,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet("{CoordinatorId}" ,Name="GetCoordinatorById")]
-        public async Task<IActionResult> GetCoordinatorById(Guid CoordinatorId)
+        public async Task<IActionResult> GetCoordinatorById(int CoordinatorId)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -127,7 +127,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCoordinator(Guid Id)
+        public async Task<IActionResult> DeleteCoordinator(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -234,7 +234,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCoordinatorEducationalEntity(Guid Id)
+        public async Task<IActionResult> DeleteCoordinatorEducationalEntity(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -262,7 +262,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCoordinatorInstitution(Guid Id)
+        public async Task<IActionResult> DeleteCoordinatorInstitution(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

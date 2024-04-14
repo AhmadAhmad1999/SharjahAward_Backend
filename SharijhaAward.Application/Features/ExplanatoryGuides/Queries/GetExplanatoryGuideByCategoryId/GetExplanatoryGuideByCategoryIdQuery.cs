@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
 {
     public class GetExplanatoryGuideByCategoryIdQuery : IRequest<BaseResponse<ExplanatoryGuideDto>>
     {
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

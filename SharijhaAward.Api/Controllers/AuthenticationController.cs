@@ -181,7 +181,7 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<Guid>? Response = await _Mediator.Send(new ForgetPasswordCommand()
+            BaseResponse<int>? Response = await _Mediator.Send(new ForgetPasswordCommand()
             {
                 lang = HeaderValue!,
                 Email = Email

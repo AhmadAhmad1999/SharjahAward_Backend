@@ -13,7 +13,7 @@ namespace SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments
 {
     public class TrainingWrokshopeAttachment : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
         public string AttachementPath { get; set; } = string.Empty;
@@ -22,6 +22,6 @@ namespace SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments
 
         public TrainingWorkshop TrainingWorkshop { get; set; } = null!;
         [ForeignKey(nameof(TrainingWorkshop))]
-        public Guid WorkshopeId { get; set; }
+        public int WorkshopeId { get; set; }
     }
 }

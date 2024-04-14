@@ -13,7 +13,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
 {
     public class UpdateCategoryCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;

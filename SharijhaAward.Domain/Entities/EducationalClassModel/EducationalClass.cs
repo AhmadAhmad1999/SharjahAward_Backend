@@ -6,10 +6,10 @@ namespace SharijhaAward.Domain.Entities.EducationalClassModel;
 
 public class EducationalClass : AuditableEntity
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string ArabicName { get; set; } = null!;
     public string EnglishName { get; set; } = null!;
     [ForeignKey(nameof(Cycle))]
-    public Guid CycleId { get; set; }
+    public int CycleId { get; set; }
     public Cycle? Cycle { get; set; }
 }

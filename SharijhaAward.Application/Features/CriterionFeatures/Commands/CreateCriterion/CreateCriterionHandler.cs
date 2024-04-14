@@ -10,7 +10,7 @@ using System.Transactions;
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterion
 {
     public class CreateCriterionHandler : IRequestHandler<CreateCriterionCommand,
-        BaseResponse<Guid>>
+        BaseResponse<int>>
     {
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
             _CategoryRepository = CategoryRepository;
             _Mapper = Mapper;
         }
-        public async Task<BaseResponse<Guid>> Handle(CreateCriterionCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateCriterionCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
@@ -39,7 +39,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
                   ? "Category is not Found"
                   : "الفئة الفرعية غير موجود";
 
-                return new BaseResponse<Guid>(ResponseMessage, false, 404);
+                return new BaseResponse<int>(ResponseMessage, false, 404);
             }
 
             TransactionOptions TransactionOptions = new TransactionOptions
@@ -86,7 +86,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
                         ? "Created successfully"
                         : "تم إنشاء المعيار بنجاح";
 
-                    return new BaseResponse<Guid>(ResponseMessage, true, 200, NewMainCriterionEntity.Id);
+                    return new BaseResponse<int>(ResponseMessage, true, 200, NewMainCriterionEntity.Id);
                 }
                 catch (Exception)
                 {

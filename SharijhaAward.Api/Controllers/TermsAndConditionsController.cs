@@ -44,7 +44,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpDelete("{Id}", Name = "DeleteTermAndCondition")]
-        public async Task<IActionResult> DeleteTermAndCondition(Guid Id)
+        public async Task<IActionResult> DeleteTermAndCondition(int Id)
         {
              //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -82,7 +82,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("{Id}",Name="GetTermAndCondition")]
-        public async Task<IActionResult> GetTermAndCondition(Guid Id)
+        public async Task<IActionResult> GetTermAndCondition(int Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -102,7 +102,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name="GetAllTermsAndConditions")]
-        public async Task<IActionResult> GetAllTermsAndConditions([FromQuery] Guid? CategoryId, int page = 1 , int perPage = 10)
+        public async Task<IActionResult> GetAllTermsAndConditions([FromQuery] int? CategoryId, int page = 1 , int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -125,7 +125,7 @@ namespace SharijhaAward.Api.Controllers
 
         [HttpGet("GetAllTermsAndConditionsByCategoryId/{Id}", Name = "GetAllTermsAndConditionsByCategoryId")]
         
-        public async Task<IActionResult> GetAllTermsAndConditionsByCategoryId(Guid Id,[FromQuery]int formId)
+        public async Task<IActionResult> GetAllTermsAndConditionsByCategoryId(int Id,[FromQuery]int formId)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -148,7 +148,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllSpecialConditionsByCategoryId/{Id}", Name = "GetAllSpecialConditionsByCategoryId")]
-        public async Task<IActionResult> GetAllSpecialConditionsByCategoryId(Guid Id,int formId)
+        public async Task<IActionResult> GetAllSpecialConditionsByCategoryId(int Id,int formId)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -191,7 +191,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet("CheckAllConditions/{Id}", Name= "CheckAllConditions")]
-        public async Task<IActionResult> CheckAllConditions(Guid Id, int formId ,bool IsSpecial)
+        public async Task<IActionResult> CheckAllConditions(int Id, int formId ,bool IsSpecial)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];

@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermA
 {
     public class TermAndConditionDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
@@ -22,6 +22,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermA
         public int? SizeOfAttachmentInKB { get; set; }
         public AttachmentType? Type { get; set; }
         public bool IsAgree { get; set; }
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
     }
 }

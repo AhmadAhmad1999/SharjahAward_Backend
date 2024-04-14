@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCod
 {
     public class CheckConfirmationCodeForForgettonPasswordCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public int ConfirmationCode { get; set; }
         public string lang { get; set; } = string.Empty;
     }

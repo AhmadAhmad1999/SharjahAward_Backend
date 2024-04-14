@@ -13,7 +13,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
     {
         public bool IsAgree { get; set; } = false;
         public List<AttachmentListVM> Attachments { get; set; } = null!;
-        public Guid TermAndConditionId { get; set; }
+        public int TermAndConditionId { get; set; }
         public int ProvidedFormId { get; set; }
     }
 }

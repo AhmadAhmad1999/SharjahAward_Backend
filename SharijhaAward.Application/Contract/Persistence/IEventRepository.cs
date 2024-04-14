@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Contract.Persistence
 {
     public interface IEventRepository : IAsyncRepository<Event>
     {
-        public Task<Event> GetEventWithInvitees(Guid ID);
+        public Task<Event> GetEventWithInvitees(int ID);
 
     }
 }
