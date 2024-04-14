@@ -21,9 +21,9 @@ namespace SharijhaAward.Domain.Entities.ExtraAttachmentModel
         public int RequiredAttachmentNumber { get; set; }
         public AttachmentType AttachmentType { get; set; }
         public int SizeOfAttachmentInKB { get; set; }
-        public ProvidedForm ProvidedForm { get; set; }
+        public ProvidedForm ProvidedForm { get; set; } = null!;
         [ForeignKey(nameof(ProvidedForm))]
         public int ProvidedFormId {  get; set; }
-        public List<ExtraAttachmentFiles>? ExtraAttachmentFiles { get; set; }
+        public List<ExtraAttachmentFile>? ExtraAttachmentFiles { get; set; }
     }
 }

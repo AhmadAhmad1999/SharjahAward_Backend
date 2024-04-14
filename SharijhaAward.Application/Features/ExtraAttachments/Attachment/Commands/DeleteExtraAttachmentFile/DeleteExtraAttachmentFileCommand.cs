@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.DeleteExtraAttachment
+namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.DeleteExtraAttachmentFile
 {
-    public class DeleteExtraAttachmentCommand : IRequest<BaseResponse<object>>
+    public class DeleteExtraAttachmentFileCommand : IRequest<BaseResponse<object>>
     {
-        public int Id { get; set; }
+        public int FileId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

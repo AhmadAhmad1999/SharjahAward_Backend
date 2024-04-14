@@ -20,10 +20,10 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
     {
         private readonly IAsyncRepository<ExtraAttachment> _extraAttachmentRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formModelRepository;
-        private readonly IAsyncRepository<ExtraAttachmentFiles> _AttachmentRepository;
+        private readonly IAsyncRepository<ExtraAttachmentFile> _AttachmentRepository;
         private readonly IMapper _mapper;
 
-        public GetAllExtraAttachmentByFormIdQueryHandler(IAsyncRepository<ExtraAttachmentFiles> AttachmentRepository,IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formModelRepository,IAsyncRepository<ExtraAttachment> extraAttachmentRepository, IMapper mapper)
+        public GetAllExtraAttachmentByFormIdQueryHandler(IAsyncRepository<ExtraAttachmentFile> AttachmentRepository,IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formModelRepository,IAsyncRepository<ExtraAttachment> extraAttachmentRepository, IMapper mapper)
         {
             _extraAttachmentRepository = extraAttachmentRepository;
             _AttachmentRepository = AttachmentRepository;

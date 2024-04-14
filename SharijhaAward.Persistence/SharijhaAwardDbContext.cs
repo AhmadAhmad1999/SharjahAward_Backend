@@ -131,7 +131,7 @@ namespace SharijhaAward.Persistence
         public DbSet<CycleConditionsProvidedForm> CycleConditionsProvidedForms { get; set; }
         public DbSet<CycleConditionAttachment> CycleConditionAttachments { get; set; }
         public DbSet<ExtraAttachment> ExtraAttachments { get; set; }
-        public DbSet<ExtraAttachmentFiles> ExtraAttachmentsProvidedForms { get; set; }
+        public DbSet<ExtraAttachmentFile> ExtraAttachmentsProvidedForms { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -199,6 +199,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CycleConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CycleConditionsProvidedForm>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ExtraAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ExtraAttachmentFile>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)
