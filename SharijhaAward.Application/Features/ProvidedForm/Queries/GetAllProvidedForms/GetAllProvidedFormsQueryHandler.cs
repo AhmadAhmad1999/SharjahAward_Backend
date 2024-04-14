@@ -33,17 +33,22 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
             {
                 return new BaseResponse<List<FormListVm>> ("", false, 401);
             }
-
+           
             var form = request.Type == null
                 ? _formRepository.Where(f => f.userId == User.Id).ToList()
                 : _formRepository.Where(f => f.userId == User.Id).Where(f=>f.Type==request.Type).ToList();
-
+           
             var data = _mapper.Map<List<FormListVm>> (form);
             for (int i = 0; i < data.Count(); i++)
             {
+                var Category = await _categoryRepository.GetByIdAsync(form[i].categoryId);
+                if(Category == null)
+                {
+                    return new BaseResponse<List<FormListVm>>("", false, 400);
+                }
                 data[i].CategoryName = request.lang=="en"
-                    ? (await _categoryRepository.GetByIdAsync(form[i].categoryId)).EnglishName
-                    : (await _categoryRepository.GetByIdAsync(form[i].categoryId)).ArabicName;
+                    ? Category.EnglishName
+                    : Category.ArabicName;
             }
             return new BaseResponse<List<FormListVm>> ("", true, 200, data);
         }

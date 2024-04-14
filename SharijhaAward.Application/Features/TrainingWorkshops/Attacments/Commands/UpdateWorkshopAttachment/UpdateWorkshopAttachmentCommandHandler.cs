@@ -31,25 +31,31 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
 
         public async Task<BaseResponse<object>> Handle(UpdateWorkshopAttachmentCommand request, CancellationToken cancellationToken)
         {
+            string msg = request.lang == "en"
+               ? "Attachment has been Updated"
+               : "تم تعديل الملف";
+
             var attachmentToUpdate = await _attachmentRepository.GetByIdAsync(request.Id);
             if (attachmentToUpdate == null)
             {
-                return new BaseResponse<object>("", false, 404);
+                 msg = request.lang == "en"
+               ? "The Attachment Not Found"
+               : "الملف المطلوب غير موجود";
+
+                return new BaseResponse<object>(msg, false, 404);
             }
-            var attachment = attachmentToUpdate;
+            var attachment = attachmentToUpdate.AttachementPath;
 
             _mapper.Map(request, attachmentToUpdate, typeof(UpdateWorkshopAttachmentCommand), typeof(TrainingWrokshopeAttachment));
     
             if (request.EditOnAttachment)
                 attachmentToUpdate.AttachementPath = await _fileService.SaveFileAsync(request.attachment);
             else
-                attachmentToUpdate.AttachementPath = attachment.AttachementPath;
+                attachmentToUpdate.AttachementPath = attachment;
 
             await _attachmentRepository.UpdateAsync(attachmentToUpdate);
 
-            string msg = request.lang == "en"
-                ? "Attachment has been Updated"
-                : "تم تعديل الملف";
+           
 
             return new BaseResponse<object>(msg, true, 200);
         }

@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId
             }
             var Agendas = await _agendaRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id,request.page,request.pageSize);
              
-            var data = _mapper.Map<List<AgendaListVm>>(Agendas).OrderBy(a=>a.CurrentDate).ToList();
+            var data = _mapper.Map<List<AgendaListVm>>(Agendas).OrderBy(a => a.StartDate).ToList();
 
             for(int i = 0; i < data.Count(); i++)
             {
