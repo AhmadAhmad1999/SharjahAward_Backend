@@ -1617,7 +1617,8 @@ namespace SharijhaAward.Persistence
                     ConfirmationCodeForResetPassword = null,
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
-                    ImageURL = null
+                    ImageURL = null,
+                    SubscriberId = "ABC123"
                 });
 
             modelBuilder.Entity<UserRole>()

@@ -49,7 +49,10 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async Task<IReadOnlyList<T>> ListAllAsync()
         {
-            return await _DbSet.AsNoTracking().ToListAsync();
+            return _DbSet.AsNoTracking()
+                .AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .ToList();
         }
         public async virtual Task<IReadOnlyList<T>> GetPagedReponseWithPredicateAsync(Expression<Func<T, bool>>? predicate,int page, int size)
         {

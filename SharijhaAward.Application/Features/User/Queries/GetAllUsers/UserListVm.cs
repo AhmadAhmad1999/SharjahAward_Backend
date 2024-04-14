@@ -10,6 +10,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
     public class UserListVm
     {
         public int Id { get; set; }
+        public string? SubscriberId { get; set; }
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
