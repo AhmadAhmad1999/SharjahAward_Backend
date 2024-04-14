@@ -49,26 +49,45 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async Task<IReadOnlyList<T>> ListAllAsync()
         {
-            return _DbSet.AsNoTracking()
-                .AsEnumerable()
-                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
-                .ToList();
+            return await Task.Run(() =>
+            {
+                return _DbSet.AsNoTracking()
+                    .AsEnumerable()
+                    .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                    .ToList();
+            });
         }
         public async virtual Task<IReadOnlyList<T>> GetPagedReponseWithPredicateAsync(Expression<Func<T, bool>>? predicate,int page, int size)
         {
-            if (size == -1 || page == 0)
-                return await _DbSet.AsNoTracking().Where(predicate!).ToListAsync();
-            if (size == 0)
-                size = 10;
-            return await _DbSet.AsNoTracking().Where(predicate!).Skip((page - 1) * size).Take(size).ToListAsync();
+            return await Task.Run(() =>
+            {
+                if (size == -1 || page == 0)
+                    return _DbSet.AsNoTracking().Where(predicate!)
+                        .AsEnumerable()
+                        .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                        .ToList();
+                if (size == 0)
+                    size = 10;
+                return _DbSet.AsNoTracking().Where(predicate!).AsEnumerable()
+                    .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                    .Skip((page - 1) * size).Take(size).ToList();
+            });
         }
         public async virtual Task<IReadOnlyList<T>> GetPagedReponseAsync( int page, int size)
         {
-            if (size == -1 || page == 0)
-                return await _DbSet.AsNoTracking().ToListAsync();
-            if (size == 0)
-                size = 10;
-            return await _DbSet.AsNoTracking().Skip((page - 1) * size).Take(size).ToListAsync();
+            return await Task.Run(() =>
+            {
+                if (size == -1 || page == 0)
+                    return _DbSet.AsNoTracking()
+                        .AsEnumerable()
+                        .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item))).ToList();
+                if (size == 0)
+                    size = 10;
+                return _DbSet.AsNoTracking()
+                    .AsEnumerable()
+                    .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                    .Skip((page - 1) * size).Take(size).ToList();
+            });
         }
         public async Task<T> AddAsync(T entity)
         {
@@ -131,59 +150,93 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
         {
-            return _DbSet.AsNoTracking().Where(predicate);
+            return _DbSet.AsNoTracking().Where(predicate).AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable();
         }
         public async virtual Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, int page, int size)
         {
-            if (size == -1 || page == 0)
-                return await _DbSet.AsNoTracking().Where(predicate).ToListAsync();
-            if (size == 0)
-                size = 10;
-            return await _DbSet.AsNoTracking()
-                .Where(predicate).Skip((page - 1) * size).Take(size).ToListAsync();
+            return await Task.Run(() =>
+            {
+                if (size == -1 || page == 0)
+                    return _DbSet.AsNoTracking().Where(predicate).AsEnumerable()
+                        .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item))).ToList();
+                if (size == 0)
+                    size = 10;
+                return _DbSet.AsNoTracking()
+                    .Where(predicate).AsEnumerable()
+                    .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                    .Skip((page - 1) * size).Take(size).ToList();
+            });
         }
         public T? FirstOrDefault(Expression<Func<T, bool>> predicate)
         {
-            return _DbSet.AsNoTracking().FirstOrDefault(predicate);
+            return _DbSet.AsNoTracking().AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable().FirstOrDefault(predicate);
         }
         public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _DbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
+            return await Task.Run(() =>
+            {
+                return _DbSet.AsNoTracking().AsEnumerable()
+                    .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                    .AsQueryable().FirstOrDefault(predicate);
+            });
         }
         public T? LastOrDefault(Expression<Func<T, bool>> predicate)
         {
-            return _DbSet.AsNoTracking().LastOrDefault(predicate);
+            return _DbSet.AsNoTracking().AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable().LastOrDefault(predicate);
         }
         public async Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _DbSet.AsNoTracking().LastOrDefaultAsync(predicate);
+            return await Task.Run(() =>
+            {
+                return _DbSet.AsNoTracking().AsEnumerable()
+                    .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                    .AsQueryable().LastOrDefault(predicate);
+            });
         }
         public IQueryable<TResult> Select<TResult>(Expression<Func<T, TResult>> selector)
         {
-            return _DbSet.AsNoTracking().Select(selector);
+            return _DbSet.AsNoTracking().AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable().Select(selector);
         }
         public IQueryable<T> OrderBy<TKey>(Expression<Func<T, TKey>> keySelector)
         {
-            return _DbSet.AsNoTracking().OrderBy(keySelector);
+            return _DbSet.AsNoTracking().AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable().OrderBy(keySelector);
         }
         public IQueryable<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector)
         {
-            return _DbSet.AsNoTracking().OrderByDescending(keySelector);
+            return _DbSet.AsNoTracking().AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable().OrderByDescending(keySelector);
         }
         public IQueryable<T> Include(string navigationPropertyPath)
         {
-            return _DbSet.AsNoTracking().Include(navigationPropertyPath);
+            return _DbSet.AsNoTracking().AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable().Include(navigationPropertyPath);
         }
         public IQueryable<T> Include(Expression<Func<T, object>> navigationProperty)
         {
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.AsNoTracking().Include(navigationPropertyPath);
+            return _DbSet.AsNoTracking().AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable().Include(navigationPropertyPath);
         }
         public IQueryable<T> IncludeThenWhere(Expression<Func<T, object>> navigationProperty, 
             Expression<Func<T, bool>> predicate)
         {
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.AsNoTracking().Include(navigationPropertyPath).Where(predicate);
+            return _DbSet.AsNoTracking().AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable().Include(navigationPropertyPath).Where(predicate);
         }
         public IQueryable<T> WhereThenIncludeThenPagination(
             Expression<Func<T, bool>> predicate, int page, int size,
@@ -195,10 +248,15 @@ namespace SharijhaAward.Persistence.Repositories
                 size = 10;
 
             if (size == -1 || page == 0)
-                query = _DbSet.AsNoTracking().Where(predicate);
+                query = _DbSet.AsNoTracking().Where(predicate).AsEnumerable()
+                    .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                    .AsQueryable();
             else
                 query = _DbSet.AsNoTracking()
-                    .Where(predicate).Skip((page - 1) * size).Take(size);
+                    .Where(predicate).AsEnumerable()
+                    .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                    .Skip((page - 1) * size).Take(size)
+                    .AsQueryable();
 
             foreach (var navigationProperty in navigationProperties)
             {
@@ -212,7 +270,9 @@ namespace SharijhaAward.Persistence.Repositories
             Expression<Func<T, bool>> predicate,
             params Expression<Func<T, object>>[] navigationProperties)
         {
-            IQueryable<T> query = _DbSet.AsNoTracking().Where(predicate);
+            IQueryable<T> query = _DbSet.AsNoTracking().Where(predicate).AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable();
 
             foreach (var navigationProperty in navigationProperties)
             {
@@ -226,19 +286,29 @@ namespace SharijhaAward.Persistence.Repositories
             Expression<Func<T, bool>> predicate)
         {
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.AsNoTracking().Include(navigationPropertyPath).FirstOrDefault(predicate);
+            return _DbSet.AsNoTracking().AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable().Include(navigationPropertyPath).FirstOrDefault(predicate);
         }
         public async Task<T?> IncludeThenFirstOrDefaultAsync(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate)
         {
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return await _DbSet.AsNoTracking().Include(navigationPropertyPath).FirstOrDefaultAsync(predicate);
+            return await Task.Run(() =>
+            {
+                return _DbSet.AsNoTracking()
+                    .AsEnumerable()
+                    .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                    .AsQueryable().Include(navigationPropertyPath).FirstOrDefault(predicate);
+            });
         }
         public T? IncludeThenLastOrDefault(Expression<Func<T, object>> navigationProperty, 
             Expression<Func<T, bool>> predicate)
         {
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.AsNoTracking().Include(navigationPropertyPath).LastOrDefault(predicate);
+            return _DbSet.AsNoTracking().AsEnumerable()
+                .OrderByDescending(item => ((DateTime)item.GetType().GetProperty("CreatedAt").GetValue(item)))
+                .AsQueryable().Include(navigationPropertyPath).LastOrDefault(predicate);
         }
         private string GetNavigationPropertyPath(Expression<Func<T, object>> navigationProperty)
         {
