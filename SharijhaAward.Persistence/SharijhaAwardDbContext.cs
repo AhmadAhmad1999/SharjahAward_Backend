@@ -65,6 +65,7 @@ namespace SharijhaAward.Persistence
       
         }
         
+        public DbSet<UserRole> UsersRoles { get; set; }
         public DbSet<Instruction> Instructions { get; set; }
         public DbSet<AppVersion> AppVersions { get; set; }
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
@@ -141,6 +142,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AppVersion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Instruction>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<UserRole>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Committee>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => !p.isDeleted);
@@ -198,6 +200,10 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CycleConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CycleConditionsProvidedForm>().HasQueryFilter(p => !p.isDeleted);
 
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.SubscriberId)
+                .IsUnique();
+
             modelBuilder.Entity<Instruction>()
                 .HasIndex(x => x.Slug)
                 .IsUnique();
@@ -211,7 +217,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    Id = 1,
                     ArabicDescription = "اختبار وصف حدث 1",
                     ArabicLocation = "اختبار موقع الفعالية 1",
                     ArabicName = "اختبار اسم حدث 1",
@@ -232,7 +238,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e74"),
+                    Id = 2,
                     ArabicDescription = "اختبار وصف حدث 2",
                     ArabicLocation = "اختبار موقع الفعالية 2",
                     ArabicName = "اختبار اسم حدث 2",
@@ -263,7 +269,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e74"),
+                    Id = 1,
                     
                 });
 
@@ -276,7 +282,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e74"),
+                    Id = 1,
                     EnglishTitle = "Test General Workshop Title 1",
                     EnglishDescription = "Test General Workshop Description 1",
                     ArabicTitle = "اختبار عنوان الورش العامة 1",
@@ -296,7 +302,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e75"),
+                    Id = 2,
                     EnglishTitle = "Test General Workshop Title 2",
                     EnglishDescription = "Test General Workshop Description 2",
                     ArabicTitle = "اختبار عنوان الورش العامة 2",
@@ -319,7 +325,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    Id = 1,
                     AboutImage = "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg",
                     ArabicAboutDescription = "تأسست جائزة الشارقة للتفوق والتميز التربوي عام 1994-1995 برعاية كريمة من صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي عضو المجلس الاعلى حاكم إمارة الشارقة حفظه الله ورعاه... وتعتبر أول جائزة تربوية على مستوى الدولة",
                     ArabicAboutTitle = "نبذة عن الجائزة",
@@ -341,8 +347,8 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
-                    AboutAwardPageId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    Id = 1,
+                    AboutAwardPageId = 1,
                     ArabicGoal = "تطوير القطاع التربوي من خلال بث روح التنافس بينهم؛ لتحقيق أفضل الممارسات التربوية.",
                     EnglishGoal = "Developing the educational sector by spreading the spirit of competition among them; To achieve best educational practices."
                 }, new OurGoal()
@@ -353,8 +359,8 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
-                    AboutAwardPageId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    Id = 2,
+                    AboutAwardPageId = 1,
                     ArabicGoal = "طوير أعمال الجائزة ومنهجياتها، ورفع الكفايات المهنية للعاملين بها.",
                     EnglishGoal = "Developing the Award’s work and methodologies, and raising the professional competencies of its employees."
                 });
@@ -414,7 +420,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<GeneralFAQ>()
                 .HasData(new GeneralFAQ()
                 {
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    Id = 1,
                     ArabicAnswer = "اختبار جواب 1",
                     ArabicQuestion = "اختبار سؤال 1",
                     EnglishAnswer = "Test Answer 1",
@@ -428,7 +434,7 @@ namespace SharijhaAward.Persistence
                     GeneralFrequentlyAskedQuestionCategoryId = 1
                 }, new GeneralFAQ()
                 {
-                    Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                    Id = 2,
                     ArabicAnswer = "اختبار جواب 2",
                     ArabicQuestion = "اختبار سؤال 2",
                     EnglishAnswer = "Test Answer 2",
@@ -442,7 +448,7 @@ namespace SharijhaAward.Persistence
                     GeneralFrequentlyAskedQuestionCategoryId = 1
                 }, new GeneralFAQ()
                 {
-                    Id = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
+                    Id = 3,
                     ArabicAnswer = "اختبار جواب 3",
                     ArabicQuestion = "اختبار سؤال 3",
                     EnglishAnswer = "Test Answer 3",
@@ -456,7 +462,7 @@ namespace SharijhaAward.Persistence
                     GeneralFrequentlyAskedQuestionCategoryId = 2
                 }, new GeneralFAQ()
                 {
-                    Id = new Guid("5542d87a-7f44-4163-5e3c-08dc427e4e9f"),
+                    Id = 4,
                     ArabicAnswer = "اختبار جواب 4",
                     ArabicQuestion = "اختبار سؤال 4",
                     EnglishAnswer = "Test Answer 4",
@@ -675,7 +681,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Criterion>()
                 .HasData(new Criterion()
                 {
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    Id = 1,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -683,13 +689,13 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     ArabicTitle = "معيار رئيسي 1",
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishTitle = "Main Criterion 1",
                     ParentId = null,
                     Score = 100
                 }, new Criterion()
                 {
-                    Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                    Id = 2,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -697,14 +703,14 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     ArabicTitle = "معيار فرعي 1",
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishTitle = "Sub Criterion 1",
-                    ParentId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    ParentId = 1,
                     Score = 50,
                     SizeOfAttachmentInKB = 5000
                 }, new Criterion()
                 {
-                    Id = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
+                    Id = 3,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -712,9 +718,9 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     ArabicTitle = "معيار فرعي 2",
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishTitle = "Sub Criterion 2",
-                    ParentId = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e73"),
+                    ParentId = 1,
                     Score = 50,
                     SizeOfAttachmentInKB = 5000
                 });
@@ -722,7 +728,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CriterionItem>()
                 .HasData(new CriterionItem()
                 {
-                    Id = new Guid("5542d87a-7f44-4163-5e3c-08dc427e4e9f"),
+                    Id = 1,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -732,12 +738,12 @@ namespace SharijhaAward.Persistence
                     ActualScore = 0,
                     Score = 50,
                     ArabicName = "بند معيار فرعي 11",
-                    CriterionId = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                    CriterionId = 2,
                     EnglishName = "Sub Criterion Item 11",
                     SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
-                    Id = new Guid("fea46b75-b836-4dcc-5e3d-08dc427e4e9f"),
+                    Id = 2,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -747,12 +753,12 @@ namespace SharijhaAward.Persistence
                     ActualScore = 0,
                     Score = 50,
                     ArabicName = "بند معيار فرعي 12",
-                    CriterionId = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                    CriterionId = 2,
                     EnglishName = "Sub Criterion Item 12",
                     SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
-                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e9f"),
+                    Id = 3,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -762,12 +768,12 @@ namespace SharijhaAward.Persistence
                     ActualScore = 0,
                     Score = 50,
                     ArabicName = "بند معيار فرعي 21",
-                    CriterionId = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
+                    CriterionId = 3,
                     EnglishName = "Sub Criterion Item 21",
                     SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
-                    Id = new Guid("06fc4cca-fe8f-4c01-5e3f-08dc427e4e9f"),
+                    Id = 4,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -777,7 +783,7 @@ namespace SharijhaAward.Persistence
                     ActualScore = 0,
                     Score = 50,
                     ArabicName = "بند معيار فرعي 22",
-                    CriterionId = new Guid("e2476afd-f501-4461-45d0-08dc427e4e73"),
+                    CriterionId = 3,
                     EnglishName = "Sub Criterion Item 22",
                     SizeOfAttachmentInKB = 5000
                 });
@@ -800,7 +806,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Cycle>().HasData(
             new Cycle
             {
-                 Id = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                 Id = 1,
                  EnglishName = "SharijhaAward",
                  ArabicName ="جائزة الشارقة",    
                  Year = "2023-2024",
@@ -812,8 +818,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Agenda>()
                 .HasData(new Agenda()
                 {
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
-                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e9f"),
+                    CycleId = 1,
+                    Id = 1,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -829,8 +835,8 @@ namespace SharijhaAward.Persistence
                     Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous
                 }, new Agenda()
                 {
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
-                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e8f"),
+                    CycleId = 1,
+                    Id = 2,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -846,8 +852,8 @@ namespace SharijhaAward.Persistence
                     Status = Domain.Constants.AgendaConstants.AgendaStatus.Active
                 }, new Agenda()
                 {
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
-                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e7f"),
+                    CycleId = 1,
+                    Id = 3,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -863,8 +869,8 @@ namespace SharijhaAward.Persistence
                     Status = Domain.Constants.AgendaConstants.AgendaStatus.Later
                 }, new Agenda()
                 {
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
-                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e6f"),
+                    CycleId = 1,
+                    Id = 4,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -880,8 +886,8 @@ namespace SharijhaAward.Persistence
                     Status = Domain.Constants.AgendaConstants.AgendaStatus.Later
                 }, new Agenda()
                 {
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
-                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e5f"),
+                    CycleId = 1,
+                    Id = 5,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -900,8 +906,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<News>()
                 .HasData(new News()
                 {
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
-                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e9f"),
+                    CycleId = 1,
+                    Id = 1,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -915,8 +921,8 @@ namespace SharijhaAward.Persistence
                     Image = "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg"
                 }, new News()
                 {
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
-                    Id = new Guid("1ac9755c-3c57-4659-5e3e-08dc427e4e8f"),
+                    CycleId = 1,
+                    Id = 2,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -934,7 +940,7 @@ namespace SharijhaAward.Persistence
                 .HasData(new Category()
                 {
                     CreatedAt = DateTime.UtcNow,
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    CycleId = 1,
                     DeletedAt = null,
                     EnglishDescription = "Test Description 1",
                     EnglishName = "Test Name 1",
@@ -952,11 +958,11 @@ namespace SharijhaAward.Persistence
                     RelatedToClasses = false,
                     WinningScore = 0,
                     Status = Domain.Constants.Common.Status.Active,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d")
+                    Id = 1
                 }, new Category()
                 {
                     CreatedAt = DateTime.UtcNow,
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1"),
+                    CycleId = 1,
                     DeletedAt = null,
                     EnglishDescription = "Test Description 2",
                     EnglishName = "Test Name 2",
@@ -973,8 +979,8 @@ namespace SharijhaAward.Persistence
                     RelatedToClasses = false,
                     WinningScore = 0,
                     Status = Domain.Constants.Common.Status.Active,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
-                    ParentId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d")
+                    Id = 2,
+                    ParentId = 1
                 });
 
             modelBuilder.Entity<TrainingWorkshop>()
@@ -986,8 +992,8 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e74"),
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    Id = 1,
+                    CategoryId = 2,
                     ArabicDescription = "اختبار وصف ورشة تدريبية 1",
                     ArabicTitle = "اختبار عنوان ورشة تدريبية 1",
                     EnglishDescription = "Test Training Workshop Description 1",
@@ -1001,8 +1007,8 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("49b5510b-c82a-441b-45ce-08dc427e4e75"),
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    Id = 2,
+                    CategoryId = 2,
                     ArabicDescription = "اختبار وصف ورشة تدريبية 2",
                     ArabicTitle = "اختبار عنوان ورشة تدريبية 2",
                     EnglishDescription = "Test Training Workshop Description 2",
@@ -1019,10 +1025,10 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("fa49f064-fc70-447b-45cf-08dc427e4e73"),
+                    Id = 1,
                     ArabicQuestion = "كيف يمكنني الاشتراك بجائزة الشارقة للتفوق والتميز التربوي",
                     ArabicAnswer = "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة.",
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishQuestion = "How can I participate in the Sharjah Award for Excellence and Educational Excellence?",
                     EnglishAnswer = "You can participate in the award by following the following steps:\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria."
                 }, new FrequentlyAskedQuestion()
@@ -1033,10 +1039,10 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    Id = 2,
                     ArabicQuestion = "كيف يمكنني الاشتراك بجائزة الشارقة للتفوق والتميز التربوي 2",
                     ArabicAnswer = "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة. 2",
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishQuestion = "How can I participate in the Sharjah Award for Excellence and Educational Excellence? 2",
                     EnglishAnswer = "You can participate in the award by following the following steps:\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria 2."
                 });
@@ -1050,7 +1056,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    Id = 10,
                     ArabicName = "منسق 1",
                     EducationType = EducationType.Government,
                     Email = "Coordinator@Coordinator.com",
@@ -1066,7 +1072,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21"),
+                    Id = 11,
                     ArabicName = "منسق 2",
                     EducationType = EducationType.Government,
                     Email = "Coordinator2@Coordinator2.com",
@@ -1082,7 +1088,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db22"),
+                    Id = 12,
                     ArabicName = "منسق 3",
                     EducationType = EducationType.Private,
                     Email = "Coordinator3@Coordinator3.com",
@@ -1098,7 +1104,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db23"),
+                    Id = 13,
                     ArabicName = "منسق 4",
                     EducationType = EducationType.Private,
                     Email = "Coordinator4@Coordinator4.com",
@@ -1117,7 +1123,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    Id = 10,
                     Email = "Coordinator@Coordinator.com",
                     PhoneNumber = "0993521579",
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
@@ -1127,8 +1133,7 @@ namespace SharijhaAward.Persistence
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
                     Gender = Gender.Male,
-                    ImageURL = null,
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                    ImageURL = null
                 }, new User()
                 {
                     isDeleted = false,
@@ -1137,7 +1142,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21"),
+                    Id = 11,
                     Email = "Coordinator2@Coordinator2.com",
                     PhoneNumber = "0993521579",
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
@@ -1147,8 +1152,7 @@ namespace SharijhaAward.Persistence
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
                     Gender = Gender.Male,
-                    ImageURL = null,
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                    ImageURL = null
                 }, new User()
                 {
                     isDeleted = false,
@@ -1157,7 +1161,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db22"),
+                    Id = 12,
                     Email = "Coordinator3@Coordinator3.com",
                     PhoneNumber = "0993521579",
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
@@ -1167,8 +1171,7 @@ namespace SharijhaAward.Persistence
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
                     Gender = Gender.Male,
-                    ImageURL = null,
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                    ImageURL = null
                 }, new User()
                 {
                     isDeleted = false,
@@ -1177,7 +1180,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db23"),
+                    Id = 13,
                     Email = "Coordinator4@Coordinator4.com",
                     PhoneNumber = "0993521579",
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
@@ -1187,8 +1190,7 @@ namespace SharijhaAward.Persistence
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
                     Gender = Gender.Male,
-                    ImageURL = null,
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                    ImageURL = null
                 });
 
             modelBuilder.Entity<EducationalEntity>()
@@ -1200,7 +1202,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    Id = 1,
                     EnglishName = "Educational Entity 1",
                     ArabicName = "جهة تعليمية 1"
                 }, new EducationalEntity()
@@ -1211,7 +1213,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Id = 2,
                     EnglishName = "Educational Entity 2",
                     ArabicName = "جهة تعليمية 2"
                 });
@@ -1225,9 +1227,9 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    Id = 1,
                     ArabicName = "مؤسسة تعليمية 1",
-                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    EducationalEntityId = 1,
                     EnglishName = "Educational Entity 1"
                 }, new EducationalInstitution()
                 {
@@ -1237,9 +1239,9 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Id = 2,
                     ArabicName = "مؤسسة تعليمية 2",
-                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    EducationalEntityId = 2,
                     EnglishName = "Educational Entity 2"
                 });
 
@@ -1252,10 +1254,10 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Id = 1,
                     RelatedDate = DateTime.Now,
-                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
-                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20")
+                    EducationalEntityId = 1,
+                    CoordinatorId = 10
                 }, new EduEntitiesCoordinator()
                 {
                     isDeleted = false,
@@ -1264,10 +1266,10 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
+                    Id = 2,
                     RelatedDate = DateTime.Now,
-                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
-                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                    EducationalEntityId = 1,
+                    CoordinatorId = 11
                 }, new EduEntitiesCoordinator()
                 {
                     isDeleted = false,
@@ -1276,10 +1278,10 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db19"),
+                    Id = 3,
                     RelatedDate = DateTime.Now,
-                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db22")
+                    EducationalEntityId = 2,
+                    CoordinatorId = 12
                 }, new EduEntitiesCoordinator()
                 {
                     isDeleted = false,
@@ -1288,10 +1290,10 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    Id = 4,
                     RelatedDate = DateTime.Now,
-                    EducationalEntityId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db23")
+                    EducationalEntityId = 2,
+                    CoordinatorId = 13
                 });
 
             modelBuilder.Entity<EduInstitutionCoordinator>()
@@ -1303,9 +1305,9 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    EducationalInstitutionId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
-                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20")
+                    Id = 1,
+                    EducationalInstitutionId = 1,
+                    CoordinatorId = 10
                 }, new EduInstitutionCoordinator()
                 {
                     isDeleted = false,
@@ -1314,9 +1316,9 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
-                    EducationalInstitutionId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
-                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21")
+                    Id = 2,
+                    EducationalInstitutionId = 1,
+                    CoordinatorId = 11
                 }, new EduInstitutionCoordinator()
                 {
                     isDeleted = false,
@@ -1325,9 +1327,9 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db19"),
-                    EducationalInstitutionId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db22")
+                    Id = 3,
+                    EducationalInstitutionId = 2,
+                    CoordinatorId = 12
                 }, new EduInstitutionCoordinator()
                 {
                     isDeleted = false,
@@ -1336,15 +1338,15 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
-                    EducationalInstitutionId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    CoordinatorId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db23")
+                    Id = 4,
+                    EducationalInstitutionId = 2,
+                    CoordinatorId = 13
                 });
 
             modelBuilder.Entity<TermAndCondition>()
                 .HasData(new TermAndCondition()
                 {
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Id = 1,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -1354,7 +1356,7 @@ namespace SharijhaAward.Persistence
                     ArabicDescription = "الموافقة على سياسة الخصوصية لهذه الفئة",
                     ArabicTitle = "الموافقة على سياسة الخصوصة",
                     AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.Pic,
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishDescription = "Accept on Privacy Term",
                     EnglishTitle = "Accept on Privacy Term",
                     IsAgree = false,
@@ -1364,7 +1366,7 @@ namespace SharijhaAward.Persistence
                     SizeOfAttachmentInKB = 0
                 }, new TermAndCondition()
                 {
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
+                    Id = 2,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -1374,7 +1376,7 @@ namespace SharijhaAward.Persistence
                     ArabicDescription = "الموافقة على سياسة الخصوصية لهذه الفئة",
                     ArabicTitle = "الموافقة على سياسة الخصوصة",
                     AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.Pic,
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishDescription = "Accept on Privacy Term",
                     EnglishTitle = "Accept on Privacy Term",
                     IsAgree = false,
@@ -1384,7 +1386,7 @@ namespace SharijhaAward.Persistence
                     SizeOfAttachmentInKB = 0
                 }, new TermAndCondition()
                 {
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db19"),
+                    Id = 3,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -1394,7 +1396,7 @@ namespace SharijhaAward.Persistence
                     ArabicDescription = "الهوية الشخصية",
                     ArabicTitle = "رفع صورة الهوية الشخصية (الامامي و الخلفي)",
                     AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.Pic,
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishDescription = "Id Card",
                     EnglishTitle = "Upload Photos of Id Card (Front and Back)",
                     IsAgree = false,
@@ -1404,7 +1406,7 @@ namespace SharijhaAward.Persistence
                     SizeOfAttachmentInKB = 1000
                 }, new TermAndCondition()
                 {
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    Id = 4,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -1414,7 +1416,7 @@ namespace SharijhaAward.Persistence
                     ArabicDescription = "الهوية الشخصية",
                     ArabicTitle = "رفع صورة الهوية الشخصية (الامامي و الخلفي)",
                     AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.Pic,
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishDescription = "Id Card",
                     EnglishTitle = "Upload Photos of Id Card (Front and Back)",
                     IsAgree = false,
@@ -1424,7 +1426,7 @@ namespace SharijhaAward.Persistence
                     SizeOfAttachmentInKB = 1000
                 }, new TermAndCondition()
                 {
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21"),
+                    Id = 5,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -1434,7 +1436,7 @@ namespace SharijhaAward.Persistence
                     ArabicDescription = "رفع الاثباتات العلمية",
                     ArabicTitle = "رفع الاثباتات العلمية",
                     AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.PDF,
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishDescription = "Upload Confirmation Documents",
                     EnglishTitle = "Upload Confirmation Documents",
                     IsAgree = false,
@@ -1444,7 +1446,7 @@ namespace SharijhaAward.Persistence
                     SizeOfAttachmentInKB = 1000
                 }, new TermAndCondition()
                 {
-                    Id = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db22"),
+                    Id = 6,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -1454,7 +1456,7 @@ namespace SharijhaAward.Persistence
                     ArabicDescription = "رفع الاثباتات العلمية",
                     ArabicTitle = "رفع الاثباتات العلمية",
                     AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.PDF,
-                    CategoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    CategoryId = 2,
                     EnglishDescription = "Upload Confirmation Documents",
                     EnglishTitle = "Upload Confirmation Documents",
                     IsAgree = false,
@@ -1467,34 +1469,38 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Role>().HasData(
                 new Role
                 {
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
+                    Id = 1,
                     RoleName = "Admin"
                 });
                 modelBuilder.Entity<Role>().HasData(
                 new Role
                 {
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
+                    Id = 2,
                     RoleName = "Subscriber"
                 });
                 modelBuilder.Entity<Role>().HasData(
                 new Role
                 {
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db19"),
+                    Id = 3,
                     RoleName = "Manager"
 
                 });
                 modelBuilder.Entity<Role>().HasData(
                 new Role
                 {
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db20"),
+                    Id = 4,
                     RoleName = "User"
 
                 });
             modelBuilder.Entity<Role>().HasData(
                 new Role 
                 {
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db21"),
+                    Id = 5,
                     RoleName = "Coordinator"
+                }, new Role
+                {
+                    Id = 6,
+                    RoleName = "Arbitrator"
                 });
 
             modelBuilder.Entity<User>()
@@ -1512,8 +1518,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Admin 123",
                     Gender = Gender.Male,
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    Id = 1,
                     ConfirmationCodeForResetPassword = null,
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
@@ -1532,8 +1537,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Admin 123 #",
                     Gender = Gender.Male,
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e78d"),
+                    Id = 2,
                     ConfirmationCodeForResetPassword = null,
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
@@ -1552,8 +1556,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Admin 123 ##",
                     Gender = Gender.Male,
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e77d"),
+                    Id = 3,
                     ConfirmationCodeForResetPassword = null,
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
@@ -1572,8 +1575,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Admin 123 ##@",
                     Gender = Gender.Male,
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e76d"),
+                    Id = 4,
                     ConfirmationCodeForResetPassword = null,
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
@@ -1592,8 +1594,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Admin 123 ##@@",
                     Gender = Gender.Male,
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db17"),
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e75d"),
+                    Id = 5,
                     ConfirmationCodeForResetPassword = null,
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
@@ -1612,13 +1613,66 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Tamer",
                     Gender = Gender.Male,
                     Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
-                    RoleId = new Guid("2df81130-cd8f-4d2e-823b-f3e6b353db18"),
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e74d"),
+                    Id = 6,
                     ConfirmationCodeForResetPassword = null,
                     ConfirmationCodeForSignUp = null,
                     isValidAccount = true,
                     ImageURL = null
                 });
+
+            modelBuilder.Entity<UserRole>()
+                .HasData(new UserRole()
+                {
+                    Id = 1,
+                    UserId = 10,
+                    RoleId = 5
+                }, new UserRole()
+                {
+                    Id = 2,
+                    UserId = 11,
+                    RoleId = 5
+                }, new UserRole()
+                {
+                    Id = 3,
+                    UserId = 12,
+                    RoleId = 5
+                }, new UserRole()
+                {
+                    Id = 4,
+                    UserId = 13,
+                    RoleId = 5
+                }, new UserRole()
+                {
+                    Id = 5,
+                    UserId = 1,
+                    RoleId = 1
+                }, new UserRole()
+                {
+                    Id = 6,
+                    UserId = 2,
+                    RoleId = 1
+                }, new UserRole()
+                {
+                    Id = 7,
+                    UserId = 3,
+                    RoleId = 1
+                }, new UserRole()
+                {
+                    Id = 8,
+                    UserId = 4,
+                    RoleId = 1
+                }, new UserRole()
+                {
+                    Id = 9,
+                    UserId = 5,
+                    RoleId = 1
+                }, new UserRole()
+                {
+                    Id = 10,
+                    UserId = 6,
+                    RoleId = 2
+                });
+
             modelBuilder.Entity<EducationalClass>()
                 .HasData(new EducationalClass()
                 {
@@ -1628,10 +1682,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e74d"),
+                    Id = 1,
                     ArabicName = "الصف الأول",
                     EnglishName = "First class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1640,10 +1694,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e75d"),
+                    Id = 2,
                     ArabicName = "الصف الثاني",
                     EnglishName = "Second class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1652,10 +1706,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e76d"),
+                    Id = 3,
                     ArabicName = "الصف الثالث",
                     EnglishName = "Third class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1664,10 +1718,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e77d"),
+                    Id = 4,
                     ArabicName = "الصف الرابع",
                     EnglishName = "Forth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1676,10 +1730,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e78d"),
+                    Id = 5,
                     ArabicName = "الصف الخامس",
                     EnglishName = "Fifth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1688,10 +1742,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    Id = 6,
                     ArabicName = "الصف السادس",
                     EnglishName = "Sixth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1700,10 +1754,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e80d"),
+                    Id = 7,
                     ArabicName = "الصف السابع",
                     EnglishName = "Seventh class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1712,10 +1766,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e81d"),
+                    Id = 8,
                     ArabicName = "الصف الثامن",
                     EnglishName = "Eighth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1724,10 +1778,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e82d"),
+                    Id = 9,
                     ArabicName = "الصف التاسع",
                     EnglishName = "Ninth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1736,10 +1790,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e83d"),
+                    Id = 10,
                     ArabicName = "الصف العاشر",
                     EnglishName = "Tenth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1748,10 +1802,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e84d"),
+                    Id = 11,
                     ArabicName = "الصف الحادي عشر",
                     EnglishName = "Eleventh class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 }, new EducationalClass()
                 {
                     isDeleted = false,
@@ -1760,10 +1814,10 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e85d"),
+                    Id = 12,
                     ArabicName = "الصف الثاني عشر",
                     EnglishName = "Twelfth class",
-                    CycleId = new Guid("784454bd-2d6c-49ae-9e8a-1932bd15aac1")
+                    CycleId = 1
                 });
 
             modelBuilder.Entity<RelatedAccountRequest>()
@@ -1776,8 +1830,8 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = 1,
-                    ReceiverId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
-                    SenderId = new Guid("81a2c75e-c71c-4213-a372-7626db57e78d"),
+                    ReceiverId = 1,
+                    SenderId = 2
                 }, new RelatedAccountRequest()
                 {
                     isDeleted = false,
@@ -1787,8 +1841,8 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = 2,
-                    ReceiverId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
-                    SenderId = new Guid("81a2c75e-c71c-4213-a372-7626db57e77d"),
+                    ReceiverId = 1,
+                    SenderId = 3
                 });
 
             modelBuilder.Entity<RelatedAccount>()
@@ -1801,8 +1855,8 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = 1,
-                    User1Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
-                    User2Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e76d"),
+                    User1Id = 1,
+                    User2Id = 4,
                 }, new RelatedAccount()
                 {
                     isDeleted = false,
@@ -1812,8 +1866,8 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = 2,
-                    User1Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
-                    User2Id = new Guid("81a2c75e-c71c-4213-a372-7626db57e75d"),
+                    User1Id = 1,
+                    User2Id = 5,
                 });
 
             modelBuilder.Entity<ProvidedForm>()
@@ -1823,7 +1877,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    categoryId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    categoryId = 2,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     CurrentStep = 1,
@@ -1832,7 +1886,7 @@ namespace SharijhaAward.Persistence
                     PercentCompletion = 1,
                     Status = Domain.Constants.ProvidedFromConstants.ProvidedFormStatus.Active,
                     Type = Domain.Constants.ProvidedFromConstants.ProvidedFormType.Current,
-                    userId = new Guid("81a2c75e-c71c-4213-a372-7626db57e79d"),
+                    userId = 1,
                     Id = 1
                 });
             modelBuilder.Entity<DynamicAttributeSection>()
@@ -1847,7 +1901,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    RecordIdOnRelation = new Guid("81a2c75e-c71c-4213-a372-7626db57e79b"),
+                    RecordIdOnRelation = 1,
                     Id = 1
                 });
 

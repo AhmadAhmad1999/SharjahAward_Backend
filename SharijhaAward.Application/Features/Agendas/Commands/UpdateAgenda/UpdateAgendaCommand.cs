@@ -14,7 +14,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
 {
     public class UpdateAgendaCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public bool UpdateOnIcone {  get; set; }
@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
         public DateTime CurrentDate { get; set; }
         public DateTime EndDate { get; set; }
         public AgendaDateType DateType { get; set; }
-        public Guid CycleId { get; set; }
+        public int CycleId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

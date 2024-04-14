@@ -11,7 +11,7 @@ namespace SharijhaAward.Domain.Entities.SystemAttachmentModel
 {
     public class CycleConditionAttachment : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string AttachementPath { get; set; } = string.Empty;
@@ -19,6 +19,6 @@ namespace SharijhaAward.Domain.Entities.SystemAttachmentModel
         public CycleConditionsProvidedForm CycleConditionsProvidedForm { get; set; } = null!;
 
         [ForeignKey(nameof(CycleConditionsProvidedForm))]
-        public Guid? CycleConditionsProvidedFormId { get; set; }
+        public int? CycleConditionsProvidedFormId { get; set; }
     }
 }

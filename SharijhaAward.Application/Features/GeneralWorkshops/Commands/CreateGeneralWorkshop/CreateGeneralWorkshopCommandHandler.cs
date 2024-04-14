@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGeneralWorkshop
 {
     public class CreateGeneralWorkshopCommandHandler
-        : IRequestHandler<CreateGeneralWorkshopCommand, BaseResponse<Guid>>
+        : IRequestHandler<CreateGeneralWorkshopCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<GeneralWorkshop> _generalWorkshopeRepository;
         private readonly IMapper _mapper;
@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGen
             _fileService = fileService;
         }
 
-        public async Task<BaseResponse<Guid>> Handle(CreateGeneralWorkshopCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateGeneralWorkshopCommand request, CancellationToken cancellationToken)
         {
             var GeneralWorkshop = _mapper.Map<GeneralWorkshop>(request);
 
@@ -48,7 +48,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGen
                 : "تم إانشاء الورشة التدريبية";
 
 
-            return new BaseResponse<Guid>(msg, true, 200, data.Id);
+            return new BaseResponse<int>(msg, true, 200, data.Id);
 
         }
     }

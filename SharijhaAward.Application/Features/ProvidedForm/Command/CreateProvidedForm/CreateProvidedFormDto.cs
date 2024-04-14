@@ -8,6 +8,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
 {
     public class CreateProvidedFormDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

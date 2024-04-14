@@ -16,7 +16,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public IFormFile attachment { get; set; } = null!;
-        public Guid TermAndConditionId { get; set; }
+        public int TermAndConditionId { get; set; }
         public string? lang {get;set; } = string.Empty;
         public string token {  get; set; } = string.Empty;
         public int formId {  get; set; }

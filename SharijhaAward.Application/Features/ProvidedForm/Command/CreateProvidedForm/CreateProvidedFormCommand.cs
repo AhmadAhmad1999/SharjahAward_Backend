@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
 {
     public class CreateProvidedFormCommand : IRequest<BaseResponse<int>>
     {
-        public Guid categoryId {  get; set; }
+        public int categoryId {  get; set; }
         public int? CategoryEducationalClassId {  get; set; }
         public string lang {  get; set; } =string.Empty;
         public string token {  get; set; } = string.Empty;

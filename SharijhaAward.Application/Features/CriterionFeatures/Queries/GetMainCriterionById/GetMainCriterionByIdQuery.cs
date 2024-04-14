@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCr
 {
     public class GetMainCriterionByIdQuery : IRequest<BaseResponse<GetMainCriterionByIdDto>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string? lang { get; set; }
     }
 }

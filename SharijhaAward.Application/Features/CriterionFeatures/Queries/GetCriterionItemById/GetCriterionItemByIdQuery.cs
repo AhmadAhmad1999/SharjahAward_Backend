@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetCriter
 {
     public class GetCriterionItemByIdQuery : IRequest<BaseResponse<GetCriterionItemByIdDto>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string? lang { get; set; }
     }
 }

@@ -60,7 +60,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("{Id}",Name="GetMessageById")]
-        public async Task<IActionResult> GetMessageById(Guid Id)
+        public async Task<IActionResult> GetMessageById(int Id)
         {
             var token = HttpContext.Request.Headers.Authorization;
 

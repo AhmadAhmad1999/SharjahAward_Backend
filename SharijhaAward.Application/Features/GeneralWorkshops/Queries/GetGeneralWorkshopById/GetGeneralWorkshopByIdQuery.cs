@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetGeneral
 {
     public class GetGeneralWorkshopByIdQuery : IRequest<BaseResponse<GeneralWorkshopDto>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

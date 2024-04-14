@@ -11,9 +11,9 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
 {
     public class SearchForCoordinatorQuery : IRequest<BaseResponse<List<CoordinatorSearchListVM>>>
     {
-        public Guid? EducationalEntity { get; set; } 
+        public int? EducationalEntity { get; set; } 
         public EducationType? EducationType { get; set; }
-        public Guid? Shcool { get; set; } 
+        public int? Shcool { get; set; } 
         public Emirates? Emirates { get; set; }
         public string lang { get; set;} = string.Empty;
     }

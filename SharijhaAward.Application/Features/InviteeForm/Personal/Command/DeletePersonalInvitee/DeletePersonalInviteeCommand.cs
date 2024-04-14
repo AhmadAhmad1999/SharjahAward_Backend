@@ -9,6 +9,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Delete
 {
     public class DeletePersonalInviteeCommand : IRequest<Unit>
     {
-        public Guid Id {  get; set; }
+        public int Id {  get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Features.User.Commands.UpdateUser
     public class UpdateUserCommand : IRequest<BaseResponse<object>>
     {
         public string lang { get; set; } = string.Empty;
-        public Guid? Id { get; set; }
+        public int? Id { get; set; }
         public Gender Gender { get; set; }
         public string PhoneNumber { get; set; } = null!;
     }

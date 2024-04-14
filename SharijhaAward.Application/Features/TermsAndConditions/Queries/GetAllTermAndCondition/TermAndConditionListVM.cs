@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
 {
     public class TermAndConditionListVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
@@ -22,7 +22,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
         public int? SizeOfAttachmentInKB { get; set; }
         public AttachmentType? AttachmentType { get; set; }
         public bool? IsSpecial { get; set; } = false;
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public DateTime CreateAt {  get; set; }
         public ConditionProvidedFormListVm? ConditionsAttachments { get; set; }
     }

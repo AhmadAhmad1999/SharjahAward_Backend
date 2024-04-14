@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
 {
     public class GetCoordinatorByIdQuery : IRequest<BaseResponse<GetCoordinatorByIdResponse>>
     {
-        public Guid CoordinatorId { get; set; }
+        public int CoordinatorId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

@@ -6,7 +6,7 @@ using SharijhaAward.Domain.Entities.IdentityModels;
 namespace SharijhaAward.Domain.Entities.TrainingManualModel; 
 
 public class TrainingManual : AuditableEntity {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     // arabic title of the Training Manual
     public string ArabicTitle { get; set; } = string.Empty;
     
@@ -20,7 +20,7 @@ public class TrainingManual : AuditableEntity {
     public string EnglishGuide { get; set; } = string.Empty;
     
    // navigation property to the category 
-   public Guid CategoryId { get; set; }
+   public int CategoryId { get; set; }
    public Category Category { get; set; } = null!;
 
 }

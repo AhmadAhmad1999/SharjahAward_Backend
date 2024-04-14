@@ -53,8 +53,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
                 return new BaseResponse<GetRelatedAccoutProfileByIdResponse>(ResponseMessage, false, 404);
             }
 
-            Guid UserId = new Guid(_JWTProvider.GetUserIdFromToken(Request.token!));
-            Guid RelatedAccountSubscriberId;
+            int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
+            int RelatedAccountSubscriberId;
 
             if (RelatedAccountEntity.User1Id == UserId)
                 RelatedAccountSubscriberId = RelatedAccountEntity.User2Id;
@@ -64,7 +64,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
 
             else
             {
-                ResponseMessage = "An error occurred. Please check the IDs in RelatedAccountEntity";
+                ResponseMessage = "You can't view this profile because you aren't related to it";
 
                 return new BaseResponse<GetRelatedAccoutProfileByIdResponse>(ResponseMessage, false, 400);
             }

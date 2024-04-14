@@ -6,7 +6,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
 {
     public class UpdateArbitratorCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;

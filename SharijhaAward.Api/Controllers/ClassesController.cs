@@ -58,7 +58,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteClass(Guid Id)
+        public async Task<IActionResult> DeleteClass(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -111,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllClasses(Guid CycleId, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllClasses(int CycleId, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -141,7 +141,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetClassById(Guid Id)
+        public async Task<IActionResult> GetClassById(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -169,7 +169,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllCategoryClassesByCategoryId(Guid CategoryId)
+        public async Task<IActionResult> GetAllCategoryClassesByCategoryId(int CategoryId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -223,7 +223,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllStudentsByClassId(Guid EducationalClassId, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllStudentsByClassId(int EducationalClassId, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -253,7 +253,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllClassesByCategoriesIds(List<Guid> CategoriesIds, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllClassesByCategoriesIds(List<int> CategoriesIds, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

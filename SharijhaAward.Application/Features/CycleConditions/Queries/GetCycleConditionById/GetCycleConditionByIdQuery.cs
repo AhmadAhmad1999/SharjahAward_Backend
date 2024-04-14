@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
 {
     public class GetCycleConditionByIdQuery : IRequest<BaseResponse<CycleConditionDto>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

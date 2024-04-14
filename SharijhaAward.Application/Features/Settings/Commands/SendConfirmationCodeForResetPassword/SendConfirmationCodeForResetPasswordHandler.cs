@@ -25,7 +25,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.SendConfirmationC
         {
             string ResponseMessage = string.Empty;
 
-            Guid UserId = new Guid(_JWTProvider.GetUserIdFromToken(Request.token!));
+            int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
             Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Id == UserId);

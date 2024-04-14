@@ -31,7 +31,7 @@ namespace SharijhaAward.Application.Features.Achievements.Commands.CreateAchieve
         public async Task<BaseResponse<object>> Handle(CreateAchievementCommand request, CancellationToken cancellationToken)
         {
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var User = await _userRepository.GetByIdAsync(new Guid(UserId));
+            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
             if(User == null)
             {
                 return new BaseResponse<object>("",false,401);

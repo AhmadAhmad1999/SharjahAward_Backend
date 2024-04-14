@@ -12,7 +12,7 @@ namespace SharijhaAward.Domain.Entities.EventModel
 {
     public class Event : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public int UniqueIntegerId { get; set; }
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;

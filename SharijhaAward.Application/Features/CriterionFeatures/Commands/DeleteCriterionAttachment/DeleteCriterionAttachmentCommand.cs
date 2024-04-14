@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCr
 {
     public class DeleteCriterionAttachmentCommand : IRequest<BaseResponse<object>>
     {
-        public Guid CriterionAttachmentId { get; set; }
+        public int CriterionAttachmentId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

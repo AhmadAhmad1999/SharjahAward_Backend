@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
         {
             string ResponseMessage = string.Empty;
 
-            Guid UserId = new Guid(_JWTProvider.GetUserIdFromToken(Request.token!));
+            int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
             List<RelatedAccount> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
                 ? await _RelatedAccountRepository

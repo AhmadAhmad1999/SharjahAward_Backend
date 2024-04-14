@@ -9,6 +9,6 @@ namespace SharijhaAward.Application.Features.Event.Commands.DeleteEvent
 {
     public class DeleteEventCommand : IRequest<Unit>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

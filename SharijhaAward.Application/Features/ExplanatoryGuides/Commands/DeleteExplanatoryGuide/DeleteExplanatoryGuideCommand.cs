@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Commands.DeleteEx
 {
     public class DeleteExplanatoryGuideCommand : IRequest<BaseResponse<object>>
     {
-        public Guid GuideId { get; set; }
+        public int GuideId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

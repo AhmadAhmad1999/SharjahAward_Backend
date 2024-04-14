@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.FAQs.Commands.UpdateFAQ
 {
     public class UpdateFAQCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicQuestion { get; set; } = string.Empty;
         public string EnglishQuestion { get; set; } = string.Empty;
         public string ArabicAnswer { get; set; } = string.Empty;

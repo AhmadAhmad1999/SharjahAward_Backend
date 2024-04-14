@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.Export
 {
     public class PersonalExportVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public int UniqueIntegerId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
@@ -17,7 +17,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.Export
         public string JobTitle { get; set; } = string.Empty;
         public string TypeOfInvitee { get; set; } = string.Empty;
         public bool IsAttend { get; set; }
-        public Guid EventId { get; set; }
+        public int EventId { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

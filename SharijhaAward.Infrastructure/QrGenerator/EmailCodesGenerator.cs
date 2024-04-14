@@ -20,7 +20,7 @@ namespace SharijhaAward.Infrastructure.QRGenerator
             _Configuration = Configuration;
         }
         /* 
-         * This Data Paramater Must Contain (Guid For [Personal, Group Invite] + Type Of Invitation + Event Name) Sepereated With '/'
+         * This Data Paramater Must Contain (int For [Personal, Group Invite] + Type Of Invitation + Event Name) Sepereated With '/'
         */
         public async Task<string> GenerateQRCode(string Data, string WWWRootFolderPath)
         {

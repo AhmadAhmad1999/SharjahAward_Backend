@@ -23,7 +23,7 @@ namespace SharijhaAward.Api.Controllers
             _WebHostEnvironment = WebHostEnvironment;
         }
         [HttpGet("ResendEmail", Name = "ResendEmail")]
-        public async Task<ActionResult<Guid>> ResendEmail( Guid InviteeId, string type)
+        public async Task<ActionResult<int>> ResendEmail( int InviteeId, string type)
         {
             var headerValue = HttpContext.Request.Headers["lang"];
             var response = await _Mediator.Send(new ResendEmailQuery()

@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.Achievements.Commands.UpdateAchieve
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
 
             var User = UserId != null
-                ? await _userRepository.GetByIdAsync(new Guid(UserId))
+                ? await _userRepository.GetByIdAsync(int.Parse(UserId))
                 : null;
             if (User == null)
             {

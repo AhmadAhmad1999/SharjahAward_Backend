@@ -5,8 +5,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 {
     public class CreateArbitratorCategoryCommand : IRequest<BaseResponse<object>>
     {
-        public Guid CategoryId { get; set; }
-        public Guid ArbitratorId { get; set; }
+        public int CategoryId { get; set; }
+        public int ArbitratorId { get; set; }
         public string? lang { get; set; }
     }
 }

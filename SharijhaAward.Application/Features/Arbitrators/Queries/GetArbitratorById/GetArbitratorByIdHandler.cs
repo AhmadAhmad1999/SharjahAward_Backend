@@ -161,7 +161,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                 .Include(x => x.EducationalClass!)
                 .Select(x => new GetAllClassesListVM()
                 {
-                    Id = x.Id,
+                    Id = x.EducationalClassId,
                     ArabicName = x.EducationalClass!.ArabicName,
                     EnglishName = x.EducationalClass!.EnglishName
                 }).ToListAsync();

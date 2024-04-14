@@ -10,7 +10,7 @@ namespace SharijhaAward.Domain.Entities.AgendaModel;
 
 public class Agenda : AuditableEntity
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string ArabicTitle { get; set; } = string.Empty;
     public string EnglishTitle { get; set; } = string.Empty;
     public string Icon { get; set; } = string.Empty;
@@ -21,6 +21,6 @@ public class Agenda : AuditableEntity
     public AgendaDateType DateType { get; set; }
     public Cycle Cycle { get; set; } = null!;
     [ForeignKey(nameof(Cycle))]
-    public Guid CycleId { get; set; }
+    public int CycleId { get; set; }
    
 }

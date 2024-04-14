@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
 {
     public class CreateCriterionItemAttachmentCommand : IRequest<BaseResponse<object>>
     {
-        public Guid CriterionItemId { get; set; }
+        public int CriterionItemId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public IFormFile Attachment { get; set; } = null!;

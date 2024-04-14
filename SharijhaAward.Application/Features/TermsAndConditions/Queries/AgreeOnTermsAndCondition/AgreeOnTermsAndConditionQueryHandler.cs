@@ -51,7 +51,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnT
             else
             {
                 var UserID = _jwtProvider.GetUserIdFromToken(request.token);
-                var user = await _userRepository.GetByIdAsync(new Guid(UserID));
+                var user = await _userRepository.GetByIdAsync(int.Parse(UserID));
                 if (user == null)
                 {
                     return new BaseResponse<object>("", false, 404);

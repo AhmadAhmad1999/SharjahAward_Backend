@@ -9,6 +9,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.DeleteGro
 {
     public class DeleteGroupInviteeCommand :IRequest<Unit>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

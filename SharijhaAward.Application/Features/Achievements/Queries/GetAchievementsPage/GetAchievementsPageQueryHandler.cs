@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.Achievements.Queries.GetAchievement
             {
                 return new BaseResponse<AchievementsDto>("Un Auth", false, 401);
             }
-            var User = await _userRepository.GetByIdAsync(new Guid (UserId));
+            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
 
             if(User == null)
             {

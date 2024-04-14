@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateGoal
 {
     public class UpdateGoalCommand :IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicGoal { get; set; } = string.Empty;
         public string EnglishGoal { get; set; } = string.Empty;
         public string lang {  get; set; } = string.Empty;

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGeneralWorkshop
 {
     public class UpdateGeneralWorkshopCommandHandler
-        : IRequestHandler<UpdateGeneralWorkshopCommand, BaseResponse<Guid>>
+        : IRequestHandler<UpdateGeneralWorkshopCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<GeneralWorkshop> _generalWorkshopRepository;
         private readonly IFileService _fileService;
@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGen
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<Guid>> Handle(UpdateGeneralWorkshopCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(UpdateGeneralWorkshopCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"
                 ? "Workshop has been Updated"
@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGen
            
             if(WorkshopToUpdate == null)
             {
-                return new BaseResponse<Guid>("", false, 404);
+                return new BaseResponse<int>("", false, 404);
             }
             var Workshop = WorkshopToUpdate;
             _mapper.Map(request, WorkshopToUpdate, typeof(UpdateGeneralWorkshopCommand), typeof(GeneralWorkshop));
@@ -58,7 +58,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGen
 
              await _generalWorkshopRepository.UpdateAsync(WorkshopToUpdate);
 
-            return new BaseResponse<Guid>(msg, true, 200);
+            return new BaseResponse<int>(msg, true, 200);
            
         }
     }

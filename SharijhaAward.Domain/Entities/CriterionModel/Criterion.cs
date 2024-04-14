@@ -11,16 +11,16 @@ namespace SharijhaAward.Domain.Entities.CriterionModel;
 
 public class Criterion: AuditableEntity
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string ArabicTitle { get; set; } = string.Empty;
     public string EnglishTitle { get; set; } = string.Empty;
     public int Score { get; set; }
     public int SizeOfAttachmentInKB { get; set; }
-    public Guid? ParentId { get; set; }
+    public int? ParentId { get; set; }
     public Criterion? Parent { get; set; } = null!;
-    public Guid CategoryId { get; set; }
+    public int CategoryId { get; set; }
     public Category Category { get; set; } = null!;
-    //public Guid ArbitrationProcedureId { get; set; }
+    //public int ArbitrationProcedureId { get; set; }
     //public ArbitrationProcedure ArbitrationProcedure { get; set; } = null!;
     public virtual List<Scale> Scales { get; set; } = new();
 }

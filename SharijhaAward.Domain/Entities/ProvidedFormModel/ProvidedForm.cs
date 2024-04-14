@@ -24,12 +24,12 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public User User { get; set; } = null!;
 
         [ForeignKey(nameof(User))]
-        public Guid userId { get; set; }
+        public int userId { get; set; }
         
         public Category Category { get; set; } = null!;
 
         [ForeignKey(nameof(Category))]
-        public Guid categoryId { get; set; }
+        public int categoryId { get; set; }
         public int? CategoryEducationalClassId { get; set; }
         public CategoryEducationalClass? CategoryEducationalClass { get; set; }
 

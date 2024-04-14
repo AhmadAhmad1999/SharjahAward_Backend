@@ -38,7 +38,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpDelete(Name="DeleteNews")]
-        public async Task<IActionResult> DeleteNews(Guid Id)
+        public async Task<IActionResult> DeleteNews(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -72,7 +72,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet("{Id}",Name="GetNewsById")]
-        public async Task<IActionResult> GetNewsById(Guid Id)
+        public async Task<IActionResult> GetNewsById(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -113,7 +113,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetNewsByCycleId",Name = "GetNewsByCycleId")]
-        public async Task<IActionResult> GetNewsByCycleId(Guid? CycleId)
+        public async Task<IActionResult> GetNewsByCycleId(int? CycleId)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];

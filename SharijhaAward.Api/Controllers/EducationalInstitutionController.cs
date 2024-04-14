@@ -39,7 +39,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet(Name= "GetAllEducationalInstitution")]
-        public async Task<IActionResult> GetAllEducationalInstitution(Guid? EducationalEntityId)
+        public async Task<IActionResult> GetAllEducationalInstitution(int? EducationalEntityId)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -90,7 +90,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteEducationalInstitutions(Guid Id)
+        public async Task<IActionResult> DeleteEducationalInstitutions(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

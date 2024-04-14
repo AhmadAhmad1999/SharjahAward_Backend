@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
                 ? _jwtProvider.GetUserIdFromToken(request.Token)
                 : request.Id.ToString();
           
-            var user = await _userRepository.GetByIdAsync(new Guid(UserID!));
+            var user = await _userRepository.GetByIdAsync(int.Parse(UserID));
             string msg;
             if (user == null)
             {

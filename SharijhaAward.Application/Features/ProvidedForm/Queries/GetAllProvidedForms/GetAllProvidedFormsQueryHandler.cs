@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllProvidedFormsQuery request, CancellationToken cancellationToken)
         {
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var User = await _userRepository.GetByIdAsync(new Guid(UserId));
+            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
             if (User == null)
             {
                 return new BaseResponse<List<FormListVm>> ("", false, 401);

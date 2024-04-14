@@ -7,9 +7,9 @@ namespace SharijhaAward.Domain.Entities.CategoryArbitratorModel
     public class CategoryArbitrator : AuditableEntity
     {
         public int Id { get; set; }
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public Category? Category { get; set; }
-        public Guid ArbitratorId { get; set; }
+        public int ArbitratorId { get; set; }
         public Arbitrator? Arbitrator { get; set; }
     }
 }

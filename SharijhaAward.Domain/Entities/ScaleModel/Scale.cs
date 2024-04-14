@@ -10,12 +10,12 @@ namespace SharijhaAward.Domain.Entities.ScaleModel;
 
 public class Scale : AuditableEntity
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string ArabicName { get; set; } = string.Empty;
     public string EnglishName { get; set; } = string.Empty;
     public int MinScore { get; set; }
     public int MaxScore { get; set; }
-    public Guid CriterionId { get; set;  }
+    public int CriterionId { get; set;  }
     public Criterion Criterion { get; set; } = null!;
     public virtual List<CriterionItem> CriterionItems { get; set; } = new();
     public virtual List<CriterionItemScale> CriterionItemScales { get; set; } = new();

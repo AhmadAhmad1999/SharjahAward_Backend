@@ -65,7 +65,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpDelete(Name = "DeleteTrainingWorkshop")]
-        public async Task<ActionResult> DeleteTrainingWorkshop(Guid Id)
+        public async Task<ActionResult> DeleteTrainingWorkshop(int Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -80,7 +80,7 @@ namespace SharijhaAward.Api.Controllers
         }
         [HttpGet("{Id}", Name = "GetTrainingWorkshopById")]
 
-        public async Task<ActionResult> GetTrainingWorkshopById(Guid Id)
+        public async Task<ActionResult> GetTrainingWorkshopById(int Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -122,7 +122,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpGet("GetWorkShopsByCategoryId/{Id}",Name= "GetWorkShopsByCategoryId")]
-        public async Task<IActionResult> GetTrainingWorkShopsByCategoryId(Guid Id,int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetTrainingWorkShopsByCategoryId(int Id,int page = 1, int pageSize = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -171,7 +171,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpDelete("DeleteAttachmentOfTrainingWorkShop/{Id}", Name = "DeleteAttachmentOfTrainingWorkShop")]
-        public async Task<IActionResult> DeleteAttachmentOfTrainingWorkShop(Guid Id)
+        public async Task<IActionResult> DeleteAttachmentOfTrainingWorkShop(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];

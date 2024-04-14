@@ -63,7 +63,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                 return new BaseResponse<List<TermAndConditionListVM>>(msg, false, 404);
             }
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var user = await _userRepository.GetByIdAsync(new Guid(UserId));
+            var user = await _userRepository.GetByIdAsync(int.Parse(UserId));
             var form = await _providedFormRepository.FirstOrDefaultAsync(p => p.Id == request.formId);
 
             var Terms = _termRepository.WhereThenInclude(t => t.CategoryId == category.Id, t => t.ConditionAttachments).Where(t => t.IsSpecial == true).ToList();

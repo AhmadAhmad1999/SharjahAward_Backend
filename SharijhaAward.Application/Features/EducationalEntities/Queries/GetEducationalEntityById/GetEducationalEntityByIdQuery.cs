@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetEduc
 {
     public class GetEducationalEntityByIdQuery : IRequest<BaseResponse<GetEducationalEntityByIdDto>>
     {
-        public Guid EducationEntityId { get; set; }
+        public int EducationEntityId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

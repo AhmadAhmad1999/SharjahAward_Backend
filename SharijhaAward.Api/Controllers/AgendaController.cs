@@ -59,7 +59,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpDelete(Name="DeleteAgenda")]
-        public async Task<IActionResult> DeleteAgenda(Guid Id)
+        public async Task<IActionResult> DeleteAgenda(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -100,7 +100,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpGet("{Id}", Name="GetAgendaById")]
-        public async Task<IActionResult> GetAgendaById(Guid Id)
+        public async Task<IActionResult> GetAgendaById(int Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -120,7 +120,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpGet("GetAgendasByCycleId",Name ="GetAgendasByCycleId")]
-        public async Task<IActionResult> GetAgendasByCycleId(Guid? Id ,int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAgendasByCycleId(int? Id ,int page = 1, int pageSize = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];

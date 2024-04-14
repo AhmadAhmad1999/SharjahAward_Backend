@@ -29,7 +29,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
         {
             string msg;
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var User = await _userRepository.GetByIdAsync(new Guid(UserId));
+            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
             if (User == null)
             {
                 msg = request.lang == "en"

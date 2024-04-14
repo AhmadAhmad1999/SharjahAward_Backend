@@ -19,12 +19,12 @@ namespace SharijhaAward.Domain.Entities.NoteModel
         public ArbitrationProcedure ArbitrationProcedure { get; set; } = null!;
 
         [ForeignKey(nameof(ArbitrationProcedure))]
-        public Guid ArbitrationId { get; set; }
+        public int ArbitrationId { get; set; }
 
         public User User { get; set; } = null!;
         
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
 
     }
 }

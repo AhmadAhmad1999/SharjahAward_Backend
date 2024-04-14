@@ -386,7 +386,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllDynamicAttributeForDependency(Guid CategoryId, int AttributeTableNameId)
+        public async Task<IActionResult> GetAllDynamicAttributeForDependency(int CategoryId, int AttributeTableNameId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

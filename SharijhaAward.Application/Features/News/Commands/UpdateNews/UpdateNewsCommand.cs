@@ -11,14 +11,14 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
 {
     public class UpdateNewsCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public IFormFile? Image { get; set; }
         public bool EditeOnImage { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string? ArabicDescription { get; set; }
         public string? EnglishDescription { get; set; }
-        public Guid CycleId { get; set; }
+        public int CycleId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

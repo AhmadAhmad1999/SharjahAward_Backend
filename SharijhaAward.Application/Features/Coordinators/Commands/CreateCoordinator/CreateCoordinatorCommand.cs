@@ -6,7 +6,7 @@ using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinator
 {
-    public class CreateCoordinatorCommand : IRequest<BaseResponse<Guid>>
+    public class CreateCoordinatorCommand : IRequest<BaseResponse<int>>
     {
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
@@ -16,8 +16,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         public Emirates Emirates { get; set; }
         public IFormFile PersonalPhoto { get; set; } = null!;
         public string lang { get; set; } = string.Empty;
-        public List<Guid> EducationalEntitiesIds { get; set; } = new List<Guid>();
-        public List<Guid> EducationalInstitutionsIds { get; set; } = new List<Guid>();
+        public List<int> EducationalEntitiesIds { get; set; } = new List<int>();
+        public List<int> EducationalInstitutionsIds { get; set; } = new List<int>();
         public List<AddDynamicAttributeValueMainCommand> DynamicAttributesWithValues { get; set; } = new List<AddDynamicAttributeValueMainCommand>();
         public string? WWWRootFilePath { get; set; }
     }

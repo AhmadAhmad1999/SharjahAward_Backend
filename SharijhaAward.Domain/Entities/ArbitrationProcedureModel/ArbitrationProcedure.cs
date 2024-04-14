@@ -7,7 +7,7 @@ namespace SharijhaAward.Domain.Entities.ArbitrationProcedureModel
 {
     public class ArbitrationProcedure : AuditInformation<User>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicGuidDescription { get; set; } = string.Empty;
         public string EnglishGuidDescription { get; set; }=string.Empty;
         public int Grade { get; set; }

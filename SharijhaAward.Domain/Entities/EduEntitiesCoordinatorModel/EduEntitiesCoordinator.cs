@@ -6,11 +6,11 @@ namespace SharijhaAward.Domain.Entities.EducationCoordinatorModel
 {
     public class EduEntitiesCoordinator : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public DateTime RelatedDate { get; set; }
-        public Guid CoordinatorId { get; set; }
+        public int CoordinatorId { get; set; }
         public Coordinator? Coordinator { get; set; }
-        public Guid EducationalEntityId { get; set; }
+        public int EducationalEntityId { get; set; }
         public EducationalEntity? EducationalEntity { get; set; }
     }
 }

@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.De
 {
     public class DeleteEducationalInstitutionsCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string? lang { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace SharijhaAward.Domain.Entities.SubscriberAchievementModel;
  * 
  */
 public class SubscriberAchievement: AuditInformation<User> {
-   public Guid Id { get; set; }
+   public int Id { get; set; }
    // the arabic title of the achievement
    public string ArabicTitle { get; set; } = string.Empty;
    // the english title of the achievement
@@ -31,11 +31,11 @@ public class SubscriberAchievement: AuditInformation<User> {
    // navigation property to the achievement classification 
    public AchievementClassification AchievementClassification { get; set; } = null!;
    [ForeignKey(nameof(AchievementClassification))]
-   public Guid AchievementClassificationId { get; set; }
+   public int AchievementClassificationId { get; set; }
 
    
    
    public User User { get; set; } = null!;
    [ForeignKey(nameof(User))]
-   public Guid UserId { get; set; }
+   public int UserId { get; set; }
 }

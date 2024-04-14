@@ -9,6 +9,6 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPer
 {
     public class GetPersonalInviteeByIdQuery : IRequest<PersonalInviteeVM>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

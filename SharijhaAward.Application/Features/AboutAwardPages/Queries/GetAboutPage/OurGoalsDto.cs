@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPag
 {
     public class OurGoalsDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Goal {  get; set; } = string.Empty;   
         public string ArabicGoal { get; set; } = string.Empty;
         public string EnglishGoal { get; set; } = string.Empty;

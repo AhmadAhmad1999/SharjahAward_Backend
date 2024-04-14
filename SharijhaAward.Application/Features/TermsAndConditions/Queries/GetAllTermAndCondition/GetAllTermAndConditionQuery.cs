@@ -13,6 +13,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
         public string lang { get; set; } = string.Empty;
         public int page {  get; set; }
         public int pageSize { get; set; }
-        public Guid? CategoryId {  get; set; }
+        public int? CategoryId {  get; set; }
     }
 }

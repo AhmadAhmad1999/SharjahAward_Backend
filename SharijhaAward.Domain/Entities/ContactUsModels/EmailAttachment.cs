@@ -10,11 +10,11 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
 {
     public class EmailAttachment : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string AttachmentUrl {  get; set; } = string.Empty;
         public EmailMessage Message { get; set; } = null!;
 
         [ForeignKey(nameof(Message))]
-        public Guid MessageId { get; set; }
+        public int MessageId { get; set; }
     }
 }

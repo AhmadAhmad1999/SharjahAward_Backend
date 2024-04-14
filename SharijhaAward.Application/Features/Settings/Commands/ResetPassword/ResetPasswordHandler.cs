@@ -22,7 +22,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ResetPassword
         {
             string ResponseMessage = string.Empty;
 
-            Guid UserID = new Guid(_JWTProvider.GetUserIdFromToken(Request.Token!));
+            int UserID = int.Parse(_JWTProvider.GetUserIdFromToken(Request.Token!));
             
             Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository.FirstOrDefaultAsync(x => x.Id == UserID);
             

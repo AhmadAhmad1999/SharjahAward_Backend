@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.DeleteT
 {
     public class DeleteTermAndConditionCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
 {
     public class GetAllDynamicAttributeForDependencyQuery : IRequest<BaseResponse<List<GetAllDynamicAttributeForDependencyListVM>>>
     {
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public int AttributeTableNameId { get; set; }
         public string lang { get; set; } = string.Empty;
     }

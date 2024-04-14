@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ExportGro
 {
     public class GroupExportVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public int UniqueIntegerId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
@@ -19,7 +19,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ExportGro
         public int ExpectedNumberOfAttendees { get; set; }
         public List<string>? StudentNames { get; set; }
         public int ActualNumberOfAttendees { get; set; }
-        public Guid EventId { get; set; }
+        public int EventId { get; set; }
         public DateTime CreatedAt { get; set; }
         
     }

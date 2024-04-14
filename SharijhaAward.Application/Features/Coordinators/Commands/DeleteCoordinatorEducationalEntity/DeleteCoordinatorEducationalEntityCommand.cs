@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordin
 {
     public class DeleteCoordinatorEducationalEntityCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string? lang { get; set; }
     }
 }

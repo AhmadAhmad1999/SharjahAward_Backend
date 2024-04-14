@@ -16,7 +16,7 @@ namespace SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel
         public Coordinator Coordinator { get; set; } = null!;
 
         [ForeignKey(nameof(Coordinator))]
-        public Guid CoordinatorId { get; set; }
+        public int CoordinatorId { get; set; }
 
 
         public ProvidedForm ProvidedForm { get; set; } = null!;

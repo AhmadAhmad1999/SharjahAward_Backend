@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ConfirmAt
 {
     public class ConfirmAttendanceGroupQuery : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public int NumberOfAttendees {  get; set; }
         public string? lang { get; set; }
         //public List<string>? StudentNames { get; set; }

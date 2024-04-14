@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.Confir
 {
     public class ConfirmAttendancePersonalQuery : IRequest<BaseResponse<object>>
     {
-        public Guid Id {  get; set; }
+        public int Id {  get; set; }
         public string? lang { get; set; }
     }
 }

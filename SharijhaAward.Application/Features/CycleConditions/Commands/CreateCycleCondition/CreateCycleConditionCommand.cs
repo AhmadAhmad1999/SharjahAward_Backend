@@ -22,7 +22,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycl
         public int? SizeOfAttachmentInKB { get; set; }
         public AttachmentType? AttachmentType { get; set; }
         public bool IsAgree { get; set; } = false;
-        public Guid CycleId { get; set; }
+        public int CycleId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

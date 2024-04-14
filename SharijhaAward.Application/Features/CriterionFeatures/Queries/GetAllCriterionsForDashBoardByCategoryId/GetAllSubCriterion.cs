@@ -2,10 +2,11 @@
 {
     public class GetAllSubCriterion
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string EnglishTitle { get; set; } = null!;
         public string ArabicTitle { get; set; } = null!;
         public int Score { get; set; }
+        public int SizeOfAttachmentInKB { get; set; }
         public List<GetAllSubCriterionItems> CriterionItems { get; set; } = new List<GetAllSubCriterionItems>();
     }
 }

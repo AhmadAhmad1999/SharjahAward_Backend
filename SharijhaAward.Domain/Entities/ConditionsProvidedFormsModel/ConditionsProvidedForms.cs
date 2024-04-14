@@ -15,13 +15,13 @@ namespace SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel
 {
     public class ConditionsProvidedForms : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public bool IsAgree { get; set; } = false;
         public List<ConditionAttachment> Attachments { get; set; } = null!;
 
         public TermAndCondition TermAndCondition { get; set; } = null!;
         [ForeignKey(nameof(TermAndCondition))]
-        public Guid TermAndConditionId { get; set; }
+        public int TermAndConditionId { get; set; }
 
         public ProvidedForm ProvidedForm { get; set; } = null!;
         [ForeignKey(nameof(ProvidedForm))]

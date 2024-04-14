@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
@@ -19,12 +20,15 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
-        public GetAllSubscribersQueryHandler(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper)
+        public GetAllSubscribersQueryHandler(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper,
+            IAsyncRepository<UserRole> UserRoleRepository)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _mapper = mapper;
+            _UserRoleRepository = UserRoleRepository;
         }
 
         public async Task<BaseResponse<List<UserListVm>>> Handle(GetAllSubscribersQuery request, CancellationToken cancellationToken)
@@ -36,11 +40,17 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
                 return new BaseResponse<List<UserListVm>>("faild in roles", false,  400);
             }
 
-            var Subscribers = await _userRepository.GetWhereThenPagedReponseAsync(u => u.RoleId == SubscriberRole.RoleId ,request.page, request.pageSize);
+            var Subscribers = await _UserRoleRepository
+                .Where(x => x.RoleId == SubscriberRole.Id)
+                .Include(x => x.User!)
+                .Select(x => x.User!)
+                .Skip((request.page - 1) * request.pageSize)
+                .Take(request.pageSize)
+                .ToListAsync();
 
             var data = _mapper.Map<List<UserListVm>>(Subscribers);
 
-            int Count = await _userRepository.GetCountAsync(u => u.RoleId == SubscriberRole.RoleId);
+            int Count = await _UserRoleRepository.GetCountAsync(u => u.RoleId == SubscriberRole.Id);
             Pagination pagination = new Pagination(request.page, request.pageSize, Count);
             return new BaseResponse<List<UserListVm>>("", true, 200, data, pagination);
         }

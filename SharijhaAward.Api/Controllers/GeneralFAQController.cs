@@ -83,7 +83,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteGeneralFAQ(Guid Id)
+        public async Task<IActionResult> DeleteGeneralFAQ(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -111,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetGeneralFAQById(Guid Id)
+        public async Task<IActionResult> GetGeneralFAQById(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             if (string.IsNullOrEmpty(HeaderValue))

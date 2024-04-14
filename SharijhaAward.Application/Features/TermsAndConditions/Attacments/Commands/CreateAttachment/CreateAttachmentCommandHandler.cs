@@ -51,7 +51,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
         public async Task<BaseResponse<object>> Handle(CreateAttachmentCommand request, CancellationToken cancellationToken)
         {
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var form = _formsRepository.FirstOrDefault(f => f.userId == new Guid(UserId) && f.Id == request.formId);
+            var form = _formsRepository.FirstOrDefault(f => f.userId == int.Parse(UserId) && f.Id == request.formId);
             var term = _termsRepository.WhereThenInclude(t => t.Id == request.TermAndConditionId, t => t.ConditionAttachments).FirstOrDefault();
            
             string msg;

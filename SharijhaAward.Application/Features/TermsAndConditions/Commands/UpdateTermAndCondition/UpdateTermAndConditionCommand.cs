@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateT
 {
     public class UpdateTermAndConditionCommand :IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
@@ -21,7 +21,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateT
         public int? SizeOfAttachmentInKB { get; set; }
         public AttachmentType? AttachmentType { get; set; }
         public bool? IsSpecial { get; set; } = false;
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

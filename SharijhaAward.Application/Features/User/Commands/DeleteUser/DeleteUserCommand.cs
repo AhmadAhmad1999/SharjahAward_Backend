@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.User.Commands.DeleteUser
 {
     public class DeleteUserCommand : IRequest<BaseResponse<object>>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

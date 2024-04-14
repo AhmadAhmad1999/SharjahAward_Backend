@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
 {
     public class CyclePublicConditionListVm
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
@@ -21,7 +21,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
         public int? RequiredAttachmentNumber { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public AttachmentType? AttachmentType { get; set; }
-        public Guid CycleId { get; set; }
+        public int CycleId { get; set; }
         public CycleConditionProvidedFormListVm? ConditionsAttachments { get; set; }
     }
 }

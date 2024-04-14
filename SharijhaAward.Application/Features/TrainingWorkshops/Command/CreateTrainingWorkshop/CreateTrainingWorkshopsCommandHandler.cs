@@ -10,7 +10,7 @@ using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTrainingWorkshop
 {
     public class CreateTrainingWorkshopsCommandHandler
-        : IRequestHandler<CreateTrainingWorkshopsCommand , BaseResponse<Guid>>
+        : IRequestHandler<CreateTrainingWorkshopsCommand , BaseResponse<int>>
     {
         private readonly IAsyncRepository<TrainingWorkshop> _trainingWorkshopRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
@@ -30,12 +30,12 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<Guid>> Handle(CreateTrainingWorkshopsCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateTrainingWorkshopsCommand request, CancellationToken cancellationToken)
         {
             Category category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             if (category == null)
             {
-                return new BaseResponse<Guid>("Category Not Found",false,404);
+                return new BaseResponse<int>("Category Not Found",false,404);
             }
             TrainingWorkshop workshop = _mapper.Map<TrainingWorkshop>(request);
             string ThumbnailPath = await _fileService.SaveFileAsync(request.Thumbnail);
@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
 
             await _categoryRepository.UpdateAsync(category);
 
-            return new BaseResponse<Guid>("", true, 200, data.Id);
+            return new BaseResponse<int>("", true, 200, data.Id);
         }
     }
 }

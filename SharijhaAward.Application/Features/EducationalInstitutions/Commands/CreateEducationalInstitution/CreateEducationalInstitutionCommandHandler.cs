@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.CreateEducationalInstitution
 {
     public class CreateEducationalInstitutionCommandHandler
-        : IRequestHandler<CreateEducationalInstitutionCommand, BaseResponse<Guid>>
+        : IRequestHandler<CreateEducationalInstitutionCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<EducationalInstitution> _educationalInstitutionRepository;
         private readonly IAsyncRepository<EducationalEntity> _educationalEntityRepository;
@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.Cr
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<Guid>> Handle(CreateEducationalInstitutionCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateEducationalInstitutionCommand request, CancellationToken cancellationToken)
         {
             string msg;
             var Entity = await _educationalEntityRepository.GetByIdAsync(request.EducationalEntityId);
@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.Cr
                 msg = request.lang == "en"
                     ? "Educational Entity dose not Exist"
                     : "الجهة التعليمية غير موجودة";
-                return new BaseResponse<Guid>(msg, false, 404);
+                return new BaseResponse<int>(msg, false, 404);
             }
             var Institution = _mapper.Map<EducationalInstitution>(request);
 
@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.Cr
                 ? "Educational Institution has been Created"
                 : "تم إنشاء المؤسسة التعليمية";
 
-            return new BaseResponse<Guid>(msg, true, 200, data.Id);
+            return new BaseResponse<int>(msg, true, 200, data.Id);
         }
     }
 }

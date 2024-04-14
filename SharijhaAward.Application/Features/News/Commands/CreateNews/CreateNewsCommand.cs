@@ -17,6 +17,6 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
         public string? ArabicDescription { get; set; }
         public string? EnglishDescription { get; set; }
         public string? Image { get; set; }
-        public Guid CycleId { get; set; }
+        public int CycleId { get; set; }
     }
 }

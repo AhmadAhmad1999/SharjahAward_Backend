@@ -13,7 +13,7 @@ namespace SharijhaAward.Domain.Entities.ExtraAttachmentModel
 {
     public class ExtraAttachment : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;

@@ -13,12 +13,12 @@ namespace SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel
 {
     public class ExtraAttachmentFiles : AuditableEntity
     {
-        public Guid Id {  get; set; }
+        public int Id {  get; set; }
         public string FileUrl { get; set; } = string.Empty;
 
         public ExtraAttachment? ExtraAttachment { get; set; }
         [ForeignKey(nameof(ExtraAttachment))]
-        public Guid ExtraAttachmentId { get; set; }
+        public int ExtraAttachmentId { get; set; }
 
     }
 }

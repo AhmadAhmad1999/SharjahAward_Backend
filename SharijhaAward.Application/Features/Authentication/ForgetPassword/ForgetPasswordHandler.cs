@@ -6,7 +6,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Application.Features.Authentication.ForgetPassword
 {
-    internal class ForgetPasswordHandler : IRequestHandler<ForgetPasswordCommand, BaseResponse<Guid>>
+    internal class ForgetPasswordHandler : IRequestHandler<ForgetPasswordCommand, BaseResponse<int>>
     {
         private readonly IUserRepository _UserRepository;
         private IEmailSender _EmailSender;
@@ -17,7 +17,7 @@ namespace SharijhaAward.Application.Features.Authentication.ForgetPassword
             _UserRepository = UserRepository;
             _EmailSender = EmailSender;
         }
-        public async Task<BaseResponse<Guid>> Handle(ForgetPasswordCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(ForgetPasswordCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.Authentication.ForgetPassword
                     ? "Email is not found"
                     : "البريد الإلكتروني غير موجود";
 
-                return new BaseResponse<Guid>(ResponseMessage, false, 404);
+                return new BaseResponse<int>(ResponseMessage, false, 404);
             }
 
             int ConfirmationCode = new Random().Next(10000, 99999);
@@ -55,7 +55,7 @@ namespace SharijhaAward.Application.Features.Authentication.ForgetPassword
                 ? "Confirmation code sent successfuly"
                 : "تم إرسال كود التفعيل بنجاح";
 
-            return new BaseResponse<Guid>(ResponseMessage, true, 200, UserEntity.Id);
+            return new BaseResponse<int>(ResponseMessage, true, 200, UserEntity.Id);
         }
     }
 }

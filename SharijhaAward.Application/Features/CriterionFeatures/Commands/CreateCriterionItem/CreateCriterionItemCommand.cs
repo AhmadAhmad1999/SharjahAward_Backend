@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
         public string EnglishName { get; set; } = string.Empty;
         public int Score { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
-        public Guid CriterionId { get; set; }
+        public int CriterionId { get; set; }
         public string? lang { get; set; }
     }
 }

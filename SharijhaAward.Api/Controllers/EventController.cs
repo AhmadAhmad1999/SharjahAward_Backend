@@ -120,7 +120,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> DeleteEvent(Guid id)
+        public async Task<ActionResult> DeleteEvent(int id)
         {
             var dtos = await _Mediator.Send(new DeleteEventCommand() { Id = id });
            
@@ -134,7 +134,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetEventById(Guid id)
+        public async Task<ActionResult> GetEventById(int id)
         { 
             var headerValue = HttpContext.Request.Headers["lang"];
             if (headerValue.IsNullOrEmpty())
@@ -155,7 +155,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetEventWithInvitees(Guid id)
+        public async Task<ActionResult> GetEventWithInvitees(int id)
         {
             var response = await _Mediator.Send(new GetEventWithInviteesQuery() { Id = id });
             return Ok(new { data = response });

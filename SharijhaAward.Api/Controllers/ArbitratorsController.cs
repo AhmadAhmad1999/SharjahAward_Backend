@@ -49,7 +49,7 @@ namespace SharijhaAward.Api.Controllers
 
             CreateArbitratorCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
 
-            BaseResponse<Guid>? Response = await _Mediator.Send(CreateArbitratorCommand);
+            BaseResponse<int>? Response = await _Mediator.Send(CreateArbitratorCommand);
 
             return Response.statusCode switch
             {
@@ -66,7 +66,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteArbitrator(Guid Id)
+        public async Task<IActionResult> DeleteArbitrator(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -150,7 +150,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetArbitratorById(Guid ArbitratorId)
+        public async Task<IActionResult> GetArbitratorById(int ArbitratorId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

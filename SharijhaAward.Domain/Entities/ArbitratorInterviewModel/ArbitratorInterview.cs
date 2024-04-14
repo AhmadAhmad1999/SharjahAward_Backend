@@ -16,11 +16,11 @@ namespace SharijhaAward.Domain.Entities.ArbitratorInterviewModel
         public Arbitrator Arbitrator { get; set; } = null!;
 
         [ForeignKey(nameof(Arbitrator))]
-        public Guid ArbitratorId {  get; set; }
+        public int ArbitratorId {  get; set; }
 
         public Interview Interview { get; set; } = null!;
 
         [ForeignKey(nameof(Interview))]
-        public Guid InterviewId { get; set;}
+        public int InterviewId { get; set;}
     }
 }

@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
             List<GetAllCriterionsForDashBoardCategoryIdDto> MainCriterions = _CriterionRepository
                 .GetWhereThenPagedReponseAsync(x => x.CategoryId == Request.CategoryId && x.ParentId == null,
                     Request.page, Request.pageSize).Result
-                .OrderBy(x => x.CreatedAt)
+                .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new GetAllCriterionsForDashBoardCategoryIdDto()
                 {
                     Id = x.Id,
@@ -59,13 +59,14 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                     .Where(x => x.ParentId != null 
                         ? x.ParentId == MainCriterion.Id
                         : false)
-                    .OrderBy(x => x.CreatedAt)
+                    .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new GetAllSubCriterion()
                     {
                         Id = x.Id,
                         Score = x.Score,
                         ArabicTitle = x.ArabicTitle,
-                        EnglishTitle = x.EnglishTitle
+                        EnglishTitle = x.EnglishTitle,
+                        SizeOfAttachmentInKB = x.SizeOfAttachmentInKB
                     }).ToListAsync();
 
                 MainCriterion.SubCriterions = SubCriterions;
@@ -74,13 +75,16 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                 {
                     List<GetAllSubCriterionItems> CriterionItems = await _CriterionItemRepository
                         .Where(x => x.CriterionId == SubCriterion.Id)
-                        .OrderBy(x => x.CreatedAt)
+                        .OrderByDescending(x => x.CreatedAt)
                         .Select(x => new GetAllSubCriterionItems()
                         {
                             Id = x.Id,
                             ArabicName = x.ArabicName,
                             EnglishName = x.EnglishName,
-                            Score = x.Score
+                            Score = x.Score,
+                            SizeOfAttachmentInKB = x.SizeOfAttachmentInKB != null
+                                ? x.SizeOfAttachmentInKB.Value
+                                : 0
                         }).ToListAsync();
 
                     SubCriterion.CriterionItems = CriterionItems;

@@ -72,7 +72,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
                 return new BaseResponse<int>("Invalid Token", false, 400);
             }
 
-            var FormsOfUser = _Providedrepository.Where(p => p.userId == new Guid(UserId)).ToList();
+            var FormsOfUser = _Providedrepository.Where(p => p.userId == int.Parse(UserId)).ToList();
             
             var category =await _CategoryRepository.GetByIdAsync(request.categoryId);
             
@@ -87,7 +87,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
                     return new BaseResponse<int>(msg, false, 400);
                 }
             }
-            var User = await _userRepository.GetByIdAsync(new Guid(UserId));
+            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
             var cycle = await _CycleRepository.GetByIdAsync(category.CycleId);
 
             if (category.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Individual)
@@ -118,7 +118,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
 
             var ProvidedForm = _mapper.Map<Domain.Entities.ProvidedFormModel.ProvidedForm>(request);
           
-            ProvidedForm.userId = new Guid(UserId);
+            ProvidedForm.userId = int.Parse(UserId);
             ProvidedForm.CycleNumber = cycle.CycleNumber;
             ProvidedForm.CycleYear = cycle.Year;
             ProvidedForm.Type = 0;

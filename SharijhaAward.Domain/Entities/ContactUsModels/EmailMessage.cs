@@ -12,7 +12,7 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
 {
     public class EmailMessage : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string From { get; set; } = string.Empty;
         public string To { get; set; } = string.Empty;
         public string Subject { get; set; } = string.Empty;
@@ -23,7 +23,7 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
 
         public EmailMessage message { get; set; } = null!;
         [ForeignKey(nameof(message))]
-        public Guid? MessageId { get; set; }
+        public int? MessageId { get; set; }
 
         public List<EmailAttachment>? Attachments { get; set; } 
     }

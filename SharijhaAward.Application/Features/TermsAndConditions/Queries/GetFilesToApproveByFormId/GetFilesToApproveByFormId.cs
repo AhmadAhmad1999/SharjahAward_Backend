@@ -12,6 +12,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetFiles
     public class GetFilesToApproveByFormId : IRequest<BaseResponse<List<ConditionProvidedFormListVm>>>
     {
         public int formId {  get; set; }
-        public Guid TermAndCondition {  get; set; }
+        public int TermAndCondition {  get; set; }
     }
 }

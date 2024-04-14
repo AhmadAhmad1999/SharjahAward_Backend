@@ -26,21 +26,21 @@ namespace SharijhaAward.Persistence.Repositories
             _Mapper = Mapper;
         }
 
-        public async Task AsignRole(Guid userId, Guid roleId)
-        {
-            var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.RoleId == roleId);
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        //public async Task AsignRole(int userId, int roleId)
+        //{
+        //    var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Id == roleId);
+        //    var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
            
-            if (user != null && role != null)
-            {
-                user.RoleId = roleId;
-                user.Role = role;
-                role.Users.Add(user);
-            }
-            await _dbContext.SaveChangesAsync();
-        }
+        //    if (user != null && role != null)
+        //    {
+        //        user.RoleId = roleId;
+        //        user.Role = role;
+        //        role.Users.Add(user);
+        //    }
+        //    await _dbContext.SaveChangesAsync();
+        //}
 
-        public async Task ChangePassword(Guid Id, string password)
+        public async Task ChangePassword(int Id, string password)
         {
             var user =await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
             user!.Password= password;
@@ -49,14 +49,18 @@ namespace SharijhaAward.Persistence.Repositories
 
         public async Task<User> GetByEmailAsync(string email, bool intoAdminDashboard)
         {
-            User? user = await _dbContext.Users
+            UserRole? UserRole = await _dbContext.UsersRoles
                 .Include(x => x.Role!)
-                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.isValidAccount && 
-                    (intoAdminDashboard 
+                .Include(x => x.User!)
+                .FirstOrDefaultAsync(u => u.User!.Email.ToLower() == email.ToLower() && u.User!.isValidAccount &&
+                    (intoAdminDashboard
                         ? u.Role!.RoleName.ToLower() != "Subscriber".ToLower()
                         : u.Role!.RoleName.ToLower() == "Subscriber".ToLower()));
 
-            return user;
+            if (UserRole is not null)
+                return UserRole.User;
+
+            return null;
         }
 
         public async Task<AuthenticationResponse> LogInAsync(User user, string? lang, bool intoAdminDashboard)

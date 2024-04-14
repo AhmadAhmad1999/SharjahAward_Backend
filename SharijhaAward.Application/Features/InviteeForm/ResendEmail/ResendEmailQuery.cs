@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
 {
     public class ResendEmailQuery : IRequest<Unit>
     {
-        public Guid InviteeId { get; set; }
+        public int InviteeId { get; set; }
         public string Type { get; set; }=string.Empty;
         public string? lang { get; set; }
         public string? ImagePath { get; set; }

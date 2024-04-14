@@ -11,6 +11,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermA
     public class GetTermAndConditionByIdQuery : IRequest<BaseResponse<TermAndConditionDto>>
     {
         public string lang { get; set; } = string.Empty;
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

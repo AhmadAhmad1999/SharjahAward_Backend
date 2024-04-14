@@ -11,6 +11,6 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Get
     public class GetAllEducationalInstitutionsQuery : IRequest<BaseResponse<List<EducationalInstitutionListVM>>>
     {
         public string lang { get; set; } = string.Empty;
-        public Guid? EducationalEntityId {  get; set; }
+        public int? EducationalEntityId {  get; set; }
     }
 }

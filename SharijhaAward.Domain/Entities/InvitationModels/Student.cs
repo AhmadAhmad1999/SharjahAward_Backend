@@ -10,11 +10,11 @@ namespace SharijhaAward.Domain.Entities.InvitationModels
 {
     public class Student : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string StudentName { get; set; } = string.Empty;
         public GroupInvitee GroupInvitee { get; set; } = null!;
 
         [ForeignKey(nameof(GroupInvitee))]
-        public Guid GroupInviteeId {  get; set; }
+        public int GroupInviteeId {  get; set; }
     }
 }

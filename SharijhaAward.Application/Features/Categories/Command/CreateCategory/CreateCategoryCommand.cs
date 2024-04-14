@@ -25,8 +25,8 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         public int? ExpectedNumberOfWinners { get; set; }
         public bool? RelatedToClasses { get; set; }
         public List<CreateCategoryEducationalClassDto>? EducationalClasses { get; set; }
-        public Guid? ParentId { get; set; }
-        public Guid? CycleId { get; set; }
+        public int? ParentId { get; set; }
+        public int? CycleId { get; set; }
         public string lang {  get; set; } = string.Empty;
     }
 }
