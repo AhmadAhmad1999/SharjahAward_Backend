@@ -188,6 +188,7 @@ using SharijhaAward.Domain.Entities.InstructionModel;
 using SharijhaAward.Application.Features.InstructionsFeatures.Commands.UpdateInstruction;
 using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAllInstructions;
 using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetInstructionBySlugId;
+using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.UpdateWorkshopAttachment;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -310,7 +311,8 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<TrainingWrokshopeAttachment, WorkshopAttachmentListVM>().ReverseMap();
             CreateMap<TrainingWrokshopeAttachment, CreateWorkshopeAttachmentCommand>().ReverseMap();
-
+            CreateMap<TrainingWrokshopeAttachment, UpdateWorkshopAttachmentCommand>().ReverseMap();
+         
             CreateMap<EducationalEntity, EducationalEntitiesListVm>().ReverseMap();
             CreateMap<EducationalEntity, CreateEducationalEntityCommand>().ReverseMap();
 
