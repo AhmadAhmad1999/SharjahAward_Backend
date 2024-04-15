@@ -33,7 +33,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> CreateClass([FromForm] CreateClassCommand CreateClassCommand)
+        public async Task<IActionResult> CreateClass([FromBody] CreateClassCommand CreateClassCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
