@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.Categories.Command.DeleteCategory;
+using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.AddExtraAttachmentFile;
+using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.DeleteExtraAttachmentFile;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExtraAttachment;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.DeleteExtraAttachment;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAttachment;
@@ -85,6 +87,43 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAllExtraAttachmentByFormIdQuery()
             {
                 formId = FormId,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpPost("AddExtraAttachmentFile",Name= "AddExtraAttachmentFile")]
+        public async Task<IActionResult> AddExtraAttachmentFile([FromForm] AddExtraAttachmentFileCommand command)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            command.lang = language!;
+
+            var response = await _mediator.Send(command);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpDelete("DeleteExtraAttachmentFile/{FileId}",Name = "DeleteExtraAttachmentFile")]
+        public async Task<IActionResult> DeleteExtraAttachmentFile(int FileId)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new DeleteExtraAttachmentFileCommand()
+            {
+                FileId = FileId,
                 lang = language!
             });
 

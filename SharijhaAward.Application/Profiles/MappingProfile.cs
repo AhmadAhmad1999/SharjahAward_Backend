@@ -190,6 +190,7 @@ using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAllInst
 using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetInstructionBySlugId;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.UpdateWorkshopAttachment;
 using SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole;
+using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.AddExtraAttachmentFile;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -350,7 +351,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ExtraAttachment, CreateExtraAttachmentCommand>().ReverseMap();
             CreateMap<ExtraAttachment, UpdateExtraAttachmentCommand>().ReverseMap();
             CreateMap<ExtraAttachment, ExtraAttachmentListVM>().ReverseMap();
-            CreateMap<ExtraAttachmentFiles, AttachmentDto>().ReverseMap();
+            
+            CreateMap<ExtraAttachmentFile, AttachmentDto>().ReverseMap();
+            CreateMap<ExtraAttachmentFile, AddExtraAttachmentFileCommand>().ReverseMap();
 
             //
             // Dynamic Attribute..

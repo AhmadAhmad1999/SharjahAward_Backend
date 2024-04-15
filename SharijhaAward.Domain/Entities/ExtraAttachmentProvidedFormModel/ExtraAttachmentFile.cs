@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel
 {
-    public class ExtraAttachmentFiles : AuditableEntity
+    public class ExtraAttachmentFile : AuditableEntity
     {
         public int Id {  get; set; }
         public string FileUrl { get; set; } = string.Empty;

@@ -39,11 +39,11 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.DeleteExt
             }
             await _extraAttachmentsRepository.DeleteAsync(ExtraAttachment);
 
-            int countOfExtraAttachment = _extraAttachmentsRepository.GetCount(e=>!e.isDeleted);
+            int countOfExtraAttachment = _extraAttachmentsRepository.GetCount(e => e.ProvidedFormId == ExtraAttachment.ProvidedFormId && !e.isDeleted);
 
             if (countOfExtraAttachment == 0)
             {
-                var form = await _formModelRepository.GetByIdAsync(request.formId);
+                var form = await _formModelRepository.GetByIdAsync(ExtraAttachment.ProvidedFormId);
                 if (form == null)
                 {
                     msg = request.lang == "en"

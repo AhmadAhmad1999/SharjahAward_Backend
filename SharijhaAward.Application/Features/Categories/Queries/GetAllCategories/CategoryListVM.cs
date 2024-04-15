@@ -21,8 +21,10 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
         public string EnglishDescription { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
         public CategoryClassification CategoryClassification { get; set; }
-        public int FinalArbitrationQualificationMark { get; set; }
-        public int WinningScore { get; set; }
+        public float? FinalArbitrationQualificationMark { get; set; }
+        public float? WinningScore { get; set; }
+        public float? MinimumAmountToParticipateInTheAward { get; set; }
+        public float? MinimumAmountToObtainACertificateOfParticipation { get; set; }
         public bool RelatedToClasses { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
         public List<SubcategoriesListVM> subcategories { get; set; } = null!;
