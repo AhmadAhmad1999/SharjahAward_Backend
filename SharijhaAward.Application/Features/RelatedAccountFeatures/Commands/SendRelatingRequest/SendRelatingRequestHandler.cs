@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
                 .Include(x => x.Role!)
                 .Include(x => x.User!)
                 .FirstOrDefaultAsync(x => x.User!.Email.ToLower() == Request.ReceiverEmail.ToLower() && x.User!.isValidAccount &&
-                    x.Role!.RoleName.ToLower() == "Subscriber".ToLower());
+                    x.Role!.EnglishName.ToLower() == "Subscriber".ToLower());
 
             if (UserRole == null)
             {

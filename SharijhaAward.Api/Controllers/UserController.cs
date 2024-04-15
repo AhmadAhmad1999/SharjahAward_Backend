@@ -77,10 +77,14 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(Token))
                 return Unauthorized("You must send the token");
 
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
             var response =  await _mediator.Send(new GetUserByIdQuery
             {
                 Id = id,
-                token =Token!
+                token =Token!,
+                lang = language
             });
 
             return response.statusCode switch

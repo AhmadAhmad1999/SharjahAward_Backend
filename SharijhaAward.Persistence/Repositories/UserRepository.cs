@@ -54,8 +54,8 @@ namespace SharijhaAward.Persistence.Repositories
                 .Include(x => x.User!)
                 .FirstOrDefaultAsync(u => u.User!.Email.ToLower() == email.ToLower() && u.User!.isValidAccount &&
                     (intoAdminDashboard
-                        ? u.Role!.RoleName.ToLower() != "Subscriber".ToLower()
-                        : u.Role!.RoleName.ToLower() == "Subscriber".ToLower()));
+                        ? u.Role!.EnglishName.ToLower() != "Subscriber".ToLower()
+                        : u.Role!.EnglishName.ToLower() == "Subscriber".ToLower()));
 
             if (UserRole is not null)
                 return UserRole.User;

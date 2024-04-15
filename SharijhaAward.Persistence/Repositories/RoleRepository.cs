@@ -17,7 +17,7 @@ namespace SharijhaAward.Persistence.Repositories
 
         public async Task<Role> GetByName(string name)
         {
-            var role= await _dbContext.Roles.FirstOrDefaultAsync(r => r.RoleName.ToLower() == name.ToLower());
+            var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.EnglishName.ToLower() == name.ToLower());
             return role!; 
         }
     }

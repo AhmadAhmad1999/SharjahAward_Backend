@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.Classes.Commands.CreateClass
 
             ResponseMessage = Request.lang == "en"
                 ? "Created successfully"
-                : "تم إنشاء الصف بنجاح";
+                : "تم إنشاء الدور بنجاح";
 
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }

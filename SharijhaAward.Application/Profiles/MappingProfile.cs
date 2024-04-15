@@ -189,6 +189,7 @@ using SharijhaAward.Application.Features.InstructionsFeatures.Commands.UpdateIns
 using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAllInstructions;
 using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetInstructionBySlugId;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.UpdateWorkshopAttachment;
+using SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -386,6 +387,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalInstitution, UpdateEducationalInstitutionsCommand>().ReverseMap();
             CreateMap<EducationalClass, UpdateClassCommand>().ReverseMap();
             CreateMap<Instruction, UpdateInstructionCommand>().ReverseMap();
+            CreateMap<Role, UpdateRoleCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();

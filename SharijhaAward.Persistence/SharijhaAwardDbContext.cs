@@ -66,6 +66,7 @@ namespace SharijhaAward.Persistence
         }
         
         public DbSet<UserRole> UsersRoles { get; set; }
+        public DbSet<PermissionHeader> PermissionHeaders { get; set; }
         public DbSet<Instruction> Instructions { get; set; }
         public DbSet<AppVersion> AppVersions { get; set; }
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
@@ -143,6 +144,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<AppVersion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Instruction>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<UserRole>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<PermissionHeader>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Committee>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => !p.isDeleted);
@@ -1470,37 +1472,41 @@ namespace SharijhaAward.Persistence
                 new Role
                 {
                     Id = 1,
-                    RoleName = "Admin"
+                    EnglishName = "Admin",
+                    ArabicName = "ادمن"
                 });
                 modelBuilder.Entity<Role>().HasData(
                 new Role
                 {
                     Id = 2,
-                    RoleName = "Subscriber"
+                    EnglishName = "Subscriber",
+                    ArabicName = "مشترك"
                 });
                 modelBuilder.Entity<Role>().HasData(
                 new Role
                 {
                     Id = 3,
-                    RoleName = "Manager"
-
+                    EnglishName = "Manager",
+                    ArabicName = "مدير"
                 });
                 modelBuilder.Entity<Role>().HasData(
                 new Role
                 {
                     Id = 4,
-                    RoleName = "User"
-
+                    EnglishName = "User",
+                    ArabicName = "مستخدم"
                 });
             modelBuilder.Entity<Role>().HasData(
                 new Role 
                 {
                     Id = 5,
-                    RoleName = "Coordinator"
+                    EnglishName = "Coordinator",
+                    ArabicName = "منسق"
                 }, new Role
                 {
                     Id = 6,
-                    RoleName = "Arbitrator"
+                    EnglishName = "Arbitrator",
+                    ArabicName = "محكم"
                 });
 
             modelBuilder.Entity<User>()

@@ -12,5 +12,6 @@ namespace SharijhaAward.Application.Features.User.Queries.GetUserById
     {
         public int? Id {  get; set; }
         public string token {  get; set; } = string.Empty;
+        public string? lang { get; set; }
     }
 }
