@@ -47,7 +47,10 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId
                 data[i].Answer = request.lang == "en" ? data[i].EnglishAnswer : data[i].ArabicAnswer;
                 data[i].Question = request.lang == "en" ? data[i].EnglishQuestion : data[i].ArabicQuestion;
             }
-            return new BaseResponse<List<FAQListVm>>("",true,200,data);
+            var count = await _faqRepository.GetCountAsync(t => t.CategoryId == request.CategoryId);
+
+            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            return new BaseResponse<List<FAQListVm>>("", true, 200, data, pagination);
         }
     }
 }
