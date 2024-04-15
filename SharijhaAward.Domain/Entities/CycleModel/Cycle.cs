@@ -57,6 +57,5 @@ public class Cycle : AuditableEntity
     
     // navigation property to the News
     public virtual List<News> News { get; set; } = new();
-    public virtual List<EducationalClass> EducationalClasses { get; set; } = new();
    
 }

@@ -6,6 +6,9 @@ using SharijhaAward.Application.Features.Categories.Queries.GetCategoryById;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories;
 using SharijhaAward.Application.Features.Categories.Command.DeleteCategory;
+using SharijhaAward.Application.Features.Categories.Queries.GetAllCategoriesWithCycleNumber;
+using SharijhaAward.Application.Responses;
+using Microsoft.Extensions.Primitives;
 
 
 namespace SharijhaAward.Api.Controllers
@@ -133,6 +136,33 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpGet("GetAllCategoriesWithCycleNumber")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllCategoriesWithCycleNumber()
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllCategoriesWithCycleNumberListVM>> Response = await 
+                _mediator.Send(new GetAllCategoriesWithCycleNumberQuery()
+                {
+                    lang = HeaderValue!
+                });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
     }
 }

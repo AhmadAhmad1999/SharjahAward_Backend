@@ -13,15 +13,12 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
         : IRequestHandler<CreateCycleCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Cycle> _cycleRepository;
-        private readonly IAsyncRepository<EducationalClass> _EducationalClassRepository;
         private readonly IMapper _mapper;
 
         public CreateCycleCommandHandler(IAsyncRepository<Cycle> cycleRepository,
-            IAsyncRepository<EducationalClass> EducationalClassRepository,
             IMapper mapper)
         {
             _cycleRepository = cycleRepository;
-            _EducationalClassRepository = EducationalClassRepository;
             _mapper = mapper;
         }
 
@@ -57,157 +54,6 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
 
                     }
                     var data = await _cycleRepository.AddAsync(cycle);
-
-                    List<EducationalClass> EducationalClassesEntities = new List<EducationalClass>()
-                    {
-                        new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 1,
-                            ArabicName = "الصف الأول",
-                            EnglishName = "First class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 2,
-                            ArabicName = "الصف الثاني",
-                            EnglishName = "Second class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 3,
-                            ArabicName = "الصف الثالث",
-                            EnglishName = "Third class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 4,
-                            ArabicName = "الصف الرابع",
-                            EnglishName = "Forth class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 5,
-                            ArabicName = "الصف الخامس",
-                            EnglishName = "Fifth class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 6,
-                            ArabicName = "الصف السادس",
-                            EnglishName = "Sixth class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 7,
-                            ArabicName = "الصف السابع",
-                            EnglishName = "Seventh class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 8,
-                            ArabicName = "الصف الثامن",
-                            EnglishName = "Eighth class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 9,
-                            ArabicName = "الصف التاسع",
-                            EnglishName = "Ninth class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 10,
-                            ArabicName = "الصف العاشر",
-                            EnglishName = "Tenth class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 11,
-                            ArabicName = "الصف الحادي عشر",
-                            EnglishName = "Eleventh class",
-                            CycleId = cycle.Id
-                        }, new EducationalClass()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            Id = 12,
-                            ArabicName = "الصف الثاني عشر",
-                            EnglishName = "Twelfth class",
-                            CycleId = cycle.Id
-                        }
-                    };
-
-                    await _EducationalClassRepository.AddRangeAsync(EducationalClassesEntities);
 
                     Transaction.Complete();
 

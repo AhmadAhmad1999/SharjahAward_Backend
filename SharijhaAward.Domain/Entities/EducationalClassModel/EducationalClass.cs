@@ -9,7 +9,4 @@ public class EducationalClass : AuditableEntity
     public int Id { get; set; }
     public string ArabicName { get; set; } = null!;
     public string EnglishName { get; set; } = null!;
-    [ForeignKey(nameof(Cycle))]
-    public int CycleId { get; set; }
-    public Cycle? Cycle { get; set; }
 }

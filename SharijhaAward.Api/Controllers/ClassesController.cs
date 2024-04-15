@@ -111,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllClasses(int CycleId, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllClasses(int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -120,7 +120,6 @@ namespace SharijhaAward.Api.Controllers
 
             BaseResponse<List<GetAllClassesListVM>> Response = await _Mediator.Send(new GetAllClassesQuery()
             {
-                CycleId = CycleId,
                 lang = HeaderValue!,
                 page = Page,
                 pageSize = PerPage
