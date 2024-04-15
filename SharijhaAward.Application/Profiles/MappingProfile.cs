@@ -191,6 +191,7 @@ using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetInstruc
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.UpdateWorkshopAttachment;
 using SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole;
 using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.AddExtraAttachmentFile;
+using SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -431,6 +432,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AppVersion, GetLastAppVersionDto>().ReverseMap();
             CreateMap<Instruction, GetAllInstructionsListVM>().ReverseMap();
             CreateMap<Instruction, GetInstructionBySlugIdDto>().ReverseMap();
+            CreateMap<Role, GetAllRolesListVM>().ReverseMap();
         }
     }
 }

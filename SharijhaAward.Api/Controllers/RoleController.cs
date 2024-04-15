@@ -1,7 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SharijhaAward.Application.Features.Identity.Role.Queries.GetAllRoles;
-
+using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.RoleFeatures.Commands.CreateRole;
+using SharijhaAward.Application.Features.RoleFeatures.Commands.CreateRolePermission;
+using SharijhaAward.Application.Features.RoleFeatures.Commands.DeleteRole;
+using SharijhaAward.Application.Features.RoleFeatures.Commands.DeleteRolePermission;
+using SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole;
+using SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles;
+using SharijhaAward.Application.Features.RoleFeatures.Queries.GetRoleById;
+using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -9,54 +16,199 @@ namespace SharijhaAward.Api.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly IMediator _mediator;
-        public RoleController(IMediator mediator)
+        private readonly IMediator _Mediator;
+        public RoleController(IMediator Mediator)
         {
-            _mediator = mediator;
+            _Mediator = Mediator;
         }
-  
-        [HttpGet(Name = "GetAllRoles")]
+
+        [HttpPost("CreateRole")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetAllRoles(int page, int perPage)
+        public async Task<IActionResult> CreateRole([FromBody] CreateRoleCommand CreateRoleCommand)
         {
-            var dto = await _mediator.Send(new GetAllRolesQuery());
-            // Pagenation
-            if (perPage == 0)
-                perPage = 10;
-            else if (perPage == -1)
-                return Ok(
-                new
-                {
-                    data = dto,
-                    status = true,
-                });
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            var totalCount = dto.Count;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
-            var dataPerPage = dto
-                .Skip((page - 1) * perPage)
-                .Take(perPage)
-                .ToList();
+            CreateRoleCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
 
-            return Ok(
-                new
-                {
-                    data = dataPerPage,
-                    status = true,
-                    pagination =
-                    new
-                    {
-                        current_page = page,
-                        last_page = totalPage,
-                        total_row = totalCount,
-                        per_page = perPage
-                    }
-                });
+            BaseResponse<object>? Response = await _Mediator.Send(CreateRoleCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("CreateRolePermission")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> CreateRolePermission([FromBody] CreateRolePermissionCommand CreateRolePermissionCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            CreateRolePermissionCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(CreateRolePermissionCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpDelete("DeleteRole/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> DeleteRole(int Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(new DeleteRoleCommand()
+            {
+                Id = Id,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpDelete("DeleteRolePermission/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> DeleteRolePermission(int Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(new DeleteRolePermissionCommand()
+            {
+                Id = Id,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("UpdateRole")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> UpdateClass([FromBody] UpdateRoleCommand UpdateRoleCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            UpdateRoleCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(UpdateRoleCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllRoles")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllRoles(int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllRolesListVM>> Response = await _Mediator.Send(new GetAllRolesQuery()
+            {
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetRoleById/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetRoleById(int Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetRoleByIdDto> Response = await _Mediator.Send(new GetRoleByIdQuery()
+            {
+                Id = Id,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
     }
 }
