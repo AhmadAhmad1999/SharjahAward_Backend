@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
             }
          
             List<CategoriesSubcategoriesDto> MainCategories = await _CategoryRepository
-                .Where(x => x.CycleId == CycleEntity.Id && x.Status == Domain.Constants.Common.Status.Active && x.ParentId == null &&
+                .Where(x => x.CycleId == CycleEntity.Id && x.ParentId == null &&
                     ((CycleEntity.GroupCategoryNumber != 0 
                         ? x.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Group
                         : false) ||
@@ -63,7 +63,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
             {
                 MainCategory.subcategories = await _CategoryRepository
                     .Where(x => x.ParentId != null 
-                        ? (x.ParentId == MainCategory.Id && x.Status != Domain.Constants.Common.Status.Close) 
+                        ? (x.ParentId == MainCategory.Id ) 
                         : false)
                     .Select(x => new SubcategoriesListVM()
                     {
