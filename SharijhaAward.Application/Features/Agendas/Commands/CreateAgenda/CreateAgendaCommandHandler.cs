@@ -39,9 +39,9 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
         public async Task<BaseResponse<object>> Handle(CreateAgendaCommand request, CancellationToken cancellationToken)
         {
             Agenda agenda = _mapper.Map<Agenda>(request);
-            Cycle cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
+            var cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
             string msg;
-            if( cycle == null )
+            if( cycle == null)
             {
                 msg = request.lang == "en"
                     ? "Cycle Not Found"
@@ -49,16 +49,25 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
 
                 return new BaseResponse<object>(msg, false, 404);
             }
+            if (cycle.Status == Domain.Constants.Common.Status.Close)
+            {
+                msg = request.lang == "en"
+                    ? "The Status of Cycle is Close"
+                    : "حالة الدورة مغلقة";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
             agenda.Icon = await _fileService.SaveFileAsync(request.Icon);
 
-            var countOfAgenda = await _agendaRepository.GetCountAsync(a => !a.isDeleted);
+            var countOfAgenda = await _agendaRepository.GetCountAsync(a => !a.isDeleted && a.CycleId == cycle.Id);
            
             if (countOfAgenda > 0)
             {
-                var AllAgenda = await _agendaRepository.ListAllAsync();
-                var LastAgenda = await _agendaRepository.OrderBy(a=>a.CreatedAt).LastOrDefaultAsync(a =>true);
-                var FirstAgenda = await _agendaRepository.OrderBy(a => a.CreatedAt).FirstOrDefaultAsync(a => true);
-               
+                var AllAgenda =  _agendaRepository.Where(a => a.CycleId == cycle.Id).OrderBy(a => a.StartDate).ToList();
+                var LastAgenda = AllAgenda.Last(); //await _agendaRepository.OrderBy(a=>a.CreatedAt).LastOrDefaultAsync(a =>true);
+                var FirstAgenda = AllAgenda.First(); //await _agendaRepository.OrderBy(a => a.CreatedAt).FirstOrDefaultAsync(a => true);
+
+
                 if (request.DateType == AgendaDateType.Full || request.DateType == AgendaDateType.Date)
                 {
                     if (request.CurrentDate > request.EndDate || request.CurrentDate < request.StartDate)

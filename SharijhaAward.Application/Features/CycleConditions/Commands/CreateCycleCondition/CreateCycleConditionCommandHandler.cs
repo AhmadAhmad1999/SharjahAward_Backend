@@ -42,6 +42,14 @@ namespace SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycl
 
                 return new BaseResponse<object>(msg, false, 404);
             }
+            if (cycle.Status == Domain.Constants.Common.Status.Close)
+            {
+                msg = request.lang == "en"
+                    ? "The Status of Cycle is Close"
+                    : "حالة الدورة مغلقة";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
             await _cycleConditionRepository.AddAsync(cycleCondition);
 
             msg = request.lang == "en"

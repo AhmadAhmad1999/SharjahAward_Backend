@@ -48,6 +48,14 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
 
                 return new BaseResponse<object>(msg, false, 404);
             }
+            if (cycle.Status == Domain.Constants.Common.Status.Close)
+            {
+                msg = request.lang == "en"
+                    ? "The Status of Cycle is Close"
+                    : "حالة الدورة مغلقة";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
 
             var form = await _providedFormRepository.FirstOrDefaultAsync(p => p.Id == request.formId);
 
