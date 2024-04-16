@@ -8,6 +8,7 @@ namespace SharijhaAward.Domain.Constants.ContactUsConstants
 {
     public enum MessageType
     {
-        TecErrore
+        TecError,
+        Enquiry
     }
 }

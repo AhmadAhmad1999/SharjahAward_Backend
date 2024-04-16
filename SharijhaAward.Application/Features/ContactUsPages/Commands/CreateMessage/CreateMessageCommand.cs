@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.ContactUsConstants;
 using System;
@@ -11,12 +12,14 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
 {
     public class CreateMessageCommand : IRequest<BaseResponse<int>>
     {
-        public string From { get; set; } = string.Empty;
-        public string To { get; set; } = string.Empty;
-        public string Subject { get; set; } = string.Empty;
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? From { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
         public MessageType Type { get; set; }
-        public MessageStatus? Status { get; set; } = MessageStatus.New;
         public int? MessageId { get; set; }
+        public string lang { get; set; } = string.Empty;
+        public string? token { get; set; }
+        public List<IFormFile>? Attachments { get; set; }
     }
 }

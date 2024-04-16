@@ -23,8 +23,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name="SendMessage")]
-        public async Task<IActionResult> SendMessage(CreateMessageCommand command)
+        public async Task<IActionResult> SendMessage([FromForm] CreateMessageCommand command)
         {
+            var token = HttpContext.Request.Headers.Authorization;
+            var language = HttpContext.Request.Headers["lang"];
+
+            command.token = token!;
+            command.lang = language!;
 
             var response = await _mediator.Send(command);
 
