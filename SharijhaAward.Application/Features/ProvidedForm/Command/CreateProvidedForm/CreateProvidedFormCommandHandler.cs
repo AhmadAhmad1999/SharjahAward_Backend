@@ -138,21 +138,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             {
                 try
                 {
-                    if (category.RelatedToClasses != null
-                        ? category.RelatedToClasses.Value
-                        : false)
-                    {
-                        if (request.CategoryEducationalClassId is null)
-                        {
-                            string ResponseMessage = request.lang == "en"
-                                ? "You have to select one class"
-                                : "يجب عليك اختيار صف";
-
-                            return new BaseResponse<int>(ResponseMessage, false, 400);
-                        }
-
-                        ProvidedForm.CategoryEducationalClassId = request.CategoryEducationalClassId;
-                    }
                     var data = await _Providedrepository.AddAsync(ProvidedForm);
 
                     await _userRepository.UpdateAsync(User);
