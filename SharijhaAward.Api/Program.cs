@@ -66,10 +66,11 @@ builder.Services.AddHangfire(configuration => configuration
                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
                    QueuePollInterval = TimeSpan.Zero,
                    UseRecommendedIsolationLevel = true,
-                   DisableGlobalLocks = true
+                   DisableGlobalLocks = true,
                }));
 
 builder.Services.AddHangfireServer();
+//builder.Services.AddHostedService<BackgroundService>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
@@ -117,7 +118,7 @@ app.UseCors("Open");
 
 app.UseHangfireDashboard();
 
-RecurringJob.AddOrUpdate<IBackGroundJobService>("Change Agenda State", service => service.ChangeAgendaStateAsync(), Cron.Minutely);
+//RecurringJob.AddOrUpdate<IBackGroundJobService>("Change Agenda State", service => service.ChangeAgendaStateAsync(), Cron.Minutely);
 
 app.MapControllers();
 

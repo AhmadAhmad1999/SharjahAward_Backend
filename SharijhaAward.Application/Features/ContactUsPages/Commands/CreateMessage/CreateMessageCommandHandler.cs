@@ -60,9 +60,9 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
             }
             var data = await _messageRepository.AddAsync(message);
 
-            if (request.Attachments!.Count() > 0)
+            if (request.EmailAttachments != null)
             {
-                foreach(var attachment in request.Attachments!)
+                foreach(var attachment in request.EmailAttachments!)
                 {
                     EmailAttachment emailAttachment = new EmailAttachment()
                     {

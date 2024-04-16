@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -37,19 +38,13 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
             {
                 return new BaseResponse<List<EmailMessageListVM>>("There is no User", false, 401);
             }
-            var EmailMessages = await _emailMessageRepository.ListAllAsync();
+            var EmailMessages = await _emailMessageRepository.WhereThenInclude(m=>m.From == User.Email || m.To == User.Email , m => m.Attachments!).ToListAsync();
             var data = _mapper.Map<List<EmailMessageListVM>>(EmailMessages);
             
             for(int i = 0; i < data.Count(); i++)
             {
-                var NameOfUser = await _userRepository.FirstOrDefaultAsync(u => u.Email == data[i].From);
-               
+                data[i].Attachments = _mapper.Map <List<EmailAttachmentListVm>>(EmailMessages[i].Attachments);
                 data[i].IsReplay = data[i].MessageId == null? false : true;
-
-                data[i].Name = request.lang == "en"
-                    ? NameOfUser!.EnglishName
-                    : NameOfUser!.ArabicName;
-                
             }
             return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data);
         }
