@@ -37,6 +37,10 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
 
         public async Task<BaseResponse<int>> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
         {
+            string msg = request.lang == "en"
+                ? "Msessage has been Sended"
+                : "تم إرسال الرسالة بنجاح";
+
             var message = _mapper.Map<EmailMessage>(request);
             message.IsRead = false;
             message.Status = Domain.Constants.ContactUsConstants.MessageStatus.New;
@@ -46,7 +50,11 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                 var User = await _userRepository.FirstOrDefaultAsync(u => u.Id == int.Parse(UserId));
                 if(User == null)
                 {
-                    return new BaseResponse<int>("Un Auth", false, 401);
+                    msg = request.lang == "en"
+                        ? "Un Authorize"
+                        : "إنتهت صلاحية الجلسة";
+
+                    return new BaseResponse<int>(msg, false, 401);
                 }
                 message.From = User!.Email;
             }
@@ -66,7 +74,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                 }
             }
             
-            return new BaseResponse<int>("", true, 200, data.Id);
+            return new BaseResponse<int>(msg, true, 200, data.Id);
         }
     }
 }
