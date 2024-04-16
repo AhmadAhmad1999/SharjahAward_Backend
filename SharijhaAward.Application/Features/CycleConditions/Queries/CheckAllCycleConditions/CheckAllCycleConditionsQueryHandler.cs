@@ -39,7 +39,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
         public async Task<BaseResponse<object>> Handle(CheckAllCycleConditionsQuery request, CancellationToken cancellationToken)
         {
             string msg;
-            var cycle = _cycleRepository.Where(c => c.Status == 0).FirstOrDefault();
+            var cycle = _cycleRepository.Where(c => c.Status == Domain.Constants.Common.Status.Active).FirstOrDefault();
             if(cycle == null)
             {
                 msg = request.lang == "en"
@@ -80,36 +80,32 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
                 for (int i = 0; i < terms.Count(); i++)
                 {
                     //Check on Terms that need Attachments
-                    if (terms[i].RequiredAttachmentNumber != conditionsProvideds[i].Attachments.Count()
-                        && terms[i].RequiredAttachmentNumber != 0)
+                    if (terms[i].NeedAttachment) 
                     {
                         msg = request.lang == "en"
-                            ? "Please Complete Uploading The File "
-                            : "الرجاء إكمال رفع الملفات";
+                                ? "Please Complete Uploading The File "
+                                : "الرجاء إكمال رفع الملفات";
 
-                        return new BaseResponse<object>(msg, false, 400);
-
+                        if (terms[i].RequiredAttachmentNumber != conditionsProvideds[i].Attachments.Count()&& terms[i].RequiredAttachmentNumber != 0)
+                        {
+                            return new BaseResponse<object>(msg, false, 400);
+                        }
+                        else if (terms[i].RequiredAttachmentNumber == 0 && conditionsProvideds[i].Attachments.Count() < 1)
+                        {
+                            return new BaseResponse<object>(msg, false, 400);
+                        }
                     }
                     //Check on Terms that don't need Attachments
-                    else if (!conditionsProvideds[i].IsAgree && !terms[i].NeedAttachment)
+                    if (!terms[i].NeedAttachment)
                     {
-                        msg = request.lang == "en"
-                            ? "Pleas Agree on All Terms and Conditions"
-                            : "الرجاء الموافقة على جميع الشروط و الأحكام";
-                        return new BaseResponse<object>(msg, false, 400);
+                        if (!conditionsProvideds[i].IsAgree && !terms[i].NeedAttachment)
+                        {
+                            msg = request.lang == "en"
+                                ? "Pleas Agree on All Terms and Conditions"
+                                : "الرجاء الموافقة على جميع الشروط و الأحكام";
+                            return new BaseResponse<object>(msg, false, 400);
 
-                    }
-                    else if (
-                        terms[i].RequiredAttachmentNumber == 0 &&
-                        conditionsProvideds[i].Attachments.Count() < 1 &&
-                        terms[i].NeedAttachment
-                        )
-                    {
-                        msg = request.lang == "en"
-                             ? "Please Complete Uploading The File "
-                             : "الرجاء إكمال رفع الملفات";
-
-                        return new BaseResponse<object>(msg, false, 400);
+                        }
                     }
                 }
             }

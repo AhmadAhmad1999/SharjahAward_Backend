@@ -346,6 +346,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EmailMessage, EmailMessageListVM>().ReverseMap();
             CreateMap<EmailMessage, EmailMessageDto>().ReverseMap();
 
+            CreateMap<EmailAttachment, EmailAttachmentListVm>().ReverseMap();
+
             CreateMap<Achievement, CreateAchievementCommand>().ReverseMap();
             CreateMap<Achievement, UpdateAchievementCommand>().ReverseMap();
             CreateMap<Achievement, AchievementsDto>().ReverseMap();

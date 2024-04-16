@@ -27,7 +27,9 @@ namespace SharijhaAward.Infrastructure
             services.AddScoped<IEmailCodesGenerator,EmailCodesGenerator>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped(typeof(IExcelHelper<>), typeof(ExcelHelper<>));
-            services.AddScoped<IBackGroundJobService, BackGroundJobService>();
+            //services.AddHostedService<BackGroundJobService>();
+
+
 
             return services;
         }
