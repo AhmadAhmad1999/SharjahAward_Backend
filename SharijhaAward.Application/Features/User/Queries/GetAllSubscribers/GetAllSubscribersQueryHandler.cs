@@ -41,8 +41,8 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
             }
 
             var Subscribers = await _UserRoleRepository
-                .Where(x => x.RoleId == SubscriberRole.Id)
                 .Include(x => x.User!)
+                .Where(x => x.RoleId == SubscriberRole.Id && x.User!.isValidAccount)
                 .Select(x => x.User!)
                 .Skip((request.page - 1) * request.pageSize)
                 .Take(request.pageSize)
