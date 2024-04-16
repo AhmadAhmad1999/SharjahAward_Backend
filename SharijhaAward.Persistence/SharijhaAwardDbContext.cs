@@ -961,7 +961,6 @@ namespace SharijhaAward.Persistence
                     ParentId = null,
                     RelatedToClasses = false,
                     WinningScore = 0,
-                    Status = Domain.Constants.Common.Status.Active,
                     Id = 1
                 }, new Category()
                 {
@@ -982,7 +981,6 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     RelatedToClasses = false,
                     WinningScore = 0,
-                    Status = Domain.Constants.Common.Status.Active,
                     Id = 2,
                     ParentId = 1
                 });

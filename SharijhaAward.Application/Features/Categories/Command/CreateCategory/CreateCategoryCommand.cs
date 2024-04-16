@@ -21,7 +21,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         public CategoryClassification? CategoryClassification { get; set; }
         public float? FinalArbitrationQualificationMark { get; set; }
         public float? WinningScore { get; set; }
-        public Status Status { get; set; } = Status.InActive;
         public int? ExpectedNumberOfWinners { get; set; }
         public float? MinimumAmountToParticipateInTheAward { get; set; }
         public float? MinimumAmountToObtainACertificateOfParticipation { get; set; }

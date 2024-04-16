@@ -28,9 +28,7 @@ public class Category : AuditableEntity
     public string ArabicDescription { get; set; } = string.Empty;
     public string EnglishDescription { get; set; } = string.Empty;
     public string Icon { get; set; } = string.Empty;
-    public Status Status { get; set; } = Status.InActive;
     public CategoryClassification? CategoryClassification { get; set; }
-
     public float? FinalArbitrationQualificationMark { get; set; }
     public float? WinningScore { get; set; }
     public float? MinimumAmountToParticipateInTheAward { get; set; }
