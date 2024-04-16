@@ -32,16 +32,9 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllClassesByCate
                     Name = Request.lang == "en"
                         ? x.EnglishName
                         : x.ArabicName
-                })
-                .ToListAsync();
+                }).ToListAsync();
 
-            int TotalCount = await _CategoryEducationalClassRepository
-                .GetCountAsync(x => Request.CategoriesIds.Any(y => y == x.CategoryId));
-
-            Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
-
-            return new BaseResponse<List<GetAllClassesByCategoriesIdsListVM>>(ResponseMessage, true, 200, Classes, PaginationParameter);
+            return new BaseResponse<List<GetAllClassesByCategoriesIdsListVM>>(ResponseMessage, true, 200, Classes);
         }
     }
 }

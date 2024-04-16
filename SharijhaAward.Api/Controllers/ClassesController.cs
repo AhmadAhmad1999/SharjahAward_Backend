@@ -244,7 +244,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("GetAllClassesByCategoriesIds")]
+        [HttpPost("GetAllClassesByCategoriesIds")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -252,20 +252,16 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllClassesByCategoriesIds(List<int> CategoriesIds, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllClassesByCategoriesIds([FromBody] GetAllClassesByCategoriesIdsQuery GetAllClassesByCategoriesIdsQuery)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<GetAllClassesByCategoriesIdsListVM>> Response = await _Mediator.Send(new GetAllClassesByCategoriesIdsQuery()
-            {
-                CategoriesIds = CategoriesIds,
-                lang = HeaderValue!,
-                page = Page,
-                pageSize = PerPage
-            });
+            GetAllClassesByCategoriesIdsQuery.lang = HeaderValue;
+
+            BaseResponse<List<GetAllClassesByCategoriesIdsListVM>> Response = await _Mediator.Send(GetAllClassesByCategoriesIdsQuery);
 
             return Response.statusCode switch
             {

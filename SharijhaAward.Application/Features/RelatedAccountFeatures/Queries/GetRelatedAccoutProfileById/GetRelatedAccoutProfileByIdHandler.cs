@@ -88,8 +88,9 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
                 : RelatedAccountUserEntity.ArabicName;
 
             List<RelatedAccountProvidedForms> ProvidedForms = _Mapper.Map<List<RelatedAccountProvidedForms>>(Request.Type == null
-                ? await _FormRepository.Where(x => x.userId == RelatedAccountSubscriberId).ToListAsync()
-                : await _FormRepository.Where(x => x.userId == RelatedAccountSubscriberId && x.Type == Request.Type).ToListAsync());
+                ? await _FormRepository.Include(x => x.Category!).Where(x => x.userId == RelatedAccountSubscriberId).ToListAsync()
+                : await _FormRepository.Include(x => x.Category!).Where(x => x.userId == RelatedAccountSubscriberId && 
+                    x.Type == Request.Type).ToListAsync());
 
             GetRelatedAccoutProfileByIdResponse Response = new GetRelatedAccoutProfileByIdResponse()
             {

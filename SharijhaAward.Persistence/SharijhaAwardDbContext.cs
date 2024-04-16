@@ -55,6 +55,7 @@ using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
 using SharijhaAward.Domain.Entities.AppVersioningModel;
 using SharijhaAward.Domain.Entities.InstructionModel;
 using SharijhaAward.Domain.Entities.ContactUsModels;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace SharijhaAward.Persistence
 {
@@ -216,6 +217,95 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Instruction>()
                 .HasIndex(x => x.Slug)
                 .IsUnique();
+
+            modelBuilder.Entity<Arbitrator>()
+                .Property(a => a.Id)
+                .ValueGeneratedOnAdd()
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity<Arbitrator>()
+                .Property(a => a.Id)
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+
+            modelBuilder.Entity<Coordinator>()
+                .Property(a => a.Id)
+                .ValueGeneratedOnAdd()
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity<Coordinator>()
+                .Property(a => a.Id)
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+
+            modelBuilder.Entity<PermissionHeader>()
+                .HasData(new PermissionHeader()
+                {
+                    Id = 1,
+                    Name = "إدارة الدورات",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                });
+
+            modelBuilder.Entity<Permission>()
+                .HasData(new Permission()
+                {
+                    Id = 1,
+                    Name = "عرض الدورات",
+                    PermissionHeaderId = 1,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 2,
+                    Name = "إضافة دورة",
+                    PermissionHeaderId = 1,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 3,
+                    Name = "عرض معلومات دورة",
+                    PermissionHeaderId = 1,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 4,
+                    Name = "تعديل دورة",
+                    PermissionHeaderId = 1,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 5,
+                    Name = "حذف دورة",
+                    PermissionHeaderId = 1,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                });
 
             modelBuilder.Entity<Event>()
                 .HasData(new Event()
@@ -1901,7 +1991,7 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    RecordIdOnRelation = 1,
+                    RecordIdOnRelation = 2,
                     Id = 1
                 });
 

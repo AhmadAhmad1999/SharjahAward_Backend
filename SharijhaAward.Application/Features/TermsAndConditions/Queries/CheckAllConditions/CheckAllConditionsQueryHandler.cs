@@ -60,7 +60,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
          
             var form = await _providedFormRepository.Where(p => p.Id == request.formId).FirstOrDefaultAsync();
 
-            var terms = await _termRepository.WhereThenInclude(t => t.CategoryId == category.Id, t => t.ConditionAttachments).ToListAsync();
+            var terms = await _termRepository.WhereThenInclude(t => t.CategoryId == category.Id && t.IsSpecial == request.IsSpecial
+                , t => t.ConditionAttachments).ToListAsync();
 
             List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
 
