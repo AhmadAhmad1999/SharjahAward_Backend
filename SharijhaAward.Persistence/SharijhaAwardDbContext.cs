@@ -54,6 +54,7 @@ using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
 using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
 using SharijhaAward.Domain.Entities.AppVersioningModel;
 using SharijhaAward.Domain.Entities.InstructionModel;
+using SharijhaAward.Domain.Entities.ContactUsModels;
 
 namespace SharijhaAward.Persistence
 {
@@ -133,6 +134,8 @@ namespace SharijhaAward.Persistence
         public DbSet<CycleConditionAttachment> CycleConditionAttachments { get; set; }
         public DbSet<ExtraAttachment> ExtraAttachments { get; set; }
         public DbSet<ExtraAttachmentFile> ExtraAttachmentsProvidedForms { get; set; }
+        public DbSet<EmailMessage> EmailMessages { get; set; }
+        public DbSet<EmailAttachment> EmailAttachments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -203,6 +206,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CycleConditionsProvidedForm>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ExtraAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ExtraAttachmentFile>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EmailAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)

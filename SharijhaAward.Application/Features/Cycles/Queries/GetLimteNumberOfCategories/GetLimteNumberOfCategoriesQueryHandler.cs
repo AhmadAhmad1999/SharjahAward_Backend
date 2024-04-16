@@ -33,6 +33,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetLimteNumberOfCate
             {
                 return new BaseResponse<LimitationDto>("Cycle Not Found", false, 404);
             }
+
             var data = _mapper.Map<LimitationDto>(cycle);
 
             return new BaseResponse<LimitationDto>("", true, 200, data);

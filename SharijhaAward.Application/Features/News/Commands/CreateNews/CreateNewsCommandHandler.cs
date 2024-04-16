@@ -39,6 +39,14 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
 
                 return new BaseResponse<object>(msg, false, 404);
             }
+            if (cycle.Status == Domain.Constants.Common.Status.Close)
+            {
+                msg = request.lang == "en"
+                    ? "The Status of Cycle is Close"
+                    : "حالة الدورة مغلقة";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
             var news = _mapper.Map<Domain.Entities.NewsModel.News>(request);
 
             await _newsRepository.AddAsync(news);
