@@ -20,22 +20,45 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
             string Language = !string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() : "ar";
 
-            List<DynamicAttributeListVM> DynamicAttributes = await _DynamicAttributeRepository
-                .WhereThenIncludeThenPagination(x => x.DynamicAttributeSectionId == Request.SectionId,
-                    Request.page, Request.pageSize,
-                    navigationProperties: x => x.AttributeDataType!)
-                .Select(x => new DynamicAttributeListVM()
-                {
-                    Id = x.Id,
-                    AttributeDataTypeName = x.AttributeDataType!.Name,
-                    Label = Language == "ar"
-                        ? x.ArabicLabel
-                        : x.EnglishLabel,
-                    PlaceHolder = Language == "ar"
-                        ? x.ArabicPlaceHolder
-                        : x.EnglishPlaceHolder,
-                    Status = x.Status.ToString()
-                }).ToListAsync();
+            List<DynamicAttributeListVM> DynamicAttributes = new List<DynamicAttributeListVM>();
+
+            if (Request.page != 0 && Request.pageSize != -1)
+                DynamicAttributes = await _DynamicAttributeRepository
+                    .Where(x => x.DynamicAttributeSectionId == Request.SectionId)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.pageSize)
+                    .Take(Request.pageSize)
+                    .Include(x => x.AttributeDataType!)
+                    .Select(x => new DynamicAttributeListVM()
+                    {
+                        Id = x.Id,
+                        AttributeDataTypeName = x.AttributeDataType!.Name,
+                        Label = Language == "ar"
+                            ? x.ArabicLabel
+                            : x.EnglishLabel,
+                        PlaceHolder = Language == "ar"
+                            ? x.ArabicPlaceHolder
+                            : x.EnglishPlaceHolder,
+                        Status = x.Status.ToString()
+                    }).ToListAsync();
+
+            else
+                DynamicAttributes = await _DynamicAttributeRepository
+                    .Where(x => x.DynamicAttributeSectionId == Request.SectionId)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Include(x => x.AttributeDataType!)
+                    .Select(x => new DynamicAttributeListVM()
+                    {
+                        Id = x.Id,
+                        AttributeDataTypeName = x.AttributeDataType!.Name,
+                        Label = Language == "ar"
+                            ? x.ArabicLabel
+                            : x.EnglishLabel,
+                        PlaceHolder = Language == "ar"
+                            ? x.ArabicPlaceHolder
+                            : x.EnglishPlaceHolder,
+                        Status = x.Status.ToString()
+                    }).ToListAsync();
 
             string ResponseMessage = string.Empty;
 

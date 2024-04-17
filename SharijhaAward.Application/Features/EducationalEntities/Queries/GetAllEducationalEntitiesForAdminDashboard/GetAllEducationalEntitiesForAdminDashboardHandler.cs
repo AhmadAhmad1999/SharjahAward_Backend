@@ -64,13 +64,13 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
                         ArabicName = y.ArabicName,
                         EnglishName = y.EnglishName
                     }).ToList(),
-                Coordinators = CoordinatorFromEducationalEntities
+                Coordinators = CoordinatorFromEducationalEntities.Where(y => y.EducationalEntityId == x.Id)
                     .Select(y => new EducaltionalEntitiesCoordinatorListVM()
                     {
                         Id = y.Coordinator!.Id,
                         ArabicName = y.Coordinator!.ArabicName,
                         EnglishName = y.Coordinator!.EnglishName
-                    }).Concat(CoordinatorFromEducationalInstitution
+                    }).Concat(CoordinatorFromEducationalInstitution.Where(y => y.EducationalInstitution.EducationalEntityId == x.Id)
                     .Select(y => new EducaltionalEntitiesCoordinatorListVM()
                     {
                         Id = y.Coordinator!.Id,

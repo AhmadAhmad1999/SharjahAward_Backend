@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
@@ -24,7 +25,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                 ? Request.lang.ToLower() : "ar";
 
             List<GetAllAttributeTablesNamesListVM> AttributeTablesNames = _Mapper.Map<List<GetAllAttributeTablesNamesListVM>>(
-                await _AttributeTableNameRepository.ListAllAsync());
+                await _AttributeTableNameRepository.OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync());
 
             string ResponseMessage = string.Empty;
 

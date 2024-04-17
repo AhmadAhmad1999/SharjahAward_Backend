@@ -31,11 +31,26 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
         public async Task<BaseResponse<List<GetAllArbitratorsListVM>>> Handle(GetAllArbitratorsByClassIdQuery Request, 
             CancellationToken cancellationToken)
         {
-            List<GetAllArbitratorsListVM> Arbitrators = _Mapper.Map<List<GetAllArbitratorsListVM>>(await _ArbitratorClassRepository
-                .Where(x => x.EducationalClassId == Request.EducationalClassId)
-                .Include(x => x.Arbitrator!)
-                .Select(x => x.Arbitrator!)
-                .ToListAsync());
+            List<Arbitrator> ArbitratorClassesEntities = new List<Arbitrator>();
+            
+            if (Request.page != 0 && Request.pageSize != -1)
+                ArbitratorClassesEntities = await _ArbitratorClassRepository
+                    .Where(x => x.EducationalClassId == Request.EducationalClassId)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.pageSize)
+                    .Take(Request.pageSize)
+                    .Include(x => x.Arbitrator!)
+                    .Select(x => x.Arbitrator!)
+                    .ToListAsync();
+            else
+                ArbitratorClassesEntities = await _ArbitratorClassRepository
+                    .Where(x => x.EducationalClassId == Request.EducationalClassId)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Include(x => x.Arbitrator!)
+                    .Select(x => x.Arbitrator!)
+                    .ToListAsync();
+
+            List<GetAllArbitratorsListVM> Arbitrators = _Mapper.Map<List<GetAllArbitratorsListVM>>(ArbitratorClassesEntities);
 
             List<CategoryArbitrator> CategoryArbitratorEntities = await _CategoryArbitratorRepository
                 .Where(x => Arbitrators.Select(y => y.Id).Contains(x.ArbitratorId))

@@ -25,10 +25,12 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
         public async Task<BaseResponse<List<GetAllArbitratorsListVM>>> Handle(GetAllArbitratorsQuery Request, CancellationToken cancellationToken)
         {
             List<GetAllArbitratorsListVM> Arbitrators = _Mapper.Map<List<GetAllArbitratorsListVM>>(await _ArbitratorRepository
-                .GetPagedReponseAsync(Request.page, Request.pageSize));
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                .ToListAsync());
 
             List<CategoryArbitrator> CategoryArbitratorEntities = await _CategoryArbitratorRepository
                 .Where(x => Arbitrators.Select(y => y.Id).Contains(x.ArbitratorId))
+                .OrderByDescending(x => x.CreatedAt)
                 .Include(x => x.Category!)
                 .ToListAsync();
 

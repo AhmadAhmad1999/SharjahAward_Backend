@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
@@ -21,7 +22,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
             CancellationToken cancellationToken)
         {
             List<GetAllAttributeOperationsListVM> AttributeOperations = _Mapper.Map<List<GetAllAttributeOperationsListVM>>(
-                await _AttributeOperationRepository.ListAllAsync());
+                await _AttributeOperationRepository.OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync());
 
             string ResponseMessage = string.Empty;
 

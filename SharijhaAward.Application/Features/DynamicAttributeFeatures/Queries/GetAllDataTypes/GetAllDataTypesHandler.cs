@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
@@ -23,7 +24,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                 ? Request.lang.ToLower() : "ar";
 
             List<GetAllDataTypesListVM> DataTypes = _Mapper.Map<List<GetAllDataTypesListVM>>(await _AttributeDataTypeRepository
-                .ListAllAsync());
+                .OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync());
 
             string ResponseMessage = string.Empty;
 

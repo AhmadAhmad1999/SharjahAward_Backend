@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
@@ -23,7 +24,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.Ge
             string ResponseMessage = string.Empty;
 
             List<GetAllDynamicAttributePatternListVM> DynamicAttributePatterns = _Mapper.Map<List<GetAllDynamicAttributePatternListVM>>(
-                await _DynamicAttributePatternRepository.GetPagedReponseAsync(Request.page, Request.pageSize));
+                await _DynamicAttributePatternRepository.OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                    .ToListAsync());
 
             int TotalCount = await _DynamicAttributePatternRepository.GetCountAsync(null);
 

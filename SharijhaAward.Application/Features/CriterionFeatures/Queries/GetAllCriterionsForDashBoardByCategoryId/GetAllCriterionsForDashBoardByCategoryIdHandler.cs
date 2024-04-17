@@ -40,18 +40,33 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                 return new BaseResponse<List<GetAllCriterionsForDashBoardCategoryIdDto>>(ResponseMessage, false, 404);
             }
 
-            List<GetAllCriterionsForDashBoardCategoryIdDto> MainCriterions = _CriterionRepository
-                .GetWhereThenPagedReponseAsync(x => x.CategoryId == Request.CategoryId && x.ParentId == null,
-                    Request.page, Request.pageSize).Result
-                .OrderByDescending(x => x.CreatedAt)
-                .Select(x => new GetAllCriterionsForDashBoardCategoryIdDto()
-                {
-                    Id = x.Id,
-                    Score = x.Score,
-                    ArabicTitle = x.ArabicTitle,
-                    EnglishTitle = x.EnglishTitle
-                })
-                .ToList();
+            List<GetAllCriterionsForDashBoardCategoryIdDto> MainCriterions = new List<GetAllCriterionsForDashBoardCategoryIdDto>();
+
+            if (Request.page != 0 && Request.pageSize != -1)
+                MainCriterions = await _CriterionRepository
+                    .Where(x => x.CategoryId == Request.CategoryId && x.ParentId == null)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.pageSize)
+                    .Take(Request.pageSize)
+                    .Select(x => new GetAllCriterionsForDashBoardCategoryIdDto()
+                    {
+                        Id = x.Id,
+                        Score = x.Score,
+                        ArabicTitle = x.ArabicTitle,
+                        EnglishTitle = x.EnglishTitle
+                    }).ToListAsync();
+
+            else
+                MainCriterions = await _CriterionRepository
+                    .Where(x => x.CategoryId == Request.CategoryId && x.ParentId == null)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Select(x => new GetAllCriterionsForDashBoardCategoryIdDto()
+                    {
+                        Id = x.Id,
+                        Score = x.Score,
+                        ArabicTitle = x.ArabicTitle,
+                        EnglishTitle = x.EnglishTitle
+                    }).ToListAsync();
 
             foreach (GetAllCriterionsForDashBoardCategoryIdDto MainCriterion in MainCriterions)
             {

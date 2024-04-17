@@ -23,14 +23,26 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByCla
         {
             string ResponseMessage = string.Empty;
 
-            List<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormsEntities = await _ProvidedFormRepository
-                .Where(x => x.CategoryEducationalClassId != null && x.PercentCompletion == 100)
-                .Include(x => x.CategoryEducationalClass!)
-                .Where(x => x.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
-                .Skip((Request.page - 1) * Request.pageSize)
-                .Take(Request.pageSize)
-                .Include(x => x.Category!)
-                .ToListAsync();
+            List<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormsEntities = new List<Domain.Entities.ProvidedFormModel.ProvidedForm>();
+
+            if (Request.page != 0 && Request.pageSize != -1)
+                ProvidedFormsEntities = await _ProvidedFormRepository
+                    .Where(x => x.CategoryEducationalClassId != null && x.PercentCompletion == 100)
+                    .Include(x => x.CategoryEducationalClass!)
+                    .Where(x => x.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.pageSize)
+                    .Take(Request.pageSize)
+                    .Include(x => x.Category!)
+                    .ToListAsync();
+            else
+                ProvidedFormsEntities = await _ProvidedFormRepository
+                    .Where(x => x.CategoryEducationalClassId != null && x.PercentCompletion == 100)
+                    .Include(x => x.CategoryEducationalClass!)
+                    .Where(x => x.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Include(x => x.Category!)
+                    .ToListAsync();
 
             List<GetAllStudentsByClassIdListVM> Response = await _DynamicAttributeValueRepository
                 .Include(x => x.DynamicAttribute!)
@@ -42,6 +54,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByCla
                         .Any(y => y == x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation) &&
                     ProvidedFormsEntities.Select(y => y.Id)
                         .Any(y => y == x.RecordId))
+                .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new GetAllStudentsByClassIdListVM()
                 {
                     Id = x.RecordId!.Value,

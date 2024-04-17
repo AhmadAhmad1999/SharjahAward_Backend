@@ -33,16 +33,17 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                 ? Request.lang.ToLower() : "ar";
 
             List<GetAllDynamicAttributeForDependencyListVM> DynamicAttributes = await _DynamicAttributeRepository
-                    .Include(x => x.DynamicAttributeSection!)
-                    .Where(x => x.DynamicAttributeSection!.RecordIdOnRelation == Request.CategoryId &&
-                        x.DynamicAttributeSection.AttributeTableNameId == Request.AttributeTableNameId)
-                    .Select(x => new GetAllDynamicAttributeForDependencyListVM()
-                    {
-                        Id = x.Id,
-                        Label = Language == "ar"
-                            ? x.ArabicLabel
-                            : x.EnglishLabel
-                    }).ToListAsync();
+                .Include(x => x.DynamicAttributeSection!)
+                .Where(x => x.DynamicAttributeSection!.RecordIdOnRelation == Request.CategoryId &&
+                    x.DynamicAttributeSection.AttributeTableNameId == Request.AttributeTableNameId)
+                .OrderByDescending(x => x.CreatedAt)
+                .Select(x => new GetAllDynamicAttributeForDependencyListVM()
+                {
+                    Id = x.Id,
+                    Label = Language == "ar"
+                        ? x.ArabicLabel
+                        : x.EnglishLabel
+                }).ToListAsync();
 
             return new BaseResponse<List<GetAllDynamicAttributeForDependencyListVM>>(ResponseMessage, true, 200, DynamicAttributes, 0);
         }

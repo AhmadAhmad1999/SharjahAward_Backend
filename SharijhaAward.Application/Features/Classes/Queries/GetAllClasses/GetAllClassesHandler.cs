@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CycleModel;
@@ -26,7 +27,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllClasses
             string ResponseMessage = string.Empty;
 
             List<GetAllClassesListVM> Classes = _Mapper.Map<List<GetAllClassesListVM>>(await _EducationalClassRepository
-                .GetPagedReponseAsync(Request.page, Request.pageSize));
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
 
             int TotalCount = await _EducationalClassRepository.GetCountAsync(null);
 

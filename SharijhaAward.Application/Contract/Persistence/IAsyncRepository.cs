@@ -35,7 +35,7 @@ namespace SharijhaAward.Application.Contract.Persistence
         IQueryable<T> WhereThenIncludeThenPagination(
             Expression<Func<T, bool>> predicate, int page, int size,
             params Expression<Func<T, object>>[] navigationProperties);
-        IQueryable<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector);
+        IQueryable<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector, int page, int size);
         IQueryable<T> Include(string navigationPropertyPath);
         IQueryable<T> Include(Expression<Func<T, object>> navigationProperty);
         IQueryable<T> IncludeThenWhere(Expression<Func<T, object>> navigationProperty,

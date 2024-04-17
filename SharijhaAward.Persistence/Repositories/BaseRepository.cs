@@ -163,9 +163,13 @@ namespace SharijhaAward.Persistence.Repositories
         {
             return _DbSet.AsNoTracking().OrderBy(keySelector);
         }
-        public IQueryable<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector)
+        public IQueryable<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector, int page, int size)
         {
-            return _DbSet.AsNoTracking().OrderByDescending(keySelector);
+            if (size == -1 || page == 0)
+                return _DbSet.AsNoTracking().OrderByDescending(keySelector);
+            if (size == 0)
+                size = 10;
+            return _DbSet.AsNoTracking().OrderByDescending(keySelector).Skip((page - 1) * size).Take(size);
         }
         public IQueryable<T> Include(string navigationPropertyPath)
         {

@@ -28,7 +28,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
         public async Task<BaseResponse<List<GetAllCoordinatorsListVM>>> Handle(GetAllCoordinatorsQuery Request, CancellationToken cancellationToken)
         {
             List<GetAllCoordinatorsListVM> Coordinators = _Mapper.Map<List<GetAllCoordinatorsListVM>>(await _CoordinatorRepository
-                .GetPagedReponseAsync(Request.page, Request.pageSize));
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                .ToListAsync());
 
             List<EduEntitiesCoordinator> CoordinatorsEducationalEntities = await _EduEntitiesCoordinatorRepository
                 .Where(x => Coordinators.Select(y => y.Id).Contains(x.CoordinatorId))
@@ -45,7 +46,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
                 EducationalEntities = CoordinatorsEducationalEntities.Where(y => y.CoordinatorId == x.Id)
                     .Select(y => new EduEntitiesCoordinatorDto()
                     {
-                        Id = y.EducationalEntity.Id,
+                        Id = y.EducationalEntity!.Id,
                         ArabicName = y.EducationalEntity.ArabicName,
                         EnglishName = y.EducationalEntity.EnglishName
                     }).ToList()

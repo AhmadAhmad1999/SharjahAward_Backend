@@ -27,11 +27,17 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
         public async Task<BaseResponse<List<CategoryListVM>>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
         {
             
-            var categories = await _categoryRepository.GetPagedReponseAsync(request.page,request.pageSize);
+            var categories = await _categoryRepository
+                .OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+                .ToListAsync();
+
             categories = categories.Where(c => c.ParentId == null).ToList();
             if (request.CycleId != null)
             {
-                categories = await _categoryRepository.Where(c => c.CycleId == request.CycleId && c.ParentId == null).ToListAsync();
+                categories = await _categoryRepository
+                    .Where(c => c.CycleId == request.CycleId && c.ParentId == null)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ToListAsync();
             }
           
             var data = _mapper.Map<List<CategoryListVM>>(categories);

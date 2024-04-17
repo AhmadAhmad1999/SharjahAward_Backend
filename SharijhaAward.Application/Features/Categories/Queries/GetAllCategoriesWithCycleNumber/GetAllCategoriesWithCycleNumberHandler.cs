@@ -19,6 +19,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
             Handle(GetAllCategoriesWithCycleNumberQuery Request, CancellationToken cancellationToken)
         {
             List<GetAllCategoriesWithCycleNumberListVM> CategoriesEntities = await _CategoryRepository
+                .OrderByDescending(x => x.CreatedAt, 0, -1)
                 .Include(x => x.Cycle!)
                 .Select(x => new GetAllCategoriesWithCycleNumberListVM()
                 {

@@ -22,6 +22,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllClassesByCate
 
             List<GetAllClassesByCategoriesIdsListVM> Classes = await _CategoryEducationalClassRepository
                 .Where(x => Request.CategoriesIds.Any(y => y == x.CategoryId))
+                .OrderByDescending(x => x.CreatedAt)
                 .Include(x => x.EducationalClass!)
                 .Select(x => x.EducationalClass!)
                 .Select(x => new GetAllClassesByCategoriesIdsListVM()
