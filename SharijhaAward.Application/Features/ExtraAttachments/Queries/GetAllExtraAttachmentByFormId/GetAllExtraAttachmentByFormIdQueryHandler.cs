@@ -33,7 +33,10 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
 
         public async Task<BaseResponse<List<ExtraAttachmentListVM>>> Handle(GetAllExtraAttachmentByFormIdQuery request, CancellationToken cancellationToken)
         {
-            var ExtraAttachments = await _extraAttachmentRepository.WhereThenInclude(e => e.ProvidedFormId == request.formId, e => e.ExtraAttachmentFiles!).ToListAsync();
+            var ExtraAttachments = await _extraAttachmentRepository
+                .Where(e => e.ProvidedFormId == request.formId)
+                .OrderByDescending(x => x.CreatedAt)
+                .Include(e => e.ExtraAttachmentFiles!).ToListAsync();
             
             var data = _mapper.Map<List<ExtraAttachmentListVM>>(ExtraAttachments);
             for(int i = 0; i<ExtraAttachments.Count(); i++)

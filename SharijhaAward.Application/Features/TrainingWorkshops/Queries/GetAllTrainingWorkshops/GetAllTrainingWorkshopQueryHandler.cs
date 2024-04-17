@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
@@ -26,7 +27,9 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTra
 
         public async Task<BaseResponse<List<TrainingWorkshopListVm>>> Handle(GetAllTrainingWorkshopsQuery request, CancellationToken cancellationToken)
         {
-            var workShops = await _trainingWorkshopRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var workShops = await _trainingWorkshopRepository.OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+                .ToListAsync();
+
             if (workShops.Count == 0)
             {
                 return new BaseResponse<List<TrainingWorkshopListVm>>("", true, 200);

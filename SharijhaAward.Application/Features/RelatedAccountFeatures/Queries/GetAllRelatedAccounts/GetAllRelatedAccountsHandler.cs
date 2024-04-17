@@ -28,10 +28,13 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
             List<RelatedAccount> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
                 ? await _RelatedAccountRepository
                     .Where(x => x.User1Id == UserId || x.User2Id == UserId)
+                    .OrderByDescending(x => x.CreatedAt)
                     .Include(x => x.User1).Include(x => x.User2).ToListAsync()
                 : await _RelatedAccountRepository
                     .Where(x => x.User1Id == UserId || x.User2Id == UserId)
-                    .Skip((Request.page - 1) * Request.pageSize).Take(Request.pageSize)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.pageSize)
+                    .Take(Request.pageSize)
                     .Include(x => x.User1).Include(x => x.User2).ToListAsync();
 
             IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber2Id = ReceivedRequests

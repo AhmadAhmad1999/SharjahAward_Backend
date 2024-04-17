@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
@@ -18,22 +19,27 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
 
         public async Task<BaseResponse<List<EducationalEntitiesListVm>>> Handle(GetAllEducationalEntitiesCommand request, CancellationToken cancellationToken)
         {
-            var EducationalEntities = await _eucationalEntityRepository.ListAllAsync();
+            var EducationalEntities = await _eucationalEntityRepository
+                .OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync();
+
             if (request.ArabicName != null && request.EnglishName != null && EducationalEntities.Count() > 0)
             {
                 EducationalEntities = _eucationalEntityRepository
                     .Where(e => e.ArabicName.ToLower().Contains(request.ArabicName!.ToLower()) &&
-                        e.EnglishName.ToLower().Contains(request.EnglishName!.ToLower())).ToList();
+                        e.EnglishName.ToLower().Contains(request.EnglishName!.ToLower()))
+                    .OrderByDescending(x => x.CreatedAt).ToList();
             }
             else if (request.EnglishName != null && EducationalEntities.Count() > 0)
             {
                 EducationalEntities = _eucationalEntityRepository
-                    .Where(e => e.EnglishName.ToLower().Contains(request.EnglishName!.ToLower())).ToList();
+                    .Where(e => e.EnglishName.ToLower().Contains(request.EnglishName!.ToLower()))
+                    .OrderByDescending(x => x.CreatedAt).ToList();
             }
             else if (request.ArabicName != null && EducationalEntities.Count() > 0)
             {
                 EducationalEntities = _eucationalEntityRepository
-                    .Where(e => e.ArabicName.ToLower().Contains(request.ArabicName!.ToLower())).ToList();
+                    .Where(e => e.ArabicName.ToLower().Contains(request.ArabicName!.ToLower()))
+                    .OrderByDescending(x => x.CreatedAt).ToList();
             }
             var data = EducationalEntities.Select(x => new EducationalEntitiesListVm()
             {

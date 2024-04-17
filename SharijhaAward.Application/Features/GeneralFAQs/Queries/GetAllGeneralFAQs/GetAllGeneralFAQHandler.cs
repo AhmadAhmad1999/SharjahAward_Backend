@@ -25,6 +25,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
 
             List<GetAllGeneralFAQListVM> GeneralFAQs = await _GeneralFAQRepository
                 .Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId)
+                .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new GetAllGeneralFAQListVM()
                 {
                     Id = x.Id,

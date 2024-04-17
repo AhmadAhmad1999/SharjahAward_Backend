@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs;
 using SharijhaAward.Application.Responses;
@@ -39,8 +40,18 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId
 
                 return new BaseResponse<List<FAQListVm>>(msg, false, 404);
             }
-            var FAQs = await _faqRepository.GetPagedReponseWithPredicateAsync(f => f.CategoryId == category.Id, request.page, request.pageSize);
-               
+            
+            List<FrequentlyAskedQuestion> FAQs = new List<FrequentlyAskedQuestion>();
+
+            if (request.page != 0 && request.pageSize != -1)
+                FAQs = await _faqRepository.Where(f => f.CategoryId == category.Id)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((request.page - 1) * request.pageSize)
+                    .Take(request.pageSize).ToListAsync();
+            else
+                FAQs = await _faqRepository.Where(f => f.CategoryId == category.Id)
+                    .OrderByDescending(x => x.CreatedAt).ToListAsync();
+
             var data = _mapper.Map<List<FAQListVm>>(FAQs);
             for(int i = 0; i < data.Count; i++)
             {

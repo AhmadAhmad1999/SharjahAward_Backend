@@ -29,26 +29,32 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
                         .Where(g => g.Name.ToLower().Contains(request.name.ToLower()) &&
                             request.EventId != null
                                 ? g.EventId == request.EventId
-                                : true).OrderBy(g => g.CreatedAt).ToList()
+                                : true).OrderByDescending(x => x.CreatedAt).ToList()
                     : _PersonalInviteeRepository
                         .Where(g => g.Name.ToLower().Contains(request.name!.ToLower()) &&
                             request.EventId != null
                                 ? g.EventId == request.EventId
                                 : true)
+                        .OrderByDescending(x => x.CreatedAt)
                         .Skip((request.page - 1) * request.pageSize)
                         .Take(request.pageSize)
-                        .OrderBy(g => g.CreatedAt)
                         .ToList();
             }
             else
             {
                 allPersonalInvitee = (List<PersonalInvitee>)(request.pageSize == -1 || request.page == 0
-                    ? await _PersonalInviteeRepository.Where(g => request.EventId != null
-                        ? g.EventId == request.EventId
-                        : true).ToListAsync()
-                    : await _PersonalInviteeRepository.GetWhereThenPagedReponseAsync(g => request.EventId != null
-                        ? g.EventId == request.EventId
-                        : true, request.page, request.pageSize));
+                    ? await _PersonalInviteeRepository
+                        .Where(g => request.EventId != null
+                            ? g.EventId == request.EventId
+                            : true)
+                        .OrderByDescending(x => x.CreatedAt).ToListAsync()
+                    : await _PersonalInviteeRepository
+                        .Where(g => request.EventId != null
+                            ? g.EventId == request.EventId : true)
+                        .OrderByDescending(x => x.CreatedAt) 
+                        .Skip((request.page - 1) * request.pageSize)
+                        .Take(request.pageSize)
+                        .ToListAsync());
             }
             
             var data = _mapper.Map<List<PersonalInviteeListVM>>(allPersonalInvitee);

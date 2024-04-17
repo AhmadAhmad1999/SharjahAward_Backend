@@ -27,7 +27,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
                     .WhereThenInclude(g => g.Name.ToLower().Contains(request.name.ToLower()) && 
                         (request.EventId != null 
                             ? g.EventId == request.EventId.Value
-                            : true), g => g.StudentNames!).ToList();
+                            : true), g => g.StudentNames!)
+                    .OrderByDescending(x => x.CreatedAt).ToList();
                 AllGroupInvitees = request.pageSize == -1 || request.page == 0
                     ? allDataWithoutPagenation
                     : allDataWithoutPagenation
@@ -39,12 +40,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
             {
                 AllGroupInvitees = request.pageSize == -1 || request.page == 0
                     ? _groupInviteeRepository.WhereThenInclude(g => request.EventId != null
-                        ? g.EventId == request.EventId.Value
-                        : true, g => g.StudentNames!).ToList()
+                            ? g.EventId == request.EventId.Value
+                            : true, g => g.StudentNames!)
+                        .OrderByDescending(x => x.CreatedAt).ToList()
                     : _groupInviteeRepository
                         .WhereThenInclude(g => request.EventId != null
                             ? g.EventId == request.EventId.Value
                             : true, g => g.StudentNames!)
+                        .OrderByDescending(x => x.CreatedAt)
                         .Skip((request.page - 1) * request.pageSize)
                         .Take(request.pageSize)
                         .ToList();

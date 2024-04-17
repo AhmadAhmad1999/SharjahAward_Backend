@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
+using System.Linq;
 
 namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAllGeneralFAQCategory
 {
@@ -12,13 +13,10 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
     {
         private readonly IAsyncRepository<GeneralFAQ> _GeneralFAQRepository;
         private readonly IAsyncRepository<GeneralFAQCategory> _GeneralFAQCategoryRepository;
-        private readonly IMapper _Mapper;
 
-        public GetAllGeneralFAQCategoryHandler(IMapper Mapper,
-            IAsyncRepository<GeneralFAQ> GeneralFAQRepository,
+        public GetAllGeneralFAQCategoryHandler(IAsyncRepository<GeneralFAQ> GeneralFAQRepository,
             IAsyncRepository<GeneralFAQCategory> GeneralFAQCategoryRepository)
         {
-            _Mapper = Mapper;
             _GeneralFAQRepository = GeneralFAQRepository;
             _GeneralFAQCategoryRepository = GeneralFAQCategoryRepository;
         }
@@ -29,6 +27,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
             string ResponseMessage = string.Empty;
 
             List<GetAllGeneralFAQCategoryListVM> GeneralFAQCategories = await _GeneralFAQCategoryRepository
+                .OrderByDescending(x => x.CreatedAt, 0, -1)
                 .Select(x => new GetAllGeneralFAQCategoryListVM()
                 {
                     Id = x.Id,
@@ -41,6 +40,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
             {
                 GeneralFAQCategory.GeneralFAQListVM = await _GeneralFAQRepository
                     .Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == GeneralFAQCategory.Id)
+                    .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new GetAllGeneralFAQListVM()
                     {
                         Id = x.Id,

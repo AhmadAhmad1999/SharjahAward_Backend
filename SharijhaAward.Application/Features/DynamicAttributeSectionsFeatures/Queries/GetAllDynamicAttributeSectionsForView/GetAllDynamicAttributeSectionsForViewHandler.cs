@@ -35,7 +35,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             if (Request.CategoryId is not null)
             {
                 string Language = !string.IsNullOrEmpty(Request.lang)
-                ? Request.lang.ToLower() : "ar";
+                    ? Request.lang.ToLower() : "ar";
 
                 string ResponseMessage = string.Empty;
 
@@ -50,20 +50,38 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                     return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, false, 404);
                 }
+                
+                List<DynamicAttributeSectionListVM> DynamicAttributeSections = new List<DynamicAttributeSectionListVM>();
 
-                List<DynamicAttributeSectionListVM> DynamicAttributeSections =
-                    _DynamicAttributeSectionRepository.IncludeThenWhere(x => x.AttributeTableName!,
-                        x => x.RecordIdOnRelation == Request.CategoryId &&
-                        x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower())
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
-                    .Select(x => new DynamicAttributeSectionListVM()
-                    {
-                        Id = x.Id,
-                        Name = Language == "ar"
-                            ? x.ArabicName
-                            : x.EnglishName
-                    }).ToList();
+                if (Request.page != 0 && Request.pageSize != -1)
+                    DynamicAttributeSections = _DynamicAttributeSectionRepository
+                        .IncludeThenWhere(x => x.AttributeTableName!,
+                            x => x.RecordIdOnRelation == Request.CategoryId &&
+                            x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower())
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.pageSize)
+                        .Take(Request.pageSize)
+                        .Select(x => new DynamicAttributeSectionListVM()
+                        {
+                            Id = x.Id,
+                            Name = Language == "ar"
+                                ? x.ArabicName
+                                : x.EnglishName
+                        }).ToList();
+
+                else
+                    DynamicAttributeSections = _DynamicAttributeSectionRepository
+                        .IncludeThenWhere(x => x.AttributeTableName!,
+                            x => x.RecordIdOnRelation == Request.CategoryId &&
+                            x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower())
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Select(x => new DynamicAttributeSectionListVM()
+                        {
+                            Id = x.Id,
+                            Name = Language == "ar"
+                                ? x.ArabicName
+                                : x.EnglishName
+                        }).ToList();
 
                 if (DynamicAttributeSections.FirstOrDefault(x => x.Name.ToLower() == "Main Information".ToLower() ||
                     x.Name == "المعلومات الأساسية") == null)
@@ -385,22 +403,43 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 string ResponseMessage = string.Empty;
 
-                List<DynamicAttributeSectionListVM> DynamicAttributeSections =
-                    _DynamicAttributeSectionRepository.IncludeThenWhere(x => x.AttributeTableName!,
-                        x => Request.isArbitrator.Value
-                            ? (x.AttributeTableName!.Name.ToLower() == TableNames.Arbitrator.ToString().ToLower() &&
-                                x.RecordIdOnRelation == -1)
-                            : (x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower() &&
-                                x.RecordIdOnRelation == -2))
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
-                    .Select(x => new DynamicAttributeSectionListVM()
-                    {
-                        Id = x.Id,
-                        Name = Language == "ar"
-                            ? x.ArabicName
-                            : x.EnglishName
-                    }).ToList();
+                List<DynamicAttributeSectionListVM> DynamicAttributeSections = new List<DynamicAttributeSectionListVM>();
+
+                if (Request.page != 0 && Request.pageSize != -1)
+                    DynamicAttributeSections = _DynamicAttributeSectionRepository
+                        .IncludeThenWhere(x => x.AttributeTableName!,
+                            x => Request.isArbitrator.Value
+                                ? (x.AttributeTableName!.Name.ToLower() == TableNames.Arbitrator.ToString().ToLower() &&
+                                    x.RecordIdOnRelation == -1)
+                                : (x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower() &&
+                                    x.RecordIdOnRelation == -2))
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.pageSize)
+                        .Take(Request.pageSize)
+                        .Select(x => new DynamicAttributeSectionListVM()
+                        {
+                            Id = x.Id,
+                            Name = Language == "ar"
+                                ? x.ArabicName
+                                : x.EnglishName
+                        }).ToList();
+
+                else
+                    DynamicAttributeSections = _DynamicAttributeSectionRepository
+                        .IncludeThenWhere(x => x.AttributeTableName!,
+                            x => Request.isArbitrator.Value
+                                ? (x.AttributeTableName!.Name.ToLower() == TableNames.Arbitrator.ToString().ToLower() &&
+                                    x.RecordIdOnRelation == -1)
+                                : (x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower() &&
+                                    x.RecordIdOnRelation == -2))
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Select(x => new DynamicAttributeSectionListVM()
+                        {
+                            Id = x.Id,
+                            Name = Language == "ar"
+                                ? x.ArabicName
+                                : x.EnglishName
+                        }).ToList();
 
                 foreach (DynamicAttributeSectionListVM DynamicAttributeSection in DynamicAttributeSections)
                 {

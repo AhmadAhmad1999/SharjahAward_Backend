@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.FAQModel;
@@ -25,7 +26,9 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs
 
         public async Task<BaseResponse<List<FAQListVm>>> Handle(GetAllFAQsQuery request, CancellationToken cancellationToken)
         {
-            var FAQs = await _faqRepository.GetPagedReponseAsync(request.page,request.pageSize);
+            var FAQs = await _faqRepository.OrderByDescending(x => x.CreatedAt, request.page,request.pageSize)
+                .ToListAsync();
+
             var data = _mapper.Map<List<FAQListVm>>(FAQs);
 
             if(data.Count != 0)

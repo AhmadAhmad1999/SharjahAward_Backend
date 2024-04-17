@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace SharijhaAward.Application.Features.Identity.Role.Queries.GetAllRoles
 
         public async Task<List<RoleListVm>> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
         {
-            var allRoles = await _roleRepository.ListAllAsync();
+            var allRoles = await _roleRepository.OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync();
             if(allRoles == null)
             {
                 throw new OpenQA.Selenium.NotFoundException("There is No Roles");

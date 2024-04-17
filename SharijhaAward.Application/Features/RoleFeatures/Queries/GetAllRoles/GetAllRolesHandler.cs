@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
@@ -22,7 +23,7 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles
             string ResponseMessage = string.Empty;
 
             List<GetAllRolesListVM> Roles = _Mapper.Map<List<GetAllRolesListVM>>(await _RoleRepository
-                .GetPagedReponseAsync(Request.page, Request.pageSize));
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
 
             int TotalCount = await _RoleRepository.GetCountAsync(null);
 

@@ -1,31 +1,23 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
 {
     public class GetAllSubscribersQueryHandler
         : IRequestHandler<GetAllSubscribersQuery, BaseResponse<List<UserListVm>>>
     {
-        private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
-        public GetAllSubscribersQueryHandler(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper,
+        public GetAllSubscribersQueryHandler(IRoleRepository roleRepository, IMapper mapper,
             IAsyncRepository<UserRole> UserRoleRepository)
         {
-            _userRepository = userRepository;
             _roleRepository = roleRepository;
             _mapper = mapper;
             _UserRoleRepository = UserRoleRepository;
@@ -39,14 +31,25 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
             {
                 return new BaseResponse<List<UserListVm>>("faild in roles", false,  400);
             }
+            List<Domain.Entities.IdentityModels.User> Subscribers = new List<Domain.Entities.IdentityModels.User>();
 
-            var Subscribers = await _UserRoleRepository
-                .Include(x => x.User!)
-                .Where(x => x.RoleId == SubscriberRole.Id && x.User!.isValidAccount)
-                .Select(x => x.User!)
-                .Skip((request.page - 1) * request.pageSize)
-                .Take(request.pageSize)
-                .ToListAsync();
+            if (request.page != 0 && request.pageSize != -1)
+                Subscribers = await _UserRoleRepository
+                    .Include(x => x.User!)
+                    .Where(x => x.RoleId == SubscriberRole.Id && x.User!.isValidAccount)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Select(x => x.User!)
+                    .Skip((request.page - 1) * request.pageSize)
+                    .Take(request.pageSize)
+                    .ToListAsync();
+
+            else
+                Subscribers = await _UserRoleRepository
+                    .Include(x => x.User!)
+                    .Where(x => x.RoleId == SubscriberRole.Id && x.User!.isValidAccount)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Select(x => x.User!)
+                    .ToListAsync();
 
             var data = _mapper.Map<List<UserListVm>>(Subscribers);
 

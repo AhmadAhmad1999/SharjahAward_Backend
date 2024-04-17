@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
 {
@@ -32,7 +28,8 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
 
         public async Task<BaseResponse<List<UserListVm>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            var Users = await _userRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var Users = await _userRepository.OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+                .ToListAsync();
 
             var data = _mapper.Map<List<UserListVm>>(Users );
 

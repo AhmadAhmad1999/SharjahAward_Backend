@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.InstructionModel;
@@ -23,7 +24,7 @@ namespace SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAll
             string ResponseMessage = string.Empty;
 
             List<GetAllInstructionsListVM> Instructions = _Mapper.Map<List<GetAllInstructionsListVM>>(await _InstructionRepository
-                .GetPagedReponseAsync(Request.page, Request.pageSize));
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
 
             int TotalCount = await _InstructionRepository.GetCountAsync(null);
 

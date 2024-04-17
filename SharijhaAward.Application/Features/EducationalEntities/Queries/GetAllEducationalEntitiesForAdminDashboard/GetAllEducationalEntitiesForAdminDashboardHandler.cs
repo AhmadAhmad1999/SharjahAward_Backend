@@ -35,7 +35,8 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
         {
             List<GetAllEducationalEntitiesForAdminDashboardListVM> EducationalEntities = _Mapper.Map<List<GetAllEducationalEntitiesForAdminDashboardListVM>>
                 (await _EducationalEntityRepository
-                    .GetPagedReponseAsync(Request.page, Request.pageSize));
+                    .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                    .ToListAsync());
 
             List<EducationalInstitution> EducationalInstitutionEntities = await _EducationalInstitutionRepository
                 .Where(x => EducationalEntities.Select(y => y.Id).Contains(x.EducationalEntityId))

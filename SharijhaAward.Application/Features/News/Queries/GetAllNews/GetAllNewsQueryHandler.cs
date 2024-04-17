@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -26,17 +27,23 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 
         public async Task<BaseResponse<List<NewsListVM>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
-            var newsList = await _newsRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var newsList = await _newsRepository.OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+                .ToListAsync();
            
             int count = _newsRepository.GetCount(n => n.isDeleted == false);
             Pagination pagination = new Pagination(request.page, request.pageSize, count);
             
             if (!request.query.IsNullOrEmpty())
             {
-                newsList = _newsRepository.Where(n => n.EnglishTitle.ToLower().Contains(request.query.ToLower())).ToList();
+                newsList = await _newsRepository
+                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query.ToLower()))
+                    .OrderByDescending(x => x.CreatedAt).ToListAsync();
+
                 if (newsList.Count() == 0)
                 {
-                    newsList = _newsRepository.Where(n => n.ArabicTitle.ToLower().Contains(request.query.ToLower())).ToList();
+                    newsList = await _newsRepository
+                        .Where(n => n.ArabicTitle.ToLower().Contains(request.query.ToLower()))
+                        .OrderByDescending(x => x.CreatedAt).ToListAsync();
                 }
             }
             var data = _mapper.Map<List<NewsListVM>>(newsList);

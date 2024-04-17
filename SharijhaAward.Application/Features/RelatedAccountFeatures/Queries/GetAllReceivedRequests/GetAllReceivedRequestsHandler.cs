@@ -30,6 +30,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
             List<GetAllReceivedRequestsListVM> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
                 ? await _RelatedAccountRequestRepository
                     .Where(x => x.ReceiverId == UserId)
+                    .OrderByDescending(x => x.CreatedAt)
                     .Include(x => x.Sender)
                     .Select(x => new GetAllReceivedRequestsListVM()
                     {
@@ -40,11 +41,13 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                             ? x.Sender!.EnglishName
                             : x.Sender!.ArabicName,
                         ImageURL = x.Sender!.ImageURL
-                    })
-                    .ToListAsync()
+                    }).ToListAsync()
                 : await _RelatedAccountRequestRepository
                     .Where(x => x.ReceiverId == UserId)
+                    .OrderByDescending(x => x.CreatedAt)
                     .Include(x => x.Sender)
+                    .Skip((Request.page - 1) * Request.pageSize)
+                    .Take(Request.pageSize)
                     .Select(x => new GetAllReceivedRequestsListVM()
                     {
                         Id = x.Id,
@@ -54,8 +57,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                             ? x.Sender!.EnglishName
                             : x.Sender!.ArabicName,
                         ImageURL = x.Sender!.ImageURL
-                    })
-                    .Skip((Request.page - 1) * Request.pageSize).Take(Request.pageSize).ToListAsync();
+                    }).ToListAsync();
 
             int TotalCount = await _RelatedAccountRequestRepository
                 .GetCountAsync(x => x.ReceiverId == UserId);

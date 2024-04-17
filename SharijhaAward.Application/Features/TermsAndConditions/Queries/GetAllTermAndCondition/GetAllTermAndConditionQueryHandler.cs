@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
@@ -25,12 +26,12 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
 
         public async Task<BaseResponse<List<TermAndConditionListVM>>> Handle(GetAllTermAndConditionQuery request, CancellationToken cancellationToken)
         {
-            var termsAndConditions = await _termAndConditionRepository.ListAllAsync();
-            
-            if (request.CategoryId != null)
-                termsAndConditions = _termAndConditionRepository.Where(t => t.CategoryId == request.CategoryId).ToList();
-            else
-               termsAndConditions = await _termAndConditionRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var termsAndConditions = await _termAndConditionRepository
+                .OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+                .Where(x => request.CategoryId != null 
+                    ? x.CategoryId == request.CategoryId
+                    : true)
+                .ToListAsync();
             
             var data = _mapper.Map<List<TermAndConditionListVM>>(termsAndConditions);
             if(data.Count != 0)

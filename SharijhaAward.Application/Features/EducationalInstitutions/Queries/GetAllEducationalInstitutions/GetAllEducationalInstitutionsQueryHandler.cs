@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
@@ -25,10 +26,14 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Get
 
         public async Task<BaseResponse<List<EducationalInstitutionListVM>>> Handle(GetAllEducationalInstitutionsQuery request, CancellationToken cancellationToken)
         {
-            var EducationalInstitution = await _educationalInstitutionRepository.ListAllAsync();
+            var EducationalInstitution = await _educationalInstitutionRepository
+                .OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync();
+
             if (request.EducationalEntityId != null && EducationalInstitution.Count() > 0)
             {
-                EducationalInstitution = _educationalInstitutionRepository.Where(e => e.EducationalEntityId == request.EducationalEntityId).ToList();
+                EducationalInstitution = await _educationalInstitutionRepository
+                    .Where(e => e.EducationalEntityId == request.EducationalEntityId)
+                    .OrderByDescending(x => x.CreatedAt).ToListAsync();
             }
 
             var data = _mapper.Map<List<EducationalInstitutionListVM>>(EducationalInstitution);

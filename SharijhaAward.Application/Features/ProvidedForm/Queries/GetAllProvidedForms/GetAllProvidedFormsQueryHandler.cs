@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -35,8 +36,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
             }
            
             var form = request.Type == null
-                ? _formRepository.Where(f => f.userId == User.Id).ToList()
-                : _formRepository.Where(f => f.userId == User.Id).Where(f=>f.Type==request.Type).ToList();
+                ? await _formRepository.Where(f => f.userId == User.Id).OrderByDescending(x => x.CreatedAt).ToListAsync()
+                : await _formRepository.Where(f => f.userId == User.Id).Where(f=>f.Type==request.Type)
+                    .OrderByDescending(x => x.CreatedAt).ToListAsync();
            
             var data = _mapper.Map<List<FormListVm>> (form);
             for (int i = 0; i < data.Count(); i++)
