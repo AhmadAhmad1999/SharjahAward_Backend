@@ -196,6 +196,7 @@ using SharijhaAward.Application.Features.PermissionFeatures.Queries.GetAllPermis
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEducationalEntitiesForAdminDashboard;
 using SharijhaAward.Application.Features.MessageTypes.Commands.UpdateMsgType;
 using SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType;
+using SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -329,6 +330,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalInstitution, Features.EducationalInstitutions.Queries.GetAllEducationalInstitutions.EducationalInstitutionListVM>().ReverseMap();
 
             CreateMap<Coordinator, CreateCoordinatorCommand>().ReverseMap();
+            CreateMap<Coordinator, UpdateCoordinatorCommand>().ReverseMap();
             CreateMap<Coordinator, CoordinatorSearchListVM>().ReverseMap();
             CreateMap<Coordinator, CoordinatorDto>().ReverseMap();
 
