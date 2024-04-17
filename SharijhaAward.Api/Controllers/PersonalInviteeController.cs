@@ -159,12 +159,13 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetAllPersonalInvitee(int page , int perPage , string? name)
+        public async Task<ActionResult> GetAllPersonalInvitee(int page , int perPage , string? name, int? EventId)
         {
             if (perPage == 0)
                 perPage = 10;
             var response = await _mediator.Send(new GetAllPersonalInviteeQuery()
             {
+                EventId = EventId,
                 page = page,
                 pageSize = perPage,
                 name = name

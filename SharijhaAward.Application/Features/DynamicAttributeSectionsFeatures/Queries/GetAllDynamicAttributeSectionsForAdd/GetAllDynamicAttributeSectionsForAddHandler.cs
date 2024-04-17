@@ -5,8 +5,6 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Helpers.Constants;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.ArbitratorModel;
-using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using System.Text.RegularExpressions;
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd
@@ -21,15 +19,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
-        private readonly IAsyncRepository<Cycle> _CycleRepository;
         public GetAllDynamicAttributeSectionsForAddHandler(IMapper Mapper,
             IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<AttributeDataType> AttributeDataTypeRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
-            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository,
-            IAsyncRepository<Cycle> CycleRepository)
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository)
         {
             _Mapper = Mapper;
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
@@ -38,7 +34,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _ProvidedFormRepository = ProvidedFormRepository;
-            _CycleRepository = CycleRepository;
         }
         public async Task<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>> 
             Handle(GetAllDynamicAttributeSectionsForAddQuery Request, CancellationToken cancellationToken)
@@ -165,33 +160,20 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, true, 200, DynamicAttributeSections);
             }
-            else if (Request.CycleId is not null)
+            else if (Request.isArbitrator is not null)
             {
                 string ResponseMessage = string.Empty;
 
                 string Language = !string.IsNullOrEmpty(Request.lang)
                     ? Request.lang.ToLower() : "ar";
 
-                Cycle? CycleEntity = await _CycleRepository
-                    .FirstOrDefaultAsync(x => x.Id == Request.CycleId);
-
-                if (CycleEntity == null)
-                {
-                    ResponseMessage = Request.lang == "en"
-                        ? "Cycle is not Found"
-                        : "الدورة غير موجودة";
-
-                    return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, false, 404);
-                }
-
                 List<GetAllDynamicAttributeSectionsForAddListVM> DynamicAttributeSections = _DynamicAttributeSectionRepository
-                    .IncludeThenWhere(x => x.AttributeTableName!, x => x.RecordIdOnRelation == CycleEntity.Id &&
-                        ((Request.ArbitratorId != null 
-                            ? x.AttributeTableName!.Name.ToLower() == TableNames.Arbitrator.ToString().ToLower()
-                            : true) ||
-                        Request.CoordinatorId != null
-                            ? x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower()
-                            : true))
+                    .IncludeThenWhere(x => x.AttributeTableName!,
+                        x => Request.isArbitrator.Value
+                            ? x.AttributeTableName!.Name.ToLower() == TableNames.Arbitrator.ToString().ToLower() &&
+                                x.RecordIdOnRelation == -1
+                            : x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower() &&
+                                x.RecordIdOnRelation == -2)
                     .Select(x => new GetAllDynamicAttributeSectionsForAddListVM()
                     {
                         Id = x.Id,

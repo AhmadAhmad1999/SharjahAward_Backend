@@ -3,11 +3,6 @@ using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.InvitationModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGroupInvitees
 {
@@ -28,8 +23,11 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
 
             if (request.name != null)
             {
-
-                var allDataWithoutPagenation = _groupInviteeRepository.WhereThenInclude(g => g.Name.ToLower().Contains(request.name.ToLower()), g => g.StudentNames!).ToList();
+                var allDataWithoutPagenation = _groupInviteeRepository
+                    .WhereThenInclude(g => g.Name.ToLower().Contains(request.name.ToLower()) && 
+                        (request.EventId != null 
+                            ? g.EventId == request.EventId.Value
+                            : true), g => g.StudentNames!).ToList();
                 AllGroupInvitees = request.pageSize == -1 || request.page == 0
                     ? allDataWithoutPagenation
                     : allDataWithoutPagenation
@@ -39,15 +37,17 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
             }
             else
             {
-                
-                    AllGroupInvitees = request.pageSize == -1 || request.page == 0
-                      ? _groupInviteeRepository.WhereThenInclude(g => true, g => g.StudentNames!).ToList()
-                      : _groupInviteeRepository
-                      .WhereThenInclude(g => true, g => g.StudentNames!)
-                      .Skip((request.page - 1) * request.pageSize)
-                      .Take(request.pageSize)
-                      .ToList();
-
+                AllGroupInvitees = request.pageSize == -1 || request.page == 0
+                    ? _groupInviteeRepository.WhereThenInclude(g => request.EventId != null
+                        ? g.EventId == request.EventId.Value
+                        : true, g => g.StudentNames!).ToList()
+                    : _groupInviteeRepository
+                        .WhereThenInclude(g => request.EventId != null
+                            ? g.EventId == request.EventId.Value
+                            : true, g => g.StudentNames!)
+                        .Skip((request.page - 1) * request.pageSize)
+                        .Take(request.pageSize)
+                        .ToList();
             }
             var data =  _mapper.Map<List<GroupInviteeListVM>>(AllGroupInvitees);
             var count =  _groupInviteeRepository.ListAllAsync().Result.Count();

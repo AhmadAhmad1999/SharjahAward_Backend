@@ -193,6 +193,7 @@ using SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole;
 using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.AddExtraAttachmentFile;
 using SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles;
 using SharijhaAward.Application.Features.PermissionFeatures.Queries.GetAllPermissions;
+using SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEducationalEntitiesForAdminDashboard;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -323,7 +324,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EduEntitiesCoordinator, AddCoordinatorToEduEntityQuery>().ReverseMap();
             
             CreateMap<EducationalInstitution, CreateEducationalInstitutionCommand>().ReverseMap();
-            CreateMap<EducationalInstitution, EducationalInstitutionListVM>().ReverseMap();
+            CreateMap<EducationalInstitution, Features.EducationalInstitutions.Queries.GetAllEducationalInstitutions.EducationalInstitutionListVM>().ReverseMap();
 
             CreateMap<Coordinator, CreateCoordinatorCommand>().ReverseMap();
             CreateMap<Coordinator, CoordinatorSearchListVM>().ReverseMap();
@@ -437,6 +438,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Instruction, GetInstructionBySlugIdDto>().ReverseMap();
             CreateMap<Role, GetAllRolesListVM>().ReverseMap();
             CreateMap<Permission, PermissionListVM>().ReverseMap();
+            CreateMap<EducationalEntity, GetAllEducationalEntitiesForAdminDashboardListVM>().ReverseMap();
         }
     }
 }

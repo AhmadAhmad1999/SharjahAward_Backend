@@ -18,19 +18,16 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
-        private readonly IAsyncRepository<Cycle> _CycleRepository;
 
         public GetAllDynamicAttributeSectionsForViewHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
-            IAsyncRepository<Category> CategoryRepository,
-            IAsyncRepository<Cycle> CycleRepository)
+            IAsyncRepository<Category> CategoryRepository)
         {
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _CategoryRepository = CategoryRepository;
-            _CycleRepository = CycleRepository;
         }
         public async Task<BaseResponse<List<DynamicAttributeSectionListVM>>> Handle(GetAllDynamicAttributeSectionsForViewQuery Request,
             CancellationToken cancellationToken)
@@ -381,31 +378,20 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 200, DynamicAttributeSections, PaginationParameter);
             }
-            else if (Request.CycleId is not null)
+            else if (Request.isArbitrator is not null)
             {
                 string Language = !string.IsNullOrEmpty(Request.lang)
                     ? Request.lang.ToLower() : "ar";
 
                 string ResponseMessage = string.Empty;
 
-                Cycle? CycleEntity = await _CycleRepository
-                    .FirstOrDefaultAsync(x => x.Id == Request.CycleId);
-
-                if (CycleEntity == null)
-                {
-                    ResponseMessage = Request.lang == "en"
-                        ? "Cycle is not found"
-                        : "الدورة غير موجودة";
-
-                    return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, false, 404);
-                }
-
                 List<DynamicAttributeSectionListVM> DynamicAttributeSections =
                     _DynamicAttributeSectionRepository.IncludeThenWhere(x => x.AttributeTableName!,
-                        x => x.RecordIdOnRelation == Request.CycleId &&
-                        (Request.isArbitrator
-                            ? x.AttributeTableName!.Name.ToLower() == TableNames.Arbitrator.ToString().ToLower()
-                            : x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower()))
+                        x => Request.isArbitrator.Value
+                            ? (x.AttributeTableName!.Name.ToLower() == TableNames.Arbitrator.ToString().ToLower() &&
+                                x.RecordIdOnRelation == -1)
+                            : (x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower() &&
+                                x.RecordIdOnRelation == -2))
                     .Skip((Request.page - 1) * Request.pageSize)
                     .Take(Request.pageSize)
                     .Select(x => new DynamicAttributeSectionListVM()
@@ -415,250 +401,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             ? x.ArabicName
                             : x.EnglishName
                     }).ToList();
-
-                if (DynamicAttributeSections.FirstOrDefault(x => x.Name.ToLower() == "Main Information".ToLower() ||
-                    x.Name == "المعلومات الأساسية") == null)
-                {
-                    DynamicAttributeSection PersonalInformationSection = new DynamicAttributeSection()
-                    {
-                        isDeleted = false,
-                        DeletedAt = null,
-                        CreatedAt = DateTime.UtcNow,
-                        CreatedBy = null,
-                        LastModifiedAt = null,
-                        LastModifiedBy = null,
-                        ArabicName = "المعلومات الأساسية",
-                        EnglishName = "Main Information",
-                        AttributeTableNameId = 1,
-                        RecordIdOnRelation = Request.CycleId
-                    };
-
-                    await _DynamicAttributeSectionRepository.AddAsync(PersonalInformationSection);
-
-                    DynamicAttributeSections.Add(new DynamicAttributeSectionListVM()
-                    {
-                        Id = PersonalInformationSection.Id,
-                        Name = Language == "en"
-                            ? PersonalInformationSection.EnglishName
-                            : PersonalInformationSection.ArabicName
-                    });
-
-                    List<DynamicAttribute> MainInformationDynamicAttribute = new List<DynamicAttribute>()
-                    {
-                        new DynamicAttribute()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            DynamicAttributeSectionId = PersonalInformationSection.Id,
-                            EnglishLabel = "Full name (identical to Emirates ID)",
-                            ArabicLabel = "الاسم الكامل (مطابق للهوية الإماراتية)",
-                            AttributeDataTypeId = 1,
-                            IsRequired = true,
-                            IsUnique = false,
-                            LinkedToAnotherAttribute = false,
-                            MaxSizeInKB = null,
-                            Status = DynamicAttributeStatus.Active,
-                            ArabicPlaceHolder = "الاسم الكامل",
-                            EnglishPlaceHolder = "Full name"
-                        }, new DynamicAttribute()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            DynamicAttributeSectionId = PersonalInformationSection.Id,
-                            EnglishLabel = "Nationality",
-                            ArabicLabel = "الجنسية",
-                            AttributeDataTypeId = 8,
-                            IsRequired = true,
-                            IsUnique = false,
-                            LinkedToAnotherAttribute = false,
-                            MaxSizeInKB = null,
-                            Status = DynamicAttributeStatus.Active,
-                            ArabicPlaceHolder = "الإمارات العربية المتحدة",
-                            EnglishPlaceHolder = "United Arab Emirates"
-                        }, new DynamicAttribute()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            DynamicAttributeSectionId = PersonalInformationSection.Id,
-                            EnglishLabel = "Gender",
-                            ArabicLabel = "الجنس",
-                            AttributeDataTypeId = 8,
-                            IsRequired = true,
-                            IsUnique = false,
-                            LinkedToAnotherAttribute = false,
-                            MaxSizeInKB = null,
-                            Status = DynamicAttributeStatus.Active,
-                            ArabicPlaceHolder = "ذكر",
-                            EnglishPlaceHolder = "Male"
-                        }, new DynamicAttribute()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            DynamicAttributeSectionId = PersonalInformationSection.Id,
-                            EnglishLabel = "Date of birth",
-                            ArabicLabel = "تاريخ الميلاد",
-                            AttributeDataTypeId = 7,
-                            IsRequired = true,
-                            IsUnique = false,
-                            LinkedToAnotherAttribute = false,
-                            MaxSizeInKB = null,
-                            Status = DynamicAttributeStatus.Active,
-                            ArabicPlaceHolder = DateTime.UtcNow.ToShortDateString(),
-                            EnglishPlaceHolder = DateTime.UtcNow.ToShortDateString()
-                        }, new DynamicAttribute()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            DynamicAttributeSectionId = PersonalInformationSection.Id,
-                            EnglishLabel = "Emirates ID number",
-                            ArabicLabel = "رقم الهوية الإماراتية",
-                            AttributeDataTypeId = 6,
-                            IsRequired = true,
-                            IsUnique = false,
-                            LinkedToAnotherAttribute = false,
-                            MaxSizeInKB = null,
-                            Status = DynamicAttributeStatus.Active,
-                            ArabicPlaceHolder = string.Empty,
-                            EnglishPlaceHolder = string.Empty
-                        }
-                    };
-
-                    await _DynamicAttributeRepository.AddRangeAsync(MainInformationDynamicAttribute);
-
-                    DynamicAttribute? NationalityDynamicAttributes = MainInformationDynamicAttribute
-                        .FirstOrDefault(x => x.AttributeDataTypeId == 8 && x.EnglishLabel.ToLower() == "Nationality".ToLower());
-
-                    string BaseUrl = "https://restcountries.com/v3.1/";
-
-                    RestClient RestClient = new RestClient(BaseUrl);
-                    RestRequest RestRequest = new RestRequest("all", Method.Get);
-
-                    RestResponse<List<NationalityResponse>> Response = RestClient.Execute<List<NationalityResponse>>(RestRequest);
-
-                    if (Response.IsSuccessful)
-                    {
-                        List<NationalityResponse> Nationalities = Response.Data!;
-
-                        List<NationalityDto> FormattedResponse = new List<NationalityDto>();
-
-                        foreach (NationalityResponse Nationality in Nationalities!)
-                        {
-                            NationalityDto nationalityDto = new NationalityDto
-                            {
-                                ArabicName = Nationality.Translations.ara.common,
-                                EnglishName = Nationality.Name.Common
-                            };
-
-                            FormattedResponse.Add(nationalityDto);
-                        }
-
-                        if (NationalityDynamicAttributes is not null)
-                        {
-                            IEnumerable<DynamicAttributeListValue> EnglishNationalitiesValues = FormattedResponse
-                                .Select(x => new DynamicAttributeListValue()
-                                {
-                                    isDeleted = false,
-                                    DeletedAt = null,
-                                    CreatedAt = DateTime.UtcNow,
-                                    CreatedBy = null,
-                                    LastModifiedAt = null,
-                                    LastModifiedBy = null,
-                                    DynamicAttributeId = NationalityDynamicAttributes.Id,
-                                    Value = x.EnglishName
-                                });
-
-                            await _DynamicAttributeListValueRepository.AddRangeAsync(EnglishNationalitiesValues);
-
-                            IEnumerable<DynamicAttributeListValue> ArabicNationalitiesValues = FormattedResponse
-                                .Select(x => new DynamicAttributeListValue()
-                                {
-                                    isDeleted = false,
-                                    DeletedAt = null,
-                                    CreatedAt = DateTime.UtcNow,
-                                    CreatedBy = null,
-                                    LastModifiedAt = null,
-                                    LastModifiedBy = null,
-                                    DynamicAttributeId = NationalityDynamicAttributes.Id,
-                                    Value = x.ArabicName
-                                });
-
-                            await _DynamicAttributeListValueRepository.AddRangeAsync(ArabicNationalitiesValues);
-                        }
-                    }
-
-                    DynamicAttribute? GenderDynamicAttributes = MainInformationDynamicAttribute
-                        .FirstOrDefault(x => x.AttributeDataTypeId == 8 && x.EnglishLabel.ToLower() == "Gender".ToLower());
-
-                    if (GenderDynamicAttributes is not null)
-                    {
-                        List<DynamicAttributeListValue> GendersValues = new List<DynamicAttributeListValue>()
-                    {
-                        new DynamicAttributeListValue()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            DynamicAttributeId = GenderDynamicAttributes.Id,
-                            Value = "Male"
-                        }, new DynamicAttributeListValue()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            DynamicAttributeId = GenderDynamicAttributes.Id,
-                            Value = "Female"
-                        }, new DynamicAttributeListValue()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            DynamicAttributeId = GenderDynamicAttributes.Id,
-                            Value = "ذكر"
-                        }, new DynamicAttributeListValue()
-                        {
-                            isDeleted = false,
-                            DeletedAt = null,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            DynamicAttributeId = GenderDynamicAttributes.Id,
-                            Value = "أنثى"
-                        }
-                    };
-
-                        await _DynamicAttributeListValueRepository.AddRangeAsync(GendersValues);
-                    }
-                }
 
                 foreach (DynamicAttributeSectionListVM DynamicAttributeSection in DynamicAttributeSections)
                 {
@@ -677,23 +419,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 : x.EnglishPlaceHolder,
                             Status = x.Status.ToString()
                         }).ToList();
-                }
-
-                DynamicAttributeSectionListVM? MainInformationDynamicSection = DynamicAttributeSections
-                    .FirstOrDefault(x => x.Name.ToLower() == "Main Information".ToLower() ||
-                        x.Name == "المعلومات الأساسية");
-
-                if (MainInformationDynamicSection is not null)
-                {
-                    int IndexOfMainInformationSection = DynamicAttributeSections.IndexOf(MainInformationDynamicSection);
-
-                    DynamicAttributeSectionListVM? FirstDynamicSection = DynamicAttributeSections.FirstOrDefault();
-
-                    if (FirstDynamicSection is not null)
-                    {
-                        DynamicAttributeSections[0] = MainInformationDynamicSection;
-                        DynamicAttributeSections[IndexOfMainInformationSection] = FirstDynamicSection;
-                    }
                 }
 
                 int TotalCount = await _DynamicAttributeSectionRepository.GetCountAsync(null);

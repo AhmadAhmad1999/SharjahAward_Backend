@@ -111,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAllDynamicAttributeSectionsForView(int? CategoryId,
-            int? CycleId, bool? isArbitrator, int Page = 1, int PerPage = 10)
+            bool? isArbitrator, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -121,7 +121,6 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<List<DynamicAttributeSectionListVM>> Response = await _Mediator.Send(new GetAllDynamicAttributeSectionsForViewQuery()
             {
                 CategoryId = CategoryId,
-                CycleId = CycleId,
                 isArbitrator = isArbitrator != null ? isArbitrator.Value : false,
                 lang = HeaderValue!,
                 page = Page,
@@ -171,7 +170,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAllDynamicAttributeSectionsForAdd(int? ProvidedFormId,
-            int? ArbitratorId, int? CoordinatorId, int? CycleId)
+            int? ArbitratorId, int? CoordinatorId, bool? isArbitrator)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -184,7 +183,7 @@ namespace SharijhaAward.Api.Controllers
                 ProvidedFormId = ProvidedFormId,
                 ArbitratorId = ArbitratorId,
                 CoordinatorId = CoordinatorId,
-                CycleId = CycleId
+                isArbitrator = isArbitrator
             });
 
             return Response.statusCode switch

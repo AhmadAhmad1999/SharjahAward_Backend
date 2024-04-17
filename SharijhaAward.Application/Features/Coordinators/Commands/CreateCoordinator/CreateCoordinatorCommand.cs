@@ -18,7 +18,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         public string lang { get; set; } = string.Empty;
         public List<int> EducationalEntitiesIds { get; set; } = new List<int>();
         public List<int> EducationalInstitutionsIds { get; set; } = new List<int>();
-        public List<AddDynamicAttributeValueMainCommand> DynamicAttributesWithValues { get; set; } = new List<AddDynamicAttributeValueMainCommand>();
         public string? WWWRootFilePath { get; set; }
     }
 }

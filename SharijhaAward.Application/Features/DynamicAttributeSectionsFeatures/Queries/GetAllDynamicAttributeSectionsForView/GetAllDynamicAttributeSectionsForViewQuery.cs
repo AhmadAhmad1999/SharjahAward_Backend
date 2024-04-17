@@ -6,8 +6,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
     public class GetAllDynamicAttributeSectionsForViewQuery : IRequest<BaseResponse<List<DynamicAttributeSectionListVM>>>
     {
         public int? CategoryId { get; set; }
-        public int? CycleId { get; set; }
-        public bool isArbitrator { get; set; } = false;
+        public bool? isArbitrator { get; set; }
         public string lang { get; set; } = string.Empty;
         public int page { get; set; }
         public int pageSize { get; set; }
