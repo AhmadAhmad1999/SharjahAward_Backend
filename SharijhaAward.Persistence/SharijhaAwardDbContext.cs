@@ -220,21 +220,11 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<Arbitrator>()
                 .Property(a => a.Id)
-                .ValueGeneratedOnAdd()
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity<Arbitrator>()
-                .Property(a => a.Id)
-                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<Coordinator>()
                 .Property(a => a.Id)
-                .ValueGeneratedOnAdd()
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity<Coordinator>()
-                .Property(a => a.Id)
-                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<PermissionHeader>()
                 .HasData(new PermissionHeader()
@@ -369,7 +359,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     Id = 1,
-                    
+
                 });
 
             modelBuilder.Entity<GeneralWorkshop>()

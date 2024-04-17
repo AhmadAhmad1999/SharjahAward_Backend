@@ -44,13 +44,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
 
         public async Task<BaseResponse<int>> Handle(CreateCoordinatorCommand Request, CancellationToken cancellationToken)
         {
-            var Coordinatorss = _mapper.Map<Coordinator>(Request);
-
-            Coordinatorss.Id = 100;
-            await _coordinatorRepository.AddAsync(Coordinatorss);
-
-            return new BaseResponse<int>(string.Empty, true, 200);
-
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,

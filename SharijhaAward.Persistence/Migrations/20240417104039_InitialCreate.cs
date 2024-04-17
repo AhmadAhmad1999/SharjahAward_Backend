@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SharijhaAward.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class ConvertIDSAddNewTableUserRoles : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -69,8 +69,7 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "Arbitrators",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     ArabicName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -148,8 +147,7 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "Coordinators",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     ArabicName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -247,6 +245,26 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EducationalClasses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ArabicName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EducationalClasses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EducationalEntities",
                 columns: table => new
                 {
@@ -264,6 +282,38 @@ namespace SharijhaAward.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EducationalEntities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmailMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    From = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    To = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: true),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    MessageId = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmailMessages_EmailMessages_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "EmailMessages",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -388,7 +438,7 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Permissions",
+                name: "PermissionHeaders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -403,7 +453,7 @@ namespace SharijhaAward.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Permissions", x => x.Id);
+                    table.PrimaryKey("PK_PermissionHeaders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -412,7 +462,8 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArabicName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -559,12 +610,13 @@ namespace SharijhaAward.Persistence.Migrations
                     ArabicDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EnglishDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Icon = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
                     CategoryClassification = table.Column<int>(type: "int", nullable: true),
-                    FinalArbitrationQualificationMark = table.Column<int>(type: "int", nullable: true),
-                    WinningScore = table.Column<int>(type: "int", nullable: true),
-                    RelatedToClasses = table.Column<bool>(type: "bit", nullable: true),
+                    FinalArbitrationQualificationMark = table.Column<float>(type: "real", nullable: true),
+                    WinningScore = table.Column<float>(type: "real", nullable: true),
+                    MinimumAmountToParticipateInTheAward = table.Column<float>(type: "real", nullable: true),
+                    MinimumAmountToObtainACertificateOfParticipation = table.Column<float>(type: "real", nullable: true),
                     ExpectedNumberOfWinners = table.Column<int>(type: "int", nullable: true),
+                    RelatedToClasses = table.Column<bool>(type: "bit", nullable: true),
                     ParentId = table.Column<int>(type: "int", nullable: true),
                     CycleId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -618,33 +670,6 @@ namespace SharijhaAward.Persistence.Migrations
                     table.PrimaryKey("PK_CycleCondition", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CycleCondition_Cycles_CycleId",
-                        column: x => x.CycleId,
-                        principalTable: "Cycles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EducationalClasses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ArabicName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CycleId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EducationalClasses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EducationalClasses_Cycles_CycleId",
                         column: x => x.CycleId,
                         principalTable: "Cycles",
                         principalColumn: "Id",
@@ -741,6 +766,38 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ArbitratorClasses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EducationalClassId = table.Column<int>(type: "int", nullable: false),
+                    ArbitratorId = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ArbitratorClasses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ArbitratorClasses_Arbitrators_ArbitratorId",
+                        column: x => x.ArbitratorId,
+                        principalTable: "Arbitrators",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ArbitratorClasses_EducationalClasses_EducationalClassId",
+                        column: x => x.EducationalClassId,
+                        principalTable: "EducationalClasses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EducationalInstitutions",
                 columns: table => new
                 {
@@ -796,6 +853,32 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_EducationCoordinators_EducationalEntities_EducationalEntityId",
                         column: x => x.EducationalEntityId,
                         principalTable: "EducationalEntities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmailAttachments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AttachmentUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MessageId = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailAttachments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmailAttachments_EmailMessages_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "EmailMessages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -896,14 +979,13 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RolePermissions",
+                name: "Permissions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PermissionId = table.Column<int>(type: "int", nullable: false),
-                    RoleRoleId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PermissionHeaderId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -913,18 +995,13 @@ namespace SharijhaAward.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RolePermissions", x => x.Id);
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RolePermissions_Permissions_PermissionId",
-                        column: x => x.PermissionId,
-                        principalTable: "Permissions",
+                        name: "FK_Permissions_PermissionHeaders_PermissionHeaderId",
+                        column: x => x.PermissionHeaderId,
+                        principalTable: "PermissionHeaders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RolePermissions_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -998,6 +1075,38 @@ namespace SharijhaAward.Persistence.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryEducationalClasses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EducationalClassId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    NumberOfExpectedWinners = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryEducationalClasses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CategoryEducationalClasses_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CategoryEducationalClasses_EducationalClasses_EducationalClassId",
+                        column: x => x.EducationalClassId,
+                        principalTable: "EducationalClasses",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1185,70 +1294,6 @@ namespace SharijhaAward.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ArbitratorClasses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EducationalClassId = table.Column<int>(type: "int", nullable: false),
-                    ArbitratorId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ArbitratorClasses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ArbitratorClasses_Arbitrators_ArbitratorId",
-                        column: x => x.ArbitratorId,
-                        principalTable: "Arbitrators",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ArbitratorClasses_EducationalClasses_EducationalClassId",
-                        column: x => x.EducationalClassId,
-                        principalTable: "EducationalClasses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CategoryEducationalClasses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EducationalClassId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    NumberOfExpectedWinners = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CategoryEducationalClasses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CategoryEducationalClasses_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CategoryEducationalClasses_EducationalClasses_EducationalClassId",
-                        column: x => x.EducationalClassId,
-                        principalTable: "EducationalClasses",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "InstitutionCoordinators",
                 columns: table => new
                 {
@@ -1302,6 +1347,38 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_Students_GroupInvitees_GroupInviteeId",
                         column: x => x.GroupInviteeId,
                         principalTable: "GroupInvitees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RolePermissions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PermissionId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RolePermissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -2416,26 +2493,26 @@ namespace SharijhaAward.Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "AboutAwardPage",
                 columns: new[] { "Id", "AboutImage", "ArabicAboutDescription", "ArabicAboutTitle", "ArabicOurVisionDescription", "ArabicOurVisionTitle", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishAboutDescription", "EnglishAboutTitle", "EnglishOurVisionDescription", "EnglishOurVisionTitle", "LastModifiedAt", "LastModifiedBy", "OurVisionImage", "isDeleted" },
-                values: new object[] { 1, "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg", "تأسست جائزة الشارقة للتفوق والتميز التربوي عام 1994-1995 برعاية كريمة من صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي عضو المجلس الاعلى حاكم إمارة الشارقة حفظه الله ورعاه... وتعتبر أول جائزة تربوية على مستوى الدولة", "نبذة عن الجائزة", "تأسست جائزة الشارقة للتفوق والتميز التربوي عام 1994-1995 برعاية كريمة من صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي عضو المجلس الاعلى حاكم إمارة الشارقة حفظه الله ورعاه... وتعتبر أول جائزة تربوية على مستوى الدولة", "رؤيتنا", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc), null, null, "The Sharjah Award for Educational Excellence and Excellence was established in 1994-1995 under the generous patronage of His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of the Emirate of Sharjah, may God protect and preserve him... It is considered the first educational award at the state level.", "About the award", "The Sharjah Award for Educational Excellence and Excellence was established in 1994-1995 under the generous patronage of His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of the Emirate of Sharjah, may God protect and preserve him... It is considered the first educational award at the state level.", "Our Vision", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg", false });
+                values: new object[] { 1, "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg", "تأسست جائزة الشارقة للتفوق والتميز التربوي عام 1994-1995 برعاية كريمة من صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي عضو المجلس الاعلى حاكم إمارة الشارقة حفظه الله ورعاه... وتعتبر أول جائزة تربوية على مستوى الدولة", "نبذة عن الجائزة", "تأسست جائزة الشارقة للتفوق والتميز التربوي عام 1994-1995 برعاية كريمة من صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي عضو المجلس الاعلى حاكم إمارة الشارقة حفظه الله ورعاه... وتعتبر أول جائزة تربوية على مستوى الدولة", "رؤيتنا", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7632), null, null, "The Sharjah Award for Educational Excellence and Excellence was established in 1994-1995 under the generous patronage of His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of the Emirate of Sharjah, may God protect and preserve him... It is considered the first educational award at the state level.", "About the award", "The Sharjah Award for Educational Excellence and Excellence was established in 1994-1995 under the generous patronage of His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of the Emirate of Sharjah, may God protect and preserve him... It is considered the first educational award at the state level.", "Our Vision", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg", false });
 
             migrationBuilder.InsertData(
                 table: "Arbitrators",
                 columns: new[] { "Id", "ArabicName", "CreatedAt", "CreatedBy", "DeletedAt", "Email", "EnglishName", "LastModifiedAt", "LastModifiedBy", "PhoneNumber", "isDeleted" },
-                values: new object[] { 1, "", new DateTime(2024, 4, 14, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(9623), null, null, "", "", null, null, "", false });
+                values: new object[] { 1, "", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7234), null, null, "", "", null, null, "", false });
 
             migrationBuilder.InsertData(
                 table: "AttributeDataTypes",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "LastModifiedAt", "LastModifiedBy", "Name", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(497), null, null, null, null, "Text", false },
-                    { 2, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(500), null, null, null, null, "Email", false },
-                    { 3, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(503), null, null, null, null, "Image", false },
-                    { 4, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(505), null, null, null, null, "File", false },
-                    { 5, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(508), null, null, null, null, "Phone Number", false },
-                    { 6, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(510), null, null, null, null, "Number", false },
-                    { 7, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(513), null, null, null, null, "Date", false },
-                    { 8, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(515), null, null, null, null, "List", false }
+                    { 1, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8129), null, null, null, null, "Text", false },
+                    { 2, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8132), null, null, null, null, "Email", false },
+                    { 3, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8135), null, null, null, null, "Image", false },
+                    { 4, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8138), null, null, null, null, "File", false },
+                    { 5, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8140), null, null, null, null, "Phone Number", false },
+                    { 6, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8143), null, null, null, null, "Number", false },
+                    { 7, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8145), null, null, null, null, "Date", false },
+                    { 8, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8149), null, null, null, null, "List", false }
                 });
 
             migrationBuilder.InsertData(
@@ -2443,14 +2520,14 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "LastModifiedAt", "LastModifiedBy", "OperationAsString", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(594), null, null, null, null, ">", false },
-                    { 2, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(599), null, null, null, null, ">=", false },
-                    { 3, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(601), null, null, null, null, "<", false },
-                    { 4, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(606), null, null, null, null, "<=", false },
-                    { 5, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(608), null, null, null, null, "=", false },
-                    { 6, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(610), null, null, null, null, "!=", false },
-                    { 7, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(614), null, null, null, null, "is Empty", false },
-                    { 8, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(616), null, null, null, null, "is not Empty", false }
+                    { 1, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8235), null, null, null, null, ">", false },
+                    { 2, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8239), null, null, null, null, ">=", false },
+                    { 3, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8242), null, null, null, null, "<", false },
+                    { 4, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8246), null, null, null, null, "<=", false },
+                    { 5, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8250), null, null, null, null, "=", false },
+                    { 6, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8253), null, null, null, null, "!=", false },
+                    { 7, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8255), null, null, null, null, "is Empty", false },
+                    { 8, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8258), null, null, null, null, "is not Empty", false }
                 });
 
             migrationBuilder.InsertData(
@@ -2458,9 +2535,9 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "LastModifiedAt", "LastModifiedBy", "Name", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(411), null, null, null, null, "ProvidedForm", false },
-                    { 2, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(415), null, null, null, null, "Coordinator", false },
-                    { 3, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(418), null, null, null, null, "Arbitrator", false }
+                    { 1, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8050), null, null, null, null, "ProvidedForm", false },
+                    { 2, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8053), null, null, null, null, "Coordinator", false },
+                    { 3, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(8056), null, null, null, null, "Arbitrator", false }
                 });
 
             migrationBuilder.InsertData(
@@ -2468,10 +2545,10 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicName", "CreatedAt", "CreatedBy", "DeletedAt", "EducationType", "Email", "Emirates", "EnglishName", "LastModifiedAt", "LastModifiedBy", "PersonalPhoto", "PhoneNumber", "isDeleted" },
                 values: new object[,]
                 {
-                    { 10, "منسق 1", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2935), null, null, 0, "Coordinator@Coordinator.com", 5, "Coordinator 1", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg", "0993521579", false },
-                    { 11, "منسق 2", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2944), null, null, 0, "Coordinator2@Coordinator2.com", 2, "Coordinator 2", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/e6258b6f-5ca5-4168-bb7c-fe1f24a6e553.jpg", "0993521579", false },
-                    { 12, "منسق 3", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2949), null, null, 1, "Coordinator3@Coordinator3.com", 1, "Coordinator 3", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/eecad556-2d56-4010-b10a-780f7500f693.png", "0993521579", false },
-                    { 13, "منسق 4", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2954), null, null, 1, "Coordinator4@Coordinator4.com", 2, "Coordinator 4", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/eecad556-2d56-4010-b10a-780f7500f693.png", "0993521579", false }
+                    { 10, "منسق 1", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1444), null, null, 0, "Coordinator@Coordinator.com", 5, "Coordinator 1", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg", "0993521579", false },
+                    { 11, "منسق 2", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1452), null, null, 0, "Coordinator2@Coordinator2.com", 2, "Coordinator 2", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/e6258b6f-5ca5-4168-bb7c-fe1f24a6e553.jpg", "0993521579", false },
+                    { 12, "منسق 3", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1455), null, null, 1, "Coordinator3@Coordinator3.com", 1, "Coordinator 3", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/eecad556-2d56-4010-b10a-780f7500f693.png", "0993521579", false },
+                    { 13, "منسق 4", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1460), null, null, 1, "Coordinator4@Coordinator4.com", 2, "Coordinator 4", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/eecad556-2d56-4010-b10a-780f7500f693.png", "0993521579", false }
                 });
 
             migrationBuilder.InsertData(
@@ -2480,12 +2557,31 @@ namespace SharijhaAward.Persistence.Migrations
                 values: new object[] { 1, "جائزة الشارقة", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 0, null, "SharijhaAward", null, null, 10, 10, null, null, null, null, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, null, 0, "2023-2024", false });
 
             migrationBuilder.InsertData(
+                table: "EducationalClasses",
+                columns: new[] { "Id", "ArabicName", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishName", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
+                values: new object[,]
+                {
+                    { 1, "الصف الأول", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2808), null, null, "First class", null, null, false },
+                    { 2, "الصف الثاني", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2812), null, null, "Second class", null, null, false },
+                    { 3, "الصف الثالث", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2816), null, null, "Third class", null, null, false },
+                    { 4, "الصف الرابع", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2820), null, null, "Forth class", null, null, false },
+                    { 5, "الصف الخامس", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2822), null, null, "Fifth class", null, null, false },
+                    { 6, "الصف السادس", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2826), null, null, "Sixth class", null, null, false },
+                    { 7, "الصف السابع", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2832), null, null, "Seventh class", null, null, false },
+                    { 8, "الصف الثامن", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2834), null, null, "Eighth class", null, null, false },
+                    { 9, "الصف التاسع", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2838), null, null, "Ninth class", null, null, false },
+                    { 10, "الصف العاشر", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2840), null, null, "Tenth class", null, null, false },
+                    { 11, "الصف الحادي عشر", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2843), null, null, "Eleventh class", null, null, false },
+                    { 12, "الصف الثاني عشر", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2846), null, null, "Twelfth class", null, null, false }
+                });
+
+            migrationBuilder.InsertData(
                 table: "EducationalEntities",
                 columns: new[] { "Id", "ArabicName", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishName", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "جهة تعليمية 1", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3143), null, null, "Educational Entity 1", null, null, false },
-                    { 2, "جهة تعليمية 2", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3147), null, null, "Educational Entity 2", null, null, false }
+                    { 1, "جهة تعليمية 1", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1637), null, null, "Educational Entity 1", null, null, false },
+                    { 2, "جهة تعليمية 2", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1642), null, null, "Educational Entity 2", null, null, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2493,8 +2589,8 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicDescription", "ArabicLocation", "ArabicName", "ArabicSiteName", "CreatedAt", "CreatedBy", "DeletedAt", "EndDate", "EnglishDescription", "EnglishLocation", "EnglishName", "EnglishSiteName", "EventDate", "LastModifiedAt", "LastModifiedBy", "StartDate", "UniqueIntegerId", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "اختبار وصف حدث 1", "اختبار موقع الفعالية 1", "اختبار اسم حدث 1", "اختبار اسم مكان الحدث 1", new DateTime(2024, 4, 14, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(8281), null, null, new DateTime(2024, 4, 19, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(8289), "Test Event Description 1", "Test Event Location 1", "Test Event Name 1", "Test Event Site Name 1", new DateTime(2024, 4, 16, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(8300), null, null, new DateTime(2024, 4, 17, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(8301), 1, false },
-                    { 2, "اختبار وصف حدث 2", "اختبار موقع الفعالية 2", "اختبار اسم حدث 2", "اختبار اسم مكان الحدث 2", new DateTime(2024, 4, 14, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(8304), null, null, new DateTime(2024, 4, 22, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(8306), "Test Event Description 2", "Test Event Location 2", "Test Event Name 2", "Test Event Site Name 2", new DateTime(2024, 4, 19, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(8307), null, null, new DateTime(2024, 4, 20, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(8309), 2, false }
+                    { 1, "اختبار وصف حدث 1", "اختبار موقع الفعالية 1", "اختبار اسم حدث 1", "اختبار اسم مكان الحدث 1", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6398), null, null, new DateTime(2024, 4, 22, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6403), "Test Event Description 1", "Test Event Location 1", "Test Event Name 1", "Test Event Site Name 1", new DateTime(2024, 4, 19, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6413), null, null, new DateTime(2024, 4, 20, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6415), 1, false },
+                    { 2, "اختبار وصف حدث 2", "اختبار موقع الفعالية 2", "اختبار اسم حدث 2", "اختبار اسم مكان الحدث 2", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6417), null, null, new DateTime(2024, 4, 25, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6419), "Test Event Description 2", "Test Event Location 2", "Test Event Name 2", "Test Event Site Name 2", new DateTime(2024, 4, 22, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6421), null, null, new DateTime(2024, 4, 23, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6422), 2, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2502,8 +2598,8 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicName", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishName", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "اختبار فئة أسئلة شائعة عامة 1", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(233), null, null, "Test General FAQ Category 1", null, null, false },
-                    { 2, "اختبار فئة أسئلة شائعة عامة 2", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(236), null, null, "Test General FAQ Category 2", null, null, false }
+                    { 1, "اختبار فئة أسئلة شائعة عامة 1", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7889), null, null, "Test General FAQ Category 1", null, null, false },
+                    { 2, "اختبار فئة أسئلة شائعة عامة 2", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7893), null, null, "Test General FAQ Category 2", null, null, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2511,8 +2607,8 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "AgendaImage", "ArabicDescription", "ArabicTitle", "CreatedAt", "CreatedBy", "DateOfWorkShop", "DayName", "DeletedAt", "EnglishDescription", "EnglishTitle", "LastModifiedAt", "LastModifiedBy", "RegistrationUrl", "Thumbnale", "Time", "Video", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, null, "اختبار وصف الورش العامة 1", "اختبار عنوان الورش العامة 1", new DateTime(2024, 4, 14, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(9703), null, new DateTime(2024, 4, 24, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(9708), "Wednesday", null, "Test General Workshop Description 1", "Test General Workshop Title 1", null, null, null, "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg", "10:00 - 12:00", null, false },
-                    { 2, null, "اختبار وصف الورش العامة 2", "اختبار عنوان الورش العامة 2", new DateTime(2024, 4, 14, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(9918), null, new DateTime(2024, 5, 4, 11, 3, 0, 764, DateTimeKind.Utc).AddTicks(9921), "Saturday", null, "Test General Workshop Description 2", "Test General Workshop Title 2", null, null, null, "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg", "2:00 - 3:00", null, false }
+                    { 1, null, "اختبار وصف الورش العامة 1", "اختبار عنوان الورش العامة 1", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7312), null, new DateTime(2024, 4, 27, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7317), "Saturday", null, "Test General Workshop Description 1", "Test General Workshop Title 1", null, null, null, "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg", "10:00 - 12:00", null, false },
+                    { 2, null, "اختبار وصف الورش العامة 2", "اختبار عنوان الورش العامة 2", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7551), null, new DateTime(2024, 5, 7, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7555), "Tuesday", null, "Test General Workshop Description 2", "Test General Workshop Title 2", null, null, null, "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg", "2:00 - 3:00", null, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2520,21 +2616,26 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicText", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishText", "LastModifiedAt", "LastModifiedBy", "Type", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "سياسة الخصوصية", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(171), null, null, "Privacy Policy", null, null, 0, false },
-                    { 2, "شروط الاستخدام", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(174), null, null, "Terms Of Use", null, null, 1, false }
+                    { 1, "سياسة الخصوصية", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7804), null, null, "Privacy Policy", null, null, 0, false },
+                    { 2, "شروط الاستخدام", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7808), null, null, "Terms Of Use", null, null, 1, false }
                 });
 
             migrationBuilder.InsertData(
+                table: "PermissionHeaders",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "LastModifiedAt", "LastModifiedBy", "Name", "isDeleted" },
+                values: new object[] { 1, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(5481), null, null, null, null, "إدارة الدورات", false });
+
+            migrationBuilder.InsertData(
                 table: "Roles",
-                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "LastModifiedAt", "LastModifiedBy", "RoleName", "isDeleted" },
+                columns: new[] { "Id", "ArabicName", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishName", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, "Admin", false },
-                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, "Subscriber", false },
-                    { 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, "Manager", false },
-                    { 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, "User", false },
-                    { 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, "Coordinator", false },
-                    { 6, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, "Arbitrator", false }
+                    { 1, "ادمن", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Admin", null, null, false },
+                    { 2, "مشترك", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Subscriber", null, null, false },
+                    { 3, "مدير", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Manager", null, null, false },
+                    { 4, "مستخدم", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "User", null, null, false },
+                    { 5, "منسق", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Coordinator", null, null, false },
+                    { 6, "محكم", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Arbitrator", null, null, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2542,16 +2643,16 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicName", "ConfirmationCodeForForgetPassword", "ConfirmationCodeForResetPassword", "ConfirmationCodeForSignUp", "CreatedAt", "CreatedBy", "DeletedAt", "Email", "EnglishName", "Gender", "ImageURL", "LastModifiedAt", "LastModifiedBy", "NumberOfGroupCategories", "NumberOfIndividualCategories", "Password", "PhoneNumber", "SubscriberId", "TrainingWorkshopId", "isDeleted", "isValidAccount", "lang" },
                 values: new object[,]
                 {
-                    { 1, "ادمن 123", null, null, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4159), null, null, "ahmad.a.ahmad.100011@gmail.com", "Admin 123", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
-                    { 2, "ادمن 123 #", null, null, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4165), null, null, "Ahmad@Ahmad.com", "Admin 123 #", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
-                    { 3, "ادمن 123 ##", null, null, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4171), null, null, "Ahmad2@Ahmad2.com", "Admin 123 ##", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
-                    { 4, "ادمن 123 ##@", null, null, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4175), null, null, "Ahmad3@Ahmad3.com", "Admin 123 ##@", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
-                    { 5, "ادمن 123 ##@@", null, null, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4182), null, null, "Ahmad4@Ahmad4.com", "Admin 123 ##@@", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
-                    { 6, "تامر", null, null, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4187), null, null, "tamer@gmail.com", "Tamer", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
-                    { 10, "منسق 1", null, null, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3048), null, null, "Coordinator@Coordinator.com", "Coordinator 1", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
-                    { 11, "منسق 2", null, null, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3055), null, null, "Coordinator2@Coordinator2.com", "Coordinator 2", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
-                    { 12, "منسق 3", null, null, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3060), null, null, "Coordinator3@Coordinator3.com", "Coordinator 3", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
-                    { 13, "منسق 4", null, null, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3065), null, null, "Coordinator4@Coordinator4.com", "Coordinator 4", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null }
+                    { 1, "ادمن 123", null, null, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2600), null, null, "ahmad.a.ahmad.100011@gmail.com", "Admin 123", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
+                    { 2, "ادمن 123 #", null, null, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2605), null, null, "Ahmad@Ahmad.com", "Admin 123 #", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
+                    { 3, "ادمن 123 ##", null, null, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2609), null, null, "Ahmad2@Ahmad2.com", "Admin 123 ##", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
+                    { 4, "ادمن 123 ##@", null, null, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2613), null, null, "Ahmad3@Ahmad3.com", "Admin 123 ##@", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
+                    { 5, "ادمن 123 ##@@", null, null, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2618), null, null, "Ahmad4@Ahmad4.com", "Admin 123 ##@@", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
+                    { 6, "تامر", null, null, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2623), null, null, "tamer@gmail.com", "Tamer", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", "ABC123", null, false, true, null },
+                    { 10, "منسق 1", null, null, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1549), null, null, "Coordinator@Coordinator.com", "Coordinator 1", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
+                    { 11, "منسق 2", null, null, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1557), null, null, "Coordinator2@Coordinator2.com", "Coordinator 2", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
+                    { 12, "منسق 3", null, null, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1561), null, null, "Coordinator3@Coordinator3.com", "Coordinator 3", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null },
+                    { 13, "منسق 4", null, null, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1565), null, null, "Coordinator4@Coordinator4.com", "Coordinator 4", 0, null, null, null, 0, 0, "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=", "0993521579", null, null, false, true, null }
                 });
 
             migrationBuilder.InsertData(
@@ -2559,51 +2660,32 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicTitle", "CreatedAt", "CreatedBy", "CurrentDate", "CycleId", "DateType", "DeletedAt", "EndDate", "EnglishTitle", "Icon", "LastModifiedAt", "LastModifiedBy", "StartDate", "Status", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "اختبار عنوان جدول أعمال 1", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2272), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 1, null, new DateTime(2024, 4, 24, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2281), "Test Agenda Titile 1", "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (1).png", null, null, new DateTime(2024, 4, 19, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2290), 1, false },
-                    { 2, "اختبار عنوان جدول أعمال 2", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2293), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 0, null, new DateTime(2024, 4, 29, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2295), "Test Agenda Titile 2", "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (2).png", null, null, new DateTime(2024, 4, 24, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2296), 0, false },
-                    { 3, "اختبار عنوان جدول أعمال 3", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2298), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 2, null, new DateTime(2024, 5, 4, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2300), "Test Agenda Titile 3", "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png", null, null, new DateTime(2024, 4, 29, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2301), 2, false },
-                    { 4, "اختبار عنوان جدول أعمال 4", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2304), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 2, null, new DateTime(2024, 5, 9, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2308), "Test Agenda Titile 4", "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png", null, null, new DateTime(2024, 5, 4, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2309), 2, false },
-                    { 5, "اختبار عنوان جدول أعمال 5", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2311), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 2, null, new DateTime(2024, 5, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2314), "Test Agenda Titile 5", "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png", null, null, new DateTime(2024, 5, 9, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2315), 2, false }
+                    { 1, "اختبار عنوان جدول أعمال 1", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(792), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 1, null, new DateTime(2024, 4, 27, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(802), "Test Agenda Titile 1", "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (1).png", null, null, new DateTime(2024, 4, 22, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(810), 1, false },
+                    { 2, "اختبار عنوان جدول أعمال 2", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(813), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 0, null, new DateTime(2024, 5, 2, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(815), "Test Agenda Titile 2", "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (2).png", null, null, new DateTime(2024, 4, 27, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(817), 0, false },
+                    { 3, "اختبار عنوان جدول أعمال 3", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(819), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 2, null, new DateTime(2024, 5, 7, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(821), "Test Agenda Titile 3", "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png", null, null, new DateTime(2024, 5, 2, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(822), 2, false },
+                    { 4, "اختبار عنوان جدول أعمال 4", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(824), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 2, null, new DateTime(2024, 5, 12, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(827), "Test Agenda Titile 4", "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png", null, null, new DateTime(2024, 5, 7, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(828), 2, false },
+                    { 5, "اختبار عنوان جدول أعمال 5", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(830), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 2, null, new DateTime(2024, 5, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(832), "Test Agenda Titile 5", "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png", null, null, new DateTime(2024, 5, 12, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(834), 2, false }
                 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "Id", "ArabicDescription", "ArabicName", "CategoryClassification", "CreatedAt", "CreatedBy", "CycleId", "DeletedAt", "EnglishDescription", "EnglishName", "ExpectedNumberOfWinners", "FinalArbitrationQualificationMark", "Icon", "LastModifiedAt", "LastModifiedBy", "ParentId", "RelatedToClasses", "Status", "WinningScore", "isDeleted" },
-                values: new object[] { 1, "اختبار وصف 1", "اختبار اسم 1", 0, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2621), null, 1, null, "Test Description 1", "Test Name 1", 1, 0, "string", null, null, null, false, 0, 0, false });
+                columns: new[] { "Id", "ArabicDescription", "ArabicName", "CategoryClassification", "CreatedAt", "CreatedBy", "CycleId", "DeletedAt", "EnglishDescription", "EnglishName", "ExpectedNumberOfWinners", "FinalArbitrationQualificationMark", "Icon", "LastModifiedAt", "LastModifiedBy", "MinimumAmountToObtainACertificateOfParticipation", "MinimumAmountToParticipateInTheAward", "ParentId", "RelatedToClasses", "WinningScore", "isDeleted" },
+                values: new object[] { 1, "اختبار وصف 1", "اختبار اسم 1", 0, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1119), null, 1, null, "Test Description 1", "Test Name 1", 1, 0f, "string", null, null, null, null, null, false, 0f, false });
 
             migrationBuilder.InsertData(
                 table: "DynamicAttributeSections",
                 columns: new[] { "Id", "ArabicName", "AttributeTableNameId", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishName", "LastModifiedAt", "LastModifiedBy", "RecordIdOnRelation", "isDeleted" },
-                values: new object[] { 1, "اختبار اسم 1", 1, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4712), null, null, "Test Name 1", null, null, 1, false });
+                values: new object[] { 1, "اختبار اسم 1", 1, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3141), null, null, "Test Name 1", null, null, 2, false });
 
             migrationBuilder.InsertData(
                 table: "EducationCoordinators",
                 columns: new[] { "Id", "CoordinatorId", "CreatedAt", "CreatedBy", "DeletedAt", "EducationalEntityId", "LastModifiedAt", "LastModifiedBy", "RelatedDate", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, 10, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3301), null, null, 1, null, null, new DateTime(2024, 4, 14, 13, 3, 0, 766, DateTimeKind.Local).AddTicks(3308), false },
-                    { 2, 11, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3397), null, null, 1, null, null, new DateTime(2024, 4, 14, 13, 3, 0, 766, DateTimeKind.Local).AddTicks(3399), false },
-                    { 3, 12, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3403), null, null, 2, null, null, new DateTime(2024, 4, 14, 13, 3, 0, 766, DateTimeKind.Local).AddTicks(3405), false },
-                    { 4, 13, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3408), null, null, 2, null, null, new DateTime(2024, 4, 14, 13, 3, 0, 766, DateTimeKind.Local).AddTicks(3410), false }
-                });
-
-            migrationBuilder.InsertData(
-                table: "EducationalClasses",
-                columns: new[] { "Id", "ArabicName", "CreatedAt", "CreatedBy", "CycleId", "DeletedAt", "EnglishName", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
-                values: new object[,]
-                {
-                    { 1, "الصف الأول", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4365), null, 1, null, "First class", null, null, false },
-                    { 2, "الصف الثاني", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4369), null, 1, null, "Second class", null, null, false },
-                    { 3, "الصف الثالث", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4372), null, 1, null, "Third class", null, null, false },
-                    { 4, "الصف الرابع", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4375), null, 1, null, "Forth class", null, null, false },
-                    { 5, "الصف الخامس", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4377), null, 1, null, "Fifth class", null, null, false },
-                    { 6, "الصف السادس", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4380), null, 1, null, "Sixth class", null, null, false },
-                    { 7, "الصف السابع", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4383), null, 1, null, "Seventh class", null, null, false },
-                    { 8, "الصف الثامن", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4385), null, 1, null, "Eighth class", null, null, false },
-                    { 9, "الصف التاسع", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4388), null, 1, null, "Ninth class", null, null, false },
-                    { 10, "الصف العاشر", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4392), null, 1, null, "Tenth class", null, null, false },
-                    { 11, "الصف الحادي عشر", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4394), null, 1, null, "Eleventh class", null, null, false },
-                    { 12, "الصف الثاني عشر", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4397), null, 1, null, "Twelfth class", null, null, false }
+                    { 1, 10, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1803), null, null, 1, null, null, new DateTime(2024, 4, 17, 12, 40, 35, 717, DateTimeKind.Local).AddTicks(1813), false },
+                    { 2, 11, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1903), null, null, 1, null, null, new DateTime(2024, 4, 17, 12, 40, 35, 717, DateTimeKind.Local).AddTicks(1905), false },
+                    { 3, 12, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1910), null, null, 2, null, null, new DateTime(2024, 4, 17, 12, 40, 35, 717, DateTimeKind.Local).AddTicks(1911), false },
+                    { 4, 13, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1916), null, null, 2, null, null, new DateTime(2024, 4, 17, 12, 40, 35, 717, DateTimeKind.Local).AddTicks(1918), false }
                 });
 
             migrationBuilder.InsertData(
@@ -2611,8 +2693,8 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicName", "CreatedAt", "CreatedBy", "DeletedAt", "EducationalEntityId", "EnglishName", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "مؤسسة تعليمية 1", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3228), null, null, 1, "Educational Entity 1", null, null, false },
-                    { 2, "مؤسسة تعليمية 2", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3232), null, null, 2, "Educational Entity 2", null, null, false }
+                    { 1, "مؤسسة تعليمية 1", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1719), null, null, 1, "Educational Entity 1", null, null, false },
+                    { 2, "مؤسسة تعليمية 2", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1725), null, null, 2, "Educational Entity 2", null, null, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2620,10 +2702,10 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicAnswer", "ArabicQuestion", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishAnswer", "EnglishQuestion", "GeneralFrequentlyAskedQuestionCategoryId", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "اختبار جواب 1", "اختبار سؤال 1", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(313), null, null, "Test Answer 1", "Test Question 1", 1, null, null, false },
-                    { 2, "اختبار جواب 2", "اختبار سؤال 2", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(317), null, null, "Test Answer 2", "Test Question 2", 1, null, null, false },
-                    { 3, "اختبار جواب 3", "اختبار سؤال 3", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(321), null, null, "Test Answer 3", "Test Question 3", 2, null, null, false },
-                    { 4, "اختبار جواب 4", "اختبار سؤال 4", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(324), null, null, "Test Answer 4", "Test Question 4", 2, null, null, false }
+                    { 1, "اختبار جواب 1", "اختبار سؤال 1", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7964), null, null, "Test Answer 1", "Test Question 1", 1, null, null, false },
+                    { 2, "اختبار جواب 2", "اختبار سؤال 2", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7968), null, null, "Test Answer 2", "Test Question 2", 1, null, null, false },
+                    { 3, "اختبار جواب 3", "اختبار سؤال 3", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7974), null, null, "Test Answer 3", "Test Question 3", 2, null, null, false },
+                    { 4, "اختبار جواب 4", "اختبار سؤال 4", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7977), null, null, "Test Answer 4", "Test Question 4", 2, null, null, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2631,8 +2713,8 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicDescription", "ArabicTitle", "CreatedAt", "CreatedBy", "CycleId", "DeletedAt", "EnglishDescription", "EnglishTitle", "Image", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "اختبار وصف أخبار 1", "اختبار عنوان أخبار 1", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2424), null, 1, null, "Test News Description 1", "Test News Title 1", "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg", null, null, false },
-                    { 2, "اختبار وصف أخبار 2", "اختبار عنوان أخبار 2", new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2429), null, 1, null, "Test News Description 2", "Test News Title 2", "https://backend.stg.award-shj.ae/UploadedFiles/1dd2958e-d80c-48d0-9a28-899d66fded8d.jpg", null, null, false }
+                    { 1, "اختبار وصف أخبار 1", "اختبار عنوان أخبار 1", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(929), null, 1, null, "Test News Description 1", "Test News Title 1", "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg", null, null, false },
+                    { 2, "اختبار وصف أخبار 2", "اختبار عنوان أخبار 2", new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(935), null, 1, null, "Test News Description 2", "Test News Title 2", "https://backend.stg.award-shj.ae/UploadedFiles/1dd2958e-d80c-48d0-9a28-899d66fded8d.jpg", null, null, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2640,8 +2722,20 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "AboutAwardPageId", "ArabicGoal", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishGoal", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, 1, "تطوير القطاع التربوي من خلال بث روح التنافس بينهم؛ لتحقيق أفضل الممارسات التربوية.", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(93), null, null, "Developing the educational sector by spreading the spirit of competition among them; To achieve best educational practices.", null, null, false },
-                    { 2, 1, "طوير أعمال الجائزة ومنهجياتها، ورفع الكفايات المهنية للعاملين بها.", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(97), null, null, "Developing the Award’s work and methodologies, and raising the professional competencies of its employees.", null, null, false }
+                    { 1, 1, "تطوير القطاع التربوي من خلال بث روح التنافس بينهم؛ لتحقيق أفضل الممارسات التربوية.", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7706), null, null, "Developing the educational sector by spreading the spirit of competition among them; To achieve best educational practices.", null, null, false },
+                    { 2, 1, "طوير أعمال الجائزة ومنهجياتها، ورفع الكفايات المهنية للعاملين بها.", new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(7733), null, null, "Developing the Award’s work and methodologies, and raising the professional competencies of its employees.", null, null, false }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Permissions",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "LastModifiedAt", "LastModifiedBy", "Name", "PermissionHeaderId", "isDeleted" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6303), null, null, null, null, "عرض الدورات", 1, false },
+                    { 2, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6308), null, null, null, null, "إضافة دورة", 1, false },
+                    { 3, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6311), null, null, null, null, "عرض معلومات دورة", 1, false },
+                    { 4, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6314), null, null, null, null, "تعديل دورة", 1, false },
+                    { 5, new DateTime(2024, 4, 17, 10, 40, 35, 715, DateTimeKind.Utc).AddTicks(6316), null, null, null, null, "حذف دورة", 1, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2649,8 +2743,8 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "LastModifiedAt", "LastModifiedBy", "ReceiverId", "SenderId", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4499), null, null, null, null, 1, 2, false },
-                    { 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4504), null, null, null, null, 1, 3, false }
+                    { 1, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2924), null, null, null, null, 1, 2, false },
+                    { 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2928), null, null, null, null, 1, 3, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2658,8 +2752,8 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "LastModifiedAt", "LastModifiedBy", "User1Id", "User2Id", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4576), null, null, null, null, 1, 4, false },
-                    { 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4579), null, null, null, null, 1, 5, false }
+                    { 1, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2996), null, null, null, null, 1, 4, false },
+                    { 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3000), null, null, null, null, 1, 5, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2681,22 +2775,22 @@ namespace SharijhaAward.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "Id", "ArabicDescription", "ArabicName", "CategoryClassification", "CreatedAt", "CreatedBy", "CycleId", "DeletedAt", "EnglishDescription", "EnglishName", "ExpectedNumberOfWinners", "FinalArbitrationQualificationMark", "Icon", "LastModifiedAt", "LastModifiedBy", "ParentId", "RelatedToClasses", "Status", "WinningScore", "isDeleted" },
-                values: new object[] { 2, "اختبار وصف 2", "اختبار اسم 2", 0, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2635), null, 1, null, "Test Description 2", "Test Name 2", 1, 0, "string", null, null, 1, false, 0, 0, false });
+                columns: new[] { "Id", "ArabicDescription", "ArabicName", "CategoryClassification", "CreatedAt", "CreatedBy", "CycleId", "DeletedAt", "EnglishDescription", "EnglishName", "ExpectedNumberOfWinners", "FinalArbitrationQualificationMark", "Icon", "LastModifiedAt", "LastModifiedBy", "MinimumAmountToObtainACertificateOfParticipation", "MinimumAmountToParticipateInTheAward", "ParentId", "RelatedToClasses", "WinningScore", "isDeleted" },
+                values: new object[] { 2, "اختبار وصف 2", "اختبار اسم 2", 0, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1133), null, 1, null, "Test Description 2", "Test Name 2", 1, 0f, "string", null, null, null, null, 1, false, 0f, false });
 
             migrationBuilder.InsertData(
                 table: "DynamicAttributes",
                 columns: new[] { "Id", "ArabicLabel", "ArabicPlaceHolder", "AttributeDataTypeId", "CreatedAt", "CreatedBy", "DeletedAt", "DynamicAttributeSectionId", "EnglishLabel", "EnglishPlaceHolder", "IsRequired", "IsUnique", "LastModifiedAt", "LastModifiedBy", "LinkedToAnotherAttribute", "MaxSizeInKB", "Status", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "اختبار نص 1", "اختبار نص 1", 1, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4799), null, null, 1, "Test Text 1", "Test Text 1", true, true, null, null, false, null, 0, false },
-                    { 2, "اختبار ايميل 1", "اختبار ايميل 1", 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4809), null, null, 1, "Test Email 1", "Test Email 1", true, true, null, null, false, null, 0, false },
-                    { 3, "اختبار صورة 1", "اختبار صورة 1", 3, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4812), null, null, 1, "Test Image 1", "Test Image 1", false, false, null, null, false, 1028, 0, false },
-                    { 4, "اختبار ملف 1", "اختبار ملف 1", 4, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4816), null, null, 1, "Test File 1", "Test File 1", false, false, null, null, false, 4112, 0, false },
-                    { 5, "اختبار رقم متحرك 1", "اختبار رقم متحرك 1", 5, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4822), null, null, 1, "Test Phone Number 1", "Test Phone Number 1", false, false, null, null, false, null, 0, false },
-                    { 6, "اختبار رقم 1", "اختبار رقم 1", 6, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4826), null, null, 1, "Test Number 1", "Test Number 1", false, false, null, null, false, null, 0, false },
-                    { 7, "اختبار تاريخ 1", "اختبار تاريخ 1", 7, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4829), null, null, 1, "Test Date 1", "Test Date 1", false, false, null, null, false, null, 0, false },
-                    { 8, "اختبار قائمة 1", "اختبار قائمة 1", 8, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4832), null, null, 1, "Test List 1", "Test List 1", false, false, null, null, false, null, 0, false }
+                    { 1, "اختبار نص 1", "اختبار نص 1", 1, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3222), null, null, 1, "Test Text 1", "Test Text 1", true, true, null, null, false, null, 0, false },
+                    { 2, "اختبار ايميل 1", "اختبار ايميل 1", 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3233), null, null, 1, "Test Email 1", "Test Email 1", true, true, null, null, false, null, 0, false },
+                    { 3, "اختبار صورة 1", "اختبار صورة 1", 3, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3251), null, null, 1, "Test Image 1", "Test Image 1", false, false, null, null, false, 1028, 0, false },
+                    { 4, "اختبار ملف 1", "اختبار ملف 1", 4, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3255), null, null, 1, "Test File 1", "Test File 1", false, false, null, null, false, 4112, 0, false },
+                    { 5, "اختبار رقم متحرك 1", "اختبار رقم متحرك 1", 5, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3260), null, null, 1, "Test Phone Number 1", "Test Phone Number 1", false, false, null, null, false, null, 0, false },
+                    { 6, "اختبار رقم 1", "اختبار رقم 1", 6, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3264), null, null, 1, "Test Number 1", "Test Number 1", false, false, null, null, false, null, 0, false },
+                    { 7, "اختبار تاريخ 1", "اختبار تاريخ 1", 7, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3269), null, null, 1, "Test Date 1", "Test Date 1", false, false, null, null, false, null, 0, false },
+                    { 8, "اختبار قائمة 1", "اختبار قائمة 1", 8, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3272), null, null, 1, "Test List 1", "Test List 1", false, false, null, null, false, null, 0, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2704,27 +2798,27 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "CoordinatorId", "CreatedAt", "CreatedBy", "DeletedAt", "EducationalInstitutionId", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, 10, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3488), null, null, 1, null, null, false },
-                    { 2, 11, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3493), null, null, 1, null, null, false },
-                    { 3, 12, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3496), null, null, 2, null, null, false },
-                    { 4, 13, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3502), null, null, 2, null, null, false }
+                    { 1, 10, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1999), null, null, 1, null, null, false },
+                    { 2, 11, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2003), null, null, 1, null, null, false },
+                    { 3, 12, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2006), null, null, 2, null, null, false },
+                    { 4, 13, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2010), null, null, 2, null, null, false }
                 });
 
             migrationBuilder.InsertData(
                 table: "Criterions",
                 columns: new[] { "Id", "ArabicTitle", "ArbitrationProcedureId", "CategoryId", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishTitle", "LastModifiedAt", "LastModifiedBy", "ParentId", "Score", "SizeOfAttachmentInKB", "isDeleted" },
-                values: new object[] { 1, "معيار رئيسي 1", null, 2, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(3391), null, null, "Main Criterion 1", null, null, null, 100, 0, false });
+                values: new object[] { 1, "معيار رئيسي 1", null, 2, new DateTime(2024, 4, 17, 10, 40, 35, 716, DateTimeKind.Utc).AddTicks(1328), null, null, "Main Criterion 1", null, null, null, 100, 0, false });
 
             migrationBuilder.InsertData(
                 table: "DynamicAttributeListValues",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "DynamicAttributeId", "LastModifiedAt", "LastModifiedBy", "Value", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4916), null, null, 8, null, null, "Test Value 1", false },
-                    { 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4919), null, null, 8, null, null, "Test Value 2", false },
-                    { 3, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4922), null, null, 8, null, null, "Test Value 3", false },
-                    { 4, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4924), null, null, 8, null, null, "Test Value 4", false },
-                    { 5, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4926), null, null, 8, null, null, "Test Value 5", false }
+                    { 1, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3359), null, null, 8, null, null, "Test Value 1", false },
+                    { 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3363), null, null, 8, null, null, "Test Value 2", false },
+                    { 3, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3366), null, null, 8, null, null, "Test Value 3", false },
+                    { 4, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3369), null, null, 8, null, null, "Test Value 4", false },
+                    { 5, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3371), null, null, 8, null, null, "Test Value 5", false }
                 });
 
             migrationBuilder.InsertData(
@@ -2732,26 +2826,26 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicAnswer", "ArabicQuestion", "CategoryId", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishAnswer", "EnglishQuestion", "LastModifiedAt", "LastModifiedBy", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة.", "كيف يمكنني الاشتراك بجائزة الشارقة للتفوق والتميز التربوي", 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2851), null, null, "You can participate in the award by following the following steps:\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria.", "How can I participate in the Sharjah Award for Excellence and Educational Excellence?", null, null, false },
-                    { 2, "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة. 2", "كيف يمكنني الاشتراك بجائزة الشارقة للتفوق والتميز التربوي 2", 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2857), null, null, "You can participate in the award by following the following steps:\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria 2.", "How can I participate in the Sharjah Award for Excellence and Educational Excellence? 2", null, null, false }
+                    { 1, "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة.", "كيف يمكنني الاشتراك بجائزة الشارقة للتفوق والتميز التربوي", 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1340), null, null, "You can participate in the award by following the following steps:\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria.", "How can I participate in the Sharjah Award for Excellence and Educational Excellence?", null, null, false },
+                    { 2, "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة. 2", "كيف يمكنني الاشتراك بجائزة الشارقة للتفوق والتميز التربوي 2", 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1348), null, null, "You can participate in the award by following the following steps:\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria 2.", "How can I participate in the Sharjah Award for Excellence and Educational Excellence? 2", null, null, false }
                 });
 
             migrationBuilder.InsertData(
                 table: "ProvidedForms",
                 columns: new[] { "Id", "CategoryEducationalClassId", "CreatedAt", "CreatedBy", "CurrentStep", "CycleNumber", "CycleYear", "DeletedAt", "FinalScore", "LastModifiedAt", "LastModifiedBy", "PercentCompletion", "Status", "SubscriberType", "TotalStep", "Type", "categoryId", "isDeleted", "userId" },
-                values: new object[] { 1, null, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(4635), null, 1, 1, "2023-2024", null, 0f, null, null, 1, 0, 0, 7, 0, 2, false, 1 });
+                values: new object[] { 1, null, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(3058), null, 1, 1, "2023-2024", null, 0f, null, null, 1, 0, 0, 7, 0, 2, false, 1 });
 
             migrationBuilder.InsertData(
                 table: "TermsAndConditions",
                 columns: new[] { "Id", "ArabicDescription", "ArabicTitle", "AttachmentType", "CategoryId", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishDescription", "EnglishTitle", "IsAgree", "IsSpecial", "LastModifiedAt", "LastModifiedBy", "NeedAttachment", "RequiredAttachmentNumber", "SizeOfAttachmentInKB", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "الموافقة على سياسة الخصوصية لهذه الفئة", "الموافقة على سياسة الخصوصة", 0, 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3567), null, null, "Accept on Privacy Term", "Accept on Privacy Term", false, true, null, null, false, 0, 0, false },
-                    { 2, "الموافقة على سياسة الخصوصية لهذه الفئة", "الموافقة على سياسة الخصوصة", 0, 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3576), null, null, "Accept on Privacy Term", "Accept on Privacy Term", false, false, null, null, false, 0, 0, false },
-                    { 3, "الهوية الشخصية", "رفع صورة الهوية الشخصية (الامامي و الخلفي)", 0, 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3583), null, null, "Id Card", "Upload Photos of Id Card (Front and Back)", false, false, null, null, true, 2, 1000, false },
-                    { 4, "الهوية الشخصية", "رفع صورة الهوية الشخصية (الامامي و الخلفي)", 0, 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3587), null, null, "Id Card", "Upload Photos of Id Card (Front and Back)", false, true, null, null, true, 2, 1000, false },
-                    { 5, "رفع الاثباتات العلمية", "رفع الاثباتات العلمية", 1, 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3607), null, null, "Upload Confirmation Documents", "Upload Confirmation Documents", false, true, null, null, true, 0, 1000, false },
-                    { 6, "رفع الاثباتات العلمية", "رفع الاثباتات العلمية", 1, 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(3613), null, null, "Upload Confirmation Documents", "Upload Confirmation Documents", false, false, null, null, true, 0, 1000, false }
+                    { 1, "الموافقة على سياسة الخصوصية لهذه الفئة", "الموافقة على سياسة الخصوصة", 0, 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2080), null, null, "Accept on Privacy Term", "Accept on Privacy Term", false, true, null, null, false, 0, 0, false },
+                    { 2, "الموافقة على سياسة الخصوصية لهذه الفئة", "الموافقة على سياسة الخصوصة", 0, 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2089), null, null, "Accept on Privacy Term", "Accept on Privacy Term", false, false, null, null, false, 0, 0, false },
+                    { 3, "الهوية الشخصية", "رفع صورة الهوية الشخصية (الامامي و الخلفي)", 0, 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2094), null, null, "Id Card", "Upload Photos of Id Card (Front and Back)", false, false, null, null, true, 2, 1000, false },
+                    { 4, "الهوية الشخصية", "رفع صورة الهوية الشخصية (الامامي و الخلفي)", 0, 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2100), null, null, "Id Card", "Upload Photos of Id Card (Front and Back)", false, true, null, null, true, 2, 1000, false },
+                    { 5, "رفع الاثباتات العلمية", "رفع الاثباتات العلمية", 1, 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2104), null, null, "Upload Confirmation Documents", "Upload Confirmation Documents", false, true, null, null, true, 0, 1000, false },
+                    { 6, "رفع الاثباتات العلمية", "رفع الاثباتات العلمية", 1, 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(2109), null, null, "Upload Confirmation Documents", "Upload Confirmation Documents", false, false, null, null, true, 0, 1000, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2759,8 +2853,8 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicDescription", "ArabicTitle", "CategoryId", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishDescription", "EnglishTitle", "LastModifiedAt", "LastModifiedBy", "Thumbnail", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, "اختبار وصف ورشة تدريبية 1", "اختبار عنوان ورشة تدريبية 1", 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2768), null, null, "Test Training Workshop Description 1", "Test Training Workshop Title 1", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg", false },
-                    { 2, "اختبار وصف ورشة تدريبية 2", "اختبار عنوان ورشة تدريبية 2", 2, new DateTime(2024, 4, 14, 11, 3, 0, 766, DateTimeKind.Utc).AddTicks(2775), null, null, "Test Training Workshop Description 2", "Test Training Workshop Title 2", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg", false }
+                    { 1, "اختبار وصف ورشة تدريبية 1", "اختبار عنوان ورشة تدريبية 1", 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1262), null, null, "Test Training Workshop Description 1", "Test Training Workshop Title 1", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg", false },
+                    { 2, "اختبار وصف ورشة تدريبية 2", "اختبار عنوان ورشة تدريبية 2", 2, new DateTime(2024, 4, 17, 10, 40, 35, 717, DateTimeKind.Utc).AddTicks(1272), null, null, "Test Training Workshop Description 2", "Test Training Workshop Title 2", null, null, "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg", false }
                 });
 
             migrationBuilder.InsertData(
@@ -2768,8 +2862,8 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ArabicTitle", "ArbitrationProcedureId", "CategoryId", "CreatedAt", "CreatedBy", "DeletedAt", "EnglishTitle", "LastModifiedAt", "LastModifiedBy", "ParentId", "Score", "SizeOfAttachmentInKB", "isDeleted" },
                 values: new object[,]
                 {
-                    { 2, "معيار فرعي 1", null, 2, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(3396), null, null, "Sub Criterion 1", null, null, 1, 50, 5000, false },
-                    { 3, "معيار فرعي 2", null, 2, new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(3401), null, null, "Sub Criterion 2", null, null, 1, 50, 5000, false }
+                    { 2, "معيار فرعي 1", null, 2, new DateTime(2024, 4, 17, 10, 40, 35, 716, DateTimeKind.Utc).AddTicks(1336), null, null, "Sub Criterion 1", null, null, 1, 50, 5000, false },
+                    { 3, "معيار فرعي 2", null, 2, new DateTime(2024, 4, 17, 10, 40, 35, 716, DateTimeKind.Utc).AddTicks(1341), null, null, "Sub Criterion 2", null, null, 1, 50, 5000, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2777,10 +2871,10 @@ namespace SharijhaAward.Persistence.Migrations
                 columns: new[] { "Id", "ActualScore", "ArabicName", "CreatedAt", "CreatedBy", "CriterionId", "DeletedAt", "EnglishName", "LastModifiedAt", "LastModifiedBy", "ScaleId", "Score", "SizeOfAttachmentInKB", "isDeleted" },
                 values: new object[,]
                 {
-                    { 1, 0, "بند معيار فرعي 11", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(3491), null, 2, null, "Sub Criterion Item 11", null, null, null, 50, 5000, false },
-                    { 2, 0, "بند معيار فرعي 12", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(3501), null, 2, null, "Sub Criterion Item 12", null, null, null, 50, 5000, false },
-                    { 3, 0, "بند معيار فرعي 21", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(3505), null, 3, null, "Sub Criterion Item 21", null, null, null, 50, 5000, false },
-                    { 4, 0, "بند معيار فرعي 22", new DateTime(2024, 4, 14, 11, 3, 0, 765, DateTimeKind.Utc).AddTicks(3508), null, 3, null, "Sub Criterion Item 22", null, null, null, 50, 5000, false }
+                    { 1, 0, "بند معيار فرعي 11", new DateTime(2024, 4, 17, 10, 40, 35, 716, DateTimeKind.Utc).AddTicks(1433), null, 2, null, "Sub Criterion Item 11", null, null, null, 50, 5000, false },
+                    { 2, 0, "بند معيار فرعي 12", new DateTime(2024, 4, 17, 10, 40, 35, 716, DateTimeKind.Utc).AddTicks(1440), null, 2, null, "Sub Criterion Item 12", null, null, null, 50, 5000, false },
+                    { 3, 0, "بند معيار فرعي 21", new DateTime(2024, 4, 17, 10, 40, 35, 716, DateTimeKind.Utc).AddTicks(1444), null, 3, null, "Sub Criterion Item 21", null, null, null, 50, 5000, false },
+                    { 4, 0, "بند معيار فرعي 22", new DateTime(2024, 4, 17, 10, 40, 35, 716, DateTimeKind.Utc).AddTicks(1448), null, 3, null, "Sub Criterion Item 22", null, null, null, 50, 5000, false }
                 });
 
             migrationBuilder.CreateIndex(
@@ -3054,11 +3148,6 @@ namespace SharijhaAward.Persistence.Migrations
                 column: "DynamicAttributeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EducationalClasses_CycleId",
-                table: "EducationalClasses",
-                column: "CycleId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_EducationalInstitutions_EducationalEntityId",
                 table: "EducationalInstitutions",
                 column: "EducationalEntityId");
@@ -3072,6 +3161,16 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "IX_EducationCoordinators_EducationalEntityId",
                 table: "EducationCoordinators",
                 column: "EducationalEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmailAttachments_MessageId",
+                table: "EmailAttachments",
+                column: "MessageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmailMessages_MessageId",
+                table: "EmailMessages",
+                column: "MessageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExplanatoryGuides_CategoryId",
@@ -3190,6 +3289,11 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "IX_OurGoals_AboutAwardPageId",
                 table: "OurGoals",
                 column: "AboutAwardPageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permissions_PermissionHeaderId",
+                table: "Permissions",
+                column: "PermissionHeaderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Personalnvitees_Email_isDeleted",
@@ -3410,6 +3514,9 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "EducationCoordinators");
 
             migrationBuilder.DropTable(
+                name: "EmailAttachments");
+
+            migrationBuilder.DropTable(
                 name: "ExplanatoryGuides");
 
             migrationBuilder.DropTable(
@@ -3503,6 +3610,9 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "DynamicAttributes");
 
             migrationBuilder.DropTable(
+                name: "EmailMessages");
+
+            migrationBuilder.DropTable(
                 name: "ExtraAttachments");
 
             migrationBuilder.DropTable(
@@ -3555,6 +3665,9 @@ namespace SharijhaAward.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "EducationalEntities");
+
+            migrationBuilder.DropTable(
+                name: "PermissionHeaders");
 
             migrationBuilder.DropTable(
                 name: "Events");
