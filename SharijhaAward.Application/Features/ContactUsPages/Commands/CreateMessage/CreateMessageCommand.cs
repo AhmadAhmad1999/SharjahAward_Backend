@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Constants.ContactUsConstants;
 using SharijhaAward.Domain.Entities.ContactUsModels;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
         public string From { get; set; } = string.Empty;
         public string? To { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
-        public MessageType Type { get; set; }
+        public int TypeId { get; set; }
         public int? MessageId { get; set; }
 
         public string lang { get; set; } = string.Empty;

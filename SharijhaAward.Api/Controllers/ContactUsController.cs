@@ -37,6 +37,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(response),
                 200 => Ok(response),
+                401 => Unauthorized(response),
                 _ => BadRequest(response)
             };
         }
@@ -45,10 +46,12 @@ namespace SharijhaAward.Api.Controllers
         {
             var token = HttpContext.Request.Headers.Authorization;
 
-            if (string.IsNullOrEmpty(token))
-                return Unauthorized("You must send the token");
-
             var Language = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(token))
+                return Language == "en"
+                    ? Unauthorized("Un Authorize")
+                    : Unauthorized("إنتهت صلاحية الجلسة");
 
             var response = await _mediator.Send(new GetAllEmailMessageQuery()
             {
@@ -69,16 +72,20 @@ namespace SharijhaAward.Api.Controllers
         {
             var token = HttpContext.Request.Headers.Authorization;
 
-            if (string.IsNullOrEmpty(token))
-                return Unauthorized("You must send the token");
-
             var Language = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(token))
+                return Language == "en"
+                    ? Unauthorized("Un Authorize")
+                    : Unauthorized("إنتهت صلاحية الجلسة");
 
             var response = await _mediator.Send(new GetEmailMessageByIdQuery()
             {
                 Id = Id,
+                lang = Language!,
                 token = token!
             });
+
             return response.statusCode switch
             {
                 404 => NotFound(response),

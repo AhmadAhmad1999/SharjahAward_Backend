@@ -194,6 +194,8 @@ using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.Ad
 using SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles;
 using SharijhaAward.Application.Features.PermissionFeatures.Queries.GetAllPermissions;
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEducationalEntitiesForAdminDashboard;
+using SharijhaAward.Application.Features.MessageTypes.Commands.UpdateMsgType;
+using SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -359,6 +361,10 @@ namespace SharijhaAward.Application.Profiles
             
             CreateMap<ExtraAttachmentFile, AttachmentDto>().ReverseMap();
             CreateMap<ExtraAttachmentFile, AddExtraAttachmentFileCommand>().ReverseMap();
+
+            CreateMap<MessageType, CreateMessageCommand>().ReverseMap();
+            CreateMap<MessageType, UpdateMsgTypeCommand>().ReverseMap();
+            CreateMap<MessageType, MessageTypeListVM>().ReverseMap();
 
             //
             // Dynamic Attribute..
