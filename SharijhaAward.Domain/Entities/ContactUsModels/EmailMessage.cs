@@ -18,7 +18,7 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
         public string From { get; set; } = string.Empty;
         public string? To { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
-        public MessageType Type { get; set; }
+        
         public MessageStatus? Status { get; set; } = MessageStatus.New;
         public bool IsRead { get; set; } = false;
 
@@ -26,6 +26,11 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
         [ForeignKey(nameof(message))]
         public int? MessageId { get; set; }
 
+        public MessageType Type { get; set; } = null!;
+        [ForeignKey(nameof(Type))]
+        public int TypeId {  get; set; }
         public List<EmailAttachment>? Attachments { get; set; } 
+
+
     }
 }

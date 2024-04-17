@@ -38,16 +38,33 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
         public async Task<BaseResponse<int>> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"
-                ? "Msessage has been Sended"
+                ? "Message has been Sended"
                 : "تم إرسال الرسالة بنجاح";
 
             var message = _mapper.Map<EmailMessage>(request);
             message.IsRead = false;
+
+            if(request.MessageId != null)
+            {
+                if(await _messageRepository.GetByIdAsync(request.MessageId) != null)
+                {
+                    message.Status = Domain.Constants.ContactUsConstants.MessageStatus.Close;
+                }
+
+                msg = request.lang == "en"
+                    ? "Message Not Found"
+                    : "الرسالة غير موجودة";
+
+                return new BaseResponse<int>(msg, false, 400);
+            }
             message.Status = Domain.Constants.ContactUsConstants.MessageStatus.New;
+
             if(request.token != null)
             {
                 var UserId = _jwtProvider.GetUserIdFromToken(request.token);
+               
                 var User = await _userRepository.FirstOrDefaultAsync(u => u.Id == int.Parse(UserId));
+                
                 if(User == null)
                 {
                     msg = request.lang == "en"

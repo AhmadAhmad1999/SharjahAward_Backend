@@ -56,6 +56,8 @@ using SharijhaAward.Domain.Entities.AppVersioningModel;
 using SharijhaAward.Domain.Entities.InstructionModel;
 using SharijhaAward.Domain.Entities.ContactUsModels;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Internal;
+using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -137,6 +139,8 @@ namespace SharijhaAward.Persistence
         public DbSet<ExtraAttachmentFile> ExtraAttachmentsProvidedForms { get; set; }
         public DbSet<EmailMessage> EmailMessages { get; set; }
         public DbSet<EmailAttachment> EmailAttachments { get; set; }
+        public DbSet<RoleMessageType> RoleMessageTypes {  get; set; }
+        public DbSet<MessageType> MessageTypes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -209,6 +213,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<ExtraAttachmentFile>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EmailAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<RoleMessageType>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<MessageType>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)

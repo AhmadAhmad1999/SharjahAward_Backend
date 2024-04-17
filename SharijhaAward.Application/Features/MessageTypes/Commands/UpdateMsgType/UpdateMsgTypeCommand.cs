@@ -6,12 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMessageById
+namespace SharijhaAward.Application.Features.MessageTypes.Commands.UpdateMsgType
 {
-    public class GetEmailMessageByIdQuery : IRequest<BaseResponse<EmailMessageDto>>
+    public class UpdateMsgTypeCommand : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
+        public string Type { get; set; } = string.Empty;
+
         public string lang { get; set; } = string.Empty;
-        public string token { get; set; } = string.Empty;
+
     }
 }

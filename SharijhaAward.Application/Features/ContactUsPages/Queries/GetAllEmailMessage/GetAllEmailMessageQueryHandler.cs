@@ -36,9 +36,15 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
             var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
             if(User == null)
             {
-                return new BaseResponse<List<EmailMessageListVM>>("There is no User", false, 401);
+               string msg = request.lang == "en"
+                        ? "Un Authorize"
+                        : "إنتهت صلاحية الجلسة";
+
+                return new BaseResponse<List<EmailMessageListVM>>(msg, false, 401);
             }
-            var EmailMessages = await _emailMessageRepository.WhereThenInclude(m=>m.From == User.Email || m.To == User.Email , m => m.Attachments!).ToListAsync();
+            var EmailMessages = await _emailMessageRepository.WhereThenInclude(m => m.From == User.Email || m.To == User.Email , m => m.Attachments!)
+                .OrderByDescending(x => x.CreatedAt).ToListAsync();
+
             var data = _mapper.Map<List<EmailMessageListVM>>(EmailMessages);
             
             for(int i = 0; i < data.Count(); i++)
