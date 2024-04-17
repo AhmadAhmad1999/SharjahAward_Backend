@@ -100,7 +100,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> UpdateCoordinator([FromBody] UpdateCoordinatorCommand UpdateCoordinatorCommand)
+        public async Task<IActionResult> UpdateCoordinator([FromForm] UpdateCoordinatorCommand UpdateCoordinatorCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
