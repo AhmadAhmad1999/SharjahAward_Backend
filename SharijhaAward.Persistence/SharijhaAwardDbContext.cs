@@ -58,6 +58,7 @@ using SharijhaAward.Domain.Entities.ContactUsModels;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Internal;
 using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
+using SharijhaAward.Domain.Entities.CircularModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -141,6 +142,7 @@ namespace SharijhaAward.Persistence
         public DbSet<EmailAttachment> EmailAttachments { get; set; }
         public DbSet<RoleMessageType> RoleMessageTypes {  get; set; }
         public DbSet<MessageType> MessageTypes { get; set; }
+        public DbSet<Circular> Circulars {  get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -215,6 +217,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<EmailAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RoleMessageType>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<MessageType>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Circular>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)

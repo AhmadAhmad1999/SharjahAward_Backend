@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
+using SharijhaAward.Application.Features.ContactUsPages.Queries.ForwordEmail;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
+using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgForAwardTeam;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMessageById;
 using SharijhaAward.Application.Responses;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -85,6 +87,51 @@ namespace SharijhaAward.Api.Controllers
                 lang = Language!,
                 token = token!
             });
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetAllMessagesForAwardTeam", Name = "GetAllMessagesForAwardTeam")]
+        public async Task<IActionResult> GetAllMessagesForAwardTeam()
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            var Language = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(token))
+                return Language == "en"
+                    ? Unauthorized("Un Authorize")
+                    : Unauthorized("إنتهت صلاحية الجلسة");
+
+            var response = await _mediator.Send(new GetAllMsgForAwardTeamQuery()
+            {
+                token = token!
+            });
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPost("ForwordEmail", Name = "ForwordEmail")]
+        public async Task<IActionResult> ForwordEmail([FromBody] ForwordEmailQuery query)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+            var language = HttpContext.Request.Headers["lang"];
+
+            query.token = token!;
+            query.lang = language!;
+
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

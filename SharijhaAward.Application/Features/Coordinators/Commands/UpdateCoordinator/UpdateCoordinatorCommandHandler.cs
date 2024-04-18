@@ -79,8 +79,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
 
             _mapper.Map(Request, CoordinatorToUpdate, typeof(UpdateCoordinatorCommand), typeof(Coordinator));
 
-            if (Request.UpdateOnPersonalPhoto)
-                CoordinatorToUpdate.PersonalPhoto = await _fileService.SaveFileAsync(Request.PersonalPhoto);
+            if (Request.updateOnPersonalPhoto)
+                CoordinatorToUpdate.PersonalPhoto = await _fileService.SaveFileAsync(Request.personalPhoto);
             else
                 CoordinatorToUpdate.PersonalPhoto = personalPhoto;
 
@@ -95,10 +95,10 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            UserEntity.Email = Request.Email;
-            UserEntity.ArabicName = Request.ArabicName;
-            UserEntity.EnglishName = Request.EnglishName;
-            UserEntity.PhoneNumber = Request.PhoneNumber;
+            UserEntity.Email = Request.email;
+            UserEntity.ArabicName = Request.arabicName;
+            UserEntity.EnglishName = Request.englishName;
+            UserEntity.PhoneNumber = Request.phoneNumber;
 
             List<DynamicAttributeValue> AlreadyInsertedDynamicValues = await _DynamicAttributeValueRepository
                 .Where(x => x.RecordIdAsGuid == Request.Id).ToListAsync();

@@ -10,14 +10,14 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
     public class UpdateCoordinatorCommand : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
-        public string ArabicName { get; set; } = string.Empty;
-        public string EnglishName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
-        public EducationType EducationType { get; set; }
-        public Emirates Emirates { get; set; }
-        public bool UpdateOnPersonalPhoto {  get; set; }
-        public IFormFile PersonalPhoto { get; set; } = null!;
+        public string arabicName { get; set; } = string.Empty;
+        public string englishName { get; set; } = string.Empty;
+        public string email { get; set; } = string.Empty;
+        public string phoneNumber { get; set; } = string.Empty;
+        public EducationType educationType { get; set; }
+        public Emirates emirates { get; set; }
+        public bool updateOnPersonalPhoto {  get; set; }
+        public IFormFile? personalPhoto { get; set; } = null!;
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }
         public List<int> EducationalEntitiesIds { get; set; } = new List<int>();

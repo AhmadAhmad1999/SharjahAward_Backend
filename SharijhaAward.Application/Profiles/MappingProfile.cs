@@ -196,6 +196,11 @@ using SharijhaAward.Application.Features.PermissionFeatures.Queries.GetAllPermis
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEducationalEntitiesForAdminDashboard;
 using SharijhaAward.Application.Features.MessageTypes.Commands.UpdateMsgType;
 using SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType;
+using SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator;
+using SharijhaAward.Domain.Entities.CircularModel;
+using SharijhaAward.Application.Features.Circulars.Command.CreateCircular;
+using SharijhaAward.Application.Features.Circulars.Command.UpdateCircular;
+using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetEducationalInstitutionById;
 
 namespace SharijhaAward.Application.Profiles
@@ -330,6 +335,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalInstitution, Features.EducationalInstitutions.Queries.GetAllEducationalInstitutions.EducationalInstitutionListVM>().ReverseMap();
 
             CreateMap<Coordinator, CreateCoordinatorCommand>().ReverseMap();
+            CreateMap<Coordinator, UpdateCoordinatorCommand>().ReverseMap();
             CreateMap<Coordinator, CoordinatorSearchListVM>().ReverseMap();
             CreateMap<Coordinator, CoordinatorDto>().ReverseMap();
 
@@ -366,6 +372,10 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<MessageType, CreateMessageCommand>().ReverseMap();
             CreateMap<MessageType, UpdateMsgTypeCommand>().ReverseMap();
             CreateMap<MessageType, MessageTypeListVM>().ReverseMap();
+
+            CreateMap<Circular, CreateCircularCommand>().ReverseMap();
+            CreateMap<Circular, UpdateCircularCommand>().ReverseMap();
+            CreateMap<Circular, CircularListVm>().ReverseMap();
 
             //
             // Dynamic Attribute..
