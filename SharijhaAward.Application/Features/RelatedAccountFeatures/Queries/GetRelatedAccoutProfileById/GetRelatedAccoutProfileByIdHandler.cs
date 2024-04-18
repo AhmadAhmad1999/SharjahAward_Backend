@@ -87,10 +87,29 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
                 ? RelatedAccountUserEntity.EnglishName
                 : RelatedAccountUserEntity.ArabicName;
 
-            List<RelatedAccountProvidedForms> ProvidedForms = _Mapper.Map<List<RelatedAccountProvidedForms>>(Request.Type == null
-                ? await _FormRepository.Include(x => x.Category!).Where(x => x.userId == RelatedAccountSubscriberId).ToListAsync()
-                : await _FormRepository.Include(x => x.Category!).Where(x => x.userId == RelatedAccountSubscriberId && 
-                    x.Type == Request.Type).ToListAsync());
+            List<RelatedAccountProvidedForms> ProvidedForms = await _FormRepository
+                .Include(x => x.Category!)
+                .Where(x => x.userId == RelatedAccountSubscriberId && 
+                    (Request.Type != null 
+                        ? x.Type == Request.Type
+                        : true))
+                .Select(x => new RelatedAccountProvidedForms()
+                {
+                    CategoryId = x.categoryId,
+                    CategoryName = Request.lang == "en"
+                        ? x.Category.EnglishName
+                        : x.Category.ArabicName,
+                    CreatedAt = x.CreatedAt,
+                    CurrentStep = x.CurrentStep,
+                    CycleNumber = x.CycleNumber,
+                    CycleYear = x.CycleYear,
+                    FinalScore = x.FinalScore,
+                    Id = x.Id,
+                    PercentCompletion = x.PercentCompletion,
+                    Status = x.Status,
+                    SubscriberType = x.SubscriberType,
+                    Type = x.Type
+                }).ToListAsync();
 
             GetRelatedAccoutProfileByIdResponse Response = new GetRelatedAccoutProfileByIdResponse()
             {
