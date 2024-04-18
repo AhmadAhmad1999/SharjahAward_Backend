@@ -5,7 +5,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitrat
 {
     public class DeleteArbitratorClassCommand : IRequest<BaseResponse<object>>
     {
-        public int Id { get; set; }
+        public int ArbitratorId { get; set; }
+        public int EducationalClassId { get; set; }
         public string? lang { get; set; }
     }
 }

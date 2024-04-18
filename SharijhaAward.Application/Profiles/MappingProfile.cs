@@ -202,6 +202,11 @@ using SharijhaAward.Application.Features.Circulars.Command.CreateCircular;
 using SharijhaAward.Application.Features.Circulars.Command.UpdateCircular;
 using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetEducationalInstitutionById;
+using SharijhaAward.Application.Features.CommitteeFeatures.Commands.CreateCommittee;
+using SharijhaAward.Domain.Entities.CommitteeModel;
+using SharijhaAward.Application.Features.CommitteeFeatures.Commands.UpdateCommittee;
+using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCommittees;
+using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommitteeById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -400,6 +405,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Criterion, CreateSubCriterionCommand>().ReverseMap();
             CreateMap<Arbitrator, CreateArbitratorCommand>().ReverseMap();
             CreateMap<EducationalClass, CreateClassCommand>().ReverseMap();
+            CreateMap<Committee, CreateCommitteeCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -413,6 +419,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalClass, UpdateClassCommand>().ReverseMap();
             CreateMap<Instruction, UpdateInstructionCommand>().ReverseMap();
             CreateMap<Role, UpdateRoleCommand>().ReverseMap();
+            CreateMap<Committee, UpdateCommitteeCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -457,6 +464,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Permission, PermissionListVM>().ReverseMap();
             CreateMap<EducationalEntity, GetAllEducationalEntitiesForAdminDashboardListVM>().ReverseMap();
             CreateMap<EducationalInstitution, GetEducationalInstitutionByIdDto>().ReverseMap();
+            CreateMap<Committee, GetAllCommitteesListVM>().ReverseMap();
+            CreateMap<Committee, GetCommitteeByIdDto>().ReverseMap();
         }
     }
 }

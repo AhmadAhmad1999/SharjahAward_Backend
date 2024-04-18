@@ -7,6 +7,7 @@
         public string EnglishName { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public bool isChairman { get; set; } = false;
         public List<ArbitratorCategoryListVM> AtbitratorCategories { get; set; } = new List<ArbitratorCategoryListVM>();
     }
 }

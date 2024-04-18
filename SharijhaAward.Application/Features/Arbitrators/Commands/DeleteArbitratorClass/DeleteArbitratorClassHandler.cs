@@ -18,7 +18,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitrat
             string ResponseMessage = string.Empty;
 
             ArbitratorClass? ArbitratorClassEntityToDelete = await _ArbitratorClassRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+                .FirstOrDefaultAsync(x => x.ArbitratorId == Request.ArbitratorId && 
+                    x.EducationalClassId == Request.EducationalClassId);
 
             if (ArbitratorClassEntityToDelete == null)
             {

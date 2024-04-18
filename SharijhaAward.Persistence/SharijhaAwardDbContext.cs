@@ -59,6 +59,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Internal;
 using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
 using SharijhaAward.Domain.Entities.CircularModel;
+using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -77,6 +78,7 @@ namespace SharijhaAward.Persistence
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
         public DbSet<ArbitratorClass> ArbitratorClasses { get; set; }
         public DbSet<Committee> Committees { get; set; }
+        public DbSet<ComitteeArbitrator> ComitteesArbitrators { get; set; }
         public DbSet<CategoryCommittee> CategoryCommittees { get; set; }
         public DbSet<CategoryEducationalClass> CategoryEducationalClasses { get; set; }
         public DbSet<EducationalClass> EducationalClasses { get; set; }
@@ -157,6 +159,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<PermissionHeader>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Committee>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ComitteeArbitrator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryEducationalClass>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalClass>().HasQueryFilter(p => !p.isDeleted);
@@ -357,19 +360,6 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<OnePageText>()
                 .Property(e => e.EnglishText)
                 .HasColumnType("nvarchar(max)");
-
-            modelBuilder.Entity<Arbitrator>()
-                .HasData(new Arbitrator()
-                {
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Id = 1,
-
-                });
 
             modelBuilder.Entity<GeneralWorkshop>()
                 .HasData(new GeneralWorkshop()
