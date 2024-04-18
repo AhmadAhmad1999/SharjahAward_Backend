@@ -15,6 +15,8 @@ namespace SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel
     {
         public int Id {  get; set; }
         public string FileUrl { get; set; } = string.Empty;
+        public bool? IsAccept {  get; set; }
+        public string? ReasonOfReject { get; set; }
 
         public ExtraAttachment? ExtraAttachment { get; set; }
         [ForeignKey(nameof(ExtraAttachment))]
