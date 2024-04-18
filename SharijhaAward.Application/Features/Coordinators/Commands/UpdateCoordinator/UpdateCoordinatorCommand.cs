@@ -20,6 +20,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
         public IFormFile PersonalPhoto { get; set; } = null!;
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }
+        public List<int> EducationalEntitiesIds { get; set; } = new List<int>();
+        public List<int> EducationalInstitutionsIds { get; set; } = new List<int>();
         public List<AddDynamicAttributeValueMainCommand> DynamicAttributesWithValues { get; set; } = new List<AddDynamicAttributeValueMainCommand>();
     }
 }

@@ -5,10 +5,8 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionForAddAdminDashboard;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 
@@ -72,28 +70,28 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
 
             data.EducationalEntities = await _EduEntitiesCoordinatorRepository
                 .Where(x => x.CoordinatorId == CoordinatorEntity.Id)
-                .Include(x => x.EducationalEntity)
+                .Include(x => x.EducationalEntity!)
                 .Select(x => new EduEntitiesCoordinatorDto()
                 {
-                    Id = x.EducationalEntity.Id,
-                    ArabicName = x.EducationalEntity.ArabicName,
-                    EnglishName = x.EducationalEntity.EnglishName,
+                    Id = x.EducationalEntity!.Id,
+                    ArabicName = x.EducationalEntity!.ArabicName,
+                    EnglishName = x.EducationalEntity!.EnglishName,
                     Name = Request.lang == "en"
-                        ? x.EducationalEntity.EnglishName
-                        : x.EducationalEntity.ArabicName
+                        ? x.EducationalEntity!.EnglishName
+                        : x.EducationalEntity!.ArabicName
                 }).ToListAsync();
 
             data.InstitutionEntities = await _EduInstitutionCoordinatorRepository
                 .Where(x => x.CoordinatorId == CoordinatorEntity.Id)
-                .Include(x => x.EducationalInstitution)
+                .Include(x => x.EducationalInstitution!)
                 .Select(x => new EduInstitutionCoordinatorDto()
                 {
-                    Id = x.EducationalInstitution.Id,
-                    ArabicName = x.EducationalInstitution.ArabicName,
-                    EnglishName = x.EducationalInstitution.EnglishName,
+                    Id = x.EducationalInstitution!.Id,
+                    ArabicName = x.EducationalInstitution!.ArabicName,
+                    EnglishName = x.EducationalInstitution!.EnglishName,
                     Name = Request.lang == "en"
-                        ? x.EducationalInstitution.EnglishName
-                        : x.EducationalInstitution.ArabicName
+                        ? x.EducationalInstitution!.EnglishName
+                        : x.EducationalInstitution!.ArabicName
                 }).ToListAsync();
 
             //

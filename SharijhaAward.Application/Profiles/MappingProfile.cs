@@ -196,6 +196,7 @@ using SharijhaAward.Application.Features.PermissionFeatures.Queries.GetAllPermis
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEducationalEntitiesForAdminDashboard;
 using SharijhaAward.Application.Features.MessageTypes.Commands.UpdateMsgType;
 using SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType;
+using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetEducationalInstitutionById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -445,6 +446,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Role, GetAllRolesListVM>().ReverseMap();
             CreateMap<Permission, PermissionListVM>().ReverseMap();
             CreateMap<EducationalEntity, GetAllEducationalEntitiesForAdminDashboardListVM>().ReverseMap();
+            CreateMap<EducationalInstitution, GetEducationalInstitutionByIdDto>().ReverseMap();
         }
     }
 }

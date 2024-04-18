@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
+using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 using SharijhaAward.Application.Features.EducationalEntities.Command.DeleteEducationalEntity;
 using SharijhaAward.Application.Features.EducationalInstitutions.Commands.CreateEducationalInstitution;
 using SharijhaAward.Application.Features.EducationalInstitutions.Commands.DeleteEducationalInstitutions;
 using SharijhaAward.Application.Features.EducationalInstitutions.Commands.UpdateEducationalInstitutions;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllEducationalInstitutions;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllEducationalInstitutionsWithPagination;
+using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetEducationalInstitutionById;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -120,7 +122,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllEducationalInstitutionsWithPagination(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllEducationalInstitutionsWithPagination(int EducationalEntityId, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -130,10 +132,39 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<List<EducationalInstitutionListVM>> Response = await _Mediator.Send
                 (new GetAllEducationalInstitutionsWithPaginationQuery()
                 {
+                    EducationalEntityId = EducationalEntityId,
                     lang = HeaderValue!,
                     page = Page,
                     pageSize = PerPage
                 });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetEducationalInstitutionById/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetEducationalInstitutionById(int Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetEducationalInstitutionByIdDto> Response = await _Mediator.Send(new GetEducationalInstitutionByIdQuery()
+            {
+                Id = Id,
+                lang = HeaderValue!
+            });
 
             return Response.statusCode switch
             {

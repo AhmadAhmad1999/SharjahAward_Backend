@@ -102,13 +102,18 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             await _DynamicAttributeListValueRepository
                                 .Where(x => x.DynamicAttributeId == DynamicAttributeInSection.Id).ToListAsync());
 
+                        List<DynamicAttributeListValueListVM> CheckIfThereisNoValue = new List<DynamicAttributeListValueListVM>();
+
                         if (Language.ToLower() == "en")
-                            DynamicAttributeInSection.DynamicAttributeListValues = DynamicAttributeInSection.DynamicAttributeListValues
+                            CheckIfThereisNoValue = DynamicAttributeInSection.DynamicAttributeListValues
                                 .Where(x => !Regex.IsMatch(x.Value, @"\p{IsArabic}")).ToList();
 
                         else
-                            DynamicAttributeInSection.DynamicAttributeListValues = DynamicAttributeInSection.DynamicAttributeListValues
+                            CheckIfThereisNoValue = DynamicAttributeInSection.DynamicAttributeListValues
                                 .Where(x => Regex.IsMatch(x.Value, @"\p{IsArabic}")).ToList();
+
+                        if (CheckIfThereisNoValue.Count() > 0)
+                            DynamicAttributeInSection.DynamicAttributeListValues = CheckIfThereisNoValue;
 
                         DynamicAttributeInSection.AttributeDataTypeName = DataTypes
                             .FirstOrDefault(y => y.Id == DynamicAttributeInSection.AttributeDataTypeId)!.Name;
@@ -192,14 +197,14 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                 {
                     AlreadyInsertedDynamicAttributeValues = await _DynamicAttributeValueRepository
                         .Where(x => x.RecordId != null
-                            ? x.RecordIdAsGuid == Request.ArbitratorId
+                            ? x.RecordId == Request.ArbitratorId
                             : false).ToListAsync();
                 }
                 else if (Request.CoordinatorId is not null)
                 {
                     AlreadyInsertedDynamicAttributeValues = await _DynamicAttributeValueRepository
                         .Where(x => x.RecordId != null
-                            ? x.RecordIdAsGuid == Request.CoordinatorId
+                            ? x.RecordId == Request.CoordinatorId
                             : false).ToListAsync();
                 }
 
@@ -229,13 +234,18 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             await _DynamicAttributeListValueRepository
                                 .Where(x => x.DynamicAttributeId == DynamicAttributeInSection.Id).ToListAsync());
 
+                        List<DynamicAttributeListValueListVM> CheckIfThereisNoValue = new List<DynamicAttributeListValueListVM>(); 
+
                         if (Language.ToLower() == "en")
-                            DynamicAttributeInSection.DynamicAttributeListValues = DynamicAttributeInSection.DynamicAttributeListValues
+                            CheckIfThereisNoValue = DynamicAttributeInSection.DynamicAttributeListValues
                                 .Where(x => !Regex.IsMatch(x.Value, @"\p{IsArabic}")).ToList();
 
                         else
-                            DynamicAttributeInSection.DynamicAttributeListValues = DynamicAttributeInSection.DynamicAttributeListValues
+                            CheckIfThereisNoValue = DynamicAttributeInSection.DynamicAttributeListValues
                                 .Where(x => Regex.IsMatch(x.Value, @"\p{IsArabic}")).ToList();
+
+                        if (CheckIfThereisNoValue.Count() > 0)
+                            DynamicAttributeInSection.DynamicAttributeListValues = CheckIfThereisNoValue;
 
                         DynamicAttributeInSection.AttributeDataTypeName = DataTypes
                             .FirstOrDefault(y => y.Id == DynamicAttributeInSection.AttributeDataTypeId)!.Name;
