@@ -19,14 +19,16 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
     {
         private readonly IAsyncRepository<EmailMessage> _emailMessageRepository;
         private readonly IAsyncRepository<EmailAttachment> _emailAttachmentRepository;
+        private readonly IAsyncRepository<MessageType> _messageTypeRepository;
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
-        public GetEmailMessageByIdQueryHandler(IAsyncRepository<EmailMessage> emailMessageRepository, IAsyncRepository<EmailAttachment> emailAttachmentRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetEmailMessageByIdQueryHandler(IAsyncRepository<MessageType> messageTypeRepository, IAsyncRepository<EmailMessage> emailMessageRepository, IAsyncRepository<EmailAttachment> emailAttachmentRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
         {
             _emailMessageRepository = emailMessageRepository;
             _emailAttachmentRepository = emailAttachmentRepository;
+            _messageTypeRepository = messageTypeRepository;
             _userRepository = userRepository;
             _jwtProvider = jwtProvider;
             _mapper = mapper;
@@ -61,15 +63,26 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
                 message.Status = Domain.Constants.ContactUsConstants.MessageStatus.InProgress;
                 await _emailMessageRepository.UpdateAsync(message);
             }
+            var Type = await _messageTypeRepository.GetByIdAsync(message.TypeId);
 
             var data = _mapper.Map<EmailMessageDto>(message);
 
+            var Sender = await _userRepository.GetByIdAsync(message.UserId);
+
             data.Attachments = _mapper.Map<List<EmailAttachmentListVm>>(message.Attachments);
-            
+            data.PersonalPhotoUrl = Sender.ImageURL!;
+            data.Gender = Sender.Gender;
+            data.TypeName = Type!.Type;
+
             var ReplayMessages = _emailMessageRepository.WhereThenInclude(m => m.MessageId == message.Id, m => m.Attachments!).ToList();
            
             data.ReplayMessages = _mapper.Map<List<EmailMessageDto>>(ReplayMessages);
-           
+            
+            for (int i = 0; i < data.ReplayMessages.Count(); i++)
+            {
+                data.ReplayMessages[i].PersonalPhotoUrl = User.ImageURL!;
+                data.ReplayMessages[i].Gender = User.Gender;
+            }
             return new BaseResponse<EmailMessageDto>("", true, 200, data);
           
         }

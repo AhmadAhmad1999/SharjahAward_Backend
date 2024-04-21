@@ -29,7 +29,7 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType
 
             var data = _mapper.Map<List<MessageTypeListVM>>(allMessageTypes);
 
-            return new BaseResponse<List<MessageTypeListVM>>("", true, 200);
+            return new BaseResponse<List<MessageTypeListVM>>("", true, 200, data);
         }
     }
 }
