@@ -1,0 +1,107 @@
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.ArbitratorModel;
+using System.Transactions;
+
+namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.UpdateAssignedFormsToArbitrator
+{
+    public class UpdateAssignedFormsToArbitratorHandler 
+        : IRequestHandler<UpdateAssignedFormsToArbitratorCommand, BaseResponse<object>>
+    {
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
+
+        public UpdateAssignedFormsToArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IAsyncRepository<Arbitration> ArbitrationRepository)
+        {
+            _ArbitratorRepository = ArbitratorRepository;
+            _ArbitrationRepository = ArbitrationRepository;
+        }
+
+        public async Task<BaseResponse<object>> 
+            Handle(UpdateAssignedFormsToArbitratorCommand Request, CancellationToken cancellationToken)
+        {
+            string ResponseMessage = string.Empty;
+
+            Arbitrator? ArbitratorEntity = await _ArbitratorRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.ArbitratorId);
+
+            if (ArbitratorEntity == null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Arbitrator not found"
+                    : "المحكم غير موجود";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
+
+            List<int> AlreadyExistProvidedFormIds = await _ArbitrationRepository
+                .Where(x => x.ArbitratorId == Request.ArbitratorId)
+                .Select(x => x.ProvidedFormId)
+                .ToListAsync();
+
+            List<int> IntersectProvidedFormIds = AlreadyExistProvidedFormIds
+                .Intersect(Request.FormsIds).ToList();
+
+            List<int> NewProvidedFormIds = Request.FormsIds
+                .Where(x => !IntersectProvidedFormIds.Contains(x))
+                .ToList();
+
+            List<int> DeleteProvidedFormIds = AlreadyExistProvidedFormIds
+                .Where(x => !IntersectProvidedFormIds.Contains(x))
+                .ToList();
+
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
+
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    IQueryable<Arbitration> DeleteArbitrationEntites = _ArbitrationRepository
+                        .Where(x => x.ArbitratorId == Request.ArbitratorId &&
+                            DeleteProvidedFormIds.Contains(x.ArbitratorId));
+
+                    if (DeleteArbitrationEntites.Count() > 0)
+                        await _ArbitrationRepository.DeleteListAsync(DeleteArbitrationEntites);
+
+                    IEnumerable<Arbitration> NewArbitrationEntites = NewProvidedFormIds
+                        .Select(x => new Arbitration()
+                        {
+                            ArbitratorId = Request.ArbitratorId,
+                            ProvidedFormId = x,
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            DeletedAt = null,
+                            isDeleted = false,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null
+                        });
+
+                    if (NewArbitrationEntites.Count() > 0)
+                        await _ArbitrationRepository.AddRangeAsync(NewArbitrationEntites);
+
+                    Transaction.Complete();
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Arbitrator's forms has been updated successfully"
+                        : "تم تعديل الاستمارات المسندة للمحكم بنجاح";
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
+        }
+    }
+}

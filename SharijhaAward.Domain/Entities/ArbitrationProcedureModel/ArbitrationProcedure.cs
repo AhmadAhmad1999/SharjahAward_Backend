@@ -8,8 +8,8 @@ namespace SharijhaAward.Domain.Entities.ArbitrationProcedureModel
     public class ArbitrationProcedure : AuditInformation<User>
     {
         public int Id { get; set; }
-        public string ArabicGuidDescription { get; set; } = string.Empty;
-        public string EnglishGuidDescription { get; set; }=string.Empty;
+        public string? ArabicGuidDescription { get; set; }
+        public string? EnglishGuidDescription { get; set; }
         public int Grade { get; set; }
         public string? StrengthPoints { get; set; }
         public string? ImprovementAreas { get; set; }
