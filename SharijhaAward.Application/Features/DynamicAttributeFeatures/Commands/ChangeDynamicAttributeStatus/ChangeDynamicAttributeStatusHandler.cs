@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.DynamicAttribute;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;

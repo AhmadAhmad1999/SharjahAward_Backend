@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using SharijhaAward.Application.Features.Categories.Command.CreateCategory;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.CategoryConstants;
 using SharijhaAward.Domain.Constants.Common;
@@ -27,6 +28,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
         public float? MinimumAmountToObtainACertificateOfParticipation { get; set; }
         public bool? RelatedToClasses { get; set; }
         public int? ExpectedNumberOfWinners { get; set; }
+        public List<CreateCategoryEducationalClassDto>? EducationalClasses { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }
