@@ -28,7 +28,7 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
         public int? MessageId { get; set; }
 
         public User User { get; set; } = null!;
-        [ForeignKey(nameof(message))]
+        [ForeignKey(nameof(User))]
         public int ? UserId { get; set; }
 
         public MessageType Type { get; set; } = null!;
