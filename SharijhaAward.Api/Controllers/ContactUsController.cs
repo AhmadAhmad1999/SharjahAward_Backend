@@ -44,7 +44,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet(Name="GetAllMessages")]
-        public async Task<IActionResult> GetAllMessages()
+        public async Task<IActionResult> GetAllMessages(string? query, int? filter, int page=1,int pageSize=10)
         {
             var token = HttpContext.Request.Headers.Authorization;
 
@@ -57,6 +57,10 @@ namespace SharijhaAward.Api.Controllers
 
             var response = await _mediator.Send(new GetAllEmailMessageQuery()
             {
+                filter=filter,
+                page=page,
+                pageSize=pageSize,
+                query=query,
                 lang = Language!,
                 token = token!
             });
