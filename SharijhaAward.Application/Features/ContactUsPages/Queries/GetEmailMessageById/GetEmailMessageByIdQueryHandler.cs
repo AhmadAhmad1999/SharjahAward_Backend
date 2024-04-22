@@ -74,7 +74,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
             data.Gender = Sender.Gender;
             data.TypeName = Type!.Type;
 
-            var ReplayMessages = _emailMessageRepository.WhereThenInclude(m => m.MessageId == message.Id, m => m.Attachments!).ToList();
+            var ReplayMessages = _emailMessageRepository.WhereThenInclude(m => m.MessageId == message.Id && m.Id != message.Id, m => m.Attachments!).ToList();
            
             data.ReplayMessages = _mapper.Map<List<EmailMessageDto>>(ReplayMessages);
             
