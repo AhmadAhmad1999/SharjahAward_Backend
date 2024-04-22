@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                 .Include(x => x.DynamicAttribute!)
                 .Include(x => x.DynamicAttribute!.DynamicAttributeSection)
                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
-                    x.isAccepted && x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
+                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                     AllArbitratorAssingedForms.Select(y => y.ProvidedFormId)
                         .Any(y => y == x.RecordId) &&
                     x.DynamicAttribute!.EnglishLabel.ToLower() == "Full name (identical to Emirates ID)".ToLower())

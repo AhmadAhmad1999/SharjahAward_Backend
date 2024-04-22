@@ -60,6 +60,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
 using SharijhaAward.Domain.Entities.CircularModel;
 using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
+using SharijhaAward.Domain.Entities.ArbitrationModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -71,6 +72,7 @@ namespace SharijhaAward.Persistence
       
         }
         
+        public DbSet<Arbitration> Arbitrations { get; set; }
         public DbSet<UserRole> UsersRoles { get; set; }
         public DbSet<PermissionHeader> PermissionHeaders { get; set; }
         public DbSet<Instruction> Instructions { get; set; }
@@ -155,6 +157,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AppVersion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Instruction>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Arbitration>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<UserRole>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<PermissionHeader>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => !p.isDeleted);
@@ -221,6 +224,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<RoleMessageType>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<MessageType>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Circular>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<RolePermission>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)
@@ -237,6 +241,33 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Coordinator>()
                 .Property(a => a.Id)
                 .ValueGeneratedNever();
+
+            modelBuilder.Entity<Instruction>()
+                .HasData(new Instruction()
+                {
+                    Id = 1,
+                    Content = "Content 1",
+                    Slug = "Slug 1",
+                    Title = "Title 1",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Instruction()
+                {
+                    Id = 2,
+                    Content = "Content 2",
+                    Slug = "Slug 2",
+                    Title = "Title 2",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                });
 
             modelBuilder.Entity<PermissionHeader>()
                 .HasData(new PermissionHeader()
