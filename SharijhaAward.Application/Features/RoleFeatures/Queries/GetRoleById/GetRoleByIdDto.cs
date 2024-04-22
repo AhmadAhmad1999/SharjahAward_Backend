@@ -5,6 +5,6 @@
         public int Id { get; set; }
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
-        public List<RolePermissionHeaderDto> RolePermissionHeaders { get; set; } = new List<RolePermissionHeaderDto>();
+        public List<int> PermissionsIds { get; set; } = new List<int>();
     }
 }

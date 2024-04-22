@@ -1,21 +1,26 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole
 {
     public class UpdateRoleHandler : IRequestHandler<UpdateRoleCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<Role> _RoleRepository;
         private readonly IMapper _Mapper;
+        private readonly IAsyncRepository<Role> _RoleRepository;
+        private readonly IAsyncRepository<RolePermission> _RolePermissionRepository;
 
         public UpdateRoleHandler(IMapper Mapper,
-            IAsyncRepository<Role> RoleRepository)
+            IAsyncRepository<Role> RoleRepository,
+            IAsyncRepository<RolePermission> RolePermissionRepository)
         {
             _RoleRepository = RoleRepository;
             _Mapper = Mapper;
+            _RolePermissionRepository = RolePermissionRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateRoleCommand Request, CancellationToken cancellationToken)
@@ -59,15 +64,74 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole
                 }
             }
 
-            _Mapper.Map(Request, RoleEntityToUpdate, typeof(UpdateRoleCommand), typeof(Role));
+            List<int> AlreadyExistPermissionIds = await _RolePermissionRepository
+                .Where(x => x.RoleId == Request.Id)
+                .Select(x => x.PermissionId)
+                .ToListAsync();
 
-            await _RoleRepository.UpdateAsync(RoleEntityToUpdate);
+            List<int> IntersectPermissionIds = AlreadyExistPermissionIds
+                .Intersect(Request.PermissionsIds).ToList();
 
-            ResponseMessage = Request.lang == "en"
-                ? "Role has been updated successfully"
-                : "تم تعديل الدور بنجاح";
+            List<int> NewPermissionIds = Request.PermissionsIds
+                .Where(x => !IntersectPermissionIds.Contains(x))
+                .ToList();
 
-            return new BaseResponse<object>(ResponseMessage, true, 200);
+            List<int> DeletePermissionIds = AlreadyExistPermissionIds
+                .Where(x => !IntersectPermissionIds.Contains(x))
+                .ToList();
+
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
+
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    _Mapper.Map(Request, RoleEntityToUpdate, typeof(UpdateRoleCommand), typeof(Role));
+
+                    await _RoleRepository.UpdateAsync(RoleEntityToUpdate);
+
+                    IQueryable<RolePermission> DeleteRolePermissionEntites = _RolePermissionRepository
+                        .Where(x => x.RoleId == Request.Id &&
+                            DeletePermissionIds.Contains(x.PermissionId));
+
+                    if (DeleteRolePermissionEntites.Count() > 0)
+                        await _RolePermissionRepository.DeleteListAsync(DeleteRolePermissionEntites);
+
+                    IEnumerable<RolePermission> NewRolePermissionEntites = NewPermissionIds
+                        .Select(x => new RolePermission()
+                        {
+                            RoleId = Request.Id,
+                            PermissionId = x,
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            DeletedAt = null,
+                            isDeleted = false,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null
+                        });
+
+                    if (NewRolePermissionEntites.Count() > 0)
+                        await _RolePermissionRepository.AddRangeAsync(NewRolePermissionEntites);
+
+                    Transaction.Complete();
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Role has been updated successfully"
+                        : "تم تعديل الدور بنجاح";
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

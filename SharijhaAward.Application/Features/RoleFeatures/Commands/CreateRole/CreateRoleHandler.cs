@@ -77,7 +77,7 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.CreateRole
 
                     ResponseMessage = Request.lang == "en"
                         ? "Created successfully"
-                        : "تم إنشاء الصف بنجاح";
+                        : "تم إنشاء الدور بنجاح";
 
                     Transaction.Complete();
 
