@@ -39,10 +39,10 @@ namespace SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetIns
             if (InstructionEntity == null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Instruction is not Found"
-                    : "الإرشاد غير موجود";
+                    ? "There is no instructions to view"
+                    : "لا يوجد محتوى لعرضه";
 
-                return new BaseResponse<GetInstructionBySlugIdDto>(ResponseMessage, false, 404);
+                return new BaseResponse<GetInstructionBySlugIdDto>(ResponseMessage, false, 200);
             }
 
             GetInstructionBySlugIdDto GetInstructionBySlugIdDto = _Mapper.Map<GetInstructionBySlugIdDto>(InstructionEntity);
