@@ -19,15 +19,17 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
         : IRequestHandler<GetAllMsgForAwardTeamQuery, BaseResponse<List<EmailMessageListVM>>>
     {
         private readonly IAsyncRepository<EmailMessage> _emailMessageRepository;
+        private readonly IAsyncRepository<MessageType> _messageTypeRepository;
         private readonly IAsyncRepository<RoleMessageType> _roleMessageTypeRepository;
         private readonly IAsyncRepository<UserRole> _userRoleRepository;
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
-        public GetAllMsgForAwardTeamQueryHandler(IAsyncRepository<EmailMessage> emailMessageRepository, IAsyncRepository<RoleMessageType> roleMessageTypeRepository, IAsyncRepository<UserRole> userRoleRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetAllMsgForAwardTeamQueryHandler(IAsyncRepository<MessageType> messageTypeRepository, IAsyncRepository<EmailMessage> emailMessageRepository, IAsyncRepository<RoleMessageType> roleMessageTypeRepository, IAsyncRepository<UserRole> userRoleRepository, IJwtProvider jwtProvider, IMapper mapper)
         {
             _emailMessageRepository = emailMessageRepository;
             _roleMessageTypeRepository = roleMessageTypeRepository;
+            _messageTypeRepository = messageTypeRepository;
             _userRoleRepository = userRoleRepository;
             _jwtProvider = jwtProvider;
             _mapper = mapper;
@@ -63,7 +65,9 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
             
             for(int i=0; i< data.Count(); i++)
             {
+                var Type = await _messageTypeRepository.GetByIdAsync(emailMessages[i].TypeId);
                 data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(emailMessages[i]);
+                data[i].TypeName = Type!.Type;
             }
 
             return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data);

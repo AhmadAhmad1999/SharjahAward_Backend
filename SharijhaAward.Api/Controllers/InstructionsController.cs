@@ -52,16 +52,19 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetClassById(GetInstructionBySlugIdQuery GetInstructionBySlugIdQuery)
+        public async Task<IActionResult> GetClassById(int? Id, string? Slug)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            GetInstructionBySlugIdQuery.lang = HeaderValue;
-
-            BaseResponse<GetInstructionBySlugIdDto> Response = await _Mediator.Send(GetInstructionBySlugIdQuery);
+            BaseResponse<GetInstructionBySlugIdDto> Response = await _Mediator.Send(new GetInstructionBySlugIdQuery()
+            {
+                Id = Id,
+                Slug = Slug,
+                lang = HeaderValue
+            });
 
             return Response.statusCode switch
             {

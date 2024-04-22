@@ -54,6 +54,9 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
             {
                 data[i].Title = request.lang == "en"
                     ? data[i].EnglishTitle : data[i].ArabicTitle;
+
+                data[i].Description = request.lang == "en"
+                    ? data[i].EnglishDescription : data[i].ArabicDescription;
             }
             int count = request.CycleId == null
                 ? _cycleConditionRepository.GetCount(c => !c.isDeleted)

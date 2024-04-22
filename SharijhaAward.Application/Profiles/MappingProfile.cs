@@ -207,6 +207,7 @@ using SharijhaAward.Domain.Entities.CommitteeModel;
 using SharijhaAward.Application.Features.CommitteeFeatures.Commands.UpdateCommittee;
 using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCommittees;
 using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommitteeById;
+using SharijhaAward.Application.Features.MessageTypes.Commands.CreateMsgType;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -374,7 +375,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ExtraAttachmentFile, AttachmentDto>().ReverseMap();
             CreateMap<ExtraAttachmentFile, AddExtraAttachmentFileCommand>().ReverseMap();
 
-            CreateMap<MessageType, CreateMessageCommand>().ReverseMap();
+            CreateMap<MessageType, CreateMsgTypeCommand>().ReverseMap();
             CreateMap<MessageType, UpdateMsgTypeCommand>().ReverseMap();
             CreateMap<MessageType, MessageTypeListVM>().ReverseMap();
 

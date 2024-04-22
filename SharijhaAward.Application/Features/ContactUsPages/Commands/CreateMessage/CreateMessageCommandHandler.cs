@@ -57,6 +57,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
 
                 return new BaseResponse<int>(msg, false, 400);
             }
+           
             message.Status = Domain.Constants.ContactUsConstants.MessageStatus.New;
 
             if(request.token != null)
@@ -74,9 +75,15 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                     return new BaseResponse<int>(msg, false, 401);
                 }
                 message.From = User!.Email;
+                message.UserId = User.Id;
             }
             var data = await _messageRepository.AddAsync(message);
 
+            if(request.MessageId == null)
+            {
+                data.MessageId = data.Id;
+                await _messageRepository.UpdateAsync(data);
+            }
             if (request.EmailAttachments != null)
             {
                 foreach(var attachment in request.EmailAttachments!)

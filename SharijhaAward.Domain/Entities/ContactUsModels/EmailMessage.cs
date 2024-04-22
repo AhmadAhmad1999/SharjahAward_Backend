@@ -1,6 +1,7 @@
 ﻿using Aspose.Pdf.Plugins;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants.ContactUsConstants;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,9 +27,14 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
         [ForeignKey(nameof(message))]
         public int? MessageId { get; set; }
 
+        public User User { get; set; } = null!;
+        [ForeignKey(nameof(message))]
+        public int ? UserId { get; set; }
+
         public MessageType Type { get; set; } = null!;
         [ForeignKey(nameof(Type))]
         public int TypeId {  get; set; }
+
         public List<EmailAttachment>? Attachments { get; set; } 
 
 

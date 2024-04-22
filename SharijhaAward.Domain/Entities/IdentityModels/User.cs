@@ -4,6 +4,7 @@ using SharijhaAward.Domain.Entities.MeetingUserModel;
 using SharijhaAward.Domain.Entities.NoteModel;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.AchievementModel;
+using SharijhaAward.Domain.Entities.ContactUsModels;
 
 namespace SharijhaAward.Domain.Entities.IdentityModels;
 public class User : AuditableEntity  {
@@ -24,6 +25,8 @@ public class User : AuditableEntity  {
     public int? NumberOfIndividualCategories { get; set; } = 0;
     public int? NumberOfGroupCategories { get; set; } = 0;
     public string? lang { get; set; }
+
+    public virtual List<EmailMessage> EmailMessages { get; set; } = null!;
     public virtual List<MeetingUser> MeetingUsers { get; set; } = null!;
     public virtual List<Note> Notes { get; set; } = null!;
     public virtual List<UserRole> UserRoles { get; set; } = null!;
