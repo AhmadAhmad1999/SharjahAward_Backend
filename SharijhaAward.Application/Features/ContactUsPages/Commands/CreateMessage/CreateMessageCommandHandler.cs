@@ -48,14 +48,16 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
             {
                 if(await _messageRepository.GetByIdAsync(request.MessageId) != null)
                 {
-                    message.Status = Domain.Constants.ContactUsConstants.MessageStatus.Close;
+                    message.Status = Domain.Constants.ContactUsConstants.MessageStatus.InProgress;
                 }
+                else
+                {
+                    msg = request.lang == "en"
+                   ? "Message Not Found"
+                   : "الرسالة غير موجودة";
 
-                msg = request.lang == "en"
-                    ? "Message Not Found"
-                    : "الرسالة غير موجودة";
-
-                return new BaseResponse<int>(msg, false, 400);
+                    return new BaseResponse<int>(msg, false, 400);
+                }
             }
            
             message.Status = Domain.Constants.ContactUsConstants.MessageStatus.New;
