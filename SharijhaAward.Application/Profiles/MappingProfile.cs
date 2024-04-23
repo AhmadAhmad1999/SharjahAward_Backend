@@ -208,6 +208,8 @@ using SharijhaAward.Application.Features.CommitteeFeatures.Commands.UpdateCommit
 using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCommittees;
 using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommitteeById;
 using SharijhaAward.Application.Features.MessageTypes.Commands.CreateMsgType;
+using SharijhaAward.Domain.Entities.NotificationModel;
+using SharijhaAward.Application.Features.NotificationFeatures.Commands.CreateNotification;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -407,6 +409,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Arbitrator, CreateArbitratorCommand>().ReverseMap();
             CreateMap<EducationalClass, CreateClassCommand>().ReverseMap();
             CreateMap<Committee, CreateCommitteeCommand>().ReverseMap();
+            CreateMap<Notification, CreateNotificationCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();

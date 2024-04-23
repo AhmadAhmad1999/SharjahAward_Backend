@@ -61,6 +61,7 @@ using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
 using SharijhaAward.Domain.Entities.CircularModel;
 using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.NotificationModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -72,6 +73,7 @@ namespace SharijhaAward.Persistence
       
         }
         
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<Arbitration> Arbitrations { get; set; }
         public DbSet<UserRole> UsersRoles { get; set; }
         public DbSet<PermissionHeader> PermissionHeaders { get; set; }
@@ -158,6 +160,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<AppVersion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Instruction>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Arbitration>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Notification>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<UserRole>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<PermissionHeader>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => !p.isDeleted);
