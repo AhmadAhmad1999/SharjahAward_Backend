@@ -213,6 +213,10 @@ using SharijhaAward.Application.Features.NotificationFeatures.Commands.CreateNot
 using SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeetings;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeeting;
+using SharijhaAward.Domain.Entities.AwardPublicationsModel;
+using SharijhaAward.Application.Features.AwardPublications.Commands.CreateAwardPublication;
+using SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwardPublications;
+using SharijhaAward.Application.Features.AwardPublications.Queries.GetAwardPublicationById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -387,6 +391,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Circular, CreateCircularCommand>().ReverseMap();
             CreateMap<Circular, UpdateCircularCommand>().ReverseMap();
             CreateMap<Circular, CircularListVm>().ReverseMap();
+
+            CreateMap<AwardPublication, CreateAwardPublicationCommand>().ReverseMap();
+            CreateMap<AwardPublication, AwardPublicationListVM>().ReverseMap();
+            CreateMap<AwardPublication, AwardPublicationDto>().ReverseMap();
+
 
             //
             // Dynamic Attribute..
