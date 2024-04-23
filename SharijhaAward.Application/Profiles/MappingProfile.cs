@@ -217,6 +217,7 @@ using SharijhaAward.Domain.Entities.AwardPublicationsModel;
 using SharijhaAward.Application.Features.AwardPublications.Commands.CreateAwardPublication;
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwardPublications;
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAwardPublicationById;
+using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queries.ReviewSpecialConditionAttachments;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -320,8 +321,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<TermAndCondition, CreateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, UpdateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionDto>().ReverseMap();
-            CreateMap<TermAndCondition, Features.TermsAndConditions.Queries.GetAllTermAndCondition.TermAndConditionListVM>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionListVM>().ReverseMap();
+            CreateMap<TermAndCondition, SpecialTermAndConditionListVM>().ReverseMap();
 
             CreateMap<ConditionAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<ConditionAttachment, CreateAttachmentCommand>().ReverseMap();
