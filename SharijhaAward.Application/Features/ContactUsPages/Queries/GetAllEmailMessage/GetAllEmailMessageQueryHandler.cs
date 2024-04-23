@@ -62,8 +62,10 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
             {
                 EmailMessages = EmailMessages.Where(m => m.Body.Contains(request.query)).OrderByDescending(x => x.CreatedAt).ToList();
             }
-                var data = _mapper.Map<List<EmailMessageListVM>>(EmailMessages);
-                int UnReadingMessages = _emailMessageRepository.GetCount(m => !m.IsRead);
+          
+            var data = _mapper.Map<List<EmailMessageListVM>>(EmailMessages);
+            int UnReadingMessages = _emailMessageRepository.GetCount(m => !m.IsRead);
+           
             for (int i = 0; i < data.Count(); i++)
             {
                    
@@ -82,7 +84,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
             
             Pagination pagination = new Pagination(request.page,request.pageSize, Count);
                
-            return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data);
+            return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data, pagination);
             
         }
     }

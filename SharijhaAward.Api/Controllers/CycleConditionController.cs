@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Application.Features.CycleConditions.Attachments.Queries.AcceptOnAttachments;
 using SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Commands.DeleteCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Commands.UpdateCycleCondition;
@@ -177,6 +178,45 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(response),
                 404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("ReviewCycleConditionAttachments", Name = "ReviewCycleConditionAttachments")]
+        public async Task<ActionResult> ReviewCycleConditionAttachments([FromQuery] int formId)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
+
+            var response = await _mediator.Send(new GetCycleConditionByFormIdQuery()
+            {
+                formId = formId,
+                token = token!,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPut("AcceptOnAttachments", Name= "AcceptOnAttachments")]
+        public async Task<IActionResult> AcceptOnAttachments(AcceptOnAttachmentsQuery query)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            query.lang = language;
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
                 _ => BadRequest(response)
             };
         }

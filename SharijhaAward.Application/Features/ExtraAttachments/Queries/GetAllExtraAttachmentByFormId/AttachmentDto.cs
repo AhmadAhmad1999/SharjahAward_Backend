@@ -10,5 +10,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
     {
         public int Id { get; set; }
         public string FileUrl { get; set; } = string.Empty;
+        public bool IsAccept { get; set; }
+        public string ReasonOfReject { get; set; } = string.Empty;
     }
 }

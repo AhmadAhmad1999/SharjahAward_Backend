@@ -3,8 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.Categories.Command.DeleteCategory;
+using SharijhaAward.Application.Features.CycleConditions.Attachments.Queries.AcceptOnAttachments;
 using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.AddExtraAttachmentFile;
 using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.DeleteExtraAttachmentFile;
+using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Queries.AcceptOnExtraAttachmentFiles;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExtraAttachment;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.DeleteExtraAttachment;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAttachment;
@@ -131,6 +133,22 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(response),
                 404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpPut("AcceptOnExtraAttachmentFiles", Name = "AcceptOnExtraAttachmentFiles")]
+        public async Task<IActionResult> AcceptOnExtraAttachmentFiles(AcceptOnExtraAttachmentFilesQuery query)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            query.lang = language;
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
                 _ => BadRequest(response)
             };
         }
