@@ -2,6 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Application.Features.CycleConditions.Attachments.Queries.AcceptOnAttachments;
+using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId;
+using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queries.AcceptOnSpecialConditionAttachments;
+using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queries.ReviewSpecialConditionAttachments;
 using SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateTermAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Commands.DeleteTermAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateTermAndCondition;
@@ -211,6 +215,45 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
 
+        }
+
+        [HttpGet("ReviewSpecialConditionAttachments/{Id}", Name = "ReviewSpecialConditionAttachments")]
+        public async Task<ActionResult> ReviewSpecialConditionAttachments(int Id, int formId)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
+
+            var response = await _mediator.Send(new ReviewSpecialConditionAttachmentsQuery()
+            {
+                formId = formId,
+                token = token!,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPut("AcceptOnSpecialConditionAttachments", Name = "AcceptOnSpecialConditionAttachments")]
+        public async Task<IActionResult> AcceptOnSpecialConditionAttachments(AcceptOnSpecialConditionAttachmentsQuery query)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            query.lang = language;
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
+            };
         }
     }
 }
