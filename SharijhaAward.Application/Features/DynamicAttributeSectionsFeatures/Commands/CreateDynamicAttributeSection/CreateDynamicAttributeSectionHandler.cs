@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection
 {
@@ -40,6 +34,15 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
                   : "اسم الجدول غير موجود";
 
                 return new BaseResponse<CreateDynamicAttributeSectionResponse>(ResponseMessage, false, 404);
+            }
+
+            if (Request.RecordIdOnRelation is null)
+            {
+                if (Request.AttributeTableNameId == 2)
+                    Request.RecordIdOnRelation = -2;
+
+                else if (Request.AttributeTableNameId == 3)
+                    Request.RecordIdOnRelation = -1;
             }
 
             DynamicAttributeSection? CheckIfSectionNameIsAlreadyUsed = await _DynamicAttributeSectionRepository

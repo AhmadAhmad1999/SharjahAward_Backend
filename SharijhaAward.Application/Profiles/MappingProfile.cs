@@ -210,6 +210,9 @@ using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommitteeB
 using SharijhaAward.Application.Features.MessageTypes.Commands.CreateMsgType;
 using SharijhaAward.Domain.Entities.NotificationModel;
 using SharijhaAward.Application.Features.NotificationFeatures.Commands.CreateNotification;
+using SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeetings;
+using SharijhaAward.Domain.Entities.MeetingModel;
+using SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeeting;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -410,6 +413,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalClass, CreateClassCommand>().ReverseMap();
             CreateMap<Committee, CreateCommitteeCommand>().ReverseMap();
             CreateMap<Notification, CreateNotificationCommand>().ReverseMap();
+            CreateMap<Meeting, CreateMeetingCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -470,6 +474,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<EducationalInstitution, GetEducationalInstitutionByIdDto>().ReverseMap();
             CreateMap<Committee, GetAllCommitteesListVM>().ReverseMap();
             CreateMap<Committee, GetCommitteeByIdDto>().ReverseMap();
+            CreateMap<Meeting, GetAllMeetingsListVM>().ReverseMap();
         }
     }
 }

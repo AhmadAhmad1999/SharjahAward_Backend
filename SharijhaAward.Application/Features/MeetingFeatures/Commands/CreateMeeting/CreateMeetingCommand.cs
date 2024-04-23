@@ -1,17 +1,18 @@
-﻿using SharijhaAward.Domain.Common;
+﻿using MediatR;
+using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
 
-namespace SharijhaAward.Domain.Entities.MeetingModel
+namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeeting
 {
-    public class Meeting : AuditableEntity
+    public class CreateMeetingCommand : IRequest<BaseResponse<object>>
     {
-        public int Id { get; set; }
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
         public string ArabicDescription { get; set; } = null!;
         public string EnglishDescription { get; set; } = null!;
         public DateTime? Date { get; set; }
         public MeetingTypes Type { get; set; }
-        public bool isImplemented { get; set; }
+        public List<CreateMeetingUserDto> UsersInfo { get; set; } = new List<CreateMeetingUserDto>();
+        public string? lang { get; set; }
     }
 }

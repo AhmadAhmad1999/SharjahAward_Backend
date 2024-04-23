@@ -1,9 +1,8 @@
-﻿using SharijhaAward.Domain.Common;
-using SharijhaAward.Domain.Constants;
+﻿using SharijhaAward.Domain.Constants;
 
-namespace SharijhaAward.Domain.Entities.MeetingModel
+namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeetings
 {
-    public class Meeting : AuditableEntity
+    public class GetAllMeetingsListVM
     {
         public int Id { get; set; }
         public string ArabicName { get; set; } = null!;

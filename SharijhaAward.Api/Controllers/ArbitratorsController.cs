@@ -39,7 +39,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> CreateArbitrator([FromForm] CreateArbitratorCommand CreateArbitratorCommand)
+        public async Task<IActionResult> CreateArbitrator([FromBody] CreateArbitratorCommand CreateArbitratorCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -150,7 +150,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetArbitratorById(int ArbitratorId)
+        public async Task<IActionResult> GetArbitratorById(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -159,7 +159,7 @@ namespace SharijhaAward.Api.Controllers
 
             BaseResponse<GetArbitratorByIdResponse> Response = await _Mediator.Send(new GetArbitratorByIdQuery()
             {
-                ArbitratorId = ArbitratorId,
+                ArbitratorId = Id,
                 lang = HeaderValue!
             });
 
