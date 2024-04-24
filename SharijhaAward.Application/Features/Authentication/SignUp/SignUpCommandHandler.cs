@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         public async Task<AuthenticationResponse> Handle(SignUpCommand Request, CancellationToken cancellationToken)
         {
             Domain.Entities.IdentityModels.User? CheckEmail = await _UserRepository
-                .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower() && x.isValidAccount);
+                .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());
 
             string msg = Request.lang == "en"
                 ? "User has been created"
@@ -41,15 +41,44 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
             if (CheckEmail is not null)
             {
-                msg = Request.lang == "en"
-                    ? "This email is already used"
-                    : "البريد الإلكتروني مستخدم بالفعل";
-
-                return new AuthenticationResponse()
+                if (CheckEmail.isValidAccount)
                 {
-                    message = msg,
-                    isSucceed = false
-                };
+                    msg = Request.lang == "en"
+                        ? "This email is already used"
+                        : "البريد الإلكتروني مستخدم بالفعل";
+
+                    return new AuthenticationResponse()
+                    {
+                        message = msg,
+                        isSucceed = false
+                    };
+                }
+                else
+                {
+                    msg = Request.lang == "en"
+                        ? "Your account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
+                        : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك";
+
+                    EmailRequest EmailRequest2 = new EmailRequest()
+                    {
+                        ToEmail = CheckEmail.Email,
+                        Subject = Request.lang == "ar"
+                            ? $"رمز تفعيل"
+                            : "Confirmation Code",
+                        Body = Request.lang == "ar"
+                            ? $"رمز التفعيل الخاص بحسابك: {CheckEmail.ConfirmationCodeForSignUp}"
+                            : $"This is your account's confirmation code: {CheckEmail.ConfirmationCodeForSignUp}"
+                    };
+
+                    await _EmailSender.SendEmailForConfirmationCode(EmailRequest2);
+
+                    return new AuthenticationResponse()
+                    {
+                        isSucceed = true,
+                        message = msg,
+                        user = _mapper.Map<UserDataResponse>(CheckEmail)
+                    };
+                }
             }
 
             Domain.Entities.IdentityModels.User User = _mapper.Map<Domain.Entities.IdentityModels.User>(Request);
@@ -71,8 +100,8 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
             if (CheckRoleId == null)
             {
                 msg = Request.lang == "en"
-                       ? "The user is not created , Role does not exist"
-                       : "لم يتم إنشاء المستخدم خطأ في الدور";
+                    ? "The user is not created , Role does not exist"
+                    : "لم يتم إنشاء المستخدم خطأ في الدور";
 
                 return new AuthenticationResponse()
                 {

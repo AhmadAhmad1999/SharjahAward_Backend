@@ -13,7 +13,6 @@ namespace SharijhaAward.Domain.Entities.ArbitratorModel
         public string PhoneNumber { get; set; } = null!;
         public string Email { get; set; } = null!;
         public bool isChairman { get; set; } = false;
-        public virtual List<ArbitratorClass> ArbitratorClasses { get; set; } = new();
         public virtual List<Arbitration> Arbitration { get; set; }=new();
         public virtual List<ArbitratorInterview> ArbitratorInterviews { get; set; } = new();
     }

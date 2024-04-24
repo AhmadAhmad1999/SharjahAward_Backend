@@ -64,6 +64,8 @@ using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.NotificationModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using SharijhaAward.Domain.Entities.MeetingModel;
+using SharijhaAward.Domain.Entities.MeetingCategoryModel;
+using SharijhaAward.Domain.Entities.NotificationTemplateModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -75,6 +77,8 @@ namespace SharijhaAward.Persistence
       
         }
         
+        public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
+        public DbSet<MeetingCategory> MeetingCategories { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<MeetingUser> MeetingUsers { get; set; }
         public DbSet<Notification> Notifications { get; set; }
@@ -165,6 +169,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Instruction>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Arbitration>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Notification>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<NotificationTemplate>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<MeetingCategory>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Meeting>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<MeetingUser>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<UserRole>().HasQueryFilter(p => !p.isDeleted);

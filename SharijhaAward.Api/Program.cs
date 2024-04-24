@@ -27,6 +27,12 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddHttpClient();
 
+// Enable asynchronous DNS resolution
+System.Net.ServicePointManager.DnsRefreshTimeout = 0;
+
+// Enable connection pooling
+System.Net.ServicePointManager.DefaultConnectionLimit = 100;
+
 FirebaseApp.Create(new AppOptions()
 {
     Credential = GoogleCredential.FromFile(Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "FirebaseAccountData.json")),

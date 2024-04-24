@@ -71,7 +71,14 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitrat
                 .Where(x => x.ArbitratorId == Request.Id)
                 .ToListAsync();
 
-            using (TransactionScope Transaction = new TransactionScope())
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
+
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
             {
                 try
                 {

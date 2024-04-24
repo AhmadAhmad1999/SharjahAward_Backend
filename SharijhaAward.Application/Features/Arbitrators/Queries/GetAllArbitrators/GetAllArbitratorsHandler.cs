@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
                 AtbitratorCategories = CategoryArbitratorEntities.Where(y => y.ArbitratorId == x.Id)
                     .Select(y => new ArbitratorCategoryListVM()
                     {
-                        Id = y.Id,
+                        Id = y.CategoryId,
                         ArabicName = y.Category!.ArabicName,
                         EnglishName = y.Category!.EnglishName
                     }).ToList()

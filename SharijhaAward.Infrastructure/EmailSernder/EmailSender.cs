@@ -15,12 +15,15 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using MailKit.Security;
+using SharijhaAward.Domain.Entities.ContactUsModels;
 
 namespace SharijhaAward.Infrastructure.EmailSernder
 {
     public class EmailSender : IEmailSender
     {
         private IConfiguration _Configuration;
+        private const int BatchSize = 50; // Number of recipients to process in each batch
         public EmailSender(IConfiguration Configuration)
         {
             _Configuration = Configuration;
@@ -142,6 +145,73 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                 {
                     throw;
                 }
+            }
+        }
+        private List<List<string>> SplitRecipientsIntoBatches(List<string> recipients)
+        {
+            return recipients
+                .Select((value, index) => new { value, index })
+                .GroupBy(x => x.index / BatchSize)
+                .Select(x => x.Select(v => v.value).ToList())
+                .ToList();
+        }
+        public async Task SendEmailAsync(List<string> recipients, string subject, string body)
+        {
+            try
+            {
+                string senderEmail = _Configuration.GetSection("SMTP:SenderEmail").Value!;
+                string password = _Configuration.GetSection("SMTP:Password").Value!;
+                string host = _Configuration.GetSection("SMTP:Host").Value!;
+                int.TryParse(_Configuration.GetSection("SMTP:Port").Value, out int port);
+
+                string htmlBody = body;
+                NetworkCredential credentials = new NetworkCredential
+                {
+                    UserName = senderEmail,
+                    Password = password
+                };
+
+                var batches = SplitRecipientsIntoBatches(recipients);
+
+                await Task.Run(() =>
+                {
+                    Parallel.ForEach(batches, batch =>
+                    {
+                        using (var client = new SmtpClient())
+                        {
+                            client.Credentials = credentials;
+                            client.Host = host;
+                            client.Port = port;
+                            client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
+
+                            foreach (var recipient in batch)
+                            {
+                                try
+                                {
+                                    MailMessage message = new MailMessage
+                                    {
+                                        From = new MailAddress(senderEmail),
+                                        Subject = subject,
+                                        IsBodyHtml = true,
+                                        Body = body
+                                    };
+
+                                    message.To.Add(recipient);
+                                    client.Send(message);
+                                }
+                                catch (Exception)
+                                {
+                                    throw;
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while sending emails: {ex.Message}");
+                throw;
             }
         }
     }

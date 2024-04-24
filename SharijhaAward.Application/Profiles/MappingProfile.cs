@@ -213,6 +213,12 @@ using SharijhaAward.Application.Features.NotificationFeatures.Commands.CreateNot
 using SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeetings;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeeting;
+using SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrator;
+using SharijhaAward.Domain.Entities.NotificationTemplateModel;
+using SharijhaAward.Application.Features.NotificationTemplateFeatures.Commands.CreateNotificationTemplate;
+using SharijhaAward.Application.Features.NotificationTemplateFeatures.Commands.UpdateNotificationTemplate;
+using SharijhaAward.Application.Features.NotificationTemplateFeatures.Queries.GetAllNotificationTemplates;
+using SharijhaAward.Application.Features.NotificationTemplateFeatures.Queries.GetNotificationTemplateById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -414,6 +420,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Committee, CreateCommitteeCommand>().ReverseMap();
             CreateMap<Notification, CreateNotificationCommand>().ReverseMap();
             CreateMap<Meeting, CreateMeetingCommand>().ReverseMap();
+            CreateMap<NotificationTemplate, CreateNotificationTemplateCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -428,6 +435,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Instruction, UpdateInstructionCommand>().ReverseMap();
             CreateMap<Role, UpdateRoleCommand>().ReverseMap();
             CreateMap<Committee, UpdateCommitteeCommand>().ReverseMap();
+            CreateMap<Arbitrator, UpdateArbitratorCommand>().ReverseMap();
+            CreateMap<NotificationTemplate, UpdateNotificationTemplateCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -475,6 +484,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Committee, GetAllCommitteesListVM>().ReverseMap();
             CreateMap<Committee, GetCommitteeByIdDto>().ReverseMap();
             CreateMap<Meeting, GetAllMeetingsListVM>().ReverseMap();
+            CreateMap<NotificationTemplate, GetAllNotificationTemplatesListVM>().ReverseMap();
+            CreateMap<NotificationTemplate, GetNotificationTemplateByIdDto>().ReverseMap();
         }
     }
 }

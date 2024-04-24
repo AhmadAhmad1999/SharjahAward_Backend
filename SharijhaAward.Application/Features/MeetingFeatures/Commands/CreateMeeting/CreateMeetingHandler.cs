@@ -2,6 +2,7 @@
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.MeetingCategoryModel;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using System.Transactions;
@@ -13,14 +14,17 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeet
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<Meeting> _MeetingRepository;
         private readonly IAsyncRepository<MeetingUser> _MeetingUserRepository;
+        private readonly IAsyncRepository<MeetingCategory> _MeetingCategoryRepository;
 
         public CreateMeetingHandler(IMapper Mapper,
             IAsyncRepository<Meeting> MeetingRepository,
-            IAsyncRepository<MeetingUser> MeetingUserRepository)
+            IAsyncRepository<MeetingUser> MeetingUserRepository,
+            IAsyncRepository<MeetingCategory> MeetingCategoryRepository)
         {
             _Mapper = Mapper;
             _MeetingRepository = MeetingRepository;
             _MeetingUserRepository = MeetingUserRepository;
+            _MeetingCategoryRepository = MeetingCategoryRepository;
         }
         public async Task<BaseResponse<object>> Handle(CreateMeetingCommand Request, CancellationToken cancellationToken)
         {
@@ -65,6 +69,15 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeet
                         }).ToList();
 
                     await _MeetingUserRepository.AddRangeAsync(NewMeetingUserEntities);
+
+                    List<MeetingCategory> NewMeetingCategoryEntities = Request.CategoriesIds
+                        .Select(x => new MeetingCategory()
+                        {
+                            CategoryId = x,
+                            MeetingId = NewMeetingEntity.Id
+                        }).ToList();
+
+                    await _MeetingCategoryRepository.AddRangeAsync(NewMeetingCategoryEntities);
 
                     Transaction.Complete();
 

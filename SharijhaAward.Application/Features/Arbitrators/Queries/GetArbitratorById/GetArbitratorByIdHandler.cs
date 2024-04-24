@@ -67,7 +67,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                 .Include(x => x.Category!)
                 .Select(x => new ArbitratorCategoryDto()
                 {
-                    Id = x.Id,
+                    Id = x.CategoryId,
                     ArabicName = x.Category!.ArabicName,
                     EnglishName = x.Category!.EnglishName
                 }).ToListAsync();
