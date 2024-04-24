@@ -25,7 +25,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name = "CreateAwardPublication")]
-        public async Task<IActionResult> CreateAwardPublication(CreateAwardPublicationCommand command)
+        public async Task<IActionResult> CreateAwardPublication([FromForm] CreateAwardPublicationCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];

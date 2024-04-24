@@ -16,7 +16,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         private readonly IUserRepository _UserRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
-        private IEmailSender _EmailSender;
+        private readonly IEmailSender _EmailSender;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
         public SignUpCommandHandler(IUserRepository userRepository,IRoleRepository roleRepository ,IMapper mapper,

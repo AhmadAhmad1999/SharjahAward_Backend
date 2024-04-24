@@ -218,6 +218,13 @@ using SharijhaAward.Application.Features.AwardPublications.Commands.CreateAwardP
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwardPublications;
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAwardPublicationById;
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queries.ReviewSpecialConditionAttachments;
+using SharijhaAward.Domain.Entities.AlbumModel;
+using SharijhaAward.Application.Features.Albums.Commands.CreateAlbum;
+using SharijhaAward.Application.Features.Albums.Commands.UpdateAlbum;
+using SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums;
+using SharijhaAward.Application.Features.Albums.Queries.GetAlbumById;
+using SharijhaAward.Application.Features.Albums.Galleries.Commands.CreateGallery;
+using SharijhaAward.Application.Features.Albums.Galleries.Queries.GetAllGalleries;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -397,6 +404,14 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AwardPublication, AwardPublicationListVM>().ReverseMap();
             CreateMap<AwardPublication, AwardPublicationDto>().ReverseMap();
 
+            CreateMap<Album, CreateAlbumCommand>().ReverseMap();
+            CreateMap<Album, UpdateAlbumCommand>().ReverseMap();
+            CreateMap<Album, AlbumListVm>().ReverseMap();
+            CreateMap<Album, AlbumDto>().ReverseMap();
+
+            CreateMap<Gallery, CreateGalleryCommand>().ReverseMap();
+            CreateMap<Gallery, GalleryListVm>().ReverseMap();
+            
 
             //
             // Dynamic Attribute..

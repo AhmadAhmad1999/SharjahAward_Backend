@@ -65,6 +65,7 @@ using SharijhaAward.Domain.Entities.NotificationModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.AwardPublicationsModel;
+using SharijhaAward.Domain.Entities.AlbumModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -155,6 +156,8 @@ namespace SharijhaAward.Persistence
         public DbSet<MessageType> MessageTypes { get; set; }
         public DbSet<Circular> Circulars { get; set; }
         public DbSet<AwardPublication> AwardPublications {  get; set; }
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Gallery> Galleries { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -237,6 +240,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Circular>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<RolePermission>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AwardPublication>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Album>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Gallery>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)
