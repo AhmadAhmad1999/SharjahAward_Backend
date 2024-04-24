@@ -142,7 +142,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpDelete("DeleteGallery{Id}", Name = "DeleteGallery")]
+        [HttpDelete("DeleteGallery/{Id}", Name = "DeleteGallery")]
         public async Task<IActionResult> DeleteGallery(int Id)
         {
             //get Language from header
@@ -161,7 +161,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet("GetAllGalleries{AlbumId}", Name= "GetAllGalleries")]
+        [HttpGet("GetAllGalleries/{AlbumId}", Name= "GetAllGalleries")]
         public async Task<IActionResult> GetAllGalleries(int AlbumId)
         {
             //get Language from header

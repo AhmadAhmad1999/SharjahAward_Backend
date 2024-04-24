@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
+using SharijhaAward.Application.Features.ContactUsPages.Queries.ClosingEmailMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.ForwordEmail;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgForAwardTeam;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMessageById;
+using SharijhaAward.Application.Features.ContactUsPages.Queries.GetMsgByIdForAwardTeam;
 using SharijhaAward.Application.Responses;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -101,8 +103,36 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
+        [HttpGet("GetMessageByIdForAwardTeam/{Id}", Name = "GetMessageByIdForAwardTeam")]
+        public async Task<IActionResult> GetMessageByIdForAwardTeam(int Id)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            var Language = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(token))
+                return Language == "en"
+                    ? Unauthorized("Un Authorize")
+                    : Unauthorized("إنتهت صلاحية الجلسة");
+
+            var response = await _mediator.Send(new GetMsgByIdForAwardTeamQuery()
+            {
+                Id = Id,
+                lang = Language!,
+                token = token!
+            });
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                _ => BadRequest(response)
+            };
+        }
+
         [HttpGet("GetAllMessagesForAwardTeam", Name = "GetAllMessagesForAwardTeam")]
-        public async Task<IActionResult> GetAllMessagesForAwardTeam()
+        public async Task<IActionResult> GetAllMessagesForAwardTeam(int page = 1 , int pageSize = 10)
         {
             var token = HttpContext.Request.Headers.Authorization;
 
@@ -115,7 +145,9 @@ namespace SharijhaAward.Api.Controllers
 
             var response = await _mediator.Send(new GetAllMsgForAwardTeamQuery()
             {
-                token = token!
+                token = token!,
+                page = page,
+                pageSize = pageSize
             });
             return response.statusCode switch
             {
@@ -145,5 +177,33 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+
+        [HttpPut("ClosingEmailMessage/{Id}", Name= "ClosingEmailMessage")]
+        public async Task<IActionResult> ClosingEmailMessage(int Id)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            var Language = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(token))
+                return Language == "en"
+                    ? Unauthorized("Un Authorize")
+                    : Unauthorized("إنتهت صلاحية الجلسة");
+
+            var response = await _mediator.Send(new ClosingEmailMessageQuery()
+            {
+                token = token!,
+                Id = Id,
+                lang = Language!
+            });
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                _ => BadRequest(response)
+            };
+        }
+
     }
 }
