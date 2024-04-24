@@ -231,6 +231,9 @@ using SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums;
 using SharijhaAward.Application.Features.Albums.Queries.GetAlbumById;
 using SharijhaAward.Application.Features.Albums.Galleries.Commands.CreateGallery;
 using SharijhaAward.Application.Features.Albums.Galleries.Queries.GetAllGalleries;
+using SharijhaAward.Application.Features.UserFeatures.Commands.CreateUser;
+using SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers;
+using SharijhaAward.Application.Features.UserFeatures.Queries.GetUserById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -446,6 +449,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Notification, CreateNotificationCommand>().ReverseMap();
             CreateMap<Meeting, CreateMeetingCommand>().ReverseMap();
             CreateMap<NotificationTemplate, CreateNotificationTemplateCommand>().ReverseMap();
+            CreateMap<User, CreateUserCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -462,6 +466,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Committee, UpdateCommitteeCommand>().ReverseMap();
             CreateMap<Arbitrator, UpdateArbitratorCommand>().ReverseMap();
             CreateMap<NotificationTemplate, UpdateNotificationTemplateCommand>().ReverseMap();
+            CreateMap<User, UpdateUserCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -511,6 +516,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Meeting, GetAllMeetingsListVM>().ReverseMap();
             CreateMap<NotificationTemplate, GetAllNotificationTemplatesListVM>().ReverseMap();
             CreateMap<NotificationTemplate, GetNotificationTemplateByIdDto>().ReverseMap();
+            CreateMap<User, GetAllUsersListVM>().ReverseMap();
+            CreateMap<User, GetUserByIdDto>().ReverseMap();
+            CreateMap<UserRole, UsersRolesDto>().ReverseMap();
         }
     }
 }
