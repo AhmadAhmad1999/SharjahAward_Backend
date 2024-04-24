@@ -219,6 +219,18 @@ using SharijhaAward.Application.Features.NotificationTemplateFeatures.Commands.C
 using SharijhaAward.Application.Features.NotificationTemplateFeatures.Commands.UpdateNotificationTemplate;
 using SharijhaAward.Application.Features.NotificationTemplateFeatures.Queries.GetAllNotificationTemplates;
 using SharijhaAward.Application.Features.NotificationTemplateFeatures.Queries.GetNotificationTemplateById;
+using SharijhaAward.Domain.Entities.AwardPublicationsModel;
+using SharijhaAward.Application.Features.AwardPublications.Commands.CreateAwardPublication;
+using SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwardPublications;
+using SharijhaAward.Application.Features.AwardPublications.Queries.GetAwardPublicationById;
+using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queries.ReviewSpecialConditionAttachments;
+using SharijhaAward.Domain.Entities.AlbumModel;
+using SharijhaAward.Application.Features.Albums.Commands.CreateAlbum;
+using SharijhaAward.Application.Features.Albums.Commands.UpdateAlbum;
+using SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums;
+using SharijhaAward.Application.Features.Albums.Queries.GetAlbumById;
+using SharijhaAward.Application.Features.Albums.Galleries.Commands.CreateGallery;
+using SharijhaAward.Application.Features.Albums.Galleries.Queries.GetAllGalleries;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -322,8 +334,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<TermAndCondition, CreateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, UpdateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionDto>().ReverseMap();
-            CreateMap<TermAndCondition, Features.TermsAndConditions.Queries.GetAllTermAndCondition.TermAndConditionListVM>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionListVM>().ReverseMap();
+            CreateMap<TermAndCondition, SpecialTermAndConditionListVM>().ReverseMap();
 
             CreateMap<ConditionAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<ConditionAttachment, CreateAttachmentCommand>().ReverseMap();
@@ -393,6 +405,19 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Circular, CreateCircularCommand>().ReverseMap();
             CreateMap<Circular, UpdateCircularCommand>().ReverseMap();
             CreateMap<Circular, CircularListVm>().ReverseMap();
+
+            CreateMap<AwardPublication, CreateAwardPublicationCommand>().ReverseMap();
+            CreateMap<AwardPublication, AwardPublicationListVM>().ReverseMap();
+            CreateMap<AwardPublication, AwardPublicationDto>().ReverseMap();
+
+            CreateMap<Album, CreateAlbumCommand>().ReverseMap();
+            CreateMap<Album, UpdateAlbumCommand>().ReverseMap();
+            CreateMap<Album, AlbumListVm>().ReverseMap();
+            CreateMap<Album, AlbumDto>().ReverseMap();
+
+            CreateMap<Gallery, CreateGalleryCommand>().ReverseMap();
+            CreateMap<Gallery, GalleryListVm>().ReverseMap();
+            
 
             //
             // Dynamic Attribute..

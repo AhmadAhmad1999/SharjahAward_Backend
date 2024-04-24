@@ -64,7 +64,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
             }
           
             var data = _mapper.Map<List<EmailMessageListVM>>(EmailMessages);
-            int UnReadingMessages = _emailMessageRepository.GetCount(m => !m.IsRead);
+            int UnReadingMessages = _emailMessageRepository.GetCount(m => !m.IsRead && m.To == User.Email);
            
             for (int i = 0; i < data.Count(); i++)
             {
@@ -76,15 +76,14 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                 data[i].TypeName = Type!.Type;
                 data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(EmailMessages[i].Attachments);                    data[i].IsReplay = data[i].MessageId == null ? false : true;
                 data[i].PersonalPhotoUrl = Sender.ImageURL!;
-                data[i].Gender = Sender.Gender;
-                data[i].CountOfUnReadingMessages = UnReadingMessages;  
+                data[i].Gender = Sender.Gender; 
             }
             
             int Count = _emailMessageRepository.GetCount(m => m.To == User.Email || m.From == User.Email);
             
             Pagination pagination = new Pagination(request.page,request.pageSize, Count);
                
-            return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data, pagination);
+            return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data, pagination,UnReadingMessages);
             
         }
     }

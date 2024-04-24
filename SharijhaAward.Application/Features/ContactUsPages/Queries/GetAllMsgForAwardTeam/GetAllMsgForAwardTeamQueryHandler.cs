@@ -66,11 +66,11 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
             for(int i=0; i< data.Count(); i++)
             {
                 var Type = await _messageTypeRepository.GetByIdAsync(emailMessages[i].TypeId);
-                data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(emailMessages[i]);
+                data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(emailMessages[i].Attachments);
                 data[i].TypeName = Type!.Type;
             }
 
-            return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data);
+            return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data.OrderByDescending(d=>d.CreatedAt).ToList());
 
         }
     }

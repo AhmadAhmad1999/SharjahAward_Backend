@@ -54,7 +54,7 @@ namespace SharijhaAward.Api.Controllers
             return response.statusCode switch
             {
                 // Return the file as a downloadable response
-                200 => File(response.data!.fileContent, "application/pdf", "ExplanatoryGuide.pdf"),
+                200 => File(response.data!.fileContent, "application/pdf", response.data.fileFileName),
                 404 => NotFound(response),
                 _ => BadRequest(response)
             };
