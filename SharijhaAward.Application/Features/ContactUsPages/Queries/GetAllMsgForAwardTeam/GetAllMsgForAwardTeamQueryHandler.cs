@@ -57,7 +57,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
             var Count = 0;
             for (int i = 0; i < MessageTypeIds.Count(); i++)
             {
-                var EmailMessage = _emailMessageRepository.WhereThenIncludeThenPagination(m => m.TypeId == MessageTypeIds[i], request.page, request.pageSize , m => m.Attachments!).ToList();
+                var EmailMessage = _emailMessageRepository.WhereThenIncludeThenPagination(m => m.TypeId == MessageTypeIds[i] && m.Id == m.MessageId, request.page, request.pageSize , m => m.Attachments!).ToList();
                 emailMessages.AddRange(EmailMessage);
 
                 Count = _emailMessageRepository.GetCount(m => m.TypeId == MessageTypeIds[i]);
@@ -68,11 +68,14 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
             for(int i=0; i< data.Count(); i++)
             {
                 var Type = await _messageTypeRepository.GetByIdAsync(emailMessages[i].TypeId);
+                
                 data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(emailMessages[i].Attachments);
+               
                 data[i].TypeName = Type!.Type;
             }
             
             Pagination pagination = new Pagination(request.page, request.pageSize, Count);
+            
             return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data.OrderByDescending(d=>d.CreatedAt).ToList(), pagination, Count);
 
         }

@@ -37,8 +37,8 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpPost("CreateGoal", Name ="CreateGoal")]
-        public async Task<IActionResult> CreateGoal( [FromBody] CreateGoalCommand command)
+        [HttpPost("CreateGoal", Name = "CreateGoal")]
+        public async Task<IActionResult> CreateGoal([FromBody] CreateGoalCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -53,7 +53,7 @@ namespace SharijhaAward.Api.Controllers
             };
 
         }
-        [HttpGet(Name="GetAboutAwardPage")]
+        [HttpGet(Name = "GetAboutAwardPage")]
         public async Task<IActionResult> GetAboutAwardPage()
         {
             //get Language from header
@@ -72,7 +72,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpPut(Name="UpdateAboutPage")]
+        [HttpPut(Name = "UpdateAboutPage")]
         public async Task<IActionResult> UpdateAboutPage([FromForm] UpdateAboutPageCommand command)
         {
             //get Language from header
@@ -89,7 +89,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpPut("UpadteGoal",Name="UpdateGoal")]
+        [HttpPut("UpadteGoal", Name = "UpdateGoal")]
         public async Task<IActionResult> UpdateGoal(UpdateGoalCommand command)
         {
             //get Language from header

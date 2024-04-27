@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -38,11 +39,27 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.ForwordEmail
             {
                 return new BaseResponse<object>("", false, 401);
             }
-
-            Message.To = request.To;
             Message.From = User.Email;
+            if (!request.To.IsNullOrEmpty())
+            {
+                var UserAsign = await _userRepository.GetByEmailAsync(request.To!,false);
+               
+                if(UserAsign == null)
+                {
+                    return new BaseResponse<object>("This Email Not Found", false, 400);
+                }
+               
+                Message.To = request.To;
 
-            await _emailMessageRepository.AddAsync(Message);
+                Message.AsignId = UserAsign.Id;
+            }
+            if(request.TypeId != null)
+            {
+                Message.TypeId = (int)request.TypeId;
+            }
+            
+
+            await _emailMessageRepository.UpdateAsync(Message);
 
             return new BaseResponse<object>("", true, 200);
         }

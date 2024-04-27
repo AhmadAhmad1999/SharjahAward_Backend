@@ -68,17 +68,21 @@ using SharijhaAward.Domain.Entities.MeetingCategoryModel;
 using SharijhaAward.Domain.Entities.NotificationTemplateModel;
 using SharijhaAward.Domain.Entities.AwardPublicationsModel;
 using SharijhaAward.Domain.Entities.AlbumModel;
+using SharijhaAward.Domain.Entities.HomePageSliderModel;
+using SharijhaAward.Domain.Entities.ReferenceSourcesModel;
+using SharijhaAward.Domain.Entities.StrategicPartnerModel;
+using SharijhaAward.Domain.Entities.SocialMediaModel;
 
 namespace SharijhaAward.Persistence
 {
     public class SharijhaAwardDbContext : DbContext
     {
         public SharijhaAwardDbContext(DbContextOptions<SharijhaAwardDbContext> options)
-        : base(options) 
+        : base(options)
         {
-      
+
         }
-        
+
         public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
         public DbSet<MeetingCategory> MeetingCategories { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
@@ -128,10 +132,10 @@ namespace SharijhaAward.Persistence
         public DbSet<DynamicAttributeValue> DynamicAttributeValues { get; set; }
         public DbSet<StaticAttribute> StaticAttributes { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<TermAndCondition> TermsAndConditions {  get; set; }
+        public DbSet<TermAndCondition> TermsAndConditions { get; set; }
         public DbSet<ConditionsProvidedForms> Attachments { get; set; }
-        public DbSet<DynamicAttributePattern> DynamicAttributePatterns {  get; set; }
-        public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues {  get; set; }
+        public DbSet<DynamicAttributePattern> DynamicAttributePatterns { get; set; }
+        public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues { get; set; }
         public DbSet<CategoryFAQ> CategoryFAQs { get; set; }
         public DbSet<ExplanatoryGuide> ExplanatoryGuides { get; set; }
         public DbSet<CycleCondition> CycleCondition { get; set; }
@@ -149,19 +153,23 @@ namespace SharijhaAward.Persistence
         public DbSet<AboutAwardPage> AboutAwardPage { get; set; }
         public DbSet<GeneralWorkshop> GeneralWorkshops { get; set; }
         public DbSet<OurGoal> OurGoals { get; set; }
-        public DbSet<Achievement> Achievements {  get; set; }
+        public DbSet<Achievement> Achievements { get; set; }
         public DbSet<CycleConditionsProvidedForm> CycleConditionsProvidedForms { get; set; }
         public DbSet<CycleConditionAttachment> CycleConditionAttachments { get; set; }
         public DbSet<ExtraAttachment> ExtraAttachments { get; set; }
         public DbSet<ExtraAttachmentFile> ExtraAttachmentsProvidedForms { get; set; }
         public DbSet<EmailMessage> EmailMessages { get; set; }
         public DbSet<EmailAttachment> EmailAttachments { get; set; }
-        public DbSet<RoleMessageType> RoleMessageTypes {  get; set; }
+        public DbSet<RoleMessageType> RoleMessageTypes { get; set; }
         public DbSet<MessageType> MessageTypes { get; set; }
         public DbSet<Circular> Circulars { get; set; }
-        public DbSet<AwardPublication> AwardPublications {  get; set; }
+        public DbSet<AwardPublication> AwardPublications { get; set; }
         public DbSet<Album> Albums { get; set; }
         public DbSet<Gallery> Galleries { get; set; }
+        public DbSet<HomePageSlider> HomePageSliders { get; set; }
+        public DbSet<ReferenceSource> ReferenceSources { get; set; }
+        public DbSet<StrategicPartner> StrategicPartners { get; set; }
+        public DbSet<SocialMedia> SocialMedias { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -248,6 +256,10 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<AwardPublication>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Album>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Gallery>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<HomePageSlider>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ReferenceSource>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<SocialMedia>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<StrategicPartner>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)

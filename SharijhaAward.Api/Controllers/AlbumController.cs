@@ -63,8 +63,8 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpDelete("{Id}", Name="DeleteAlbum")]
-        public async Task<IActionResult> UpdateAlbum(int Id)
+        [HttpDelete("{Id}", Name = "DeleteAlbum")]
+        public async Task<IActionResult> DeleteAlbum(int Id)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -82,8 +82,8 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet(Name="GetAllAlbums")]
-        public async Task<IActionResult> GetAllAlbums(int? CycleId, int page = 1,int pageSize=10)
+        [HttpGet(Name = "GetAllAlbums")]
+        public async Task<IActionResult> GetAllAlbums(int? CycleId, int page = 1, int pageSize = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -104,7 +104,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet("{Id}", Name= "GetAlbumById")]
+        [HttpGet("{Id}", Name = "GetAlbumById")]
         public async Task<IActionResult> GetAlbumById(int Id)
         {
             //get Language from header
@@ -124,7 +124,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpPost("CreateGallery",Name = "CreateGallery")]
+        [HttpPost("CreateGallery", Name = "CreateGallery")]
         public async Task<IActionResult> CreateGallery([FromForm] CreateGalleryCommand command)
         {
             //get Language from header
@@ -161,7 +161,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet("GetAllGalleries/{AlbumId}", Name= "GetAllGalleries")]
+        [HttpGet("GetAllGalleries/{AlbumId}", Name = "GetAllGalleries")]
         public async Task<IActionResult> GetAllGalleries(int AlbumId)
         {
             //get Language from header

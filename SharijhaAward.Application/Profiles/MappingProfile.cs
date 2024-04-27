@@ -234,6 +234,17 @@ using SharijhaAward.Application.Features.Albums.Galleries.Queries.GetAllGallerie
 using SharijhaAward.Application.Features.UserFeatures.Commands.CreateUser;
 using SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers;
 using SharijhaAward.Application.Features.UserFeatures.Queries.GetUserById;
+using SharijhaAward.Domain.Entities.HomePageSliderModel;
+using SharijhaAward.Application.Features.HomePageSliderItems.Commands.CreateHomePageSliderItem;
+using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllHomePageSliderItems;
+using SharijhaAward.Domain.Entities.ReferenceSourcesModel;
+using SharijhaAward.Application.Features.ReferenceSources.Commands.UpdateReferenceSourcePage;
+using SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferenceSourcePage;
+using SharijhaAward.Domain.Entities.StrategicPartnerModel;
+using SharijhaAward.Application.Features.StrategicPartners.Commands.CreateStrategicPartner;
+using SharijhaAward.Application.Features.StrategicPartners.Commands.UpdateStrategicPartner;
+using SharijhaAward.Application.Features.StrategicPartners.Queries.GetStrategicPartnerById;
+using SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStrategicPartners;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -420,7 +431,17 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<Gallery, CreateGalleryCommand>().ReverseMap();
             CreateMap<Gallery, GalleryListVm>().ReverseMap();
-            
+
+            CreateMap<HomePageSlider, CreateHomePageSliderItemCommand>().ReverseMap();
+            CreateMap<HomePageSlider, SliderItemsListVM>().ReverseMap();
+
+            CreateMap<ReferenceSource, UpdateReferenceSourcePageCommand>().ReverseMap();
+            CreateMap<ReferenceSource, ReferenceSourceDto>().ReverseMap();
+
+            CreateMap<StrategicPartner, CreateStrategicPartnerCommand>().ReverseMap();
+            CreateMap<StrategicPartner, UpdateStrategicPartnerCommand>().ReverseMap();
+            CreateMap<StrategicPartner, StrategicPartnerDto>().ReverseMap();
+            CreateMap<StrategicPartner, StrategicPartnerListVM>().ReverseMap();
 
             //
             // Dynamic Attribute..

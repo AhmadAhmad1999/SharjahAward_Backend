@@ -53,6 +53,11 @@
     <Folder Include="Features\Circulars\Queries\GetCircularById\" />
     <Folder Include="Features\EducationalInstitutions\Queries\GetEducationalInstitutionsByEntityId\" />
     <Folder Include="Features\Identity\Role\Command\" />
+    <Folder Include="Features\SocialMediaPage\Commands\CreateSocialMediaItem\" />
+    <Folder Include="Features\SocialMediaPage\Commands\DeleteSocialMediaItem\" />
+    <Folder Include="Features\SocialMediaPage\Commands\UpdateSocialMediaItem\" />
+    <Folder Include="Features\SocialMediaPage\Queries\GetAllSocialMediaItems\" />
+    <Folder Include="Features\SocialMediaPage\Queries\GetSocialMediaItemById\" />
     <Folder Include="Features\Subscriber\Queries\" />
     <Folder Include="Features\TrainingWorkshops\Attacments\Queries\" />
   </ItemGroup>

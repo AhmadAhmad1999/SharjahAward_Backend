@@ -29,7 +29,7 @@ namespace SharijhaAward.Api.Controllers
                 return Unauthorized();
             }
             command.token = token!;
-            var response = await _mediator .Send(command);
+            var response = await _mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -40,7 +40,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet(Name= "GetAchievements")]
+        [HttpGet(Name = "GetAchievements")]
         public async Task<IActionResult> GetAchievements()
         {
             var token = HttpContext.Request.Headers.Authorization;
@@ -49,7 +49,7 @@ namespace SharijhaAward.Api.Controllers
                 return Unauthorized();
             }
 
-            var response = await _mediator.Send(new GetAchievementsPageQuery() 
+            var response = await _mediator.Send(new GetAchievementsPageQuery()
             {
                 token = token!
             });
@@ -62,7 +62,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpPut(Name= "UpdateAchievement")]
+        [HttpPut(Name = "UpdateAchievement")]
         public async Task<IActionResult> UpdateAchievement(UpdateAchievementCommand command)
         {
             var token = HttpContext.Request.Headers.Authorization;

@@ -18,11 +18,11 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
         public string? From { get; set; } = string.Empty;
         public string? To { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
-        public int? TypeId { get; set; }
+        public int TypeId { get; set; }
         public int? MessageId { get; set; }
 
         public string? lang { get; set; } = string.Empty;
-        public string? token { get; set; }
+        public string token { get; set; } = string.Empty;
         public List<IFormFile>? EmailAttachments { get; set; } 
     }
 }

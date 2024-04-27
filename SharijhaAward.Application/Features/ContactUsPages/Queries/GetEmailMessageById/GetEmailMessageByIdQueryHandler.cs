@@ -60,7 +60,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
             if(message.To == User.Email && !message.IsRead)
             {
                 message.IsRead = true;
-                message.Status = Domain.Constants.ContactUsConstants.MessageStatus.InProgress;
+              //message.Status = Domain.Constants.ContactUsConstants.MessageStatus.InProgress;
                 await _emailMessageRepository.UpdateAsync(message);
             }
             var Type = await _messageTypeRepository.GetByIdAsync(message.TypeId);

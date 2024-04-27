@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
+using SharijhaAward.Application.Features.ContactUsPages.Commands.DeleteMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.ClosingEmailMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.ForwordEmail;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
@@ -26,7 +28,7 @@ namespace SharijhaAward.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost(Name="SendMessage")]
+        [HttpPost(Name = "SendMessage")]
         public async Task<IActionResult> SendMessage([FromForm] CreateMessageCommand command)
         {
             var token = HttpContext.Request.Headers.Authorization;
@@ -45,8 +47,8 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpGet(Name="GetAllMessages")]
-        public async Task<IActionResult> GetAllMessages(string? query, int? filter, int page=1,int pageSize=10)
+        [HttpGet(Name = "GetAllMessages")]
+        public async Task<IActionResult> GetAllMessages(string? query, int? filter, int page = 1, int pageSize = 10)
         {
             var token = HttpContext.Request.Headers.Authorization;
 
@@ -59,10 +61,10 @@ namespace SharijhaAward.Api.Controllers
 
             var response = await _mediator.Send(new GetAllEmailMessageQuery()
             {
-                filter=filter,
-                page=page,
-                pageSize=pageSize,
-                query=query,
+                filter = filter,
+                page = page,
+                pageSize = pageSize,
+                query = query,
                 lang = Language!,
                 token = token!
             });
@@ -74,8 +76,33 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpDelete("{Id}", Name= "DeleteMessage")]
+        public async Task<IActionResult> DeleteMessage(int Id)
+        {
+            var Language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
+            if (string.IsNullOrEmpty(token))
+                return Language == "en"
+                    ? Unauthorized("Un Authorize")
+                    : Unauthorized("إنتهت صلاحية الجلسة");
 
-        [HttpGet("{Id}",Name="GetMessageById")]
+           
+
+            var response = await _mediator.Send(new DeleteMessageCommand()
+            {
+                Id = Id,
+                lang = Language!,
+            });
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpGet("{Id}", Name = "GetMessageById")]
         public async Task<IActionResult> GetMessageById(int Id)
         {
             var token = HttpContext.Request.Headers.Authorization;
@@ -132,7 +159,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllMessagesForAwardTeam", Name = "GetAllMessagesForAwardTeam")]
-        public async Task<IActionResult> GetAllMessagesForAwardTeam(int page = 1 , int pageSize = 10)
+        public async Task<IActionResult> GetAllMessagesForAwardTeam(int page = 1, int pageSize = 10)
         {
             var token = HttpContext.Request.Headers.Authorization;
 
@@ -178,7 +205,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpPut("ClosingEmailMessage/{Id}", Name= "ClosingEmailMessage")]
+        [HttpPut("ClosingEmailMessage/{Id}", Name = "ClosingEmailMessage")]
         public async Task<IActionResult> ClosingEmailMessage(int Id)
         {
             var token = HttpContext.Request.Headers.Authorization;

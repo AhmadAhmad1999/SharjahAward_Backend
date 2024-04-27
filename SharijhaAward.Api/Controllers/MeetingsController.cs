@@ -23,7 +23,7 @@ namespace SharijhaAward.Api.Controllers
         {
             _Mediator = Mediator;
         }
-        [HttpPost("CreateMeeting")]
+        [HttpPost(Name="CreateMeeting")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,7 +48,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpDelete("DeleteMeeting/{Id}")]
+        [HttpDelete("{Id}",Name = "DeleteMeeting")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -76,7 +76,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("GetAllMeetings")]
+        [HttpGet(Name="GetAllMeetings")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -105,7 +105,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("GetAllSubscribersInfoByCategoryId/{Id}")]
+        [HttpGet("{Id}",Name= "GetAllSubscribersInfoByCategoryId")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -135,7 +135,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("GetMeetingById/{Id}")]
+        [HttpGet("GetMeetingById/{Id}",Name= "GetMeetingById")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

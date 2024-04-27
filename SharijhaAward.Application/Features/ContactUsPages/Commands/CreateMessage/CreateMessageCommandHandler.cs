@@ -44,31 +44,12 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
             var message = _mapper.Map<EmailMessage>(request);
             message.IsRead = false;
 
-            if(request.MessageId != null)
-            {
-                if(await _messageRepository.GetByIdAsync(request.MessageId) != null)
-                {
-                    message.Status = Domain.Constants.ContactUsConstants.MessageStatus.InProgress;
-                }
-                else
-                {
-                    msg = request.lang == "en"
-                   ? "Message Not Found"
-                   : "الرسالة غير موجودة";
+            
+                var UserId = _jwtProvider.GetUserIdFromToken(request.token!);
 
-                    return new BaseResponse<int>(msg, false, 400);
-                }
-            }
-           
-            message.Status = Domain.Constants.ContactUsConstants.MessageStatus.New;
-
-            if(request.token != null)
-            {
-                var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-               
                 var User = await _userRepository.FirstOrDefaultAsync(u => u.Id == int.Parse(UserId));
-                
-                if(User == null)
+
+                if (User == null)
                 {
                     msg = request.lang == "en"
                         ? "Un Authorize"
@@ -76,9 +57,40 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
 
                     return new BaseResponse<int>(msg, false, 401);
                 }
+                if (message.UserId == null) 
+                {
+                    message.UserId = User.Id;
+                }
                 message.From = User!.Email;
-                message.UserId = User.Id;
+            
+
+            if (request.MessageId != null)
+            {
+                var ParentMessage = await _messageRepository.GetByIdAsync(request.MessageId);
+                
+                if (ParentMessage == null)
+                {
+                    msg = request.lang == "en"
+                  ? "Message Not Found"
+                  : "الرسالة غير موجودة";
+
+                    return new BaseResponse<int>(msg, false, 400);
+
+                }
+                else
+                {
+                    if(message.AsignId  == null)
+                    {
+                        message.UserId = User.Id;
+                    }
+                }
             }
+            else
+            {
+                message.Status = Domain.Constants.ContactUsConstants.MessageStatus.New;
+            }
+           
+           
             var data = await _messageRepository.AddAsync(message);
 
             if(request.MessageId == null)

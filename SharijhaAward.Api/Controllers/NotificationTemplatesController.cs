@@ -24,7 +24,7 @@ namespace SharijhaAward.Api.Controllers
         {
             _Mediator = Mediator;
         }
-        [HttpPost("CreateNotificationTemplate")]
+        [HttpPost(Name = "CreateNotificationTemplate")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -50,7 +50,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpDelete("DeleteNotificationTemplate/{Id}")]
+        [HttpDelete("{Id}", Name = "DeleteNotificationTemplate")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

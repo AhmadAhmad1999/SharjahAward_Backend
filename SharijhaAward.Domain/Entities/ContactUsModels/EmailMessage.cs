@@ -22,6 +22,7 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
         
         public MessageStatus? Status { get; set; } = MessageStatus.New;
         public bool IsRead { get; set; } = false;
+        public int? AsignId { get; set; }
 
         public EmailMessage message { get; set; } = null!;
         [ForeignKey(nameof(message))]

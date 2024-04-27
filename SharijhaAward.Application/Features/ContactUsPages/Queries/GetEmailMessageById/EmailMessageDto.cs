@@ -18,6 +18,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
         public string From { get; set; } = string.Empty;
         public string? To { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
+        public int TypeId { get; set; }
         public string TypeName { get; set; } = string.Empty;
         public MessageStatus? Status { get; set; } = MessageStatus.New;
         public bool IsRead { get; set; } 
