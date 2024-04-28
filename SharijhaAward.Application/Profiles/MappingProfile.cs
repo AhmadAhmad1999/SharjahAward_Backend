@@ -251,6 +251,7 @@ using SharijhaAward.Application.Features.SocialMediaPage.Commands.CreateSocialMe
 using SharijhaAward.Application.Features.SocialMediaPage.Commands.UpdateSocialMediaItem;
 using SharijhaAward.Application.Features.SocialMediaPage.Queries.GetSocialMediaItemById;
 using SharijhaAward.Application.Features.SocialMediaPage.Queries.GetAllSocialMediaItems;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsBySubscriberId;
 using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotifications;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategories;
 
@@ -366,6 +367,7 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<ProvidedForm, CreateProvidedFormCommand>().ReverseMap();
             CreateMap<ProvidedForm, FormListVm>().ReverseMap();
+            CreateMap<ProvidedForm, FormsBySubscriberIdListVM>().ReverseMap();
             CreateMap<ProvidedForm, ProvidedFormDto>().ReverseMap();
 
             CreateMap<ExplanatoryGuide, CreateExplanatoryGuideCommand>().ReverseMap();
