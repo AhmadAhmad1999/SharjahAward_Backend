@@ -1,10 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using SharijhaAward.Application.Features.Classes.Commands.DeleteClass;
-using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
-using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.NotificationTemplateFeatures.Commands.CreateNotificationTemplate;
 using SharijhaAward.Application.Features.NotificationTemplateFeatures.Commands.DeleteNotificationTemplate;
 using SharijhaAward.Application.Features.NotificationTemplateFeatures.Commands.UpdateNotificationTemplate;
@@ -24,7 +20,7 @@ namespace SharijhaAward.Api.Controllers
         {
             _Mediator = Mediator;
         }
-        [HttpPost(Name = "CreateNotificationTemplate")]
+        [HttpPost("CreateNotificationTemplate")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -50,7 +46,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpDelete("{Id}", Name = "DeleteNotificationTemplate")]
+        [HttpDelete("DeleteNotificationTemplate/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

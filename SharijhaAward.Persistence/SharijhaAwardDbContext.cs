@@ -531,10 +531,24 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Type = Domain.Constants.OnePageText.OnePageTextType.PrivacyPolicy
+                    Type = Domain.Constants.OnePageText.OnePageTextType.PrivacyPolicy,
+                    Slug = "Privacy_Policy_Website"
                 }, new OnePageText()
                 {
                     Id = 2,
+                    ArabicText = "سياسة الخصوصية",
+                    EnglishText = "Privacy Policy",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Type = Domain.Constants.OnePageText.OnePageTextType.PrivacyPolicy,
+                    Slug = "Privacy_Policy_Subscriber"
+                }, new OnePageText()
+                {
+                    Id = 3,
                     ArabicText = "شروط الاستخدام",
                     EnglishText = "Terms Of Use",
                     isDeleted = false,
@@ -543,7 +557,21 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Type = Domain.Constants.OnePageText.OnePageTextType.TermsOfUse
+                    Type = Domain.Constants.OnePageText.OnePageTextType.TermsOfUse,
+                    Slug = "Terms_Of_Use_Website"
+                }, new OnePageText()
+                {
+                    Id = 4,
+                    ArabicText = "شروط الاستخدام",
+                    EnglishText = "Terms Of Use",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Type = Domain.Constants.OnePageText.OnePageTextType.TermsOfUse,
+                    Slug = "Terms_Of_Use_Subscriber"
                 });
 
             modelBuilder.Entity<GeneralFAQCategory>()

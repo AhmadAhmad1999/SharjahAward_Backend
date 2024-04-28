@@ -17,7 +17,8 @@ namespace SharijhaAward.Application.Features.Settings.Queries.GetPrivacyPolicy
         {
             string ResponseMessage = string.Empty;
 
-            OnePageText? OnePageTextEntity = await _OnePageTextRepository.FirstOrDefaultAsync(x => x.Id == 1);
+            OnePageText? OnePageTextEntity = await _OnePageTextRepository
+                .FirstOrDefaultAsync(x => x.Slug.ToLower() == Request.Slug.ToLower());
 
             if (OnePageTextEntity == null)
             {

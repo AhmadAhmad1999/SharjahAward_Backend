@@ -245,6 +245,7 @@ using SharijhaAward.Application.Features.StrategicPartners.Commands.CreateStrate
 using SharijhaAward.Application.Features.StrategicPartners.Commands.UpdateStrategicPartner;
 using SharijhaAward.Application.Features.StrategicPartners.Queries.GetStrategicPartnerById;
 using SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStrategicPartners;
+using SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -488,6 +489,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Arbitrator, UpdateArbitratorCommand>().ReverseMap();
             CreateMap<NotificationTemplate, UpdateNotificationTemplateCommand>().ReverseMap();
             CreateMap<User, UpdateUserCommand>().ReverseMap();
+            CreateMap<User, UpdateUserCommand2>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();

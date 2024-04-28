@@ -229,7 +229,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> EditPrivacyPolicy([FromForm] EditPrivacyPolicyCommand EditPrivacyPolicyCommand)
+        public async Task<IActionResult> EditPrivacyPolicy(EditPrivacyPolicyCommand EditPrivacyPolicyCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -254,7 +254,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetPrivacyPolicy()
+        public async Task<IActionResult> GetPrivacyPolicy(string Slug)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -263,6 +263,7 @@ namespace SharijhaAward.Api.Controllers
 
             BaseResponse<GetPrivacyPolicyDto> Response = await _Mediator.Send(new GetPrivacyPolicyQuery()
             {
+                Slug = Slug,
                 lang = HeaderValue!
             });
 
@@ -281,7 +282,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> EditTermsOfUse([FromForm] EditTermsOfUseCommand EditTermsOfUseCommand)
+        public async Task<IActionResult> EditTermsOfUse(EditTermsOfUseCommand EditTermsOfUseCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -306,7 +307,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetTermsOfUse()
+        public async Task<IActionResult> GetTermsOfUse(string Slug)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -315,6 +316,7 @@ namespace SharijhaAward.Api.Controllers
 
             BaseResponse<GetTermsOfUseDto> Response = await _Mediator.Send(new GetTermsOfUseQuery()
             {
+                Slug = Slug,
                 lang = HeaderValue!
             });
 

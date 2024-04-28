@@ -10,6 +10,8 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommit
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
         public CommitteeStatus Status { get; set; } = CommitteeStatus.InActive;
+        public int ChairmanId { get; set; }
+        public string ChairmanName { get; set; } = null!;
         public List<ArbitratorDto> Arbitrators { get; set; } = new List<ArbitratorDto>();
         public List<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
     }

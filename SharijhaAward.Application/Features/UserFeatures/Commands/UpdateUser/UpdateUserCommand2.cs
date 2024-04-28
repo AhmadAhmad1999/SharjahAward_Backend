@@ -4,7 +4,7 @@ using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser
 {
-    public class UpdateUserCommand : IRequest<BaseResponse<object>>
+    public class UpdateUserCommand2 : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
         public string Email { get; set; } = string.Empty;

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -10,12 +9,9 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
     public class GetAllCommitteesHandler : IRequestHandler<GetAllCommitteesQuery, BaseResponse<List<GetAllCommitteesListVM>>>
     {
         private readonly IAsyncRepository<Committee> _CommitteeRepository;
-        private readonly IMapper _Mapper;
-        public GetAllCommitteesHandler(IAsyncRepository<Committee> CommitteeRepository,
-            IMapper Mapper)
+        public GetAllCommitteesHandler(IAsyncRepository<Committee> CommitteeRepository)
         {
             _CommitteeRepository = CommitteeRepository;
-            _Mapper = Mapper;
         }
 
         public async Task<BaseResponse<List<GetAllCommitteesListVM>>> Handle(GetAllCommitteesQuery Request, 
@@ -23,8 +19,21 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
         {
             string ResponseMessage = string.Empty;
 
-            List<GetAllCommitteesListVM> Committees = _Mapper.Map<List<GetAllCommitteesListVM>>(await _CommitteeRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
+            List<GetAllCommitteesListVM> Committees = await _CommitteeRepository
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                .Include(x => x.Chairman!)
+                .Select(x => new GetAllCommitteesListVM()
+                {
+                    Id = x.Id,
+                    ArabicName = x.ArabicName,
+                    EnglishName = x.EnglishName,
+                    ChairmanId = x.ChairmanId,
+                    Status = x.Status,
+                    CreatedAt = x.CreatedAt,
+                    ChairmanName = Request.lang == "en"
+                        ? x.Chairman!.EnglishName
+                        : x.Chairman!.ArabicName
+                }).ToListAsync();
 
             int TotalCount = await _CommitteeRepository.GetCountAsync(null);
 

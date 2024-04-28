@@ -12,5 +12,6 @@ namespace SharijhaAward.Domain.Entities.OnePageTextModel
         [MaxLength]
         public string? EnglishText { get; set; }
         public OnePageTextType Type { get; set; }
+        public string Slug { get; set; } = null!;
     }
 }

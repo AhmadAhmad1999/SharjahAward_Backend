@@ -17,7 +17,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditTermsOfUse
             string ResponseMessage = string.Empty;
 
             OnePageText? TermsOfUseEntity = await _OnePageTextRepository
-                .FirstOrDefaultAsync(x => x.Id == 2);
+                .FirstOrDefaultAsync(x => x.Slug.ToLower() == Request.Slug.ToLower());
 
             if (TermsOfUseEntity == null)
             {

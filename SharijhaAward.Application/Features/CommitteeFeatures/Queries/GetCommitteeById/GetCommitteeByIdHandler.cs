@@ -33,6 +33,7 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommit
             string ResponseMessage = string.Empty;
 
             Committee? CommitteeEntity = await _CommitteeRepository
+                .Include(x => x.Chairman!)
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (CommitteeEntity == null)
@@ -60,6 +61,9 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommit
 
             CommitteeDto.Arbitrators = Arbitrators;
             CommitteeDto.Categories = Categories;
+            CommitteeDto.ChairmanName = Request.lang == "en"
+                ? CommitteeEntity.EnglishName
+                : CommitteeEntity.ArabicName;
 
             return new BaseResponse<GetCommitteeByIdDto>(ResponseMessage, true, 200, CommitteeDto);
         }

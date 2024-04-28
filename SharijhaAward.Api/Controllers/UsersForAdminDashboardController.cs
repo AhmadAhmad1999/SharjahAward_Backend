@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using NPOI.OpenXmlFormats.Spreadsheet;
 using SharijhaAward.Application.Features.UserFeatures.Commands.ChangePassword;
 using SharijhaAward.Application.Features.UserFeatures.Commands.CreateUser;
 using SharijhaAward.Application.Features.UserFeatures.Commands.DeleteUser;
@@ -22,8 +21,7 @@ namespace SharijhaAward.Api.Controllers
         {
             _Mediator = Mediator;
         }
-
-        [HttpPost("ChangePasswordForAdmin", Name = "ChangePasswordForAdmin")]
+        [HttpPost("ChangePassword")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -31,7 +29,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> ChangePasswordForAdmin([FromBody] ChangePasswordCommand ChangePasswordCommand)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand ChangePasswordCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -48,7 +46,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPost("CreateUserForAdmin", Name = "CreateUserForAdmin")]
+        [HttpPost("CreateUser")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -56,7 +54,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> CreateUserForAdmin([FromBody] CreateUserCommand CreateUserCommand)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand CreateUserCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -73,7 +71,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpDelete("{Id}", Name = "DeleteUserForAdmin")]
+        [HttpDelete("DeleteUser/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -81,7 +79,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteUserForAdmin(int Id)
+        public async Task<IActionResult> DeleteUser(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -101,43 +99,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-
-        //[HttpPut(Name= "UpdateUserForAdmin")]
-        //public async Task<IActionResult> UpdateUserForAdmin(UpdateUserCommand command)
-        //{
-        //    var language = HttpContext.Request.Headers["lang"];
-
-        //    command.lang = language!;
-
-        //    var response = await _Mediator.Send(command);
-        //    return response.statusCode switch
-        //    {
-        //        404 => NotFound(response),
-        //        200 => Ok(response),
-        //        _ => BadRequest(response)
-        //    };
-        //}
-            //[HttpPut(Name = "UpdateUserForAdmin")]
-            //public async Task<IActionResult> UpdateUserForAdmin(UpdateUserCommand UpdateUserCommand)
-            //{
-            //    StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            //    UpdateUserCommand.lang = !string.IsNullOrEmpty(HeaderValue)
-            //        ? HeaderValue
-            //        : "en";
-
-            //    BaseResponse<object>? Response = await _Mediator.Send(UpdateUserCommand);
-
-            //    return Response.statusCode switch
-            //    {
-            //        404 => NotFound(Response),
-            //        200 => Ok(Response),
-            //        _ => BadRequest(Response)
-            //    };
-
-            //}
-
-        [HttpGet(Name = "GetAllUsersForAdmin")]
+        [HttpPut("UpdateUser")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -145,7 +107,32 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllUsersForAdmin(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> UpdateUser(UpdateUserCommand2 UpdateUserCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            UpdateUserCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(UpdateUserCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllUsers")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllUsers(int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -166,7 +153,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("{Id}", Name = "GetUserByIdFormAdmin")]
+        [HttpGet("GetUserById/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -174,7 +161,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetUserByIdFormAdmin(int Id)
+        public async Task<IActionResult> GetUserById(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

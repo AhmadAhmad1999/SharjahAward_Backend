@@ -38,9 +38,9 @@ namespace SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetIns
 
             if (InstructionEntity == null)
             {
-                ResponseMessage = Request.lang == "en"
-                    ? "There is no instructions to view"
-                    : "لا يوجد محتوى لعرضه";
+                //ResponseMessage = Request.lang == "en"
+                //    ? "There is no instructions to view"
+                //    : "لا يوجد محتوى لعرضه";
 
                 return new BaseResponse<GetInstructionBySlugIdDto>(ResponseMessage, false, 200);
             }

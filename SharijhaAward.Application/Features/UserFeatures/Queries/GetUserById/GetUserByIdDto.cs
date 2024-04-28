@@ -8,6 +8,6 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetUserById
         public string Email { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         public string PhoneNumber { get; set; } = null!;
-        public List<UsersRolesDto> Roles { get; set; } = new List<UsersRolesDto>();
+        public List<int> RolesIds { get; set; } = new List<int>();
     }
 }

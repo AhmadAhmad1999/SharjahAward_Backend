@@ -11,6 +11,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditTermsOfUse
 {
     public class EditTermsOfUseCommand : IRequest<BaseResponse<object>>
     {
+        public string Slug { get; set; } = null!;
         [MaxLength]
         public string ArabicText { get; set; } = null!;
         [MaxLength]

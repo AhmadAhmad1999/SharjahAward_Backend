@@ -10,7 +10,7 @@ using System.Transactions;
 
 namespace SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser
 {
-    public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, BaseResponse<object>>
+    public class UpdateUserHandler : IRequestHandler<UpdateUserCommand2, BaseResponse<object>>
     {
         private readonly IMapper _Mapper;
         private readonly IUserRepository _UserRepository;
@@ -25,7 +25,7 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser
             _UserRoleRepository = UserRoleRepository;
         }
 
-        public async Task<BaseResponse<object>> Handle(UpdateUserCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(UpdateUserCommand2 Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
@@ -91,7 +91,7 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser
                     if (NewUserRoleEntites.Count() > 0)
                         await _UserRoleRepository.AddRangeAsync(NewUserRoleEntites);
 
-                    _Mapper.Map(Request, UserEntityToUpdate, typeof(UpdateClassCommand), typeof(EducationalClass));
+                    _Mapper.Map(Request, UserEntityToUpdate, typeof(UpdateUserCommand2), typeof(Domain.Entities.IdentityModels.User));
 
                     ResponseMessage = Request.lang == "en"
                        ? "User has been updated successfully"

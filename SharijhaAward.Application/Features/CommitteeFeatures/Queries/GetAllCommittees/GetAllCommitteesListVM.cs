@@ -8,5 +8,8 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
         public CommitteeStatus Status { get; set; } = CommitteeStatus.InActive;
+        public int ChairmanId { get; set; }
+        public string ChairmanName { get; set; } = null!;
+        public DateTime CreatedAt { get; set; }
     }
 }

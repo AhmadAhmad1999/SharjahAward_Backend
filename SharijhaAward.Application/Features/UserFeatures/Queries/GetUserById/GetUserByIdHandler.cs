@@ -40,11 +40,10 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetUserById
 
             GetUserByIdDto GetUserByIdDto = _Mapper.Map<GetUserByIdDto>(UserEntity);
 
-            List<UserRole> UserRolesEntities = await _UserRoleRepository
+            GetUserByIdDto.RolesIds = await _UserRoleRepository
                 .Where(x => x.UserId == Request.Id)
+                .Select(x => x.RoleId)
                 .ToListAsync();
-
-            GetUserByIdDto.Roles = _Mapper.Map<List<UsersRolesDto>>(UserRolesEntities);
 
             return new BaseResponse<GetUserByIdDto>(ResponseMessage, true, 200, GetUserByIdDto);
         }
