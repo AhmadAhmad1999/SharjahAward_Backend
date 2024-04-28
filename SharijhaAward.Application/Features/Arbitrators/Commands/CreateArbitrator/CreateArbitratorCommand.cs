@@ -11,6 +11,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public bool isChairman { get; set; } = false;
+        public string Password { get; set; } = null!;
         public string? lang { get; set; }
         public List<int> Categories { get; set; } = new List<int>();
         public List<int> ArbitratorClasses { get; set; } = new List<int>();

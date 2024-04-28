@@ -15,6 +15,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         public EducationType EducationType { get; set; }
         public Emirates Emirates { get; set; }
         public IFormFile PersonalPhoto { get; set; } = null!;
+        public string Password { get; set; } = null!;
         public string lang { get; set; } = string.Empty;
         public List<int> EducationalEntitiesIds { get; set; } = new List<int>();
         public List<int> EducationalInstitutionsIds { get; set; } = new List<int>();

@@ -97,7 +97,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                     if (DataTypeAsName.ToLower() == "Text".ToLower() ||
                         DataTypeAsName.ToLower() == "Email".ToLower() ||
                         DataTypeAsName.ToLower() == "Phone Number".ToLower() ||
-                        DataTypeAsName.ToLower() == "List".ToLower())
+                        DataTypeAsName.ToLower() == "List".ToLower() ||
+                        DataTypeAsName.ToLower() == "Location".ToLower())
                     {
                         if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
                         {

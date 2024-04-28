@@ -771,6 +771,16 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     Name = "List"
+                }, new AttributeDataType()
+                {
+                    Id = 9,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Location"
                 });
 
             modelBuilder.Entity<AttributeOperation>()

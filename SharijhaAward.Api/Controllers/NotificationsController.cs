@@ -1,13 +1,12 @@
 ﻿using FirebaseAdmin.Messaging;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using NPOI.XWPF.UserModel;
 using SharijhaAward.Api.Helpers2;
-using SharijhaAward.Application.Features.Classes.Commands.DeleteClass;
+using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.NotificationFeatures.Commands.CreateNotification;
 using SharijhaAward.Application.Features.NotificationFeatures.Commands.DeleteNotification;
+using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotifications;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -84,6 +83,35 @@ namespace SharijhaAward.Api.Controllers
             {
                 Id = Id,
                 lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllNotifications")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllNotifications(int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllNotificationsListVM>> Response = await _Mediator.Send(new GetAllNotificationsQuery()
+            {
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage
             });
 
             return Response.statusCode switch

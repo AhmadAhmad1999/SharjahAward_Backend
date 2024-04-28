@@ -9,6 +9,7 @@ using SharijhaAward.Application.Features.Categories.Command.DeleteCategory;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategoriesWithCycleNumber;
 using SharijhaAward.Application.Responses;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategories;
 
 
 namespace SharijhaAward.Api.Controllers
@@ -156,6 +157,33 @@ namespace SharijhaAward.Api.Controllers
                 {
                     lang = HeaderValue!
                 });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllSubCategories")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllSubCategories()
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllSubCategoriesListVM>> Response = await _mediator.Send(new GetAllSubCategoriesQuery()
+            {
+                lang = HeaderValue!
+            });
 
             return Response.statusCode switch
             {
