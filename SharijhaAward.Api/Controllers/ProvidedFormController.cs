@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Aspose.Pdf;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,7 @@ using SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvidedForm
 using SharijhaAward.Application.Features.ProvidedForm.Command.DeleteProvidedForm;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.ChangeStep;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForms;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsBySubscriberId;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFormById;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm;
 using SharijhaAward.Domain.Constants.ProvidedFromConstants;
@@ -129,6 +131,34 @@ namespace SharijhaAward.Api.Controllers
             }
             query.token = token!;
             var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetProvidedFormsBySubscriberId/{Id}", Name = "GetProvidedFormsBySubscriberId")]
+        public async Task<IActionResult> GetProvidedFormsBySubscriberId(int Id , int page = 1, int pageSize = 10)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
+
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+            var response = await _mediator.Send(new GetFormsBySubscriberIdQuery()
+            {
+                lang = Language!,
+                page= page,
+                pageSize = pageSize,
+                Id = Id
+            });
 
             return response.statusCode switch
             {
