@@ -245,6 +245,11 @@ using SharijhaAward.Application.Features.StrategicPartners.Commands.CreateStrate
 using SharijhaAward.Application.Features.StrategicPartners.Commands.UpdateStrategicPartner;
 using SharijhaAward.Application.Features.StrategicPartners.Queries.GetStrategicPartnerById;
 using SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStrategicPartners;
+using SharijhaAward.Domain.Entities.SocialMediaModel;
+using SharijhaAward.Application.Features.SocialMediaPage.Commands.CreateSocialMediaItem;
+using SharijhaAward.Application.Features.SocialMediaPage.Commands.UpdateSocialMediaItem;
+using SharijhaAward.Application.Features.SocialMediaPage.Queries.GetSocialMediaItemById;
+using SharijhaAward.Application.Features.SocialMediaPage.Queries.GetAllSocialMediaItems;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -442,6 +447,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<StrategicPartner, UpdateStrategicPartnerCommand>().ReverseMap();
             CreateMap<StrategicPartner, StrategicPartnerDto>().ReverseMap();
             CreateMap<StrategicPartner, StrategicPartnerListVM>().ReverseMap();
+
+            CreateMap<SocialMedia, CreateSocialMediaItemCommand>().ReverseMap();
+            CreateMap<SocialMedia, UpdateSocialMediaItemCommand>().ReverseMap();
+            CreateMap<SocialMedia, SocialMediaItemDto>().ReverseMap();
+            CreateMap<SocialMedia, SocialMediaItemListVM>().ReverseMap();
 
             //
             // Dynamic Attribute..

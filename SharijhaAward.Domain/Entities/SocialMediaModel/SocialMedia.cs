@@ -10,8 +10,8 @@ namespace SharijhaAward.Domain.Entities.SocialMediaModel
     public class SocialMedia : AuditableEntity
     {
         public int Id { get; set; }
-        public string? Logo { get; set; } 
-        public string? Thumbnail { get; set; }
+        public string? LogoUrl { get; set; } 
+        public string? ThumbnailUrl { get; set; }
         public string Url { get; set; } = string.Empty;
     }
 }
