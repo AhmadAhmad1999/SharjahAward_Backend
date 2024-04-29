@@ -13,6 +13,7 @@ namespace SharijhaAward.Domain.Entities.PageStructureModel
     {
         public int Id { get; set; }
         public bool hasHelography { get; set; }
+        public string? IconUrl { get; set; }
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public string? EnglishSubTitle { get; set; }

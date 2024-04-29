@@ -72,6 +72,8 @@ using SharijhaAward.Domain.Entities.HomePageSliderModel;
 using SharijhaAward.Domain.Entities.ReferenceSourcesModel;
 using SharijhaAward.Domain.Entities.StrategicPartnerModel;
 using SharijhaAward.Domain.Entities.SocialMediaModel;
+using SharijhaAward.Domain.Entities.PageStructureModel;
+using SharijhaAward.Domain.Entities.PageStructureModels;
 
 namespace SharijhaAward.Persistence
 {
@@ -170,6 +172,9 @@ namespace SharijhaAward.Persistence
         public DbSet<ReferenceSource> ReferenceSources { get; set; }
         public DbSet<StrategicPartner> StrategicPartners { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
+        public DbSet<PageStructure> PageStructures { get; set; }
+        public DbSet<DarkCard> DarkCards { get; set; }
+        public DbSet<ParagraphCard> ParagraphCards { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -260,6 +265,10 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<ReferenceSource>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<SocialMedia>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<StrategicPartner>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DarkCard>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ParagraphCard>().HasQueryFilter(p => !p.isDeleted);
+
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)
