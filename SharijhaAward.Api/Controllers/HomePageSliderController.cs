@@ -8,7 +8,8 @@ using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllHomeP
 
 namespace SharijhaAward.Api.Controllers
 {
-    public class HomePageSliderController : Controller
+    [Route("api/[controller]")]
+    public class HomePageSliderController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -34,7 +35,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpDelete("{Id}", Name="DeleteHomeSliderItem")]
+        [HttpDelete("{Id}", Name = "DeleteHomeSliderItem")]
         public async Task<IActionResult> DeleteHomeSliderItem(int Id)
         {
             var language = HttpContext.Request.Headers["lang"];

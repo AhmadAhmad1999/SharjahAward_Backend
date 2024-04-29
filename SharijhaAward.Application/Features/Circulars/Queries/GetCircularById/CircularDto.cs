@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
+namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
 {
-    public class CircularListVm
+    public class CircularDto
     {
         public int Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;

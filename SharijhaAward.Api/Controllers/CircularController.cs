@@ -5,6 +5,7 @@ using SharijhaAward.Application.Features.Circulars.Command.CreateCircular;
 using SharijhaAward.Application.Features.Circulars.Command.DeleteCircular;
 using SharijhaAward.Application.Features.Circulars.Command.UpdateCircular;
 using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
+using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -36,7 +37,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpDelete("{Id}", Name="DeleteCircular")]
+        [HttpDelete("{Id}", Name = "DeleteCircular")]
         public async Task<IActionResult> DeleteCircular(int Id)
         {
             var language = HttpContext.Request.Headers["lang"];
@@ -47,7 +48,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 Id = Id,
                 lang = language!
-            }) ;
+            });
 
             return response.statusCode switch
             {
@@ -57,7 +58,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpPut(Name="UpdateCircular")]
+        [HttpPut(Name = "UpdateCircular")]
         public async Task<IActionResult> UpdateCircualr([FromForm] UpdateCircularCommand command)
         {
             var language = HttpContext.Request.Headers["lang"];
@@ -74,7 +75,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet(Name="GetAllCircular")]
+        [HttpGet(Name = "GetAllCircular")]
         public async Task<IActionResult> GetAllCircular(int page = 1, int pageSize = 10)
         {
             var language = HttpContext.Request.Headers["lang"];
@@ -83,6 +84,25 @@ namespace SharijhaAward.Api.Controllers
             {
                 page = page,
                 pageSize = pageSize
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("{Id}", Name = "GetCircularById")]
+        public async Task<IActionResult> GetCircularById(int Id)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetCircularByIdQuery()
+            {
+                lang = language!,
+                Id = Id
             });
 
             return response.statusCode switch
