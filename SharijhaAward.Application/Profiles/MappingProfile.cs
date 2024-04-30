@@ -267,6 +267,13 @@ using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Commands.
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsByPageId;
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetParagraphCardById;
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Commands.CreateParagraphCard;
+using SharijhaAward.Domain.Entities.PageStructureModel;
+using SharijhaAward.Application.Features.PageStructures.Pages.Commands.CreatePage;
+using SharijhaAward.Application.Features.PageStructures.Pages.Commands.UpdatePage;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAllMainPages;
+using SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievementById;
+using SharijhaAward.Application.Features.Achievements.Queries.AcceptOnAchievement;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -426,6 +433,7 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<Achievement, CreateAchievementCommand>().ReverseMap();
             CreateMap<Achievement, UpdateAchievementCommand>().ReverseMap();
+            CreateMap<Achievement, UpdateAchievementByIdCommand>().ReverseMap();
             CreateMap<Achievement, AchievementsDto>().ReverseMap();
 
             CreateMap<ExtraAttachment, CreateExtraAttachmentCommand>().ReverseMap();
@@ -481,6 +489,12 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ParagraphCard, UpdateParagraphCardCommand>().ReverseMap();
             CreateMap<ParagraphCard, ParagraphCardListVM>().ReverseMap();
             CreateMap<ParagraphCard, ParagraphCardDto>().ReverseMap();
+
+            CreateMap<PageStructure, CreatePageCommand>().ReverseMap();
+            CreateMap<PageStructure, UpdatePageCommand>().ReverseMap();
+            CreateMap<PageStructure, MainPageListVM>().ReverseMap();
+            CreateMap<PageStructure, SubPageListVM>().ReverseMap();
+            CreateMap<PageStructure, PageDto>().ReverseMap();
 
             //
             // Dynamic Attribute..ParagraphCard

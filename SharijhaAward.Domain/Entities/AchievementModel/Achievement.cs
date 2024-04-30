@@ -23,6 +23,9 @@ namespace SharijhaAward.Domain.Entities.AchievementModel
         public DateTime? UpdateProjects { get; set; }
         public DateTime? UpdateSkillsAndExperiences { get; set; }
         public DateTime? UpdateSocialMedia { get; set; }
+        public bool? AcceptedOnDistinctionField { get; set; }
+        public bool? AcceptedOnProjects { get; set; }
+        public bool? AcceptedOnSkillsAndExperiences { get; set; }
 
         public User? User { get; set; } = null!;
         [ForeignKey(nameof(User))]

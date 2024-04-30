@@ -21,5 +21,6 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Updat
         public string? ArabicSubTitle { get; set; }
         public string? EnglishContent { get; set; }
         public string? ArabicContent { get; set; }
+        public string? lang { get; set; }
     }
 }
