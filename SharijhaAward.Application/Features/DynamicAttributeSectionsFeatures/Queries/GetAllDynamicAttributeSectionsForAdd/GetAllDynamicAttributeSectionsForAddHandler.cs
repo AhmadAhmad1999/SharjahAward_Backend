@@ -82,6 +82,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         .Where(x => x.Status == Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active &&
                             DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId) &&
                             x.DynamicAttributeSectionId == DynamicAttributeSection.Id)
+                        .OrderBy(x => x.OrderId)
                         .Select(x => new DynamicAttributeListWithListValuesVM()
                         {
                             Id = x.Id,
@@ -214,6 +215,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         .Where(x => x.Status == Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active &&
                             DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId) &&
                             x.DynamicAttributeSectionId == DynamicAttributeSection.Id)
+                        .OrderBy(x => x.OrderId)
                         .Select(x => new DynamicAttributeListWithListValuesVM()
                         {
                             Id = x.Id,

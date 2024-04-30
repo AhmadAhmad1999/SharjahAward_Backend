@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeFeaturesFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Responses;
@@ -89,6 +90,12 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                 return new BaseResponse<CreateDynamicAttributeResponse>(ResponseMessage, false, 400);
             }
 
+            int LastOrderIdInSection = await _DynamicAttributeRepository
+                .Where(x => x.DynamicAttributeSectionId == CheckIfDynamicAttributeSectionIdDoesExist.Id)
+                .OrderBy(x => x.OrderId)
+                .Select(x => x.OrderId)
+                .LastOrDefaultAsync();
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -101,6 +108,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                 // Add Dynamic Attribute Main Data..
                 DynamicAttribute NewDynamicAttributeEntity = _Mapper.Map<DynamicAttribute>(Request);
                 NewDynamicAttributeEntity.Status = DynamicAttributeStatus.Active;
+                NewDynamicAttributeEntity.OrderId = LastOrderIdInSection++;
 
                 await _DynamicAttributeRepository.AddAsync(NewDynamicAttributeEntity);
 
