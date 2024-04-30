@@ -257,6 +257,16 @@ using SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategories;
 using SharijhaAward.Domain.Entities.ArbitrationScaleModel;
 using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.CreateArbitrationScale;
 using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.UpdateArbitrationScale;
+using SharijhaAward.Domain.Entities.PageStructureModels;
+using SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.CreateDarkCard;
+using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsByPageId;
+using SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.UpdateDarkCard;
+using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetDarkCardById;
+using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
+using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Commands.UpdateParagraphCard;
+using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsByPageId;
+using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetParagraphCardById;
+using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Commands.CreateParagraphCard;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -432,6 +442,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Circular, CreateCircularCommand>().ReverseMap();
             CreateMap<Circular, UpdateCircularCommand>().ReverseMap();
             CreateMap<Circular, CircularListVm>().ReverseMap();
+            CreateMap<Circular, CircularDto>().ReverseMap();
 
             CreateMap<AwardPublication, CreateAwardPublicationCommand>().ReverseMap();
             CreateMap<AwardPublication, AwardPublicationListVM>().ReverseMap();
@@ -461,8 +472,18 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<SocialMedia, SocialMediaItemDto>().ReverseMap();
             CreateMap<SocialMedia, SocialMediaItemListVM>().ReverseMap();
 
+            CreateMap<DarkCard, CreateDarkCardCommand>().ReverseMap();
+            CreateMap<DarkCard, UpdateDarkCardCommand>().ReverseMap();
+            CreateMap<DarkCard, DarkCardListVM>().ReverseMap();
+            CreateMap<DarkCard, DarkCardDto>().ReverseMap();
+
+            CreateMap<ParagraphCard, CreateParagraphCardCommand>().ReverseMap();
+            CreateMap<ParagraphCard, UpdateParagraphCardCommand>().ReverseMap();
+            CreateMap<ParagraphCard, ParagraphCardListVM>().ReverseMap();
+            CreateMap<ParagraphCard, ParagraphCardDto>().ReverseMap();
+
             //
-            // Dynamic Attribute..
+            // Dynamic Attribute..ParagraphCard
             //
 
             // Create..
