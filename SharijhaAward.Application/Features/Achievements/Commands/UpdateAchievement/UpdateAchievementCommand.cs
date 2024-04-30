@@ -25,7 +25,7 @@ namespace SharijhaAward.Application.Features.Achievements.Commands.UpdateAchieve
         public bool EditeOnSkillsAndExperiences { get; set; } = false;
         public bool EditeOnSocialMedia { get; set; } = false;
         public string token { get; set; } = string.Empty;
-        public string lang { get; set; } = string.Empty;
+        public string? lang { get; set; }
       
     }
 }

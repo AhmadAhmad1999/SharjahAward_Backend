@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.Achievements.Queries.GetAchievement
             var Achievements = await _achievementsRepository.FirstOrDefaultAsync(a => a.UserId == User.Id);
 
             var data = _mapper.Map<AchievementsDto>(Achievements);
-            
+
             return new BaseResponse<AchievementsDto>("", true, 200,data);
         }
     }
