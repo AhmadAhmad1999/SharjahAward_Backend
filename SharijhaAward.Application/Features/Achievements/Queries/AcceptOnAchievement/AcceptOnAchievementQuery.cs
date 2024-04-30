@@ -14,6 +14,7 @@ namespace SharijhaAward.Application.Features.Achievements.Queries.AcceptOnAchiev
         public string token { get; set; } = string.Empty;
         public string? lang {  get; set; }
         public bool IsAccepted { get; set; }
+        public int AcceptOn {  get; set; }
 
     }
 }

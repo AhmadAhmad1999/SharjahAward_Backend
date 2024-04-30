@@ -52,10 +52,12 @@ namespace SharijhaAward.Application.Features.Achievements.Queries.AcceptOnAchiev
             }
 
             var Achievements = await _achievementsRepository.FirstOrDefaultAsync(a => a.UserId == User!.Id);
+            
+            Achievements!.AcceptedOnDistinctionField = request.AcceptOn == 1 ? request.IsAccepted : Achievements!.AcceptedOnDistinctionField;
+            Achievements!.AcceptedOnProjects = request.AcceptOn == 2 ? request.IsAccepted : Achievements!.AcceptedOnProjects;
+            Achievements!.AcceptedOnSkillsAndExperiences = request.AcceptOn == 3 ? request.IsAccepted : Achievements!.AcceptedOnSkillsAndExperiences;
 
-            Achievements!.IsAccepted = request.IsAccepted;
-
-            await _achievementsRepository.UpdateAsync(Achievements);
+            await _achievementsRepository.UpdateAsync(Achievements!);
 
             return new BaseResponse<object>("", true, 200);
         }
