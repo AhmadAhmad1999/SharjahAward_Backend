@@ -41,6 +41,8 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.
                     {
                         ArbitrationScale NewArbitrationScaleEntity = _Mapper.Map<ArbitrationScale>(ArbitrationScaleDto);
 
+                        NewArbitrationScaleEntity.CategoryId = Request.CategoryId;
+
                         await _ArbitrationScaleRepository.AddAsync(NewArbitrationScaleEntity);
 
                         IEnumerable<ArbitrationScalesCriterion> NewArbitrationScalesCriterionEntities = 
