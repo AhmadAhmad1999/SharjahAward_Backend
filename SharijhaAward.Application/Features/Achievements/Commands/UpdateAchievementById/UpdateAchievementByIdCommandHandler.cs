@@ -36,13 +36,13 @@ namespace SharijhaAward.Application.Features.Achievements.Commands.UpdateAchieve
             var AdminId = _jwtProvider.GetUserIdFromToken(request.token);
             
             var Admin = await _userRepository.GetByIdAsync(int.Parse(AdminId));
-            if(Admin is { })
+            if(Admin == null)
             {
                 return new BaseResponse<object>("", false, 401);
             }
 
             var User = await _userRepository.GetByIdAsync(request.UserId);
-            if(User is { })
+            if(User == null)
             {
                 return new BaseResponse<object>("", false, 404);
             }
@@ -50,6 +50,11 @@ namespace SharijhaAward.Application.Features.Achievements.Commands.UpdateAchieve
             var Achievement = await _achievementsRepository.FirstOrDefaultAsync(a => a.UserId == User!.Id);
 
             _mapper.Map(request, Achievement, typeof(UpdateAchievementByIdCommand), typeof(Achievement));
+
+
+            Achievement!.AcceptedOnDistinctionField = true;
+            Achievement!.AcceptedOnProjects = true;
+            Achievement!.AcceptedOnSkillsAndExperiences = true;
 
             await _achievementsRepository.UpdateAsync(Achievement!);
 

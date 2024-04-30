@@ -9,10 +9,12 @@ using SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitrator;
 using SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitratorCategory;
 using SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitratorClass;
 using SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrator;
+using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById;
 using SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinator;
 using SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator;
+using SharijhaAward.Application.Features.Coordinators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators;
 using SharijhaAward.Application.Responses;
 
@@ -275,6 +277,19 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("ArbitratorExportToExcel", Name = "ArbitratorExportToExcel")]
+        public async Task<IActionResult> ArbitratorExportToExcel()
+        {
+            var response = await _Mediator.Send(new ArbitratorExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Arbitrators.xlsx"),
+                _ => BadRequest(response)
             };
         }
     }
