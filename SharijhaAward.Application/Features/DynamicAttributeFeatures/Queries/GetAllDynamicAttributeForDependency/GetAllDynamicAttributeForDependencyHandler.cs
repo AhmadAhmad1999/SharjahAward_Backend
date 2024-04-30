@@ -24,7 +24,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
             _Mapper = Mapper;
             _DynamicAttributeRepository = DynamicAttributeRepository;
         }
-        public async Task<BaseResponse<List<GetAllDynamicAttributeForDependencyListVM>>> Handle(GetAllDynamicAttributeForDependencyQuery Request,
+        public async Task<BaseResponse<List<GetAllDynamicAttributeForDependencyListVM>>> 
+            Handle(GetAllDynamicAttributeForDependencyQuery Request,
             CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;

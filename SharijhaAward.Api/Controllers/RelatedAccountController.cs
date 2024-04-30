@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.AcceptRelatingRequest;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.CancelRelating;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.CreateDirectRelating;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.RejectRelatingRequest;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.SendRelatingRequest;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllReceivedRequests;
@@ -212,6 +213,36 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
+        [HttpGet("GetAllRelatedAccountsWithUserId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllRelatedAccountsWithUserId(int UserId, int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllRelatedAccountsListVM>> Response = await _Mediator.Send(new GetAllRelatedAccountsQuery()
+            {
+                Id = UserId,
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
         [HttpGet("GetRelatedAccoutProfileById")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -239,6 +270,32 @@ namespace SharijhaAward.Api.Controllers
                 Type = null,
                 RelatedAccountId = RelatedAccountId
             });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("CreateDirectRelating")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> CreateDirectRelating(CreateDirectRelatingCommand CreateDirectRelatingCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            CreateDirectRelatingCommand.lang = HeaderValue;
+
+            BaseResponse<object> Response = await _Mediator.Send(CreateDirectRelatingCommand);
 
             return Response.statusCode switch
             {

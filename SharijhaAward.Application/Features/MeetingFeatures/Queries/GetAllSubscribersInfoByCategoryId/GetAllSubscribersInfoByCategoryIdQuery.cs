@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllSubsc
 {
     public class GetAllSubscribersInfoByCategoryIdQuery : IRequest<BaseResponse<List<GetAllSubscribersInfoByCategoryIdListVM>>>
     {
-        public int Id { get; set; }
+        public List<int> Ids { get; set; } = new List<int>();
         public int page { get; set; }
         public int pageSize { get; set; }
         public string? lang { get; set; }

@@ -6,6 +6,8 @@
         CriterionItem = 1,
         SpecialCondition = 2,
         GeneralCondition = 3,
-        PersonalAndAcademicInformation = 4
+        SubscriberPersonalAndAcademicInformation = 4,
+        CoordinatorFiles = 5,
+        ArbitratorFiles = 6
     }
 }

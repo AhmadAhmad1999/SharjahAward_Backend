@@ -5,7 +5,6 @@ using SharijhaAward.Domain.Entities.EventModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.InvitationModels;
 using SharijhaAward.Domain.Entities.CategoryCommitteeModel;
-using SharijhaAward.Domain.Entities.CriterionItemScaleModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopSubscriberModel;
 using System;
@@ -74,6 +73,7 @@ using SharijhaAward.Domain.Entities.StrategicPartnerModel;
 using SharijhaAward.Domain.Entities.SocialMediaModel;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 using SharijhaAward.Domain.Entities.PageStructureModels;
+using SharijhaAward.Domain.Entities.ArbitrationScaleModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -85,6 +85,8 @@ namespace SharijhaAward.Persistence
 
         }
 
+        public DbSet<ArbitrationScale> ArbitrationScales { get; set; }
+        public DbSet<ArbitrationScalesCriterion> ArbitrationScalesCriterions { get; set; }
         public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
         public DbSet<MeetingCategory> MeetingCategories { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
@@ -114,7 +116,6 @@ namespace SharijhaAward.Persistence
         public DbSet<PersonalInvitee> Personalnvitees { get; set; }
         public DbSet<GroupInvitee> GroupInvitees { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<CriterionItemScale> CriterionItemScales { get; set; }
         public DbSet<TrainingWorkshopSubscriber> TrainingWorkshopSubscribers { get; set; }
         public DbSet<Cycle> Cycles { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -188,6 +189,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Arbitration>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Notification>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<NotificationTemplate>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitrationScale>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitrationScalesCriterion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<MeetingCategory>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Meeting>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<MeetingUser>().HasQueryFilter(p => !p.isDeleted);

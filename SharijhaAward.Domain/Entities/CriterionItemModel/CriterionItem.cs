@@ -1,9 +1,7 @@
 ﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.Common;
-using SharijhaAward.Domain.Entities.CriterionItemScaleModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using SharijhaAward.Domain.Entities.ScaleModel;
 
 namespace SharijhaAward.Domain.Entities.CriterionItemModel; 
 

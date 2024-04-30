@@ -23,7 +23,7 @@ namespace SharijhaAward.Api.Controllers
         {
             _Mediator = Mediator;
         }
-        [HttpPost(Name="CreateMeeting")]
+        [HttpPost("CreateMeeting")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -31,7 +31,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> CreateClass([FromBody] CreateMeetingCommand CreateMeetingCommand)
+        public async Task<IActionResult> CreateMeeting([FromBody] CreateMeetingCommand CreateMeetingCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -48,7 +48,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpDelete("{Id}",Name = "DeleteMeeting")]
+        [HttpDelete("DeleteMeeting/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -76,7 +76,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet(Name="GetAllMeetings")]
+        [HttpGet("GetAllMeetings")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -105,7 +105,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("{Id}",Name= "GetAllSubscribersInfoByCategoryId")]
+        [HttpGet("GetAllSubscribersInfoByCategoryId")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -113,20 +113,21 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllSubscribersInfoByCategoryId(int Id, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllSubscribersInfoByCategoryId([FromQuery] List<int> Ids, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<GetAllSubscribersInfoByCategoryIdListVM>> Response = await _Mediator.Send(new GetAllSubscribersInfoByCategoryIdQuery()
-            {
-                Id = Id,
-                lang = HeaderValue!,
-                page = Page,
-                pageSize = PerPage
-            });
+            BaseResponse<List<GetAllSubscribersInfoByCategoryIdListVM>> Response = 
+                await _Mediator.Send(new GetAllSubscribersInfoByCategoryIdQuery()
+                {
+                    Ids = Ids,
+                    lang = HeaderValue,
+                    page = Page,
+                    pageSize = PerPage
+                });
 
             return Response.statusCode switch
             {
@@ -135,7 +136,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("GetMeetingById/{Id}",Name= "GetMeetingById")]
+        [HttpGet("GetMeetingById/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

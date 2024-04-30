@@ -254,6 +254,9 @@ using SharijhaAward.Application.Features.SocialMediaPage.Queries.GetAllSocialMed
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsBySubscriberId;
 using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotifications;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategories;
+using SharijhaAward.Domain.Entities.ArbitrationScaleModel;
+using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.CreateArbitrationScale;
+using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.UpdateArbitrationScale;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -486,6 +489,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Meeting, CreateMeetingCommand>().ReverseMap();
             CreateMap<NotificationTemplate, CreateNotificationTemplateCommand>().ReverseMap();
             CreateMap<User, CreateUserCommand>().ReverseMap();
+            CreateMap<ArbitrationScale, CreateArbitrationScaleCommand>().ReverseMap();
+            CreateMap<ArbitrationScale, ArbitrationScaleDto>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -504,6 +509,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<NotificationTemplate, UpdateNotificationTemplateCommand>().ReverseMap();
             CreateMap<User, UpdateUserCommand>().ReverseMap();
             CreateMap<User, UpdateUserCommand2>().ReverseMap();
+            CreateMap<ArbitrationScale, UpdateArbitrationScaleCommand>().ReverseMap();
+            CreateMap<ArbitrationScale, UpdateArbitrationScaleDto>().ReverseMap();
+            CreateMap<ArbitrationScalesCriterion, UpdateArbitrationScaleCriterionDto>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();

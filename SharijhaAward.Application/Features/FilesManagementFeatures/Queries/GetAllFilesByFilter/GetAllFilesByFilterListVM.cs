@@ -7,7 +7,6 @@
         public int FileSizeInKB { get; set; }
         public DateTime UploadedAt { get; set; }
         public string? Description { get; set; }
-        public int CycleId { get; set; }
-        public string CycleName { get; set; } = null!;
+        public string FileType { get; set; } = null!;
     }
 }

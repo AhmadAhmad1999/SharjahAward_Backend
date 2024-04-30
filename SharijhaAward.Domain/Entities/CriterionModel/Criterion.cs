@@ -3,7 +3,6 @@ using SharijhaAward.Domain.Entities.ArbitrationProcedureModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.Common;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using SharijhaAward.Domain.Entities.ScaleModel;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Domain.Common;
 
@@ -22,5 +21,4 @@ public class Criterion: AuditableEntity
     public Category Category { get; set; } = null!;
     //public int ArbitrationProcedureId { get; set; }
     //public ArbitrationProcedure ArbitrationProcedure { get; set; } = null!;
-    public virtual List<Scale> Scales { get; set; } = new();
 }

@@ -5,6 +5,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
 {
     public class GetAllRelatedAccountsQuery : IRequest<BaseResponse<List<GetAllRelatedAccountsListVM>>>
     {
+        public int? Id { get; set; }
         public string? token { get; set; }
         public string? lang { get; set; }
         public int page { get; set; }
