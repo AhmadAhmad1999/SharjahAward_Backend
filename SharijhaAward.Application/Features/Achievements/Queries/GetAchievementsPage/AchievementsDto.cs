@@ -24,6 +24,8 @@ namespace SharijhaAward.Application.Features.Achievements.Queries.GetAchievement
         public DateTime? UpdateSocialMedia { get; set; }
         public DateTime CreatedAt {  get; set; } 
         public DateTime UpdatedAt { get; set; }
-        public bool? IsAccepted { get; set; }
+        public bool? AcceptedOnDistinctionField { get; set; }
+        public bool? AcceptedOnProjects { get; set; }
+        public bool? AcceptedOnSkillsAndExperiences { get; set; }
     }
 }
