@@ -13,6 +13,7 @@ using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
 using SharijhaAward.Application;
 using SharijhaAward.Application.Contract.Infrastructure;
+using SharijhaAward.Application.Helpers.DateTimeConverter;
 using SharijhaAward.Infrastructure;
 using SharijhaAward.Persistence;
 using System.Configuration;
@@ -37,6 +38,12 @@ FirebaseApp.Create(new AppOptions()
 {
     Credential = GoogleCredential.FromFile(Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "FirebaseAccountData.json")),
 });
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new DateTimeConverterClass());
+    });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

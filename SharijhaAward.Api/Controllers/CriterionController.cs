@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCriter
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCriterionAttachment;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCriterionItem;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCriterionItemAttachment;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.ReorderCriterionItemsInsideSubCriterions;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterion;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterionItem;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId;
@@ -460,6 +461,31 @@ namespace SharijhaAward.Api.Controllers
                 Id = Id,
                 lang = HeaderValue!
             });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("ReorderCriterionItemsInsideSubCriterions")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            ReorderCriterionItemsInsideSubCriterions([FromBody] ReorderCriterionItemsInsideSubCriterionsCommand ReorderCriterionItemsInsideSubCriterionsCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            ReorderCriterionItemsInsideSubCriterionsCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(ReorderCriterionItemsInsideSubCriterionsCommand);
 
             return Response.statusCode switch
             {

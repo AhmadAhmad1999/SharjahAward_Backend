@@ -90,7 +90,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                 {
                     List<GetAllSubCriterionItems> CriterionItems = await _CriterionItemRepository
                         .Where(x => x.CriterionId == SubCriterion.Id)
-                        .OrderByDescending(x => x.CreatedAt)
+                        .OrderBy(x => x.OrderId)
                         .Select(x => new GetAllSubCriterionItems()
                         {
                             Id = x.Id,

@@ -276,6 +276,7 @@ using SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievement
 using SharijhaAward.Application.Features.Achievements.Queries.AcceptOnAchievement;
 using SharijhaAward.Application.Features.Coordinators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.AppVersioningFeatures.Command.CreateNewAppVersion;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -530,6 +531,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<User, CreateUserCommand>().ReverseMap();
             CreateMap<ArbitrationScale, CreateArbitrationScaleCommand>().ReverseMap();
             CreateMap<ArbitrationScale, ArbitrationScaleDto>().ReverseMap();
+            CreateMap<AppVersion, CreateNewAppVersionCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
