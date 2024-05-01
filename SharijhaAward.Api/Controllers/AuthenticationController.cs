@@ -8,6 +8,7 @@ using SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeFor
 using SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForSignUp;
 using SharijhaAward.Application.Features.Authentication.ForgetPassword;
 using SharijhaAward.Application.Features.Authentication.Login;
+using SharijhaAward.Application.Features.Authentication.ShowAsSubscriber;
 using SharijhaAward.Application.Features.Authentication.SignUp;
 using SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmationCode;
 using SharijhaAward.Application.Features.Settings.Commands.ResetPassword;
@@ -192,6 +193,32 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("ShowAsSubscriber/{UserId}", Name = "ShowAsSubscriber")]
+        public async Task<IActionResult> ShowAsSubscriber(int UserId)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
+            
+            if(token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+
+            var response = await _Mediator.Send(new ShowAsSubscriberQuery()
+            {
+                token = token!,
+                lang = language!,
+                UserId = UserId,
+            });
+
+            return response.isSucceed switch
+            {
+                true => Ok(response),
+                false => NotFound(response)
             };
         }
     }
