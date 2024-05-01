@@ -19,7 +19,6 @@ namespace SharijhaAward.Api.Controllers
         {
             _mediator = mediator;
         }
-
         [HttpPost(Name = "CreateAboutPage")]
         public async Task<IActionResult> CreateAboutPage([FromForm] CreateAboutPageCommand command)
         {

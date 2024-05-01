@@ -91,6 +91,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
 
                     SubCriterionObject.CriterionItemListVM = _CriterionItemRepository
                         .Where(x => x.CriterionId == SubCriterionObject.Id)
+                        .OrderBy(x => x.OrderId)
                         .Select(x => new CriterionItemListVM()
                         {
                             Id = x.Id,

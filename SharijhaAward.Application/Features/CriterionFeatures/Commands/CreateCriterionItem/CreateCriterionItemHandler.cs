@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
@@ -50,7 +51,14 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
                 return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
+            int LastOrderIdInSection = await _CriterionItemRepository
+                .Where(x => x.CriterionId == Request.CriterionId)
+                .OrderBy(x => x.OrderId)
+                .Select(x => x.OrderId)
+                .LastOrDefaultAsync();
+
             CriterionItem NewCriterionItemEntity = _Mapper.Map<CriterionItem>(Request);
+            NewCriterionItemEntity.OrderId = LastOrderIdInSection++;
 
             await _CriterionItemRepository.AddAsync(NewCriterionItemEntity);
 

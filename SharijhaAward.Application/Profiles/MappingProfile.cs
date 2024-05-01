@@ -274,6 +274,7 @@ using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageByI
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAllMainPages;
 using SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievementById;
 using SharijhaAward.Application.Features.Achievements.Queries.AcceptOnAchievement;
+using SharijhaAward.Application.Features.AppVersioningFeatures.Command.CreateNewAppVersion;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -526,6 +527,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<User, CreateUserCommand>().ReverseMap();
             CreateMap<ArbitrationScale, CreateArbitrationScaleCommand>().ReverseMap();
             CreateMap<ArbitrationScale, ArbitrationScaleDto>().ReverseMap();
+            CreateMap<AppVersion, CreateNewAppVersionCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
