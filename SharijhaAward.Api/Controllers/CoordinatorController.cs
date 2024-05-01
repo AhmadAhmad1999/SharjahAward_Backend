@@ -9,6 +9,7 @@ using SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinator
 using SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinatorInstitution;
 using SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator;
 using SharijhaAward.Application.Features.Coordinators.Queries.AddCordinatorToEduEntity;
+using SharijhaAward.Application.Features.Coordinators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators;
 using SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById;
 using SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoordinator;
@@ -279,6 +280,19 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(Response),
                 200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("CoordinatorExportToExcel", Name="CoordinatorExportToExcel")]
+        public async Task<IActionResult> CoordinatorExportToExcel()
+        {
+            var response = await _mediator.Send(new CoordinatorExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Coordinators.xlsx"),
                 _ => BadRequest(Response)
             };
         }

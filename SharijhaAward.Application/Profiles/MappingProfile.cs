@@ -274,6 +274,8 @@ using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageByI
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAllMainPages;
 using SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievementById;
 using SharijhaAward.Application.Features.Achievements.Queries.AcceptOnAchievement;
+using SharijhaAward.Application.Features.Coordinators.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Command.CreateNewAppVersion;
 
 namespace SharijhaAward.Application.Profiles
@@ -412,6 +414,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Coordinator, UpdateCoordinatorCommand>().ReverseMap();
             CreateMap<Coordinator, CoordinatorSearchListVM>().ReverseMap();
             CreateMap<Coordinator, CoordinatorDto>().ReverseMap();
+            CreateMap<Coordinator, CoordinatorExportVM>().ReverseMap();
 
             CreateMap<GeneralWorkshop, CreateGeneralWorkshopCommand>().ReverseMap();
             CreateMap<GeneralWorkshop, UpdateGeneralWorkshopCommand>().ReverseMap();
@@ -519,6 +522,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<CriterionItem, CreateCriterionItemCommand>().ReverseMap();
             CreateMap<Criterion, CreateSubCriterionCommand>().ReverseMap();
             CreateMap<Arbitrator, CreateArbitratorCommand>().ReverseMap();
+            CreateMap<Arbitrator, ArbitratorExportVM>().ReverseMap();
             CreateMap<EducationalClass, CreateClassCommand>().ReverseMap();
             CreateMap<Committee, CreateCommitteeCommand>().ReverseMap();
             CreateMap<Notification, CreateNotificationCommand>().ReverseMap();

@@ -70,6 +70,9 @@ namespace SharijhaAward.Application.Features.Achievements.Commands.UpdateAchieve
             if (request.EditeOnSocialMedia)
                 Achievement.UpdateSocialMedia = DateTime.Now.Date;
 
+            Achievement.AcceptedOnDistinctionField = false;
+            Achievement.AcceptedOnProjects = false;
+            Achievement.AcceptedOnSkillsAndExperiences = false;
 
             await _achievementsRepository.UpdateAsync(Achievement);
 
