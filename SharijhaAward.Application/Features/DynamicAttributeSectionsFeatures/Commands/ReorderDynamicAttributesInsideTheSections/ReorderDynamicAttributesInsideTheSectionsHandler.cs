@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using System.Linq;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.ReorderDynamicAttributesInsideTheSections
@@ -12,16 +12,30 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
         : IRequestHandler<ReorderDynamicAttributesInsideTheSectionsCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
+        private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
 
-        public ReorderDynamicAttributesInsideTheSectionsHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository)
+        public ReorderDynamicAttributesInsideTheSectionsHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
+            IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
+            _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(ReorderDynamicAttributesInsideTheSectionsCommand Request, 
             CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            List<DynamicAttribute> AllDynamicAttributeEntities = await _DynamicAttributeRepository
+                .Where(x => Request.DynamicAttributeSectionsDto.Select(y => y.SectionId)
+                    .Any(y => y == x.DynamicAttributeSectionId))
+                .Include(x => x.DynamicAttributeSection!)
+                .ToListAsync();
+
+            List<DynamicAttributeSection> AllDynamicAttributeSectionsEntities = AllDynamicAttributeEntities
+                .Select(x => x.DynamicAttributeSection!)
+                .Distinct()
+                .ToList();
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {
@@ -36,16 +50,32 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
                 {
                     foreach (DynamicAttributeSectionsDto DynamicAttributeSectionsDto in Request.DynamicAttributeSectionsDto)
                     {
-                        List<DynamicAttribute> DynamicAttributesInsideSection = await _DynamicAttributeRepository
-                            .Where(x => DynamicAttributeSectionsDto.DynamicAttributesIds.Any(y => y == x.Id))
-                            .ToListAsync();
+                        DynamicAttributeSection? DynamicAttributeSectionEntity = AllDynamicAttributeSectionsEntities
+                            .FirstOrDefault(x => x.Id == DynamicAttributeSectionsDto.SectionId);
 
-                        foreach (DynamicAttribute DynamicAttribute in DynamicAttributesInsideSection)
+                        if (DynamicAttributeSectionEntity is not null)
                         {
-                            if (DynamicAttribute.DynamicAttributeSectionId != DynamicAttributeSectionsDto.SectionId)
+                            if (DynamicAttributeSectionEntity.OrderId != DynamicAttributeSectionsDto.OrderId)
                             {
-                                DynamicAttribute.DynamicAttributeSectionId = DynamicAttributeSectionsDto.SectionId;
-                                await _DynamicAttributeRepository.UpdateAsync(DynamicAttribute);
+                                DynamicAttributeSectionEntity.OrderId = DynamicAttributeSectionsDto.OrderId;
+
+                                await _DynamicAttributeSectionRepository.UpdateAsync(DynamicAttributeSectionEntity);
+                            }
+
+                            foreach (DynamicAttributesDto DynamicAttributesDto in DynamicAttributeSectionsDto.DynamicAttributesDtos)
+                            {
+                                DynamicAttribute? DynamicAttributeEntity = AllDynamicAttributeEntities
+                                    .FirstOrDefault(x => x.Id == DynamicAttributesDto.DynamicAttributeId);
+                                
+                                if (DynamicAttributeEntity is not null)
+                                {
+                                    if (DynamicAttributeEntity.OrderId != DynamicAttributesDto.OrderId)
+                                    {
+                                        DynamicAttributeEntity.OrderId = DynamicAttributesDto.OrderId;
+
+                                        await _DynamicAttributeRepository.UpdateAsync(DynamicAttributeEntity);
+                                    }
+                                }
                             }
                         }
                     }

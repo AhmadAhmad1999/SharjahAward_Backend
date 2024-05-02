@@ -77,6 +77,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                                 DynamicAttributeId = Request.Id
                             }).ToList();
 
+                        if (NewDynamicAttributeListValuesEntities.Any())
+                            await _DynamicAttributeListValueRepository.AddRangeAsync(NewDynamicAttributeListValuesEntities);
+
                         IEnumerable<UpdateDynamicAttributeValueDto> UpdatedDynamicAttributeListValues = Request.Values
                             .Where(x => x.Id != 0);
 

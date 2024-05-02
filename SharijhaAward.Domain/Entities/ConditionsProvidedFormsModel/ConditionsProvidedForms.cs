@@ -20,7 +20,6 @@ namespace SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel
         public List<ConditionAttachment> Attachments { get; set; } = null!;
 
         public TermAndCondition TermAndCondition { get; set; } = null!;
-        [ForeignKey(nameof(TermAndCondition))]
         public int TermAndConditionId { get; set; }
 
         public ProvidedForm ProvidedForm { get; set; } = null!;

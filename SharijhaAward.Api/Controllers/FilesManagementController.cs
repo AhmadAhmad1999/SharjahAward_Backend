@@ -27,16 +27,20 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllFilesByFilter(GetAllFilesByFilterQuery GetAllFilesByFilterQuery)
+        public async Task<IActionResult> GetAllFilesByFilter(int FilterId, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            GetAllFilesByFilterQuery.lang = HeaderValue;
-
-            BaseResponse<List<GetAllFilesByFilterListVM>> Response = await _Mediator.Send(GetAllFilesByFilterQuery);
+            BaseResponse<List<GetAllFilesByFilterListVM>> Response = await _Mediator.Send(new GetAllFilesByFilterQuery()
+            {
+                FilterId = FilterId,
+                page = Page,
+                pageSize = PerPage,
+                lang = HeaderValue
+            });
 
             return Response.statusCode switch
             {
