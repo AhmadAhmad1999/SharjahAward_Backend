@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -55,6 +56,15 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
                 {
                     // Create Main Criterion..
                     Criterion NewMainCriterionEntity = _Mapper.Map<Criterion>(Request);
+
+                    int LastOrderIdForMainCriterion = await _CriterionRepository
+                        .Where(x => x.CategoryId == Request.CategoryId && x.ParentId == null)
+                        .OrderBy(x => x.OrderId)
+                        .Select(x => x.OrderId)
+                        .LastOrDefaultAsync();
+
+                    NewMainCriterionEntity.OrderId = LastOrderIdForMainCriterion++;
+
                     await _CriterionRepository.AddAsync(NewMainCriterionEntity);
 
                     // Create Sub Criterions..
@@ -64,6 +74,17 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
 
                         NewSubCriterionEntity.ParentId = NewMainCriterionEntity.Id;
                         NewSubCriterionEntity.CategoryId = NewMainCriterionEntity.CategoryId;
+
+                        int LastOrderIdForSubCriterion = await _CriterionRepository
+                            .Where(x => x.CategoryId == Request.CategoryId && 
+                                (x.ParentId != null
+                                    ? x.ParentId == NewMainCriterionEntity.Id
+                                    : false))
+                            .OrderBy(x => x.OrderId)
+                            .Select(x => x.OrderId)
+                            .LastOrDefaultAsync();
+
+                        NewSubCriterionEntity.OrderId = LastOrderIdForSubCriterion++;
 
                         await _CriterionRepository.AddAsync(NewSubCriterionEntity);
 

@@ -37,7 +37,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
         {
             string ResponseMessage = string.Empty;
 
-            if (Request.Filter == FilesFilter.Criterion)
+            if (Request.FilterId == (int)FilesFilter.Criterion)
             {
                 List<DownloadFilesByIdsListVM> FilesFromCriterionAttachmentes = await _CriterionAttachmentRepository
                     .Where(x => File.Exists(x.AttachementPath) && 
@@ -53,7 +53,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200,
                     FilesFromCriterionAttachmentes);
             }
-            else if (Request.Filter == FilesFilter.CriterionItem)
+            else if (Request.FilterId == (int)FilesFilter.CriterionItem)
             {
                 List<DownloadFilesByIdsListVM> FilesFromCriterionItemAttachmentes = await _CriterionItemAttachmentRepository
                     .Where(x => File.Exists(x.AttachementPath) &&
@@ -69,7 +69,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200,
                     FilesFromCriterionItemAttachmentes);
             }
-            else if (Request.Filter == FilesFilter.SpecialCondition)
+            else if (Request.FilterId == (int)FilesFilter.SpecialCondition)
             {
                 List<DownloadFilesByIdsListVM> FilesFromSpecialConditions = await _ConditionAttachmentRepository
                     .Where(x => File.Exists(x.AttachementPath) &&
@@ -85,7 +85,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200,
                     FilesFromSpecialConditions);
             }
-            else if (Request.Filter == FilesFilter.GeneralCondition)
+            else if (Request.FilterId == (int)FilesFilter.GeneralCondition)
             {
                 List<DownloadFilesByIdsListVM> FilesFromGeneralConditions = await _CycleConditionAttachmentRepository
                     .Where(x => File.Exists(x.AttachementPath) &&
@@ -101,7 +101,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200,
                     FilesFromGeneralConditions);
             }
-            else if (Request.Filter == FilesFilter.SubscriberPersonalAndAcademicInformation)
+            else if (Request.FilterId == (int)FilesFilter.SubscriberPersonalAndAcademicInformation)
             {
                 List<DownloadFilesByIdsListVM> FilesValues = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
@@ -121,7 +121,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
 
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200, FilesValues);
             }
-            else if (Request.Filter == FilesFilter.CoordinatorFiles)
+            else if (Request.FilterId == (int)FilesFilter.CoordinatorFiles)
             {
                 List<DownloadFilesByIdsListVM> FilesValues = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
@@ -140,7 +140,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
 
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200, FilesValues);
             }
-            else if (Request.Filter == FilesFilter.ArbitratorFiles)
+            else if (Request.FilterId == (int)FilesFilter.ArbitratorFiles)
             {
                 List<DownloadFilesByIdsListVM> FilesValues = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)

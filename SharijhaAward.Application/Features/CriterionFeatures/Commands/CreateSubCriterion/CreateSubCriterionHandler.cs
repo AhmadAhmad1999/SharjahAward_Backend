@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSubCriterion
@@ -50,6 +49,17 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
 
             Criterion NewSubCriterionEntity = _Mapper.Map<Criterion>(Request);
             NewSubCriterionEntity.CategoryId = CheckIfMainCriterionIdDoesExist.CategoryId;
+
+            int LastOrderIdForSubCriterion = await _CriterionRepository
+                .Where(x => x.CategoryId == CheckIfMainCriterionIdDoesExist.CategoryId &&
+                    (x.ParentId != null
+                        ? x.ParentId == CheckIfMainCriterionIdDoesExist.Id
+                        : false))
+                .OrderBy(x => x.OrderId)
+                .Select(x => x.OrderId)
+                .LastOrDefaultAsync();
+
+            NewSubCriterionEntity.OrderId = LastOrderIdForSubCriterion++;
 
             await _CriterionRepository.AddAsync(NewSubCriterionEntity);
 

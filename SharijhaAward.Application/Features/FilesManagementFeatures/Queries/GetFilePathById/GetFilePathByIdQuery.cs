@@ -7,7 +7,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
     public class GetFilePathByIdQuery : IRequest<BaseResponse<GetFilePathByIdDto>>
     {
         public int Id { get; set; }
-        public FilesFilter Filter { get; set; }
+        public int FilterId { get; set; }
         public string? lang { get; set; }
     }
 }

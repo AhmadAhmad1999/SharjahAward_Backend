@@ -277,6 +277,7 @@ using SharijhaAward.Application.Features.Achievements.Queries.AcceptOnAchievemen
 using SharijhaAward.Application.Features.Coordinators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Command.CreateNewAppVersion;
+using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllAppVersions;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -607,6 +608,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<UserRole, UsersRolesDto>().ReverseMap();
             CreateMap<Notification, GetAllNotificationsListVM>().ReverseMap();
             CreateMap<Category, GetAllSubCategoriesListVM>().ReverseMap();
+            CreateMap<AppVersion, GetAllAppVersionsListVM>().ReverseMap();
         }
     }
 }

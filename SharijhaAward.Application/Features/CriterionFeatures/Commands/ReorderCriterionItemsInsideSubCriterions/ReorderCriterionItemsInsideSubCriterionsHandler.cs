@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
+using SharijhaAward.Domain.Entities.CriterionModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.ReorderCriterionItemsInsideSubCriterions
@@ -10,10 +11,13 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.ReorderC
     public class ReorderCriterionItemsInsideSubCriterionsHandler
         : IRequestHandler<ReorderCriterionItemsInsideSubCriterionsCommand, BaseResponse<object>>
     {
+        private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
 
-        public ReorderCriterionItemsInsideSubCriterionsHandler(IAsyncRepository<CriterionItem> CriterionItemRepository)
+        public ReorderCriterionItemsInsideSubCriterionsHandler(IAsyncRepository<Criterion> CriterionRepository,
+            IAsyncRepository<CriterionItem> CriterionItemRepository)
         {
+            _CriterionRepository = CriterionRepository;
             _CriterionItemRepository = CriterionItemRepository;
         }
         public async Task<BaseResponse<object>> Handle(ReorderCriterionItemsInsideSubCriterionsCommand Request, 
@@ -32,18 +36,51 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.ReorderC
             {
                 try
                 {
-                    foreach (SubCriterionItemsDto SubCriterionItemsDto in Request.SubCriterionItemsDto)
-                    {
-                        List<CriterionItem> CriterionItemInsideSubCriterion = await _CriterionItemRepository
-                            .Where(x => SubCriterionItemsDto.CriterionItemsIds.Any(y => y == x.Id))
-                            .ToListAsync();
+                    List<CriterionItem> AllCriterionItems = await _CriterionItemRepository
+                        .Include(x => x.Criterion!)
+                        .Where(x => Request.MainCriterionsDtos.Select(y => y.MainCriterionId)
+                            .Any(y => y == x.CriterionId || y == x.Criterion!.ParentId))
+                        .ToListAsync();
 
-                        foreach (CriterionItem CriterionItem in CriterionItemInsideSubCriterion)
+                    List<Criterion> AllCriterions = AllCriterionItems
+                        .Select(x => x.Criterion!)
+                        .ToList();
+
+                    foreach (MainCriterionsDto MainCriterionsDto in Request.MainCriterionsDtos)
+                    {
+                        Criterion? MainCriterionEntity = AllCriterions
+                            .FirstOrDefault(x => x.Id == MainCriterionsDto.MainCriterionId);
+
+                        if (MainCriterionEntity is not null)
                         {
-                            if (CriterionItem.CriterionId != SubCriterionItemsDto.SubCriterionId)
+                            MainCriterionEntity.OrderId = MainCriterionsDto.OrderId;
+
+                            await _CriterionRepository.UpdateAsync(MainCriterionEntity);
+
+                            foreach (SubCriterionDto SubCriterionDto in MainCriterionsDto.SubCriterionDtos)
                             {
-                                CriterionItem.CriterionId = SubCriterionItemsDto.SubCriterionId;
-                                await _CriterionItemRepository.UpdateAsync(CriterionItem);
+                                Criterion? SubCriterionEntity = AllCriterions
+                                    .FirstOrDefault(x => x.Id == SubCriterionDto.SubCriterionId);
+
+                                if (SubCriterionEntity is not null)
+                                {
+                                    SubCriterionEntity.OrderId = SubCriterionDto.OrderId;
+
+                                    await _CriterionRepository.UpdateAsync(SubCriterionEntity);
+
+                                    foreach (CriterionItemDto CriterionItemDtos in SubCriterionDto.CriterionItemDtos)
+                                    {
+                                        CriterionItem? CriterionItemEntity = AllCriterionItems
+                                            .FirstOrDefault(x => x.Id == CriterionItemDtos.CriterionItemId);
+
+                                        if (CriterionItemEntity is not null)
+                                        {
+                                            CriterionItemEntity.OrderId = CriterionItemDtos.OrderId;
+
+                                            await _CriterionItemRepository.UpdateAsync(CriterionItemEntity);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

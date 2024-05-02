@@ -2,54 +2,115 @@
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.UpdateDynamicAttribute
 {
     public class UpdateDynamicAttributeHandler : IRequestHandler<UpdateDynamicAttributeCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
+        private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IMapper _Mapper;
 
         public UpdateDynamicAttributeHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
+            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IMapper Mapper)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
+            _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _Mapper = Mapper;
         }
         public async Task<BaseResponse<object>> Handle(UpdateDynamicAttributeCommand Request, CancellationToken cancellationToken)
         {
-            string ResponseMessage = string.Empty;
-
-            DynamicAttribute? DynamicAttributeOldData = await _DynamicAttributeRepository.GetByIdAsync(Request.Id);
-
-            if (DynamicAttributeOldData == null)
+            TransactionOptions TransactionOptions = new TransactionOptions
             {
-                ResponseMessage = Request.lang == "en"
-                    ? "Field not found"
-                    : "هذا الحقل غير موجود";
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
-                return new BaseResponse<object>(ResponseMessage, false, 404);
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    string ResponseMessage = string.Empty;
+
+                    DynamicAttribute? DynamicAttributeOldData = await _DynamicAttributeRepository.GetByIdAsync(Request.Id);
+
+                    if (DynamicAttributeOldData == null)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? "Field not found"
+                            : "هذا الحقل غير موجود";
+
+                        return new BaseResponse<object>(ResponseMessage, false, 404);
+                    }
+
+                    UpdateDynamicAttributeValidator Validator = new UpdateDynamicAttributeValidator();
+                    ValidationResult ValidationResult = await Validator.ValidateAsync(Request);
+
+                    if (ValidationResult.Errors.Count > 0)
+                        throw new ValidationException(ValidationResult.Errors);
+
+                    _Mapper.Map(Request, DynamicAttributeOldData, typeof(UpdateDynamicAttributeCommand),
+                        typeof(DynamicAttribute));
+
+                    await _DynamicAttributeRepository.UpdateAsync(DynamicAttributeOldData);
+
+                    if (Request.Values is not null 
+                            ? Request.Values.Any()
+                            : false)
+                    {
+                        List<DynamicAttributeListValue> OldDynamicAttributeValueEntities = await _DynamicAttributeListValueRepository
+                            .Where(x => x.DynamicAttributeId == Request.Id)
+                            .ToListAsync();
+
+                        List<DynamicAttributeListValue> NewDynamicAttributeListValuesEntities = Request.Values
+                            .Where(x => x.Id == 0)
+                            .Select(x => new DynamicAttributeListValue()
+                            {
+                                Value = x.Value,
+                                DynamicAttributeId = Request.Id
+                            }).ToList();
+
+                        IEnumerable<UpdateDynamicAttributeValueDto> UpdatedDynamicAttributeListValues = Request.Values
+                            .Where(x => x.Id != 0);
+
+                        foreach (UpdateDynamicAttributeValueDto DynamicAttributeValue in UpdatedDynamicAttributeListValues)
+                        {
+                            DynamicAttributeListValue? DynamicAttributeListValueEntity = OldDynamicAttributeValueEntities
+                                .FirstOrDefault(x => x.Id == DynamicAttributeValue.Id);
+
+                            if (DynamicAttributeListValueEntity is not null)
+                            {
+                                if (DynamicAttributeListValueEntity.Value.ToLower() != DynamicAttributeValue.Value.ToLower())
+                                {
+                                    DynamicAttributeListValueEntity.Value = DynamicAttributeValue.Value;
+
+                                    await _DynamicAttributeListValueRepository.UpdateAsync(DynamicAttributeListValueEntity);
+                                }
+                            }
+                        }
+                    }
+
+                    Transaction.Complete();
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Field has been updated successfully"
+                        : "تم تعديل الحقل بنجاح";
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
             }
-            
-            UpdateDynamicAttributeValidator Validator = new UpdateDynamicAttributeValidator();
-            ValidationResult ValidationResult = await Validator.ValidateAsync(Request);
-
-            if (ValidationResult.Errors.Count > 0)
-                throw new ValidationException(ValidationResult.Errors);
-
-            _Mapper.Map(Request, DynamicAttributeOldData, typeof(UpdateDynamicAttributeCommand),
-                typeof(DynamicAttribute));
-
-            await _DynamicAttributeRepository.UpdateAsync(DynamicAttributeOldData);
-
-            ResponseMessage = Request.lang == "en"
-                ? "Field has been updated successfully"
-                : "تم تعديل الحقل بنجاح";
-
-            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

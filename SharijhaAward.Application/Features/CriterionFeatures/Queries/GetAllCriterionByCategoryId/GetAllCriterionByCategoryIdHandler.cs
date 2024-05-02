@@ -61,7 +61,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
 
             List<MainCriterionListVM> MainCriterionObjects = AllCriterionsEntities
                 .Where(x => x.ParentId == null)
-                .OrderByDescending(x => x.CreatedAt)
+                .OrderBy(x => x.OrderId)
                 .Select(x => new MainCriterionListVM()
                 {
                     Id = x.Id,
@@ -74,7 +74,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
             {
                 MainCriterionObject.SubCriterionListVM = AllCriterionsEntities
                     .Where(x => x.ParentId == MainCriterionObject.Id)
-                    .OrderByDescending(x => x.CreatedAt)
+                    .OrderBy(x => x.OrderId)
                     .Select(x => new SubCriterionListVM()
                     {
                         Id = x.Id,

@@ -11,6 +11,7 @@ namespace SharijhaAward.Domain.Entities.CriterionModel;
 public class Criterion: AuditableEntity
 {
     public int Id { get; set; }
+    public int OrderId { get; set; }
     public string ArabicTitle { get; set; } = string.Empty;
     public string EnglishTitle { get; set; } = string.Empty;
     public int Score { get; set; }

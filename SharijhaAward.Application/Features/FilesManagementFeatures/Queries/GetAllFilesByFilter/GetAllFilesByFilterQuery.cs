@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 {
     public class GetAllFilesByFilterQuery : IRequest<BaseResponse<List<GetAllFilesByFilterListVM>>>
     {
-        public FilesFilter Filter { get; set; }
+        public int FilterId { get; set; }
         public string? lang { get; set; }
         public int page { get; set; }
         public int pageSize { get; set; }

@@ -1,8 +1,9 @@
 ﻿namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.ReorderCriterionItemsInsideSubCriterions
 {
-    public class SubCriterionItemsDto
+    public class SubCriterionDto
     {
         public int SubCriterionId { get; set; }
-        public List<int> CriterionItemsIds { get; set; } = new List<int>();
+        public int OrderId { get; set; }
+        public List<CriterionItemDto> CriterionItemDtos { get; set; } = new List<CriterionItemDto>();
     }
 }

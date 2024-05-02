@@ -37,7 +37,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
         {
             string ResponseMessage = string.Empty;
 
-            if (Request.Filter == FilesFilter.Criterion)
+            if (Request.FilterId == (int)FilesFilter.Criterion)
             {
                 int TotalCount = await _CriterionAttachmentRepository.GetCountAsync(x => File.Exists(x.AttachementPath));
 
@@ -64,7 +64,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesFromCriterionAttachmentes, PaginationParameter);
             }
-            else if (Request.Filter == FilesFilter.CriterionItem)
+            else if (Request.FilterId == (int)FilesFilter.CriterionItem)
             {
                 int TotalCount = await _CriterionItemAttachmentRepository.GetCountAsync(x => File.Exists(x.AttachementPath));
 
@@ -91,7 +91,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesFromCriterionItemAttachmentes, PaginationParameter);
             }
-            else if (Request.Filter == FilesFilter.SpecialCondition)
+            else if (Request.FilterId == (int)FilesFilter.SpecialCondition)
             {
                 int TotalCount = await _ConditionAttachmentRepository.GetCountAsync(x => File.Exists(x.AttachementPath));
 
@@ -118,7 +118,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesFromSpecialConditions, PaginationParameter);
             }
-            else if (Request.Filter == FilesFilter.GeneralCondition)
+            else if (Request.FilterId == (int)FilesFilter.GeneralCondition)
             {
                 int TotalCount = await _CycleConditionAttachmentRepository.GetCountAsync(x => File.Exists(x.AttachementPath));
 
@@ -145,7 +145,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesFromGeneralConditions, PaginationParameter);
             }
-            else if (Request.Filter == FilesFilter.SubscriberPersonalAndAcademicInformation)
+            else if (Request.FilterId == (int)FilesFilter.SubscriberPersonalAndAcademicInformation)
             {
                 int TotalCount = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
@@ -182,7 +182,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesValues, PaginationParameter);
             }
-            else if (Request.Filter == FilesFilter.CoordinatorFiles)
+            else if (Request.FilterId == (int)FilesFilter.CoordinatorFiles)
             {
                 int TotalCount = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
@@ -217,7 +217,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesValues, PaginationParameter);
             }
-            else if (Request.Filter == FilesFilter.ArbitratorFiles)
+            else if (Request.FilterId == (int)FilesFilter.ArbitratorFiles)
             {
                 int TotalCount = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)

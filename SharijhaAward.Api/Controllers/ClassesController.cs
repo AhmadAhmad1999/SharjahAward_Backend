@@ -11,7 +11,9 @@ using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClassesByCategoriesIds;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByClassId;
 using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
+using SharijhaAward.Application.Helpers.DateTimeConverter;
 using SharijhaAward.Application.Responses;
+using System.Text.Json;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -35,6 +37,12 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> CreateClass([FromBody] CreateClassCommand CreateClassCommand)
         {
+            //var options = new JsonSerializerOptions();
+
+            //// remove default converter and add unformatted one
+            //options.Converters.Remove(new DateTimeConverterClass());
+            //options.Converters.Add(new DateTimeNoFormatConverter());
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             CreateClassCommand.lang = !string.IsNullOrEmpty(HeaderValue)

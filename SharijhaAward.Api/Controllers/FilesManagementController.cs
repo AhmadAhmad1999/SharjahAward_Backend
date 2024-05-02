@@ -53,7 +53,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetFilePathById(int Id, FilesFilter Filter)
+        public async Task<IActionResult> GetFilePathById(int Id, int FilterId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -63,7 +63,7 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<GetFilePathByIdDto> Response = await _Mediator.Send(new GetFilePathByIdQuery()
             {
                 Id = Id,
-                Filter = Filter,
+                FilterId = FilterId,
                 lang = HeaderValue!
             });
 
@@ -82,7 +82,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DownloadFilesByIds([FromQuery] List<int> Ids, FilesFilter Filter, bool DownloadAllFiles)
+        public async Task<IActionResult> DownloadFilesByIds([FromQuery] List<int> Ids, int FilterId, bool DownloadAllFiles)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -94,7 +94,7 @@ namespace SharijhaAward.Api.Controllers
                 {
                     Ids = Ids,
                     lang = HeaderValue,
-                    Filter = Filter,
+                    FilterId = FilterId,
                     DownloadAllFiles = DownloadAllFiles
                 });
 

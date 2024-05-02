@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.ReorderC
 {
     public class ReorderCriterionItemsInsideSubCriterionsCommand : IRequest<BaseResponse<object>>
     {
-        public List<SubCriterionItemsDto> SubCriterionItemsDto { get; set; } = new List<SubCriterionItemsDto>();
+        public List<MainCriterionsDto> MainCriterionsDtos { get; set; } = new List<MainCriterionsDto>();
         public string? lang { get; set; }
     }
 }

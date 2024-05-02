@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
         {
             string ResponseMessage = string.Empty;
 
-            if (Request.Filter == FilesFilter.Criterion)
+            if (Request.FilterId == (int)FilesFilter.Criterion)
             {
                 CriterionAttachment? CriterionAttachmentEntity = await _CriterionAttachmentRepository
                     .FirstOrDefaultAsync(x => x.Id == Request.Id);
@@ -57,7 +57,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, true, 200, Response);
             }
-            else if (Request.Filter == FilesFilter.CriterionItem)
+            else if (Request.FilterId == (int)FilesFilter.CriterionItem)
             {
                 CriterionItemAttachment? CriterionItemAttachmentEntity = await _CriterionItemAttachmentRepository
                     .FirstOrDefaultAsync(x => x.Id == Request.Id);
@@ -78,7 +78,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, true, 200, Response);
             }
-            else if (Request.Filter == FilesFilter.SpecialCondition)
+            else if (Request.FilterId == (int)FilesFilter.SpecialCondition)
             {
                 ConditionAttachment? ConditionAttachmentEntity = await _ConditionAttachmentRepository
                     .FirstOrDefaultAsync(x => x.Id == Request.Id);
@@ -99,7 +99,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, true, 200, Response);
             }
-            else if (Request.Filter == FilesFilter.GeneralCondition)
+            else if (Request.FilterId == (int)FilesFilter.GeneralCondition)
             {
                 CycleConditionAttachment? CycleConditionAttachmentEntity = await _CycleConditionAttachmentRepository
                     .FirstOrDefaultAsync(x => x.Id == Request.Id);
@@ -120,7 +120,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, true, 200, Response);
             }
-            else if (Request.Filter == FilesFilter.SubscriberPersonalAndAcademicInformation)
+            else if (Request.FilterId == (int)FilesFilter.SubscriberPersonalAndAcademicInformation)
             {
                 DynamicAttributeValue? DynamicAttributeValueEntity = await _DynamicAttributeValueRepository
                     .FirstOrDefaultAsync(x => x.Id == Request.Id);

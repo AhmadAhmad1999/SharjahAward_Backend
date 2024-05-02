@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
     {
         public List<int> Ids { get; set; } = new List<int>();
         public bool DownloadAllFiles { get; set; } = false;
-        public FilesFilter Filter { get; set; }
+        public int FilterId { get; set; }
         public string? lang { get; set; }
     }
 }

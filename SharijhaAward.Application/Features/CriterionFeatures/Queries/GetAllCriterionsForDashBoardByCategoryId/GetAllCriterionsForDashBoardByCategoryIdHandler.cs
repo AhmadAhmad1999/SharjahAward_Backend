@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
             if (Request.page != 0 && Request.pageSize != -1)
                 MainCriterions = await _CriterionRepository
                     .Where(x => x.CategoryId == Request.CategoryId && x.ParentId == null)
-                    .OrderByDescending(x => x.CreatedAt)
+                    .OrderBy(x => x.OrderId)
                     .Skip((Request.page - 1) * Request.pageSize)
                     .Take(Request.pageSize)
                     .Select(x => new GetAllCriterionsForDashBoardCategoryIdDto()
@@ -59,7 +59,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
             else
                 MainCriterions = await _CriterionRepository
                     .Where(x => x.CategoryId == Request.CategoryId && x.ParentId == null)
-                    .OrderByDescending(x => x.CreatedAt)
+                    .OrderBy(x => x.OrderId)
                     .Select(x => new GetAllCriterionsForDashBoardCategoryIdDto()
                     {
                         Id = x.Id,
@@ -74,7 +74,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                     .Where(x => x.ParentId != null 
                         ? x.ParentId == MainCriterion.Id
                         : false)
-                    .OrderByDescending(x => x.CreatedAt)
+                    .OrderBy(x => x.OrderId)
                     .Select(x => new GetAllSubCriterion()
                     {
                         Id = x.Id,
