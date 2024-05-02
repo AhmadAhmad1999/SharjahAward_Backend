@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
@@ -66,6 +67,16 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
             }
 
             DynamicAttributeSection NewDynamicAttributeSectionEntity = _Mapper.Map<DynamicAttributeSection>(Request);
+
+            int CheckIfSesctionNameIsAlreadyUsed = await _DynamicAttributeSectionRepository
+                .Where(x => x.AttributeTableNameId == Request.AttributeTableNameId &&
+                    x.RecordIdOnRelation == Request.RecordIdOnRelation)
+                .OrderBy(x => x.OrderId)
+                .Select(x => x.OrderId)
+                .LastOrDefaultAsync();
+
+            NewDynamicAttributeSectionEntity.OrderId = CheckIfSesctionNameIsAlreadyUsed++;
+
             await _DynamicAttributeSectionRepository.AddAsync(NewDynamicAttributeSectionEntity);
 
             ResponseMessage = Request.lang == "en"

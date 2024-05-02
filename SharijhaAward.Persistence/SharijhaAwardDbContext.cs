@@ -137,7 +137,7 @@ namespace SharijhaAward.Persistence
         public DbSet<StaticAttribute> StaticAttributes { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<TermAndCondition> TermsAndConditions { get; set; }
-        public DbSet<ConditionsProvidedForms> Attachments { get; set; }
+        public DbSet<ConditionsProvidedForms> ConditionsProvidedForms { get; set; }
         public DbSet<DynamicAttributePattern> DynamicAttributePatterns { get; set; }
         public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues { get; set; }
         public DbSet<CategoryFAQ> CategoryFAQs { get; set; }
@@ -795,6 +795,16 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     Name = "Location"
+                }, new AttributeDataType()
+                {
+                    Id = 10,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    Name = "Emirates ID number"
                 });
 
             modelBuilder.Entity<AttributeOperation>()
@@ -888,6 +898,7 @@ namespace SharijhaAward.Persistence
                 .HasData(new Criterion()
                 {
                     Id = 1,
+                    OrderId = 1,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -902,6 +913,7 @@ namespace SharijhaAward.Persistence
                 }, new Criterion()
                 {
                     Id = 2,
+                    OrderId = 1,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -917,6 +929,7 @@ namespace SharijhaAward.Persistence
                 }, new Criterion()
                 {
                     Id = 3,
+                    OrderId = 2,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -935,6 +948,7 @@ namespace SharijhaAward.Persistence
                 .HasData(new CriterionItem()
                 {
                     Id = 1,
+                    OrderId = 1,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -950,6 +964,7 @@ namespace SharijhaAward.Persistence
                 }, new CriterionItem()
                 {
                     Id = 2,
+                    OrderId = 2,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -965,6 +980,7 @@ namespace SharijhaAward.Persistence
                 }, new CriterionItem()
                 {
                     Id = 3,
+                    OrderId = 1,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -980,6 +996,7 @@ namespace SharijhaAward.Persistence
                 }, new CriterionItem()
                 {
                     Id = 4,
+                    OrderId = 2,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -2037,7 +2054,8 @@ namespace SharijhaAward.Persistence
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     RecordIdOnRelation = 2,
-                    Id = 1
+                    Id = 1,
+                    OrderId = 1
                 });
 
             modelBuilder.Entity<DynamicAttribute>()
@@ -2050,6 +2068,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     Id = 1,
+                    OrderId = 1,
                     ArabicLabel = "اختبار نص 1",
                     ArabicPlaceHolder = "اختبار نص 1",
                     AttributeDataTypeId = 1,
@@ -2064,6 +2083,7 @@ namespace SharijhaAward.Persistence
                 }, new DynamicAttribute()
                 {
                     Id = 2,
+                    OrderId = 2,
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2084,6 +2104,7 @@ namespace SharijhaAward.Persistence
                 }, new DynamicAttribute()
                 {
                     Id = 3,
+                    OrderId = 3,
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2104,6 +2125,7 @@ namespace SharijhaAward.Persistence
                 }, new DynamicAttribute()
                 {
                     Id = 4,
+                    OrderId = 4,
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2124,6 +2146,7 @@ namespace SharijhaAward.Persistence
                 }, new DynamicAttribute()
                 {
                     Id = 5,
+                    OrderId = 5,
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2144,6 +2167,7 @@ namespace SharijhaAward.Persistence
                 }, new DynamicAttribute()
                 {
                     Id = 6,
+                    OrderId = 6,
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2164,6 +2188,7 @@ namespace SharijhaAward.Persistence
                 }, new DynamicAttribute()
                 {
                     Id = 7,
+                    OrderId = 7,
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2184,6 +2209,7 @@ namespace SharijhaAward.Persistence
                 }, new DynamicAttribute()
                 {
                     Id = 8,
+                    OrderId = 8,
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,

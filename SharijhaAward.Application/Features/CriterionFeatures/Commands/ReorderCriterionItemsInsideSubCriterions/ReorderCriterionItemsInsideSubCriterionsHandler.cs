@@ -44,6 +44,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.ReorderC
 
                     List<Criterion> AllCriterions = AllCriterionItems
                         .Select(x => x.Criterion!)
+                        .Distinct()
                         .ToList();
 
                     foreach (MainCriterionsDto MainCriterionsDto in Request.MainCriterionsDtos)

@@ -58,7 +58,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         .IncludeThenWhere(x => x.AttributeTableName!,
                             x => x.RecordIdOnRelation == Request.CategoryId &&
                             x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower())
-                        .OrderByDescending(x => x.CreatedAt)
+                        .OrderBy(x => x.OrderId)
                         .Skip((Request.page - 1) * Request.pageSize)
                         .Take(Request.pageSize)
                         .Select(x => new DynamicAttributeSectionListVM()
@@ -74,7 +74,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         .IncludeThenWhere(x => x.AttributeTableName!,
                             x => x.RecordIdOnRelation == Request.CategoryId &&
                             x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower())
-                        .OrderByDescending(x => x.CreatedAt)
+                        .OrderBy(x => x.OrderId)
                         .Select(x => new DynamicAttributeSectionListVM()
                         {
                             Id = x.Id,
@@ -203,7 +203,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             DynamicAttributeSectionId = PersonalInformationSection.Id,
                             EnglishLabel = "Emirates ID number",
                             ArabicLabel = "رقم الهوية الإماراتية",
-                            AttributeDataTypeId = 6,
+                            AttributeDataTypeId = 10,
                             IsRequired = true,
                             IsUnique = false,
                             LinkedToAnotherAttribute = false,
@@ -420,7 +420,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     x.RecordIdOnRelation == -1)
                                 : (x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower() &&
                                     x.RecordIdOnRelation == -2))
-                        .OrderByDescending(x => x.CreatedAt)
+                        .OrderBy(x => x.OrderId)
                         .Skip((Request.page - 1) * Request.pageSize)
                         .Take(Request.pageSize)
                         .Select(x => new DynamicAttributeSectionListVM()
@@ -439,7 +439,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     x.RecordIdOnRelation == -1)
                                 : (x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower() &&
                                     x.RecordIdOnRelation == -2))
-                        .OrderByDescending(x => x.CreatedAt)
+                        .OrderBy(x => x.OrderId)
                         .Select(x => new DynamicAttributeSectionListVM()
                         {
                             Id = x.Id,

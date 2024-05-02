@@ -3,6 +3,7 @@
     public class DynamicAttributeSectionsDto
     {
         public int SectionId { get; set; }
-        public List<int> DynamicAttributesIds { get; set; } = new List<int>();
+        public int OrderId { get; set; }
+        public List<DynamicAttributesDto> DynamicAttributesDtos { get; set; } = new List<DynamicAttributesDto>();
     }
 }
