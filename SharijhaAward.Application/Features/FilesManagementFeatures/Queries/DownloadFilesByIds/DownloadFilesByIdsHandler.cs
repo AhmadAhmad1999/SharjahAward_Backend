@@ -40,8 +40,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
             if (Request.FilterId == (int)FilesFilter.Criterion)
             {
                 List<DownloadFilesByIdsListVM> FilesFromCriterionAttachmentes = await _CriterionAttachmentRepository
-                    .Where(x => File.Exists(x.AttachementPath) && 
-                        (!Request.DownloadAllFiles
+                    .Where(x => (!Request.DownloadAllFiles
                             ? Request.Ids.Any(y => y == x.Id)
                             : true))
                     .OrderByDescending(x => x.Id)
@@ -56,8 +55,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
             else if (Request.FilterId == (int)FilesFilter.CriterionItem)
             {
                 List<DownloadFilesByIdsListVM> FilesFromCriterionItemAttachmentes = await _CriterionItemAttachmentRepository
-                    .Where(x => File.Exists(x.AttachementPath) &&
-                        (!Request.DownloadAllFiles
+                    .Where(x => (!Request.DownloadAllFiles
                             ? Request.Ids.Any(y => y == x.Id)
                             : true))
                     .OrderByDescending(x => x.Id)
@@ -72,8 +70,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
             else if (Request.FilterId == (int)FilesFilter.SpecialCondition)
             {
                 List<DownloadFilesByIdsListVM> FilesFromSpecialConditions = await _ConditionAttachmentRepository
-                    .Where(x => File.Exists(x.AttachementPath) &&
-                        (!Request.DownloadAllFiles
+                    .Where(x => (!Request.DownloadAllFiles
                             ? Request.Ids.Any(y => y == x.Id)
                             : true))
                     .OrderByDescending(x => x.Id)
@@ -88,8 +85,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
             else if (Request.FilterId == (int)FilesFilter.GeneralCondition)
             {
                 List<DownloadFilesByIdsListVM> FilesFromGeneralConditions = await _CycleConditionAttachmentRepository
-                    .Where(x => File.Exists(x.AttachementPath) &&
-                        (!Request.DownloadAllFiles
+                    .Where(x => (!Request.DownloadAllFiles
                             ? Request.Ids.Any(y => y == x.Id)
                             : true))
                     .OrderByDescending(x => x.Id)
@@ -108,8 +104,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
-                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)
-                            ? File.Exists(x.Value) : false) &&
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
                         (!Request.DownloadAllFiles
                             ? Request.Ids.Any(y => y == x.Id)
                             : true))
@@ -127,8 +122,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
-                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)
-                            ? File.Exists(x.Value) : false) &&
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
                         (!Request.DownloadAllFiles
                             ? Request.Ids.Any(y => y == x.Id)
                             : true))
@@ -146,8 +140,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
-                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)
-                            ? File.Exists(x.Value) : false) &&
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
                         (!Request.DownloadAllFiles
                             ? Request.Ids.Any(y => y == x.Id)
                             : true))
