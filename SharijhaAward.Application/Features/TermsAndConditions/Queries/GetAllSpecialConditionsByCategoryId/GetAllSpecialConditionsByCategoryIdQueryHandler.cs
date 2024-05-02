@@ -68,7 +68,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
 
             var Terms = _termRepository
                 .WhereThenInclude(t => t.CategoryId == category.Id, t => t.ConditionAttachments)
-                .Where(t => t.IsSpecial == true)
                 .OrderByDescending(x => x.CreatedAt).ToList();
 
             List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();

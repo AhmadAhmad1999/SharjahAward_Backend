@@ -1562,51 +1562,11 @@ namespace SharijhaAward.Persistence
                     EnglishDescription = "Accept on Privacy Term",
                     EnglishTitle = "Accept on Privacy Term",
                     IsAgree = false,
-                    IsSpecial = true,
                     NeedAttachment = false,
                     RequiredAttachmentNumber = 0,
                     SizeOfAttachmentInKB = 0
-                }, new TermAndCondition()
-                {
-                    Id = 2,
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ArabicDescription = "الموافقة على سياسة الخصوصية لهذه الفئة",
-                    ArabicTitle = "الموافقة على سياسة الخصوصة",
-                    AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.Pic,
-                    CategoryId = 2,
-                    EnglishDescription = "Accept on Privacy Term",
-                    EnglishTitle = "Accept on Privacy Term",
-                    IsAgree = false,
-                    IsSpecial = false,
-                    NeedAttachment = false,
-                    RequiredAttachmentNumber = 0,
-                    SizeOfAttachmentInKB = 0
-                }, new TermAndCondition()
-                {
-                    Id = 3,
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ArabicDescription = "الهوية الشخصية",
-                    ArabicTitle = "رفع صورة الهوية الشخصية (الامامي و الخلفي)",
-                    AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.Pic,
-                    CategoryId = 2,
-                    EnglishDescription = "Id Card",
-                    EnglishTitle = "Upload Photos of Id Card (Front and Back)",
-                    IsAgree = false,
-                    IsSpecial = false,
-                    NeedAttachment = true,
-                    RequiredAttachmentNumber = 2,
-                    SizeOfAttachmentInKB = 1000
-                }, new TermAndCondition()
+                }, 
+                new TermAndCondition()
                 {
                     Id = 4,
                     isDeleted = false,
@@ -1622,7 +1582,6 @@ namespace SharijhaAward.Persistence
                     EnglishDescription = "Id Card",
                     EnglishTitle = "Upload Photos of Id Card (Front and Back)",
                     IsAgree = false,
-                    IsSpecial = true,
                     NeedAttachment = true,
                     RequiredAttachmentNumber = 2,
                     SizeOfAttachmentInKB = 1000
@@ -1642,27 +1601,6 @@ namespace SharijhaAward.Persistence
                     EnglishDescription = "Upload Confirmation Documents",
                     EnglishTitle = "Upload Confirmation Documents",
                     IsAgree = false,
-                    IsSpecial = true,
-                    NeedAttachment = true,
-                    RequiredAttachmentNumber = 0,
-                    SizeOfAttachmentInKB = 1000
-                }, new TermAndCondition()
-                {
-                    Id = 6,
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ArabicDescription = "رفع الاثباتات العلمية",
-                    ArabicTitle = "رفع الاثباتات العلمية",
-                    AttachmentType = Domain.Constants.AttachmentConstant.AttachmentType.PDF,
-                    CategoryId = 2,
-                    EnglishDescription = "Upload Confirmation Documents",
-                    EnglishTitle = "Upload Confirmation Documents",
-                    IsAgree = false,
-                    IsSpecial = false,
                     NeedAttachment = true,
                     RequiredAttachmentNumber = 0,
                     SizeOfAttachmentInKB = 1000

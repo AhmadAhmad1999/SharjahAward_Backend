@@ -26,37 +26,22 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFor
 
         public async Task<BaseResponse<ProvidedFormDto>> Handle(GetProvidedFormByIdQuery request, CancellationToken cancellationToken)
         {
-            if (request.UserId != null)
-            {
-                var User = await _userRepository.GetByIdAsync(request.UserId);
+            var User = await _userRepository.GetByIdAsync(request.UserId);
 
-                if (User == null)
-                {
-                    return new BaseResponse<ProvidedFormDto>("User Not Found", false, 404);
-                }
-                var form = _formRepository.Where(f => f.Id == request.Id && f.userId == User.Id);
+             if (User == null)
+             {
+                 return new BaseResponse<ProvidedFormDto>("User Not Found", false, 404);
+             }
+             var form = await _formRepository.FirstOrDefaultAsync(f => f.Id == request.Id && f.userId == User.Id);
 
-                if (form == null)
-                {
-                    return new BaseResponse<ProvidedFormDto>("Provided Form Not Found", false, 404);
-                }
-                var data = _mapper.Map<ProvidedFormDto>(form);
+             if (form == null)
+             {
+                 return new BaseResponse<ProvidedFormDto>("Provided Form Not Found", false, 404);
+             }
+             var data = _mapper.Map<ProvidedFormDto>(form);
 
-                return new BaseResponse<ProvidedFormDto>("", true, 200, data);
-            }
-            else
-            {
-                var form = await _formRepository.GetByIdAsync(request.Id);
+             return new BaseResponse<ProvidedFormDto>("", true, 200, data);
 
-                if (form == null)
-                {
-                    return new BaseResponse<ProvidedFormDto>("", false, 404);
-                }
-                var data = _mapper.Map<ProvidedFormDto>(form);
-
-                return new BaseResponse<ProvidedFormDto>("", true, 200, data);
-            }
-          
         }
     }
 }

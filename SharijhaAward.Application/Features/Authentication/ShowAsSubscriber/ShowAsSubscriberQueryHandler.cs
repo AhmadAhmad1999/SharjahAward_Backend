@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -15,11 +17,13 @@ namespace SharijhaAward.Application.Features.Authentication.ShowAsSubscriber
     {
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
-
-        public ShowAsSubscriberQueryHandler(IUserRepository userRepository, IJwtProvider jwtProvider)
+        private readonly IMapper _mapper;
+        public ShowAsSubscriberQueryHandler(IMapper mapper, IUserRepository userRepository, IJwtProvider jwtProvider)
         {
             _userRepository = userRepository;
             _jwtProvider = jwtProvider;
+            _mapper = mapper;
+
         }
         public async Task<AuthenticationResponse> Handle(ShowAsSubscriberQuery request, CancellationToken cancellationToken)
         {
@@ -48,8 +52,19 @@ namespace SharijhaAward.Application.Features.Authentication.ShowAsSubscriber
                         : "المستخدم غير موجود"
                 };
             }
+            var token = _jwtProvider.Generate(User);
+           
+            var response = new AuthenticationResponse()
+            {
+                token = token,
+                user = _mapper.Map<UserDataResponse>(User),
+                message = request.lang == "en"
+                    ? "You can Show As Subscriber"
+                    : "يمكنك الدخول كمشترك",
 
-            var response = await _userRepository.LogInAsync(User, request.lang, false);
+                isSucceed = true,
+            };
+            
 
             return response;
         }
