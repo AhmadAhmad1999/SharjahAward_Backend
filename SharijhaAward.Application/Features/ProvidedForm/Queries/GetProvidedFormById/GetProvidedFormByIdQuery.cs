@@ -10,6 +10,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFor
 {
     public class GetProvidedFormByIdQuery : IRequest<BaseResponse<ProvidedFormDto>>
     {
+        public int? UserId { get; set; }
         public int Id { get; set; }
     }
 }

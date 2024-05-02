@@ -105,11 +105,12 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet("{Id}", Name="GetProvidedFormById")]
-        public async Task<IActionResult> GetProvidedFormById(int Id)
+        [HttpGet("{UserId}/{Id}", Name="GetProvidedFormById")]
+        public async Task<IActionResult> GetProvidedFormById(int? UserId,int Id)
         {
             var response = await _mediator.Send(new GetProvidedFormByIdQuery()
             {
+                UserId = UserId,
                 Id = Id
             });
 
