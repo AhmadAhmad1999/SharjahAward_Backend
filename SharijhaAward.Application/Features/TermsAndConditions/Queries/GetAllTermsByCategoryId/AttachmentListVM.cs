@@ -12,5 +12,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Attached { get; set; } = string.Empty;
+        public string AttachementPath { get; set; } = string.Empty;
+        public int SizeOfAttachmentInKB { get; set; }
     }
 }
