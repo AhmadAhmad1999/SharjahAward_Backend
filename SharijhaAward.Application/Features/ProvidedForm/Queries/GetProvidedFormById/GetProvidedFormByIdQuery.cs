@@ -12,5 +12,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFor
     {
         public int? UserId { get; set; }
         public int Id { get; set; }
+        public string? lang { get; set; }
     }
 }
