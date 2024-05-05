@@ -23,7 +23,7 @@ namespace SharijhaAward.Infrastructure.EmailSernder
     public class EmailSender : IEmailSender
     {
         private IConfiguration _Configuration;
-        private const int BatchSize = 50; // Number of recipients to process in each batch
+        private const int BatchSize = 10; // Number of recipients to process in each batch
         public EmailSender(IConfiguration Configuration)
         {
             _Configuration = Configuration;
@@ -155,7 +155,7 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                 .Select(x => x.Select(v => v.value).ToList())
                 .ToList();
         }
-        public async Task SendEmailAsync(List<string> recipients, string subject, string body)
+        public async Task<List<string>> SendEmailAsync(List<string> recipients, string subject, string body)
         {
             try
             {
@@ -172,6 +172,8 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                 };
 
                 var batches = SplitRecipientsIntoBatches(recipients);
+
+                List<string> invalidEmails = new List<string>();
 
                 await Task.Run(() =>
                 {
@@ -201,16 +203,17 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                                 }
                                 catch (Exception)
                                 {
-                                    throw;
+                                    invalidEmails.Add(recipient);
                                 }
                             }
                         }
                     });
                 });
+
+                return invalidEmails;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while sending emails: {ex.Message}");
                 throw;
             }
         }
