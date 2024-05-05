@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.MeetingCategoryModel;
@@ -15,16 +16,19 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeet
         private readonly IAsyncRepository<Meeting> _MeetingRepository;
         private readonly IAsyncRepository<MeetingUser> _MeetingUserRepository;
         private readonly IAsyncRepository<MeetingCategory> _MeetingCategoryRepository;
+        private readonly IEmailSender _EmailSender;
 
         public CreateMeetingHandler(IMapper Mapper,
             IAsyncRepository<Meeting> MeetingRepository,
             IAsyncRepository<MeetingUser> MeetingUserRepository,
-            IAsyncRepository<MeetingCategory> MeetingCategoryRepository)
+            IAsyncRepository<MeetingCategory> MeetingCategoryRepository,
+            IEmailSender EmailSender)
         {
             _Mapper = Mapper;
             _MeetingRepository = MeetingRepository;
             _MeetingUserRepository = MeetingUserRepository;
             _MeetingCategoryRepository = MeetingCategoryRepository;
+            _EmailSender = EmailSender;
         }
         public async Task<BaseResponse<object>> Handle(CreateMeetingCommand Request, CancellationToken cancellationToken)
         {
@@ -78,6 +82,36 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeet
                         }).ToList();
 
                     await _MeetingCategoryRepository.AddRangeAsync(NewMeetingCategoryEntities);
+
+                    List<string> Recipients = Request.UsersInfo.Select(x => x.Email).ToList();
+
+                    string EmailSubject = NewMeetingEntity.ArabicName + "-" + NewMeetingEntity.EnglishName;
+
+                    string FirstArabicLine = $"Meeting Title: {NewMeetingEntity.ArabicName}";
+                    string SecondArabicLine = $"Meeting Date: {NewMeetingEntity.Date.DayOfWeek} " +
+                        $"{NewMeetingEntity.Date.Year}-{NewMeetingEntity.Date.Month}-{NewMeetingEntity.Date.Day}";
+                    string ThirdArabicLine = $"Meeting Time: {NewMeetingEntity.Date.Hour}:{NewMeetingEntity.Date} {NewMeetingEntity.Date.ToString("tt")}";
+                    string ForthArabicLine = $"Meeting Type: {NewMeetingEntity.Type}";
+                    string FifthArabicLine = $"{NewMeetingEntity.ArabicText}";
+
+                    string FirstEnglishLine = $"Meeting Title: {NewMeetingEntity.EnglishName}";
+                    string SecondEnglishLine = $"Meeting Date: {NewMeetingEntity.Date.DayOfWeek} " +
+                        $"{NewMeetingEntity.Date.Year}-{NewMeetingEntity.Date.Month}-{NewMeetingEntity.Date.Day}";
+                    string ThirdEnglishLine = $"Meeting Time: {NewMeetingEntity.Date.Hour}:{NewMeetingEntity.Date} {NewMeetingEntity.Date.ToString("tt")}";
+                    string ForthEnglishLine = $"Meeting Type: {NewMeetingEntity.Type}";
+                    string FifthEnglishLine = $"{NewMeetingEntity.EnglishText}";
+
+                    string EmailArabicBody = (string.IsNullOrEmpty(FifthArabicLine)
+                        ? string.Join("\n", FirstArabicLine, SecondArabicLine, ThirdArabicLine, ForthArabicLine)
+                        : string.Join("\n", FirstArabicLine, SecondArabicLine, ThirdArabicLine, ForthArabicLine, FifthArabicLine));
+
+                    string EmailEnglishBody = (string.IsNullOrEmpty(FifthEnglishLine)
+                        ? string.Join("\n", FirstEnglishLine, SecondEnglishLine, ThirdEnglishLine, ForthEnglishLine)
+                        : string.Join("\n", FirstEnglishLine, SecondEnglishLine, ThirdEnglishLine, ForthEnglishLine, FifthEnglishLine));
+
+                    string FullEmailBody = string.Join("\n", EmailArabicBody, EmailEnglishBody);
+
+                    await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody);
 
                     Transaction.Complete();
 
