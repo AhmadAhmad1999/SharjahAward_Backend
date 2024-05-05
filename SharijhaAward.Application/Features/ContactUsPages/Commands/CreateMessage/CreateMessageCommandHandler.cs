@@ -43,6 +43,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
 
             var message = _mapper.Map<EmailMessage>(request);
             message.IsRead = false;
+            
 
             
                 var UserId = _jwtProvider.GetUserIdFromToken(request.token!);
@@ -83,6 +84,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                     {
                         message.UserId = User.Id;
                     }
+                    
                 }
             }
             else

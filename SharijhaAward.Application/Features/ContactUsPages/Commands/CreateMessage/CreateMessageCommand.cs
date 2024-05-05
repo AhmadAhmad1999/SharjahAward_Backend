@@ -22,7 +22,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
         public int? MessageId { get; set; }
 
         public string? lang { get; set; } = string.Empty;
-        public string token { get; set; } = string.Empty;
+        public string? token { get; set; } = string.Empty;
         public List<IFormFile>? EmailAttachments { get; set; } 
     }
 }

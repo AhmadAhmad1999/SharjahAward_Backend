@@ -82,6 +82,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
             {
                 data.ReplayMessages[i].PersonalPhotoUrl = User.ImageURL!;
                 data.ReplayMessages[i].Gender = User.Gender;
+                data.IsReplay = true;
             }
             return new BaseResponse<EmailMessageDto>("", true, 200, data);
           

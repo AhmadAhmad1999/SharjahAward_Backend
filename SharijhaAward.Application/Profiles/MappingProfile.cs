@@ -281,6 +281,10 @@ using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllAppVe
 using SharijhaAward.Domain.Entities.AwardSponsorModel;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Commands.CreateAwardSponsor;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Commands.UpdateAwardSponsor;
+using SharijhaAward.Domain.Entities.RewardModel;
+using SharijhaAward.Application.Features.Rewards.Commands.CreateReward;
+using SharijhaAward.Application.Features.Rewards.Commands.UpdateReward;
+using SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -507,6 +511,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AwardSponsor, CreateAwardSponsorCommand>().ReverseMap();
             CreateMap<AwardSponsor, UpdateAwardSponsorCommand>().ReverseMap();
             CreateMap<AwardSponsor, AwardPublicationDto>().ReverseMap();
+
+            CreateMap<Reward, CreateRewardCommand>().ReverseMap();
+            CreateMap<Reward, UpdateRewardCommand>().ReverseMap();
+            CreateMap<Reward, RewardListVm>().ReverseMap();
+
 
             //
             // Dynamic Attribute..ParagraphCard

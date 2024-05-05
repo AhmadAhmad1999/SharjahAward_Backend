@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.ForwordEmail
     {
         public int MsgId { get; set; }
         public int? TypeId { get; set; }
-        public string token { get; set; } = string.Empty;
+        public string? token { get; set; } = string.Empty;
         public string? To { get; set; } = string.Empty;
         public string lang { get; set; } = string.Empty;
     }

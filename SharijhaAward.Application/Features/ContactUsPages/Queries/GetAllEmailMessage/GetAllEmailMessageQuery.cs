@@ -10,8 +10,8 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
 {
     public class GetAllEmailMessageQuery : IRequest<BaseResponse<List<EmailMessageListVM>>>
     {
-        public string token { get; set; } = string.Empty;
-        public string lang { get; set; } = string.Empty;
+        public string? token { get; set; } 
+        public string? lang { get; set; }
         public int page {  get; set; }
         public int pageSize { get; set; }
         public string? query { get; set; } = string.Empty;

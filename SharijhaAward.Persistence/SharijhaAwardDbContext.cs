@@ -75,6 +75,7 @@ using SharijhaAward.Domain.Entities.PageStructureModel;
 using SharijhaAward.Domain.Entities.PageStructureModels;
 using SharijhaAward.Domain.Entities.ArbitrationScaleModel;
 using SharijhaAward.Domain.Entities.AwardSponsorModel;
+using SharijhaAward.Domain.Entities.RewardModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -178,6 +179,7 @@ namespace SharijhaAward.Persistence
         public DbSet<DarkCard> DarkCards { get; set; }
         public DbSet<ParagraphCard> ParagraphCards { get; set; }
         public DbSet<AwardSponsor> AwardSponsors { get; set; }
+        public DbSet<Reward> Rewards { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -274,6 +276,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<DarkCard>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ParagraphCard>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AwardSponsor>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Reward>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)

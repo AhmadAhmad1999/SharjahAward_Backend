@@ -76,7 +76,8 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                 data[i].TypeName = Type!.Type;
                 data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(EmailMessages[i].Attachments);                    data[i].IsReplay = data[i].MessageId == null ? false : true;
                 data[i].PersonalPhotoUrl = Sender.ImageURL!;
-                data[i].Gender = Sender.Gender; 
+                data[i].Gender = Sender.Gender;
+                data[i].IsReplay = false;
             }
             
             int Count = _emailMessageRepository.GetCount(m => m.To == User.Email || m.From == User.Email);
