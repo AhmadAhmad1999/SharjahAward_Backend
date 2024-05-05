@@ -47,8 +47,8 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByCla
             List<GetAllStudentsByClassIdListVM> Response = await _DynamicAttributeValueRepository
                 .Include(x => x.DynamicAttribute!)
                 .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                .Where(x => (x.DynamicAttribute!.EnglishLabel.ToLower() == "Full name (identical to Emirates ID)".ToLower() ||
-                        x.DynamicAttribute.ArabicLabel == "الاسم الكامل (مطابق للهوية الإماراتية)") &&
+                .Where(x => (x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower() ||
+                        x.DynamicAttribute.ArabicTitle == "الاسم الكامل (مطابق للهوية الإماراتية)") &&
                     x.RecordId != null &&
                     ProvidedFormsEntities.Select(y => y.categoryId)
                         .Any(y => y == x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation) &&

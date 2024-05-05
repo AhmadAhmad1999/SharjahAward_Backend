@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetRema
                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                     AllArbitratorAssingedForms.Select(y => y.ProvidedFormId)
                         .Any(y => y == x.RecordId) &&
-                    x.DynamicAttribute!.EnglishLabel.ToLower() == "Full name (identical to Emirates ID)".ToLower())
+                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
                 .ToListAsync();
 
             List<FormsListVMForArbitrationDto> RemainingForms = await _ProvidedFormRepository

@@ -1495,7 +1495,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                         {
                             DynamicAttribute? ClassDynamicAttribute = await _DynamicAttributeRepository
                                 .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId)
-                                    .Contains(x.Id) && x.EnglishLabel.ToLower() == "Class".ToLower());
+                                    .Contains(x.Id) && x.EnglishTitle.ToLower() == "Class".ToLower());
 
                             if (ClassDynamicAttribute is not null)
                             {

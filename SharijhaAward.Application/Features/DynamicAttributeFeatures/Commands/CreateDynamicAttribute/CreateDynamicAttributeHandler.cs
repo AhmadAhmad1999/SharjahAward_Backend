@@ -109,6 +109,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                 DynamicAttribute NewDynamicAttributeEntity = _Mapper.Map<DynamicAttribute>(Request);
                 NewDynamicAttributeEntity.Status = DynamicAttributeStatus.Active;
                 NewDynamicAttributeEntity.OrderId = LastOrderIdInSection++;
+                NewDynamicAttributeEntity.ArabicTitle = NewDynamicAttributeEntity.ArabicLabel;
+                NewDynamicAttributeEntity.EnglishTitle = NewDynamicAttributeEntity.EnglishLabel;
 
                 await _DynamicAttributeRepository.AddAsync(NewDynamicAttributeEntity);
 

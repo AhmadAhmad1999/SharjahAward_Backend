@@ -39,15 +39,10 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
             if (Request.FilterId == (int)FilesFilter.Criterion)
             {
-                int TotalCount = await _CriterionAttachmentRepository.GetCountAsync(x => File.Exists(x.AttachementPath));
+                int TotalCount = await _CriterionAttachmentRepository.GetCountAsync(null);
 
                 List<GetAllFilesByFilterListVM> FilesFromCriterionAttachmentes = await _CriterionAttachmentRepository
-                    .Where(x => File.Exists(x.AttachementPath))
-                    .OrderByDescending(x => x.Id)
-                    .Skip((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : 0)
-                    .Take((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : TotalCount)
+                    .OrderByDescending(x => x.Id, Request.page, Request.pageSize)
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -66,15 +61,10 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
             }
             else if (Request.FilterId == (int)FilesFilter.CriterionItem)
             {
-                int TotalCount = await _CriterionItemAttachmentRepository.GetCountAsync(x => File.Exists(x.AttachementPath));
+                int TotalCount = await _CriterionItemAttachmentRepository.GetCountAsync(null);
 
                 List<GetAllFilesByFilterListVM> FilesFromCriterionItemAttachmentes = await _CriterionItemAttachmentRepository
-                    .Where(x => File.Exists(x.AttachementPath))
-                    .OrderByDescending(x => x.Id)
-                    .Skip((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : 0)
-                    .Take((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : TotalCount)
+                    .OrderByDescending(x => x.Id, Request.page, Request.pageSize)
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -93,15 +83,10 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
             }
             else if (Request.FilterId == (int)FilesFilter.SpecialCondition)
             {
-                int TotalCount = await _ConditionAttachmentRepository.GetCountAsync(x => File.Exists(x.AttachementPath));
+                int TotalCount = await _ConditionAttachmentRepository.GetCountAsync(null);
 
                 List<GetAllFilesByFilterListVM> FilesFromSpecialConditions = await _ConditionAttachmentRepository
-                    .Where(x => File.Exists(x.AttachementPath))
-                    .OrderByDescending(x => x.Id)
-                    .Skip((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : 0)
-                    .Take((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : TotalCount)
+                    .OrderByDescending(x => x.Id, Request.page, Request.pageSize)
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -120,15 +105,10 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
             }
             else if (Request.FilterId == (int)FilesFilter.GeneralCondition)
             {
-                int TotalCount = await _CycleConditionAttachmentRepository.GetCountAsync(x => File.Exists(x.AttachementPath));
+                int TotalCount = await _CycleConditionAttachmentRepository.GetCountAsync(null);
 
                 List<GetAllFilesByFilterListVM> FilesFromGeneralConditions = await _CycleConditionAttachmentRepository
-                    .Where(x => File.Exists(x.AttachementPath))
-                    .OrderByDescending(x => x.Id)
-                    .Skip((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : 0)
-                    .Take((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : TotalCount)
+                    .OrderByDescending(x => x.Id, Request.page, Request.pageSize)
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -151,16 +131,14 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                     .Include(x => x.DynamicAttribute!)
                     .CountAsync(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) && 
-                        (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)
-                            ? File.Exists(x.Value) : false);
+                        (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4));
 
                 List<GetAllFilesByFilterListVM> FilesValues = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
-                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)
-                            ? File.Exists(x.Value) : false))
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
                     .OrderByDescending(x => x.Id)
                     .Skip((Request.page != 0 || Request.pageSize != -1)
                         ? (Request.page - 1) * Request.pageSize : 0)
@@ -187,15 +165,13 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 int TotalCount = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .CountAsync(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
-                        (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)
-                            ? File.Exists(x.Value) : false);
+                        (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4));
 
                 List<GetAllFilesByFilterListVM> FilesValues = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
-                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)
-                            ? File.Exists(x.Value) : false))
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
                     .OrderByDescending(x => x.Id)
                     .Skip((Request.page != 0 || Request.pageSize != -1)
                         ? (Request.page - 1) * Request.pageSize : 0)
@@ -222,15 +198,13 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 int TotalCount = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .CountAsync(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
-                        (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)
-                            ? File.Exists(x.Value) : false);
+                        (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4));
 
                 List<GetAllFilesByFilterListVM> FilesValues = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
-                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)
-                            ? File.Exists(x.Value) : false))
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
                     .OrderByDescending(x => x.Id)
                     .Skip((Request.page != 0 || Request.pageSize != -1)
                         ? (Request.page - 1) * Request.pageSize : 0)

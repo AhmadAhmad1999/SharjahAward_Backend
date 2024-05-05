@@ -105,7 +105,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                 .Include(x => x.DynamicAttribute!.DynamicAttributeSection)
                 .Where(x => ArbitrationsEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId) &&
                     x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
-                    x.DynamicAttribute!.EnglishLabel.ToLower() == "Full name (identical to Emirates ID)".ToLower())
+                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
                 .ToListAsync();
 
             List<GetAllFormsForSortingProcessListVM> Response = ArbitrationsEntities
