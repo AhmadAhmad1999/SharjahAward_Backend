@@ -122,7 +122,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             LastModifiedBy = null,
                             DynamicAttributeSectionId = PersonalInformationSection.Id,
                             EnglishLabel = "Full name (identical to Emirates ID)",
+                            EnglishTitle = "Full name (identical to Emirates ID)",
                             ArabicLabel = "الاسم الكامل (مطابق للهوية الإماراتية)",
+                            ArabicTitle = "الاسم الكامل (مطابق للهوية الإماراتية)",
                             AttributeDataTypeId = 1,
                             IsRequired = true,
                             IsUnique = false,
@@ -142,7 +144,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             LastModifiedBy = null,
                             DynamicAttributeSectionId = PersonalInformationSection.Id,
                             EnglishLabel = "Nationality",
+                            EnglishTitle = "Nationality",
                             ArabicLabel = "الجنسية",
+                            ArabicTitle = "الجنسية",
                             AttributeDataTypeId = 8,
                             IsRequired = true,
                             IsUnique = false,
@@ -162,7 +166,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             LastModifiedBy = null,
                             DynamicAttributeSectionId = PersonalInformationSection.Id,
                             EnglishLabel = "Gender",
+                            EnglishTitle = "Gender",
                             ArabicLabel = "الجنس",
+                            ArabicTitle = "الجنس",
                             AttributeDataTypeId = 8,
                             IsRequired = true,
                             IsUnique = false,
@@ -182,7 +188,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             LastModifiedBy = null,
                             DynamicAttributeSectionId = PersonalInformationSection.Id,
                             EnglishLabel = "Date of birth",
+                            EnglishTitle = "Date of birth",
                             ArabicLabel = "تاريخ الميلاد",
+                            ArabicTitle = "تاريخ الميلاد",
                             AttributeDataTypeId = 7,
                             IsRequired = true,
                             IsUnique = false,
@@ -202,7 +210,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             LastModifiedBy = null,
                             DynamicAttributeSectionId = PersonalInformationSection.Id,
                             EnglishLabel = "Emirates ID number",
+                            EnglishTitle = "Emirates ID number",
                             ArabicLabel = "رقم الهوية الإماراتية",
+                            ArabicTitle = "رقم الهوية الإماراتية",
                             AttributeDataTypeId = 10,
                             IsRequired = true,
                             IsUnique = false,
@@ -229,7 +239,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             LastModifiedBy = null,
                             DynamicAttributeSectionId = PersonalInformationSection.Id,
                             EnglishLabel = "Class",
+                            EnglishTitle = "Class",
                             ArabicLabel = "الصف",
+                            ArabicTitle = "الصف",
                             AttributeDataTypeId = 8,
                             IsRequired = true,
                             IsUnique = false,
@@ -245,7 +257,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     await _DynamicAttributeRepository.AddRangeAsync(MainInformationDynamicAttribute);
 
                     DynamicAttribute? NationalityDynamicAttributes = MainInformationDynamicAttribute
-                        .FirstOrDefault(x => x.AttributeDataTypeId == 8 && x.EnglishLabel.ToLower() == "Nationality".ToLower());
+                        .FirstOrDefault(x => x.AttributeDataTypeId == 8 && x.EnglishTitle.ToLower() == "Nationality".ToLower());
 
                     string BaseUrl = "https://restcountries.com/v3.1/";
 
@@ -306,7 +318,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     }
 
                     DynamicAttribute? GenderDynamicAttributes = MainInformationDynamicAttribute
-                        .FirstOrDefault(x => x.AttributeDataTypeId == 8 && x.EnglishLabel.ToLower() == "Gender".ToLower());
+                        .FirstOrDefault(x => x.AttributeDataTypeId == 8 && x.EnglishTitle.ToLower() == "Gender".ToLower());
 
                     if (GenderDynamicAttributes is not null)
                     {

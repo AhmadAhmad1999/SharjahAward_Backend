@@ -40,7 +40,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllSubsc
                 .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                     x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
-                    x.DynamicAttribute.EnglishLabel.ToLower() == "Full name (identical to Emirates ID)".ToLower() &&
+                    x.DynamicAttribute.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower() &&
                     FormsEntities.Select(y => y.FormId).Any(y => y == x.RecordId))
                 .Select(x => new
                 {

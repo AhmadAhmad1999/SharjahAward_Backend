@@ -12,6 +12,8 @@ namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
+        public string ArabicTitle { get; set; } = null!;
+        public string EnglishTitle { get; set; } = null!;
         public string ArabicLabel { get; set; } = null!;
         public string EnglishLabel { get; set; } = null!;
         public string ArabicPlaceHolder { get; set; } = null!;
