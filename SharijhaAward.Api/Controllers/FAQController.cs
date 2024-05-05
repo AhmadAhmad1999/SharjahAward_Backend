@@ -9,6 +9,7 @@ using SharijhaAward.Application.Features.FAQs.Commands.UpdateFAQ;
 using SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs;
 using SharijhaAward.Application.Features.FAQs.Queries.GetFAQById;
 using SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId;
+using SharijhaAward.Application.Features.FAQs.Queries.SearchForFAQs;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -116,6 +117,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
+
         [HttpGet("GetAllFAQsByCategoryId/{Id}", Name = "GetAllFAQsByCategoryId")]
         public async Task<IActionResult> GetAllFAQsByCategoryId(int Id,int page = 1 , int pageSize = 10)
         {
@@ -138,5 +140,27 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+
+        [HttpGet("SearchForFAQs", Name = "SearchForFAQs")]
+        public async Task<IActionResult> SearchForFAQs(string? SearchQuery)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            //get data from mediator
+            var response = await _mediator.Send(new SearchForFAQsQuery()
+            {
+                lang = language!,
+                SrearchQuery = SearchQuery
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
     }
 }

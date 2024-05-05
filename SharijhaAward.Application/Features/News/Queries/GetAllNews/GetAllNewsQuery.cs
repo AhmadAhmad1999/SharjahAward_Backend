@@ -14,5 +14,6 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
         public int page { get; set; }
         public int pageSize { get; set; }
         public string? query { get; set; } = string.Empty;
+        public int? CycleId { get; set; }
     }
 }
