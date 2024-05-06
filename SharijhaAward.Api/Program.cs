@@ -4,20 +4,16 @@ using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NLog.Config;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
 using SharijhaAward.Application;
-using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Helpers.DateTimeConverter;
 using SharijhaAward.Infrastructure;
 using SharijhaAward.Persistence;
-using System.Configuration;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +26,17 @@ builder.Services.AddHttpClient();
 
 // Enable asynchronous DNS resolution
 System.Net.ServicePointManager.DnsRefreshTimeout = 0;
+
+/*------------------------------------------------------------------------------------*/
+/*                              Custom Logging Layout                                 */
+
+ConfigurationItemFactory.Default.LayoutRenderers
+    .RegisterDefinition("Custom-Layout", typeof(CustomlayoutRenderer));
+
+builder.Services.AddScoped<LogFilterAttribute>();
+/*------------------------------------------------------------------------------------*/
+
+
 
 // Enable connection pooling
 System.Net.ServicePointManager.DefaultConnectionLimit = 100;

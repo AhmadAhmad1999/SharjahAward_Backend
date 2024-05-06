@@ -76,6 +76,7 @@ using SharijhaAward.Domain.Entities.PageStructureModels;
 using SharijhaAward.Domain.Entities.ArbitrationScaleModel;
 using SharijhaAward.Domain.Entities.AwardSponsorModel;
 using SharijhaAward.Domain.Entities.RewardModel;
+using SharijhaAward.Domain.Entities.LoggerModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -87,6 +88,7 @@ namespace SharijhaAward.Persistence
 
         }
 
+        public DbSet<LogUserAction> LogUserActions { get; set; }
         public DbSet<ArbitrationScale> ArbitrationScales { get; set; }
         public DbSet<ArbitrationScalesCriterion> ArbitrationScalesCriterions { get; set; }
         public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
@@ -193,6 +195,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Arbitration>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Notification>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<NotificationTemplate>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<LogUserAction>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitrationScale>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitrationScalesCriterion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<MeetingCategory>().HasQueryFilter(p => !p.isDeleted);
