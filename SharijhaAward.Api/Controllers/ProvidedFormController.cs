@@ -108,10 +108,14 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("{UserId}/{Id}", Name="GetProvidedFormById")]
         public async Task<IActionResult> GetProvidedFormById(int? UserId,int Id)
         {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
             var response = await _mediator.Send(new GetProvidedFormByIdQuery()
             {
                 UserId = UserId,
-                Id = Id
+                Id = Id,
+                lang = Language!
             });
 
             return response.statusCode switch
