@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using NLog.Config;
+using NLog.Extensions.Logging;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
@@ -34,6 +35,12 @@ ConfigurationItemFactory.Default.LayoutRenderers
     .RegisterDefinition("Custom-Layout", typeof(CustomlayoutRenderer));
 
 builder.Services.AddScoped<LogFilterAttribute>();
+
+builder.Services.AddSingleton<ILoggerFactory, NLogLoggerFactory>();
+var serviceProvider = builder.Services.BuildServiceProvider();
+builder.Services.AddSingleton(builder.Services);
+builder.Services.AddSingleton(serviceProvider);
+
 /*------------------------------------------------------------------------------------*/
 
 
@@ -102,7 +109,6 @@ builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddLogging();
 builder.Services.AddCors(options =>
@@ -130,6 +136,7 @@ app.UseStaticFiles(new StaticFileOptions
            Path.Combine(builder.Environment.ContentRootPath, "wwwroot/UploadedFiles")),
     RequestPath = "/UploadedFiles"
 });
+
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
