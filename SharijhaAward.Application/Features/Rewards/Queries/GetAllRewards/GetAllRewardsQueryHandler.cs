@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards
 
         public async Task<BaseResponse<List<RewardListVm>>> Handle(GetAllRewardsQuery request, CancellationToken cancellationToken)
         {
-            var Rewards = await _rewardRepository.Where(r => r.CategoryId == request.CategoryId).ToListAsync();
+            var Rewards = await _rewardRepository.GetWhereThenPagedReponseAsync(r => r.CategoryId == request.CategoryId, request.page, request.pageSize);
             
             var data = _mapper.Map<List<RewardListVm>>(Rewards);
 
@@ -35,8 +35,11 @@ namespace SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards
             {
                 item.Rank = request.lang == "en" ? item.EnglishRank : item.ArabicRank;
             }
-
-            return new BaseResponse<List<RewardListVm>>("", true, 200, data);
+            int count = _rewardRepository.GetCount(r => r.CategoryId == request.CategoryId);
+           
+            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+           
+            return new BaseResponse<List<RewardListVm>>("", true, 200, data, pagination);
         }
     }
 }

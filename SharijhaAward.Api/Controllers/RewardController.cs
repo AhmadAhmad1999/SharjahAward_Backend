@@ -5,6 +5,7 @@ using SharijhaAward.Application.Features.Rewards.Commands.CreateReward;
 using SharijhaAward.Application.Features.Rewards.Commands.DeleteReward;
 using SharijhaAward.Application.Features.Rewards.Commands.UpdateReward;
 using SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards;
+using SharijhaAward.Application.Features.Rewards.Queries.GetRewardById;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -75,7 +76,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllRewards")]
-        public async Task<IActionResult> GetAllRewards(int CategoryId)
+        public async Task<IActionResult> GetAllRewards(int CategoryId, int page = 1, int pageSize = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -83,7 +84,28 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAllRewardsQuery
             {
                 lang = Language!,
-                CategoryId = CategoryId
+                CategoryId = CategoryId,
+                page = page,
+                pageSize = pageSize
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpGet("{Id}", Name = "GetRewardById")]
+        public async Task<IActionResult> GetRewardById(int Id)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetRewardByIdQuery
+            {
+                lang = Language!,
+                Id = Id,
             });
 
             return response.statusCode switch

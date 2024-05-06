@@ -285,6 +285,7 @@ using SharijhaAward.Domain.Entities.RewardModel;
 using SharijhaAward.Application.Features.Rewards.Commands.CreateReward;
 using SharijhaAward.Application.Features.Rewards.Commands.UpdateReward;
 using SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards;
+using SharijhaAward.Application.Features.Rewards.Queries.GetRewardById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -515,6 +516,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Reward, CreateRewardCommand>().ReverseMap();
             CreateMap<Reward, UpdateRewardCommand>().ReverseMap();
             CreateMap<Reward, RewardListVm>().ReverseMap();
+            CreateMap<Reward, RewardDto>().ReverseMap();
 
 
             //
