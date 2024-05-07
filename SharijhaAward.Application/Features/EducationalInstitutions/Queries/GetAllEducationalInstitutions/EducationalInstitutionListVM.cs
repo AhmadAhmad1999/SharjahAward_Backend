@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllEducationalInstitutions
 {
@@ -12,5 +8,7 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Get
         public string Name { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
+        public EducationType EducationType { get; set; }
+        public Emirates Emirates { get; set; }
     }
 }

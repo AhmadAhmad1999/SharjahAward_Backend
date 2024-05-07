@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.MeetingCategoryModel;
@@ -7,26 +7,24 @@ using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using System.Transactions;
 
-namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeeting
+namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeeting
 {
-    public class CreateMeetingHandler : IRequestHandler<CreateMeetingCommand, BaseResponse<object>>
+    public class UpdateMeetingHandler : IRequestHandler<UpdateMeetingCommand, BaseResponse<object>>
     {
-        private readonly IMapper _Mapper;
         private readonly IAsyncRepository<Meeting> _MeetingRepository;
         private readonly IAsyncRepository<MeetingUser> _MeetingUserRepository;
         private readonly IAsyncRepository<MeetingCategory> _MeetingCategoryRepository;
 
-        public CreateMeetingHandler(IMapper Mapper,
-            IAsyncRepository<Meeting> MeetingRepository,
+        public UpdateMeetingHandler(IAsyncRepository<Meeting> MeetingRepository,
             IAsyncRepository<MeetingUser> MeetingUserRepository,
             IAsyncRepository<MeetingCategory> MeetingCategoryRepository)
         {
-            _Mapper = Mapper;
             _MeetingRepository = MeetingRepository;
             _MeetingUserRepository = MeetingUserRepository;
             _MeetingCategoryRepository = MeetingCategoryRepository;
         }
-        public async Task<BaseResponse<object>> Handle(CreateMeetingCommand Request, CancellationToken cancellationToken)
+
+        public async Task<BaseResponse<object>> Handle(UpdateMeetingCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
@@ -56,25 +54,45 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeet
             {
                 try
                 {
-                    Meeting NewMeetingEntity = _Mapper.Map<Meeting>(Request);
+                    Meeting? MeetingEntity = await _MeetingRepository
+                        .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
-                    await _MeetingRepository.AddAsync(NewMeetingEntity);
+                    if (MeetingEntity is null)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? "Meeting is not Found"
+                            : "الاجتماع غير موجود";
+
+                        return new BaseResponse<object>(ResponseMessage, false, 404);
+                    }
+
+                    List<MeetingUser> OldMeetingUserEntities = await _MeetingUserRepository
+                        .Where(x => x.MeetingId == Request.Id)
+                        .ToListAsync();
+
+                    await _MeetingUserRepository.RemoveListAsync(OldMeetingUserEntities);
 
                     List<MeetingUser> NewMeetingUserEntities = Request.UsersInfo
                         .Select(x => new MeetingUser()
                         {
                             Name = x.Name,
                             Email = x.Email,
-                            MeetingId = NewMeetingEntity.Id
+                            MeetingId = Request.Id
                         }).ToList();
 
                     await _MeetingUserRepository.AddRangeAsync(NewMeetingUserEntities);
+
+                    List<MeetingCategory> OldMeetingCategoryEntities = await _MeetingCategoryRepository
+                        .Where(x => x.MeetingId == Request.Id)
+                        .ToListAsync();
+
+                    await _MeetingCategoryRepository.RemoveListAsync(OldMeetingCategoryEntities);
 
                     List<MeetingCategory> NewMeetingCategoryEntities = Request.CategoriesIds
                         .Select(x => new MeetingCategory()
                         {
                             CategoryId = x,
-                            MeetingId = NewMeetingEntity.Id
+                            MeetingId = Request.Id
                         }).ToList();
 
                     await _MeetingCategoryRepository.AddRangeAsync(NewMeetingCategoryEntities);
@@ -82,8 +100,8 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeet
                     Transaction.Complete();
 
                     ResponseMessage = Request.lang == "en"
-                        ? "Created successfully"
-                        : "تم إنشاء الاجتماع بنجاح";
+                        ? "Updated successfully"
+                        : "تم تعديل الاجتماع بنجاح";
 
                     return new BaseResponse<object>(ResponseMessage, true, 200);
                 }

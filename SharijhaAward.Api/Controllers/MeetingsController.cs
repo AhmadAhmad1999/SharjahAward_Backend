@@ -1,9 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using SharijhaAward.Application.Features.Classes.Commands.DeleteClass;
-using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeeting;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.DeleteMeeting;
 using SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeetings;
@@ -11,6 +8,8 @@ using SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllSubscribe
 using SharijhaAward.Application.Features.MeetingFeatures.Queries.GetMeetingById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailToUsersInMeeting;
+using SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeeting;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -158,6 +157,56 @@ namespace SharijhaAward.Api.Controllers
                 Id = Id,
                 lang = HeaderValue!
             });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("SendEmailToUsersInMeeting")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> SendEmailToUsersInMeeting([FromBody] SendEmailToUsersInMeetingCommand SendEmailToUsersInMeetingCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            SendEmailToUsersInMeetingCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(SendEmailToUsersInMeetingCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("UpdateMeeting")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> UpdateMeeting([FromBody] UpdateMeetingCommand UpdateMeetingCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            UpdateMeetingCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(UpdateMeetingCommand);
 
             return Response.statusCode switch
             {
