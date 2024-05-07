@@ -5,9 +5,11 @@ using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
 using SharijhaAward.Application.Features.HomePageSliderItems.Commands.CreateHomePageSliderItem;
 using SharijhaAward.Application.Features.HomePageSliderItems.Commands.DeleteHomePageSliderItem;
 using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllHomePageSliderItems;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     public class HomePageSliderController : ControllerBase
     {

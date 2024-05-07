@@ -5,9 +5,11 @@ using SharijhaAward.Application.Features.DynamicAttributePatterns.Commands.Selec
 using SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.GetAllDynamicAttributePattern;
 using SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.GetDynamicAttributePatternById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class DynamicAttributePatternController : ControllerBase

@@ -19,9 +19,11 @@ using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriteri
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetCriterionItemById;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCriterionById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CriterionController : ControllerBase

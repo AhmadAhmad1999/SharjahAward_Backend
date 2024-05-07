@@ -39,7 +39,6 @@
 	<ItemGroup>
 		<Folder Include="QREmailHelper\" />
 		<Folder Include="wwwroot\DynamicFiles\" />
-		<Folder Include="wwwroot\Logs\" />
 		<Folder Include="wwwroot\ProfilePics\" />
 		<Folder Include="wwwroot\GeneratedBarcode\" />
 		<Folder Include="wwwroot\Images\" />

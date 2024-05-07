@@ -9,9 +9,11 @@ using SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole;
 using SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles;
 using SharijhaAward.Application.Features.RoleFeatures.Queries.GetRoleById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : ControllerBase

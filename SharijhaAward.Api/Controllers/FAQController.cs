@@ -10,9 +10,11 @@ using SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs;
 using SharijhaAward.Application.Features.FAQs.Queries.GetFAQById;
 using SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId;
 using SharijhaAward.Application.Features.FAQs.Queries.SearchForFAQs;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class FAQController : ControllerBase

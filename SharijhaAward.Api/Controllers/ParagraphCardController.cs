@@ -6,8 +6,11 @@ using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Commands.
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsByPageId;
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetParagraphCardById;
 
+using SharijhaAward.Api.Logger;
+
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ParagraphCardController : ControllerBase

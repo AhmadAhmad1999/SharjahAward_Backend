@@ -13,9 +13,11 @@ using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllRe
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllRelatedAccounts;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetRelatedAccoutProfileById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class RelatedAccountController : ControllerBase

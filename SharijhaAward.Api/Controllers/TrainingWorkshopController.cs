@@ -20,9 +20,11 @@ using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsB
 using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 using System;
 using System.Text.Json.Nodes;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class TrainingWorkshopController : ControllerBase

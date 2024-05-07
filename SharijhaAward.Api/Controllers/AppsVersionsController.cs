@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Command.CreateNewAppVersion;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllAppVersions;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetLastAppVersion;
@@ -10,6 +11,7 @@ using System.Text.Json;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AppsVersionsController : ControllerBase

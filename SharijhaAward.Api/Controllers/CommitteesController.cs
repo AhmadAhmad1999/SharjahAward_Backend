@@ -10,8 +10,11 @@ using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCommitt
 using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommitteeById;
 using SharijhaAward.Application.Responses;
 
+using SharijhaAward.Api.Logger;
+
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CommitteesController : ControllerBase

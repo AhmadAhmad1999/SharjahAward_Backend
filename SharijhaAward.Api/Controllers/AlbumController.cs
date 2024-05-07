@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAboutPage;
 using SharijhaAward.Application.Features.Agendas.Commands.DeleteAgenda;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
@@ -16,6 +17,7 @@ using SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AlbumController : ControllerBase

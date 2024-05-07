@@ -7,8 +7,11 @@ using SharijhaAward.Application.Features.CycleConditions.Attachments.Commands.Cr
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.CreateAttachment;
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.DeleteAttachment;
 
+using SharijhaAward.Api.Logger;
+
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ConditionAttachmentController : ControllerBase

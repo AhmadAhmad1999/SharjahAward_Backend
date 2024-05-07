@@ -7,9 +7,11 @@ using SharijhaAward.Application.Features.GeneralFAQCategories.Commands.UpdateGen
 using SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAllGeneralFAQCategory;
 using SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetGeneralFAQCategoryById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class GeneralFAQCategoryController : ControllerBase

@@ -6,9 +6,11 @@ using SharijhaAward.Application.Features.Rewards.Commands.DeleteReward;
 using SharijhaAward.Application.Features.Rewards.Commands.UpdateReward;
 using SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards;
 using SharijhaAward.Application.Features.Rewards.Queries.GetRewardById;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class RewardController : ControllerBase

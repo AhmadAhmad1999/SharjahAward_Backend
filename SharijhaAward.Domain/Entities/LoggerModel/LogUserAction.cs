@@ -13,5 +13,6 @@ namespace SharijhaAward.Domain.Entities.LoggerModel
         public string? HeaderParameters { get; set; }
         public string ResponseStatus { get; set; } = null!;
         public string Result { get; set; } = null!;
+        public Guid ActivityId { get; set; }
     }
 }

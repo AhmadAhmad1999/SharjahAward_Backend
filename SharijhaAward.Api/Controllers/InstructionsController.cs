@@ -7,9 +7,11 @@ using SharijhaAward.Application.Features.InstructionsFeatures.Commands.UpdateIns
 using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAllInstructions;
 using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetInstructionBySlugId;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class InstructionsController : ControllerBase

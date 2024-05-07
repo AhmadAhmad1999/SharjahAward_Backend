@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using OpenQA.Selenium.DevTools.V120.Browser;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Authentication;
 using SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForForgettonPassword;
 using SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForSignUp;
@@ -19,6 +20,7 @@ using System.Text.Json.Serialization;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase

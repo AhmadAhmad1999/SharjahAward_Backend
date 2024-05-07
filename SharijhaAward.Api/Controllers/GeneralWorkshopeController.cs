@@ -6,9 +6,11 @@ using SharijhaAward.Application.Features.GeneralWorkshops.Commands.DeleteGeneral
 using SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGeneralWorkshop;
 using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGeneralWorkshops;
 using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetGeneralWorkshopById;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class GeneralWorkshopeController : ControllerBase

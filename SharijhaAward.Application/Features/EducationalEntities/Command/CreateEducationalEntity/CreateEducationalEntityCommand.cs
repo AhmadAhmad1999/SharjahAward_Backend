@@ -7,7 +7,6 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateE
     {
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
-        public List<CreateEducationalInstitutionDto> EducationalInstitutions { get; set; } = new List<CreateEducationalInstitutionDto>();
         public string? lang { get; set; }
     }
 }

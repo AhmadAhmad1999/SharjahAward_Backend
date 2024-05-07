@@ -11,9 +11,11 @@ using SharijhaAward.Application.Features.StrategicPartners.Commands.DeleteStrate
 using SharijhaAward.Application.Features.StrategicPartners.Commands.UpdateStrategicPartner;
 using SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStrategicPartners;
 using SharijhaAward.Application.Features.StrategicPartners.Queries.GetStrategicPartnerById;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class SocialMediaItemController : ControllerBase

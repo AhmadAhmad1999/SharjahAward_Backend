@@ -6,9 +6,11 @@ using SharijhaAward.Application.Features.MessageTypes.Commands.DeleteMsgType;
 using SharijhaAward.Application.Features.MessageTypes.Commands.UpdateMsgType;
 using SharijhaAward.Application.Features.MessageTypes.Queries.AsignMessageToRole;
 using SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class MessageTypeController : ControllerBase

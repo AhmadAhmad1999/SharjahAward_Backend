@@ -10,9 +10,11 @@ using SharijhaAward.Application.Features.AwardPublications.Queries.DownloadAward
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwardPublications;
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAwardPublicationById;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideByCategoryId;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AwardPublicationController : ControllerBase

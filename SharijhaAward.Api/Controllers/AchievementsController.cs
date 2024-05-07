@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Achievements.Commands.CreateAchievement;
 using SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievement;
 using SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievementById;
@@ -12,6 +13,7 @@ using SharijhaAward.Application.Features.Achievements.Queries.GetAchievementsPag
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AchievementsController : ControllerBase

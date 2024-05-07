@@ -6,9 +6,11 @@ using SharijhaAward.Application.Features.Circulars.Command.DeleteCircular;
 using SharijhaAward.Application.Features.Circulars.Command.UpdateCircular;
 using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
 using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CircularController : ControllerBase

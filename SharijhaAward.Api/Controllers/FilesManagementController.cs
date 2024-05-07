@@ -5,9 +5,11 @@ using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Downloa
 using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.GetAllFilesByFilter;
 using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.GetFilePathById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class FilesManagementController : ControllerBase

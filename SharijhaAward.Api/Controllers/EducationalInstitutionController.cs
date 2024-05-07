@@ -12,9 +12,11 @@ using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllE
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllEducationalInstitutionsWithPagination;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetEducationalInstitutionById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class EducationalInstitutionController : ControllerBase

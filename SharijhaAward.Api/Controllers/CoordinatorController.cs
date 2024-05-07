@@ -14,9 +14,11 @@ using SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators
 using SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById;
 using SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoordinator;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CoordinatorController : ControllerBase

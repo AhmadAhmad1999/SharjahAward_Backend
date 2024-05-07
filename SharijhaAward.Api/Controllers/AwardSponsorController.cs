@@ -7,9 +7,11 @@ using SharijhaAward.Application.Features.AwardSponsorsPage.Commands.CreateAwardS
 using SharijhaAward.Application.Features.AwardSponsorsPage.Commands.DeleteAwardSponsor;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Commands.UpdateAwardSponsor;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AwardSponsorController : ControllerBase

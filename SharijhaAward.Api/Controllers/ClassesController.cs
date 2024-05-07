@@ -15,8 +15,11 @@ using SharijhaAward.Application.Helpers.DateTimeConverter;
 using SharijhaAward.Application.Responses;
 using System.Text.Json;
 
+using SharijhaAward.Api.Logger;
+
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ClassesController : ControllerBase

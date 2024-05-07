@@ -15,9 +15,11 @@ using SharijhaAward.Application.Responses;
 using System.Reflection.Metadata.Ecma335;
 
 
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

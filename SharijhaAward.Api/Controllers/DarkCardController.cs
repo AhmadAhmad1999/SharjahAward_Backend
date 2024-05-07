@@ -11,9 +11,11 @@ using SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.Delet
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.UpdateDarkCard;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsByPageId;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetDarkCardById;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class DarkCardController : ControllerBase

@@ -12,15 +12,12 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateE
         IRequestHandler<CreateEducationalEntityCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
-        private readonly IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository;
         private readonly IMapper _Mapper;
 
         public CreateEducationalEntityCommandHandler(IAsyncRepository<EducationalEntity> EducationalEntityRepository,
-            IAsyncRepository<EducationalInstitution> EducationalInstitutionRepository,
             IMapper Mapper)
         {
             _EducationalEntityRepository = EducationalEntityRepository;
-            _EducationalInstitutionRepository = EducationalInstitutionRepository;
             _Mapper = Mapper;
         }
         public async Task<BaseResponse<int>> Handle(CreateEducationalEntityCommand Request, CancellationToken cancellationToken)
@@ -41,22 +38,6 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateE
                     EducationalEntity NewEducationalEntity = _Mapper.Map<EducationalEntity>(Request);
 
                     await _EducationalEntityRepository.AddAsync(NewEducationalEntity);
-
-                    IEnumerable<EducationalInstitution> NewEducationalInstitutionEntities = Request.EducationalInstitutions
-                        .Select(x => new EducationalInstitution()
-                        {
-                            ArabicName = x.ArabicName,
-                            EnglishName = x.EnglishName,
-                            EducationalEntityId = NewEducationalEntity.Id,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            DeletedAt = null,
-                            isDeleted = false,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null
-                        });
-
-                    await _EducationalInstitutionRepository.AddRangeAsync(NewEducationalInstitutionEntities);
 
                     ResponseMessage = Request.lang == "en"
                         ? "Created successfully"
