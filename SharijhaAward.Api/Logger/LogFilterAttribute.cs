@@ -12,27 +12,25 @@ namespace SharijhaAward.Api.Logger
     public class LogFilterAttribute : ActionFilterAttribute
     {
         static public int? UserId { get; set; }
-        private readonly IServiceCollection _Services;
-        private readonly ServiceProvider _ServiceProvider;
+        private readonly IServiceCollection _ServiceCollection;
         private readonly ILogger<LogFilterAttribute> _Logger;
-        private readonly IAsyncRepository<LogUserAction> _LogUserActionRepository;
+        private IServiceProvider _ServiceProvider;
         public static List<ActionParamaters> MyParametersList { get; set; } = new List<ActionParamaters>();
         public class ActionParamaters
         {
-            public Guid GuidId { get; set; }
+            public string GuidId { get; set; }
             public IDictionary<string, object> Parameters { get; set; }
         }
-        //public LogFilterAttribute(IServiceCollection Services, ILogger<LogFilterAttribute> Logger
-        //    /*IAsyncRepository<LogUserAction> LogUserActionRepository*/)
-        //{
-        //    _Services = Services;
-        //    _ServiceProvider = _Services.BuildServiceProvider();
-        //    _Logger = Logger;
-        //}
+       
+        public LogFilterAttribute(IServiceProvider ServiceProvider, ILogger<LogFilterAttribute> logger)
+        {
+            _ServiceProvider = ServiceProvider;
+            _Logger = logger;
+        }
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            Guid GuidId = Guid.Parse(filterContext.HttpContext.TraceIdentifier);
-            Trace.CorrelationManager.ActivityId = GuidId;
+            string GuidId = filterContext.HttpContext.TraceIdentifier;
+            // Trace.CorrelationManager.ActivityId = GuidId;
             IDictionary<string, object> Parameters = filterContext.ActionArguments;
             MyParametersList.Add(new ActionParamaters
             {
@@ -46,6 +44,7 @@ namespace SharijhaAward.Api.Logger
         }
         public override void OnActionExecuted(ActionExecutedContext FilterContext)
         {
+            IAsyncRepository<LogUserAction> _LogUserActionRepository = _ServiceProvider.GetService<IAsyncRepository<LogUserAction>>();
             // Check If There Any Exception In API Response..
             Exception Exceptions = FilterContext.Exception;
 
@@ -71,7 +70,7 @@ namespace SharijhaAward.Api.Logger
 
                     // 5. Body Parameters..
                     IDictionary<string, object>? Parameters = MyParametersList.Where(x =>
-                        x.GuidId == Guid.Parse(FilterContext.HttpContext.TraceIdentifier)).Select(x => x.Parameters).FirstOrDefault();
+                        x.GuidId == FilterContext.HttpContext.TraceIdentifier).Select(x => x.Parameters).FirstOrDefault();
                     NewLog.BodyParameters = Newtonsoft.Json.JsonConvert.SerializeObject(Parameters);
 
                     // 6. Header Paramaters..
@@ -83,39 +82,39 @@ namespace SharijhaAward.Api.Logger
                     // 8. Result...
                     NewLog.Result = Exceptions.Message;
 
-                    if (Exceptions != null)
-                    {
+                    _LogUserActionRepository.AddAsync(NewLog);
+
+                    //if (Exceptions != null)
+                    //{
                         
-                    }
-                    else
-                    {
-                        IActionResult? ActionResult = FilterContext.Result;
-                        if (ActionResult is OkObjectResult APIResult)
-                        {
-                            dynamic? DynamicObject = new ExpandoObject();
-                            DynamicObject = APIResult.Value;
-                            if (DynamicObject != null ? 
-                                !string.IsNullOrEmpty(DynamicObject.Errors)
-                                : false)
-                            {
-                                // 7. Response Status..
-                                NewLog.ResponseStatus = "Failed";
+                    //}
+                    //else
+                    //{
+                    //    IActionResult? ActionResult = FilterContext.Result;
+                    //    if (ActionResult is OkObjectResult APIResult)
+                    //    {
+                    //        dynamic? DynamicObject = new ExpandoObject();
+                    //        DynamicObject = APIResult.Value;
+                    //        if (DynamicObject != null ? 
+                    //            !string.IsNullOrEmpty(DynamicObject.Errors)
+                    //            : false)
+                    //        {
+                    //            // 7. Response Status..
+                    //            NewLog.ResponseStatus = "Failed";
 
-                                // 8. Result...
-                                NewLog.Result = DynamicObject.Errors;
-                            }
-                            else if (DynamicObject.Code == 0)
-                            {
-                                // 7. Response Status..
-                                NewLog.ResponseStatus = "Success";
+                    //            // 8. Result...
+                    //            NewLog.Result = DynamicObject.Errors;
+                    //        }
+                    //        else if (DynamicObject.Code == 0)
+                    //        {
+                    //            // 7. Response Status..
+                    //            NewLog.ResponseStatus = "Success";
 
-                                // 8. Result...
-                                NewLog.Result = Newtonsoft.Json.JsonConvert.SerializeObject(DynamicObject);
-                            }
-                        }
-                    }
-                    //UnitOfWork.LogUsersActionsRepository.AddAsync(NewLog);
-                    //UnitOfWork.SaveChangesAsync();
+                    //            // 8. Result...
+                    //            NewLog.Result = Newtonsoft.Json.JsonConvert.SerializeObject(DynamicObject);
+                    //        }
+                    //    }
+                    //}
                 }
                 catch (Exception err)
                 {
