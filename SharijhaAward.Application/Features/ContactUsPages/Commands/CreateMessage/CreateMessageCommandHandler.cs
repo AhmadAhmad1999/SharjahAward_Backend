@@ -92,10 +92,14 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                 message.Status = Domain.Constants.ContactUsConstants.MessageStatus.New;
             }
            
-           
             var data = await _messageRepository.AddAsync(message);
+            
+            if (request.FirstName == null && request.LastName == null)
+            {
+                data.FirstName = request.lang == "en" ? User.EnglishName : User.ArabicName;
+            }
 
-            if(request.MessageId == null)
+            if (request.MessageId == null)
             {
                 data.MessageId = data.Id;
                 await _messageRepository.UpdateAsync(data);

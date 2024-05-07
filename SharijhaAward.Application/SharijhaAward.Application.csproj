@@ -50,6 +50,8 @@
 
   <ItemGroup>
     <Folder Include="Features\AwardPublications\Commands\UpdateAwardPublication\" />
+    <Folder Include="Features\AwardStatistics\Queries\GetAllAwardStatistics\" />
+    <Folder Include="Features\AwardStatistics\Queries\GetAwardStatisticById\" />
     <Folder Include="Features\EducationalInstitutions\Queries\GetEducationalInstitutionsByEntityId\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
