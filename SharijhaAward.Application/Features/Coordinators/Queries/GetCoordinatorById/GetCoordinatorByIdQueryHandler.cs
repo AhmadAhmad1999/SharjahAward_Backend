@@ -84,6 +84,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
             data.InstitutionEntities = await _EduInstitutionCoordinatorRepository
                 .Where(x => x.CoordinatorId == CoordinatorEntity.Id)
                 .Include(x => x.EducationalInstitution!)
+                .Include(x => x.EducationalInstitution!.EducationalEntity!)
                 .Select(x => new EduInstitutionCoordinatorDto()
                 {
                     Id = x.EducationalInstitution!.Id,
@@ -91,8 +92,23 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                     EnglishName = x.EducationalInstitution!.EnglishName,
                     Name = Request.lang == "en"
                         ? x.EducationalInstitution!.EnglishName
-                        : x.EducationalInstitution!.ArabicName
+                        : x.EducationalInstitution!.ArabicName,
+                    EducationalEntityId = x.EducationalInstitution!.EducationalEntityId
                 }).ToListAsync();
+
+            data.EduEntitiesWithInstitution = data.EducationalEntities
+                .Select(EducationalEntity => new EduEntitiesWithInstitutionDto()
+                {
+                    Id = EducationalEntity.Id,
+                    ArabicName = EducationalEntity.ArabicName,
+                    EnglishName = EducationalEntity!.EnglishName,
+                    Name = Request.lang == "en"
+                        ? EducationalEntity!.EnglishName
+                        : EducationalEntity!.ArabicName,
+                    InstitutionEntities = data.InstitutionEntities
+                        .Where(x => x.EducationalEntityId == EducationalEntity.Id)
+                        .ToList()
+                }).ToList();
 
             //
             // Dynamic Fields..

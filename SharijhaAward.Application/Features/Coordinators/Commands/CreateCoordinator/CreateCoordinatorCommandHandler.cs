@@ -64,8 +64,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                     if (CheckEmailIfAlreadyUsedInUser is not null)
                     {
                         ResponseMessage = Request.lang == "en"
-                            ? "Invalid email or password"
-                            : "خطأ في البريد الإلكتروني او كلمة المرور";
+                            ? "This email is already used"
+                            : "البريد الإلكتروني مستخدم بالفعل";
 
                         return new BaseResponse<int>(ResponseMessage, false, 400);
                     }
@@ -76,8 +76,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                     if (CheckEmailIfAlreadyUsedInCoordinator is not null)
                     {
                         ResponseMessage = Request.lang == "en"
-                            ? "Invalid email or password"
-                            : "خطأ في البريد الإلكتروني او كلمة المرور";
+                            ? "This email is already used"
+                            : "البريد الإلكتروني مستخدم بالفعل";
 
                         return new BaseResponse<int>(ResponseMessage, false, 400);
                     }

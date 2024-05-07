@@ -6,5 +6,6 @@
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+        public int EducationalEntityId { get; set; }
     }
 }
