@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.ReferenceSources.Commands.UpdateReferenceSourcePage;
 using SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferenceSourcePage;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ReferenceSourcePageController : ControllerBase

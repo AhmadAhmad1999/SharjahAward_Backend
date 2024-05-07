@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateAboutPage;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateGoal;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAboutPage;
@@ -9,6 +10,7 @@ using SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AboutPageController : ControllerBase
@@ -22,6 +24,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost(Name = "CreateAboutPage")]
         public async Task<IActionResult> CreateAboutPage([FromForm] CreateAboutPageCommand command)
         {
+            
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 

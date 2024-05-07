@@ -7,9 +7,11 @@ using SharijhaAward.Application.Features.NotificationTemplateFeatures.Commands.U
 using SharijhaAward.Application.Features.NotificationTemplateFeatures.Queries.GetAllNotificationTemplates;
 using SharijhaAward.Application.Features.NotificationTemplateFeatures.Queries.GetNotificationTemplateById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class NotificationTemplatesController : ControllerBase

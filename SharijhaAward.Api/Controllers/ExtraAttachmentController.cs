@@ -11,9 +11,11 @@ using SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExtraAt
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.DeleteExtraAttachment;
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAttachment;
 using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachment;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ExtraAttachmentController : ControllerBase

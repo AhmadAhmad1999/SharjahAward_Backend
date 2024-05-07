@@ -13,9 +13,11 @@ using SharijhaAward.Application.Features.Settings.Queries.GetPrivacyPolicy;
 using SharijhaAward.Application.Features.Settings.Queries.GetProfileById;
 using SharijhaAward.Application.Features.Settings.Queries.GetTermsOfUse;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class SettingsController : ControllerBase

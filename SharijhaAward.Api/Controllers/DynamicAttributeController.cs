@@ -17,9 +17,11 @@ using SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave;
 using SharijhaAward.Application.Helpers.RejectDynamicAttributeValue;
 using SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class DynamicAttributeController : ControllerBase

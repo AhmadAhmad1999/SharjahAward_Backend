@@ -21,9 +21,11 @@ using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ExportToEx
 using SharijhaAward.Application.Responses;
 using System.Net;
 
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class GroupInviteeController : Controller

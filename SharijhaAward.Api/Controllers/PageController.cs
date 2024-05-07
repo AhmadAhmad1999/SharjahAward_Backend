@@ -7,8 +7,11 @@ using SharijhaAward.Application.Features.PageStructures.Pages.Commands.UpdatePag
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAllMainPages;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
 
+using SharijhaAward.Api.Logger;
+
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class PageController : ControllerBase

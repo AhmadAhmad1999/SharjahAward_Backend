@@ -22,9 +22,11 @@ using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
 using SelectPdf;
 using PdfSharpCore.Pdf.Content.Objects;
 using System.Xml;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class EventController : ControllerBase

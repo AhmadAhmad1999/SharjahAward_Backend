@@ -7,9 +7,11 @@ using IronBarCode;
 using System.Diagnostics;
 using System.Drawing;
 using System.Net.Http.Headers;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ResendEmailController : ControllerBase

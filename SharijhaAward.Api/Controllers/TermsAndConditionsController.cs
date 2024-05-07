@@ -16,9 +16,11 @@ using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAn
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermAndConditionById;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class TermsAndConditionsController : ControllerBase

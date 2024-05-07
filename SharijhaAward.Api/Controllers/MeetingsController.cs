@@ -10,9 +10,11 @@ using SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeetings;
 using SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllSubscribersInfoByCategoryId;
 using SharijhaAward.Application.Features.MeetingFeatures.Queries.GetMeetingById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class MeetingsController : ControllerBase

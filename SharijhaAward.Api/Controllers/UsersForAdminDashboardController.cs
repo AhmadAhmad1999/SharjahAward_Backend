@@ -8,9 +8,11 @@ using SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser;
 using SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers;
 using SharijhaAward.Application.Features.UserFeatures.Queries.GetUserById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersForAdminDashboardController : ControllerBase

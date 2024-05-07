@@ -15,8 +15,11 @@ using SharijhaAward.Application.Features.ContactUsPages.Queries.GetMsgByIdForAwa
 using SharijhaAward.Application.Responses;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
+using SharijhaAward.Api.Logger;
+
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ContactUsController : ControllerBase

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CycleModel;
@@ -13,14 +14,20 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IAsyncRepository<Cycle> _CycleRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IAsyncRepository<RolePermission> _RolePermissionRepository;
 
         public LoginCommandHandler(IUserRepository userRepository , IMapper mapper, IAsyncRepository<Role> roleRepository,
-            IAsyncRepository<Cycle> CycleRepository)
+            IAsyncRepository<Cycle> CycleRepository,
+            IAsyncRepository<UserRole> UserRoleRepository,
+            IAsyncRepository<RolePermission> RolePermissionRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _roleRepository = roleRepository;
             _CycleRepository = CycleRepository;
+            _UserRoleRepository = UserRoleRepository;
+            _RolePermissionRepository = RolePermissionRepository;
         }
         public async Task<AuthenticationResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -32,6 +39,21 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             var response = await _userRepository.LogInAsync(user, request.lang, request.intoAdminDashboard);
 
             response.ActiveCycleId = ActiveCycleEntity?.Id;
+
+            List<int> UserRolesIds = await _UserRoleRepository
+                .Where(x => x.UserId == user.Id)
+                .Select(x => x.RoleId)
+                .ToListAsync();
+
+            response.UserPermissions = await _RolePermissionRepository
+                .Where(x => UserRolesIds.Contains(x.RoleId))
+                .Include(x => x.Permission!)
+                .Include(x => x.Permission!.PermissionHeader!)
+                .Select(x => new UserPermissionsDto()
+                {
+                    Action = x.Permission!.Name,
+                    Subject = x.Permission!.PermissionHeader!.Name
+                }).ToListAsync();
 
             return response;
         }

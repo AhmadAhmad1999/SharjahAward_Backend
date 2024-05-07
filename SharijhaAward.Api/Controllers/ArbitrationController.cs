@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.AssignFormsToArbitrator;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.ChangeStatusForAssignedForm;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.UpdateAssignedFormsToArbitrator;
@@ -12,6 +13,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ArbitrationController : ControllerBase

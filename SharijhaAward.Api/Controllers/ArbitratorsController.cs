@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
 using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitratorCategory;
 using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitratorClass;
@@ -20,6 +21,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ArbitratorsController : ControllerBase

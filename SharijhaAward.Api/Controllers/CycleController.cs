@@ -11,9 +11,11 @@ using SharijhaAward.Application.Features.Cycles.Queries.GetLimteNumberOfCategori
 using SharijhaAward.Application.Features.GeneralFAQs.Commands.DeleteGeneralFAQ;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CycleController : ControllerBase

@@ -24,9 +24,11 @@ using SharijhaAward.Application.Responses;
 using System.Globalization;
 using System.Net;
 using System.Resources;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class PersonalInviteeController : Controller

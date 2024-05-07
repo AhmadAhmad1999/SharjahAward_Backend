@@ -14,9 +14,11 @@ using SharijhaAward.Application.Features.GeneralFAQs.Commands.UpdateGeneralFAQ;
 using SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFAQs;
 using SharijhaAward.Application.Features.GeneralFAQs.Queries.GetGeneralFAQById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class GeneralFAQController : ControllerBase

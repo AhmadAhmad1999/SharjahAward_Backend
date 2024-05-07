@@ -8,9 +8,11 @@ using SharijhaAward.Application.Features.News.Commands.UpdateNews;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId;
 using SharijhaAward.Application.Features.News.Queries.GetNewsById;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class NewsController : ControllerBase

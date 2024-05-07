@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using NPOI.SS.Formula.Functions;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Domain.Entities.AppVersioningModel;
 using SharijhaAward.Domain.Entities.LoggerModel;
 using System.Diagnostics;
 using System.Dynamic;
@@ -18,10 +18,10 @@ namespace SharijhaAward.Api.Logger
         public static List<ActionParamaters> MyParametersList { get; set; } = new List<ActionParamaters>();
         public class ActionParamaters
         {
-            public string GuidId { get; set; }
+            public Guid GuidId { get; set; }
             public IDictionary<string, object> Parameters { get; set; }
         }
-       
+
         public LogFilterAttribute(IServiceProvider ServiceProvider, ILogger<LogFilterAttribute> logger)
         {
             _ServiceProvider = ServiceProvider;
@@ -29,8 +29,9 @@ namespace SharijhaAward.Api.Logger
         }
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            string GuidId = filterContext.HttpContext.TraceIdentifier;
-            // Trace.CorrelationManager.ActivityId = GuidId;
+            Guid GuidId = Guid.NewGuid();
+            Trace.CorrelationManager.ActivityId = GuidId;
+            filterContext.HttpContext.TraceIdentifier = GuidId.ToString();
             IDictionary<string, object> Parameters = filterContext.ActionArguments;
             MyParametersList.Add(new ActionParamaters
             {
@@ -42,12 +43,13 @@ namespace SharijhaAward.Api.Logger
             if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null")
                 UserId = Int32.Parse(new JwtSecurityTokenHandler().ReadJwtToken(token.Split(" ")[1]).Claims.ToList()[0].Value);
         }
-        public override void OnActionExecuted(ActionExecutedContext FilterContext)
+
+        public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             IAsyncRepository<LogUserAction> _LogUserActionRepository = _ServiceProvider.GetService<IAsyncRepository<LogUserAction>>();
-            // Check If There Any Exception In API Response..
-            Exception Exceptions = FilterContext.Exception;
 
+            // Check If There Any Exception In API Response..
+            Exception Exceptions = filterContext.Exception;
             if (Exceptions != null)
             {
                 try
@@ -62,19 +64,19 @@ namespace SharijhaAward.Api.Logger
                         NewLog.UserId = UserId.Value;
 
                     // 3. Controller Name..
-                    List<object> Controller_Function_Name = FilterContext.RouteData.Values.Values.ToList();
+                    List<object> Controller_Function_Name = filterContext.RouteData.Values.Values.ToList();
                     NewLog.ControllerName = Controller_Function_Name[1].ToString();
 
                     // 4. Function Name..
                     NewLog.FunctionName = Controller_Function_Name[0].ToString();
 
                     // 5. Body Parameters..
-                    IDictionary<string, object>? Parameters = MyParametersList.Where(x =>
-                        x.GuidId == FilterContext.HttpContext.TraceIdentifier).Select(x => x.Parameters).FirstOrDefault();
+                    IDictionary<string, object> Parameters = MyParametersList.Where(x =>
+                        x.GuidId.ToString() == filterContext.HttpContext.TraceIdentifier).Select(x => x.Parameters).FirstOrDefault();
                     NewLog.BodyParameters = Newtonsoft.Json.JsonConvert.SerializeObject(Parameters);
 
                     // 6. Header Paramaters..
-                    NewLog.HeaderParameters = Newtonsoft.Json.JsonConvert.SerializeObject(FilterContext.HttpContext.Request.Headers);
+                    NewLog.HeaderParameters = Newtonsoft.Json.JsonConvert.SerializeObject(filterContext.HttpContext.Request.Headers);
 
                     // 7. Response Status..
                     NewLog.ResponseStatus = "Failed";
@@ -82,39 +84,11 @@ namespace SharijhaAward.Api.Logger
                     // 8. Result...
                     NewLog.Result = Exceptions.Message;
 
+                    // 9. Activity Id...
+                    NewLog.ActivityId = Trace.CorrelationManager.ActivityId;
+
+                    _Logger.LogError(Exceptions.Message);
                     _LogUserActionRepository.AddAsync(NewLog);
-
-                    //if (Exceptions != null)
-                    //{
-                        
-                    //}
-                    //else
-                    //{
-                    //    IActionResult? ActionResult = FilterContext.Result;
-                    //    if (ActionResult is OkObjectResult APIResult)
-                    //    {
-                    //        dynamic? DynamicObject = new ExpandoObject();
-                    //        DynamicObject = APIResult.Value;
-                    //        if (DynamicObject != null ? 
-                    //            !string.IsNullOrEmpty(DynamicObject.Errors)
-                    //            : false)
-                    //        {
-                    //            // 7. Response Status..
-                    //            NewLog.ResponseStatus = "Failed";
-
-                    //            // 8. Result...
-                    //            NewLog.Result = DynamicObject.Errors;
-                    //        }
-                    //        else if (DynamicObject.Code == 0)
-                    //        {
-                    //            // 7. Response Status..
-                    //            NewLog.ResponseStatus = "Success";
-
-                    //            // 8. Result...
-                    //            NewLog.Result = Newtonsoft.Json.JsonConvert.SerializeObject(DynamicObject);
-                    //        }
-                    //    }
-                    //}
                 }
                 catch (Exception err)
                 {

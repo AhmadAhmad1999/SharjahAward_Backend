@@ -8,9 +8,11 @@ using SharijhaAward.Application.Features.NotificationFeatures.Commands.CreateNot
 using SharijhaAward.Application.Features.NotificationFeatures.Commands.DeleteNotification;
 using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotifications;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class NotificationsController : ControllerBase

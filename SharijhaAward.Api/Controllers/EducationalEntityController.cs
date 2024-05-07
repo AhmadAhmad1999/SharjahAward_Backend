@@ -8,9 +8,11 @@ using SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEduca
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEducationalEntitiesForAdminDashboard;
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetEducationalEntityById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class EducationalEntityController : ControllerBase

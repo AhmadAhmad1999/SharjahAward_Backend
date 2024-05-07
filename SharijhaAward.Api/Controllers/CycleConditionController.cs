@@ -13,9 +13,11 @@ using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditi
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionById;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnTermsAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAllConditions;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CycleConditionController : ControllerBase

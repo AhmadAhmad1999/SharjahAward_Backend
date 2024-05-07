@@ -13,9 +13,11 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFormByI
 using SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm;
 using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ProvidedFormController : ControllerBase
