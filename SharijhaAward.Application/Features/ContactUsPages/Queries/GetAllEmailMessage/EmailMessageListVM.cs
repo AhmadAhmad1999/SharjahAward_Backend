@@ -17,6 +17,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
         public string From { get; set; } = string.Empty;
         public string? To { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
+        public int TypeId { get; set; } 
         public string TypeName { get; set; } = string.Empty;
         public MessageStatus? Status { get; set; } = MessageStatus.New;
         public int? MessageId { get; set; }

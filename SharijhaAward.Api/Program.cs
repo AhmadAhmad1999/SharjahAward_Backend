@@ -58,11 +58,11 @@ FirebaseApp.Create(new AppOptions()
     Credential = GoogleCredential.FromFile(Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "FirebaseAccountData.json")),
 });
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new DateTimeConverterClass());
-    });
+//builder.Services.AddControllers()
+//    .AddJsonOptions(options =>
+//    {
+//        options.JsonSerializerOptions.Converters.Add(new DateTimeConverterClass());
+//    });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
