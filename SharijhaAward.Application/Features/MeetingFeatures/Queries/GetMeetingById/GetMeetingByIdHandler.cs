@@ -65,14 +65,8 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetMeetingB
                         Email = x.Email,
                         Name = x.Name
                     }).ToList(),
-                Categories = CategoriesEntities
-                    .Select(x => new CategoryDto()
-                    {
-                        Id = x.Id,
-                        Name = Request.lang == "en"
-                            ? x.EnglishName
-                            : x.ArabicName
-                    }).ToList()
+                CategoriesIds = CategoriesEntities
+                    .Select(x => x.Id).ToList()
             };
 
             return new BaseResponse<GetMeetingByIdDto>(ResponseMessage, true, 200, Response);

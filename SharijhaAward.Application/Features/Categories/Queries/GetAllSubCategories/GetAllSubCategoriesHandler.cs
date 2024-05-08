@@ -20,7 +20,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
             Handle(GetAllSubCategoriesQuery Request, CancellationToken cancellationToken)
         {
             List<GetAllSubCategoriesListVM> CategoriesEntities = await _CategoryRepository
-                .Where(x => x.ParentId == null)
+                .Where(x => x.ParentId != null)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new GetAllSubCategoriesListVM()
                 {
