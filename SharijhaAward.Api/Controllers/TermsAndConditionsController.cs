@@ -197,7 +197,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet("CheckAllConditions/{Id}", Name= "CheckAllConditions")]
-        public async Task<IActionResult> CheckAllConditions(int Id, int formId ,bool IsSpecial)
+        public async Task<IActionResult> CheckAllConditions(int Id, int formId )
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -205,7 +205,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new CheckAllConditionsQuery()
             {
                 CategoryId = Id,
-                IsSpecial = IsSpecial,
+
                 formId = formId,
                 lang = Language!
             });

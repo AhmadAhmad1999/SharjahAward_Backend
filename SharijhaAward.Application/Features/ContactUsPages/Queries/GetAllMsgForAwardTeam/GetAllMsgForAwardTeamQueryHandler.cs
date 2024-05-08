@@ -22,15 +22,17 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
         private readonly IAsyncRepository<MessageType> _messageTypeRepository;
         private readonly IAsyncRepository<RoleMessageType> _roleMessageTypeRepository;
         private readonly IAsyncRepository<UserRole> _userRoleRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
-        public GetAllMsgForAwardTeamQueryHandler(IAsyncRepository<MessageType> messageTypeRepository, IAsyncRepository<EmailMessage> emailMessageRepository, IAsyncRepository<RoleMessageType> roleMessageTypeRepository, IAsyncRepository<UserRole> userRoleRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetAllMsgForAwardTeamQueryHandler(IUserRepository userRepository, IAsyncRepository<MessageType> messageTypeRepository, IAsyncRepository<EmailMessage> emailMessageRepository, IAsyncRepository<RoleMessageType> roleMessageTypeRepository, IAsyncRepository<UserRole> userRoleRepository, IJwtProvider jwtProvider, IMapper mapper)
         {
             _emailMessageRepository = emailMessageRepository;
             _roleMessageTypeRepository = roleMessageTypeRepository;
             _messageTypeRepository = messageTypeRepository;
             _userRoleRepository = userRoleRepository;
+            _userRepository = userRepository;
             _jwtProvider = jwtProvider;
             _mapper = mapper;
         }
@@ -43,10 +45,12 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
             {
                 return new BaseResponse<List<EmailMessageListVM>>("", false, 401);
             }
+            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
+
             var RoleIds = _userRoleRepository.Where(r => r.UserId == int.Parse(UserId)).Select(r=>r.RoleId).ToList();
             
             List<int> MessageTypeIds = new List<int>();
-           
+            
             for(int i = 0; i < RoleIds.Count(); i++)
             {
                 var TypeIds = _roleMessageTypeRepository.Where(r => r.RoleId == RoleIds[i]).Select(r => r.MessageTypeId).ToList();
@@ -54,7 +58,9 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
             }
 
             List<EmailMessage> emailMessages = new List<EmailMessage>();
+            
             var Count = 0;
+           
             for (int i = 0; i < MessageTypeIds.Count(); i++)
             {
                 var EmailMessage = _emailMessageRepository.WhereThenIncludeThenPagination(m => m.TypeId == MessageTypeIds[i] && m.Id == m.MessageId, request.page, request.pageSize , m => m.Attachments!).ToList();
@@ -72,6 +78,8 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
                 data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(emailMessages[i].Attachments);
                
                 data[i].TypeName = Type!.Type;
+
+                data[i].IsOutComing = data[i].From == User!.Email ? true : false; 
             }
             
             Pagination pagination = new Pagination(request.page, request.pageSize, Count);

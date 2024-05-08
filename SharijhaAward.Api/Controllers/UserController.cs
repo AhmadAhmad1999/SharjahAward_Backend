@@ -99,7 +99,7 @@ namespace SharijhaAward.Api.Controllers
         }
         [HttpGet(Name = "GetAllUsers")]
 
-        public async Task<ActionResult> GetAllUsers(int page , int perPage)
+        public async Task<ActionResult> GetAllUsers(int page = 1 , int perPage=10)
         {
             var response = await _mediator.Send(new GetAllUsersQuery()
             {
