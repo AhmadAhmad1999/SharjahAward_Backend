@@ -1,42 +1,31 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.MeetingModel;
+using SharijhaAward.Domain.Entities.MeetingUserModel;
 
-namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailToUsersInMeeting
+namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeeting
 {
-    public class SendEmailToUsersInMeetingHandler : IRequestHandler<SendEmailToUsersInMeetingCommand, BaseResponse<object>>
+    public class CancelMeetingHandler : IRequestHandler<CancelMeetingCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Meeting> _MeetingRepository;
+        private readonly IAsyncRepository<MeetingUser> _MeetingUserRepository;
         private readonly IEmailSender _EmailSender;
 
-        public SendEmailToUsersInMeetingHandler(IAsyncRepository<Meeting> MeetingRepository,
+        public CancelMeetingHandler(IAsyncRepository<Meeting> MeetingRepository,
+            IAsyncRepository<MeetingUser> MeetingUserRepository,
             IEmailSender EmailSender)
         {
             _MeetingRepository = MeetingRepository;
+            _MeetingUserRepository = MeetingUserRepository;
             _EmailSender = EmailSender;
         }
 
-        public async Task<BaseResponse<object>> Handle(SendEmailToUsersInMeetingCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CancelMeetingCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
-
-            List<string> CheckForDuplicatedEmails = Request.UsersInfo
-                .GroupBy(m => m.Email.ToLower())
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key)
-                .ToList();
-
-            if (CheckForDuplicatedEmails.Any())
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? $"The following emails are duplicated: {string.Join(", ", CheckForDuplicatedEmails)}"
-                    : $"البُرُد الإلكترونية التالية مكررة: {string.Join(", ", CheckForDuplicatedEmails)}";
-
-                return new BaseResponse<object>(ResponseMessage, false, 400);
-            }
 
             Meeting? MeetingEntity = await _MeetingRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.MeetingId);
@@ -50,11 +39,14 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            List<string> Recipients = await _MeetingUserRepository
+                .Where(x => x.MeetingId == Request.MeetingId)
+                .Select(x => x.Email)
+                .ToListAsync();
+
             try
             {
-                List<string> Recipients = Request.UsersInfo.Select(x => x.Email).ToList();
-
-                string EmailSubject = MeetingEntity.ArabicName + "-" + MeetingEntity.EnglishName;
+                string EmailSubject = "Canceled Meeting: " + MeetingEntity.EnglishName + " - اجتماع مُلغى: " + MeetingEntity.ArabicName;
 
                 string FirstArabicLine = $"عنوان الاجتماع: {MeetingEntity.ArabicName}";
                 string SecondArabicLine = $"تاريخ الاجتماع: {MeetingEntity.Date.DayOfWeek} " +
@@ -62,6 +54,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
                 string ThirdArabicLine = $"وقت الاجتماع: {MeetingEntity.Date.Hour}:{MeetingEntity.Date} {MeetingEntity.Date.ToString("tt")}";
                 string ForthArabicLine = $"نوع الاجتماع: {MeetingEntity.Type}";
                 string FifthArabicLine = $"{MeetingEntity.ArabicText}";
+                string SixthArabicLine = $"سبب الإلغاء: {Request.ArabicReasonOfCanceling}";
 
                 string FirstEnglishLine = $"Meeting Title: {MeetingEntity.EnglishName}";
                 string SecondEnglishLine = $"Meeting Date: {MeetingEntity.Date.DayOfWeek} " +
@@ -69,6 +62,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
                 string ThirdEnglishLine = $"Meeting Time: {MeetingEntity.Date.Hour}:{MeetingEntity.Date} {MeetingEntity.Date.ToString("tt")}";
                 string ForthEnglishLine = $"Meeting Type: {MeetingEntity.Type}";
                 string FifthEnglishLine = $"{MeetingEntity.EnglishText}";
+                string SixthEnglisLine = $"Reason Of Canceling: {Request.EnglishReasonOfCanceling}";
 
                 string EmailArabicBody = (string.IsNullOrEmpty(FifthArabicLine)
                     ? string.Join("\n", FirstArabicLine, SecondArabicLine, ThirdArabicLine, ForthArabicLine)
@@ -84,7 +78,10 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
 
                 ResponseMessage = Request.lang == "en"
                     ? "Sent successfully"
-                    : "تم إرسال إيميلات الدعوة للاجتماع بنجاح";
+                    : "The meeting was successfully cancelled, and emails were sent to its participants";
+
+                MeetingEntity.isCanceled = true;
+                await _MeetingRepository.UpdateAsync(MeetingEntity);
 
                 return new BaseResponse<object>(ResponseMessage, true, 200);
             }

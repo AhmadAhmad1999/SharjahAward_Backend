@@ -289,6 +289,7 @@ using SharijhaAward.Application.Features.Rewards.Queries.GetRewardById;
 using SharijhaAward.Domain.Entities.AwardStatisticModel;
 using SharijhaAward.Application.Features.AwardStatistics.Commands.CreateAwardStatistic;
 using SharijhaAward.Application.Features.AwardStatistics.Commands.UpdateAwardStatistic;
+using SharijhaAward.Application.Features.Authentication.SingUpFromAdminDashboard;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -559,6 +560,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ArbitrationScale, CreateArbitrationScaleCommand>().ReverseMap();
             CreateMap<ArbitrationScale, ArbitrationScaleDto>().ReverseMap();
             CreateMap<AppVersion, CreateNewAppVersionCommand>().ReverseMap();
+            CreateMap<User, SingUpFromAdminDashboardCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
