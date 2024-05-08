@@ -38,7 +38,9 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Get
                             ? x.EnglishName
                             : x.ArabicName,
                         ArabicName = x.ArabicName,
-                        EnglishName = x.EnglishName
+                        EnglishName = x.EnglishName,
+                        EducationType = x.EducationType,
+                        Emirates = x.Emirates
                     }).ToListAsync();
 
             int TotalCount = await _EducationalInstitutionRepository.GetCountAsync(null);

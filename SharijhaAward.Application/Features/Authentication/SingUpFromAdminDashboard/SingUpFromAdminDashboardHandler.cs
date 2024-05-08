@@ -1,36 +1,31 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Authentication.Login;
-using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
-namespace SharijhaAward.Application.Features.Authentication.SignUp
+namespace SharijhaAward.Application.Features.Authentication.SingUpFromAdminDashboard
 {
-    public class SignUpCommandHandler
-        : IRequestHandler<SignUpCommand, AuthenticationResponse>
+    public class SingUpFromAdminDashboardHandler
+        : IRequestHandler<SingUpFromAdminDashboardCommand, AuthenticationResponse>
     {
         private readonly IUserRepository _UserRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
-        private readonly IEmailSender _EmailSender;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
-        public SignUpCommandHandler(IUserRepository userRepository,IRoleRepository roleRepository ,IMapper mapper,
-            IEmailSender EmailSender,
+        public SingUpFromAdminDashboardHandler(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper,
             IAsyncRepository<UserRole> UserRoleRepository)
         {
             _roleRepository = roleRepository;
             _UserRepository = userRepository;
             _mapper = mapper;
-            _EmailSender = EmailSender;
             _UserRoleRepository = UserRoleRepository;
         }
 
-        public async Task<AuthenticationResponse> Handle(SignUpCommand Request, CancellationToken cancellationToken)
+        public async Task<AuthenticationResponse> Handle(SingUpFromAdminDashboardCommand Request, CancellationToken cancellationToken)
         {
             Domain.Entities.IdentityModels.User? CheckEmail = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());
@@ -56,21 +51,8 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                 else
                 {
                     msg = Request.lang == "en"
-                        ? "This account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
-                        : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك";
-
-                    EmailRequest EmailRequest2 = new EmailRequest()
-                    {
-                        ToEmail = CheckEmail.Email,
-                        Subject = Request.lang == "ar"
-                            ? $"رمز تفعيل"
-                            : "Confirmation Code",
-                        Body = Request.lang == "ar"
-                            ? $"رمز التفعيل الخاص بحسابك: {CheckEmail.ConfirmationCodeForSignUp}"
-                            : $"This is your account's confirmation code: {CheckEmail.ConfirmationCodeForSignUp}"
-                    };
-
-                    await _EmailSender.SendEmailForConfirmationCode(EmailRequest2);
+                        ? "This account is not authenticated, please verify it using the verified account button"
+                        : "لم يتم توثيق هذا الحساب، يرجى التحقق منه باستخدام زر الحساب الموثق";
 
                     return new AuthenticationResponse()
                     {
@@ -91,9 +73,9 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
 
-            User.isValidAccount = false;
+            User.isValidAccount = true;
 
-            Role? CheckRoleId = Request.RoleName != null 
+            Role? CheckRoleId = Request.RoleName != null
                 ? await _roleRepository.GetByName(Request.RoleName)
                 : await _roleRepository.GetByName("User");
 
@@ -105,13 +87,9 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
                 return new AuthenticationResponse()
                 {
-                   message = msg
+                    message = msg
                 };
             }
-
-            int ConfirmationCode = new Random().Next(10000, 99999);
-
-            User.ConfirmationCodeForSignUp = ConfirmationCode;
 
             var random = new Random();
             const string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -151,20 +129,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
             await _UserRoleRepository.AddAsync(NewUserRoleEntity);
 
-            EmailRequest EmailRequest = new EmailRequest()
-            {
-                ToEmail = User.Email,
-                Subject = Request.lang == "ar"
-                    ? $"رمز تفعيل"
-                    : "Confirmation Code",
-                Body = Request.lang == "ar"
-                    ? $"رمز التفعيل الخاص بحسابك: {ConfirmationCode}"
-                    : $"This is your account's confirmation code: {ConfirmationCode}"
-            };
-
-            await _EmailSender.SendEmailForConfirmationCode(EmailRequest);
-
-            return new AuthenticationResponse() 
+            return new AuthenticationResponse()
             {
                 isSucceed = true,
                 message = msg,

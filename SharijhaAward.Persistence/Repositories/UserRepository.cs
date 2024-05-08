@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Authentication.Login;
+using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
@@ -18,12 +19,14 @@ namespace SharijhaAward.Persistence.Repositories
     {
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _Mapper;
-
+        private readonly IEmailSender _EmailSender;
         public UserRepository(SharijhaAwardDbContext dbContext , IJwtProvider jwtProvider,
-            IMapper Mapper) : base(dbContext)
+            IMapper Mapper,
+            IEmailSender EmailSender) : base(dbContext)
         {
             _jwtProvider = jwtProvider;
             _Mapper = Mapper;
+            _EmailSender = EmailSender;
         }
 
         //public async Task AsignRole(int userId, int roleId)
@@ -73,6 +76,27 @@ namespace SharijhaAward.Persistence.Repositories
                     message = lang == "en"
                         ? "Invalid email or password"
                         : "خطأ في الإيميل أو كلمة المرور"
+                };
+            }
+            else if (!userToLogin.isValidAccount)
+            {
+                EmailRequest EmailRequest2 = new EmailRequest()
+                {
+                    ToEmail = userToLogin.Email,
+                    Subject = lang == "ar"
+                            ? $"رمز تفعيل"
+                            : "Confirmation Code",
+                    Body = lang == "ar"
+                            ? $"رمز التفعيل الخاص بحسابك: {userToLogin.ConfirmationCodeForSignUp}"
+                            : $"This is your account's confirmation code: {userToLogin.ConfirmationCodeForSignUp}"
+                };
+
+                await _EmailSender.SendEmailForConfirmationCode(EmailRequest2);
+                return new AuthenticationResponse()
+                {
+                    message = lang == "en"
+                        ? "This account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
+                        : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك"
                 };
             }
 

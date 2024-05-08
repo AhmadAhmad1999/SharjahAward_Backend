@@ -36,7 +36,10 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
             if (request.page != 0 && request.pageSize != -1)
                 Subscribers = await _UserRoleRepository
                     .Include(x => x.User!)
-                    .Where(x => x.RoleId == SubscriberRole.Id && x.User!.isValidAccount)
+                    .Where(x => x.RoleId == SubscriberRole.Id &&
+                        (request.isValidAccount != null 
+                            ? x.User!.isValidAccount == request.isValidAccount
+                            : true))
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => x.User!)
                     .Skip((request.page - 1) * request.pageSize)
@@ -46,14 +49,22 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
             else
                 Subscribers = await _UserRoleRepository
                     .Include(x => x.User!)
-                    .Where(x => x.RoleId == SubscriberRole.Id && x.User!.isValidAccount)
+                    .Where(x => x.RoleId == SubscriberRole.Id &&
+                        (request.isValidAccount != null
+                            ? x.User!.isValidAccount == request.isValidAccount
+                            : true))
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => x.User!)
                     .ToListAsync();
 
             var data = _mapper.Map<List<UserListVm>>(Subscribers);
 
-            int Count = await _UserRoleRepository.GetCountAsync(u => u.RoleId == SubscriberRole.Id);
+            int Count = await _UserRoleRepository
+                .Include(x => x.User!)
+                .CountAsync(u => u.RoleId == SubscriberRole.Id && 
+                    (request.isValidAccount != null
+                        ? u.User!.isValidAccount == request.isValidAccount
+                        : true));
             Pagination pagination = new Pagination(request.page, request.pageSize, Count);
             return new BaseResponse<List<UserListVm>>("", true, 200, data, pagination);
         }
