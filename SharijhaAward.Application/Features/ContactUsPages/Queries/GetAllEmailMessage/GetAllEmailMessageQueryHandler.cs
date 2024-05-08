@@ -48,9 +48,11 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
 
             var EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.From == User.Email || m.To == User.Email && m.MessageId == m.Id, request.page, request.pageSize, m => m.Attachments!)
                 .OrderByDescending(x => x.CreatedAt).ToListAsync();
+
             if (request.filter == 1)
             {
                 EmailMessages = EmailMessages.Where(m => m.From == User.Email).ToList();
+              
             }
 
             if (request.filter == 2)
@@ -60,7 +62,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
             if (request.query != null)
         
             {
-                EmailMessages = EmailMessages.Where(m => m.Body.Contains(request.query)).OrderByDescending(x => x.CreatedAt).ToList();
+                EmailMessages = _emailMessageRepository.Where(m => m.Body.Contains(request.query)).OrderByDescending(x => x.CreatedAt).ToList();
             }
           
             var data = _mapper.Map<List<EmailMessageListVM>>(EmailMessages);
@@ -78,9 +80,10 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                 data[i].PersonalPhotoUrl = Sender.ImageURL!;
                 data[i].Gender = Sender.Gender;
                 data[i].IsReplay = false;
+                data[i].IsOutComing = User.Email == data[i].From ? true : false;
             }
             
-            int Count = _emailMessageRepository.GetCount(m => m.To == User.Email || m.From == User.Email);
+            int Count = _emailMessageRepository.GetCount(m => m.To == User.Email || m.From == User.Email && m.MessageId == m.Id);
             
             Pagination pagination = new Pagination(request.page,request.pageSize, Count);
                

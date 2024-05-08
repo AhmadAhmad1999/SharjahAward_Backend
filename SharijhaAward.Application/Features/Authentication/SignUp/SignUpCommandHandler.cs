@@ -6,6 +6,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.AchievementModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.Authentication.SignUp
@@ -18,8 +19,9 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         private readonly IMapper _mapper;
         private readonly IEmailSender _EmailSender;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IAsyncRepository<Achievement> _achievementRepository;
 
-        public SignUpCommandHandler(IUserRepository userRepository,IRoleRepository roleRepository ,IMapper mapper,
+        public SignUpCommandHandler(IAsyncRepository<Achievement> achievementRepository, IUserRepository userRepository,IRoleRepository roleRepository ,IMapper mapper,
             IEmailSender EmailSender,
             IAsyncRepository<UserRole> UserRoleRepository)
         {
@@ -28,6 +30,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
             _mapper = mapper;
             _EmailSender = EmailSender;
             _UserRoleRepository = UserRoleRepository;
+            _achievementRepository = achievementRepository;
         }
 
         public async Task<AuthenticationResponse> Handle(SignUpCommand Request, CancellationToken cancellationToken)
@@ -150,6 +153,15 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
             };
 
             await _UserRoleRepository.AddAsync(NewUserRoleEntity);
+
+            Achievement achievement = new Achievement()
+            {
+                AcceptedOnDistinctionField = false,
+                AcceptedOnProjects = false,
+                AcceptedOnSkillsAndExperiences = false,
+                UserId = UserEntityAfterAdd.Id
+            };
+
 
             EmailRequest EmailRequest = new EmailRequest()
             {

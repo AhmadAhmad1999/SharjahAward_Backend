@@ -50,6 +50,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycl
 
                 return new BaseResponse<object>(msg, false, 400);
             }
+            
             await _cycleConditionRepository.AddAsync(cycleCondition);
 
             msg = request.lang == "en"

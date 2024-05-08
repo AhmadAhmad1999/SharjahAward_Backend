@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using NPOI.SS.Formula.Functions;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.LoggerModel;
+using SharijhaAward.Infrastructure.Authentication;
 using System.Diagnostics;
 using System.Dynamic;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,6 +17,7 @@ namespace SharijhaAward.Api.Logger
         private readonly IServiceCollection _ServiceCollection;
         private readonly ILogger<LogFilterAttribute> _Logger;
         private IServiceProvider _ServiceProvider;
+        private IJwtProvider _JwtProvider;
         public static List<ActionParamaters> MyParametersList { get; set; } = new List<ActionParamaters>();
         public class ActionParamaters
         {
@@ -22,10 +25,13 @@ namespace SharijhaAward.Api.Logger
             public IDictionary<string, object> Parameters { get; set; }
         }
 
-        public LogFilterAttribute(IServiceProvider ServiceProvider, ILogger<LogFilterAttribute> logger)
+        public LogFilterAttribute(IServiceProvider ServiceProvider,
+            ILogger<LogFilterAttribute> logger,
+            IJwtProvider JwtProvider)
         {
             _ServiceProvider = ServiceProvider;
             _Logger = logger;
+            _JwtProvider = JwtProvider;
         }
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -41,7 +47,7 @@ namespace SharijhaAward.Api.Logger
             string token = filterContext.HttpContext.Request.Headers["Authorization"].ToString();
 
             if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null")
-                UserId = Int32.Parse(new JwtSecurityTokenHandler().ReadJwtToken(token.Split(" ")[1]).Claims.ToList()[0].Value);
+                UserId = int.Parse(_JwtProvider.GetUserIdFromToken(token));
         }
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)

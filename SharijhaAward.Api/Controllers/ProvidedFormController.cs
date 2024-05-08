@@ -14,6 +14,7 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm;
 using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedFormsForAllSubscriber;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -96,6 +97,33 @@ namespace SharijhaAward.Api.Controllers
                 token = token!,
                 Type = Type,
                 lang= Language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetAllFormsForAllSubscriber", Name = "GetAllFormsForAllSubscriber")]
+        public async Task<IActionResult> GetAllFormsForAllSubscriber(int page = 1, int pageSize = 10)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
+
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+            var response = await _mediator.Send(new GetAllFormsForAllSubscriberQuery()
+            {
+                page=page,
+                pageSize = pageSize,
+                lang = Language!
             });
 
             return response.statusCode switch
