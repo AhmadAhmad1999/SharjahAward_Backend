@@ -56,29 +56,25 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
 
                 string EmailSubject = MeetingEntity.ArabicName + "-" + MeetingEntity.EnglishName;
 
-                string FirstArabicLine = $"عنوان الاجتماع: {MeetingEntity.ArabicName}";
+                string FirstArabicLine = $"عنوان الاجتماع: {MeetingEntity.ArabicName} \n";
                 string SecondArabicLine = $"تاريخ الاجتماع: {MeetingEntity.Date.DayOfWeek} " +
-                    $"{MeetingEntity.Date.Year}-{MeetingEntity.Date.Month}-{MeetingEntity.Date.Day}";
-                string ThirdArabicLine = $"وقت الاجتماع: {MeetingEntity.Date.Hour}:{MeetingEntity.Date} {MeetingEntity.Date.ToString("tt")}";
-                string ForthArabicLine = $"نوع الاجتماع: {MeetingEntity.Type}";
-                string FifthArabicLine = $"{MeetingEntity.ArabicText}";
+                    $"{MeetingEntity.Date.Year}-{MeetingEntity.Date.Month}-{MeetingEntity.Date.Day} \n";
+                string ThirdArabicLine = $"وقت الاجتماع: {MeetingEntity.Date.Hour}:{MeetingEntity.Date} {MeetingEntity.Date.ToString("tt")} \n";
+                string ForthArabicLine = $"نوع الاجتماع: {MeetingEntity.Type} \n";
+                string FifthArabicLine = $"{MeetingEntity.ArabicText} \n \n";
 
-                string FirstEnglishLine = $"Meeting Title: {MeetingEntity.EnglishName}";
+                string FirstEnglishLine = $"Meeting Title: {MeetingEntity.EnglishName} \n";
                 string SecondEnglishLine = $"Meeting Date: {MeetingEntity.Date.DayOfWeek} " +
-                    $"{MeetingEntity.Date.Year}-{MeetingEntity.Date.Month}-{MeetingEntity.Date.Day}";
-                string ThirdEnglishLine = $"Meeting Time: {MeetingEntity.Date.Hour}:{MeetingEntity.Date} {MeetingEntity.Date.ToString("tt")}";
-                string ForthEnglishLine = $"Meeting Type: {MeetingEntity.Type}";
-                string FifthEnglishLine = $"{MeetingEntity.EnglishText}";
+                    $"{MeetingEntity.Date.Year}-{MeetingEntity.Date.Month}-{MeetingEntity.Date.Day} \n";
+                string ThirdEnglishLine = $"Meeting Time: {MeetingEntity.Date.Hour}:{MeetingEntity.Date} {MeetingEntity.Date.ToString("tt")} \n";
+                string ForthEnglishLine = $"Meeting Type: {MeetingEntity.Type} \n";
+                string FifthEnglishLine = $"{MeetingEntity.EnglishText} \n";
 
-                string EmailArabicBody = (string.IsNullOrEmpty(FifthArabicLine)
-                    ? string.Join("\n", FirstArabicLine, SecondArabicLine, ThirdArabicLine, ForthArabicLine)
-                    : string.Join("\n", FirstArabicLine, SecondArabicLine, ThirdArabicLine, ForthArabicLine, FifthArabicLine));
-
-                string EmailEnglishBody = (string.IsNullOrEmpty(FifthEnglishLine)
-                    ? string.Join("\n", FirstEnglishLine, SecondEnglishLine, ThirdEnglishLine, ForthEnglishLine)
-                    : string.Join("\n", FirstEnglishLine, SecondEnglishLine, ThirdEnglishLine, ForthEnglishLine, FifthEnglishLine));
-
-                string FullEmailBody = string.Join("\n", EmailArabicBody, EmailEnglishBody);
+                string FullEmailBody = (string.IsNullOrEmpty(FifthArabicLine)
+                    ? string.Join(FirstArabicLine, SecondArabicLine, ThirdArabicLine, ForthArabicLine,
+                        FirstEnglishLine, SecondEnglishLine, ThirdEnglishLine, ForthEnglishLine)
+                    : string.Join(FirstArabicLine, SecondArabicLine, ThirdArabicLine, ForthArabicLine, FifthArabicLine,
+                        FirstEnglishLine, SecondEnglishLine, ThirdEnglishLine, ForthEnglishLine, FifthEnglishLine));
 
                 await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody);
 

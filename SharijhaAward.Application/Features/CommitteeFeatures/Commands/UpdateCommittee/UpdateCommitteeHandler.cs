@@ -136,6 +136,8 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Commands.UpdateCo
                     if (NewCategoryCommitteeEntites.Count() > 0)
                         await _CategoryCommitteeRepository.AddRangeAsync(NewCategoryCommitteeEntites);
 
+                    Transaction.Complete();
+
                     ResponseMessage = Request.lang == "en"
                         ? "Committee has been updated successfully"
                         : "تم تعديل اللجنة بنجاح";
