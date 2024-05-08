@@ -76,7 +76,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
                 var Type = await _messageTypeRepository.GetByIdAsync(emailMessages[i].TypeId);
                 
                 data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(emailMessages[i].Attachments);
-               
+                
                 data[i].TypeName = Type!.Type;
 
                 data[i].IsOutComing = data[i].From == User!.Email ? true : false; 

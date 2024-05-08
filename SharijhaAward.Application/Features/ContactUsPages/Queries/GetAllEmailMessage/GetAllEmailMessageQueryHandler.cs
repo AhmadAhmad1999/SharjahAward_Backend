@@ -80,7 +80,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                 data[i].PersonalPhotoUrl = Sender.ImageURL!;
                 data[i].Gender = Sender.Gender;
                 data[i].IsReplay = false;
-                data[i].IsOutComing = request.filter == 1 ? true : false;
+                data[i].IsOutComing = User.Email == data[i].From ? true : false;
             }
             
             int Count = _emailMessageRepository.GetCount(m => m.To == User.Email || m.From == User.Email && m.MessageId == m.Id);
