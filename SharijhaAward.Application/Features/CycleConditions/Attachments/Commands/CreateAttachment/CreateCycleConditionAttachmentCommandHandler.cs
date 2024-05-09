@@ -61,6 +61,16 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Command
                 && c.ProvidedFormId == form!.Id,
                 c => c.Attachments).FirstOrDefault();
 
+            if(conditionsProvided == null)
+            {
+                conditionsProvided = new CycleConditionsProvidedForm()
+                {
+                    IsAgree = false,
+                    ProvidedFormId = request.formId,
+                    CycleConditionId = request.CycleConditionId
+                };
+                conditionsProvided = await _conditionFormsRepository.AddAsync(conditionsProvided);
+            }
 
 
             var data = _mapper.Map<CycleConditionAttachment>(request);

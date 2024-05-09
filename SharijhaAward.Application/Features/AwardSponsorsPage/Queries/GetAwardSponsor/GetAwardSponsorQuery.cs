@@ -10,5 +10,6 @@ namespace SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardS
 {
     public class GetAwardSponsorQuery : IRequest<BaseResponse<AwardSponsorDto>>
     {
+        public string? lang { get; set; }
     }
 }

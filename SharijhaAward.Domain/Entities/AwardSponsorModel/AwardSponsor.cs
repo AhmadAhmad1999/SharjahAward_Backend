@@ -10,16 +10,21 @@ namespace SharijhaAward.Domain.Entities.AwardSponsorModel
     public class AwardSponsor : AuditableEntity
     {
         public int Id {  get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string EnglishName { get; set; } = string.Empty;
+        public string ArabicName { get; set; } = string.Empty;
+        public string EnglishDescription { get; set; } = string.Empty;
+        public string ArabicDescription { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
-        public string UpbringingAndAiography { get; set; } = string.Empty;
+        public string EnglishUpbringingAndAiography { get; set; } = string.Empty;
+        public string ArabicUpbringingAndAiography { get; set; } = string.Empty;
         public string Image2 { get; set; } = string.Empty;
-        public string HonoraryPositions { get; set; } = string.Empty;
+        public string EnglishHonoraryPositions { get; set; } = string.Empty;
+        public string ArabicHonoraryPositions { get; set; } = string.Empty;
         public string Image3 { get; set; } = string.Empty;
-        public string EducationalStages { get; set; } = string.Empty;
-        public string Writings { get; set; } = string.Empty;
-        
+        public string EnglishEducationalStages { get; set; } = string.Empty;
+        public string ArabicEducationalStages { get; set; } = string.Empty;
+        public string EnglishWritings { get; set; } = string.Empty;
+        public string ArabicWritings { get; set; } = string.Empty;
 
     }
 }

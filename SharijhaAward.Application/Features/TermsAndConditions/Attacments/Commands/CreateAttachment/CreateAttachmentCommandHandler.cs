@@ -70,8 +70,18 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
                 && c.ProvidedFormId == form!.Id ,
                 c=>c.Attachments).FirstOrDefault();
 
-       
-           
+            if(conditionsProvided == null)
+            {
+                conditionsProvided = new ConditionsProvidedForms()
+                {
+                    IsAgree = false,
+                    ProvidedFormId = request.formId,
+                    TermAndConditionId = request.TermAndConditionId
+
+                };
+                await _conditionFormsRepository.AddAsync(conditionsProvided);
+            }
+
             var data = _mapper.Map<ConditionAttachment>(request);
             data.ConditionsProvidedFormsId = conditionsProvided!.Id;
           

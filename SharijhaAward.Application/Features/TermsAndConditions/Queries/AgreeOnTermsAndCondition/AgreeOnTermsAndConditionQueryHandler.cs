@@ -56,28 +56,29 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnT
                 {
                     return new BaseResponse<object>("", false, 404);
                 }
-                var form = _providedFormRepository.Where(f => f.Id == request.formId).FirstOrDefault();
+
+                var form = await _providedFormRepository.FirstOrDefaultAsync(f => f.Id == request.formId && f.userId == user.Id);
+                
                 if (form == null)
                 {
                     return new BaseResponse<object>("", false, 404);
                 }
+
                 var term = await _termRepository.GetByIdAsync(request.TermId);
                 if (term == null)
                 {
                     return new BaseResponse<object>("", false, 404);
                 }
-                //ConditionsProvidedForms conditionsProvided = new ConditionsProvidedForms();
-                //conditionsProvided.IsAgree = request.IsAgree;
-                //conditionsProvided.TermAndConditionId = term.Id;
-                //conditionsProvided.ProvidedFormId = form!.Id;
 
-                //await _conditionsProvidedFormsRepository.AddAsync(conditionsProvided);
-                var conditionsProvided = await _conditionsProvidedFormsRepository.FirstOrDefaultAsync(
-                    c => c.ProvidedFormId == form.Id && c.TermAndConditionId == request.TermId);
-              
-                conditionsProvided!.IsAgree = request.IsAgree;
-                conditionsProvided.TermAndConditionId = term.Id;
-                conditionsProvided.ProvidedFormId = form!.Id;
+                ConditionsProvidedForms conditionsProvided = new ConditionsProvidedForms()
+                {
+                    IsAgree = request.IsAgree,
+                    ProvidedFormId = request.formId,
+                    TermAndConditionId = request.TermId
+                };
+
+                await _conditionsProvidedFormsRepository.AddAsync(conditionsProvided);
+
             }
 
             return new BaseResponse<object>("", true, 200);
