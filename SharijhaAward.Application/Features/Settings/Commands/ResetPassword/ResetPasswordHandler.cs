@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Settings.Commands.ResetPassword
 {
@@ -10,12 +13,15 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ResetPassword
     {
         private readonly IUserRepository _UserRepository;
         private readonly IJwtProvider _JWTProvider;
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
 
         public ResetPasswordHandler(IUserRepository UserRepository, 
-            IJwtProvider JWTProvider)
+            IJwtProvider JWTProvider,
+            IAsyncRepository<UserToken> UserTokenRepository)
         {
             _UserRepository = UserRepository;
             _JWTProvider = JWTProvider;
+            _UserTokenRepository = UserTokenRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(ResetPasswordCommand Request, CancellationToken cancellationToken)
@@ -35,6 +41,10 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ResetPassword
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            List<UserToken> UserTokenEntitiesToDelete = await _UserTokenRepository
+                .Where(x => x.UserId == UserID)
+                .ToListAsync();
+
             byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
             string NewPasswordAfterHashing = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: Request.NewPassword,
@@ -45,13 +55,45 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ResetPassword
 
             UserEntity.Password = NewPasswordAfterHashing;
 
-            await _UserRepository.UpdateAsync(UserEntity);
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
-            ResponseMessage = Request.lang == "en"
-                ? "Your password has been updated successfully"
-                : "تم تحديث كلمة المرور الخاصة بك بنجاح";
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    await _UserTokenRepository.DeleteListAsync(UserTokenEntitiesToDelete);
 
-            return new BaseResponse<object>(ResponseMessage, true, 200);
+                    await _UserRepository.UpdateAsync(UserEntity);
+
+                    string Token = _JWTProvider.Generate(UserEntity);
+
+                    UserToken NewUserTokenEntity = new UserToken()
+                    {
+                        UserId = UserID,
+                        Token = Token
+                    };
+
+                    await _UserTokenRepository.AddAsync(NewUserTokenEntity);
+
+                    Transaction.Complete();
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Your password has been updated successfully"
+                        : "تم تحديث كلمة المرور الخاصة بك بنجاح";
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200, Token);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

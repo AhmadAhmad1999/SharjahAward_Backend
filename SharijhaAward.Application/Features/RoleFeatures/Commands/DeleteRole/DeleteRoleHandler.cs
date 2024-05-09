@@ -12,13 +12,17 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.DeleteRole
         private readonly IAsyncRepository<Role> _RoleRepository;
         private readonly IAsyncRepository<RolePermission> _RolePermissionRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
+
         public DeleteRoleHandler(IAsyncRepository<Role> RoleRepository,
             IAsyncRepository<RolePermission> RolePermissionRepository,
-            IAsyncRepository<UserRole> UserRoleRepository)
+            IAsyncRepository<UserRole> UserRoleRepository,
+            IAsyncRepository<UserToken> UserTokenRepository)
         {
             _RoleRepository = RoleRepository;
             _RolePermissionRepository = RolePermissionRepository;
             _UserRoleRepository = UserRoleRepository;
+            _UserTokenRepository = UserTokenRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(DeleteRoleCommand Request, CancellationToken cancellationToken)
@@ -60,7 +64,16 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.DeleteRole
                         .Where(x => x.RoleId == Request.Id)
                         .ToListAsync();
 
-                    await _UserRoleRepository.DeleteListAsync(UserRolesToDelete);
+                    if (UserRolesToDelete.Any())
+                    {
+                        await _UserRoleRepository.DeleteListAsync(UserRolesToDelete);
+
+                        List<UserToken> UserTokenEntitiesToDelete = await _UserTokenRepository
+                            .Where(x => UserRolesToDelete.Select(y => y.UserId).Contains(x.UserId))
+                            .ToListAsync();
+
+                        await _UserTokenRepository.DeleteListAsync(UserTokenEntitiesToDelete);
+                    }
 
                     ResponseMessage = Request.lang == "en"
                         ? "Role has been deleted successfully"

@@ -1,16 +1,19 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
 {
@@ -20,18 +23,20 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
 
         public ChangePasswordQueryHandler(
-            IUserRepository userRepository, IMapper mapper, IJwtProvider jwtProvider)
+            IUserRepository userRepository, IMapper mapper, IJwtProvider jwtProvider,
+            IAsyncRepository<UserToken> UserTokenRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _jwtProvider = jwtProvider;
+            _UserTokenRepository = UserTokenRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
         {
-
             var UserID = request.Id == null
                 ? _jwtProvider.GetUserIdFromToken(request.Token)
                 : request.Id.ToString();
@@ -77,10 +82,47 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
-           
-            await _userRepository.ChangePassword(user.Id,request.NewPassword);
 
-            return new BaseResponse<object>(msg, true, 200);
+            List<UserToken> UserTokenEntitiesToDelete = await _UserTokenRepository
+                .Where(x => x.UserId == user.Id)
+                .ToListAsync();
+
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
+
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    await _UserTokenRepository.DeleteListAsync(UserTokenEntitiesToDelete);
+
+                    await _userRepository.ChangePassword(user.Id, request.NewPassword);
+
+                    string Token = _jwtProvider.Generate(user);
+
+                    UserToken NewUserTokenEntity = new UserToken()
+                    {
+                        UserId = user.Id,
+                        Token = Token
+                    };
+
+                    await _UserTokenRepository.AddAsync(NewUserTokenEntity);
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<object>(msg, true, 200, Token);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
+
         }
     }
 }

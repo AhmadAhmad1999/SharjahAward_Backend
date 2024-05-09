@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
@@ -13,14 +14,19 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.CreateUser
         private readonly IMapper _Mapper;
         private readonly IUserRepository _UserRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
-
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
+        private readonly IJwtProvider _JWTProvider;
         public CreateUserHandler(IMapper Mapper,
             IUserRepository UserRepository,
-            IAsyncRepository<UserRole> UserRoleRepository)
+            IAsyncRepository<UserRole> UserRoleRepository,
+            IAsyncRepository<UserToken> UserTokenRepository,
+            IJwtProvider JWTProvider)
         {
             _Mapper = Mapper;
             _UserRepository = UserRepository;
             _UserRoleRepository = UserRoleRepository;
+            _UserTokenRepository = UserTokenRepository;
+            _JWTProvider = JWTProvider;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateUserCommand Request, CancellationToken cancellationToken)
@@ -75,6 +81,16 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.CreateUser
                         }).ToList();
 
                     await _UserRoleRepository.AddRangeAsync(NewUserRolesEntities);
+
+                    string Token = _JWTProvider.Generate(NewUserEntity);
+
+                    UserToken NewUserTokenEntity = new UserToken()
+                    {
+                        UserId = NewUserEntity.Id,
+                        Token = Token
+                    };
+
+                    await _UserTokenRepository.AddAsync(NewUserTokenEntity);
 
                     ResponseMessage = Request.lang == "en"
                         ? "Created successfully"
