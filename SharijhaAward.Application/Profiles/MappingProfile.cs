@@ -290,6 +290,7 @@ using SharijhaAward.Domain.Entities.AwardStatisticModel;
 using SharijhaAward.Application.Features.AwardStatistics.Commands.CreateAwardStatistic;
 using SharijhaAward.Application.Features.AwardStatistics.Commands.UpdateAwardStatistic;
 using SharijhaAward.Application.Features.Authentication.SingUpFromAdminDashboard;
+using SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeeting;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -582,6 +583,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ArbitrationScale, UpdateArbitrationScaleCommand>().ReverseMap();
             CreateMap<ArbitrationScale, UpdateArbitrationScaleDto>().ReverseMap();
             CreateMap<ArbitrationScalesCriterion, UpdateArbitrationScaleCriterionDto>().ReverseMap();
+            CreateMap<Meeting, UpdateMeetingCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();

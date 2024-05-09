@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -14,14 +15,17 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeet
         private readonly IAsyncRepository<Meeting> _MeetingRepository;
         private readonly IAsyncRepository<MeetingUser> _MeetingUserRepository;
         private readonly IAsyncRepository<MeetingCategory> _MeetingCategoryRepository;
+        private readonly IMapper _Mapper;
 
         public UpdateMeetingHandler(IAsyncRepository<Meeting> MeetingRepository,
             IAsyncRepository<MeetingUser> MeetingUserRepository,
-            IAsyncRepository<MeetingCategory> MeetingCategoryRepository)
+            IAsyncRepository<MeetingCategory> MeetingCategoryRepository,
+            IMapper Mapper)
         {
             _MeetingRepository = MeetingRepository;
             _MeetingUserRepository = MeetingUserRepository;
             _MeetingCategoryRepository = MeetingCategoryRepository;
+            _Mapper = Mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateMeetingCommand Request, CancellationToken cancellationToken)
@@ -65,6 +69,9 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeet
 
                         return new BaseResponse<object>(ResponseMessage, false, 404);
                     }
+
+                    _Mapper.Map(Request, MeetingEntity, typeof(UpdateMeetingCommand), typeof(Meeting));
+                    await _MeetingRepository.UpdateAsync(MeetingEntity);
 
                     List<MeetingUser> OldMeetingUserEntities = await _MeetingUserRepository
                         .Where(x => x.MeetingId == Request.Id)

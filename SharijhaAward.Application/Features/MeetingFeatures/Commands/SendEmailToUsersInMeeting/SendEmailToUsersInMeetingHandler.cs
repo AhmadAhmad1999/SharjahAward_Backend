@@ -1,42 +1,33 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeeting;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.MeetingModel;
+using SharijhaAward.Domain.Entities.MeetingUserModel;
 
 namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailToUsersInMeeting
 {
     public class SendEmailToUsersInMeetingHandler : IRequestHandler<SendEmailToUsersInMeetingCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Meeting> _MeetingRepository;
+        private readonly IAsyncRepository<MeetingUser> _MeetingUserRepository;
         private readonly IEmailSender _EmailSender;
 
         public SendEmailToUsersInMeetingHandler(IAsyncRepository<Meeting> MeetingRepository,
+            IAsyncRepository<MeetingUser> MeetingUserRepository,
             IEmailSender EmailSender)
         {
             _MeetingRepository = MeetingRepository;
+            _MeetingUserRepository = MeetingUserRepository;
             _EmailSender = EmailSender;
         }
 
         public async Task<BaseResponse<object>> Handle(SendEmailToUsersInMeetingCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
-
-            List<string> CheckForDuplicatedEmails = Request.UsersInfo
-                .GroupBy(m => m.Email.ToLower())
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key)
-                .ToList();
-
-            if (CheckForDuplicatedEmails.Any())
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? $"The following emails are duplicated: {string.Join(", ", CheckForDuplicatedEmails)}"
-                    : $"البُرُد الإلكترونية التالية مكررة: {string.Join(", ", CheckForDuplicatedEmails)}";
-
-                return new BaseResponse<object>(ResponseMessage, false, 400);
-            }
 
             Meeting? MeetingEntity = await _MeetingRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.MeetingId);
@@ -52,7 +43,8 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
 
             try
             {
-                List<string> Recipients = Request.UsersInfo.Select(x => x.Email).ToList();
+                List<string> Recipients = await _MeetingUserRepository.Where(x => x.MeetingId == Request.MeetingId)
+                    .Select(x => x.Email).ToListAsync();
 
                 string EmailSubject = MeetingEntity.ArabicName + "-" + MeetingEntity.EnglishName;
 

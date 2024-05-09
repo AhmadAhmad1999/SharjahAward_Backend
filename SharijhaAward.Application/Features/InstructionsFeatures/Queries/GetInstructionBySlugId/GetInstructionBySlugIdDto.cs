@@ -8,6 +8,6 @@ namespace SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetIns
         public string Slug { get; set; } = null!;
         public string Title { get; set; } = null!;
         [MaxLength]
-        public string Content { get; set; } = null!;
+        public string? Content { get; set; }
     }
 }
