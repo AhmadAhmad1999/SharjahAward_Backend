@@ -7,6 +7,7 @@ using SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeeting;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
+using System.Globalization;
 
 namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailToUsersInMeeting
 {
@@ -48,25 +49,49 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
 
                 string EmailSubject = MeetingEntity.ArabicName + "-" + MeetingEntity.EnglishName;
 
-                string FirstArabicLine = $"عنوان الاجتماع: {MeetingEntity.ArabicName} \n";
-                string SecondArabicLine = $"تاريخ الاجتماع: {MeetingEntity.Date.DayOfWeek} " +
-                    $"{MeetingEntity.Date.Year}-{MeetingEntity.Date.Month}-{MeetingEntity.Date.Day} \n";
-                string ThirdArabicLine = $"وقت الاجتماع: {MeetingEntity.Date.Hour}:{MeetingEntity.Date} {MeetingEntity.Date.ToString("tt")} \n";
-                string ForthArabicLine = $"نوع الاجتماع: {MeetingEntity.Type} \n";
-                string FifthArabicLine = $"{MeetingEntity.ArabicText} \n \n";
+                CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
-                string FirstEnglishLine = $"Meeting Title: {MeetingEntity.EnglishName} \n";
-                string SecondEnglishLine = $"Meeting Date: {MeetingEntity.Date.DayOfWeek} " +
-                    $"{MeetingEntity.Date.Year}-{MeetingEntity.Date.Month}-{MeetingEntity.Date.Day} \n";
-                string ThirdEnglishLine = $"Meeting Time: {MeetingEntity.Date.Hour}:{MeetingEntity.Date} {MeetingEntity.Date.ToString("tt")} \n";
-                string ForthEnglishLine = $"Meeting Type: {MeetingEntity.Type} \n";
-                string FifthEnglishLine = $"{MeetingEntity.EnglishText} \n";
+                string FirstArabicLine = $"عنوان الاجتماع: {MeetingEntity.ArabicName}";
+                string SecondArabicLine = $"تاريخ الاجتماع: {MeetingEntity.Date.ToString("dddd", ArabicCulture)}" +
+                    $"{MeetingEntity.Date.ToString("d/M/yyyy", ArabicCulture)}";
+                string ThirdArabicLine = $"وقت الاجتماع: {MeetingEntity.Date.ToString("hh:mm tt", ArabicCulture)}";
 
-                string FullEmailBody = (string.IsNullOrEmpty(FifthArabicLine)
-                    ? string.Join(FirstArabicLine, SecondArabicLine, ThirdArabicLine, ForthArabicLine,
-                        FirstEnglishLine, SecondEnglishLine, ThirdEnglishLine, ForthEnglishLine)
-                    : string.Join(FirstArabicLine, SecondArabicLine, ThirdArabicLine, ForthArabicLine, FifthArabicLine,
-                        FirstEnglishLine, SecondEnglishLine, ThirdEnglishLine, ForthEnglishLine, FifthEnglishLine));
+                string ForthArabicLine = string.Empty;
+
+                if (MeetingEntity.Type == Domain.Constants.MeetingTypes.Virtual)
+                    ForthArabicLine = "افتراضي";
+                else
+                    ForthArabicLine = "أونلاين";
+
+                string FifthArabicLine = $"نص الاجتماع: {MeetingEntity.ArabicText}";
+
+                CultureInfo EnglishCulture = new CultureInfo("en-US");
+
+                string FirstEnglishLine = $"Meeting Title: {MeetingEntity.EnglishName}";
+                string SecondEnglishLine = $"Meeting Date: {MeetingEntity.Date.ToString("dddd", EnglishCulture)}" +
+                    $"{MeetingEntity.Date.ToString("d/M/yyyy", EnglishCulture)}";
+                string ThirdEnglishLine = $"Meeting Time: {MeetingEntity.Date.ToString("hh:mm tt", EnglishCulture)}";
+                string ForthEnglishLine = $"Meeting Type: {MeetingEntity.Type}";
+                string FifthEnglishLine = $"Meeting Text: {MeetingEntity.EnglishText}";
+
+                string HtmlBody = "wwwroot/Send_Email_Template.html";
+
+                string HTMLContent = File.ReadAllText(HtmlBody);
+
+                string FullEmailBody = HTMLContent
+                    .Replace("$FirstArabicLine$", FirstArabicLine, StringComparison.Ordinal)
+                    .Replace("$SecondArabicLine$", SecondArabicLine, StringComparison.Ordinal)
+                    .Replace("$ThirdArabicLine$", ThirdArabicLine, StringComparison.Ordinal)
+                    .Replace("$ForthArabicLine$", ForthArabicLine, StringComparison.Ordinal)
+                    .Replace("$FifthArabicLine$", FifthArabicLine, StringComparison.Ordinal)
+                    .Replace("$FirstEnglishLine$", FirstEnglishLine, StringComparison.Ordinal)
+                    .Replace("$SecondEnglishLine$", SecondEnglishLine, StringComparison.Ordinal)
+                    .Replace("$ThirdEnglishLine$", ThirdEnglishLine, StringComparison.Ordinal)
+                    .Replace("$ForthEnglishLine$", ForthEnglishLine, StringComparison.Ordinal)
+                    .Replace("$FifthEnglishLine$", FifthEnglishLine, StringComparison.Ordinal)
+                    .Replace("$SixthArabicLine$", "", StringComparison.Ordinal)
+                    .Replace("$SixthEnglisLine$", "", StringComparison.Ordinal);
+
 
                 await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody);
 
