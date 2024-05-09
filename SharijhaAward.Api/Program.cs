@@ -5,11 +5,11 @@ using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using NLog.Config;
-using NLog.Extensions.Logging;
-using NLog.Web;
+//using NLog.Config;
+//using NLog.Extensions.Logging;
+//using NLog.Web;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
@@ -36,16 +36,16 @@ System.Net.ServicePointManager.DnsRefreshTimeout = 0;
 /*                              Custom Logging Layout                                 */
 /*------------------------------------------------------------------------------------*/
 
-ConfigurationItemFactory.Default.LayoutRenderers
-    .RegisterDefinition("Custom-Layout", typeof(CustomlayoutRenderer));
+//ConfigurationItemFactory.Default.LayoutRenderers
+//    .RegisterDefinition("Custom-Layout", typeof(CustomlayoutRenderer));
 
-builder.Services.AddScoped<LogFilterAttribute>();
+//builder.Services.AddScoped<LogFilterAttribute>();
 
-builder.Services.AddSingleton<ILoggerFactory, NLogLoggerFactory>();
-var serviceProvider = builder.Services.BuildServiceProvider();
-builder.Services.AddSingleton(builder.Services);
-builder.Services.AddSingleton(serviceProvider);
-builder.Host.UseNLog();
+//builder.Services.AddSingleton<ILoggerFactory, NLogLoggerFactory>();
+//var serviceProvider = builder.Services.BuildServiceProvider();
+//builder.Services.AddSingleton(builder.Services);
+//builder.Services.AddSingleton(serviceProvider);
+//builder.Host.UseNLog();
 /*------------------------------------------------------------------------------------*/
 
 
