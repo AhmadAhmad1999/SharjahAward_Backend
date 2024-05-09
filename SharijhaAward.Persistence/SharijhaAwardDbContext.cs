@@ -1010,18 +1010,6 @@ namespace SharijhaAward.Persistence
                 .HasFilter("[isDeleted] = 0")
                 .IsUnique();
 
-            modelBuilder.Entity<Cycle>().HasData(
-            new Cycle
-            {
-                 Id = 1,
-                 EnglishName = "SharijhaAward",
-                 ArabicName ="جائزة الشارقة",    
-                 Year = "2023-2024",
-                 Status = Domain.Constants.Common.Status.Active,
-                 IndividualCategoryNumber = 10,
-                 GroupCategoryNumber = 10
-            });
-
             modelBuilder.Entity<Agenda>()
                 .HasData(new Agenda()
                 {
@@ -1141,51 +1129,6 @@ namespace SharijhaAward.Persistence
                     EnglishDescription = "Test News Description 2",
                     EnglishTitle = "Test News Title 2",
                     Image = "https://backend.stg.award-shj.ae/UploadedFiles/1dd2958e-d80c-48d0-9a28-899d66fded8d.jpg"
-                });
-
-            modelBuilder.Entity<Category>()
-                .HasData(new Category()
-                {
-                    CreatedAt = DateTime.UtcNow,
-                    CycleId = 1,
-                    DeletedAt = null,
-                    EnglishDescription = "Test Description 1",
-                    EnglishName = "Test Name 1",
-                    ExpectedNumberOfWinners = 1,
-                    ArabicDescription = "اختبار وصف 1",
-                    ArabicName = "اختبار اسم 1",
-                    CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
-                    CreatedBy = null,
-                    FinalArbitrationQualificationMark = 0,
-                    Icon = "string",
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    ParentId = null,
-                    RelatedToClasses = false,
-                    WinningScore = 0,
-                    Id = 1
-                }, new Category()
-                {
-                    CreatedAt = DateTime.UtcNow,
-                    CycleId = 1,
-                    DeletedAt = null,
-                    EnglishDescription = "Test Description 2",
-                    EnglishName = "Test Name 2",
-                    ExpectedNumberOfWinners = 1,
-                    ArabicDescription = "اختبار وصف 2",
-                    ArabicName = "اختبار اسم 2",
-                    CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
-                    CreatedBy = null,
-                    FinalArbitrationQualificationMark = 0,
-                    Icon = "string",
-                    isDeleted = false,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    RelatedToClasses = false,
-                    WinningScore = 0,
-                    Id = 2,
-                    ParentId = 1
                 });
 
             modelBuilder.Entity<TrainingWorkshop>()
@@ -2289,7 +2232,7 @@ namespace SharijhaAward.Persistence
             ////////////////////////////////////////
             /// Profissional Data Seeder..
             ////////////////////////////////////////
-
+            #region Instructions
             modelBuilder.Entity<Instruction>()
                 .HasData(new Instruction()
                 {
@@ -2903,6 +2846,199 @@ namespace SharijhaAward.Persistence
                     Content = null,
                     Slug = "subscriber_profile",
                     Title = "بروفايل مستخدم"
+                });
+            #endregion
+            #region Cycle
+            modelBuilder.Entity<Cycle>()
+                .HasData(new Cycle()
+                {
+                    Id = 1,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    CycleNumber = 31,
+                    Year = "2024 - 2025",
+                    ArabicName = "جائزة الشارقة للتفوق والتميز التربوي",
+                    EnglishName = "Sharjah Award for Educational Excellence",
+                    Status = Domain.Constants.Common.Status.Active,
+                    RegistrationPortalOpeningDate = new DateTime(2025, 1, 1),
+                    RegistrationPortalClosingDate = new DateTime(2025, 5, 1),
+                    SubscriberPortalClosingDate = null,
+                    InitialArbitrationStartDate = null,
+                    InitialArbitrationEndDate = null,
+                    FinalArbitrationStartDate = null,
+                    FinalArbitrationEndDate = null,
+                    IndividualCategoryNumber = 1,
+                    TheUpperLimitForObtainingInformation = 10,
+                    MarginOfDifferenceBetweenArbitrators = 10,
+                    GroupCategoryNumber = 1
+                });
+            #endregion
+            modelBuilder.Entity<Category>()
+                .HasData(new Category()
+                {
+                    Id = 1,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "جائزة جوهرة اللغة العربية",
+                    EnglishName = "The \"Gem\" of the Arabic Language",
+                    ArabicDescription = string.Empty,
+                    EnglishDescription = string.Empty,
+                    Icon = "",
+                    CategoryClassification = null,
+                    FinalArbitrationQualificationMark = null,
+                    WinningScore = null,
+                    MinimumAmountToParticipateInTheAward = null,
+                    MinimumAmountToObtainACertificateOfParticipation = null,
+                    ExpectedNumberOfWinners = null,
+                    RelatedToClasses = null,
+                    ParentId = null,
+                    CycleId = 1
+                }, new Category()
+                {
+                    Id = 2,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "جائزة جوهرة اللغة العربية",
+                    EnglishName = "The \"Gem\" of the Arabic Language",
+                    ArabicDescription = "جائزة رائدة استثنائيّة تتسابق فيها المدارس الحكومية والخاصة في رعاية اللغة العربية، وتمكين المجتمع المدرسيّ (طالب، معلم، ولي الأمر...) من امتلاك مهارات اللغة العربية وتوظيفها في العلم والحياة.",
+                    EnglishDescription = "It is an exceptional pioneering award where both public and private schools compete to promote the Arabic language, empower the school community students, teachers, and parents and equip them with the Arabic language skills that they can utilize in life and knowledge acquisition.",
+                    Icon = "",
+                    CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
+                    FinalArbitrationQualificationMark = 100,
+                    WinningScore = 90,
+                    MinimumAmountToParticipateInTheAward = 60,
+                    MinimumAmountToObtainACertificateOfParticipation = 80,
+                    ExpectedNumberOfWinners = 3,
+                    RelatedToClasses = true,
+                    ParentId = 1,
+                    CycleId = 1
+                }, new Category()
+                {
+                    Id = 3,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "فئة الأفراد المتميزين",
+                    EnglishName = "Distinguished Individuals Category",
+                    ArabicDescription = string.Empty,
+                    EnglishDescription = string.Empty,
+                    Icon = "",
+                    CategoryClassification = null,
+                    FinalArbitrationQualificationMark = null,
+                    WinningScore = null,
+                    MinimumAmountToParticipateInTheAward = null,
+                    MinimumAmountToObtainACertificateOfParticipation = null,
+                    ExpectedNumberOfWinners = null,
+                    RelatedToClasses = null,
+                    ParentId = null,
+                    CycleId = 1
+                }, new Category()
+                {
+                    Id = 4,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "فئة القائد التربوي المتميز",
+                    EnglishName = "Distinguished Educational Leader Category",
+                    ArabicDescription = "تشمل جميع القيادات التّربويّة في القطاعين الحكوميّ والخاص من فئة القيادات العليا والقيادات الوسطى.\r\n\r\nتشمل القيادة العليا (مدير مدرسة).\r\nتشمل القيادة الوسطى (مساعد مدير أكاديمي، رئيس وحدة الشؤون الأكاديمية، رئيس وحدة شؤون الطلبة، رئيس وحدة الخدمات).",
+                    EnglishDescription = "This category consists of all educational leaders in the public and private sectors including senior leaders and middle leaders.\r\n\r\n- Senior leadership includes school principal.\r\n\r\n- Middle leadership includes Assistant Academic Principal, Head of Academic Affairs Unit, Head of Student Affairs Unit, Head of Services Unit.",
+                    Icon = "",
+                    CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
+                    FinalArbitrationQualificationMark = 100,
+                    WinningScore = 90,
+                    MinimumAmountToParticipateInTheAward = 60,
+                    MinimumAmountToObtainACertificateOfParticipation = 80,
+                    ExpectedNumberOfWinners = 3,
+                    RelatedToClasses = true,
+                    ParentId = 3,
+                    CycleId = 1
+                }, new Category()
+                {
+                    Id = 5,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "فئة المعلم المتميز",
+                    EnglishName = "Distinguished Teacher Category",
+                    ArabicDescription = "المعلم هو المحرك الأساسي لعملية التعليم والتعلم، فبمقدار جودة عطائه ترتقي العملية التعليمية، وخاصة مع المتغيرات الحديثة التي تقتضي من المعلم مواكبتها، لينتج التعليم ثماره المرجوة، ويمتزج بعصر المعرفة والثورات التكنولوجية، ويصبح جزءاً فاعلًا في الحياة والاقتصاد، وتهتم الجائزة بهذه الفئة وتأهيلها ليثبت المعلم المشارك إنجازه وقيادته الفاعلة، وتطوّره المهنيّ، ويبرهن على إبداعه وابتكاراته الوظيفيّة ومسؤولياته المجتمعيّة، ويحق لجميع المعلمين من مرحلة رياض الأطفال إلى الصف الثاني عشر ومن ذوي التّخصصات المختلفة في التعليم الحكومي والخاص والفنّي والتكنولوجي الترشح لهذه الفئة.",
+                    EnglishDescription = "The teacher is the main guide of the teaching and learning process as the quality of his/her input elevates the educational process, especially with the new changes and the technological revolution that require teachers to keep up with in order to achieve the desired results in life and economy. The Sharjah Award for Educational Excellence acknowledges this category and requires participant teachers to underscore their distinguished performance, effective leadership, professional development, creativity and innovation in the job, and social responsibility. All teachers from kindergarten to the twelfth grade with various specializations in public, private, and applied technology schools are eligible to nominate for this category.",
+                    Icon = "",
+                    CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
+                    FinalArbitrationQualificationMark = 100,
+                    WinningScore = 90,
+                    MinimumAmountToParticipateInTheAward = 60,
+                    MinimumAmountToObtainACertificateOfParticipation = 80,
+                    ExpectedNumberOfWinners = 3,
+                    RelatedToClasses = true,
+                    ParentId = 3,
+                    CycleId = 1
+                }, new Category()
+                {
+                    Id = 6,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "فئة المؤسسات المتميزة",
+                    EnglishName = "Distinguished Institutions Category",
+                    ArabicDescription = string.Empty,
+                    EnglishDescription = string.Empty,
+                    Icon = "",
+                    CategoryClassification = null,
+                    FinalArbitrationQualificationMark = null,
+                    WinningScore = null,
+                    MinimumAmountToParticipateInTheAward = null,
+                    MinimumAmountToObtainACertificateOfParticipation = null,
+                    ExpectedNumberOfWinners = null,
+                    RelatedToClasses = null,
+                    ParentId = 3,
+                    CycleId = 1
+                }, new Category()
+                {
+                    Id = 7,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "فئة الحضانة المتميزة",
+                    EnglishName = "Distinguished Institutions Category",
+                    ArabicDescription = "تحرص الحكومة الرشيدة في دولة الامارات العربية المتحدة على جودة الخدمات المقدمة للطفل باعتباره اللبنة الأولى في بناء المجتمع وتلقينه الدروس الأولى للانطلاق إلى فضاء الحياة مسلحاً بالقيم والسلوكيات الإيجابية ومتمكنا من المهارات الأساسية الأولى لذا فقد أفردت الجائزة لهذه الفئة مجالًا لإبراز تميزها في مجال تطوير الأدوات وبيئة العمل وتقديم الخدمات المتميزة للعاملين فيها، وللطلبة ولأولياء الأمور، وللمجتمع ككل، ويحق لجميع الحضانات الحكومية والخاصة على مستوى دولة الإمارات التّقدّم للجائزة وفق معايير مخصّصة وضمن شروط محدّدة.",
+                    EnglishDescription = string.Empty,
+                    Icon = "",
+                    CategoryClassification = null,
+                    FinalArbitrationQualificationMark = null,
+                    WinningScore = null,
+                    MinimumAmountToParticipateInTheAward = null,
+                    MinimumAmountToObtainACertificateOfParticipation = null,
+                    ExpectedNumberOfWinners = null,
+                    RelatedToClasses = null,
+                    ParentId = 3,
+                    CycleId = 1
                 });
         }
 
