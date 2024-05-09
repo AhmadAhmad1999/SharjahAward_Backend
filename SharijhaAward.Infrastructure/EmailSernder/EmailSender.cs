@@ -201,6 +201,10 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                                     message.To.Add(recipient);
                                     client.Send(message);
                                 }
+                                catch (SmtpException)
+                                {
+                                    throw;
+                                }
                                 catch (Exception)
                                 {
                                     invalidEmails.Add(recipient);
@@ -212,7 +216,7 @@ namespace SharijhaAward.Infrastructure.EmailSernder
 
                 return invalidEmails;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

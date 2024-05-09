@@ -11,7 +11,7 @@ using System.Text.Json;
 
 namespace SharijhaAward.Api.Controllers
 {
-    [ServiceFilter(typeof(LogFilterAttribute))]
+    // [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AppsVersionsController : ControllerBase

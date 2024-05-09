@@ -20,7 +20,7 @@ using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
-    [ServiceFilter(typeof(LogFilterAttribute))]
+    // [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class TermsAndConditionsController : ControllerBase

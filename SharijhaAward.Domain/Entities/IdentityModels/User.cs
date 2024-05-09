@@ -25,6 +25,7 @@ public class User : AuditableEntity  {
     public int? NumberOfIndividualCategories { get; set; } = 0;
     public int? NumberOfGroupCategories { get; set; } = 0;
     public string? lang { get; set; }
+    public string? Token { get; set; }
 
     public virtual List<EmailMessage> EmailMessages { get; set; } = null!;
     public virtual List<MeetingUser> MeetingUsers { get; set; } = null!;

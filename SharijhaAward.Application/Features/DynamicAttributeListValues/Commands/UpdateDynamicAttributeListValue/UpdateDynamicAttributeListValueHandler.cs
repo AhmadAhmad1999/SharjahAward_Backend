@@ -1,19 +1,24 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using System.Transactions;
 namespace SharijhaAward.Application.Features.DynamicAttributeListValues.Commands.UpdateDynamicAttributeListValue
 {
     public class UpdateDynamicAttributeListValueHandler : IRequestHandler<UpdateDynamicAttributeListValueCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
+        private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IMapper _Mapper;
 
         public UpdateDynamicAttributeListValueHandler(IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
             IMapper Mapper)
         {
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
+            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _Mapper = Mapper;
         }
         public async Task<BaseResponse<object>> Handle(UpdateDynamicAttributeListValueCommand Request, CancellationToken cancellationToken)
@@ -32,16 +37,40 @@ namespace SharijhaAward.Application.Features.DynamicAttributeListValues.Commands
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            _Mapper.Map(Request, DynamicAttributeListValueOldData, typeof(UpdateDynamicAttributeListValueCommand),
-                typeof(DynamicAttributeListValue));
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
-            await _DynamicAttributeListValueRepository.UpdateAsync(DynamicAttributeListValueOldData);
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    _Mapper.Map(Request, DynamicAttributeListValueOldData, typeof(UpdateDynamicAttributeListValueCommand),
+                        typeof(DynamicAttributeListValue));
 
-            ResponseMessage = Request.lang == "en"
-                ? "Value has been updated successfully"
-                : "تم تعديل القيمة بنجاح";
+                    await _DynamicAttributeListValueRepository.UpdateAsync(DynamicAttributeListValueOldData);
 
-            return new BaseResponse<object>(ResponseMessage, true, 200);
+                    await _DynamicAttributeValueRepository
+                        .Where(x => x.DynamicAttributeId == DynamicAttributeListValueOldData.DynamicAttributeId)
+                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.Value, Request.Value));
+
+                    Transaction.Complete();
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Value has been updated successfully"
+                        : "تم تعديل القيمة بنجاح";
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }
