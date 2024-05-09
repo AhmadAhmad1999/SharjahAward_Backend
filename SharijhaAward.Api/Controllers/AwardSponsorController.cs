@@ -84,7 +84,10 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAwardSponsorQuery());
+            var response = await _mediator.Send(new GetAwardSponsorQuery()
+            {
+                lang = Language!
+            });
 
             return response.statusCode switch
             {
