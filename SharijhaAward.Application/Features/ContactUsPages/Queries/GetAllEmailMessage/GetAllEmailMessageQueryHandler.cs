@@ -51,18 +51,18 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
 
             if (request.filter == 1)
             {
-                EmailMessages = EmailMessages.Where(m => m.From == User.Email).ToList();
-              
+                EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.From == User.Email , request.page, request.pageSize, m => m.Attachments!)
+                .OrderByDescending(x => x.CreatedAt).ToListAsync();
             }
 
             if (request.filter == 2)
             {
-                EmailMessages = EmailMessages.Where(m => m.To == User.Email).ToList();
+                EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.To == User.Email, request.page, request.pageSize, m => m.Attachments!)
+                .OrderByDescending(x => x.CreatedAt).ToListAsync();
             }
             if (request.query != null)
-        
             {
-                EmailMessages = _emailMessageRepository.Where(m => m.Body.Contains(request.query)).OrderByDescending(x => x.CreatedAt).ToList();
+                EmailMessages = _emailMessageRepository.WhereThenInclude(m => m.Body.Contains(request.query), m => m.Attachments!).OrderByDescending(x => x.CreatedAt).ToList();
             }
           
             var data = _mapper.Map<List<EmailMessageListVM>>(EmailMessages);
@@ -76,10 +76,10 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                 var Sender = await _userRepository.GetByIdAsync(EmailMessages[i].UserId);
 
                 data[i].TypeName = Type!.Type;
-                data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(EmailMessages[i].Attachments);                    data[i].IsReplay = data[i].MessageId == null ? false : true;
+                data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(EmailMessages[i].Attachments);   
+                data[i].IsReplay = data[i].MessageId == data[i].Id ? false : true;
                 data[i].PersonalPhotoUrl = Sender.ImageURL!;
                 data[i].Gender = Sender.Gender;
-                data[i].IsReplay = false;
                 data[i].IsOutComing = User.Email == data[i].From ? true : false;
             }
             

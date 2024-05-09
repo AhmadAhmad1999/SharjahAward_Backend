@@ -34,7 +34,7 @@ namespace SharijhaAward.Api.Controllers
         private readonly IMediator _Mediator;
         private readonly IExcelHelper<EventsExportVM> _excelHelper;
         private readonly IWebHostEnvironment _WebHostEnvironment;
-        public EventController(IMediator Mediator, 
+        public EventController(IMediator Mediator,
             IWebHostEnvironment webHostEnvironment,
             IExcelHelper<EventsExportVM> excelHelper)
         {
@@ -62,17 +62,18 @@ namespace SharijhaAward.Api.Controllers
         }
 
 
-        [HttpPut(Name = "UpdateEvent")]
+        [HttpPut("{Id}", Name = "UpdateEvent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> Update([FromBody] UpdateEventCommand updateEventCommand)
+        public async Task<ActionResult> Update(int Id, [FromBody] UpdateEventCommand updateEventCommand)
         {
-           var response= await _Mediator.Send(updateEventCommand);
-            return Ok(new {data = response , message= "Updated Sucssesfully"});
+            updateEventCommand.Id = Id;
+            var response = await _Mediator.Send(updateEventCommand);
+            return Ok(new { data = response, message = "Updated Sucssesfully" });
         }
 
         [HttpGet(Name = "GetAllEvents")]
@@ -90,20 +91,20 @@ namespace SharijhaAward.Api.Controllers
                 headerValue = "";
             int pageSize = perPage == 0 ? 10 : perPage;
             //get data from mediator
-            var response = await _Mediator.Send(new GetAllEventsQuery() 
-            { 
+            var response = await _Mediator.Send(new GetAllEventsQuery()
+            {
                 lang = headerValue,
-                page=page,
+                page = page,
                 pageSize = pageSize
             });
-           
+
             var totalCount = response.totalItem;
             var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
             return Ok(
                 new
                 {
-                     response.data,
-                     response.statusCode,
+                    response.data,
+                    response.statusCode,
                     pagination =
                     new
                     {
@@ -114,8 +115,8 @@ namespace SharijhaAward.Api.Controllers
                     }
                 });
         }
-       
-        [HttpDelete(Name = "DeleteEvent")]
+
+        [HttpDelete("{id}", Name = "DeleteEvent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
