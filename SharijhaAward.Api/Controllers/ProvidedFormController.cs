@@ -18,7 +18,7 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForm
 
 namespace SharijhaAward.Api.Controllers
 {
-    [ServiceFilter(typeof(LogFilterAttribute))]
+    // [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ProvidedFormController : ControllerBase

@@ -14,7 +14,7 @@ using SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeeting;
 
 namespace SharijhaAward.Api.Controllers
 {
-    [ServiceFilter(typeof(LogFilterAttribute))]
+    // [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class MeetingsController : ControllerBase
