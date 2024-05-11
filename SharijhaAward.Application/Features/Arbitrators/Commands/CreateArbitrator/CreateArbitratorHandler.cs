@@ -106,7 +106,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                         ImageURL = null,
                         isValidAccount = true,
                         // Password = "123456",
-                        lang = null,
                         PhoneNumber = Request.PhoneNumber
                     };
 

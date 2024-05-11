@@ -90,6 +90,7 @@ namespace SharijhaAward.Persistence
 
         }
 
+        public DbSet<UserNotification> UserNotifications { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
         public DbSet<LogUserAction> LogUserActions { get; set; }
         public DbSet<ArbitrationScale> ArbitrationScales { get; set; }
@@ -202,6 +203,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<NotificationTemplate>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<LogUserAction>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<UserToken>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<UserNotification>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitrationScale>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitrationScalesCriterion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<MeetingCategory>().HasQueryFilter(p => !p.isDeleted);

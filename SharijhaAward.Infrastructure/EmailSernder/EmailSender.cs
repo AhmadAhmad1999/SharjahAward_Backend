@@ -155,7 +155,7 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                 .Select(x => x.Select(v => v.value).ToList())
                 .ToList();
         }
-        public async Task<List<string>> SendEmailAsync(List<string> recipients, string subject, string body)
+        public async Task<List<string>> SendEmailAsync(List<string> recipients, string subject, string body, AlternateView AlternateView)
         {
             try
             {
@@ -197,6 +197,8 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                                         IsBodyHtml = true,
                                         Body = body
                                     };
+
+                                    message.AlternateViews.Add(AlternateView);
 
                                     message.To.Add(recipient);
                                     client.Send(message);

@@ -13,7 +13,7 @@ using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Features.Authentication.LogOut;
 using SharijhaAward.Application.Features.Authentication.ShowAsSubscriber;
 using SharijhaAward.Application.Features.Authentication.SignUp;
-using SharijhaAward.Application.Features.Authentication.SingUpFromAdminDashboard;
+using SharijhaAward.Application.Features.Authentication.SignUpFromAdminDashboard;
 using SharijhaAward.Application.Features.Authentication.VerifyAccount;
 using SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmationCode;
 using SharijhaAward.Application.Features.Settings.Commands.ResetPassword;
@@ -51,13 +51,19 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
+            StringValues? DeviceToken = HttpContext.Request.Headers["fcm_token"];
+
+            if (string.IsNullOrEmpty(DeviceToken))
+                return Unauthorized("You must send the fcm token");
+
             var response = await _Mediator.Send(
                 new LoginCommand()
                 { 
                     Email = user.Email,
                     Password = user.Password,
                     lang = HeaderValue,
-                    intoAdminDashboard = user.intoAdminDashboard
+                    intoAdminDashboard = user.intoAdminDashboard,
+                    DeviceToken = DeviceToken
                 });
 
             var options = new JsonSerializerOptions
@@ -123,24 +129,30 @@ namespace SharijhaAward.Api.Controllers
 
                     });
         }
-        [HttpPost("SingUpFromAdminDashboard", Name = "SingUpFromAdminDashboard")]
+        [HttpPost("SignUpFromAdminDashboard", Name = "SignUpFromAdminDashboard")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> SingUpFromAdminDashboard([FromBody] SingUpFromAdminDashboardCommand user)
+        public async Task<ActionResult<string>> SignUpFromAdminDashboard([FromBody] SignUpFromAdminDashboardCommand user)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            var response = await _Mediator.Send(new SingUpFromAdminDashboardCommand()
+            StringValues? DeviceToken = HttpContext.Request.Headers["fcm_token"];
+
+            if (string.IsNullOrEmpty(DeviceToken))
+                return Unauthorized("You must send the fcm token");
+
+            var response = await _Mediator.Send(new SignUpFromAdminDashboardCommand()
             {
                 Email = user.Email,
                 Password = user.Password,
                 RoleName = user.RoleName,
                 Gender = user.Gender,
                 PhoneNumber = user.PhoneNumber,
-                lang = HeaderValue
+                lang = HeaderValue,
+                DeviceToken = DeviceToken
             });
 
             if (!response.isSucceed)
@@ -176,7 +188,13 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
+            StringValues? DeviceToken = HttpContext.Request.Headers["fcm_token"];
+
+            if (string.IsNullOrEmpty(DeviceToken))
+                return Unauthorized("You must send the fcm token");
+
             CheckConfirmationCodeForSignUpCommand.lang = HeaderValue!;
+            CheckConfirmationCodeForSignUpCommand.DeviceToken = DeviceToken!;
 
             BaseResponse<object>? Response = await _Mediator.Send(CheckConfirmationCodeForSignUpCommand);
 

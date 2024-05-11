@@ -1,14 +1,13 @@
-﻿using FirebaseAdmin.Messaging;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using SharijhaAward.Api.Helpers2;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.NotificationFeatures.Commands.CreateNotification;
 using SharijhaAward.Application.Features.NotificationFeatures.Commands.DeleteNotification;
 using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotifications;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotificationsByFCM_Token;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -22,24 +21,6 @@ namespace SharijhaAward.Api.Controllers
         public NotificationsController(IMediator Mediator)
         {
             _Mediator = Mediator;
-        }
-        [HttpPost("SendMessageAsync")]
-        public async Task<IActionResult> SendMessageAsync([FromBody] MessageRequest request)
-        {
-            var message = new MulticastMessage()
-            {
-                Notification = new Notification
-                {
-                    Title = "Ttitle 2",
-                    Body = "tek[e 2"
-                },
-                Tokens = new List<string> { "f6N6pRwGT-WpkeuXOt9gH5:APA91bFFE5J-VVBE3Z8rafdOXuDxIf57c9TJGUDjFQ6oewsrqYATeqPh8eoWH_wkjeZUAp8WTGPhLtno7iBAhIsC0uWaTW9LOCIDt0kQO4v4fLhyhPY_g-9MQB9pk3Me8iKScVCWX6g5" }
-            };
-
-            //var messaging = FirebaseMessaging.DefaultInstance;
-            //var result = await messaging.SendAsync(message);
-            await FirebaseMessaging.DefaultInstance.SendMulticastAsync(message);
-            return Ok("Message sent successfully!");
         }
         [HttpPost("CreateNotification")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -114,6 +95,41 @@ namespace SharijhaAward.Api.Controllers
                 lang = HeaderValue!,
                 page = Page,
                 pageSize = PerPage
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllNotificationsByFCM_Token")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllNotificationsByFCM_Token(int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            StringValues? DeviceToken = HttpContext.Request.Headers["fcm_token"];
+
+            if (string.IsNullOrEmpty(DeviceToken))
+                return Unauthorized("You must send the fcm token");
+
+            BaseResponse<List<GetAllNotificationsByFCM_TokenListVM>> Response = await _Mediator.Send(new GetAllNotificationsByFCM_TokenQuery()
+            {
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage,
+                DeviceToken = DeviceToken
             });
 
             return Response.statusCode switch

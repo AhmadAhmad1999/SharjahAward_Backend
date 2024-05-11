@@ -46,7 +46,9 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                 UserToken NewUserTokenEntity = new UserToken()
                 {
                     Token = response.token,
-                    UserId = user.Id
+                    UserId = user.Id,
+                    AppLanguage = request.lang!,
+                    DeviceToken = request.DeviceToken!
                 };
 
                 await _UserTokenRepository.AddAsync(NewUserTokenEntity);

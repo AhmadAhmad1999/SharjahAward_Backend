@@ -9,6 +9,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Commands.Creat
         public string EnglishTitle { get; set; } = null!;
         public string ArabicBody { get; set; } = null!;
         public string EnglishBody { get; set; } = null!;
+        public List<int> UsersIds { get; set; } = new List<int>();
         public string? lang { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using System.Globalization;
+using System.Net.Mail;
 
 namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailToUsersInMeeting
 {
@@ -59,9 +60,9 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
                 string ForthArabicLine = string.Empty;
 
                 if (MeetingEntity.Type == Domain.Constants.MeetingTypes.Virtual)
-                    ForthArabicLine = "افتراضي";
+                    ForthArabicLine = "نوع الاجتماع: افتراضي";
                 else
-                    ForthArabicLine = "أونلاين";
+                    ForthArabicLine = "نوع الاجتماع: أونلاين";
 
                 string FifthArabicLine = $"نص الاجتماع: {MeetingEntity.ArabicText}";
 
@@ -78,6 +79,9 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
 
                 string HTMLContent = File.ReadAllText(HtmlBody);
 
+                byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
+
                 string FullEmailBody = HTMLContent
                     .Replace("$FirstArabicLine$", FirstArabicLine, StringComparison.Ordinal)
                     .Replace("$SecondArabicLine$", SecondArabicLine, StringComparison.Ordinal)
@@ -92,8 +96,16 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
                     .Replace("$SixthArabicLine$", "", StringComparison.Ordinal)
                     .Replace("$SixthEnglisLine$", "", StringComparison.Ordinal);
 
+                // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(FullEmailBody, null, "text/html");
 
-                await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody);
+                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                AlternateView.LinkedResources.Add(HeaderImage);
+
+                FullEmailBody = FullEmailBody
+                    .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
+
+                await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody, AlternateView);
 
                 ResponseMessage = Request.lang == "en"
                     ? "Sent successfully"

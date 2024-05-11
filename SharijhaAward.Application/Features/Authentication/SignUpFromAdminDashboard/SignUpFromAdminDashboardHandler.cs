@@ -6,17 +6,17 @@ using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
-namespace SharijhaAward.Application.Features.Authentication.SingUpFromAdminDashboard
+namespace SharijhaAward.Application.Features.Authentication.SignUpFromAdminDashboard
 {
-    public class SingUpFromAdminDashboardHandler
-        : IRequestHandler<SingUpFromAdminDashboardCommand, AuthenticationResponse>
+    public class SignUpFromAdminDashboardHandler
+        : IRequestHandler<SignUpFromAdminDashboardCommand, AuthenticationResponse>
     {
         private readonly IUserRepository _UserRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
-        public SingUpFromAdminDashboardHandler(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper,
+        public SignUpFromAdminDashboardHandler(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper,
             IAsyncRepository<UserRole> UserRoleRepository)
         {
             _roleRepository = roleRepository;
@@ -25,7 +25,7 @@ namespace SharijhaAward.Application.Features.Authentication.SingUpFromAdminDashb
             _UserRoleRepository = UserRoleRepository;
         }
 
-        public async Task<AuthenticationResponse> Handle(SingUpFromAdminDashboardCommand Request, CancellationToken cancellationToken)
+        public async Task<AuthenticationResponse> Handle(SignUpFromAdminDashboardCommand Request, CancellationToken cancellationToken)
         {
             Domain.Entities.IdentityModels.User? CheckEmail = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());

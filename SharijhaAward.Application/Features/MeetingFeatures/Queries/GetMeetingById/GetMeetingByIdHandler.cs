@@ -68,7 +68,11 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetMeetingB
                 CategoriesIds = CategoriesEntities
                     .Select(x => x.Id).ToList(),
                 ArabicText = MeetingEntity.ArabicText,
-                EnglishText = MeetingEntity.EnglishText
+                EnglishText = MeetingEntity.EnglishText,
+                isImplemented = MeetingEntity.isImplemented,
+                isCanceled = MeetingEntity.isCanceled,
+                ArabicReasonOfCanceling = MeetingEntity.ArabicReasonOfCanceling,
+                EnglishReasonOfCanceling = MeetingEntity.EnglishReasonOfCanceling
             };
 
             return new BaseResponse<GetMeetingByIdDto>(ResponseMessage, true, 200, Response);

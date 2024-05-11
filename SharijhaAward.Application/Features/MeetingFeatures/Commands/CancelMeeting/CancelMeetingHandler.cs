@@ -6,6 +6,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using System.Globalization;
+using System.Net.Mail;
 
 namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeeting
 {
@@ -47,7 +48,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeet
 
             try
             {
-                string EmailSubject = "Canceled Meeting: " + MeetingEntity.EnglishName + " - اجتماع مُلغى: " + MeetingEntity.ArabicName;
+                string EmailSubject = "Canceled Meeting: " + MeetingEntity.EnglishName + " - " + MeetingEntity.ArabicName + " : اجتماع مُلغى";
 
                 CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
@@ -59,9 +60,9 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeet
                 string ForthArabicLine = string.Empty;
 
                 if (MeetingEntity.Type == Domain.Constants.MeetingTypes.Virtual)
-                    ForthArabicLine = "افتراضي";
+                    ForthArabicLine = "نوع الاجتماع: افتراضي";
                 else
-                    ForthArabicLine = "أونلاين";
+                    ForthArabicLine = "نوع الاجتماع: أونلاين";
 
                 string FifthArabicLine = $"نص الاجتماع: {MeetingEntity.ArabicText}";
                 string SixthArabicLine = $"سبب الإلغاء: {Request.ArabicReasonOfCanceling}";
@@ -74,11 +75,14 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeet
                 string ThirdEnglishLine = $"Meeting Time: {MeetingEntity.Date.ToString("hh:mm tt", EnglishCulture)}";
                 string ForthEnglishLine = $"Meeting Type: {MeetingEntity.Type}";
                 string FifthEnglishLine = $"Meeting Text: {MeetingEntity.EnglishText}";
-                string SixthEnglisLine = $"Reason Of Canceling: {Request.EnglishReasonOfCanceling}";
+                string SixthEnglisLine = $"Reason Of Cancelation: {Request.EnglishReasonOfCanceling}";
 
                 string HtmlBody = "wwwroot/Send_Email_Template.html";
 
                 string HTMLContent = File.ReadAllText(HtmlBody);
+
+                byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
 
                 string FullEmailBody = HTMLContent
                     .Replace("$FirstArabicLine$", FirstArabicLine, StringComparison.Ordinal)
@@ -94,13 +98,25 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeet
                     .Replace("$FifthEnglishLine$", FifthEnglishLine, StringComparison.Ordinal)
                     .Replace("$SixthEnglisLine$", SixthEnglisLine, StringComparison.Ordinal);
 
-                await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody);
+                // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(FullEmailBody, null, "text/html");
+
+                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                AlternateView.LinkedResources.Add(HeaderImage);
+
+                FullEmailBody = FullEmailBody
+                    .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
+
+                await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody, AlternateView);
 
                 ResponseMessage = Request.lang == "en"
                     ? "Sent successfully"
                     : "The meeting was successfully cancelled, and emails were sent to its participants";
 
                 MeetingEntity.isCanceled = true;
+                MeetingEntity.EnglishReasonOfCanceling = Request.EnglishReasonOfCanceling;
+                MeetingEntity.ArabicReasonOfCanceling = Request.ArabicReasonOfCanceling;
+
                 await _MeetingRepository.UpdateAsync(MeetingEntity);
 
                 return new BaseResponse<object>(ResponseMessage, true, 200);

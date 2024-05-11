@@ -2,9 +2,9 @@
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
 
-namespace SharijhaAward.Application.Features.Authentication.SingUpFromAdminDashboard
+namespace SharijhaAward.Application.Features.Authentication.SignUpFromAdminDashboard
 {
-    public class SingUpFromAdminDashboardCommand : IRequest<AuthenticationResponse>
+    public class SignUpFromAdminDashboardCommand : IRequest<AuthenticationResponse>
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
@@ -12,5 +12,6 @@ namespace SharijhaAward.Application.Features.Authentication.SingUpFromAdminDashb
         public Gender Gender { get; set; }
         public string PhoneNumber { get; set; } = null!;
         public string? lang { get; set; }
+        public string? DeviceToken { get; set; }
     }
 }
