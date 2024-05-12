@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationScaleModel;
-using SharijhaAward.Domain.Entities.EducationalClassModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.UpdateArbitrationScale
@@ -39,39 +37,55 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.
                 {
                     foreach (UpdateArbitrationScaleDto ArbitrationScaleDto in Request.ArbitrationScaleDtos)
                     {
-                        ArbitrationScale? ArbitrationScaleEntityToUpdate = await _ArbitrationScaleRepository
-                            .FirstOrDefaultAsync(x => x.Id == ArbitrationScaleDto.Id);
-
-                        if (ArbitrationScaleEntityToUpdate == null)
+                        if (ArbitrationScaleDto.Id != 0)
                         {
-                            ResponseMessage = Request.lang == "en"
-                                ? "Arbitration scale is not found"
-                                : "مقياس التحكيم غير موجود";
-
-                            return new BaseResponse<object>(ResponseMessage, false, 404);
-                        }
-
-                        _Mapper.Map(ArbitrationScaleDto, ArbitrationScaleEntityToUpdate, typeof(UpdateArbitrationScaleDto), typeof(ArbitrationScale));
-
-                        await _ArbitrationScaleRepository.UpdateAsync(ArbitrationScaleEntityToUpdate);
-
-                        foreach (UpdateArbitrationScaleCriterionDto ArbitrationScaleCriterion in ArbitrationScaleDto.ArbitrationScaleCriterionDto)
-                        {
-                            ArbitrationScalesCriterion? ArbitrationScalesCriterionEntityToUpdate = await _ArbitrationScalesCriterionRepository
-                                .FirstOrDefaultAsync(x => x.Id == ArbitrationScaleCriterion.Id);
+                            ArbitrationScale? ArbitrationScaleEntityToUpdate = await _ArbitrationScaleRepository
+                                .FirstOrDefaultAsync(x => x.Id == ArbitrationScaleDto.Id);
 
                             if (ArbitrationScaleEntityToUpdate == null)
                             {
                                 ResponseMessage = Request.lang == "en"
-                                    ? "Arbitration scale criterion is not found"
+                                    ? "Arbitration scale is not found"
                                     : "مقياس التحكيم غير موجود";
 
                                 return new BaseResponse<object>(ResponseMessage, false, 404);
                             }
 
-                            _Mapper.Map(ArbitrationScaleCriterion, ArbitrationScalesCriterionEntityToUpdate, typeof(UpdateArbitrationScaleCriterionDto), typeof(ArbitrationScalesCriterion));
+                            _Mapper.Map(ArbitrationScaleDto, ArbitrationScaleEntityToUpdate, typeof(UpdateArbitrationScaleDto), typeof(ArbitrationScale));
 
-                            await _ArbitrationScalesCriterionRepository.UpdateAsync(ArbitrationScalesCriterionEntityToUpdate);
+                            await _ArbitrationScaleRepository.UpdateAsync(ArbitrationScaleEntityToUpdate);
+
+                            foreach (UpdateArbitrationScaleCriterionDto ArbitrationScaleCriterion in ArbitrationScaleDto.ArbitrationScaleCriterionDto)
+                            {
+                                ArbitrationScalesCriterion? ArbitrationScalesCriterionEntityToUpdate = await _ArbitrationScalesCriterionRepository
+                                    .FirstOrDefaultAsync(x => x.Id == ArbitrationScaleCriterion.Id);
+
+                                if (ArbitrationScaleEntityToUpdate is null)
+                                {
+                                    ResponseMessage = Request.lang == "en"
+                                        ? "Arbitration scale criterion is not found"
+                                        : "مقياس التحكيم غير موجود";
+
+                                    return new BaseResponse<object>(ResponseMessage, false, 404);
+                                }
+
+                                _Mapper.Map(ArbitrationScaleCriterion, ArbitrationScalesCriterionEntityToUpdate, typeof(UpdateArbitrationScaleCriterionDto), typeof(ArbitrationScalesCriterion));
+
+                                await _ArbitrationScalesCriterionRepository.UpdateAsync(ArbitrationScalesCriterionEntityToUpdate!);
+                            }
+                        }
+                        else
+                        {
+                            ArbitrationScale NewArbitrationScaleEntity = _Mapper.Map<ArbitrationScale>(ArbitrationScaleDto);
+
+                            await _ArbitrationScaleRepository.AddAsync(NewArbitrationScaleEntity);
+
+                            foreach (UpdateArbitrationScaleCriterionDto ArbitrationScaleCriterion in ArbitrationScaleDto.ArbitrationScaleCriterionDto)
+                            {
+                                ArbitrationScalesCriterion NewArbitrationScalesCriterionEntity = _Mapper.Map<ArbitrationScalesCriterion>(ArbitrationScaleCriterion);
+
+                                await _ArbitrationScalesCriterionRepository.AddAsync(NewArbitrationScalesCriterionEntity);
+                            }
                         }
                     }
                     

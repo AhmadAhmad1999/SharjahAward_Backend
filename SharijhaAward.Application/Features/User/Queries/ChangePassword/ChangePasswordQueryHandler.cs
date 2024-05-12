@@ -104,14 +104,6 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
 
                     string Token = _jwtProvider.Generate(user);
 
-                    UserToken NewUserTokenEntity = new UserToken()
-                    {
-                        UserId = user.Id,
-                        Token = Token
-                    };
-
-                    await _UserTokenRepository.AddAsync(NewUserTokenEntity);
-
                     Transaction.Complete();
 
                     return new BaseResponse<object>(msg, true, 200, Token);

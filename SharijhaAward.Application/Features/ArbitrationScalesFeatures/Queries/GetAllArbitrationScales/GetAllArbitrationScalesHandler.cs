@@ -39,12 +39,13 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                 .ToListAsync();
             
             List<Criterion> AllMainCriterionsEntities = ListOfCriterionItemEntities
-                .Where(x => x.Criterion!.ParentId is { })
-                .Select(x => x.Criterion!)
+                .Select(x => x.Criterion!.Parent!)
+                .DistinctBy(x => x.Id)
                 .ToList();
 
             List<Criterion> AllSubCriterionsEntities = ListOfCriterionItemEntities
                 .Select(x => x.Criterion!)
+                .DistinctBy(x => x.Id)
                 .Except(AllMainCriterionsEntities)
                 .ToList();
 
@@ -66,7 +67,8 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                     Id = MainCriterionEntity.Id,
                     Title = Request.lang == "en"
                         ? MainCriterionEntity.EnglishTitle
-                        : MainCriterionEntity.ArabicTitle
+                        : MainCriterionEntity.ArabicTitle,
+                    Score = MainCriterionEntity.Score
                 };
 
                 List<Criterion> SubCriterionsEntities = AllSubCriterionsEntities
@@ -78,8 +80,9 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                     {
                         Id = x.Id,
                         Title = Request.lang == "en"
-                            ? MainCriterionEntity.EnglishTitle
-                            : MainCriterionEntity.ArabicTitle
+                            ? x.EnglishTitle
+                            : x.ArabicTitle,
+                        Score = x.Score
                     }).ToList();
 
                 foreach (SubCriterionDto SubCriterionDto in MainCriterionDto.SubCriterionDto)
@@ -97,7 +100,8 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                                 Id = x.Id,
                                 Name = Request.lang == "en"
                                     ? x.EnglishName
-                                    : x.ArabicName
+                                    : x.ArabicName,
+                                Score = x.Score
                             }).ToList();
 
                         foreach (CriterionItemDto CriterionItemDto in SubCriterionDto.CriterionItemDto)

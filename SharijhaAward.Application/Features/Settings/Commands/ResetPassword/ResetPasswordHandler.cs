@@ -72,14 +72,6 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ResetPassword
 
                     string Token = _JWTProvider.Generate(UserEntity);
 
-                    UserToken NewUserTokenEntity = new UserToken()
-                    {
-                        UserId = UserID,
-                        Token = Token
-                    };
-
-                    await _UserTokenRepository.AddAsync(NewUserTokenEntity);
-
                     Transaction.Complete();
 
                     ResponseMessage = Request.lang == "en"

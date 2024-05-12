@@ -110,7 +110,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllArbitrationScales(int SubCategoryId, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllArbitrationScales(int SubCategoryId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -120,9 +120,7 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<GetAllArbitrationScalesListVM> Response = await _Mediator.Send(new GetAllArbitrationScalesQuery()
             {
                 SubCategoryId = SubCategoryId,
-                lang = HeaderValue!,
-                page = Page,
-                pageSize = PerPage
+                lang = HeaderValue!
             });
 
             return Response.statusCode switch

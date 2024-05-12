@@ -10,5 +10,6 @@ namespace SharijhaAward.Domain.Entities.IdentityModels
         public string Token { get; set; } = null!;
         public string AppLanguage { get; set; } = null!;
         public string DeviceToken { get; set; } = null!;
+        public PlatformType Platform { get; set; }
     }
 }

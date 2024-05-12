@@ -12,6 +12,5 @@ namespace SharijhaAward.Application.Features.Authentication.SignUpFromAdminDashb
         public Gender Gender { get; set; }
         public string PhoneNumber { get; set; } = null!;
         public string? lang { get; set; }
-        public string? DeviceToken { get; set; }
     }
 }

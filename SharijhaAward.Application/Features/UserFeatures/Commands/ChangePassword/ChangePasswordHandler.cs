@@ -69,14 +69,6 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.ChangePasswor
 
                     string Token = _JWTProvider.Generate(UserEntity);
 
-                    UserToken NewUserTokenEntity = new UserToken()
-                    {
-                        UserId = UserEntity.Id,
-                        Token = Token
-                    };
-
-                    await _UserTokenRepository.AddAsync(NewUserTokenEntity);
-
                     Transaction.Complete();
 
                     ResponseMessage = Request.lang == "en"

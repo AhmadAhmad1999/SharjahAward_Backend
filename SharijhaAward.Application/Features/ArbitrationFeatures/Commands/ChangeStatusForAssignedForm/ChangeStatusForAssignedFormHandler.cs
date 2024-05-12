@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
@@ -8,14 +9,20 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
     public class ChangeStatusForAssignedFormHandler : IRequestHandler<ChangeStatusForAssignedFormCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
-        public ChangeStatusForAssignedFormHandler(IAsyncRepository<Arbitration> ArbitrationRepository)
+        private readonly IJwtProvider _JWTProvider;
+
+        public ChangeStatusForAssignedFormHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
+            IJwtProvider JWTProvider)
         {
             _ArbitrationRepository = ArbitrationRepository;
+            _JWTProvider = JWTProvider;
         }
 
         public async Task<BaseResponse<object>> Handle(ChangeStatusForAssignedFormCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
             Arbitration? ArbitrationEntity = await _ArbitrationRepository.GetByIdAsync(Request.Id);
 
@@ -28,7 +35,20 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            ArbitrationEntity.isAccepted = Request.isAccepted;
+            if (ArbitrationEntity.ArbitratorId == UserId && ArbitrationEntity.Arbitrator!.isChairman)
+            {
+                ArbitrationEntity.isAccepted = Request.isAccepted;
+                ArbitrationEntity.isAcceptedFromChairman = Request.isAcceptedFromChairman;
+
+                await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
+
+                ResponseMessage = Request.lang == "en"
+                    ? "Form's status has been updated successfully"
+                    : "تم تعديل حالة الاستمارة المسندة بنجاح";
+
+                return new BaseResponse<object>(ResponseMessage, true, 200);
+            }
+
             await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
 
             ResponseMessage = Request.lang == "en"

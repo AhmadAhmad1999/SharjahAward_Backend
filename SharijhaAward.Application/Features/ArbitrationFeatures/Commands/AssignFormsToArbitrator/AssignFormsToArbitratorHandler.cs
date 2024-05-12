@@ -24,7 +24,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Assign
                 {
                     ArbitratorId = Request.ArbitratorId,
                     isAccepted = true,
-                    ProvidedFormId = x
+                    ProvidedFormId = x,
+                    isAcceptedFromChairman = false
                 }).ToList();
 
             await _ArbitrationRepository.AddRangeAsync(NewArbitrationEntities);

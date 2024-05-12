@@ -14,6 +14,7 @@ using SharijhaAward.Application.Features.Authentication.LogOut;
 using SharijhaAward.Application.Features.Authentication.ShowAsSubscriber;
 using SharijhaAward.Application.Features.Authentication.SignUp;
 using SharijhaAward.Application.Features.Authentication.SignUpFromAdminDashboard;
+using SharijhaAward.Application.Features.Authentication.UpdateFCMToken;
 using SharijhaAward.Application.Features.Authentication.VerifyAccount;
 using SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmationCode;
 using SharijhaAward.Application.Features.Settings.Commands.ResetPassword;
@@ -51,11 +52,6 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            StringValues? DeviceToken = HttpContext.Request.Headers["fcm_token"];
-
-            if (string.IsNullOrEmpty(DeviceToken))
-                return Unauthorized("You must send the fcm token");
-
             var response = await _Mediator.Send(
                 new LoginCommand()
                 { 
@@ -63,7 +59,8 @@ namespace SharijhaAward.Api.Controllers
                     Password = user.Password,
                     lang = HeaderValue,
                     intoAdminDashboard = user.intoAdminDashboard,
-                    DeviceToken = DeviceToken
+                    DeviceToken = user.DeviceToken,
+                    Platform = user.Platform
                 });
 
             var options = new JsonSerializerOptions
@@ -139,11 +136,6 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            StringValues? DeviceToken = HttpContext.Request.Headers["fcm_token"];
-
-            if (string.IsNullOrEmpty(DeviceToken))
-                return Unauthorized("You must send the fcm token");
-
             var response = await _Mediator.Send(new SignUpFromAdminDashboardCommand()
             {
                 Email = user.Email,
@@ -151,8 +143,7 @@ namespace SharijhaAward.Api.Controllers
                 RoleName = user.RoleName,
                 Gender = user.Gender,
                 PhoneNumber = user.PhoneNumber,
-                lang = HeaderValue,
-                DeviceToken = DeviceToken
+                lang = HeaderValue
             });
 
             if (!response.isSucceed)
@@ -188,13 +179,7 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            StringValues? DeviceToken = HttpContext.Request.Headers["fcm_token"];
-
-            if (string.IsNullOrEmpty(DeviceToken))
-                return Unauthorized("You must send the fcm token");
-
             CheckConfirmationCodeForSignUpCommand.lang = HeaderValue!;
-            CheckConfirmationCodeForSignUpCommand.DeviceToken = DeviceToken!;
 
             BaseResponse<object>? Response = await _Mediator.Send(CheckConfirmationCodeForSignUpCommand);
 
@@ -334,6 +319,38 @@ namespace SharijhaAward.Api.Controllers
                 token = Token,
                 lang = HeaderValue!
             });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("UpdateFCMToken")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> UpdateFCMToken([FromBody] UpdateFCMTokenCommand UpdateFCMTokenCommand)
+        {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
+            UpdateFCMTokenCommand.token = Token;
+
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            UpdateFCMTokenCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<AuthenticationResponse>? Response = await _Mediator.Send(UpdateFCMTokenCommand);
 
             return Response.statusCode switch
             {

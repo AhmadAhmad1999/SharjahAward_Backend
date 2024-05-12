@@ -3263,7 +3263,7 @@ namespace SharijhaAward.Persistence
                     EnglishTitle = "The quality of performance, achievements and influential initiatives adopted by the school",
                     Score = 300,
                     SizeOfAttachmentInKB = 0,
-                    ParentId = 2,
+                    ParentId = 1,
                     CategoryId = 2
                 }, new Criterion()
                 {
@@ -3279,7 +3279,7 @@ namespace SharijhaAward.Persistence
                     EnglishTitle = "The impact of achievements and initiatives in the school and local community, and their added value",
                     Score = 200,
                     SizeOfAttachmentInKB = 0,
-                    ParentId = 2,
+                    ParentId = 1,
                     CategoryId = 2
                 });
             #endregion

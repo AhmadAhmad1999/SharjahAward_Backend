@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Features.User.Queries.ChangePassword;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.Settings.Commands.ResetPassword
 {
