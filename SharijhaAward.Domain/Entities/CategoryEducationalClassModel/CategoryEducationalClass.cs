@@ -9,7 +9,7 @@ namespace SharijhaAward.Domain.Entities.CategoryEducationalClassModel
         public int Id { get; set; }
         public int EducationalClassId { get; set; }
         public EducationalClass? EducationalClass { get; set; }
-        public int CategoryId { get; set; }
+        public int CategoryId { get; set; } // 2, 5, 7, 8
         public Category? Category { get; set; }
         public int NumberOfExpectedWinners { get; set; }
     }

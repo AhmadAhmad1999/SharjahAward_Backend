@@ -9,8 +9,8 @@ namespace SharijhaAward.Application.Features.InstructionsFeatures.Commands.Updat
         public int Id { get; set; }
         public string Slug { get; set; } = null!;
         public string Title { get; set; } = null!;
-        public string Content { get; set; } = null!;
         [MaxLength]
+        public string Content { get; set; } = null!;
         public string? lang { get; set; }
     }
 }

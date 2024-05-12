@@ -111,7 +111,8 @@ namespace SharijhaAward.Api.MiddleWares
                         }
                     }
                     else if (Ex is WebException || 
-                        Ex is System.Net.Mail.SmtpException)
+                        Ex is System.Net.Mail.SmtpException ||
+                        Ex is AggregateException)
                     {
                         Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 

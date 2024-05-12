@@ -13,14 +13,20 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<Role> _RoleRepository;
         private readonly IAsyncRepository<RolePermission> _RolePermissionRepository;
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
         public UpdateRoleHandler(IMapper Mapper,
             IAsyncRepository<Role> RoleRepository,
-            IAsyncRepository<RolePermission> RolePermissionRepository)
+            IAsyncRepository<RolePermission> RolePermissionRepository,
+            IAsyncRepository<UserToken> UserTokenRepository,
+            IAsyncRepository<UserRole> UserRoleRepository)
         {
             _RoleRepository = RoleRepository;
             _Mapper = Mapper;
             _RolePermissionRepository = RolePermissionRepository;
+            _UserTokenRepository = UserTokenRepository;
+            _UserRoleRepository = UserRoleRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateRoleCommand Request, CancellationToken cancellationToken)
@@ -116,7 +122,20 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole
                         });
 
                     if (NewRolePermissionEntites.Count() > 0)
+                    {
                         await _RolePermissionRepository.AddRangeAsync(NewRolePermissionEntites);
+
+                        List<int> UsersIds = await _UserRoleRepository
+                            .Where(x => x.RoleId == Request.Id)
+                            .Select(x => x.UserId)
+                            .ToListAsync();
+
+                        List<UserToken> UserTokenEntitiesToDelete = await _UserTokenRepository
+                            .Where(x => UsersIds.Contains(x.UserId))
+                            .ToListAsync();
+
+                        await _UserTokenRepository.DeleteListAsync(UserTokenEntitiesToDelete);
+                    }
 
                     Transaction.Complete();
 

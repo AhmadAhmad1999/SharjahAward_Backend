@@ -2,6 +2,7 @@
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.Settings.Commands.ChangeUserAccountLanguage
 {
@@ -9,12 +10,15 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ChangeUserAccount
     {
         private IUserRepository _UserRepository;
         private readonly IJwtProvider _JWTProvider;
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
 
         public ChangeUserAccountLanguageHandler(IUserRepository UserRepository,
-            IJwtProvider JWTProvider)
+            IJwtProvider JWTProvider,
+            IAsyncRepository<UserToken> UserTokenRepository)
         {
             _UserRepository = UserRepository;
             _JWTProvider = JWTProvider;
+            _UserTokenRepository = UserTokenRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(ChangeUserAccountLanguageCommand Request, CancellationToken cancellationToken)
@@ -35,14 +39,29 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ChangeUserAccount
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            UserEntity.lang = Request.lang;
-            await _UserRepository.UpdateAsync(UserEntity);
+            UserToken? UserTokenEntity = await _UserTokenRepository
+                .FirstOrDefaultAsync(x => x.UserId == UserID && 
+                    x.DeviceToken.ToLower() == Request.DeviceToken!.ToLower() &&
+                    x.Token.ToLower() == Request.Token!.ToLower());
+
+            if (UserTokenEntity == null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "User token is not found"
+                    : "حساب المستخدم غير موجود";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
+
+            UserTokenEntity.AppLanguage = Request.NewLanguage;
+
+            await _UserTokenRepository.UpdateAsync(UserTokenEntity);
 
             ResponseMessage = Request.lang == "en"
                 ? "Profile language has been updated successfully"
                 : "تم تعديل لغة الحساب الشخصي بنجاح";
 
-            throw new NotImplementedException();
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

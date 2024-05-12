@@ -14,5 +14,6 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         public string Email { get; set; }=string.Empty;
         public string Password { get; set; } = string.Empty;
         public string? lang { get; set; }
+        public string? DeviceToken { get; set; }
     }
 }

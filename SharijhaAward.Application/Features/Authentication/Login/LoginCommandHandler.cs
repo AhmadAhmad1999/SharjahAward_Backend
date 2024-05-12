@@ -16,11 +16,13 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         private readonly IAsyncRepository<Cycle> _CycleRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IAsyncRepository<RolePermission> _RolePermissionRepository;
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
 
         public LoginCommandHandler(IUserRepository userRepository , IMapper mapper, IAsyncRepository<Role> roleRepository,
             IAsyncRepository<Cycle> CycleRepository,
             IAsyncRepository<UserRole> UserRoleRepository,
-            IAsyncRepository<RolePermission> RolePermissionRepository)
+            IAsyncRepository<RolePermission> RolePermissionRepository,
+            IAsyncRepository<UserToken> UserTokenRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -28,6 +30,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             _CycleRepository = CycleRepository;
             _UserRoleRepository = UserRoleRepository;
             _RolePermissionRepository = RolePermissionRepository;
+            _UserTokenRepository = UserTokenRepository;
         }
         public async Task<AuthenticationResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -37,6 +40,19 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             var user =  _mapper.Map<Domain.Entities.IdentityModels.User>(request);
          
             var response = await _userRepository.LogInAsync(user, request.lang, request.intoAdminDashboard);
+
+            if (!string.IsNullOrEmpty(response.token) && !string.IsNullOrWhiteSpace(response.token))
+            {
+                UserToken NewUserTokenEntity = new UserToken()
+                {
+                    Token = response.token,
+                    UserId = user.Id,
+                    AppLanguage = request.lang!,
+                    DeviceToken = request.DeviceToken!
+                };
+
+                await _UserTokenRepository.AddAsync(NewUserTokenEntity);
+            }
 
             response.ActiveCycleId = ActiveCycleEntity?.Id;
 

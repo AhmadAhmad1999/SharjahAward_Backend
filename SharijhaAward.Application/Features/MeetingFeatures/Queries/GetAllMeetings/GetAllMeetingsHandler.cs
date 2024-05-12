@@ -23,15 +23,46 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeeti
         {
             string ResponseMessage = string.Empty;
 
-            List<GetAllMeetingsListVM> Classes = _Mapper.Map<List<GetAllMeetingsListVM>>(await _MeetingRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
+            if (Request.isCanceled is not null)
+            {
+                List<GetAllMeetingsListVM> Meetings = _Mapper.Map<List<GetAllMeetingsListVM>>(await _MeetingRepository
+                    .Where(x => x.isCanceled == Request.isCanceled)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ToListAsync());
 
-            int TotalCount = await _MeetingRepository.GetCountAsync(null);
+                int TotalCount = await _MeetingRepository.GetCountAsync(null);
 
-            Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.pageSize, TotalCount);
 
-            return new BaseResponse<List<GetAllMeetingsListVM>>(ResponseMessage, true, 200, Classes, PaginationParameter);
+                return new BaseResponse<List<GetAllMeetingsListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
+            }
+            else if (Request.isImplemented is not null)
+            {
+                List<GetAllMeetingsListVM> Meetings = _Mapper.Map<List<GetAllMeetingsListVM>>(await _MeetingRepository
+                    .Where(x => x.isImplemented == Request.isImplemented)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ToListAsync());
+
+                int TotalCount = await _MeetingRepository.GetCountAsync(null);
+
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.pageSize, TotalCount);
+
+                return new BaseResponse<List<GetAllMeetingsListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
+            }
+            else
+            {
+                List<GetAllMeetingsListVM> Meetings = _Mapper.Map<List<GetAllMeetingsListVM>>(await _MeetingRepository
+                    .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
+
+                int TotalCount = await _MeetingRepository.GetCountAsync(null);
+
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.pageSize, TotalCount);
+
+                return new BaseResponse<List<GetAllMeetingsListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
+            }
         }
     }
 }

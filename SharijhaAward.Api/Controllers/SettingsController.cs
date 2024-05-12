@@ -344,6 +344,11 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(Token))
                 return Unauthorized("You must send the token");
 
+            StringValues? DeviceToken = HttpContext.Request.Headers["fcm_token"];
+
+            if (string.IsNullOrEmpty(DeviceToken))
+                return Unauthorized("You must send the fcm token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             BaseResponse<object>? Response = await _Mediator.Send(new ChangeUserAccountLanguageCommand()
@@ -352,7 +357,8 @@ namespace SharijhaAward.Api.Controllers
                     ? HeaderValue
                     : "en",
                 Token = Token,
-                NewLanguage = NewLanguage
+                NewLanguage = NewLanguage,
+                DeviceToken = DeviceToken
             });
 
             return Response.statusCode switch

@@ -16,5 +16,7 @@ namespace SharijhaAward.Domain.Entities.MeetingModel
         public MeetingTypes Type { get; set; }
         public bool isImplemented { get; set; }
         public bool isCanceled { get; set; }
+        public string? EnglishReasonOfCanceling { get; set; }
+        public string? ArabicReasonOfCanceling { get; set; }
     }
 }

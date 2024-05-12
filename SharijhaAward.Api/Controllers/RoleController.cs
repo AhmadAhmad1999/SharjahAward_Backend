@@ -10,6 +10,7 @@ using SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles;
 using SharijhaAward.Application.Features.RoleFeatures.Queries.GetRoleById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRolesIds;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -203,6 +204,34 @@ namespace SharijhaAward.Api.Controllers
             {
                 Id = Id,
                 lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetUsersByRolesIds")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetUsersByRolesIds([FromQuery] List<int> RolesIds)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<UsersInRoleDto>> Response = await _Mediator.Send(new GetUsersByRolesIdsQuery()
+            {
+                RolesIds = RolesIds,
+                lang = HeaderValue
             });
 
             return Response.statusCode switch

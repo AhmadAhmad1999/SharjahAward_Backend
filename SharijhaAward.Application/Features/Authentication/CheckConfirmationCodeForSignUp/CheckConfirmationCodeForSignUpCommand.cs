@@ -7,6 +7,7 @@ namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCod
     {
         public int Id { get; set; }
         public int ConfirmationCode { get; set; }
-        public string lang { get; set; } = string.Empty;
+        public string? lang { get; set; }
+        public string? DeviceToken { get; set; }
     }
 }
