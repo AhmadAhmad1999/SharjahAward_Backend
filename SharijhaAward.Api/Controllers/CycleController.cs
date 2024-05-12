@@ -12,6 +12,7 @@ using SharijhaAward.Application.Features.GeneralFAQs.Commands.DeleteGeneralFAQ;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Domain.Common;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -79,18 +80,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllCycle")]
-        public async Task<IActionResult> GetAllCycle(int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetAllCycle([FromQuery] GetAllCyclesQuery query)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
             //get data from mediator
-            var response = await _mediator.Send(new GetAllCyclesQuery()
-            {
-                lang = Language!,
-                page = page,
-                pageSize = perPage
-            });
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

@@ -25,7 +25,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name ="AddNews")]
-        public async Task<IActionResult> AddNews(CreateNewsCommand command)
+        public async Task<IActionResult> AddNews([FromForm] CreateNewsCommand command)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -39,7 +39,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpDelete(Name="DeleteNews")]
+        [HttpDelete("{Id}", Name="DeleteNews")]
         public async Task<IActionResult> DeleteNews(int Id)
         {
             //get Language from header
