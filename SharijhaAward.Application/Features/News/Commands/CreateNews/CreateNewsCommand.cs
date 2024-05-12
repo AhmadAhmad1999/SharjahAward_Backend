@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CycleModel;
 using System;
@@ -16,7 +17,7 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
         public string EnglishTitle { get; set; } = string.Empty;
         public string? ArabicDescription { get; set; }
         public string? EnglishDescription { get; set; }
-        public string? Image { get; set; }
+        public IFormFile? Image { get; set; }
         public int CycleId { get; set; }
     }
 }

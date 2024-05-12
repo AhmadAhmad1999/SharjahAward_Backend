@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateAboutPage;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateGoal;
+using SharijhaAward.Application.Features.AboutAwardPages.Commands.DeleteGoal;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAboutPage;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateGoal;
 using SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage;
@@ -24,7 +25,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost(Name = "CreateAboutPage")]
         public async Task<IActionResult> CreateAboutPage([FromForm] CreateAboutPageCommand command)
         {
-            
+
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
@@ -91,7 +92,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpPut("UpadteGoal", Name = "UpdateGoal")]
+        [HttpPut("UpdateGoal", Name = "UpdateGoal")]
         public async Task<IActionResult> UpdateGoal(UpdateGoalCommand command)
         {
             //get Language from header
@@ -100,6 +101,25 @@ namespace SharijhaAward.Api.Controllers
             command.lang = language!;
 
             var response = await _mediator.Send(command);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpPut("DeleteGoal/{Id}", Name = "DeleteGoal")]
+        public async Task<IActionResult> DeleteGoal(int Id)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new DeleteGoalCommand()
+            {
+                lang = language!,
+                Id = Id
+            });
 
             return response.statusCode switch
             {
