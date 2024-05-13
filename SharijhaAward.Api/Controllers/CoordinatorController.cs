@@ -158,19 +158,16 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllCoordinators(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllCoordinators([FromQuery] GetAllCoordinatorsQuery query)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<GetAllCoordinatorsListVM>> Response = await _mediator.Send(new GetAllCoordinatorsQuery()
-            {
-                lang = HeaderValue!,
-                page = Page,
-                pageSize = PerPage
-            });
+            query.lang = HeaderValue!;
+            
+            BaseResponse<List<GetAllCoordinatorsListVM>> Response = await _mediator.Send(query);
 
             return Response.statusCode switch
             {

@@ -1,5 +1,4 @@
-﻿using SharijhaAward.Application.Helpers.DateTimeConverter;
-using SharijhaAward.Domain.Constants.AgendaConstants;
+﻿using SharijhaAward.Domain.Constants.AgendaConstants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +17,6 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
         public string Icon { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        [JsonConverter(typeof(DateTimeNoFormatConverter))]
         public DateTime CurrentDate { get; set; }
         public AgendaStatus Status { get; set; }
         public AgendaDateType DateType { get; set; }

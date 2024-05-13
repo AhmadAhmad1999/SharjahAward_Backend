@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.MeetingModel;
 
 namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeetings
@@ -22,11 +23,12 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeeti
             Handle(GetAllMeetingsQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
 
             if (Request.isCanceled is not null)
             {
                 List<GetAllMeetingsListVM> Meetings = _Mapper.Map<List<GetAllMeetingsListVM>>(await _MeetingRepository
-                    .Where(x => x.isCanceled == Request.isCanceled)
+                    .WhereThenFilter(x => x.isCanceled == Request.isCanceled, filterObject)
                     .OrderByDescending(x => x.CreatedAt)
                     .ToListAsync());
 
@@ -40,7 +42,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeeti
             else if (Request.isImplemented is not null)
             {
                 List<GetAllMeetingsListVM> Meetings = _Mapper.Map<List<GetAllMeetingsListVM>>(await _MeetingRepository
-                    .Where(x => x.isImplemented == Request.isImplemented)
+                    .WhereThenFilter(x => x.isImplemented == Request.isImplemented, filterObject)
                     .OrderByDescending(x => x.CreatedAt)
                     .ToListAsync());
 
@@ -54,7 +56,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeeti
             else
             {
                 List<GetAllMeetingsListVM> Meetings = _Mapper.Map<List<GetAllMeetingsListVM>>(await _MeetingRepository
-                    .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
+                    .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
 
                 int TotalCount = await _MeetingRepository.GetCountAsync(null);
 

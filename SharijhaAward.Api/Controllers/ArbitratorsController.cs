@@ -125,19 +125,16 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllArbitrators(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllArbitrators([FromQuery] GetAllArbitratorsQuery query)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<GetAllArbitratorsListVM>> Response = await _Mediator.Send(new GetAllArbitratorsQuery()
-            {
-                lang = HeaderValue!,
-                page = Page,
-                pageSize = PerPage
-            });
+            query.lang = HeaderValue!;
+
+            BaseResponse<List<GetAllArbitratorsListVM>> Response = await _Mediator.Send(query);
 
             return Response.statusCode switch
             {

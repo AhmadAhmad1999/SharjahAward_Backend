@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CategoryModel;
 
 namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForms
@@ -35,9 +36,11 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
                 return new BaseResponse<List<FormListVm>> ("", false, 401);
             }
            
+            FilterObject filterObject = new FilterObject() { Filters= request.filters };
+
             var form = request.Type == null
-                ? await _formRepository.Where(f => f.userId == User.Id).OrderByDescending(x => x.CreatedAt).ToListAsync()
-                : await _formRepository.Where(f => f.userId == User.Id).Where(f=>f.Type==request.Type)
+                ? await _formRepository.WhereThenFilter(f => f.userId == User.Id, filterObject).OrderByDescending(x => x.CreatedAt).ToListAsync()
+                : await _formRepository.WhereThenFilter(f => f.userId == User.Id, filterObject).Where(f=>f.Type==request.Type)
                     .OrderByDescending(x => x.CreatedAt).ToListAsync();
            
             var data = _mapper.Map<List<FormListVm>> (form);

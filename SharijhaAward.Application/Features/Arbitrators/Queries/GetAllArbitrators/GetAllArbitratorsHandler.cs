@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 
@@ -24,8 +25,10 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
         }
         public async Task<BaseResponse<List<GetAllArbitratorsListVM>>> Handle(GetAllArbitratorsQuery Request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+           
             List<GetAllArbitratorsListVM> Arbitrators = _Mapper.Map<List<GetAllArbitratorsListVM>>(await _ArbitratorRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize)
                 .ToListAsync());
 
             List<CategoryArbitrator> CategoryArbitratorEntities = await _CategoryArbitratorRepository

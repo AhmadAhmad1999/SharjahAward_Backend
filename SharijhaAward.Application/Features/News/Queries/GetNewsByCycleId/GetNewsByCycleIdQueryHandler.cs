@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
@@ -42,10 +43,23 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
 
                 return new BaseResponse<List<NewsListVM>>(msg, false, 400);
             }
-            var NewsListByCycle = _newsRepository.Where(n => n.CycleId == Cycle!.Id).ToList();
+            var NewsListByCycle = await _newsRepository.GetWhereThenPagedReponseAsync(n => n.CycleId == Cycle!.Id, request.page, request.pageSize);
             
+            if (!request.query.IsNullOrEmpty())
+            {
+                NewsListByCycle = await _newsRepository
+                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
+                    .OrderByDescending(x => x.CreatedAt).ToListAsync();
 
-            if (NewsListByCycle.Count == 0)
+                if (NewsListByCycle.Count() == 0)
+                {
+                    NewsListByCycle = await _newsRepository
+                        .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()))
+                        .OrderByDescending(x => x.CreatedAt).ToListAsync();
+                }
+            }
+
+            if (NewsListByCycle == null)
             {
                 msg = request.lang == "en"
                     ? "There is No News"
@@ -65,8 +79,15 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
                         ? NewsListByCycle[i].EnglishDescription!
                         : NewsListByCycle[i].ArabicDescription!;
             }
+           
+            int count = _newsRepository.GetCount(n => n.CycleId == Cycle.Id);
+            
+            Pagination pagination = new Pagination(request.page, request.pageSize, count);
 
-            return new BaseResponse<List<NewsListVM>>("", true, 200, data);
+            if (!request.query.IsNullOrEmpty())
+                return new BaseResponse<List<NewsListVM>>("", true, 200, data);
+
+            return new BaseResponse<List<NewsListVM>>("", true, 200, data, pagination);
         }
     }
 }

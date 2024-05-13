@@ -195,6 +195,82 @@ namespace SharijhaAward.Persistence.Repositories
 
             return query;
         }
+        public async virtual Task<IReadOnlyList<T>> GetFilterThenPagedReponseAsync(FilterObject filterObject, int page, int size)
+        {
+            var query = new List<T>();
+
+            if (size == -1 || page == 0)
+            {
+                query = await _DbSet.AsNoTracking().ToListAsync();
+            }
+
+            if (filterObject != null && filterObject.Filters != null)
+            {
+                foreach (var filter in filterObject.Filters)
+                {
+                    var propertyType = typeof(T).GetProperty(filter.Key!)?.PropertyType;
+                    if (propertyType != null)
+                    {
+                        if (filter.Value == null)
+                        {
+                            // Process null value
+                            query = query.Where(entity => EF.Property<object>(entity, filter.Key!) == null).ToList();
+                        }
+                        else if (propertyType == typeof(string) && filter.Value is string stringValue)
+                        {
+                            // Process string value
+                            if (!string.IsNullOrEmpty(stringValue))
+                            {
+                                query = query.Where(entity => EF.Property<string>(entity, filter.Key!) == stringValue).ToList();
+                            }
+                        }
+                        else if (propertyType == typeof(int) && filter.Value is string IntValue)
+                        {
+                            int Value = int.Parse(IntValue);
+                            // Process string value
+                            if (!string.IsNullOrEmpty(IntValue))
+                            {
+                                query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value).ToList();
+                            }
+                        }
+                        //else if (propertyType == typeof(DateTime) && filter.Value is DateTimeRange dateRange)
+                        //{
+                        //    // Process date range
+                        //    if (dateRange.StartDate != null && dateRange.EndDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate &&
+                        //            EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
+                        //    }
+                        //    else if (dateRange.StartDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate);
+                        //    }
+                        //    else if (dateRange.EndDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
+                        //    }
+                        //}
+                        else
+                        {
+                            // Process other value types
+                            query = query.Where(entity => EF.Property<object>(entity, filter.Key!).Equals(filter.Value)).ToList();
+                        }
+                    }
+                }
+            }
+            if(size != -1)
+            {
+                if (size == 0)
+                    size = 10;
+                query = query
+                    .Skip((page - 1) * size).Take(size).ToList();
+            }
+            
+            return query;
+        }
         public async virtual Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, FilterObject filterObject, int page, int size)
         {
             var query = new List<T>();
@@ -230,7 +306,7 @@ namespace SharijhaAward.Persistence.Repositories
                             // Process string value
                             if (!string.IsNullOrEmpty(IntValue))
                             {
-                                query = query.Where(entity => EF.Property<int>(entity, filter.Key) == Value).ToList();
+                                query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value).ToList();
                             }
                         }
                         //else if (propertyType == typeof(DateTime) && filter.Value is DateTimeRange dateRange)
@@ -310,6 +386,78 @@ namespace SharijhaAward.Persistence.Repositories
                 size = 10;
             return _DbSet.AsNoTracking().OrderByDescending(keySelector).Skip((page - 1) * size).Take(size);
         }
+        public IQueryable<T> OrderByDescending<TKey>(FilterObject filterObject, Expression<Func<T, TKey>> keySelector, int page, int size)
+        {
+            IQueryable<T> query = _DbSet.AsNoTracking();
+
+            if (filterObject != null && filterObject.Filters != null)
+            {
+                foreach (var filter in filterObject.Filters)
+                {
+                    var propertyType = typeof(T).GetProperty(filter.Key!)?.PropertyType;
+                    if (propertyType != null)
+                    {
+                        if (filter.Value == null)
+                        {
+                            // Process null value
+                            query = query.Where(entity => EF.Property<object>(entity, filter.Key) == null);
+                        }
+                        else if (propertyType == typeof(string) && filter.Value is string stringValue)
+                        {
+                            // Process string value
+                            if (!string.IsNullOrEmpty(stringValue))
+                            {
+                                query = query.Where(entity => EF.Property<string>(entity, filter.Key) == stringValue);
+                            }
+                        }
+                        else if (propertyType == typeof(int) && filter.Value is string IntValue)
+                        {
+                            int Value = int.Parse(IntValue);
+                            // Process string value
+                            if (!string.IsNullOrEmpty(IntValue))
+                            {
+                                query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
+                            }
+                        }
+                        //else if (propertyType == typeof(DateTime) && filter.Value is DateTimeRange dateRange)
+                        //{
+                        //    // Process date range
+                        //    if (dateRange.StartDate != null && dateRange.EndDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate &&
+                        //            EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
+                        //    }
+                        //    else if (dateRange.StartDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate);
+                        //    }
+                        //    else if (dateRange.EndDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
+                        //    }
+                        //}
+                        else
+                        {
+                            // Process other value types
+                            query = query.Where(entity => EF.Property<object>(entity, filter.Key!).Equals(filter.Value));
+                        }
+                    }
+                }
+            }
+
+            if (size == -1 || page == 0)
+                return _DbSet.AsNoTracking().OrderByDescending(keySelector);
+            if (size == 0)
+            {
+                size = 10;
+                query.AsNoTracking().OrderByDescending(keySelector).Skip((page - 1) * size).Take(size);
+            }
+
+            return query;
+        }
         public IQueryable<T> Include(string navigationPropertyPath)
         {
             return _DbSet.AsNoTracking().Include(navigationPropertyPath);
@@ -318,6 +466,70 @@ namespace SharijhaAward.Persistence.Repositories
         {
             string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
             return _DbSet.AsNoTracking().Include(navigationPropertyPath);
+        }
+        public IQueryable<T> Include(Expression<Func<T, object>> navigationProperty, FilterObject filterObject)
+        {
+            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            var query = _DbSet.AsNoTracking().Include(navigationPropertyPath);
+           
+            if (filterObject != null && filterObject.Filters != null)
+            {
+                foreach (var filter in filterObject.Filters)
+                {
+                    var propertyType = typeof(T).GetProperty(filter.Key!)?.PropertyType;
+                    if (propertyType != null)
+                    {
+                        if (filter.Value == null)
+                        {
+                            // Process null value
+                            query = query.Where(entity => EF.Property<object>(entity, filter.Key!) == null);
+                        }
+                        else if (propertyType == typeof(string) && filter.Value is string stringValue)
+                        {
+                            // Process string value
+                            if (!string.IsNullOrEmpty(stringValue))
+                            {
+                                query = query.Where(entity => EF.Property<string>(entity, filter.Key!) == stringValue);
+                            }
+                        }
+                        else if (propertyType == typeof(int) && filter.Value is string IntValue)
+                        {
+                            int Value = int.Parse(IntValue);
+                            // Process string value
+                            if (!string.IsNullOrEmpty(IntValue))
+                            {
+                                query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
+                            }
+                        }
+                        //else if (propertyType == typeof(DateTime) && filter.Value is DateTimeRange dateRange)
+                        //{
+                        //    // Process date range
+                        //    if (dateRange.StartDate != null && dateRange.EndDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate &&
+                        //            EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
+                        //    }
+                        //    else if (dateRange.StartDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate);
+                        //    }
+                        //    else if (dateRange.EndDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
+                        //    }
+                        //}
+                        else
+                        {
+                            // Process other value types
+                            query = query.Where(entity => EF.Property<object>(entity, filter.Key!).Equals(filter.Value));
+                        }
+                    }
+                }
+            }
+            return query;
         }
         public IQueryable<T> IncludeThenWhere(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate)
@@ -348,9 +560,80 @@ namespace SharijhaAward.Persistence.Repositories
 
             return query;
         }
+        public IQueryable<T> WhereThenInclude(Expression<Func<T, bool>> predicate, FilterObject filterObject, params Expression<Func<T, object>>[] navigationProperties)
+        {
+            IQueryable<T> query = _DbSet.AsNoTracking().Where(predicate);
+
+            if (filterObject != null && filterObject.Filters != null)
+            {
+                foreach (var filter in filterObject.Filters)
+                {
+                    var propertyType = typeof(T).GetProperty(filter.Key!)?.PropertyType;
+                    if (propertyType != null)
+                    {
+                        if (filter.Value == null)
+                        {
+                            // Process null value
+                            query = query.Where(entity => EF.Property<object>(entity, filter.Key!) == null);
+                        }
+                        else if (propertyType == typeof(string) && filter.Value is string stringValue)
+                        {
+                            // Process string value
+                            if (!string.IsNullOrEmpty(stringValue))
+                            {
+                                query = query.Where(entity => EF.Property<string>(entity, filter.Key!) == stringValue);
+                            }
+                        }
+                        else if (propertyType == typeof(int) && filter.Value is string IntValue)
+                        {
+                            int Value = int.Parse(IntValue);
+                            // Process string value
+                            if (!string.IsNullOrEmpty(IntValue))
+                            {
+                                query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
+                            }
+                        }
+                        //else if (propertyType == typeof(DateTime) && filter.Value is DateTimeRange dateRange)
+                        //{
+                        //    // Process date range
+                        //    if (dateRange.StartDate != null && dateRange.EndDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate &&
+                        //            EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
+                        //    }
+                        //    else if (dateRange.StartDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate);
+                        //    }
+                        //    else if (dateRange.EndDate != null)
+                        //    {
+                        //        query = query.Where(entity =>
+                        //            EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
+                        //    }
+                        //}
+                        else
+                        {
+                            // Process other value types
+                            query = query.Where(entity => EF.Property<object>(entity, filter.Key!).Equals(filter.Value));
+                        }
+                    }
+                }
+            }
+
+            foreach (var navigationProperty in navigationProperties)
+            {
+                string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+                query = query.Include(navigationPropertyPath);
+            }
+
+            return query;
+        }
+
         public IQueryable<T> WhereThenInclude(
-            Expression<Func<T, bool>> predicate,
-            params Expression<Func<T, object>>[] navigationProperties)
+           Expression<Func<T, bool>> predicate,
+           params Expression<Func<T, object>>[] navigationProperties)
         {
             IQueryable<T> query = _DbSet.AsNoTracking().Where(predicate);
 
