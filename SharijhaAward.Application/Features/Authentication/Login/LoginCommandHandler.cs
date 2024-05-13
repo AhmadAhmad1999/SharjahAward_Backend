@@ -42,7 +42,6 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             var response = await _userRepository.LogInAsync(user, request.lang, request.intoAdminDashboard);
 
             if (!string.IsNullOrEmpty(response.token) && !string.IsNullOrWhiteSpace(response.token) && 
-                !string.IsNullOrEmpty(request.DeviceToken) && !string.IsNullOrWhiteSpace(request.DeviceToken) &&
                 request.Platform != null)
             {
                 UserToken NewUserTokenEntity = new UserToken()
@@ -50,7 +49,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                     Token = response.token,
                     UserId = response.user.Id,
                     AppLanguage = request.lang!,
-                    DeviceToken = request.DeviceToken!,
+                    DeviceToken = request.DeviceToken,
                     Platform = request.Platform!.Value
                 };
 
@@ -59,20 +58,23 @@ namespace SharijhaAward.Application.Features.Authentication.Login
 
             response.ActiveCycleId = ActiveCycleEntity?.Id;
 
-            List<int> UserRolesIds = await _UserRoleRepository
-                .Where(x => x.UserId == response.user.Id)
-                .Select(x => x.RoleId)
-                .ToListAsync();
+            if (response.user is not null)
+            {
+                List<int> UserRolesIds = await _UserRoleRepository
+                    .Where(x => x.UserId == response.user.Id)
+                    .Select(x => x.RoleId)
+                    .ToListAsync();
 
-            response.UserPermissions = await _RolePermissionRepository
-                .Where(x => UserRolesIds.Contains(x.RoleId))
-                .Include(x => x.Permission!)
-                .Include(x => x.Permission!.PermissionHeader!)
-                .Select(x => new UserPermissionsDto()
-                {
-                    Action = x.Permission!.Name,
-                    Subject = x.Permission!.PermissionHeader!.Name
-                }).ToListAsync();
+                response.UserPermissions = await _RolePermissionRepository
+                    .Where(x => UserRolesIds.Contains(x.RoleId))
+                    .Include(x => x.Permission!)
+                    .Include(x => x.Permission!.PermissionHeader!)
+                    .Select(x => new UserPermissionsDto()
+                    {
+                        Action = x.Permission!.Name,
+                        Subject = x.Permission!.PermissionHeader!.Name
+                    }).ToListAsync();
+            }
 
             return response;
         }

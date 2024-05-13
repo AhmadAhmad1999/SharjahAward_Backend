@@ -41,8 +41,10 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ChangeUserAccount
 
             UserToken? UserTokenEntity = await _UserTokenRepository
                 .FirstOrDefaultAsync(x => x.UserId == UserID && 
-                    x.DeviceToken.ToLower() == Request.DeviceToken!.ToLower() &&
-                    x.Token.ToLower() == Request.Token!.ToLower());
+                    ((!string.IsNullOrEmpty(x.DeviceToken) && !string.IsNullOrEmpty(Request.DeviceToken)) 
+                        ? x.DeviceToken.ToLower() == Request.DeviceToken!.ToLower() 
+                        : true) &&
+                    x.Token.ToLower() == Request.Token!.ToLower().Replace("Bearer", string.Empty));
 
             if (UserTokenEntity == null)
             {
