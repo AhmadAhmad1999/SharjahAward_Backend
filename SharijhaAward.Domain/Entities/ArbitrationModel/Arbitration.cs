@@ -13,5 +13,6 @@ namespace SharijhaAward.Domain.Entities.ArbitrationModel
         public Arbitrator? Arbitrator { get; set; }
         public int ProvidedFormId { get; set; }
         public ProvidedForm? ProvidedForm { get; set; }
+        public ArbitrationType Type { get; set; } = 0;
     }
 }

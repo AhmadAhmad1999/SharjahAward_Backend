@@ -51,6 +51,7 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
 
             List<MainCriterionDto> ListOfMainCriterionDto = new List<MainCriterionDto>();
             List<ArbitrationScaleDto> ListOfArbitrationScaleDto = ArbitrationScalesCriterionEntities
+                .DistinctBy(x => x.ArbitrationScaleId)
                 .Select(x => x.ArbitrationScale!)
                 .Select(x => new ArbitrationScaleDto()
                 {
