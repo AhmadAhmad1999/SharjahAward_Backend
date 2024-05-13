@@ -85,6 +85,8 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
+            query.lang = Language!;
+
             //get data from mediator
             var response = await _mediator.Send(query);
 

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
@@ -33,9 +34,11 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
             }
             List<Domain.Entities.IdentityModels.User> Subscribers = new List<Domain.Entities.IdentityModels.User>();
 
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             if (request.page != 0 && request.pageSize != -1)
                 Subscribers = await _UserRoleRepository
-                    .Include(x => x.User!)
+                    .Include(x => x.User!, filterObject)
                     .Where(x => x.RoleId == SubscriberRole.Id &&
                         (request.isValidAccount != null 
                             ? x.User!.isValidAccount == request.isValidAccount
@@ -48,7 +51,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
 
             else
                 Subscribers = await _UserRoleRepository
-                    .Include(x => x.User!)
+                    .Include(x => x.User!, filterObject)
                     .Where(x => x.RoleId == SubscriberRole.Id &&
                         (request.isValidAccount != null
                             ? x.User!.isValidAccount == request.isValidAccount

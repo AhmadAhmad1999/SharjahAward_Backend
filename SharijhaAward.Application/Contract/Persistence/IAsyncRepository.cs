@@ -27,6 +27,7 @@ namespace SharijhaAward.Application.Contract.Persistence
         Task RemoveListAsync(IEnumerable<T> entities);
         IQueryable<T> Where(Expression<Func<T, bool>> predicate);
         IQueryable<T> WhereThenFilter(Expression<Func<T, bool>> predicate, FilterObject filterObject);
+        Task<IReadOnlyList<T>> GetFilterThenPagedReponseAsync(FilterObject filterObject, int page, int size);
         Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, int page, int size);
         Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, FilterObject filterObject, int page, int size);
         T? FirstOrDefault(Expression<Func<T, bool>> predicate);
@@ -39,12 +40,15 @@ namespace SharijhaAward.Application.Contract.Persistence
             Expression<Func<T, bool>> predicate, int page, int size,
             params Expression<Func<T, object>>[] navigationProperties);
         IQueryable<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector, int page, int size);
+        IQueryable<T> OrderByDescending<TKey>(FilterObject filterObject, Expression<Func<T, TKey>> keySelector, int page, int size);
         IQueryable<T> Include(string navigationPropertyPath);
         IQueryable<T> Include(Expression<Func<T, object>> navigationProperty);
+        IQueryable<T> Include(Expression<Func<T, object>> navigationProperty, FilterObject filterObject)
         IQueryable<T> IncludeThenWhere(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate);
         public IQueryable<T> WhereThenInclude(Expression<Func<T, bool>> predicate,
             params Expression<Func<T, object>>[] navigationProperties);
+        IQueryable<T> WhereThenInclude(Expression<Func<T, bool>> predicate, FilterObject filterObject, params Expression<Func<T, object>>[] navigationProperties);
         T? IncludeThenFirstOrDefault(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate);
         Task<T?> IncludeThenFirstOrDefaultAsync(Expression<Func<T, object>> navigationProperty,

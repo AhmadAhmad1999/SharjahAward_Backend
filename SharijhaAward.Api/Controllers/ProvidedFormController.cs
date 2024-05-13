@@ -82,7 +82,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name="GetAllProvidedForm")]
-        public async Task<IActionResult> GetAllProvidedForm([FromQuery] ProvidedFormType? Type)
+        public async Task<IActionResult> GetAllProvidedForm([FromQuery] GetAllProvidedFormsQuery query)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -92,12 +92,11 @@ namespace SharijhaAward.Api.Controllers
             {
                 return Unauthorized();
             }
-            var response = await _mediator.Send(new GetAllProvidedFormsQuery()
-            {
-                token = token!,
-                Type = Type,
-                lang= Language!
-            });
+
+            query.lang = Language!;
+            query.token = token!;
+
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

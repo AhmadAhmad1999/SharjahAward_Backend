@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public ProvidedFormType? Type { get; set; }
         public string token { get; set; } = string.Empty;
         public string lang { get; set; } = string.Empty;
+        public List<Filter>? filters { get; set; }
     }
 }

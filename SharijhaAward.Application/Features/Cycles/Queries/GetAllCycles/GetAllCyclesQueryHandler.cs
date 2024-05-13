@@ -28,8 +28,10 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles
 
         public async Task<BaseResponse<List<CycleListVM>>> Handle(GetAllCyclesQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var CycleList = await _cycleRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+                .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.pageSize)
                 .ToListAsync();
 
             var data = _mapper.Map<List<CycleListVM>>(CycleList);

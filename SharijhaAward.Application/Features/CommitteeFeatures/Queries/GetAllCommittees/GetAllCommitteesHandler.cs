@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CommitteeModel;
 
 namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCommittees
@@ -19,8 +20,10 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
         {
             string ResponseMessage = string.Empty;
 
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             List<GetAllCommitteesListVM> Committees = await _CommitteeRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize)
                 .Include(x => x.Chairman!)
                 .Select(x => new GetAllCommitteesListVM()
                 {

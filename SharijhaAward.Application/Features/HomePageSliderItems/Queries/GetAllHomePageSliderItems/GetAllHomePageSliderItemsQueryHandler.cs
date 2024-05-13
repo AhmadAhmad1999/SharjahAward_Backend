@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllH
 
             var data  = _mapper.Map<List<SliderItemsListVM>>(AllSliderItem);
 
-            return new BaseResponse<List<SliderItemsListVM>>("", true, 200);
+            return new BaseResponse<List<SliderItemsListVM>>("", true, 200, data);
         }
     }
 }
