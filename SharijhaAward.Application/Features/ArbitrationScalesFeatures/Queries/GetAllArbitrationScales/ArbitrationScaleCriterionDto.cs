@@ -3,6 +3,7 @@
     public class ArbitrationScaleCriterionDto
     {
         public int Id { get; set; }
+        public int ScaleId { get; set; }
         public string ArabicDescription { get; set; } = null!;
         public string EnglishDescription { get; set; } = null!;
         public int? CriterionId { get; set; }

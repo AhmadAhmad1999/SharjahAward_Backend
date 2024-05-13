@@ -562,6 +562,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ArbitrationScale, ArbitrationScaleDto>().ReverseMap();
             CreateMap<AppVersion, CreateNewAppVersionCommand>().ReverseMap();
             CreateMap<User, SignUpFromAdminDashboardCommand>().ReverseMap();
+            CreateMap<ArbitrationScalesCriterion, ArbitrationScaleCriterionDto>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();

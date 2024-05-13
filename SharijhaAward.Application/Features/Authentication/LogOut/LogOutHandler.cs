@@ -29,7 +29,7 @@ namespace SharijhaAward.Application.Features.Authentication.LogOut
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
             UserToken? UserToken = await _UserTokenRepository
-                .FirstOrDefaultAsync(x => x.UserId == UserId && x.Token.ToLower() == Request.token!.ToLower().Replace("Bearer", string.Empty) &&
+                .FirstOrDefaultAsync(x => x.UserId == UserId && x.Token.ToLower() == Request.token!.ToLower().Replace("bearer ", string.Empty) &&
                     x.Platform == Request.Platform);
 
             if (UserToken is null)

@@ -90,15 +90,19 @@ namespace SharijhaAward.Application.Features.Authentication.CheckConfirmationCod
 
                     string Token = _JWTProvider.Generate(UserEntity);
 
-                    UserToken NewUserTokenEntity = new UserToken()
+                    if (Request.PlatformType is not null)
                     {
-                        Token = Token,
-                        DeviceToken = Request.DeviceToken,
-                        AppLanguage = Request.lang!,
-                        UserId = Request.Id
-                    };
+                        UserToken NewUserTokenEntity = new UserToken()
+                        {
+                            Token = Token,
+                            DeviceToken = Request.DeviceToken,
+                            AppLanguage = Request.lang!,
+                            UserId = Request.Id,
+                            Platform = Request.PlatformType.Value
+                        };
 
-                    await _UserTokenRepository.AddAsync(NewUserTokenEntity);
+                        await _UserTokenRepository.AddAsync(NewUserTokenEntity);
+                    }
 
                     AuthenticationResponse Response = new AuthenticationResponse()
                     {

@@ -8,6 +8,7 @@ namespace SharijhaAward.Domain.Entities.ArbitrationModel
     {
         public int Id { get; set; }
         public bool isAccepted { get; set; }
+        public string? ReasonForRejecting { get; set; }
         public bool isAcceptedFromChairman { get; set; }
         public int ArbitratorId { get; set; }
         public Arbitrator? Arbitrator { get; set; }

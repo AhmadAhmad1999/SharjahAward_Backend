@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ChangeUserAccount
                     ((!string.IsNullOrEmpty(x.DeviceToken) && !string.IsNullOrEmpty(Request.DeviceToken)) 
                         ? x.DeviceToken.ToLower() == Request.DeviceToken!.ToLower() 
                         : true) &&
-                    x.Token.ToLower() == Request.Token!.ToLower().Replace("Bearer", string.Empty));
+                    x.Token.ToLower() == Request.Token!.ToLower().Replace("bearer ", string.Empty));
 
             if (UserTokenEntity == null)
             {

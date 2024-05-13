@@ -3266,7 +3266,7 @@ namespace SharijhaAward.Persistence
                     ArabicTitle = "جودة الأداء والإنجازات والمبادرات المؤثرة التي تبنتها المدرسة",
                     EnglishTitle = "The quality of performance, achievements and influential initiatives adopted by the school",
                     Score = 300,
-                    SizeOfAttachmentInKB = 0,
+                    SizeOfAttachmentInKB = 5000,
                     ParentId = 1,
                     CategoryId = 2
                 }, new Criterion()
@@ -3282,7 +3282,7 @@ namespace SharijhaAward.Persistence
                     ArabicTitle = "أثر الإنجازات والمبادرات في المجتمع المدرسي والمحلي، والقيمة المضافة لها",
                     EnglishTitle = "The impact of achievements and initiatives in the school and local community, and their added value",
                     Score = 200,
-                    SizeOfAttachmentInKB = 0,
+                    SizeOfAttachmentInKB = 5000,
                     ParentId = 1,
                     CategoryId = 2
                 });
@@ -3304,7 +3304,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Strategic planning for projects and initiatives that serve the Arabic language",
                     Score = 40,
                     ActualScore = 40,
-                    SizeOfAttachmentInKB = null
+                    SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
                     Id = 2,
@@ -3320,7 +3320,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Supporting language skills for all categories of students",
                     Score = 120,
                     ActualScore = 120,
-                    SizeOfAttachmentInKB = null
+                    SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
                     Id = 3,
@@ -3336,7 +3336,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Leading the development of the language competencies of the school community",
                     Score = 60,
                     ActualScore = 60,
-                    SizeOfAttachmentInKB = null
+                    SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
                     Id = 4,
@@ -3352,7 +3352,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Managing human capital and resources to serve the Arabic language",
                     Score = 60,
                     ActualScore = 60,
-                    SizeOfAttachmentInKB = null
+                    SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
                     Id = 5,
@@ -3368,7 +3368,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Leading institutional performance to enrich the school with literary productions",
                     Score = 40,
                     ActualScore = 40,
-                    SizeOfAttachmentInKB = null
+                    SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
                     Id = 6,
@@ -3384,7 +3384,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "The school community masters the Arabic language skills in communication, reading, and creativity",
                     Score = 150,
                     ActualScore = 150,
-                    SizeOfAttachmentInKB = null
+                    SizeOfAttachmentInKB = 5000
                 }, new CriterionItem()
                 {
                     Id = 7,
@@ -3400,7 +3400,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Spreading a culture of pride in the Arabic language in the school and local community",
                     Score = 50,
                     ActualScore = 50,
-                    SizeOfAttachmentInKB = null
+                    SizeOfAttachmentInKB = 5000
                 });
             #endregion
             #region ArbitrationScale

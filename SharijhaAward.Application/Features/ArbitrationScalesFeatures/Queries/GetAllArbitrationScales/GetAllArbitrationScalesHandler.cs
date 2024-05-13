@@ -119,7 +119,8 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                                     CriterionId = null,
                                     CriterionItemId = x.CriterionItemId,
                                     ArabicDescription = x.ArabicDescription,
-                                    ArbitrationScaleId = x.ArbitrationScaleId
+                                    ArbitrationScaleId = x.ArbitrationScaleId,
+                                    ScaleId = x.ArbitrationScaleId
                                 }).ToList();
                         }
                     }
@@ -138,7 +139,8 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                                 ArbitrationScaleId = x.ArbitrationScaleId,
                                 CriterionId = x.CriterionId,
                                 CriterionItemId = null,
-                                EnglishDescription = x.EnglishDescription
+                                EnglishDescription = x.EnglishDescription,
+                                ScaleId = x.ArbitrationScaleId
                             }).ToList();
                     }
                 }
