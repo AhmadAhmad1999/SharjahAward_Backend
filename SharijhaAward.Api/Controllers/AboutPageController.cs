@@ -109,7 +109,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpPut("DeleteGoal/{Id}", Name = "DeleteGoal")]
+        [HttpDelete("DeleteGoal/{Id}", Name = "DeleteGoal")]
         public async Task<IActionResult> DeleteGoal(int Id)
         {
             //get Language from header

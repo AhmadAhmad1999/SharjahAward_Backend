@@ -17,7 +17,6 @@ using SharijhaAward.Api.Logger;
 using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
 using SharijhaAward.Application;
-using SharijhaAward.Application.Helpers.DateTimeConverter;
 using SharijhaAward.Infrastructure;
 using SharijhaAward.Persistence;
 using System.Net;

@@ -83,7 +83,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
                 {
                     //Check on Terms that need Attachments
                     if (terms[i].RequiredAttachmentNumber != conditionsProvideds[i].Attachments.Count() 
-                        && terms[i].RequiredAttachmentNumber != 0 )
+                        && terms[i].RequiredAttachmentNumber != 0 && terms[i].NeedAttachment == true )
                     {
                         msg = request.lang == "en"
                             ? "Please Complete Uploading The File "

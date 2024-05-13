@@ -29,7 +29,9 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwa
 
         public async Task<BaseResponse<List<AwardPublicationListVM>>> Handle(GetAllAwardPublicationsQuery request, CancellationToken cancellationToken)
         {
-            var Cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
+            var Cycle = request.CycleId == null
+                ? await _cycleRepository.FirstOrDefaultAsync(c=>c.Status == Domain.Constants.Common.Status.Active)
+                : await _cycleRepository.GetByIdAsync(request.CycleId);
            
             if(Cycle == null)
             {

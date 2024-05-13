@@ -11,7 +11,6 @@ using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClassesByCategoriesIds;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByClassId;
 using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
-using SharijhaAward.Application.Helpers.DateTimeConverter;
 using SharijhaAward.Application.Responses;
 using System.Text.Json;
 

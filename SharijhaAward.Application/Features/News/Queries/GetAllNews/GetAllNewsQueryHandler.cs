@@ -31,12 +31,13 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
                 .ToListAsync();
            
             int count = _newsRepository.GetCount(n => n.isDeleted == false);
+            
             Pagination pagination = new Pagination(request.page, request.pageSize, count);
             
             if (!request.query.IsNullOrEmpty())
             {
                 newsList = await _newsRepository
-                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query.ToLower()))
+                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
                     .OrderByDescending(x => x.CreatedAt).ToListAsync();
 
                 if (newsList.Count() == 0)

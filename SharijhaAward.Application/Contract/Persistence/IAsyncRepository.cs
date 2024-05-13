@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Contract.Persistence
         IQueryable<T> OrderByDescending<TKey>(FilterObject filterObject, Expression<Func<T, TKey>> keySelector, int page, int size);
         IQueryable<T> Include(string navigationPropertyPath);
         IQueryable<T> Include(Expression<Func<T, object>> navigationProperty);
-        IQueryable<T> Include(Expression<Func<T, object>> navigationProperty, FilterObject filterObject)
+        IQueryable<T> Include(Expression<Func<T, object>> navigationProperty, FilterObject filterObject);
         IQueryable<T> IncludeThenWhere(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate);
         public IQueryable<T> WhereThenInclude(Expression<Func<T, bool>> predicate,

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿ using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
@@ -124,7 +124,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             ProvidedForm.Type = 0;
             ProvidedForm.Status = 0;
             ProvidedForm.CurrentStep = 1;
-            ProvidedForm.TotalStep = 7;
+            ProvidedForm.TotalStep = 6;
             ProvidedForm.PercentCompletion = 0;
 
             TransactionOptions TransactionOptions = new TransactionOptions

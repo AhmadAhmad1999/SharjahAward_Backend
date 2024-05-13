@@ -115,7 +115,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetNewsByCycleId",Name = "GetNewsByCycleId")]
-        public async Task<IActionResult> GetNewsByCycleId(int? CycleId)
+        public async Task<IActionResult> GetNewsByCycleId(int? CycleId, string? query, int page = 1, int pageSize = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -124,8 +124,10 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetNewsByCycleIdQuery()
             {
                 lang = Language!,
-                CycleId = CycleId
-
+                CycleId = CycleId,
+                page = page,
+                pageSize = pageSize,
+                query = query
             });
             return response.statusCode switch
             {

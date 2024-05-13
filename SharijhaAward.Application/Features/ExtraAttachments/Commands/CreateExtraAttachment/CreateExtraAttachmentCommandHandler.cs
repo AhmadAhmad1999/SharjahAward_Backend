@@ -41,9 +41,9 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExt
 
                 return new BaseResponse<int>(msg, false, 404);
             }
-            providedForm.TotalStep = 8;
+            providedForm.TotalStep ++;
             
-            var PercentFormula = (providedForm.CurrentStep - 1 * 100) / providedForm.TotalStep;
+            var PercentFormula = ((providedForm.CurrentStep - 1) * 100) / providedForm.TotalStep;
             providedForm.PercentCompletion = PercentFormula < 0 ? 0 : PercentFormula;
 
             var extraAttachment = _mapper.Map<ExtraAttachment>(request);
