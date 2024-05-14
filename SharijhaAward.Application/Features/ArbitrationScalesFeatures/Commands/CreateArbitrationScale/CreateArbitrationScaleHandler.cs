@@ -80,23 +80,39 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.
 
                             foreach (ArbitrationScaleCriterionDto ArbitrationScaleCriterion in ArbitrationScaleDto.ArbitrationScaleCriterionDto)
                             {
-                                ArbitrationScalesCriterion? ArbitrationScalesCriterionEntityToUpdate = await _ArbitrationScalesCriterionRepository
-                                    .FirstOrDefaultAsync(x => x.Id == ArbitrationScaleCriterion.Id);
-
-                                if (ArbitrationScaleEntityToUpdate is null)
+                                if (ArbitrationScaleCriterion.Id != 0)
                                 {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? "Arbitration scale criterion is not found"
-                                        : "مقياس التحكيم غير موجود";
+                                    ArbitrationScalesCriterion? ArbitrationScalesCriterionEntityToUpdate = await _ArbitrationScalesCriterionRepository
+                                        .FirstOrDefaultAsync(x => x.Id == ArbitrationScaleCriterion.Id);
 
-                                    return new BaseResponse<object>(ResponseMessage, false, 404);
+                                    if (ArbitrationScaleEntityToUpdate is null)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? "Arbitration scale criterion is not found"
+                                            : "مقياس التحكيم غير موجود";
+
+                                        return new BaseResponse<object>(ResponseMessage, false, 404);
+                                    }
+
+                                    _Mapper.Map(ArbitrationScaleCriterion, ArbitrationScalesCriterionEntityToUpdate, typeof(ArbitrationScaleCriterionDto), typeof(ArbitrationScalesCriterion));
+
+                                    ArbitrationScalesCriterionEntityToUpdate!.EnglishDescription = "No Value";
+
+                                    await _ArbitrationScalesCriterionRepository.UpdateAsync(ArbitrationScalesCriterionEntityToUpdate!);
                                 }
+                                else
+                                {
+                                    ArbitrationScalesCriterion NewArbitrationScalesCriterionEntity = new ArbitrationScalesCriterion()
+                                    {
+                                        ArabicDescription = ArbitrationScaleCriterion.ArabicDescription,
+                                        EnglishDescription = "No Value",
+                                        CriterionId = ArbitrationScaleCriterion.CriterionId,
+                                        CriterionItemId = ArbitrationScaleCriterion.CriterionItemId,
+                                        ArbitrationScaleId = ArbitrationScaleEntityToUpdate.Id,
+                                    };
 
-                                _Mapper.Map(ArbitrationScaleCriterion, ArbitrationScalesCriterionEntityToUpdate, typeof(ArbitrationScaleCriterionDto), typeof(ArbitrationScalesCriterion));
-
-                                ArbitrationScalesCriterionEntityToUpdate!.EnglishDescription = "No Value";
-
-                                await _ArbitrationScalesCriterionRepository.UpdateAsync(ArbitrationScalesCriterionEntityToUpdate!);
+                                    await _ArbitrationScalesCriterionRepository.AddAsync(NewArbitrationScalesCriterionEntity);
+                                }
                             }
                         }
                     }

@@ -13,11 +13,14 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
     {
         private readonly IAsyncRepository<ArbitrationScalesCriterion> _ArbitrationScalesCriterionRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
+        private readonly IAsyncRepository<Criterion> _CriterionRepository;
         public GetAllArbitrationScalesHandler(IAsyncRepository<ArbitrationScalesCriterion> ArbitrationScalesCriterionRepository,
-            IAsyncRepository<CriterionItem> CriterionItemRepository)
+            IAsyncRepository<CriterionItem> CriterionItemRepository,
+            IAsyncRepository<Criterion> CriterionRepository)
         {
             _ArbitrationScalesCriterionRepository = ArbitrationScalesCriterionRepository;
             _CriterionItemRepository = CriterionItemRepository;
+            _CriterionRepository = CriterionRepository;
         }
         public async Task<BaseResponse<GetAllArbitrationScalesListVM>> 
             Handle(GetAllArbitrationScalesQuery Request, CancellationToken cancellationToken)
@@ -31,24 +34,24 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
 
+            List<Criterion> AllCriterions = await _CriterionRepository
+                .Where(x => x.CategoryId == Request.SubCategoryId)
+                .Include(x => x.Parent!)
+                .ToListAsync();
+
+            List<Criterion> AllMainCriterionsEntities = AllCriterions
+                .Where(x => x.ParentId == null)
+                .ToList();
+
+            List<Criterion> AllSubCriterionsEntities = AllCriterions
+                .Where(x => x.ParentId != null)
+                .ToList();
+
             List<CriterionItem> ListOfCriterionItemEntities = await _CriterionItemRepository
-                .Include(x => x.Criterion!)
-                .Include(x => x.Criterion!.Parent!)
-                .Where(x => x.Criterion!.CategoryId == Request.SubCategoryId)
+                .Where(x => AllSubCriterionsEntities.Select(y => y.Id).Contains(x.CriterionId))
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
             
-            List<Criterion> AllMainCriterionsEntities = ListOfCriterionItemEntities
-                .Select(x => x.Criterion!.Parent!)
-                .DistinctBy(x => x.Id)
-                .ToList();
-
-            List<Criterion> AllSubCriterionsEntities = ListOfCriterionItemEntities
-                .Select(x => x.Criterion!)
-                .DistinctBy(x => x.Id)
-                .Except(AllMainCriterionsEntities)
-                .ToList();
-
             List<MainCriterionDto> ListOfMainCriterionDto = new List<MainCriterionDto>();
             List<ArbitrationScaleDto> ListOfArbitrationScaleDto = ArbitrationScalesCriterionEntities
                 .DistinctBy(x => x.ArbitrationScaleId)
