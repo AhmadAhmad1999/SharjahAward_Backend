@@ -3,8 +3,10 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories;
+using SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.RewardModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +19,13 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
         : IRequestHandler<GetAllCategoryQuery, BaseResponse<List<CategoryListVM>>>
     {
         private readonly IAsyncRepository<Category> _categoryRepository;
+        private readonly IAsyncRepository<Reward> _rewardRepository;
         private readonly IMapper _mapper;
 
-        public GetAllCategoryQueryHandler(IAsyncRepository<Category> categoryRepository, IMapper mapper)
+        public GetAllCategoryQueryHandler(IAsyncRepository<Reward> rewardRepository, IAsyncRepository<Category> categoryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _rewardRepository = rewardRepository;
             _mapper = mapper;
         }
         public async Task<BaseResponse<List<CategoryListVM>>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
@@ -42,6 +46,10 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
           
             var data = _mapper.Map<List<CategoryListVM>>(categories);
 
+            var rewards = await _rewardRepository.ListAllAsync();
+            
+            var Rewards = _mapper.Map<List<RewardListVm>>(rewards);
+           
             for (int i = 0; i < data.Count; i++)
             {
                 List<Category> subCategories = _categoryRepository.Where(c => c.ParentId == data[i].Id).ToList();
@@ -51,7 +59,13 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
                 {
                     data[i].subcategories[j].Name = request.lang == "en"
                         ? subCategories[j].EnglishName
-                        : subCategories[j].ArabicName;
+                        : subCategories[j].ArabicName;   
+
+                    data[i].subcategories[j].Description = request.lang == "en"
+                        ? subCategories[j].EnglishDescription
+                        : subCategories[j].ArabicDescription;
+
+                    data[i].subcategories[j].Rewards = Rewards.Where(r => r.CategoryId == subCategories[j].Id).ToList();
                 }
 
                 data[i].Name = request.lang == "ar" ? data[i].ArabicName : data[i].EnglishName;
