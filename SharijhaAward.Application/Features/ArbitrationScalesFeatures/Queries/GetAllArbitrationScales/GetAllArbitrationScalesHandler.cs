@@ -52,6 +52,7 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
             List<MainCriterionDto> ListOfMainCriterionDto = new List<MainCriterionDto>();
             List<ArbitrationScaleDto> ListOfArbitrationScaleDto = ArbitrationScalesCriterionEntities
                 .DistinctBy(x => x.ArbitrationScaleId)
+                .OrderBy(x => x.Id)
                 .Select(x => x.ArbitrationScale!)
                 .Select(x => new ArbitrationScaleDto()
                 {
@@ -109,7 +110,7 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                         {
                             List<ArbitrationScalesCriterion> SubCriterionArbitrationScalesCriterion = ArbitrationScalesCriterionEntities
                                 .Where(x => x.CriterionItemId != null && x.CriterionItemId == CriterionItemDto.Id)
-                                .OrderByDescending(x => x.CreatedAt)
+                                .OrderBy(x => x.ArbitrationScaleId)
                                 .ToList();
 
                             CriterionItemDto.ArbitrationScaleCriterionDto = SubCriterionArbitrationScalesCriterion
@@ -128,7 +129,7 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                     {
                         List<ArbitrationScalesCriterion> SubCriterionArbitrationScalesCriterion = ArbitrationScalesCriterionEntities
                             .Where(x => x.CriterionId != null && x.CriterionId == SubCriterionDto.Id)
-                            .OrderByDescending(x => x.CreatedAt)
+                            .OrderBy(x => x.ArbitrationScaleId)
                             .ToList();
 
                         SubCriterionDto.ArbitrationScaleCriterionDto = SubCriterionArbitrationScalesCriterion

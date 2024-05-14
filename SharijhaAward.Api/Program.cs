@@ -157,12 +157,12 @@ try
     app.UseAuthentication();
 
     app.UseCors("Open");
-    string LogsFolderPath = "c:/temp/Logs";
+    //string LogsFolderPath = "c:/temp/Logs";
 
-    if (!Directory.Exists(LogsFolderPath))
-    {
-        Directory.CreateDirectory(LogsFolderPath);
-    }
+    //if (!Directory.Exists(LogsFolderPath))
+    //{
+    //    Directory.CreateDirectory(LogsFolderPath);
+    //}
     //hangfire
 
     app.UseHangfireDashboard();
