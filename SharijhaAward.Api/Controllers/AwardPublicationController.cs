@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwardPu
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAwardPublicationById;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideByCategoryId;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.AwardPublications.Commands.UpdateAwardPublication;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -55,6 +56,24 @@ namespace SharijhaAward.Api.Controllers
                 Id = Id,
                 lang = language!
             });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPut(Name = "UpdateAwardPublication")]
+        public async Task<IActionResult> UpdateAwardPublication([FromForm] UpdateAwardPublicationCommand command)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            command.lang = language!;
+
+            var response = await _mediator.Send(command);
+
             return response.statusCode switch
             {
                 200 => Ok(response),

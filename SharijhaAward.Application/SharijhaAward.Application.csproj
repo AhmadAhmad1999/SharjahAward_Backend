@@ -50,7 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\AwardPublications\Commands\UpdateAwardPublication\" />
     <Folder Include="Features\EducationalInstitutions\Queries\GetEducationalInstitutionsByEntityId\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\InitialArbitrationFeatures\Commands\" />

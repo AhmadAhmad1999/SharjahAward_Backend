@@ -291,6 +291,7 @@ using SharijhaAward.Application.Features.AwardStatistics.Commands.CreateAwardSta
 using SharijhaAward.Application.Features.AwardStatistics.Commands.UpdateAwardStatistic;
 using SharijhaAward.Application.Features.Authentication.SignUpFromAdminDashboard;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeeting;
+using SharijhaAward.Application.Features.AwardPublications.Commands.UpdateAwardPublication;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -471,6 +472,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Circular, CircularDto>().ReverseMap();
 
             CreateMap<AwardPublication, CreateAwardPublicationCommand>().ReverseMap();
+            CreateMap<AwardPublication, UpdateAwardPublicationCommand>().ReverseMap();
             CreateMap<AwardPublication, AwardPublicationListVM>().ReverseMap();
             CreateMap<AwardPublication, AwardPublicationDto>().ReverseMap();
 
