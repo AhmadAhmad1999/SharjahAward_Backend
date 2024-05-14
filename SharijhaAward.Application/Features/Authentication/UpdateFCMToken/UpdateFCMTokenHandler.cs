@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Newtonsoft.Json.Linq;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
@@ -9,36 +10,29 @@ namespace SharijhaAward.Application.Features.Authentication.UpdateFCMToken
     public class UpdateFCMTokenHandler : IRequestHandler<UpdateFCMTokenCommand, BaseResponse<AuthenticationResponse>>
     {
         private readonly IAsyncRepository<UserToken> _UserTokenRepository;
+        private readonly IJwtProvider _JWTProvider;
 
-        public UpdateFCMTokenHandler(IAsyncRepository<UserToken> UserTokenRepository)
+        public UpdateFCMTokenHandler(IAsyncRepository<UserToken> UserTokenRepository,
+            IJwtProvider JWTProvider)
         {
             _UserTokenRepository = UserTokenRepository;
+            _JWTProvider = JWTProvider;
         }
         public async Task<BaseResponse<AuthenticationResponse>> Handle(UpdateFCMTokenCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
+            int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
+
             UserToken? UserTokenEntity = await _UserTokenRepository
                 .FirstOrDefaultAsync(x => x.Platform == Request.Platform && 
-                    x.Token.ToLower() == Request.token!.ToLower().Replace("Bearer", string.Empty));
+                    x.Token.ToLower() == Request.token!.ToLower().Replace("bearer ", string.Empty) &&
+                    x.UserId == UserId &&
+                    ((!string.IsNullOrEmpty(x.DeviceToken))
+                        ? x.DeviceToken!.ToLower() == Request.DeviceToken!.ToLower()
+                        : true));
 
-            if (UserTokenEntity is null && !string.IsNullOrEmpty(Request.DeviceToken) && !string.IsNullOrWhiteSpace(Request.DeviceToken) &&
-                !string.IsNullOrEmpty(Request.token) && !string.IsNullOrWhiteSpace(Request.token))
-            {
-                UserToken NewUserToken = new UserToken()
-                {
-                    Token = Request.token!.ToLower().Replace("Bearer", string.Empty),
-                    DeviceToken = Request.DeviceToken,
-                    Platform = Request.Platform!.Value,
-                    AppLanguage = Request.lang!
-                };
-
-                await _UserTokenRepository.AddAsync(NewUserToken);
-
-                return new BaseResponse<AuthenticationResponse>(ResponseMessage, true, 200);
-            }
-            else if (string.IsNullOrEmpty(Request.DeviceToken) || string.IsNullOrWhiteSpace(Request.DeviceToken) ||
-                string.IsNullOrEmpty(Request.token) || string.IsNullOrWhiteSpace(Request.token))
+            if (UserTokenEntity is null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "You must send the token"

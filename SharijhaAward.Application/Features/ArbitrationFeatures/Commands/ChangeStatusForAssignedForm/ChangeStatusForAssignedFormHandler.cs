@@ -49,6 +49,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                 return new BaseResponse<object>(ResponseMessage, true, 200);
             }
 
+            ArbitrationEntity.isAccepted = Request.isAccepted;
+            ArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
+
             await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
 
             ResponseMessage = Request.lang == "en"
