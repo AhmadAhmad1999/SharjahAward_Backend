@@ -27,14 +27,14 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferen
         {
             var ReferenceSourcePage = await _referenceSourceRepository.FirstOrDefaultAsync(r => !r.isDeleted);
 
-            if (ReferenceSourcePage == null)
-            {
-               string msg = request.lang == "en"
-                          ? "Reference Source Page Not Found"
-                          : "المصادر المرجعية غير موجودة";
+            //if (ReferenceSourcePage == null)
+            //{
+            //   string msg = request.lang == "en"
+            //              ? "Reference Source Page Not Found"
+            //              : "المصادر المرجعية غير موجودة";
 
-                return new BaseResponse<ReferenceSourceDto>(msg, false, 404);
-            }
+            //    return new BaseResponse<ReferenceSourceDto>(msg, false, 404);
+            //}
 
             var data = _mapper.Map<ReferenceSourceDto>(ReferenceSourcePage);
 

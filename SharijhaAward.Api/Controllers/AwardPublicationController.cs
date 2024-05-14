@@ -103,7 +103,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllAwardPublications")]
-        public async Task<IActionResult> GetAllAwardPublications(int CycleId, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllAwardPublications(int? CycleId, int page = 1, int pageSize = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];

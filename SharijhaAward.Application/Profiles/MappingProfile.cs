@@ -292,6 +292,10 @@ using SharijhaAward.Application.Features.AwardStatistics.Commands.UpdateAwardSta
 using SharijhaAward.Application.Features.Authentication.SignUpFromAdminDashboard;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeeting;
 using SharijhaAward.Application.Features.AwardPublications.Commands.UpdateAwardPublication;
+using SharijhaAward.Application.Features.Cycles.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.CommitteeFeatures.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.News.Queries.ExportToExcel;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -368,11 +372,13 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Cycle, CycleListVM>().ReverseMap();
             CreateMap<Cycle, UpdateCycleCommand>().ReverseMap();
             CreateMap<Cycle, CycleDto>().ReverseMap();
+            CreateMap<Cycle, CycleExportDto>().ReverseMap();
             CreateMap<Cycle, LimitationDto>().ReverseMap();
 
             CreateMap<News, CreateNewsCommand>().ReverseMap();
             CreateMap<News, UpdateNewsCommand>().ReverseMap();
             CreateMap<News, NewsVM>().ReverseMap();
+            CreateMap<News, NewsExportDto>().ReverseMap();
             CreateMap<News, NewsListVM>().ReverseMap();
 
             CreateMap<Agenda, CreateAgendaCommand>().ReverseMap();
@@ -470,6 +476,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Circular, UpdateCircularCommand>().ReverseMap();
             CreateMap<Circular, CircularListVm>().ReverseMap();
             CreateMap<Circular, CircularDto>().ReverseMap();
+            CreateMap<Circular, CircularExportDto>().ReverseMap();
 
             CreateMap<AwardPublication, CreateAwardPublicationCommand>().ReverseMap();
             CreateMap<AwardPublication, UpdateAwardPublicationCommand>().ReverseMap();
@@ -529,6 +536,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AwardStatistic, UpdateAwardStatisticCommand>().ReverseMap();
             CreateMap<AwardStatistic, AwardPublicationDto>().ReverseMap();
             CreateMap<AwardStatistic, AwardPublicationListVM>().ReverseMap();
+
+            CreateMap<Committee, CommitteeExportDto>().ReverseMap();
 
 
             //

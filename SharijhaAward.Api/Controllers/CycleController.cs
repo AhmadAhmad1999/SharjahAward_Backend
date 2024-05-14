@@ -13,6 +13,8 @@ using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Domain.Common;
+using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.Cycles.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -129,6 +131,19 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("CycleExportToExcel", Name = "CycleExportToExcel")]
+        public async Task<IActionResult> CycleExportToExcel()
+        {
+            var response = await _mediator.Send(new ExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Cycles.xlsx"),
+                _ => BadRequest(response)
             };
         }
     }

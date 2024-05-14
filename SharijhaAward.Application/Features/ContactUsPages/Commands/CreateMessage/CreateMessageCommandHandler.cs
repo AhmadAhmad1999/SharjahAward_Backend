@@ -6,6 +6,7 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,13 +43,21 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                 : "تم إرسال الرسالة بنجاح";
 
             var message = _mapper.Map<EmailMessage>(request);
-            message.IsRead = false;
-            
 
-            
+            message.IsRead = false;
+
+            EmailMessage data;
+
+            if (request.token == null)
+            {
+               data = await _messageRepository.AddAsync(message);
+            }
+            else
+            {
+
                 var UserId = _jwtProvider.GetUserIdFromToken(request.token!);
 
-                var User = await _userRepository.FirstOrDefaultAsync(u => u.Id == int.Parse(UserId));
+                var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
 
                 if (User == null)
                 {
@@ -58,51 +67,52 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
 
                     return new BaseResponse<int>(msg, false, 401);
                 }
-                if (message.UserId == null) 
+                if (message.UserId == null)
                 {
                     message.UserId = User.Id;
                 }
                 message.From = User!.Email;
-            
 
-            if (request.MessageId != null)
-            {
-                var ParentMessage = await _messageRepository.GetByIdAsync(request.MessageId);
-                
-                if (ParentMessage == null)
+
+                if (request.MessageId != null)
                 {
-                    msg = request.lang == "en"
-                  ? "Message Not Found"
-                  : "الرسالة غير موجودة";
+                    var ParentMessage = await _messageRepository.GetByIdAsync(request.MessageId);
 
-                    return new BaseResponse<int>(msg, false, 400);
+                    if (ParentMessage == null)
+                    {
+                        msg = request.lang == "en"
+                      ? "Message Not Found"
+                      : "الرسالة غير موجودة";
 
+                        return new BaseResponse<int>(msg, false, 400);
+
+                    }
+                    else
+                    {
+                        if (message.AsignId == null)
+                        {
+                            message.UserId = User.Id;
+                        }
+
+                    }
                 }
                 else
                 {
-                    if(message.AsignId  == null)
-                    {
-                        message.UserId = User.Id;
-                    }
-                    
+                    message.Status = Domain.Constants.ContactUsConstants.MessageStatus.New;
                 }
-            }
-            else
-            {
-                message.Status = Domain.Constants.ContactUsConstants.MessageStatus.New;
-            }
-           
-            var data = await _messageRepository.AddAsync(message);
-            
-            if (request.FirstName == null && request.LastName == null)
-            {
-                data.FirstName = request.lang == "en" ? User.EnglishName : User.ArabicName;
-            }
 
-            if (request.MessageId == null)
-            {
-                data.MessageId = data.Id;
-                await _messageRepository.UpdateAsync(data);
+                 data = await _messageRepository.AddAsync(message);
+
+                if (request.FirstName == null && request.LastName == null)
+                {
+                    data.FirstName = request.lang == "en" ? User.EnglishName : User.ArabicName;
+                }
+
+                if (request.MessageId == null)
+                {
+                    data.MessageId = data.Id;
+                    await _messageRepository.UpdateAsync(data);
+                }
             }
             if (request.EmailAttachments != null)
             {

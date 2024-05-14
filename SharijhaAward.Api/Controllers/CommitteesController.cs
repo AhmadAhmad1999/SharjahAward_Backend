@@ -11,6 +11,8 @@ using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommitteeB
 using SharijhaAward.Application.Responses;
 
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.CommitteeFeatures.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -180,6 +182,19 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("CommiteeExportToExcel", Name = "CommiteeExportToExcel")]
+        public async Task<IActionResult> CommiteeExportToExcel()
+        {
+            var response = await _Mediator.Send(new CommitteeExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Committees.xlsx"),
+                _ => BadRequest(response)
             };
         }
     }

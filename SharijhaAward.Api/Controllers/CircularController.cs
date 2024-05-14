@@ -7,6 +7,7 @@ using SharijhaAward.Application.Features.Circulars.Command.UpdateCircular;
 using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
 using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -111,6 +112,19 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(response),
                 404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("CircularExportToExcel", Name = "CircularExportToExcel")]
+        public async Task<IActionResult> CircularExportToExcel()
+        {
+            var response = await _mediator.Send(new CircularExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Circulars.xlsx"),
                 _ => BadRequest(response)
             };
         }
