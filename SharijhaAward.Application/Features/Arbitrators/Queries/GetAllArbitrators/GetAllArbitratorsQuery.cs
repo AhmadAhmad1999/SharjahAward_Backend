@@ -7,8 +7,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
     public class GetAllArbitratorsQuery : IRequest<BaseResponse<List<GetAllArbitratorsListVM>>>
     {
         public string? lang { get; set; }
-        public int page { get; set; }
-        public int pageSize { get; set; }
+        public int page { get; set; } = 1;
+        public int pageSize { get; set; } = 10;
         public List<Filter>? filters { get; set; }
     }
 }

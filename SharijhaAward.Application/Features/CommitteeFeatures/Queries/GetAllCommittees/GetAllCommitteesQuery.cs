@@ -7,8 +7,8 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
     public class GetAllCommitteesQuery : IRequest<BaseResponse<List<GetAllCommitteesListVM>>>
     {
         public string? lang { get; set; }
-        public int page { get; set; }
-        public int pageSize { get; set; }
+        public int page { get; set; } = 1;
+        public int pageSize { get; set; } = 10;
         public List<Filter>? filters { get; set; }
     }
 }

@@ -8,8 +8,8 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
     public class GetAllSubscribersQuery : IRequest<BaseResponse<List<UserListVm>>>
     {
         public bool? isValidAccount { get; set; }
-        public int page {  get; set; }
-        public int pageSize { get; set; }
+        public int page { get; set; } = 1;
+        public int pageSize { get; set; } = 10;
         public List<Filter>? filters { get; set; }
     }
 }
