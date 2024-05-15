@@ -36,10 +36,17 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
             foreach(var form in data)
             {
-                var Category = await _categoryRepository.GetByIdAsync(form.categoryId);
+                var SubCategory = await _categoryRepository.GetByIdAsync(form.categoryId);
+                var Category = await _categoryRepository.GetByIdAsync(SubCategory!.ParentId);
               
                 if(Category != null)
-                     form.CategoryName = request.lang == "en"? Category.EnglishName : Category.ArabicName;
+                     form.CategoryName = request.lang == "en"
+                        ? Category.EnglishName 
+                        : Category.ArabicName;
+
+                form.SubCategoryName = request.lang == "en"
+                        ? SubCategory.EnglishName 
+                        : SubCategory.ArabicName;
             }
 
             int count = _formRepository.GetCount(f => !f.isDeleted);

@@ -37,7 +37,7 @@ namespace SharijhaAward.Application.Features.Albums.Queries.GetAlbumById
 
             var data = _mapper.Map<AlbumDto>(album);
 
-            return new BaseResponse<AlbumDto>("", true, 200);
+            return new BaseResponse<AlbumDto>("", true, 200, data);
         }
     }
 }

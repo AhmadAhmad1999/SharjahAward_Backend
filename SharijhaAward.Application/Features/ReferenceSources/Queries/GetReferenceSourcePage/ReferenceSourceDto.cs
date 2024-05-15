@@ -11,6 +11,10 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferen
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Sources { get; set; } = string.Empty;
+        public string EnglishTitle { get; set; } = string.Empty;
+        public string ArabicTitle { get; set; } = string.Empty;
+        public string EnglishSources { get; set; } = string.Empty;
+        public string ArabicSources { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
     }
 }

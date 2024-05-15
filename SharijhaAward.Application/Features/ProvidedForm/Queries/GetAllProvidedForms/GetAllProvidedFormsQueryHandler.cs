@@ -46,12 +46,19 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
             var data = _mapper.Map<List<FormListVm>> (form);
             for (int i = 0; i < data.Count(); i++)
             {
-                var Category = await _categoryRepository.GetByIdAsync(form[i].categoryId);
-                if(Category == null)
+                var SubCategory = await _categoryRepository.GetByIdAsync(form[i].categoryId);
+                var Category = await _categoryRepository.GetByIdAsync(SubCategory!.ParentId);
+                
+                if(SubCategory == null)
                 {
                     return new BaseResponse<List<FormListVm>>("", false, 400);
                 }
-                data[i].CategoryName = request.lang=="en"
+
+                data[i].SubCategoryName = request.lang=="en"
+                    ? SubCategory.EnglishName
+                    : SubCategory.ArabicName;
+
+                data[i].CategoryName = request.lang == "en"
                     ? Category.EnglishName
                     : Category.ArabicName;
             }

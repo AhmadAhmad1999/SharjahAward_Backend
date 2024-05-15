@@ -36,9 +36,18 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferen
             //    return new BaseResponse<ReferenceSourceDto>(msg, false, 404);
             //}
 
+           
             var data = _mapper.Map<ReferenceSourceDto>(ReferenceSourcePage);
 
-            return new BaseResponse<ReferenceSourceDto>("", true, 200);
+            data.Title = request.lang == "en"
+                ? data.EnglishTitle
+                : data.ArabicTitle;
+            
+            data.Sources = request.lang == "en"
+                ? data.EnglishSources
+                : data.ArabicSources;
+
+            return new BaseResponse<ReferenceSourceDto>("", true, 200, data);
         }
     }
 }

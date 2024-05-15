@@ -19,8 +19,9 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public ProvidedFormStatus Status { get; set; } 
         public SubscriberType SubscriberType { get; set; }
         public int CurrentStep {  get; set; }
-        public int TotalStep { get; set; } = 7;
+        public int TotalStep { get; set; } = 6;
         public float FinalScore {  get; set; }
+        public bool IsAccepted { get; set; }
         public User User { get; set; } = null!;
 
         [ForeignKey(nameof(User))]

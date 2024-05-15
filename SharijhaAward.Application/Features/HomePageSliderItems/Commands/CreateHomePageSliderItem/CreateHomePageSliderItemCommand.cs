@@ -11,8 +11,10 @@ namespace SharijhaAward.Application.Features.HomePageSliderItems.Commands.Create
 {
     public class CreateHomePageSliderItemCommand : IRequest<BaseResponse<object>>
     {
-        public string Title { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string ArabicTitle { get; set; } = string.Empty;
+        public string EnglishTitle { get; set; } = string.Empty;
+        public string ArabicDescription { get; set; } = string.Empty;
+        public string EngishDescription { get; set; } = string.Empty;
         public IFormFile Image { get; set; } = null!;
         public string? lang { get; set; }
     }

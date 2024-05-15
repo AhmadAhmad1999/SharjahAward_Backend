@@ -114,10 +114,10 @@ namespace SharijhaAward.Api.Controllers
             var Language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
 
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
+            //if (token.IsNullOrEmpty())
+            //{
+            //    return Unauthorized();
+            //}
             var response = await _mediator.Send(new GetAllFormsForAllSubscriberQuery()
             {
                 page=page,
