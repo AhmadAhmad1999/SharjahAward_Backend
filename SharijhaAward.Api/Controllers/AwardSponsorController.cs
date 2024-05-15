@@ -8,6 +8,7 @@ using SharijhaAward.Application.Features.AwardSponsorsPage.Commands.DeleteAwardS
 using SharijhaAward.Application.Features.AwardSponsorsPage.Commands.UpdateAwardSponsor;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsorById;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -87,6 +88,27 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAwardSponsorQuery()
             {
                 lang = Language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+
+        }
+
+        [HttpGet("{Id}", Name = "GetAwardSponserById")]
+        public async Task<IActionResult> GetAwardSponserById(int Id)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAwardSponsorByIdQuery()
+            {
+                lang = Language!,
+                Id = Id
             });
 
             return response.statusCode switch

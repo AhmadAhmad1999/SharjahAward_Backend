@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor
 {
-    public class AwardSponsorDto
+    public class AwardSponsorListVM
     {
         public int Id { get; set; }
         public string EnglishName { get; set; } = string.Empty;
