@@ -43,6 +43,8 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                 .Where(x => x.ParentId == null)
                 .ToList();
 
+            int FullSscore = AllMainCriterionsEntities.Sum(x => x.Score);
+
             List<Criterion> AllSubCriterionsEntities = AllCriterions
                 .Where(x => x.ParentId != null)
                 .ToList();
@@ -73,7 +75,8 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                     Title = Request.lang == "en"
                         ? MainCriterionEntity.EnglishTitle
                         : MainCriterionEntity.ArabicTitle,
-                    Score = MainCriterionEntity.Score
+                    Score = MainCriterionEntity.Score,
+                    ScoreInPercentageForm = ((MainCriterionEntity.Score / (float) FullSscore) * 100).ToString() + "%"
                 };
 
                 List<Criterion> SubCriterionsEntities = AllSubCriterionsEntities
@@ -87,7 +90,8 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                         Title = Request.lang == "en"
                             ? x.EnglishTitle
                             : x.ArabicTitle,
-                        Score = x.Score
+                        Score = x.Score,
+                        ScoreInPercentageForm = ((x.Score / (float)FullSscore) * 100).ToString() + "%"
                     }).ToList();
 
                 foreach (SubCriterionDto SubCriterionDto in MainCriterionDto.SubCriterionDto)
