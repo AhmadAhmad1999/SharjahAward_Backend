@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardS
             data.EducationalStages = request.lang == "en" ? data.EnglishEducationalStages : data.ArabicEducationalStages;
             data.UpbringingAndAiography = request.lang == "en" ? data.EnglishUpbringingAndAiography : data.ArabicUpbringingAndAiography;
 
-            return new BaseResponse<AwardSponsorDto>("", true, 200);
+            return new BaseResponse<AwardSponsorDto>("", true, 200, data);
         }
     }
 }

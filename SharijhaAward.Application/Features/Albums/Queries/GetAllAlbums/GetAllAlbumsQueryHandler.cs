@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums
         {
 
             var Cycle = request.CycleId == null
-                ? _cycleRepository.FirstOrDefault(c => c.Status == Domain.Constants.Common.Status.Active)
+                ? await _cycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active)
                 : await _cycleRepository.GetByIdAsync(request.CycleId);
           
             if(Cycle == null)
@@ -42,7 +42,7 @@ namespace SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums
                 return new BaseResponse<List<AlbumListVm>>(msg, false, 404);
             }
 
-            var AllAlbums = _albumRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id, request.page, request.pageSize);
+            var AllAlbums = await _albumRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id, request.page, request.pageSize);
             
             var data = _mapper.Map<List<AlbumListVm>>(AllAlbums);
 

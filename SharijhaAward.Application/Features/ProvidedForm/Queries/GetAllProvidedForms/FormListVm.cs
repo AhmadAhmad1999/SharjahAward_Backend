@@ -14,7 +14,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public int CurrentStep { get; set; }
         public int TotalStep {  get; set; }
         public string CategoryName { get; set; } = string.Empty;
+        public string SubCategoryName { get; set; } = string.Empty;
         public float FinalScore { get; set; }
+        public bool IsAccepted { get; set; }
         public int categoryId { get; set; }
         public DateTime CreatedAt { get; set; }
 

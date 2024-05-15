@@ -296,6 +296,7 @@ using SharijhaAward.Application.Features.Cycles.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.CommitteeFeatures.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.News.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -525,7 +526,7 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<AwardSponsor, CreateAwardSponsorCommand>().ReverseMap();
             CreateMap<AwardSponsor, UpdateAwardSponsorCommand>().ReverseMap();
-            CreateMap<AwardSponsor, AwardPublicationDto>().ReverseMap();
+            CreateMap<AwardSponsor, AwardSponsorDto>().ReverseMap();
 
             CreateMap<Reward, CreateRewardCommand>().ReverseMap();
             CreateMap<Reward, UpdateRewardCommand>().ReverseMap();
