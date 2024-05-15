@@ -9,25 +9,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor
+namespace SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsorById
 {
-    public class GetAwardSponsorQueryHandler
-        : IRequestHandler<GetAwardSponsorQuery, BaseResponse<AwardSponsorListVM>>
+    public class GetAwardSponsorByIdQueryHandler
+        : IRequestHandler<GetAwardSponsorByIdQuery, BaseResponse<AwardSponsorDto>>
     {
         private readonly IAsyncRepository<AwardSponsor> _awardSponsorRepository;
         private readonly IMapper _mapper;
 
-        public GetAwardSponsorQueryHandler(IAsyncRepository<AwardSponsor> awardSponsorRepository, IMapper mapper)
+        public GetAwardSponsorByIdQueryHandler(IAsyncRepository<AwardSponsor> awardSponsorRepository, IMapper mapper)
         {
             _awardSponsorRepository = awardSponsorRepository;
             _mapper = mapper;
         }
-
-        public async Task<BaseResponse<AwardSponsorListVM>> Handle(GetAwardSponsorQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<AwardSponsorDto>> Handle(GetAwardSponsorByIdQuery request, CancellationToken cancellationToken)
         {
-            var Sponser = await _awardSponsorRepository.FirstOrDefaultAsync(a => !a.isDeleted);
+            var Sponsor = await _awardSponsorRepository.GetByIdAsync(request.Id);
+           
+            if(Sponsor == null)
+            {
+                return new BaseResponse<AwardSponsorDto>("", false, 404);
+            }
 
-            var data = _mapper.Map<AwardSponsorListVM>(Sponser);
+            var data = _mapper.Map<AwardSponsorDto>(Sponsor);
 
             data.Writings = request.lang == "en" ? data.EnglishWritings : data.ArabicWritings;
             data.Name = request.lang == "en" ? data.EnglishName : data.ArabicName;
@@ -37,7 +41,7 @@ namespace SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardS
             data.UpbringingAndAiography = request.lang == "en" ? data.EnglishUpbringingAndAiographyFirst : data.ArabicUpbringingAndAiographyFirst;
             data.UpbringingAndAiographySecound = request.lang == "en" ? data.EnglishUpbringingAndAiographySecound : data.ArabicUpbringingAndAiographySecound;
 
-            return new BaseResponse<AwardSponsorListVM>("", true, 200, data);
+            return new BaseResponse<AwardSponsorDto>("", true, 200, data);
         }
     }
 }

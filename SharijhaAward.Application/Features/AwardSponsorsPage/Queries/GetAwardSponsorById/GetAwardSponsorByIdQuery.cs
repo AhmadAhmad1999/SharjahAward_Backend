@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor
+namespace SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsorById
 {
-    public class GetAwardSponsorQuery : IRequest<BaseResponse<AwardSponsorListVM>>
+    public class GetAwardSponsorByIdQuery : IRequest<BaseResponse<AwardSponsorDto>>
     {
+        public int Id { get; set; }
         public string? lang { get; set; }
     }
 }
