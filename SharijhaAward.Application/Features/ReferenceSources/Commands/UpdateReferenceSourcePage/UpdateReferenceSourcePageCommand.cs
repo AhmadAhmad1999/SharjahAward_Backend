@@ -11,8 +11,10 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Commands.UpdateRef
 {
     public class UpdateReferenceSourcePageCommand : IRequest<BaseResponse<object>>
     {
-        public string Title { get; set; } = string.Empty;
-        public string Sources { get; set; } = string.Empty;
+        public string EnglishTitle { get; set; } = string.Empty;
+        public string ArabicTitle { get; set; } = string.Empty;
+        public string EnglishSources { get; set; } = string.Empty;
+        public string ArabicSources { get; set; } = string.Empty;
         public bool UpdateOnImage { get; set; }
         public IFormFile? Image { get; set; } 
         public string? lang {  get; set; }
