@@ -34,7 +34,8 @@ namespace SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardS
             data.Description = request.lang == "en" ? data.EnglishDescription : data.ArabicDescription;
             data.HonoraryPositions = request.lang == "en" ? data.EnglishHonoraryPositions : data.ArabicHonoraryPositions;
             data.EducationalStages = request.lang == "en" ? data.EnglishEducationalStages : data.ArabicEducationalStages;
-            data.UpbringingAndAiography = request.lang == "en" ? data.EnglishUpbringingAndAiography : data.ArabicUpbringingAndAiography;
+            data.UpbringingAndAiography = request.lang == "en" ? data.EnglishUpbringingAndAiographyFirst : data.ArabicUpbringingAndAiographyFirst;
+            data.UpbringingAndAiographySecound = request.lang == "en" ? data.EnglishUpbringingAndAiographySecound : data.ArabicUpbringingAndAiographySecound;
 
             return new BaseResponse<AwardSponsorDto>("", true, 200, data);
         }

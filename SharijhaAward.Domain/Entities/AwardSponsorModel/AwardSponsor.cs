@@ -15,8 +15,10 @@ namespace SharijhaAward.Domain.Entities.AwardSponsorModel
         public string EnglishDescription { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
-        public string EnglishUpbringingAndAiography { get; set; } = string.Empty;
-        public string ArabicUpbringingAndAiography { get; set; } = string.Empty;
+        public string EnglishUpbringingAndAiographyFirst { get; set; } = string.Empty;
+        public string? EnglishUpbringingAndAiographySecound { get; set; } = string.Empty;
+        public string ArabicUpbringingAndAiographyFirst { get; set; } = string.Empty;
+        public string? ArabicUpbringingAndAiographySecound { get; set; } = string.Empty;
         public string Image2 { get; set; } = string.Empty;
         public string EnglishHonoraryPositions { get; set; } = string.Empty;
         public string ArabicHonoraryPositions { get; set; } = string.Empty;

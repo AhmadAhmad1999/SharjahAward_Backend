@@ -16,8 +16,10 @@ namespace SharijhaAward.Application.Features.AwardSponsorsPage.Commands.CreateAw
         public string EnglishDescription { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public IFormFile Image { get; set; } = null!;
-        public string EnglishUpbringingAndAiography { get; set; } = string.Empty;
-        public string ArabicUpbringingAndAiography { get; set; } = string.Empty;
+        public string EnglishUpbringingAndAiographyFirst { get; set; } = string.Empty;
+        public string EnglishUpbringingAndAiographySecound { get; set; } = string.Empty;
+        public string ArabicUpbringingAndAiographyFirst { get; set; } = string.Empty;
+        public string ArabicUpbringingAndAiographySecound { get; set; } = string.Empty;
         public IFormFile Image2 { get; set; } = null!;
         public string EnglishHonoraryPositions { get; set; } = string.Empty;
         public string ArabicHonoraryPositions { get; set; } = string.Empty;
