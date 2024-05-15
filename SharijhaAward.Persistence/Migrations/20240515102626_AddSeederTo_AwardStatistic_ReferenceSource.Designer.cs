@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharijhaAward.Persistence;
 
@@ -11,9 +12,11 @@ using SharijhaAward.Persistence;
 namespace SharijhaAward.Persistence.Migrations
 {
     [DbContext(typeof(SharijhaAwardDbContext))]
-    partial class SharijhaAwardDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240515102626_AddSeederTo_AwardStatistic_ReferenceSource")]
+    partial class AddSeederTo_AwardStatistic_ReferenceSource
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7169,9 +7172,6 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<float>("FinalScore")
                         .HasColumnType("real");
 
-                    b.Property<bool>("IsAccepted")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -7225,11 +7225,10 @@ namespace SharijhaAward.Persistence.Migrations
                             CycleNumber = 1,
                             CycleYear = "2023-2024",
                             FinalScore = 0f,
-                            IsAccepted = false,
                             PercentCompletion = 1,
                             Status = 0,
                             SubscriberType = 0,
-                            TotalStep = 6,
+                            TotalStep = 7,
                             Type = 0,
                             categoryId = 2,
                             isDeleted = false,

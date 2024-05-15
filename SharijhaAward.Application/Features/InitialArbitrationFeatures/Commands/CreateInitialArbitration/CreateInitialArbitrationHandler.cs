@@ -85,6 +85,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                     {
                         ArbitrationEntity.DateOfArbitration = DateTime.UtcNow;
                         ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
+
+                        ArbitrationEntity.FullScore = Request.InitialArbitrationMainCommand.Sum(x => x.ArbitrationScore);
                     }
 
                     else
