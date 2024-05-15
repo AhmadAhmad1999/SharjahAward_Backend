@@ -151,8 +151,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                 .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
                                 .ToList();
 
-                            GetAllFormsForArbitrationAuditListVM.FullScore = InitialArbitrationEntitiesForThisArbitrations
+                            GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
                                 .Sum(x => x.ArbitrationScore) / InitialArbitrationEntitiesForThisArbitrations.Count();
+
+                            GetAllFormsForArbitrationAuditListVM.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
 
                             Response.Add(GetAllFormsForArbitrationAuditListVM);
                         }
@@ -197,8 +199,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                             .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
                             .ToList();
 
-                        GetAllFormsForArbitrationAuditListVM.FullScore = InitialArbitrationEntitiesForThisArbitrations
+                        GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
                             .Sum(x => x.ArbitrationScore) / InitialArbitrationEntitiesForThisArbitrations.Count();
+
+                        GetAllFormsForArbitrationAuditListVM.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
 
                         GetAllFormsForArbitrationAuditListVM.ItExceededTheMarginOfDifferenceInArbitrationScores = false;
 
