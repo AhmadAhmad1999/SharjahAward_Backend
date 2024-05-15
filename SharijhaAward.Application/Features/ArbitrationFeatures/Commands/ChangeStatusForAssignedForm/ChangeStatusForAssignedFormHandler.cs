@@ -50,7 +50,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
             }
 
             ArbitrationEntity.isAccepted = Request.isAccepted;
-            ArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
+            
+            if (!Request.isAccepted)
+                ArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
 
             await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
 

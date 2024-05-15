@@ -297,6 +297,9 @@ using SharijhaAward.Application.Features.CommitteeFeatures.Queries.ExportToExcel
 using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.News.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor;
+using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateInitialArbitration;
+using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.UpdateChairmanNotesOnInitialArbitration;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -575,6 +578,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AppVersion, CreateNewAppVersionCommand>().ReverseMap();
             CreateMap<User, SignUpFromAdminDashboardCommand>().ReverseMap();
             CreateMap<ArbitrationScalesCriterion, ArbitrationScaleCriterionDto>().ReverseMap();
+            CreateMap<InitialArbitration, InitialArbitrationMainCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -597,6 +601,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ArbitrationScale, UpdateArbitrationScaleDto>().ReverseMap();
             CreateMap<ArbitrationScalesCriterion, UpdateArbitrationScaleCriterionDto>().ReverseMap();
             CreateMap<Meeting, UpdateMeetingCommand>().ReverseMap();
+            CreateMap<ChairmanNotesOnInitialArbitration, UpdateChairmanNotesOnInitialArbitrationCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();

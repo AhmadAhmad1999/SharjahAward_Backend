@@ -10,5 +10,6 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
         public string CategoryName { get; set; } = null!;
         public DateTime? DateOfArbitration { get; set; }
         public ArbitrationType ArbitrationType { get; set; }
+        public int FullArbitrationScore { get; set; }
     }
 }
