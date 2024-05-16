@@ -298,6 +298,8 @@ using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.News.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsorById;
+using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllFormsForInterviewStep;
+using SharijhaAward.Domain.Entities.InterviewModel;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -654,6 +656,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Notification, GetAllNotificationsListVM>().ReverseMap();
             CreateMap<Category, GetAllSubCategoriesListVM>().ReverseMap();
             CreateMap<AppVersion, GetAllAppVersionsListVM>().ReverseMap();
+            CreateMap<Interview, GetAllFormsForInterviewStepListVM>().ReverseMap();
         }
     }
 }
