@@ -7,6 +7,7 @@
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
         public bool ItExceededTheMarginOfDifferenceInArbitrationScores { get; set; }
+        public float Average { get; set; }
         public float FullScore { get; set; }
     }
 }
