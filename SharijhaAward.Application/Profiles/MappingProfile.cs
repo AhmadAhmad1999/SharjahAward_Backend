@@ -303,6 +303,8 @@ using SharijhaAward.Application.Features.Categories.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep;
+using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAwardStatisticById;
+using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStatistics;
 
 namespace SharijhaAward.Application.Profiles
 {
