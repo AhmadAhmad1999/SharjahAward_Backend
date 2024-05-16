@@ -78,7 +78,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             
             for(int i=0; i < FormsOfUser.Count(); i++)
             {
-                if (FormsOfUser[i].categoryId == category.Id)
+                if (FormsOfUser[i].categoryId == category!.Id)
                 {
                     msg = request.lang == "en"
                         ? "You have already subscribed to this category"
@@ -92,7 +92,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
 
             if (category.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Individual)
             {
-                if(User.NumberOfIndividualCategories >= cycle.IndividualCategoryNumber)
+                if(User!.NumberOfIndividualCategories >= cycle.IndividualCategoryNumber)
                 {
                     msg = request.lang == "en"
                          ? "You cannot subscribe to more Individual Categories"

@@ -28,21 +28,24 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.DeleteProvided
             string msg;
 
             var form = await _formRepository.GetByIdAsync(request.providedFormId);
-            var category = await _categoryRepository.GetByIdAsync(form!.categoryId);
-            var user = await _userRepository.GetByIdAsync(form.userId);
-
-            if(form == null)
+           
+            if (form == null)
             {
                 msg = request.lang == "en"
                     ? "Provided Form dose not Exist"
                     : "لا يوجد إستمارة ";
-                
-                return new BaseResponse<object>(msg,false,404);
+
+                return new BaseResponse<object>(msg, false, 404);
             }
-            if (category.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Individual)
-                user.NumberOfIndividualCategories--;
+
+            var category = await _categoryRepository.GetByIdAsync(form!.categoryId);
+            var user = await _userRepository.GetByIdAsync(form.userId);
+
+
+            if (category!.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Individual)
+                user!.NumberOfIndividualCategories--;
             else
-                user.NumberOfGroupCategories--;
+                user!.NumberOfGroupCategories--;
 
             await _formRepository.DeleteAsync(form);
 
