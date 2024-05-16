@@ -12,6 +12,7 @@ using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategories;
 
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.Categories.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -192,6 +193,19 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("CategoryExportToExcel", Name = "CategoryExportToExcel")]
+        public async Task<IActionResult> CategoryExportToExcel()
+        {
+            var response = await _mediator.Send(new CategoryExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Categories.xlsx"),
+                _ => BadRequest(response)
             };
         }
     }

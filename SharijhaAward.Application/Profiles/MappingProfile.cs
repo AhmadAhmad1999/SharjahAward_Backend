@@ -299,6 +299,7 @@ using SharijhaAward.Application.Features.News.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsorById;
 using SharijhaAward.Domain.Entities.InterviewModel;
+using SharijhaAward.Application.Features.Categories.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep;
@@ -358,6 +359,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Category, CreateCategoryCommand>().ReverseMap();
             CreateMap<Category, UpdateCategoryCommand>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Category, CategoryExportDto>().ReverseMap();
             CreateMap<Category, CategoryListVM>().ReverseMap();
             CreateMap<Category, CategoriesSubcategoriesDto>().ReverseMap();
             CreateMap<Category, SubcategoriesListVM>().ReverseMap();
@@ -541,8 +543,8 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<AwardStatistic, CreateAwardStatisticCommand>().ReverseMap();
             CreateMap<AwardStatistic, UpdateAwardStatisticCommand>().ReverseMap();
-            CreateMap<AwardStatistic, AwardPublicationDto>().ReverseMap();
-            CreateMap<AwardStatistic, AwardPublicationListVM>().ReverseMap();
+            CreateMap<AwardStatistic, AwardStatisticDto>().ReverseMap();
+            CreateMap<AwardStatistic, AwardStatisticListVM>().ReverseMap();
 
             CreateMap<Committee, CommitteeExportDto>().ReverseMap();
 

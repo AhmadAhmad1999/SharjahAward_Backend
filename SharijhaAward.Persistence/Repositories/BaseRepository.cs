@@ -133,13 +133,13 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public IQueryable<T> WhereThenFilter(Expression<Func<T, bool>> predicate, FilterObject filterObject)
         {
-            IQueryable<T> query = _DbSet.AsNoTracking();
+            IQueryable<T> query = _DbSet.AsNoTracking().Where(predicate);
 
             if (filterObject != null && filterObject.Filters != null)
             {
                 foreach (var filter in filterObject.Filters)
                 {
-                    var propertyType = typeof(T).GetProperty(filter.Key)?.PropertyType;
+                    var propertyType = typeof(T).GetProperty(filter.Key!)?.PropertyType;
                     if (propertyType != null)
                     {
                         if (filter.Value == null)
@@ -273,7 +273,7 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async virtual Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, FilterObject filterObject, int page, int size)
         {
-            var query = new List<T>();
+            var query = await _DbSet.AsNoTracking().Where(predicate).ToListAsync();
 
             if (size == -1 || page == 0)
             {
