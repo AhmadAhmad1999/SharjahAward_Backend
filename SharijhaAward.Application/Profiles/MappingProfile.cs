@@ -298,8 +298,10 @@ using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.News.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsorById;
-using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllFormsForInterviewStep;
 using SharijhaAward.Domain.Entities.InterviewModel;
+using SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateInterview;
+using SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterview;
+using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -579,6 +581,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AppVersion, CreateNewAppVersionCommand>().ReverseMap();
             CreateMap<User, SignUpFromAdminDashboardCommand>().ReverseMap();
             CreateMap<ArbitrationScalesCriterion, ArbitrationScaleCriterionDto>().ReverseMap();
+            CreateMap<Interview, CreateInterviewCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -601,6 +604,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ArbitrationScale, UpdateArbitrationScaleDto>().ReverseMap();
             CreateMap<ArbitrationScalesCriterion, UpdateArbitrationScaleCriterionDto>().ReverseMap();
             CreateMap<Meeting, UpdateMeetingCommand>().ReverseMap();
+            CreateMap<Interview, UpdateInterviewCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -656,7 +660,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Notification, GetAllNotificationsListVM>().ReverseMap();
             CreateMap<Category, GetAllSubCategoriesListVM>().ReverseMap();
             CreateMap<AppVersion, GetAllAppVersionsListVM>().ReverseMap();
-            CreateMap<Interview, GetAllFormsForInterviewStepListVM>().ReverseMap();
+            CreateMap<Interview, GetAllInterviewsForInterviewStepListVM>().ReverseMap();
         }
     }
 }

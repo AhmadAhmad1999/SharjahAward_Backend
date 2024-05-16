@@ -70,7 +70,8 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
                         Id = x.EducationalClassId,
                         Name = request.lang == "en"
                             ? x.EducationalClass!.EnglishName
-                            : x.EducationalClass!.ArabicName
+                            : x.EducationalClass!.ArabicName,
+                        NumberOfExpectedWinners = x.NumberOfExpectedWinners
                     }).ToListAsync();
             }
             

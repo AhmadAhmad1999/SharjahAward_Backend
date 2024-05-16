@@ -3,78 +3,77 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.MeetingModel;
-using SharijhaAward.Domain.Entities.MeetingUserModel;
+using SharijhaAward.Domain.Entities.InterviewModel;
 using System.Globalization;
 using System.Net.Mail;
 
-namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeeting
+namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.CancelInterview
 {
-    public class CancelMeetingHandler : IRequestHandler<CancelMeetingCommand, BaseResponse<object>>
+    public class CancelInterviewHandler : IRequestHandler<CancelInterviewCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<Meeting> _MeetingRepository;
-        private readonly IAsyncRepository<MeetingUser> _MeetingUserRepository;
+        private readonly IAsyncRepository<Interview> _InterviewRepository;
+        private readonly IAsyncRepository<InterviewUser> _InterviewUserRepository;
         private readonly IEmailSender _EmailSender;
 
-        public CancelMeetingHandler(IAsyncRepository<Meeting> MeetingRepository,
-            IAsyncRepository<MeetingUser> MeetingUserRepository,
+        public CancelInterviewHandler(IAsyncRepository<Interview> InterviewRepository,
+            IAsyncRepository<InterviewUser> InterviewUserRepository,
             IEmailSender EmailSender)
         {
-            _MeetingRepository = MeetingRepository;
-            _MeetingUserRepository = MeetingUserRepository;
+            _InterviewRepository = InterviewRepository;
+            _InterviewUserRepository = InterviewUserRepository;
             _EmailSender = EmailSender;
         }
 
-        public async Task<BaseResponse<object>> Handle(CancelMeetingCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CancelInterviewCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
-            Meeting? MeetingEntity = await _MeetingRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.MeetingId);
+            Interview? InterviewEntity = await _InterviewRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.InterviewId);
 
-            if (MeetingEntity is null)
+            if (InterviewEntity is null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Meeting is not Found"
-                    : "الاجتماع غير موجود";
+                    ? "Interview is not Found"
+                    : "المقابلة غير موجودة";
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            List<string> Recipients = await _MeetingUserRepository
-                .Where(x => x.MeetingId == Request.MeetingId)
+            List<string> Recipients = await _InterviewUserRepository
+                .Where(x => x.InterviewId == Request.InterviewId)
                 .Select(x => x.Email)
                 .ToListAsync();
 
             try
             {
-                string EmailSubject = "Canceled Meeting: " + MeetingEntity.EnglishName + " - " + MeetingEntity.ArabicName + " : اجتماع مُلغى";
+                string EmailSubject = "Canceled Interview: " + InterviewEntity.EnglishName + " - " + InterviewEntity.ArabicName + " : المقابلة مُلغى";
 
                 CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
-                string FirstArabicLine = $"عنوان الاجتماع: {MeetingEntity.ArabicName}";
-                string SecondArabicLine = $"تاريخ الاجتماع: {MeetingEntity.Date.ToString("dddd", ArabicCulture)}" +
-                    $"{MeetingEntity.Date.ToString("d/M/yyyy", ArabicCulture)}";
-                string ThirdArabicLine = $"وقت الاجتماع: {MeetingEntity.Date.ToString("hh:mm tt", ArabicCulture)}";
+                string FirstArabicLine = $"عنوان المقابلة: {InterviewEntity.ArabicName}";
+                string SecondArabicLine = $"تاريخ المقابلة: {InterviewEntity.Date.ToString("dddd", ArabicCulture)}" +
+                    $"{InterviewEntity.Date.ToString("d/M/yyyy", ArabicCulture)}";
+                string ThirdArabicLine = $"وقت المقابلة: {InterviewEntity.Date.ToString("hh:mm tt", ArabicCulture)}";
 
                 string ForthArabicLine = string.Empty;
 
-                if (MeetingEntity.Type == Domain.Constants.MeetingTypes.Virtual)
-                    ForthArabicLine = "نوع الاجتماع: افتراضي";
+                if (InterviewEntity.Type == Domain.Constants.MeetingTypes.Virtual)
+                    ForthArabicLine = "نوع المقابلة: افتراضي";
                 else
-                    ForthArabicLine = "نوع الاجتماع: أونلاين";
+                    ForthArabicLine = "نوع المقابلة: أونلاين";
 
-                string FifthArabicLine = $"نص الاجتماع: {MeetingEntity.ArabicText}";
+                string FifthArabicLine = $"نص المقابلة: {InterviewEntity.ArabicText}";
                 string SixthArabicLine = $"سبب الإلغاء: {Request.ArabicReasonOfCanceling}";
 
                 CultureInfo EnglishCulture = new CultureInfo("en-US");
 
-                string FirstEnglishLine = $"Meeting Title: {MeetingEntity.EnglishName}";
-                string SecondEnglishLine = $"Meeting Date: {MeetingEntity.Date.ToString("dddd", EnglishCulture)}" +
-                    $"{MeetingEntity.Date.ToString("d/M/yyyy", EnglishCulture)}";
-                string ThirdEnglishLine = $"Meeting Time: {MeetingEntity.Date.ToString("hh:mm tt", EnglishCulture)}";
-                string ForthEnglishLine = $"Meeting Type: {MeetingEntity.Type}";
-                string FifthEnglishLine = $"Meeting Text: {MeetingEntity.EnglishText}";
+                string FirstEnglishLine = $"Interview Title: {InterviewEntity.EnglishName}";
+                string SecondEnglishLine = $"Interview Date: {InterviewEntity.Date.ToString("dddd", EnglishCulture)}" +
+                    $"{InterviewEntity.Date.ToString("d/M/yyyy", EnglishCulture)}";
+                string ThirdEnglishLine = $"Interview Time: {InterviewEntity.Date.ToString("hh:mm tt", EnglishCulture)}";
+                string ForthEnglishLine = $"Interview Type: {InterviewEntity.Type}";
+                string FifthEnglishLine = $"Interview Text: {InterviewEntity.EnglishText}";
                 string SixthEnglisLine = $"Reason Of Cancelation: {Request.EnglishReasonOfCanceling}";
 
                 string HtmlBody = "wwwroot/Send_Email_Template.html";
@@ -110,14 +109,14 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeet
                 await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody, AlternateView);
 
                 ResponseMessage = Request.lang == "en"
-                    ? "The meeting was successfully cancelled, and emails were sent to its participants"
-                    : "The meeting was successfully cancelled, and emails were sent to its participants";
+                    ? "The interview was successfully cancelled, and emails were sent to its participants"
+                    : "تم إلغاء المقابلة بنجاح، وتم إرسال رسائل البريد الإلكتروني إلى المشاركين فيها";
 
-                MeetingEntity.isCanceled = true;
-                MeetingEntity.EnglishReasonOfCanceling = Request.EnglishReasonOfCanceling;
-                MeetingEntity.ArabicReasonOfCanceling = Request.ArabicReasonOfCanceling;
+                InterviewEntity.isCanceled = true;
+                InterviewEntity.EnglishReasonOfCanceling = Request.EnglishReasonOfCanceling;
+                InterviewEntity.ArabicReasonOfCanceling = Request.ArabicReasonOfCanceling;
 
-                await _MeetingRepository.UpdateAsync(MeetingEntity);
+                await _InterviewRepository.UpdateAsync(InterviewEntity);
 
                 return new BaseResponse<object>(ResponseMessage, true, 200);
             }
