@@ -45,10 +45,10 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
           
             var Guide = await _explanatoryGuideRepository.FirstOrDefaultAsync(e => e.CategoryId == Category.Id);
            
-            if(Guide == null)
-            {
-                return new BaseResponse<ExplanatoryGuideDetailsDto>(msg, false, 404);
-            }
+            //if(Guide == null)
+            //{
+            //    return new BaseResponse<ExplanatoryGuideDetailsDto>(msg, false, 404);
+            //}
             var data = _mapper.Map<ExplanatoryGuideDetailsDto>(Guide);
             
             data.Title = request.lang == "en"

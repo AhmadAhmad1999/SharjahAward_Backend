@@ -302,6 +302,7 @@ using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAwardStatist
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStatistics;
 using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllFormsForInterviewStep;
 using SharijhaAward.Domain.Entities.InterviewModel;
+using SharijhaAward.Application.Features.Categories.Queries.ExportToExcel;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -358,6 +359,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Category, CreateCategoryCommand>().ReverseMap();
             CreateMap<Category, UpdateCategoryCommand>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Category, CategoryExportDto>().ReverseMap();
             CreateMap<Category, CategoryListVM>().ReverseMap();
             CreateMap<Category, CategoriesSubcategoriesDto>().ReverseMap();
             CreateMap<Category, SubcategoriesListVM>().ReverseMap();
