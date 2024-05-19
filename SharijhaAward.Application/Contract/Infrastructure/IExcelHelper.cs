@@ -9,5 +9,6 @@ namespace SharijhaAward.Application.Contract.Infrastructure
     public interface IExcelHelper<T> where T : class
     {
         public byte[] ExportToExcel (List<T> data);
+        public byte[] GeneratePrototype();
     }
 }

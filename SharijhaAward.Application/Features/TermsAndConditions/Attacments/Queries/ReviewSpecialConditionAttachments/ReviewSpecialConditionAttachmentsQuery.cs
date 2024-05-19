@@ -12,7 +12,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queri
     public class ReviewSpecialConditionAttachmentsQuery
         : IRequest<BaseResponse<List<SpecialTermAndConditionListVM>>>
     {
-        public int CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
         public string token { get; set; } = string.Empty;
         public int formId { get; set; }

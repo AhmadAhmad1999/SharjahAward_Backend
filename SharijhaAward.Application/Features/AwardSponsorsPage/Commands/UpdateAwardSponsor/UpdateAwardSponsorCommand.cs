@@ -17,17 +17,17 @@ namespace SharijhaAward.Application.Features.AwardSponsorsPage.Commands.UpdateAw
         public string EnglishDescription { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public bool UpdateOnImage1 { get; set; }
-        public IFormFile Image { get; set; } = null!;
+        public IFormFile? Image { get; set; } = null!;
         public string EnglishUpbringingAndAiographyFirst { get; set; } = string.Empty;
         public string EnglishUpbringingAndAiographySecound { get; set; } = string.Empty;
         public string ArabicUpbringingAndAiographyFirst { get; set; } = string.Empty;
         public string ArabicUpbringingAndAiographySecound { get; set; } = string.Empty;
         public bool UpdateOnImage2 { get; set; }
-        public IFormFile Image2 { get; set; } = null!;
+        public IFormFile? Image2 { get; set; } = null!;
         public string EnglishHonoraryPositions { get; set; } = string.Empty;
         public string ArabicHonoraryPositions { get; set; } = string.Empty;
         public bool UpdateOnImage3 { get; set; }
-        public IFormFile Image3 { get; set; } = null!;
+        public IFormFile? Image3 { get; set; } = null!;
         public string EnglishEducationalStages { get; set; } = string.Empty;
         public string ArabicEducationalStages { get; set; } = string.Empty;
         public string EnglishWritings { get; set; } = string.Empty;
