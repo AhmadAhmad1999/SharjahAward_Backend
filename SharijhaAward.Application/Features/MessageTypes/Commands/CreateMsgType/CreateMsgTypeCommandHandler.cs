@@ -32,7 +32,9 @@ namespace SharijhaAward.Application.Features.MessageTypes.Commands.CreateMsgType
             var messageType = _mapper.Map<MessageType>(request);
 
             var allMessageTypes = await _messageTypeRepository.ListAllAsync();
+            
             var type = _messageTypeRepository.FirstOrDefault(t => t.Id == messageType.Id);
+            
             if(type != null)
             {
                 msg = request.lang == "en"
