@@ -72,7 +72,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
             data.Attachments = _mapper.Map<List<EmailAttachmentListVm>>(message.Attachments);
             data.PersonalPhotoUrl = Sender.ImageURL!;
             data.Gender = Sender.Gender;
-            data.TypeName = Type!.Type;
+            data.TypeName = request.lang == "en" ? Type!.EnglishType : Type!.ArabicType;
 
             var ReplayMessages = _emailMessageRepository.WhereThenInclude(m => m.MessageId == message.Id && m.Id != message.Id, m => m.Attachments!).ToList();
            

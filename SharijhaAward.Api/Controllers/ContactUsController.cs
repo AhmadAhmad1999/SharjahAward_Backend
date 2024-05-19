@@ -177,7 +177,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 token = token!,
                 page = page,
-                pageSize = pageSize
+                pageSize = pageSize,
+                lang = Language!
             });
             return response.statusCode switch
             {

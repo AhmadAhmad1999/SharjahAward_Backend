@@ -77,7 +77,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
                 
                 data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(emailMessages[i].Attachments);
                 
-                data[i].TypeName = Type!.Type;
+                data[i].TypeName = request.lang == "en" ? Type!.EnglishType : Type!.ArabicType;
 
                 data[i].IsOutComing = data[i].From == User!.Email ? true : false; 
             }

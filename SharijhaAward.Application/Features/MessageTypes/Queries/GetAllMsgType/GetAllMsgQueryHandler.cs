@@ -28,7 +28,11 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType
             var allMessageTypes = await _messageTypeRepository.ListAllAsync();
 
             var data = _mapper.Map<List<MessageTypeListVM>>(allMessageTypes);
-
+           
+            foreach( var messageType in data)
+            {
+                messageType.Type = request.lang == "en" ? messageType.EnglishType : messageType.ArabicType;
+            }
             return new BaseResponse<List<MessageTypeListVM>>("", true, 200, data);
         }
     }

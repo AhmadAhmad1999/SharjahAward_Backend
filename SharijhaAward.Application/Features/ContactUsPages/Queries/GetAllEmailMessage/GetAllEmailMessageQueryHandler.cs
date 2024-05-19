@@ -75,7 +75,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                     
                 var Sender = await _userRepository.GetByIdAsync(EmailMessages[i].UserId);
 
-                data[i].TypeName = Type!.Type;
+                data[i].TypeName = request.lang == "en" ? Type!.EnglishType : Type!.ArabicType;
                 data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(EmailMessages[i].Attachments);   
                 data[i].IsReplay = data[i].MessageId == data[i].Id ? false : true;
                 data[i].PersonalPhotoUrl = Sender.ImageURL!;
