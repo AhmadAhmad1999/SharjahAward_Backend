@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Albums.Commands.CreateAlbum
 {
-    public class CreateAlbumCommand : IRequest<BaseResponse<object>>
+    public class CreateAlbumCommand : IRequest<BaseResponse<int>>
     {
         public string Title { get; set; } = string.Empty;
         public IFormFile Thumbnail { get; set; } = null!;

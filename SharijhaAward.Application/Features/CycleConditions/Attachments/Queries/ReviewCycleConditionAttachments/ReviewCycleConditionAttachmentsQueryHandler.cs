@@ -50,6 +50,10 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Queries
                 return new BaseResponse<List<CycleConditionListVM>>("", false, 404);
             }
             var form = _formRepository.FirstOrDefault(p => p.Id == request.formId);
+            if(form == null)
+            {
+                return new BaseResponse<List<CycleConditionListVM>>("", false, 400);
+            }
 
             var Terms = _cycleConditionRepository.WhereThenInclude(t => t.CycleId == Cycle.Id && t.NeedAttachment==true, t => t.ConditionAttachments).ToList();
 
