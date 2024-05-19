@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
 using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CancelInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteInterview;
+using SharijhaAward.Application.Features.InterviewFeatures.Commands.ImplementInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.SendEmailToUsersInInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep;
@@ -18,9 +20,13 @@ namespace SharijhaAward.Api.Controllers
     public class InterviewController : ControllerBase
     {
         private readonly IMediator _Mediator;
-        public InterviewController(IMediator Mediator)
+        private readonly IWebHostEnvironment _WebHostEnvironment;
+
+        public InterviewController(IMediator Mediator,
+            IWebHostEnvironment WebHostEnvironment)
         {
             _Mediator = Mediator;
+            _WebHostEnvironment = WebHostEnvironment;
         }
         [HttpPost("CreateInterview")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -202,5 +208,33 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
+        [HttpPost("ImplementInterview")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ImplementInterview([FromForm] ImplementInterviewMainCommand ImplementInterviewMainCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            ImplementInterviewMainCommand.lang = HeaderValue;
+            ImplementInterviewMainCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
+
+            BaseResponse<object> Response = await _Mediator.Send(ImplementInterviewMainCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+
     }
 }

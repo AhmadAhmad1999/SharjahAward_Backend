@@ -80,6 +80,7 @@ using SharijhaAward.Domain.Entities.LoggerModel;
 using SharijhaAward.Domain.Entities.AwardStatisticModel;
 using SharijhaAward.Domain.Entities.TrainingManualModel;
 using SharijhaAward.Domain.Entities.InterviewModel;
+using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -91,6 +92,8 @@ namespace SharijhaAward.Persistence
 
         }
 
+        public DbSet<FinalArbitration> FinalArbitrations { get; set; }
+        public DbSet<InterviewAttachment> InterviewAttachments { get; set; }
         public DbSet<Interview> Interviews { get; set; }
         public DbSet<InterviewNote> InterviewNotes { get; set; }
         public DbSet<InterviewQuestion> InterviewQuestions { get; set; }
@@ -212,6 +215,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<LogUserAction>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<UserToken>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<UserNotification>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<FinalArbitration>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<InterviewAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Interview>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<InterviewQuestion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<InterviewNote>().HasQueryFilter(p => !p.isDeleted);

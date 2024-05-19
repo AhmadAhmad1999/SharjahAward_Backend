@@ -1,14 +1,10 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Http;
-using SharijhaAward.Application.Responses;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.ImplementInterview
 {
-    public class ImplementInterviewCommand : IRequest<BaseResponse<object>>
+    public class ImplementInterviewCommand 
     {
-        public int Id { get; set; }
-        public string? lang { get; set; }
+        public string? Description { get; set; }
         public IFormFile AttachmentFile { get; set; } = null!;
-        public string? WWWRootFilePath { get; set; }
     }
 }
