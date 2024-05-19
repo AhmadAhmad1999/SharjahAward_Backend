@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AwardStatistics.Commands.CreateAwardStatistic;
 using SharijhaAward.Application.Features.AwardStatistics.Commands.DeleteAwardStatistic;
 using SharijhaAward.Application.Features.AwardStatistics.Commands.UpdateAwardStatistic;
@@ -9,6 +9,7 @@ using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAwardStatist
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AwardStatisticController : ControllerBase

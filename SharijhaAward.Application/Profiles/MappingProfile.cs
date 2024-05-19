@@ -305,6 +305,8 @@ using SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterv
 using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep;
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAwardStatisticById;
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStatistics;
+using SharijhaAward.Domain.Entities.FinalArbitrationModel;
+using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.CreateFinalArbitration;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -586,6 +588,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<User, SignUpFromAdminDashboardCommand>().ReverseMap();
             CreateMap<ArbitrationScalesCriterion, ArbitrationScaleCriterionDto>().ReverseMap();
             CreateMap<Interview, CreateInterviewCommand>().ReverseMap();
+            CreateMap<FinalArbitration, CreateFinalArbitrationCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();

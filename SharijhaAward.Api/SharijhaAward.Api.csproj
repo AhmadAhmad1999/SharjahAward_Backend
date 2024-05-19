@@ -8,6 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Controllers\0rmvamul.ydj~" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Aspose.HTML" Version="24.1.0" />
 		<PackageReference Include="Aspose.PDF" Version="24.1.0" />
 		<PackageReference Include="BarCode" Version="2024.2.1" />
@@ -39,6 +43,7 @@
 		<Folder Include="QREmailHelper\" />
 		<Folder Include="wwwroot\DynamicFiles\" />
 		<Folder Include="wwwroot\InterviewAttachments\" />
+		<Folder Include="wwwroot\Logs\" />
 		<Folder Include="wwwroot\ProfilePics\" />
 		<Folder Include="wwwroot\GeneratedBarcode\" />
 		<Folder Include="wwwroot\Images\" />

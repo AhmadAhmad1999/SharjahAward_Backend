@@ -1628,25 +1628,6 @@ namespace SharijhaAward.Persistence
                     User2Id = 5,
                 });
 
-            modelBuilder.Entity<ProvidedForm>()
-                .HasData(new ProvidedForm()
-                {
-                    isDeleted = false,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    categoryId = 2,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    CurrentStep = 1,
-                    CycleYear = "2023-2024",
-                    CycleNumber = 1,
-                    PercentCompletion = 1,
-                    Status = Domain.Constants.ProvidedFromConstants.ProvidedFormStatus.Active,
-                    Type = Domain.Constants.ProvidedFromConstants.ProvidedFormType.Current,
-                    userId = 1,
-                    Id = 1
-                });
             modelBuilder.Entity<DynamicAttributeSection>()
                 .HasData(new DynamicAttributeSection()
                 {

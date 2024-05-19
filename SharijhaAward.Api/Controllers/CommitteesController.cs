@@ -16,7 +16,7 @@ using SharijhaAward.Application.Features.CommitteeFeatures.Queries.ExportToExcel
 
 namespace SharijhaAward.Api.Controllers
 {
-    // [ServiceFilter(typeof(LogFilterAttribute))]
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CommitteesController : ControllerBase

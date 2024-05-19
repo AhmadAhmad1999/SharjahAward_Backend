@@ -12,7 +12,7 @@ using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSpons
 
 namespace SharijhaAward.Api.Controllers
 {
-    // [ServiceFilter(typeof(LogFilterAttribute))]
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AwardSponsorController : ControllerBase

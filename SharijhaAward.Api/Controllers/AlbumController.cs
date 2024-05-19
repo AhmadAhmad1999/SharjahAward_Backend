@@ -17,7 +17,7 @@ using SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums;
 
 namespace SharijhaAward.Api.Controllers
 {
-    // [ServiceFilter(typeof(LogFilterAttribute))]
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AlbumController : ControllerBase

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
 using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CancelInterview;
@@ -15,6 +16,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class InterviewController : ControllerBase

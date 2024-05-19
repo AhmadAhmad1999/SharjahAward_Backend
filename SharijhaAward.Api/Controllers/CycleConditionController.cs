@@ -18,7 +18,7 @@ using SharijhaAward.Application.Features.CycleConditions.Attachments.Queries.Rev
 
 namespace SharijhaAward.Api.Controllers
 {
-    // [ServiceFilter(typeof(LogFilterAttribute))]
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CycleConditionController : ControllerBase
