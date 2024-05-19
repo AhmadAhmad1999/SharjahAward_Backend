@@ -219,8 +219,8 @@ namespace SharijhaAward.Api.Controllers
 
         }
 
-        [HttpGet("ReviewSpecialConditionAttachments/{Id}", Name = "ReviewSpecialConditionAttachments")]
-        public async Task<ActionResult> ReviewSpecialConditionAttachments(int Id, int formId)
+        [HttpGet("ReviewSpecialConditionAttachments", Name = "ReviewSpecialConditionAttachments")]
+        public async Task<ActionResult> ReviewSpecialConditionAttachments([FromQuery] int formId)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];

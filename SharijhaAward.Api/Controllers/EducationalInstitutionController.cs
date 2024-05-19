@@ -13,6 +13,8 @@ using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllE
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetEducationalInstitutionById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetExcelFilePrototype;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -173,6 +175,19 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("GetExcelFilePrototype", Name = "GetExcelFilePrototype")]
+        public async Task<IActionResult> GetExcelFilePrototype()
+        {
+            var response = await _Mediator.Send(new GetExcelFilePrototypeQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EducationalInstitutionPrototype.xlsx"),
+                _ => BadRequest(response)
             };
         }
     }

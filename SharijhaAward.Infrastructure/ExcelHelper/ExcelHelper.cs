@@ -93,5 +93,36 @@ namespace SharijhaAward.Infrastructure.ExcelHelper
 
             return content;
         }
+
+        public byte[] GeneratePrototype()
+        {
+            var workbook = new XSSFWorkbook();
+            var sheet = workbook.CreateSheet("Sheet1");
+            var rowHeader = sheet.CreateRow(0);
+
+            var properties = typeof(T).GetProperties();
+
+            //header
+            var font = workbook.CreateFont();
+            font.IsBold = true;
+            var style = workbook.CreateCellStyle();
+            style.SetFont(font);
+
+            var colIndex = 0;
+            foreach (var property in properties)
+            {
+                var cell = rowHeader.CreateCell(colIndex);
+                cell.SetCellValue(property.Name);
+                cell.CellStyle = style;
+                colIndex++;
+            }
+            //end header
+
+            var stream = new MemoryStream();
+            workbook.Write(stream);
+            var content = stream.ToArray();
+
+            return content;
+        }
     }
 }

@@ -20,7 +20,6 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queri
     public class ReviewSpecialConditionAttachmentsQueryHandler
         : IRequestHandler<ReviewSpecialConditionAttachmentsQuery, BaseResponse<List<SpecialTermAndConditionListVM>>>
     {
-        private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<TermAndCondition> _termRepository;
         private readonly IAsyncRepository<ConditionsProvidedForms> _conditionsProvidedFormsRepository;
         private readonly IAsyncRepository<ConditionAttachment> _conditionAttachmentRepository;
@@ -29,9 +28,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queri
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
-        public ReviewSpecialConditionAttachmentsQueryHandler(IAsyncRepository<Category> categoryRepository, IAsyncRepository<TermAndCondition> termRepository, IAsyncRepository<ConditionsProvidedForms> conditionsProvidedFormsRepository, IAsyncRepository<ConditionAttachment> conditionAttachmentRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public ReviewSpecialConditionAttachmentsQueryHandler(IAsyncRepository<TermAndCondition> termRepository, IAsyncRepository<ConditionsProvidedForms> conditionsProvidedFormsRepository, IAsyncRepository<ConditionAttachment> conditionAttachmentRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
         {
-            _categoryRepository = categoryRepository;
             _termRepository = termRepository;
             _conditionsProvidedFormsRepository = conditionsProvidedFormsRepository;
             _conditionAttachmentRepository = conditionAttachmentRepository;
@@ -43,22 +41,22 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queri
 
         public async Task<BaseResponse<List<SpecialTermAndConditionListVM>>> Handle(ReviewSpecialConditionAttachmentsQuery request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+           
             string msg;
-            if (category == null)
-            {
-                msg = request.lang == "en"
-                    ? "Category Not Found"
-                    : "الفئة غير موجودة";
-
-                return new BaseResponse<List<SpecialTermAndConditionListVM>>(msg, false, 404);
-            }
+      
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
             var user = await _userRepository.GetByIdAsync(int.Parse(UserId));
             var form = await _providedFormRepository.FirstOrDefaultAsync(p => p.Id == request.formId);
+            if(form == null)
+            {
+                msg = request.lang == "en"
+                   ? "Provided Form Not Found"
+                   : "الإستمارة غير موجودة";
 
+                return new BaseResponse<List<SpecialTermAndConditionListVM>>("Form not Found", false, 404);
+            }
             var Terms = _termRepository
-                .WhereThenInclude(t => t.CategoryId == category.Id && t.NeedAttachment == true, t => t.ConditionAttachments)
+                .WhereThenInclude(t => t.CategoryId == form.categoryId && t.NeedAttachment == true, t => t.ConditionAttachments)
                 .OrderByDescending(x => x.CreatedAt).ToList();
 
             List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
