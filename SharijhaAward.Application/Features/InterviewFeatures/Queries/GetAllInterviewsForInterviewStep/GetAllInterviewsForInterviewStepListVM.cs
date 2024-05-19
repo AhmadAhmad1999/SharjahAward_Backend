@@ -1,8 +1,8 @@
 ﻿using SharijhaAward.Domain.Constants;
 
-namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllFormsForInterviewStep
+namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep
 {
-    public class GetAllFormsForInterviewStepListVM
+    public class GetAllInterviewsForInterviewStepListVM
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

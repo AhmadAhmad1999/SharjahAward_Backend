@@ -1,12 +1,13 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
+using SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateInterview;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
 
-namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateInterview
+namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterview
 {
-    public class CreateInterviewCommand : IRequest<BaseResponse<object>>
+    public class UpdateInterviewCommand : IRequest<BaseResponse<object>>
     {
+        public int Id { get; set; }
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
         public string ArabicDescription { get; set; } = null!;
@@ -22,4 +23,3 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateIn
         public string? lang { get; set; }
     }
 }
-

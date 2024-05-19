@@ -2,9 +2,9 @@
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 
-namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllFormsForInterviewStep
+namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep
 {
-    public class GetAllFormsForInterviewStepQuery : IRequest<BaseResponse<List<GetAllFormsForInterviewStepListVM>>>
+    public class GetAllInterviewsForInterviewStepQuery : IRequest<BaseResponse<List<GetAllInterviewsForInterviewStepListVM>>>
     {
         public bool? isCanceled { get; set; }
         public bool? isImplemented { get; set; }

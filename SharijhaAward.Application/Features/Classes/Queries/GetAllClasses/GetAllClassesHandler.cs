@@ -11,14 +11,11 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllClasses
     public class GetAllClassesHandler : IRequestHandler<GetAllClassesQuery, BaseResponse<List<GetAllClassesListVM>>>
     {
         private readonly IAsyncRepository<EducationalClass> _EducationalClassRepository;
-        private readonly IAsyncRepository<Cycle> _CycleRepository;
         private readonly IMapper _Mapper;
         public GetAllClassesHandler(IAsyncRepository<EducationalClass> EducationalClassRepository,
-            IAsyncRepository<Cycle> CycleRepository,
             IMapper Mapper)
         {
             _EducationalClassRepository = EducationalClassRepository;
-            _CycleRepository = CycleRepository;
             _Mapper = Mapper;
         }
 
