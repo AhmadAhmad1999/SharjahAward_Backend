@@ -79,7 +79,12 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet(Name="GetAllMessageType")]
         public async Task<IActionResult> GetAllMessageType()
         {
-            var response = await _mediator.Send(new GetAllMsgQuery());
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAllMsgQuery() 
+            {
+                lang = language! 
+            });
 
             return response.statusCode switch
             {

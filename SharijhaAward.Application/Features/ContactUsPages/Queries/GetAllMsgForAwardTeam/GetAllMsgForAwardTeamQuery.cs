@@ -14,6 +14,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
         public int page { get; set; }
         public int pageSize { get; set; }
         public string token { get; set; } = string.Empty;
+        public string? lang {  get; set; }
 
     }
 }

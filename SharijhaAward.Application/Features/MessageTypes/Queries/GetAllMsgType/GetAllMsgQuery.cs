@@ -10,5 +10,6 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType
 {
     public class GetAllMsgQuery : IRequest<BaseResponse<List<MessageTypeListVM>>>
     {
+        public string? lang { get; set; }
     }
 }
