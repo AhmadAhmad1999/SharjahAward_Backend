@@ -15,7 +15,6 @@ namespace SharijhaAward.Domain.Entities.InterviewModel
         public DateTime Date { get; set; }
         public MeetingTypes Type { get; set; }
         public bool isImplemented { get; set; }
-        public string? AttachmentPath { get; set; }
         public bool isCanceled { get; set; }
         public string? EnglishReasonOfCanceling { get; set; }
         public string? ArabicReasonOfCanceling { get; set; }
