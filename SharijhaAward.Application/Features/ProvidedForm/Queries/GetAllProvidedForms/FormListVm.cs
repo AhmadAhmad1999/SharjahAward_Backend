@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
     public class FormListVm
     {
         public int Id { get; set; }
-        public string SubscriberName {  get; set; } = string.Empty;
+        public string? SubscriberName {  get; set; }
         public int PercentCompletion { get; set; }
         public int CycleNumber { get; set; }
         public string CycleYear { get; set; } = string.Empty;
@@ -13,11 +13,11 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public ProvidedFormStatus Status { get; set; }
         public SubscriberType SubscriberType { get; set; }
         public int CurrentStep { get; set; }
-        public int TotalStep {  get; set; }
+        public int TotalStep { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public string SubCategoryName { get; set; } = string.Empty;
         public float FinalScore { get; set; }
-        public bool IsAccepted { get; set; }
+        public bool? IsAccepted { get; set; }
         public int categoryId { get; set; }
         public DateTime CreatedAt { get; set; }
 

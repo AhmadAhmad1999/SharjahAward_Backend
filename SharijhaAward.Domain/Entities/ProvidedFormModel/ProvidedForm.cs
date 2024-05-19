@@ -21,7 +21,7 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public int CurrentStep {  get; set; }
         public int TotalStep { get; set; } = 6;
         public float FinalScore {  get; set; }
-        public bool IsAccepted { get; set; }
+        public bool? IsAccepted { get; set; }
         public string? ReasonForRejection { get; set; }
 
         public User User { get; set; } = null!;

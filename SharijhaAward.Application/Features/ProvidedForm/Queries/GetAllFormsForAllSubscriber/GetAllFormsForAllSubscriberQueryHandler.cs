@@ -40,68 +40,77 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
         {
             var forms = await _formRepository.GetPagedReponseAsync(request.page, request.pageSize);
             
-            var SubscribersNames = await _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
-                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                .Where(x => forms.Select(y => y.Id).Any(y => y == x.RecordId) &&
-                    x.DynamicAttribute!.DynamicAttributeSection!.EnglishName == "Main Information" &&
-                    x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
-                .Select(x => new
-                {
-                    x.RecordId,
-                    x.Value
-                }).ToListAsync();
-
-            var Categories = await _categoryRepository
-                .Where(x => forms.Select(y => y.categoryId).Contains(x.Id))
-                .Include(x => x.Parent!).ToListAsync();
-
-            var data = forms.Select(x => new FormListVm()
+            if (forms.Any())
             {
-                Id = x.Id,
-                SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value,
-                PercentCompletion = x.PercentCompletion,
-                CycleNumber = x.CycleNumber,
-                CycleYear = x.CycleYear,
-                Type = x.Type,
-                Status = x.Status,
-                SubscriberType = x.SubscriberType,
-                CurrentStep = x.CurrentStep,
-                TotalStep = x.TotalStep,
-                FinalScore = x.FinalScore,
-                IsAccepted = x.IsAccepted,
-                categoryId = x.categoryId,
-                CreatedAt = x.CreatedAt,
-                CategoryName = request.lang == "en"
-                    ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.EnglishName
-                    : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
-                SubCategoryName = request.lang == "en"
-                    ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
-                    : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName
-            }).ToList();
+                var SubscribersNames = await _DynamicAttributeValueRepository
+                    .Include(x => x.DynamicAttribute!)
+                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                    .Where(x => forms.Select(y => y.Id).Any(y => y == x.RecordId) &&
+                        x.DynamicAttribute!.DynamicAttributeSection!.EnglishName == "Main Information" &&
+                        x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
+                    .Select(x => new
+                    {
+                        x.RecordId,
+                        x.Value
+                    }).ToListAsync();
 
-            //foreach (var form in data)
-            //{
-            //    var SubCategory = await _categoryRepository.GetByIdAsync(form.categoryId);
-            //    var Category = await _categoryRepository.GetByIdAsync(SubCategory!.ParentId);
-              
-            //    if(Category != null)
-            //         form.CategoryName = request.lang == "en"
-            //            ? Category.EnglishName 
-            //            : Category.ArabicName;
+                var Categories = await _categoryRepository
+                    .Where(x => forms.Select(y => y.categoryId).Contains(x.Id))
+                    .Include(x => x.Parent!).ToListAsync();
 
-            //    form.SubCategoryName = request.lang == "en"
-            //            ? SubCategory.EnglishName 
-            //            : SubCategory.ArabicName;
-            //}
+                var data = forms.Select(x => new FormListVm()
+                {
+                    Id = x.Id,
+                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
+                        ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
+                        : null,
+                    PercentCompletion = x.PercentCompletion,
+                    CycleNumber = x.CycleNumber,
+                    CycleYear = x.CycleYear,
+                    Type = x.Type,
+                    Status = x.Status,
+                    SubscriberType = x.SubscriberType,
+                    CurrentStep = x.CurrentStep,
+                    TotalStep = x.TotalStep,
+                    FinalScore = x.FinalScore,
+                    IsAccepted = x.IsAccepted,
+                    categoryId = x.categoryId,
+                    CreatedAt = x.CreatedAt,
+                    CategoryName = request.lang == "en"
+                        ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.EnglishName
+                        : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
+                    SubCategoryName = request.lang == "en"
+                        ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
+                        : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName
+                }).ToList();
 
-            int count = _formRepository.GetCount(f => !f.isDeleted);
+                //foreach (var form in data)
+                //{
+                //    var SubCategory = await _categoryRepository.GetByIdAsync(form.categoryId);
+                //    var Category = await _categoryRepository.GetByIdAsync(SubCategory!.ParentId);
 
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+                //    if(Category != null)
+                //         form.CategoryName = request.lang == "en"
+                //            ? Category.EnglishName 
+                //            : Category.ArabicName;
 
-            return new BaseResponse<List<FormListVm>>("", true, 200, data, pagination);
+                //    form.SubCategoryName = request.lang == "en"
+                //            ? SubCategory.EnglishName 
+                //            : SubCategory.ArabicName;
+                //}
 
-        
+                int count = _formRepository.GetCount(f => !f.isDeleted);
+
+                Pagination pagination = new Pagination(request.page, request.pageSize, count);
+
+                return new BaseResponse<List<FormListVm>>("", true, 200, data, pagination);
+
+            }
+
+            else
+            {
+                return new BaseResponse<List<FormListVm>>("", true, 200, new List<FormListVm>());
+            }
         }
     }
 }
