@@ -10,8 +10,8 @@ namespace SharijhaAward.Application.Features.Albums.Galleries.Queries.GetAllGall
 {
     public class GetAllGalleriesQuery : IRequest<BaseResponse<List<GalleryListVm>>>
     {
-        public int page { get; set; }
-        public int pageSize { get; set; }
+        public int page { get; set; } = 1;
+        public int pageSize { get; set; } = 10;
         public int AlbumId { get; set; }
         public string? lang { get; set; }
     }

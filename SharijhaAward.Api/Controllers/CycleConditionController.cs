@@ -14,6 +14,7 @@ using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditi
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnTermsAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAllConditions;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.CycleConditions.Attachments.Queries.ReviewCycleConditionAttachments;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -191,7 +192,7 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
 
-            var response = await _mediator.Send(new GetCycleConditionByFormIdQuery()
+            var response = await _mediator.Send(new ReviewCycleConditionAttachmentsQuery()
             {
                 formId = formId,
                 token = token!,

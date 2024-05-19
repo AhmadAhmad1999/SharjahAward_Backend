@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.Albums.Commands.CreateAlbum
 {
     public class CreateAlbumCommandHandler
-        : IRequestHandler<CreateAlbumCommand, BaseResponse<object>>
+        : IRequestHandler<CreateAlbumCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<Album> _albumRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
@@ -29,7 +29,7 @@ namespace SharijhaAward.Application.Features.Albums.Commands.CreateAlbum
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<object>> Handle(CreateAlbumCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateAlbumCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"
                 ? "Album has been Created"
@@ -42,16 +42,16 @@ namespace SharijhaAward.Application.Features.Albums.Commands.CreateAlbum
                 ? "Cycle Not Found"
                 : "الدورة غير موجودة";
 
-                return new BaseResponse<object>(msg, false, 404);
+                return new BaseResponse<int>(msg, false, 404);
             }
 
             var album = _mapper.Map<Album>(request);
 
             album.ThumbnailUrl = await _fileService.SaveFileAsync(request.Thumbnail);
            
-            await _albumRepository.AddAsync(album);
+            var data = await _albumRepository.AddAsync(album);
 
-            return new BaseResponse<object>(msg, true, 200);
+            return new BaseResponse<int>(msg, true, 200, data.Id);
             
         }
     }

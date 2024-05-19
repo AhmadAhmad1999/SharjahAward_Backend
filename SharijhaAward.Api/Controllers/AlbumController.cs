@@ -164,7 +164,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllGalleries/{AlbumId}", Name = "GetAllGalleries")]
-        public async Task<IActionResult> GetAllGalleries(int AlbumId)
+        public async Task<IActionResult> GetAllGalleries(int AlbumId, int page = 1, int pageSize = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -172,7 +172,9 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAllGalleriesQuery()
             {
                 AlbumId = AlbumId,
-                lang = language!
+                lang = language!,
+                page = page,
+                pageSize = pageSize
             });
             return response.statusCode switch
             {
