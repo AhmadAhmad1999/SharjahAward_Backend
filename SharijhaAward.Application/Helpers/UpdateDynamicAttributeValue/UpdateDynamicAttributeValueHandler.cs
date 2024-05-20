@@ -533,7 +533,7 @@ namespace SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue
                                 DynamicAttributeValue? CheckIfDependencyValueIsInsertedInDatabase = AlreadyInsertedDynamicValues
                                     .FirstOrDefault(x => x.RecordId == Request.RecordId &&
                                         x.DynamicAttributeId == DependencyEntityInGroup.DynamicAttributeId &&
-                                        x.isAccepted);
+                                        (x.isAccepted != null ? x.isAccepted.Value : true));
 
                                 if (CheckIfDependencyValueIsInsertedInDatabase == null)
                                     break;

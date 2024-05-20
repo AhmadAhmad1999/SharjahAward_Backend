@@ -8,7 +8,8 @@ namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
         public string Value { get; set; } = null!;
         public int? RecordId { get; set; }
         public int? RecordIdAsGuid { get; set; }
-        public bool isAccepted { get; set; }
+        public bool? isAccepted { get; set; }
+        public string? ReasonForRejecting { get; set; }
         public int DynamicAttributeId { get; set; }
         public DynamicAttribute? DynamicAttribute { get; set; }
     }

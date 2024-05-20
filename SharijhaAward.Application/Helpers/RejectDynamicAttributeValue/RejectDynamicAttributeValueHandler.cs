@@ -1,35 +1,59 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
 {
-    public class RejectDynamicAttributeValueHandler : IRequestHandler<RejectDynamicAttributeValueCommand, BaseResponse<object>>
+    public class RejectDynamicAttributeValueHandler : IRequestHandler<RejectDynamicAttributeValueMainCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         public RejectDynamicAttributeValueHandler(IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
         {
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
         }
-        public async Task<BaseResponse<object>> Handle(RejectDynamicAttributeValueCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(RejectDynamicAttributeValueMainCommand Request, CancellationToken cancellationToken)
         {
-            string UpdateSql = $"UPDATE DynamicAttributeValue SET isAccepted = 0 WHERE DynamicAttributeId IN " +
-                $"({string.Join(",", Request.DynamicAttributesIds)})";
+            List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
+                .Where(x => Request.RejectDynamicAttributeValueCommand.Select(y => y.DynamicAttributesId).Contains(x.DynamicAttributeId))
+                .ToListAsync();
 
-            await _DynamicAttributeValueRepository.ExecuteUpdateAsync(UpdateSql);
+            foreach (DynamicAttributeValue DynamicAttributeValueEntity in DynamicAttributeValueEntities)
+            {
+                DynamicAttributeValueEntity.isAccepted = false;
+                DynamicAttributeValueEntity.ReasonForRejecting = Request.RejectDynamicAttributeValueCommand
+                    .FirstOrDefault(x => x.DynamicAttributesId == DynamicAttributeValueEntity.DynamicAttributeId)!.ReasonForRejecting;
+            }
 
-            string ResponseMessage = Request.lang == "en"
-                ? "Fields has been rejected successfully"
-                : "تم رفض الحقول بنجاح";
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
-            return new BaseResponse<object>();
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    await _DynamicAttributeValueRepository.UpdateListAsync(DynamicAttributeValueEntities);
+
+                    Transaction.Complete();
+
+                    string ResponseMessage = Request.lang == "en"
+                        ? "Fields has been rejected successfully"
+                        : "تم رفض الحقول بنجاح";
+
+                    return new BaseResponse<object>();
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

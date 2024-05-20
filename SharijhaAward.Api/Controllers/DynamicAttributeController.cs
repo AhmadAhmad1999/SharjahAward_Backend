@@ -363,15 +363,15 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> RejectDynamicAttributeValue(RejectDynamicAttributeValueCommand RejectDynamicAttributeValueCommand)
+        public async Task<IActionResult> RejectDynamicAttributeValue(RejectDynamicAttributeValueMainCommand RejectDynamicAttributeValueMainCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
             
-            RejectDynamicAttributeValueCommand.lang = HeaderValue;
+            RejectDynamicAttributeValueMainCommand.lang = HeaderValue;
 
-            BaseResponse<object>? Response = await _Mediator.Send(RejectDynamicAttributeValueCommand);
+            BaseResponse<object>? Response = await _Mediator.Send(RejectDynamicAttributeValueMainCommand);
 
             return Response.statusCode switch
             {

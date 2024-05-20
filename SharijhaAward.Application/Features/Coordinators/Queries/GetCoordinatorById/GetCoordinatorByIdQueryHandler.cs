@@ -175,7 +175,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                             if (CheckIfValueIsAlreadyInserted != null)
                             {
                                 DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
-                                DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                DynamicAttributeInSection.isAccepted = true;
                             }
                         }
                         else
@@ -186,7 +186,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                             if (CheckIfValueIsAlreadyInserted != null)
                             {
                                 DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value;
-                                DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                DynamicAttributeInSection.isAccepted = true;
                             }
                         }
                     }
