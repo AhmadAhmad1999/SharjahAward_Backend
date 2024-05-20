@@ -81,6 +81,8 @@ using SharijhaAward.Domain.Entities.AwardStatisticModel;
 using SharijhaAward.Domain.Entities.TrainingManualModel;
 using SharijhaAward.Domain.Entities.InterviewModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
+using SharijhaAward.Domain.Entities.ArbitratorFormModel;
+using SharijhaAward.Domain.Entities.CoordinatorFormModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -198,6 +200,8 @@ namespace SharijhaAward.Persistence
         public DbSet<AwardSponsor> AwardSponsors { get; set; }
         public DbSet<Reward> Rewards { get; set; }
         public DbSet<AwardStatistic> AwardStatistics { get; set; }
+        public DbSet<ArbitratorForm> ArbitratorForms { get; set; }
+        public DbSet<CoordinatorForm> CoordinatorForms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -309,6 +313,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<AwardSponsor>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Reward>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AwardStatistic>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CoordinatorForm>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitratorForm>().HasQueryFilter(p => !p.isDeleted);
 
 
             modelBuilder.Entity<User>()
