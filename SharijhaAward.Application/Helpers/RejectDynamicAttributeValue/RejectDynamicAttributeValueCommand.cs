@@ -1,11 +1,8 @@
-﻿using MediatR;
-using SharijhaAward.Application.Responses;
-
-namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
+﻿namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
 {
-    public class RejectDynamicAttributeValueCommand : IRequest<BaseResponse<object>>
+    public class RejectDynamicAttributeValueCommand 
     {
-        public List<int> DynamicAttributesIds { get; set; } = new List<int>();
-        public string? lang { get; set; }
+        public int DynamicAttributesId { get; set; }
+        public string ReasonForRejecting { get; set; } = null!;
     }
 }

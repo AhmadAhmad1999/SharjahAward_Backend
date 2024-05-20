@@ -21,6 +21,7 @@ namespace SharijhaAward.Application.Contract.Persistence
         Task<T> AddAsync(T entity);
         Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
         Task UpdateAsync(T entity);
+        Task UpdateListAsync(IEnumerable<T> entities);
         Task DeleteAsync(T entity);
         Task DeleteListAsync(IEnumerable<T> entities);
         Task RemoveAsync(T entity);

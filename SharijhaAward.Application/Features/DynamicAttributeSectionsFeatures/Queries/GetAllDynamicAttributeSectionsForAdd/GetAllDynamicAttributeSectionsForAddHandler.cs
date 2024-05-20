@@ -131,6 +131,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 {
                                     DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
                                     DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                    DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                 }
                             }
                             else
@@ -142,6 +143,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 {
                                     DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value;
                                     DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                    DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                 }
                             }
                         }
@@ -264,6 +266,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 {
                                     DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
                                     DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                    DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                 }
                             }
                             else
@@ -275,6 +278,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 {
                                     DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value;
                                     DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                    DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                 }
                             }
                         }

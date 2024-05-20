@@ -137,7 +137,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                             if (CheckIfValueIsAlreadyInserted != null)
                             {
                                 DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
-                                DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                DynamicAttributeInSection.isAccepted = true;
                             }
                         }
                         else
@@ -148,7 +148,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                             if (CheckIfValueIsAlreadyInserted != null)
                             {
                                 DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value;
-                                DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                DynamicAttributeInSection.isAccepted = true;
                             }
                         }
                     }

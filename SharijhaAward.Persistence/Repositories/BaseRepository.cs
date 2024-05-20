@@ -99,6 +99,15 @@ namespace SharijhaAward.Persistence.Repositories
             _dbContext.Entry(entity).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
+        public async Task UpdateListAsync(IEnumerable<T> entities)
+        {
+            foreach (T entity in entities)
+            {
+                _dbContext.Entry(entity).State = EntityState.Modified;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
         public async Task DeleteAsync(T entity)
         {
             typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
