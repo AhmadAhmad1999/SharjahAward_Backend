@@ -20,6 +20,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         public string? InsertedValueAsString { get; set; }
         public string? InsertedValueAsBinaryFilePath { get; set; }
         public bool? isAccepted { get; set; }
+        public string? ReasonForRejecting { get; set; }
         public int? MaxSizeInKB { get; set; }
         public List<DynamicAttributeListValueListVM>? DynamicAttributeListValues { get; set; }
     }

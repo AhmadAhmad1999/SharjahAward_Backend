@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SharijhaAward.Persistence.Repositories
 {
@@ -55,7 +56,7 @@ namespace SharijhaAward.Persistence.Repositories
             UserRole? UserRole = await _dbContext.UsersRoles
                 .Include(x => x.Role!)
                 .Include(x => x.User!)
-                .FirstOrDefaultAsync(u => u.User!.Email.ToLower() == email.ToLower() && u.User!.isValidAccount &&
+                .FirstOrDefaultAsync(u => u.User!.Email.ToLower() == email.ToLower() &&
                     (intoAdminDashboard
                         ? u.Role!.EnglishName.ToLower() != "Subscriber".ToLower()
                         : u.Role!.EnglishName.ToLower() == "Subscriber".ToLower()));
