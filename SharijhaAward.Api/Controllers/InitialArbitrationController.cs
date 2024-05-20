@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateChairmanNotesOnInitialArbitration;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateInitialArbitration;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.DeleteChairmanNotesOnInitialArbitration;
@@ -12,6 +13,7 @@ using SharijhaAward.Domain.Entities.ArbitrationModel;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class InitialArbitrationController : ControllerBase

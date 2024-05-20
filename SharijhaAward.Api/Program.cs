@@ -1,4 +1,3 @@
-using Aspose.Pdf.Operators;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Hangfire;
@@ -6,13 +5,13 @@ using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
-//using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-
-//using NLog.Config;
-//using NLog.Extensions.Logging;
-//using NLog.Web;
+using NLog;
+using NLog.Config;
+using NLog.Extensions.Logging;
+using NLog.Targets;
+using NLog.Web;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
@@ -20,9 +19,6 @@ using SharijhaAward.Application;
 using SharijhaAward.Infrastructure;
 using SharijhaAward.Persistence;
 using System.Net;
-using System.Text.Json;
-using static Org.BouncyCastle.Math.EC.ECCurve;
-
 
 try
 {
@@ -35,28 +31,42 @@ try
     builder.Services.AddHttpClient();
 
     // Enable asynchronous DNS resolution
-    System.Net.ServicePointManager.DnsRefreshTimeout = 0;
+    ServicePointManager.DnsRefreshTimeout = 0;
 
     /*------------------------------------------------------------------------------------*/
     /*                              Custom Logging Layout                                 */
     /*------------------------------------------------------------------------------------*/
+    
+    ConfigurationItemFactory.Default.LayoutRenderers
+        .RegisterDefinition("Custom-Layout", typeof(CustomlayoutRenderer));
 
-    //ConfigurationItemFactory.Default.LayoutRenderers
-    //    .RegisterDefinition("Custom-Layout", typeof(CustomlayoutRenderer));
+    builder.Services.AddScoped<LogFilterAttribute>();
 
-    //builder.Services.AddScoped<LogFilterAttribute>();
+    builder.Services.AddSingleton<ILoggerFactory, NLogLoggerFactory>();
+    var serviceProvider = builder.Services.BuildServiceProvider();
+    builder.Services.AddSingleton(builder.Services);
+    builder.Services.AddSingleton(serviceProvider);
+    builder.Host.UseNLog();
 
-    //builder.Services.AddSingleton<ILoggerFactory, NLogLoggerFactory>();
-    //var serviceProvider = builder.Services.BuildServiceProvider();
-    //builder.Services.AddSingleton(builder.Services);
-    //builder.Services.AddSingleton(serviceProvider);
-    //builder.Host.UseNLog();
+    string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+    string customLogFilePath = Path.Combine(wwwrootPath, "Logs", $"LogFile-{DateTime.Now:yyyy-MM-dd}.log");
+
+    // Load NLog configuration from the NLog.config file
+    LogManager.Configuration = new XmlLoggingConfiguration("NLog.config");
+
+    // Update the log file path in the NLog configuration
+    var fileTarget = (FileTarget)LogManager.Configuration.FindTargetByName("UsersActionsLog");
+    fileTarget.FileName = customLogFilePath;
+
+    // Reconfigure NLog with the updated configuration
+    LogManager.ReconfigExistingLoggers();
+
     /*------------------------------------------------------------------------------------*/
 
 
 
     // Enable connection pooling
-    System.Net.ServicePointManager.DefaultConnectionLimit = 100;
+    ServicePointManager.DefaultConnectionLimit = 100;
 
     FirebaseApp.Create(new AppOptions()
     {
@@ -157,12 +167,7 @@ try
     app.UseAuthentication();
 
     app.UseCors("Open");
-    //string LogsFolderPath = "c:/temp/Logs";
-
-    //if (!Directory.Exists(LogsFolderPath))
-    //{
-    //    Directory.CreateDirectory(LogsFolderPath);
-    //}
+    
     //hangfire
 
     app.UseHangfireDashboard();
@@ -184,7 +189,7 @@ catch (Exception ex)
     {
         Runcontext.Response.Clear();
         Runcontext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-        // string expected = JsonConvert.SerializeObject(new { UserState = "Unauthenticated" });
+
         if (ex.InnerException is not null ? !string.IsNullOrEmpty(ex.InnerException.Message) : false)
             await Runcontext.Response.WriteAsync(JsonConvert.SerializeObject(new { ErrorMessage = ex.Message, ErrorInnerMessage = ex.InnerException.Message }));
         else

@@ -10,13 +10,12 @@ using SharijhaAward.Application.Features.Categories.Queries.GetAllCategoriesWith
 using SharijhaAward.Application.Responses;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategories;
-
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Categories.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
-    // [ServiceFilter(typeof(LogFilterAttribute))]
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase

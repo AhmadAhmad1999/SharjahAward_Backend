@@ -10,7 +10,7 @@ using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 
 namespace SharijhaAward.Api.Controllers
 {
-    // [ServiceFilter(typeof(LogFilterAttribute))]
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AgendaController : ControllerBase

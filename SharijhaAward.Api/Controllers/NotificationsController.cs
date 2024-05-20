@@ -11,7 +11,7 @@ using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNoti
 
 namespace SharijhaAward.Api.Controllers
 {
-    // [ServiceFilter(typeof(LogFilterAttribute))]
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class NotificationsController : ControllerBase

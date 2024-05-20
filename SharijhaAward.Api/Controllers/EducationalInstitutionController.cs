@@ -18,7 +18,7 @@ using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetExce
 
 namespace SharijhaAward.Api.Controllers
 {
-    // [ServiceFilter(typeof(LogFilterAttribute))]
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class EducationalInstitutionController : ControllerBase

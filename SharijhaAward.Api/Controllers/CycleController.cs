@@ -18,7 +18,7 @@ using SharijhaAward.Application.Features.Cycles.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
-    // [ServiceFilter(typeof(LogFilterAttribute))]
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CycleController : ControllerBase
