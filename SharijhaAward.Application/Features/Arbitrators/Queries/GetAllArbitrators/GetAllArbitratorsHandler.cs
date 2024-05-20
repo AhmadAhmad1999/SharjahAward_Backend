@@ -10,7 +10,7 @@ using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators
 {
     public class GetAllArbitratorsHandler : IRequestHandler<GetAllArbitratorsQuery,
-        BaseResponse<List<GetAllArbitratorsListVM>>>
+        BaseResponse<List<ArbitratorsListVM>>>
     {
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
         private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
@@ -23,11 +23,11 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
             _CategoryArbitratorRepository = CategoryArbitratorRepository;
             _Mapper = Mapper;
         }
-        public async Task<BaseResponse<List<GetAllArbitratorsListVM>>> Handle(GetAllArbitratorsQuery Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<ArbitratorsListVM>>> Handle(GetAllArbitratorsQuery Request, CancellationToken cancellationToken)
         {
             FilterObject filterObject = new FilterObject() { Filters = Request.filters };
            
-            List<GetAllArbitratorsListVM> Arbitrators = _Mapper.Map<List<GetAllArbitratorsListVM>>(await _ArbitratorRepository
+            List<ArbitratorsListVM> Arbitrators = _Mapper.Map<List<ArbitratorsListVM>>(await _ArbitratorRepository
                 .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize)
                 .ToListAsync());
 
@@ -37,7 +37,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
                 .Include(x => x.Category!)
                 .ToListAsync();
 
-            Arbitrators = Arbitrators.Select(x => new GetAllArbitratorsListVM()
+            Arbitrators = Arbitrators.Select(x => new ArbitratorsListVM()
             {
                 Id = x.Id,
                 ArabicName = x.ArabicName,
@@ -60,7 +60,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.pageSize, TotalCount);
 
-            return new BaseResponse<List<GetAllArbitratorsListVM>>(ResponseMessage, true, 200, Arbitrators, PaginationParameter);
+            return new BaseResponse<List<ArbitratorsListVM>>(ResponseMessage, true, 200, Arbitrators, PaginationParameter);
         }
     }
 }

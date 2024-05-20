@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
 using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitratorCategory;
@@ -13,15 +14,17 @@ using SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrator;
 using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById;
+using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorsByFormId;
 using SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinator;
 using SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator;
 using SharijhaAward.Application.Features.Coordinators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
-    [ServiceFilter(typeof(LogFilterAttribute))]
+    // [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ArbitratorsController : ControllerBase
@@ -134,7 +137,7 @@ namespace SharijhaAward.Api.Controllers
 
             query.lang = HeaderValue!;
 
-            BaseResponse<List<GetAllArbitratorsListVM>> Response = await _Mediator.Send(query);
+            BaseResponse<List<ArbitratorsListVM>> Response = await _Mediator.Send(query);
 
             return Response.statusCode switch
             {
@@ -269,6 +272,37 @@ namespace SharijhaAward.Api.Controllers
             {
                 Id = Id,
                 lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("GetAllArbitratorsByFormId/{formId}", Name = "GetAllArbitratorsByFormId")]
+        public async Task<IActionResult> GetAllArbitratorsByFormId(int formId)
+        {
+            string token = HttpContext.Request.Headers.Authorization!;
+
+            if(token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+           
+            var Response = await _Mediator.Send(new GetArbitratorsByFormIdQuery()
+            {
+                formId = formId,
+                lang = HeaderValue!,
+                token = token
             });
 
             return Response.statusCode switch

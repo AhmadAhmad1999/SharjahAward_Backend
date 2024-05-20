@@ -4,7 +4,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsByClassId
 {
-    public class GetAllArbitratorsByClassIdQuery : IRequest<BaseResponse<List<GetAllArbitratorsListVM>>>
+    public class GetAllArbitratorsByClassIdQuery : IRequest<BaseResponse<List<ArbitratorsListVM>>>
     {
         public int EducationalClassId { get; set; }
         public int page { get; set; }

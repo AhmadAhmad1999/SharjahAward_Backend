@@ -11,7 +11,7 @@ using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators
 {
     public class GetAllCoordinatorsHandler : IRequestHandler<GetAllCoordinatorsQuery,
-        BaseResponse<List<GetAllCoordinatorsListVM>>>
+        BaseResponse<List<CoordinatorsListVM>>>
     {
         private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
         private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
@@ -26,10 +26,10 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
             _Mapper = Mapper;
         }
 
-        public async Task<BaseResponse<List<GetAllCoordinatorsListVM>>> Handle(GetAllCoordinatorsQuery Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<CoordinatorsListVM>>> Handle(GetAllCoordinatorsQuery Request, CancellationToken cancellationToken)
         {
             FilterObject filterObject = new FilterObject() { Filters = Request.filters };
-            List<GetAllCoordinatorsListVM> Coordinators = _Mapper.Map<List<GetAllCoordinatorsListVM>>(await _CoordinatorRepository
+            List<CoordinatorsListVM> Coordinators = _Mapper.Map<List<CoordinatorsListVM>>(await _CoordinatorRepository
                 .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize)
                 .ToListAsync());
 
@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
                 .Include(x => x.EducationalEntity!)
                 .ToListAsync();
 
-            Coordinators = Coordinators.Select(x => new GetAllCoordinatorsListVM()
+            Coordinators = Coordinators.Select(x => new CoordinatorsListVM()
             {
                 Id = x.Id,
                 ArabicName = x.ArabicName,
@@ -61,7 +61,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.pageSize, TotalCount);
 
-            return new BaseResponse<List<GetAllCoordinatorsListVM>>(ResponseMessage, true, 200, Coordinators, PaginationParameter);
+            return new BaseResponse<List<CoordinatorsListVM>>(ResponseMessage, true, 200, Coordinators, PaginationParameter);
         }
     }
 }

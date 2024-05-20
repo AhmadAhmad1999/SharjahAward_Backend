@@ -11,7 +11,7 @@ using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsByClassId
 {
     public class GetAllArbitratorsByClassIdHandler : IRequestHandler<GetAllArbitratorsByClassIdQuery,
-        BaseResponse<List<GetAllArbitratorsListVM>>>
+        BaseResponse<List<ArbitratorsListVM>>>
     {
         private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
             _Mapper = Mapper;
         }
 
-        public async Task<BaseResponse<List<GetAllArbitratorsListVM>>> Handle(GetAllArbitratorsByClassIdQuery Request, 
+        public async Task<BaseResponse<List<ArbitratorsListVM>>> Handle(GetAllArbitratorsByClassIdQuery Request, 
             CancellationToken cancellationToken)
         {
             List<Arbitrator> ArbitratorClassesEntities = new List<Arbitrator>();
@@ -50,14 +50,14 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
                     .Select(x => x.Arbitrator!)
                     .ToListAsync();
 
-            List<GetAllArbitratorsListVM> Arbitrators = _Mapper.Map<List<GetAllArbitratorsListVM>>(ArbitratorClassesEntities);
+            List<ArbitratorsListVM> Arbitrators = _Mapper.Map<List<ArbitratorsListVM>>(ArbitratorClassesEntities);
 
             List<CategoryArbitrator> CategoryArbitratorEntities = await _CategoryArbitratorRepository
                 .Where(x => Arbitrators.Select(y => y.Id).Contains(x.ArbitratorId))
                 .Include(x => x.Category!)
                 .ToListAsync();
 
-            Arbitrators = Arbitrators.Select(x => new GetAllArbitratorsListVM()
+            Arbitrators = Arbitrators.Select(x => new ArbitratorsListVM()
             {
                 Id = x.Id,
                 ArabicName = x.ArabicName,
@@ -80,7 +80,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.pageSize, TotalCount);
 
-            return new BaseResponse<List<GetAllArbitratorsListVM>>(ResponseMessage, true, 200, Arbitrators, PaginationParameter);
+            return new BaseResponse<List<ArbitratorsListVM>>(ResponseMessage, true, 200, Arbitrators, PaginationParameter);
         }
     }
 }

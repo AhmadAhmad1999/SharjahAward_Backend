@@ -4,7 +4,7 @@ using SharijhaAward.Domain.Common;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators
 {
-    public class GetAllArbitratorsQuery : IRequest<BaseResponse<List<GetAllArbitratorsListVM>>>
+    public class GetAllArbitratorsQuery : IRequest<BaseResponse<List<ArbitratorsListVM>>>
     {
         public string? lang { get; set; }
         public int page { get; set; } = 1;

@@ -305,8 +305,6 @@ using SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterv
 using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep;
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAwardStatisticById;
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStatistics;
-using SharijhaAward.Domain.Entities.FinalArbitrationModel;
-using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.CreateFinalArbitration;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -588,7 +586,6 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<User, SignUpFromAdminDashboardCommand>().ReverseMap();
             CreateMap<ArbitrationScalesCriterion, ArbitrationScaleCriterionDto>().ReverseMap();
             CreateMap<Interview, CreateInterviewCommand>().ReverseMap();
-            CreateMap<FinalArbitration, CreateFinalArbitrationCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -642,8 +639,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Criterion, GetMainCriterionByIdDto>().ReverseMap();
             CreateMap<Criterion, SubCriterionListDto>().ReverseMap();
             CreateMap<CriterionItem, CriterionItemListDto>().ReverseMap();
-            CreateMap<Coordinator, GetAllCoordinatorsListVM>().ReverseMap();
-            CreateMap<Arbitrator, GetAllArbitratorsListVM>().ReverseMap();
+            CreateMap<Coordinator, CoordinatorsListVM>().ReverseMap();
+            CreateMap<Arbitrator, ArbitratorsListVM>().ReverseMap();
             CreateMap<Arbitrator, ArbitratorDto>().ReverseMap();
             CreateMap<EducationalEntity, GetEducationalEntityByIdDto>().ReverseMap();
             CreateMap<EducationalClass, GetAllClassesListVM>().ReverseMap();

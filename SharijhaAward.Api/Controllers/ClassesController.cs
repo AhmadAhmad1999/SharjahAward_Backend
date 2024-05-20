@@ -18,7 +18,7 @@ using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
-    [ServiceFilter(typeof(LogFilterAttribute))]
+    // [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ClassesController : ControllerBase
@@ -213,7 +213,7 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<GetAllArbitratorsListVM>> Response = await _Mediator.Send(new GetAllArbitratorsByClassIdQuery()
+            BaseResponse<List<ArbitratorsListVM>> Response = await _Mediator.Send(new GetAllArbitratorsByClassIdQuery()
             {
                 EducationalClassId = EducationalClassId,
                 lang = HeaderValue,
