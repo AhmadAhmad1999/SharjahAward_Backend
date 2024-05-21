@@ -52,7 +52,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPatch("RejectInitialArbiitrationFromArbitrationAudit/{FormId}")]
+        [HttpPatch("ChangeInitialArbiitrationFromArbitrationAuditStatus/{FormId}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -60,18 +60,22 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteClass(int FormId)
+        public async Task<IActionResult> RejectInitialArbiitrationFromArbitrationAudit(RejectInitialArbiitrationFromArbitrationAuditCommand RejectInitialArbiitrationFromArbitrationAuditCommand)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<object>? Response = await _Mediator.Send(new RejectInitialArbiitrationFromArbitrationAuditCommand()
-            {
-                FormId = FormId,
-                lang = HeaderValue!
-            });
+            RejectInitialArbiitrationFromArbitrationAuditCommand.lang = HeaderValue;
+            RejectInitialArbiitrationFromArbitrationAuditCommand.Token = Token;
+
+            BaseResponse<object>? Response = await _Mediator.Send(RejectInitialArbiitrationFromArbitrationAuditCommand);
 
             return Response.statusCode switch
             {

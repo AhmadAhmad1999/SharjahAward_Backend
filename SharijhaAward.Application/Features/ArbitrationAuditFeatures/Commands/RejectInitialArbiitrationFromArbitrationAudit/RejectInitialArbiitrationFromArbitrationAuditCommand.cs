@@ -6,6 +6,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
     public class RejectInitialArbiitrationFromArbitrationAuditCommand : IRequest<BaseResponse<object>>
     {
         public int FormId { get; set; }
+        public bool IsAccepted { get; set; }
+        public string? Token { get; set; }
         public string? lang { get; set; }
     }
 }

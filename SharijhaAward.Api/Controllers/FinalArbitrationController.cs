@@ -1,0 +1,194 @@
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.CreateChairmanNotesOnFinalArbitrationScore;
+using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.CreateFinalArbitrationScore;
+using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.DeleteChairmanNotesOnFinalArbitrationScore;
+using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.UpdateChairmanNotesOnFinalArbitrationScore;
+using SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.GetAllFormsForFinalArbitration;
+using SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.GetFinalArbitrationById;
+using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.ArbitrationModel;
+
+namespace SharijhaAward.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class FinalArbitrationController : ControllerBase
+    {
+        private readonly IMediator _Mediator;
+
+        public FinalArbitrationController(IMediator Mediator)
+        {
+            _Mediator = Mediator;
+        }
+
+        [HttpPost("CreateChairmanNotesOnFinalArbitrationScore")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> CreateChairmanNotesOnFinalArbitrationScore([FromBody] CreateChairmanNotesOnFinalArbitrationScoreCommand CreateChairmanNotesOnFinalArbitrationScoreCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            CreateChairmanNotesOnFinalArbitrationScoreCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(CreateChairmanNotesOnFinalArbitrationScoreCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("CreateFinalArbitrationScore")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> CreateFinalArbitrationScore([FromBody] CreateFinalArbitrationScoreCommand CreateFinalArbitrationScoreCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            CreateFinalArbitrationScoreCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(CreateFinalArbitrationScoreCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpDelete("DeleteChairmanNotesOnFinalArbitrationScore/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> DeleteChairmanNotesOnFinalArbitrationScore(int Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(new DeleteChairmanNotesOnFinalArbitrationScoreCommand()
+            {
+                Id = Id,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("UpdateChairmanNotesOnFinalArbitrationScore")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> UpdateChairmanNotesOnFinalArbitrationScore([FromBody] UpdateChairmanNotesOnFinalArbitrationScoreCommand UpdateChairmanNotesOnFinalArbitrationScoreCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            UpdateChairmanNotesOnFinalArbitrationScoreCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(UpdateChairmanNotesOnFinalArbitrationScoreCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllFormsForFinalArbitration")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllFormsForFinalArbitration(ArbitrationType ArbitrationType, int Page = 1, int PerPage = 10)
+        {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetAllFormsForFinalArbitrationMainListVM> Response = await _Mediator.Send(new GetAllFormsForFinalArbitrationQuery()
+            {
+                lang = HeaderValue!,
+                page = Page,
+                pageSize = PerPage,
+                Token = Token,
+                ArbitrationType = ArbitrationType
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetFinalArbitrationByFormId/{ArbitrationId}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetFinalArbitrationById(int FormId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<MainCriterionForFinalArbitrationScoreDto>> Response = await _Mediator.Send(new GetFinalArbitrationByIdQuery()
+            {
+                lang = HeaderValue!,
+                FormId = FormId
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+    }
+}

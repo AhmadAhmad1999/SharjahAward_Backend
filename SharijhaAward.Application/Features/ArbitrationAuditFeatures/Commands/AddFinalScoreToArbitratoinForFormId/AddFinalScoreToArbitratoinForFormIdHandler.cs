@@ -65,8 +65,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.A
                             Type = ArbitrationType.NotBeenArbitrated,
                             DateOfArbitration = null,
                             FullScore = Request.FinalScore,
-                            FinalScore = 0,
-                            ParentId = null
+                            FinalScore = 0
                         };
 
                         await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);

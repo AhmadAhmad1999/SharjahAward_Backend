@@ -41,11 +41,11 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                     {
                         if (InitialArbitrationMainCommand.InitialArbitrationId == 0)
                         {
-                            InitialArbitration NewArbitrationEntity = _Mapper.Map<InitialArbitration>(InitialArbitrationMainCommand);
+                            InitialArbitration NewInitialArbitrationEntity = _Mapper.Map<InitialArbitration>(InitialArbitrationMainCommand);
 
-                            NewArbitrationEntity.ArbitrationId = Request.ArbitrationId;
+                            NewInitialArbitrationEntity.ArbitrationId = Request.ArbitrationId;
 
-                            await _InitialArbitrationRepository.AddAsync(NewArbitrationEntity);
+                            await _InitialArbitrationRepository.AddAsync(NewInitialArbitrationEntity);
                         }
                         else
                         {
@@ -70,7 +70,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                     }
 
                     Arbitration? ArbitrationEntity = await _ArbitrationRepository
-                            .FirstOrDefaultAsync(x => x.Id == Request.ArbitrationId);
+                        .FirstOrDefaultAsync(x => x.Id == Request.ArbitrationId);
 
                     if (ArbitrationEntity is null)
                     {

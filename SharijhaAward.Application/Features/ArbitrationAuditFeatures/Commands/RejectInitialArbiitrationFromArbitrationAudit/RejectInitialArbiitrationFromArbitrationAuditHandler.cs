@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
@@ -13,11 +14,15 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
+        private readonly IJwtProvider _JwtProvider;
+
         public RejectInitialArbiitrationFromArbitrationAuditHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
-            IAsyncRepository<FinalArbitration> FinalArbitrationRepository)
+            IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
+            IJwtProvider JwtProvider)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
+            _JwtProvider = JwtProvider;
         }
 
         public async Task<BaseResponse<object>> Handle(RejectInitialArbiitrationFromArbitrationAuditCommand Request, CancellationToken cancellationToken)
@@ -37,22 +42,50 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                 {
                     await _ArbitrationRepository
                         .Where(x => x.ProvidedFormId == Request.FormId)
-                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsRejectedFromArbitrationAuditStep, true));
+                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsRejectedFromArbitrationAuditStep, Request.IsAccepted));
 
-                    FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
-                        .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
+                    if (!Request.IsAccepted)
+                    {
+                        FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
+                            .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
 
-                    if (FinalArbitrationEntity is not null)
-                        await _FinalArbitrationRepository.DeleteAsync(FinalArbitrationEntity);
+                        if (FinalArbitrationEntity is not null)
+                            await _FinalArbitrationRepository.DeleteAsync(FinalArbitrationEntity);
+                    }
+                    else
+                    {
+                        int ArbitratorId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
+                        List<float> FullScores = await _ArbitrationRepository
+                            .Where(x => x.ProvidedFormId == Request.FormId)
+                            .Select(x => x.FullScore)
+                            .ToListAsync();
+
+                        float FullScore = FullScores.Sum() / FullScores.Count();
+
+                        FinalArbitration NewFinalArbitrationEntity = new FinalArbitration()
+                        {
+                            isAccepted = false,
+                            ReasonForRejecting = null,
+                            isAcceptedFromChairman = false,
+                            ArbitratorId = ArbitratorId,
+                            ProvidedFormId = Request.FormId,
+                            Type = ArbitrationType.NotBeenArbitrated,
+                            DateOfArbitration = null,
+                            FullScore = FullScore,
+                            FinalScore = 0
+                        };
+
+                        await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);
+                    }
 
                     Transaction.Complete();
 
                     ResponseMessage = Request.lang == "en"
                         ? "Initial arbitration has been rejected successfully"
-                        : "تم رفض التحكيم على الاستمارة بنجاح";
+                        : "تم رفض التحكيم الأولي على الاستمارة بنجاح";
 
                     return new BaseResponse<object>(ResponseMessage, true, 200);
-
                 }
                 catch (Exception)
                 {

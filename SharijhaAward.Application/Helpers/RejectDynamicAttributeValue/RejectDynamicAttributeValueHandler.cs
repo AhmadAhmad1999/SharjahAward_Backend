@@ -45,10 +45,10 @@ namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
                     Transaction.Complete();
 
                     string ResponseMessage = Request.lang == "en"
-                        ? "Fields has been rejected successfully"
-                        : "تم رفض الحقول بنجاح";
+                        ? "Field's acceptance status has been successfully changed"
+                        : "تم تغيير حالة قبول الحقل بنجاح";
 
-                    return new BaseResponse<object>();
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
                 }
                 catch (Exception)
                 {

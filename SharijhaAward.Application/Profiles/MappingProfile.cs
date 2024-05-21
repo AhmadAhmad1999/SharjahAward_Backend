@@ -306,6 +306,8 @@ using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllIntervi
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAwardStatisticById;
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStatistics;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
+using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.CreateFinalArbitrationScore;
+using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.UpdateChairmanNotesOnFinalArbitrationScore;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -587,6 +589,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<User, SignUpFromAdminDashboardCommand>().ReverseMap();
             CreateMap<ArbitrationScalesCriterion, ArbitrationScaleCriterionDto>().ReverseMap();
             CreateMap<Interview, CreateInterviewCommand>().ReverseMap();
+            CreateMap<FinalArbitrationScore, CreateFinalArbitrationScoreMainCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -610,6 +613,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ArbitrationScalesCriterion, UpdateArbitrationScaleCriterionDto>().ReverseMap();
             CreateMap<Meeting, UpdateMeetingCommand>().ReverseMap();
             CreateMap<Interview, UpdateInterviewCommand>().ReverseMap();
+            CreateMap<ChairmanNotesOnFinalArbitrationScore, UpdateChairmanNotesOnFinalArbitrationScoreCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();

@@ -19,7 +19,5 @@ namespace SharijhaAward.Domain.Entities.FinalArbitrationModel
         public DateTime? DateOfArbitration { get; set; }
         public float FullScore { get; set; }
         public float FinalScore { get; set; }
-        public int? ParentId { get; set; }
-        public FinalArbitration? Parent { get; set; }
     }
 }

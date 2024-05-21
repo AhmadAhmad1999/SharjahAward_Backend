@@ -19,6 +19,9 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.AsignFormToCoordin
 using SharijhaAward.Application.Features.ProvidedForm.Queries.AsignFormToArbitrator;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.UnAsignFormToArbitrator;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.UnAsignFormToCoordinator;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllCriterionsForCoordinator;
+using SharijhaAward.Application.Responses;
+using Microsoft.Extensions.Primitives;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -309,8 +312,34 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(response),
                 _ => BadRequest(response)
             };
-        } 
-        
+        }
+        [HttpGet("GetAllCriterionsForCoordinator")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllCriterionsForCoordinator(int FormId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllCriterionsForCoordinatorListVM>> Response = await _mediator.Send(new GetAllCriterionsForCoordinatorQuery()
+            {
+                lang = HeaderValue!,
+                FormId = FormId
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
     }
 }

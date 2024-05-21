@@ -1,11 +1,5 @@
 ﻿using SharijhaAward.Domain.Common;
-using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.CriterionModel
 {
