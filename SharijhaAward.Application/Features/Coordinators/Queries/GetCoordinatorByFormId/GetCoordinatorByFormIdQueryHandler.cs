@@ -42,10 +42,10 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
             var Admin = await _userRepository.GetByIdAsync(int.Parse(adminId));
             if(Admin == null)
             {
-                return new BaseResponse<List<CoordinatorsListVM>>("UnAuht", false, 401);
+                return new BaseResponse<List<CoordinatorsListVM>>("Un Auht", false, 401);
             }
 
-            var form = await _coordinatorFormRepository.GetByIdAsync(request.formId);
+            var form = await _providedFormRepository.GetByIdAsync(request.formId);
             if(form == null)
             {
                 return new BaseResponse<List<CoordinatorsListVM>>("Form Not Found", false, 404);

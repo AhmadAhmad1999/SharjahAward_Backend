@@ -46,10 +46,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.AsignFormToArb
             }
             var AdminToken = _userTokenRepository.FirstOrDefault(t => t.UserId == int.Parse(userId) && t.Token == request.token);
 
-            if (AdminToken == null)
-            {
-                return new BaseResponse<object>("Un Auth", false, 401);
-            }
+            //if (AdminToken == null)
+            //{
+            //    return new BaseResponse<object>("Un Auth", false, 401);
+            //}
 
             if (_userRoleRepository.FirstOrDefault(r => r.UserId == Admin.Id && r.RoleId == 1) == null)
             {

@@ -19,6 +19,7 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.AsignFormToCoordin
 using SharijhaAward.Application.Features.ProvidedForm.Queries.AsignFormToArbitrator;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.UnAsignFormToArbitrator;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.UnAsignFormToCoordinator;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.AcceptOnForm;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -309,8 +310,34 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(response),
                 _ => BadRequest(response)
             };
-        } 
-        
+        }
+        [HttpPut("AcceptOnForm", Name = "AcceptOnForm")]
+        public async Task<IActionResult> AcceptOnForm(AcceptOnFormQuery query)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+            query.token = token!;
+            query.lang = Language!;
+
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+
 
     }
 }

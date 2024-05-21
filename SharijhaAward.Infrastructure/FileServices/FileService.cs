@@ -43,7 +43,18 @@ namespace SharijhaAward.Infrastructure.FileServices
                   ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{filePath.Split('\\').LastOrDefault()}"
                   : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{filePath.Split('\\').LastOrDefault()}";
         }
+        public async Task<string> SaveFileAndGetPath(IFormFile file)
+        {
+            var filePath = Path.Combine(_SavePath, Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
 
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+           
+
+            return filePath;
+        }
 
         public async Task<byte[]> ReadFileAsync(string filePath)
         {

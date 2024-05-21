@@ -15,6 +15,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetExcelFilePrototype;
+using SharijhaAward.Application.Features.EducationalInstitutions.Queries.ImportDataFormExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -187,6 +188,19 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(response),
                 200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EducationalInstitutionPrototype.xlsx"),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPost("ImportFromExcel", Name = "ImportFromExcel")]
+        public async Task<IActionResult> ImportFromExcel([FromForm] ImportDataFormExcelQuery query)
+        {
+            var response = await _Mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
                 _ => BadRequest(response)
             };
         }

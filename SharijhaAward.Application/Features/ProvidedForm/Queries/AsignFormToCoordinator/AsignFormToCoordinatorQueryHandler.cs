@@ -39,43 +39,55 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.AsignFormToCoo
 
         public async Task<BaseResponse<object>> Handle(AsignFormToCoordinatorQuery request, CancellationToken cancellationToken)
         {
-            var userId =  _jwtProvider.GetUserIdFromToken(request.token);
+            var userId = _jwtProvider.GetUserIdFromToken(request.token);
             var Admin = await _userRepository.FirstOrDefaultAsync(a => a.Id == int.Parse(userId));
-            if(Admin == null)
+            if (Admin == null)
             {
                 return new BaseResponse<object>("Un Auth", false, 401);
             }
             var AdminToken = _userTokenRepository.FirstOrDefault(t => t.UserId == int.Parse(userId) && t.Token == request.token);
-            
-            if(AdminToken == null)
-            {
-                return new BaseResponse<object>("Un Auth", false, 401);
-            }
 
-            if( _userRoleRepository.FirstOrDefault(r => r.UserId == Admin.Id && r.RoleId == 1) == null)
+            //if(AdminToken == null)
+            //{
+            //    return new BaseResponse<object>("Un Auth", false, 401);
+            //}
+
+            if (_userRoleRepository.FirstOrDefault(r => r.UserId == Admin.Id && r.RoleId == 1) == null)
             {
                 return new BaseResponse<object>("", false, 400);
             }
             var form = await _providedFormRepository.GetByIdAsync(request.formId);
-            if(form == null)
+            if (form == null)
             {
                 return new BaseResponse<object>("Form not Found", false, 404);
             }
             var coordinator = await _coordinatorRepository.GetByIdAsync(request.coordinatorId);
-            if(coordinator == null)
+            if (coordinator == null)
             {
                 return new BaseResponse<object>("Coordinator not Found", false, 404);
             }
 
-            var CoordinatorForm = new CoordinatorForm()
+            var CoordinatorForm = _coordinatorProvidedFormRepository.FirstOrDefault(
+                c => c.CoordinatorId == coordinator.Id && c.ProvidedFormId == form.Id);
+            
+            if (CoordinatorForm == null)
             {
-                ProvidedFormId = form.Id,
-                CoordinatorId = coordinator.Id
-            };
+                CoordinatorForm = new CoordinatorForm()
+                {
+                    ProvidedFormId = form.Id,
+                    CoordinatorId = coordinator.Id
+                };
 
-            await _coordinatorProvidedFormRepository.AddAsync(CoordinatorForm);
 
-            return new BaseResponse<object>("", true, 200);
+                await _coordinatorProvidedFormRepository.AddAsync(CoordinatorForm);
+
+                return new BaseResponse<object>("", true, 200);
+            }
+
+            else
+            {
+                return new BaseResponse<object>("Form already Asign To This Coordinator", false, 400);
+            }
         }
     }
 }
