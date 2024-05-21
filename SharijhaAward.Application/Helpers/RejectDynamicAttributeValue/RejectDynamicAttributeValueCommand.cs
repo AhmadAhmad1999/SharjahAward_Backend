@@ -3,6 +3,7 @@
     public class RejectDynamicAttributeValueCommand 
     {
         public int DynamicAttributesId { get; set; }
-        public string ReasonForRejecting { get; set; } = null!;
+        public bool isAccepted { get; set; }
+        public string? ReasonForRejecting { get; set; }
     }
 }

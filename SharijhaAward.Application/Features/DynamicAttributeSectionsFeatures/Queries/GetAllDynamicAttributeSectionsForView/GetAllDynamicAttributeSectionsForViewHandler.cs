@@ -219,8 +219,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             LinkedToAnotherAttribute = false,
                             MaxSizeInKB = null,
                             Status = DynamicAttributeStatus.Active,
-                            ArabicPlaceHolder = string.Empty,
-                            EnglishPlaceHolder = string.Empty,
+                            ArabicPlaceHolder = "xxx-xxxx-xxxxxxx-x",
+                            EnglishPlaceHolder = "xxx-xxxx-xxxxxxx-x",
                             OrderId = 5
                         }
                     };

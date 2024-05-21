@@ -22,9 +22,11 @@ namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
 
             foreach (DynamicAttributeValue DynamicAttributeValueEntity in DynamicAttributeValueEntities)
             {
-                DynamicAttributeValueEntity.isAccepted = false;
-                DynamicAttributeValueEntity.ReasonForRejecting = Request.RejectDynamicAttributeValueCommand
-                    .FirstOrDefault(x => x.DynamicAttributesId == DynamicAttributeValueEntity.DynamicAttributeId)!.ReasonForRejecting;
+                RejectDynamicAttributeValueCommand RequestCommand = Request.RejectDynamicAttributeValueCommand
+                    .FirstOrDefault(x => x.DynamicAttributesId == DynamicAttributeValueEntity.DynamicAttributeId)!;
+
+                DynamicAttributeValueEntity.isAccepted = RequestCommand.isAccepted;
+                DynamicAttributeValueEntity.ReasonForRejecting = RequestCommand.ReasonForRejecting;
             }
 
             TransactionOptions TransactionOptions = new TransactionOptions
