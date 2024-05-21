@@ -7,6 +7,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.A
     {
         public int FormId { get; set; }
         public float FinalScore { get; set; }
+        public string? Token { get; set; }
         public string? lang { get; set; }
     }
 }

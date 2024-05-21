@@ -305,6 +305,7 @@ using SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterv
 using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep;
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAwardStatisticById;
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStatistics;
+using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
 namespace SharijhaAward.Application.Profiles
 {

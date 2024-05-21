@@ -100,47 +100,52 @@ namespace SharijhaAward.Api.Logger
             }
             else
             {
-                IActionResult? ActionResult = filterContext.Result;
-                if (ActionResult is OkObjectResult json)
+                string httpMethod = filterContext.HttpContext.Request.Method;
+
+                if (!string.Equals(httpMethod, "GET", StringComparison.OrdinalIgnoreCase))
                 {
-                    dynamic DynamicObject = json.Value;
+                    IActionResult? ActionResult = filterContext.Result;
+                    if (ActionResult is OkObjectResult json)
+                    {
+                        dynamic DynamicObject = json.Value;
 
-                    LogUserAction NewLog = new LogUserAction();
+                        LogUserAction NewLog = new LogUserAction();
 
-                    // 1. Date..
-                    NewLog.Date = DateTime.UtcNow;
+                        // 1. Date..
+                        NewLog.Date = DateTime.UtcNow;
 
-                    // 2. User Id..
-                    if (UserId != null)
-                        NewLog.UserId = UserId.Value;
+                        // 2. User Id..
+                        if (UserId != null)
+                            NewLog.UserId = UserId.Value;
 
-                    // 3. Controller Name..
-                    List<object> Controller_Function_Name = filterContext.RouteData.Values.Values.ToList();
-                    NewLog.ControllerName = Controller_Function_Name[1].ToString();
+                        // 3. Controller Name..
+                        List<object> Controller_Function_Name = filterContext.RouteData.Values.Values.ToList();
+                        NewLog.ControllerName = Controller_Function_Name[1].ToString();
 
-                    // 4. Function Name..
-                    NewLog.FunctionName = Controller_Function_Name[0].ToString();
+                        // 4. Function Name..
+                        NewLog.FunctionName = Controller_Function_Name[0].ToString();
 
-                    // 5. Body Parameters..
-                    IDictionary<string, object> Parameters = MyParametersList.Where(x =>
-                        x.GuidId.ToString() == filterContext.HttpContext.TraceIdentifier).Select(x => x.Parameters).FirstOrDefault();
+                        // 5. Body Parameters..
+                        IDictionary<string, object> Parameters = MyParametersList.Where(x =>
+                            x.GuidId.ToString() == filterContext.HttpContext.TraceIdentifier).Select(x => x.Parameters).FirstOrDefault();
 
-                    NewLog.BodyParameters = Newtonsoft.Json.JsonConvert.SerializeObject(Parameters);
+                        NewLog.BodyParameters = Newtonsoft.Json.JsonConvert.SerializeObject(Parameters);
 
-                    // 6. Header Paramaters..
-                    NewLog.HeaderParameters = Newtonsoft.Json.JsonConvert.SerializeObject(filterContext.HttpContext.Request.Headers);
+                        // 6. Header Paramaters..
+                        NewLog.HeaderParameters = Newtonsoft.Json.JsonConvert.SerializeObject(filterContext.HttpContext.Request.Headers);
 
-                    // 7. Response Status..
-                    NewLog.ResponseStatus = "Succeed";
+                        // 7. Response Status..
+                        NewLog.ResponseStatus = "Succeed";
 
 
-                    // 8. Result...
-                    NewLog.Result = Newtonsoft.Json.JsonConvert.SerializeObject(DynamicObject);
+                        // 8. Result...
+                        NewLog.Result = Newtonsoft.Json.JsonConvert.SerializeObject(DynamicObject);
 
-                    // 9. Activity Id...
-                    NewLog.ActivityId = Trace.CorrelationManager.ActivityId;
+                        // 9. Activity Id...
+                        NewLog.ActivityId = Trace.CorrelationManager.ActivityId;
 
-                    _LogUserActionRepository.AddAsync(NewLog);
+                        _LogUserActionRepository.AddAsync(NewLog);
+                    }
                 }
             }
         }
