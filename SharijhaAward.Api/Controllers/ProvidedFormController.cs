@@ -15,6 +15,10 @@ using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedFormsForAllSubscriber;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.AsignFormToCoordinator;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.AsignFormToArbitrator;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.UnAsignFormToArbitrator;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.UnAsignFormToCoordinator;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -202,5 +206,111 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+
+        [HttpPost("AsignFormToCoordinator", Name = "AsignFormToCoordinator")]
+        public async Task<IActionResult> AsignFormToCoordinator(AsignFormToCoordinatorQuery query)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+            query.token = token!;
+            query.lang = Language!;
+
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpDelete("UnAsignFormToCoordinator", Name = "UnAsignFormToCoordinator")]
+        public async Task<IActionResult> UnAsignFormToCoordinator([FromQuery] UnAsignFormToCoordinatorQuery query)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+            query.token = token!;
+            query.lang = Language!;
+
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPost("AsignFormToArbitrator", Name = "AsignFormToArbitrator")]
+        public async Task<IActionResult> AsignFormToArbitrator(AsignFormToArbitratorQuery query)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+            query.token = token!;
+            query.lang = Language!;
+
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpDelete("UnAsignFormToArbitrator", Name = "UnAsignFormToArbitrator")]
+        public async Task<IActionResult> UnAsignFormToArbitrator([FromQuery] UnAsignFormToArbitratorQuery query)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+            query.token = token!;
+            query.lang = Language!;
+
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        } 
+        
+
     }
 }

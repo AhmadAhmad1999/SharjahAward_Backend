@@ -15,10 +15,12 @@ using SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById
 using SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoordinator;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorByFormId;
 
 namespace SharijhaAward.Api.Controllers
 {
-    [ServiceFilter(typeof(LogFilterAttribute))]
+    // [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class CoordinatorController : ControllerBase
@@ -167,7 +169,7 @@ namespace SharijhaAward.Api.Controllers
 
             query.lang = HeaderValue!;
             
-            BaseResponse<List<GetAllCoordinatorsListVM>> Response = await _mediator.Send(query);
+            BaseResponse<List<CoordinatorsListVM>> Response = await _mediator.Send(query);
 
             return Response.statusCode switch
             {
@@ -282,6 +284,38 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
+
+        [HttpGet("GetAllCoordinatorsByFormId/{formId}", Name = "GetAllCoordinatorsByFormId")]
+        public async Task<IActionResult> GetAllCoordinatorsByFormId(int formId)
+        {
+            string token = HttpContext.Request.Headers.Authorization!;
+
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+
+            var Response = await _mediator.Send(new GetCoordinatorByFormIdQuery()
+            {
+                formId = formId,
+                lang = HeaderValue!,
+                token = token
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+
 
         [HttpGet("CoordinatorExportToExcel", Name="CoordinatorExportToExcel")]
         public async Task<IActionResult> CoordinatorExportToExcel()

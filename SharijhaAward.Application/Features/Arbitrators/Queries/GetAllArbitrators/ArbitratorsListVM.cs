@@ -1,6 +1,6 @@
 ﻿namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators
 {
-    public class GetAllArbitratorsListVM
+    public class ArbitratorsListVM
     {
         public int Id { get; set; }
         public string ArabicName { get; set; } = null!;

@@ -640,8 +640,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Criterion, GetMainCriterionByIdDto>().ReverseMap();
             CreateMap<Criterion, SubCriterionListDto>().ReverseMap();
             CreateMap<CriterionItem, CriterionItemListDto>().ReverseMap();
-            CreateMap<Coordinator, GetAllCoordinatorsListVM>().ReverseMap();
-            CreateMap<Arbitrator, GetAllArbitratorsListVM>().ReverseMap();
+            CreateMap<Coordinator, CoordinatorsListVM>().ReverseMap();
+            CreateMap<Arbitrator, ArbitratorsListVM>().ReverseMap();
             CreateMap<Arbitrator, ArbitratorDto>().ReverseMap();
             CreateMap<EducationalEntity, GetEducationalEntityByIdDto>().ReverseMap();
             CreateMap<EducationalClass, GetAllClassesListVM>().ReverseMap();

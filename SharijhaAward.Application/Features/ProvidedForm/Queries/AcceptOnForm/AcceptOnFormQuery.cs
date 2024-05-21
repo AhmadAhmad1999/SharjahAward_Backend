@@ -12,6 +12,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.AcceptOnForm
     {
         public int formId { get; set; }
         public bool IsAccepted { get; set; }
+        public string? ReasonOfRejection { get; set; }
         public string? token { get; set; }
 
     }

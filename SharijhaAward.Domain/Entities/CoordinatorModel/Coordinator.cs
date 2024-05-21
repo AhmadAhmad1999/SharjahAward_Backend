@@ -1,5 +1,6 @@
 ﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants;
+using SharijhaAward.Domain.Entities.CoordinatorFormModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 
@@ -17,6 +18,7 @@ namespace SharijhaAward.Domain.Entities.CoordinatorModel
         public string PersonalPhoto { get; set; } = string.Empty;
 
         public List<EduEntitiesCoordinator>? EducationCoordinators { get; set; } 
-        public List<EduInstitutionCoordinator>? InstitutionCoordinators {  get; set; } 
+        public List<EduInstitutionCoordinator>? InstitutionCoordinators {  get; set; }
+        public List<CoordinatorForm> CoordinatorForms { get; set; } = null!;
     }
 }

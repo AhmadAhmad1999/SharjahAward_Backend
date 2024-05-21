@@ -2,7 +2,7 @@
 
 namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators
 {
-    public class GetAllCoordinatorsListVM
+    public class CoordinatorsListVM
     {
         public int Id { get; set; }
         public string ArabicName { get; set; } = null!;

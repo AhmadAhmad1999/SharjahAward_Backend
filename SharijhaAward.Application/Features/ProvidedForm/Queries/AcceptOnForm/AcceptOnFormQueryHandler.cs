@@ -43,6 +43,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.AcceptOnForm
             }
 
             form.IsAccepted = request.IsAccepted;
+            form.ReasonOfRejection = request.ReasonOfRejection;
 
             await _formRepository.UpdateAsync(form);
 
