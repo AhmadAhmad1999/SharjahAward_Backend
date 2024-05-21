@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorsB
                 return new BaseResponse<List<ArbitratorsListVM>>("UnAuht", false, 401);
             }
 
-            var form = await _arbitratorFormRepository.GetByIdAsync(request.formId);
+            var form = await _providedFormRepository.GetByIdAsync(request.formId);
             if (form == null)
             {
                 return new BaseResponse<List<ArbitratorsListVM>>("Form Not Found", false, 404);

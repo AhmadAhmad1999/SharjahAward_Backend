@@ -81,8 +81,8 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                     if (ParentMessage == null)
                     {
                         msg = request.lang == "en"
-                      ? "Message Not Found"
-                      : "الرسالة غير موجودة";
+                        ? "Message Not Found"
+                        : "الرسالة غير موجودة";
 
                         return new BaseResponse<int>(msg, false, 400);
 

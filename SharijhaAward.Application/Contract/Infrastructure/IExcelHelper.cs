@@ -10,5 +10,6 @@ namespace SharijhaAward.Application.Contract.Infrastructure
     {
         public byte[] ExportToExcel (List<T> data);
         public byte[] GeneratePrototype();
+        public List<T> ImportFromExcel(byte[] fileContent);
     }
 }

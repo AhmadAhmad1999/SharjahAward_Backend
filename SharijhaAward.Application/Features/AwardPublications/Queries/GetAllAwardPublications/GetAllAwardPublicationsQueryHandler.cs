@@ -41,7 +41,10 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwa
             var AwardPublications = await _awardPublicationRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id,request.page,request.pageSize);
 
             var data = _mapper.Map<List<AwardPublicationListVM>>(AwardPublications);
-
+            foreach (var item in data)
+            {
+                item.CycleName = Cycle.ArabicName;
+            }
             var Count = _awardPublicationRepository.GetCount(a => !a.isDeleted && a.CycleId == Cycle.Id);
             
             Pagination pagination = new Pagination(request.page, request.pageSize, Count);

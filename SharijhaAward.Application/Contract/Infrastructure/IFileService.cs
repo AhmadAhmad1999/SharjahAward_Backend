@@ -12,6 +12,7 @@ namespace SharijhaAward.Application.Contract.Infrastructure
     public interface IFileService
     {
         Task<string> SaveFileAsync(IFormFile file);
+        Task<string> SaveFileAndGetPath(IFormFile file);
         Task<byte[]> ReadFileAsync(string filePath);
     }
 }

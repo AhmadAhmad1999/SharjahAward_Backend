@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.UnAsignFormToC
             var adminId = _jwtProvider.GetUserIdFromToken(request.token);
             var Admin = await _userRepository.GetByIdAsync(int.Parse(adminId));
         
-            if(Admin == null || _userTokenRepository.FirstOrDefault(t => t.UserId == Admin.Id && t.Token == request.token) == null)
+            if(Admin == null)
             {
                 return new BaseResponse<object>("", false, 401);
             }
