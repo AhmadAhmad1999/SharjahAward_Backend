@@ -339,9 +339,6 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-
-
-        }
         [HttpGet("GetAllCriterionsForCoordinator")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
