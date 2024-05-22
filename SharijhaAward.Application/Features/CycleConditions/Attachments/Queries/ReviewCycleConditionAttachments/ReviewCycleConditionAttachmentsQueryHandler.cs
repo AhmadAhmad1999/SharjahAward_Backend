@@ -55,7 +55,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Queries
                 return new BaseResponse<List<CycleConditionListVM>>("", false, 400);
             }
 
-            var Terms = _cycleConditionRepository.WhereThenInclude(t => t.CycleId == Cycle.Id && t.NeedAttachment==true, t => t.ConditionAttachments).ToList();
+            var Terms = _cycleConditionRepository.WhereThenInclude(t => t.CycleId == Cycle.Id, t => t.ConditionAttachments).ToList();
 
             List<CycleConditionsProvidedForm> conditionsProvideds = new List<CycleConditionsProvidedForm>();
 
@@ -76,8 +76,8 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Queries
             {
 
                 data[i].Attachments = _mapper.Map<List<CycleConditionAttachmentListVm>>(conditionsProvideds[i].Attachments);
-
-
+                data[i].Acceptance = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvideds[i]);
+                    
                 data[i].Title = request.lang == "en"
                     ? data[i].EnglishTitle
                     : data[i].ArabicTitle;

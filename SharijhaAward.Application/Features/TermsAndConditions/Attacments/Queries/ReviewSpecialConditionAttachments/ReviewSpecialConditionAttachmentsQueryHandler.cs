@@ -56,7 +56,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queri
                 return new BaseResponse<List<SpecialTermAndConditionListVM>>("Form not Found", false, 404);
             }
             var Terms = _termRepository
-                .WhereThenInclude(t => t.CategoryId == form.categoryId && t.NeedAttachment == true, t => t.ConditionAttachments)
+                .WhereThenInclude(t => t.CategoryId == form.categoryId , t => t.ConditionAttachments)
                 .OrderByDescending(x => x.CreatedAt).ToList();
 
             List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
@@ -76,7 +76,9 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queri
 
             for (int i = 0; i < data.Count; i++)
             {
-                data[i].Attachments = _mapper.Map<List<AttachmentListVM>>(conditionsProvideds[i].Attachments);
+                
+                data[i].Attachments =  _mapper.Map<List<AttachmentListVM>>(conditionsProvideds[i].Attachments);
+                data[i].Acceptance = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
 
                 data[i].Title = request.lang == "en"
                     ? data[i].EnglishTitle
