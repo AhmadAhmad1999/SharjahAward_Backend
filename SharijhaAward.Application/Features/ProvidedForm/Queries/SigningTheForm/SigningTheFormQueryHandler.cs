@@ -57,7 +57,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
             {
                 
                 form.PercentCompletion = 100;
-                form.CurrentStep = 7;
+                form.CurrentStep = 6;
 
                 await _formRepository.UpdateAsync(form);
                 msg = request.lang == "en"

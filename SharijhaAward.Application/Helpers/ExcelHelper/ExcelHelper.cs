@@ -8,12 +8,24 @@ using System.Threading.Tasks;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Domain.Entities.LoggerModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace SharijhaAward.Infrastructure.ExcelHelper
+namespace SharijhaAward.Application.Helpers.ExcelHelper
 {
     public class ExcelHelper<T> : IExcelHelper<T> where T : class
     {
+        private IServiceProvider _ServiceProvider;
         
+
+        public ExcelHelper(IServiceProvider serviceProvider)
+        {
+            _ServiceProvider = serviceProvider;
+        }
+
+        IAsyncRepository<object> AnynomousTable;
         public byte[] ExportToExcel (List<T> data)
         {
             var workbook = new XSSFWorkbook();
@@ -151,6 +163,11 @@ namespace SharijhaAward.Infrastructure.ExcelHelper
                             var stringListValue = cellValue.Split(',').Select(s => s.Trim()).ToList();
                             property.SetValue(item, stringListValue);
                         }
+                        else if(property.Name.EndsWith("Id") && property.PropertyType == typeof(int))
+                        {
+                            IAsyncRepository<EducationalEntity> _educationalEntityRepository = _ServiceProvider.GetService<IAsyncRepository<EducationalEntity>>();
+                            int EducationalEntityId = _educationalEntityRepository.FirstOrDefault(e => e.ArabicName == "").Id;
+                        }
                     }
                 }
 
@@ -227,15 +244,20 @@ namespace SharijhaAward.Infrastructure.ExcelHelper
 
         private List<string> GetForeignKeyValues(string foreignKeyName)
         {
-            switch (foreignKeyName)
-            {
-                case "EducationalEntityId":
-                    return new List<string> { "Category1", "Category2", "Category3" };
-                case "SupplierId":
-                    return new List<string> { "Supplier1", "Supplier2", "Supplier3" };
-                default:
-                    return null;
-            }
+            //string TableName = foreignKeyName.Split("Id")[0];
+
+           // using (var context = new )
+                switch (foreignKeyName)
+                {
+                    case "EducationalEntityId":
+                        {
+                            IAsyncRepository<EducationalEntity> _educationalEntityRepository = _ServiceProvider.GetService<IAsyncRepository<EducationalEntity>>();
+                            var Edu = _educationalEntityRepository.Select(e => e.ArabicName).ToList();
+                            return Edu;
+                        }
+                    default:
+                        return null;
+                }
         }
     }
 }
