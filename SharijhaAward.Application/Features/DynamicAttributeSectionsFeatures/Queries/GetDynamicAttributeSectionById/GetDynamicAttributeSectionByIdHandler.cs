@@ -36,6 +36,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         Id = x.Id,
                         ArabicName = x.ArabicName,
                         EnglishName = x.EnglishName,
+                        TableTypeSection = x.TableTypeSection
                     }).FirstOrDefaultAsync());
 
             if (DynamicAttributeSection == null)

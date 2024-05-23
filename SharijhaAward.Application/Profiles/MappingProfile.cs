@@ -308,6 +308,7 @@ using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStat
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.CreateFinalArbitrationScore;
 using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.UpdateChairmanNotesOnFinalArbitrationScore;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllCriterionsForCoordinator;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -670,6 +671,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Category, GetAllSubCategoriesListVM>().ReverseMap();
             CreateMap<AppVersion, GetAllAppVersionsListVM>().ReverseMap();
             CreateMap<Interview, GetAllInterviewsForInterviewStepListVM>().ReverseMap();
+            CreateMap<CriterionAttachment, GetAllCriterionsForCoordinatorAttachment>().ReverseMap();
+            CreateMap<CriterionItemAttachment, GetAllCriterionsForCoordinatorAttachment>().ReverseMap();
         }
     }
 }

@@ -18,17 +18,20 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
         private readonly IAsyncRepository<ConditionAttachment> _ConditionAttachmentRepository;
         private readonly IAsyncRepository<CycleConditionAttachment> _CycleConditionAttachmentRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
         public GetFilePathByIdHandler(IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
             IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository,
             IAsyncRepository<ConditionAttachment> ConditionAttachmentRepository,
             IAsyncRepository<CycleConditionAttachment> CycleConditionAttachmentRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository)
         {
             _CriterionAttachmentRepository = CriterionAttachmentRepository;
             _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
             _ConditionAttachmentRepository = ConditionAttachmentRepository;
             _CycleConditionAttachmentRepository = CycleConditionAttachmentRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
         }
 
         public async Task<BaseResponse<GetFilePathByIdDto>>
@@ -120,28 +123,54 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, true, 200, Response);
             }
-            else if (Request.FilterId == (int)FilesFilter.SubscriberPersonalAndAcademicInformation)
+            else if (Request.FilterId == (int)FilesFilter.SubscriberPersonalAndAcademicInformation ||
+                Request.FilterId == (int)FilesFilter.CoordinatorFiles ||
+                Request.FilterId == (int)FilesFilter.ArbitratorFiles)
             {
-                DynamicAttributeValue? DynamicAttributeValueEntity = await _DynamicAttributeValueRepository
-                    .FirstOrDefaultAsync(x => x.Id == Request.Id);
-
-                if (DynamicAttributeValueEntity is null)
+                if (Request.RowId is null)
                 {
-                    ResponseMessage = Request.lang == "en"
-                        ? "Personal and academic information attachment is not Found"
-                        : "ملف الاستمارة غير موجود";
+                    DynamicAttributeValue? DynamicAttributeValueEntity = await _DynamicAttributeValueRepository
+                        .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
-                    return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, false, 404);
+                    if (DynamicAttributeValueEntity is null)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? "Personal and academic information attachment is not Found"
+                            : "ملف الاستمارة غير موجود";
+
+                        return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, false, 404);
+                    }
+
+                    GetFilePathByIdDto Response = new GetFilePathByIdDto()
+                    {
+                        FilePath = DynamicAttributeValueEntity.Value
+                    };
+
+                    return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, true, 200, Response);
                 }
-
-                GetFilePathByIdDto Response = new GetFilePathByIdDto()
+                else
                 {
-                    FilePath = DynamicAttributeValueEntity.Value
-                };
+                    DynamicAttributeTableValue? DynamicAttributeTableValueEntity = await _DynamicAttributeTableValueRepository
+                        .FirstOrDefaultAsync(x => x.Id == Request.Id && x.RowId == Request.RowId);
 
-                return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, true, 200, Response);
+                    if (DynamicAttributeTableValueEntity is null)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? "Personal and academic information attachment is not Found"
+                            : "ملف الاستمارة غير موجود";
+
+                        return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, false, 404);
+                    }
+
+                    GetFilePathByIdDto Response = new GetFilePathByIdDto()
+                    {
+                        FilePath = DynamicAttributeTableValueEntity.Value
+                    };
+
+                    return new BaseResponse<GetFilePathByIdDto>(ResponseMessage, true, 200, Response);
+                }
             }
-
+            
             throw new NotImplementedException();
         }
     }

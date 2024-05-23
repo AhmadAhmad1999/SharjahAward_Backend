@@ -15,6 +15,11 @@ namespace SharijhaAward.Persistence
     {
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
         {
+            // Production Database..
+            //services.AddDbContext<SharijhaAwardDbContext>(options =>
+            //    options.UseSqlServer(connectionString: configuration.GetConnectionString("PRODConnection")));
+
+            // Default Database..
             services.AddDbContext<SharijhaAwardDbContext>(options =>
                 options.UseSqlServer(connectionString: configuration.GetConnectionString("DefaultConnection")));
             

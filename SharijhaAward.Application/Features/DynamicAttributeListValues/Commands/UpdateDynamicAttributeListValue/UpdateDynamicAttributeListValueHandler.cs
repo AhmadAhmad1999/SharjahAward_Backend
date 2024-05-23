@@ -11,14 +11,17 @@ namespace SharijhaAward.Application.Features.DynamicAttributeListValues.Commands
     {
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
         private readonly IMapper _Mapper;
 
         public UpdateDynamicAttributeListValueHandler(IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
             IMapper Mapper)
         {
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
             _Mapper = Mapper;
         }
         public async Task<BaseResponse<object>> Handle(UpdateDynamicAttributeListValueCommand Request, CancellationToken cancellationToken)
@@ -26,7 +29,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeListValues.Commands
             string ResponseMessage = string.Empty;
 
             DynamicAttributeListValue? DynamicAttributeListValueOldData = await _DynamicAttributeListValueRepository
-                .GetByIdAsync(Request.Id);
+                .Include(x => x.DynamicAttribute!)
+                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (DynamicAttributeListValueOldData == null)
             {
@@ -53,9 +58,15 @@ namespace SharijhaAward.Application.Features.DynamicAttributeListValues.Commands
 
                     await _DynamicAttributeListValueRepository.UpdateAsync(DynamicAttributeListValueOldData);
 
-                    await _DynamicAttributeValueRepository
-                        .Where(x => x.DynamicAttributeId == DynamicAttributeListValueOldData.DynamicAttributeId)
-                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.Value, Request.Value));
+                    if (!DynamicAttributeListValueOldData.DynamicAttribute!.DynamicAttributeSection!.TableTypeSection)
+                        await _DynamicAttributeValueRepository
+                            .Where(x => x.DynamicAttributeId == DynamicAttributeListValueOldData.DynamicAttributeId)
+                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.Value, Request.Value));
+
+                    else
+                        await _DynamicAttributeTableValueRepository
+                            .Where(x => x.DynamicAttributeId == DynamicAttributeListValueOldData.DynamicAttributeId)
+                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.Value, Request.Value));
 
                     Transaction.Complete();
 

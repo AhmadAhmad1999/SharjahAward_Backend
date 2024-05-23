@@ -42,6 +42,12 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.A
             {
                 try
                 {
+                    float? FinalArbitrationQualificationMark = await _ArbitrationRepository
+                        .Include(x => x.ProvidedForm!)
+                        .Include(x => x.ProvidedForm!.Category!)
+                        .Select(x => x.ProvidedForm!.Category!.FinalArbitrationQualificationMark)
+                        .FirstOrDefaultAsync();
+
                     await _ArbitrationRepository
                         .Where(x => x.ProvidedFormId == Request.FormId)
                         .ExecuteUpdateAsync(x => x.SetProperty(y => y.FullScore, Request.FinalScore));
@@ -52,8 +58,11 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.A
 
                     FinalArbitration? CheckIfFinalArbitrationEntityIsAlreadyExist = await _FinalArbitrationRepository
                         .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
-                    
-                    if (CheckIfFinalArbitrationEntityIsAlreadyExist is null)
+
+                    if (CheckIfFinalArbitrationEntityIsAlreadyExist is null &&
+                        (FinalArbitrationQualificationMark is not null
+                            ? Request.FinalScore >= FinalArbitrationQualificationMark
+                            : false))
                     {
                         FinalArbitration NewFinalArbitrationEntity = new FinalArbitration()
                         {
@@ -70,11 +79,21 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.A
 
                         await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);
                     }
-                    else
+                    else if (CheckIfFinalArbitrationEntityIsAlreadyExist is not null &&
+                        (FinalArbitrationQualificationMark is not null
+                            ? Request.FinalScore >= FinalArbitrationQualificationMark
+                            : false))
                     {
                         CheckIfFinalArbitrationEntityIsAlreadyExist.FullScore = Request.FinalScore;
 
                         await _FinalArbitrationRepository.UpdateAsync(CheckIfFinalArbitrationEntityIsAlreadyExist);
+                    }
+                    else if (CheckIfFinalArbitrationEntityIsAlreadyExist is not null &&
+                        (FinalArbitrationQualificationMark is not null
+                            ? Request.FinalScore < FinalArbitrationQualificationMark
+                            : false))
+                    {
+                        await _FinalArbitrationRepository.DeleteAsync(CheckIfFinalArbitrationEntityIsAlreadyExist);
                     }
 
                     Transaction.Complete();

@@ -94,6 +94,7 @@ namespace SharijhaAward.Persistence
 
         }
 
+        public DbSet<DynamicAttributeTableValue> DynamicAttributeTableValue { get; set; }
         public DbSet<FinalArbitrationScore> FinalArbitrationScores { get; set; }
         public DbSet<ChairmanNotesOnFinalArbitrationScore> ChairmanNotesOnFinalArbitrationScores { get; set; }
         public DbSet<FinalArbitration> FinalArbitrations { get; set; }
@@ -222,6 +223,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<UserToken>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<UserNotification>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ChairmanNotesOnFinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributeTableValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<FinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<FinalArbitration>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<InterviewAttachment>().HasQueryFilter(p => !p.isDeleted);

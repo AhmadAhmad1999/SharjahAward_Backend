@@ -2,14 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
@@ -19,14 +13,17 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
     {
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public AddDynamicAttributeValueForSaveHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
             IHttpContextAccessor HttpContextAccessor)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
             _HttpContextAccessor = HttpContextAccessor;
         }
 
@@ -34,19 +31,18 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
             CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
-            foreach (AddDynamicAttributeValueForSaveMainCommand InputDynamicAttributeWithValues in Request.DynamicAttributesWithValues)
+
+            int DynamicAttributeEntitiesCount = await _DynamicAttributeRepository
+                .Where(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId).Contains(x.Id))
+                .CountAsync();
+
+            if (DynamicAttributeEntitiesCount != Request.DynamicAttributesWithValues.Count())
             {
-                DynamicAttribute? DynamicAttributeEntity = await _DynamicAttributeRepository
-                    .IncludeThenFirstOrDefaultAsync(x => x.AttributeDataType!, x => x.Id == InputDynamicAttributeWithValues.DynamicAttributeId);
+                ResponseMessage = Request.lang == "en"
+                    ? "Field is not found"
+                    : "الحقل غير موجود";
 
-                if (DynamicAttributeEntity == null)
-                {
-                    ResponseMessage = Request.lang == "en"
-                        ? "Field is not found"
-                        : "الحقل غير موجود";
-
-                    return new BaseResponse<AddDynamicAttributeValueForSaveResponse>(ResponseMessage, false, 404);
-                }
+                return new BaseResponse<AddDynamicAttributeValueForSaveResponse>(ResponseMessage, false, 404);
             }
 
             using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -108,6 +104,64 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                         }).ToList();
 
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
+
+                    List<DynamicAttributeTableValue> DynamicAttributeTableValueEnititiesToDelete = await _DynamicAttributeTableValueRepository
+                        .Where(x => x.RecordId == Request.RecordId)
+                        .ToListAsync();
+
+                    if (DynamicAttributeTableValueEnititiesToDelete.Any())
+                        await _DynamicAttributeTableValueRepository.DeleteListAsync(DynamicAttributeTableValueEnititiesToDelete);
+
+                    List<AddDynamicAttributeTableValueForSaveMainCommand> DynamicAttributesTableValueAsFile = Request.DynamicAttributesWithTableValues
+                        .Where(x => x.ValueAsBinaryFile != null).ToList();
+
+                    foreach (AddDynamicAttributeTableValueForSaveMainCommand DynamicAttributeAsFile in DynamicAttributesTableValueAsFile)
+                    {
+                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                        string FolderPath = isHttps
+                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
+                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
+
+                        string? FileName = $"{Request.RecordId}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
+
+                        string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
+
+                        string? FolderPathToCreate = Request.WWWRootFilePath!;
+                        string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
+
+                        while (File.Exists(FilePathToSaveIntoDataBase))
+                        {
+                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
+                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
+                        }
+
+                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                        {
+                            DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(FileStream);
+                        }
+
+                        DynamicAttributeAsFile.ValueAsBinaryFile = null;
+                        DynamicAttributeAsFile.ValueAsString = FilePathToSaveIntoDataBase;
+                    }
+
+                    List<DynamicAttributeTableValue> DynamicAttributeTableValueEntitiesToAdd = Request.DynamicAttributesWithTableValues
+                        .Where(x => !string.IsNullOrEmpty(x.ValueAsString))
+                        .Select(x => new DynamicAttributeTableValue()
+                        {
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            DeletedAt = null,
+                            DynamicAttributeId = x.DynamicAttributeId,
+                            isDeleted = false,
+                            RecordId = Request.RecordId,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            Value = x.ValueAsString!,
+                            RowId = x.RowId
+                        }).ToList();
+
+                    await _DynamicAttributeTableValueRepository.AddRangeAsync(DynamicAttributeTableValueEntitiesToAdd);
 
                     Transaction.Complete();
 

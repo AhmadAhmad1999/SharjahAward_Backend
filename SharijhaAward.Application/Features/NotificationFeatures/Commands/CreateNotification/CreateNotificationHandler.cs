@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Commands.Creat
                     await _NotificationRepository.AddAsync(NewNotificationEntity);
 
                     List<FirebaseAdmin.Messaging.Message> NotificationMessages = await _UserTokenRepository
-                        .Where(x => Request.UsersIds.Contains(x.UserId))
+                        .Where(x => Request.UsersIds.Any(y => y == x.UserId))
                         .Include(x => x.User!)
                         .Select(x => x.AppLanguage == "en"
                             ? new FirebaseAdmin.Messaging.Message()
@@ -69,11 +69,11 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Commands.Creat
                             }).ToListAsync();
 
                     List<UserNotification> UserNotificationEntities = await _UserTokenRepository
-                        .Where(x => Request.UsersIds.Contains(x.UserId))
-                        .DistinctBy(x => x.UserId)
+                        .Where(x => Request.UsersIds.Any(y => y == x.UserId))
+                        .GroupBy(x => x.UserId)
                         .Select(x => new UserNotification()
                         {
-                            UserId = x.UserId,
+                            UserId = x.Key,
                             NotificationId = NewNotificationEntity.Id,
                             isReaded = false
                         }).ToListAsync();

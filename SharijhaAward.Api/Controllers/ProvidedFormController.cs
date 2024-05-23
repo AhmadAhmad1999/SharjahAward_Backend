@@ -1,9 +1,6 @@
-﻿using Aspose.Pdf;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvidedForm;
 using SharijhaAward.Application.Features.ProvidedForm.Command.DeleteProvidedForm;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.ChangeStep;
@@ -11,8 +8,6 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForm
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsBySubscriberId;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFormById;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm;
-using SharijhaAward.Domain.Constants.ProvidedFromConstants;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedFormsForAllSubscriber;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.AsignFormToCoordinator;

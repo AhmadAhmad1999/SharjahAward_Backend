@@ -10,9 +10,12 @@ namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
     public class RejectDynamicAttributeValueHandler : IRequestHandler<RejectDynamicAttributeValueMainCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
-        public RejectDynamicAttributeValueHandler(IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
+        private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
+        public RejectDynamicAttributeValueHandler(IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository)
         {
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
         }
         public async Task<BaseResponse<object>> Handle(RejectDynamicAttributeValueMainCommand Request, CancellationToken cancellationToken)
         {
@@ -22,11 +25,31 @@ namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
 
             foreach (DynamicAttributeValue DynamicAttributeValueEntity in DynamicAttributeValueEntities)
             {
-                RejectDynamicAttributeValueCommand RequestCommand = Request.RejectDynamicAttributeValueCommand
-                    .FirstOrDefault(x => x.DynamicAttributesId == DynamicAttributeValueEntity.DynamicAttributeId)!;
+                RejectDynamicAttributeValueCommand? RequestCommand = Request.RejectDynamicAttributeValueCommand
+                    .FirstOrDefault(x => x.DynamicAttributesId == DynamicAttributeValueEntity.DynamicAttributeId);
 
-                DynamicAttributeValueEntity.isAccepted = RequestCommand.isAccepted;
-                DynamicAttributeValueEntity.ReasonForRejecting = RequestCommand.ReasonForRejecting;
+                if (RequestCommand is not null)
+                {
+                    DynamicAttributeValueEntity.isAccepted = RequestCommand.isAccepted;
+                    DynamicAttributeValueEntity.ReasonForRejecting = RequestCommand.ReasonForRejecting;
+                }
+            }
+
+            List<DynamicAttributeTableValue> DynamicAttributeTableValueEntities = await _DynamicAttributeTableValueRepository
+                .Where(x => Request.RejectDynamicAttributeValueCommand.Select(y => y.DynamicAttributesId).Contains(x.DynamicAttributeId))
+                .ToListAsync();
+
+            foreach (DynamicAttributeTableValue DynamicAttributeTableValueEntity in DynamicAttributeTableValueEntities)
+            {
+                RejectDynamicAttributeValueCommand? RequestCommand = Request.RejectDynamicAttributeValueCommand
+                    .FirstOrDefault(x => x.DynamicAttributesId == DynamicAttributeTableValueEntity.DynamicAttributeId && 
+                        x.RowId == DynamicAttributeTableValueEntity.RowId);
+
+                if (RequestCommand is not null)
+                {
+                    DynamicAttributeTableValueEntity.isAccepted = RequestCommand.isAccepted;
+                    DynamicAttributeTableValueEntity.ReasonForRejecting = RequestCommand.ReasonForRejecting;
+                }
             }
 
             TransactionOptions TransactionOptions = new TransactionOptions
@@ -41,6 +64,7 @@ namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
                 try
                 {
                     await _DynamicAttributeValueRepository.UpdateListAsync(DynamicAttributeValueEntities);
+                    await _DynamicAttributeTableValueRepository.UpdateListAsync(DynamicAttributeTableValueEntities);
 
                     Transaction.Complete();
 
