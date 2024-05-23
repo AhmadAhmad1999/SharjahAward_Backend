@@ -36,7 +36,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
             List<GetAllDynamicAttributeForDependencyListVM> DynamicAttributes = await _DynamicAttributeRepository
                 .Include(x => x.DynamicAttributeSection!)
                 .Where(x => x.DynamicAttributeSection!.RecordIdOnRelation == Request.CategoryId &&
-                    x.DynamicAttributeSection.AttributeTableNameId == Request.AttributeTableNameId)
+                    x.DynamicAttributeSection!.AttributeTableNameId == Request.AttributeTableNameId &&
+                    !x.DynamicAttributeSection!.TableTypeSection)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new GetAllDynamicAttributeForDependencyListVM()
                 {

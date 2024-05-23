@@ -1,11 +1,5 @@
 ﻿using MediatR;
-using SharijhaAward.Application.Features.DynamicAttributeListValues.Commands.CreateDynamicAttributeListValue;
 using SharijhaAward.Application.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 {
@@ -13,6 +7,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
     {
         public int RecordId { get; set; }
         public List<AddDynamicAttributeValueMainCommand> DynamicAttributesWithValues { get; set; } = new List<AddDynamicAttributeValueMainCommand>();
+        public List<AddDynamicAttributeTableValueMainCommand> DynamicAttributesWithTableValues { get; set; } = new List<AddDynamicAttributeTableValueMainCommand>();
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }
     }

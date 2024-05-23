@@ -1,11 +1,5 @@
 ﻿using MediatR;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection
 {
@@ -15,6 +9,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
         public string EnglishName { get; set; } = null!;
         public int AttributeTableNameId { get; set; }
         public int? RecordIdOnRelation { get; set; }
+        public bool TableTypeSection { get; set; }
         public string? lang { get; set; }
     }
 }

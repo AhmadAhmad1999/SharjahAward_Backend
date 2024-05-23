@@ -3,6 +3,7 @@
     public class GetAllFilesByFilterListVM
     {
         public int Id { get; set; }
+        public int? RowId { get; set; }
         public string FileName { get; set; } = null!;
         public int FileSizeInKB { get; set; }
         public DateTime UploadedAt { get; set; }

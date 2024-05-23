@@ -59,7 +59,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetFilePathById(int Id, int FilterId)
+        public async Task<IActionResult> GetFilePathById(int Id, int? RowId, int FilterId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -70,7 +70,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 Id = Id,
                 FilterId = FilterId,
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                RowId = RowId
             });
 
             return Response.statusCode switch
@@ -88,7 +89,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DownloadFilesByIds([FromQuery] List<int> Ids, int FilterId, bool DownloadAllFiles)
+        public async Task<IActionResult> DownloadFilesByIds([FromQuery] List<int> Ids, List<int> TableAttributeIds, int FilterId, bool DownloadAllFiles)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -101,7 +102,8 @@ namespace SharijhaAward.Api.Controllers
                     Ids = Ids,
                     lang = HeaderValue,
                     FilterId = FilterId,
-                    DownloadAllFiles = DownloadAllFiles
+                    DownloadAllFiles = DownloadAllFiles,
+                    TableAttributeIds = TableAttributeIds
                 });
 
             return Response.statusCode switch

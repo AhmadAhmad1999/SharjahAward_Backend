@@ -5,6 +5,6 @@
         public int Id { get; set; }
         public int OrderId { get; set; }
         public string Name { get; set; } = null!;
-        public List<GetAllCriterionsForCoordinatorAttachment> GetAllCriterionsForCoordinatorAttachment { get; set; } = new List<GetAllCriterionsForCoordinatorAttachment>();
+        public List<GetAllCriterionsForCoordinatorAttachment> SubCriterionItemAttachments { get; set; } = new List<GetAllCriterionsForCoordinatorAttachment>();
     }
 }

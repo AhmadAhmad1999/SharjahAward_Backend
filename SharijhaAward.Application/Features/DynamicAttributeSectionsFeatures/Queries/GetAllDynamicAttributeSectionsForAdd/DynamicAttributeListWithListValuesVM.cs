@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
-using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd
 {
@@ -19,6 +12,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         public bool isRequired { get; set; }
         public string? InsertedValueAsString { get; set; }
         public string? InsertedValueAsBinaryFilePath { get; set; }
+        public int RowId { get; set; }
         public bool? isAccepted { get; set; }
         public string? ReasonForRejecting { get; set; }
         public int? MaxSizeInKB { get; set; }

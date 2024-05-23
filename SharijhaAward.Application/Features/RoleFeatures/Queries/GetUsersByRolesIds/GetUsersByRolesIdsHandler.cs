@@ -30,11 +30,11 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRole
             List<UsersInRoleDto> UsersInRoleDtos = await _UserTokenRepository
                 .Include(x => x.User!)
                 .Where(x => UserIds.Contains(x.UserId) && x.User!.isValidAccount)
-                .DistinctBy(x => x.UserId)
+                .GroupBy(x => x.UserId)
                 .Select(x => new UsersInRoleDto()
                 {
-                    Id = x.UserId,
-                    Email = x.User!.Email
+                    Id = x.Key,
+                    Email = x.First().User!.Email
                 }).ToListAsync();
 
             return new BaseResponse<List<UsersInRoleDto>>(ResponseMessage, true, 200, UsersInRoleDtos);

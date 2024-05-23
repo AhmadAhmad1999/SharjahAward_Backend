@@ -7,7 +7,6 @@ using SharijhaAward.Domain.Constants.DynamicAttribute;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using RestSharp;
-using SharijhaAward.Domain.Entities.CycleModel;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView
 {
@@ -66,7 +65,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             Id = x.Id,
                             Name = Language == "ar"
                                 ? x.ArabicName
-                                : x.EnglishName
+                                : x.EnglishName,
+                            TableTypeSection = x.TableTypeSection
                         }).ToList();
 
                 else
@@ -80,7 +80,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             Id = x.Id,
                             Name = Language == "ar"
                                 ? x.ArabicName
-                                : x.EnglishName
+                                : x.EnglishName,
+                            TableTypeSection = x.TableTypeSection
                         }).ToList();
 
                 if (DynamicAttributeSections.FirstOrDefault(x => x.Name.ToLower() == "Main Information".ToLower() ||
@@ -97,7 +98,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         ArabicName = "المعلومات الأساسية",
                         EnglishName = "Main Information",
                         AttributeTableNameId = 1,
-                        RecordIdOnRelation = Request.CategoryId
+                        RecordIdOnRelation = Request.CategoryId,
+                        TableTypeSection = false
                     };
 
                     await _DynamicAttributeSectionRepository.AddAsync(PersonalInformationSection);
@@ -440,7 +442,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             Id = x.Id,
                             Name = Language == "ar"
                                 ? x.ArabicName
-                                : x.EnglishName
+                                : x.EnglishName,
+                            TableTypeSection = x.TableTypeSection
                         }).ToList();
 
                 else
@@ -457,7 +460,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             Id = x.Id,
                             Name = Language == "ar"
                                 ? x.ArabicName
-                                : x.EnglishName
+                                : x.EnglishName,
+                            TableTypeSection = x.TableTypeSection
                         }).ToList();
 
                 foreach (DynamicAttributeSectionListVM DynamicAttributeSection in DynamicAttributeSections)
