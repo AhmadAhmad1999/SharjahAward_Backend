@@ -53,6 +53,9 @@ namespace SharijhaAward.Api.Logger
 
             // Check If There Any Exception In API Response..
             Exception Exceptions = filterContext.Exception;
+
+            string httpMethod = filterContext.HttpContext.Request.Method;
+
             if (Exceptions != null)
             {
                 try
@@ -72,6 +75,9 @@ namespace SharijhaAward.Api.Logger
 
                     // 4. Function Name..
                     NewLog.FunctionName = Controller_Function_Name[0].ToString();
+
+                    // Http Method..
+                    NewLog.HttpMethod = httpMethod;
 
                     // 5. Body Parameters..
                     IDictionary<string, object> Parameters = MyParametersList.Where(x =>
@@ -100,8 +106,6 @@ namespace SharijhaAward.Api.Logger
             }
             else
             {
-                string httpMethod = filterContext.HttpContext.Request.Method;
-
                 if (!string.Equals(httpMethod, "GET", StringComparison.OrdinalIgnoreCase))
                 {
                     IActionResult? ActionResult = filterContext.Result;
@@ -124,6 +128,9 @@ namespace SharijhaAward.Api.Logger
 
                         // 4. Function Name..
                         NewLog.FunctionName = Controller_Function_Name[0].ToString();
+
+                        // Http Method..
+                        NewLog.HttpMethod = httpMethod;
 
                         // 5. Body Parameters..
                         IDictionary<string, object> Parameters = MyParametersList.Where(x =>

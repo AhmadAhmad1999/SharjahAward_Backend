@@ -6,7 +6,6 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
-using SharijhaAward.Domain.Entities.CommitteeModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 

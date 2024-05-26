@@ -15,21 +15,40 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Commands.Creat
         private readonly IAsyncRepository<Notification> _NotificationRepository;
         private readonly IAsyncRepository<UserToken> _UserTokenRepository;
         private readonly IAsyncRepository<UserNotification> _UserNotificationRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
         public CreateNotificationHandler(IMapper Mapper,
             IAsyncRepository<Notification> NotificationRepository,
             IAsyncRepository<UserToken> UserTokenRepository,
-            IAsyncRepository<UserNotification> UserNotificationRepository)
+            IAsyncRepository<UserNotification> UserNotificationRepository,
+            IAsyncRepository<UserRole> UserRoleRepository)
         {
             _Mapper = Mapper;
             _NotificationRepository = NotificationRepository;
             _UserTokenRepository = UserTokenRepository;
             _UserNotificationRepository = UserNotificationRepository;
+            _UserRoleRepository = UserRoleRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateNotificationCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            if (Request.ToAllRoles)
+            {
+                Request.UsersIds = await _UserRoleRepository
+                    .Select(x => x.UserId)
+                    .Distinct()
+                    .ToListAsync();
+            }
+            else if (Request.RolesIds.Any())
+            {
+                Request.UsersIds = await _UserRoleRepository
+                    .Where(x => Request.RolesIds.Contains(x.Id))
+                    .Select(x => x.UserId)
+                    .Distinct()
+                    .ToListAsync();
+            }
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {

@@ -83,6 +83,7 @@ using SharijhaAward.Domain.Entities.InterviewModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorFormModel;
 using SharijhaAward.Domain.Entities.CoordinatorFormModel;
+using SharijhaAward.Domain.Entities.AdvancedFormBuilderModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -94,6 +95,15 @@ namespace SharijhaAward.Persistence
 
         }
 
+        public DbSet<VirtualTable> VirtualTables { get; set; }
+        public DbSet<VirtualTableForSection> VirtualTableForSections { get; set; }
+        public DbSet<AdvancedFormBuilderValue> AdvancedFormBuilderValues { get; set; }
+        public DbSet<AdvancedFormBuilderTableValue> AdvancedFormBuilderTableValues { get; set; }
+        public DbSet<AdvancedFormBuilderPatternValue> AdvancedFormBuilderPatternValues { get; set; }
+        public DbSet<AdvancedFormBuilderPattern> AdvancedFormBuilderPatterns { get; set; }
+        public DbSet<AdvancedFormBuilderListValue> AdvancedFormBuilderListValues { get; set; }
+        public DbSet<AdvancedFormBuilder> AdvancedFormBuilders { get; set; }
+        public DbSet<AdvancedFormBuilderSection> AdvancedFormBuilderSections { get; set; }
         public DbSet<DynamicAttributeTableValue> DynamicAttributeTableValue { get; set; }
         public DbSet<FinalArbitrationScore> FinalArbitrationScores { get; set; }
         public DbSet<ChairmanNotesOnFinalArbitrationScore> ChairmanNotesOnFinalArbitrationScores { get; set; }
@@ -226,6 +236,13 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<DynamicAttributeTableValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<FinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<FinalArbitration>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderTableValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderPatternValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderPattern>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderListValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilder>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderSection>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<InterviewAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Interview>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<InterviewQuestion>().HasQueryFilter(p => !p.isDeleted);
@@ -1899,6 +1916,78 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     DynamicAttributeId = 8,
                     Value = "Test Value 5"
+                });
+
+            modelBuilder.Entity<Arbitrator>()
+                .HasData(new Arbitrator()
+                {
+                    Id = 100,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicName = "محكم 1",
+                    EnglishName = "Arbitrator 1",
+                    PhoneNumber = "0935174134",
+                    Email = "TestArbitratorEmail@gmail.com",
+                    isChairman = false
+                });
+
+            modelBuilder.Entity<User>()
+                .HasData(new User()
+                {
+                    Id = 100,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    SubscriberId = null,
+                    ArabicName = "محكم 1",
+                    EnglishName = "Arbitrator 1",
+                    PhoneNumber = "0935174134",
+                    Email = "TestArbitratorEmail@gmail.com",
+                    Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                    Gender = Gender.Male,
+                    isValidAccount = true,
+                });
+
+            modelBuilder.Entity<UserRole>()
+                .HasData(new UserRole()
+                {
+                    Id = 100,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    UserId = 100,
+                    RoleId = 6
+                });
+
+            modelBuilder.Entity<Arbitration>()
+                .HasData(new Arbitration()
+                {
+                    Id = 100,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    isAccepted = true,
+                    ReasonForRejecting = null,
+                    isAcceptedFromChairman = true,
+                    ArbitratorId = 100,
+                    ProvidedFormId = 111,
+                    Type = ArbitrationType.NotBeenArbitrated,
+                    DateOfArbitration = null,
+                    IsRejectedFromArbitrationAuditStep = null,
+                    FullScore = 0
                 });
 
             ////////////////////////////////////////

@@ -1,9 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using SharijhaAward.Domain.Constants;
+﻿using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using SharijhaAward.Domain.Entities.NoteModel;
 using SharijhaAward.Domain.Common;
-using SharijhaAward.Domain.Entities.AchievementModel;
 using SharijhaAward.Domain.Entities.ContactUsModels;
 
 namespace SharijhaAward.Domain.Entities.IdentityModels;

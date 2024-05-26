@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System.ComponentModel.DataAnnotations;
-
-namespace SharijhaAward.Domain.Constants
+﻿namespace SharijhaAward.Domain.Constants
 {
     public enum EducationType
     {
         Government,
-        Private
+        Private,
+        Other
     }
 }
