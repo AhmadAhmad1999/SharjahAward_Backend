@@ -52,7 +52,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
             if (CheckIfThisUserHasFullAccessOrArbitratorRole is null)
             {
                 List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
-                    .Where(x => x.isAccepted && x.isAcceptedFromChairman && 
+                    .Where(x => x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false) && 
                         (Request.ArbitrationType != null
                             ? x.Type == Request.ArbitrationType
                             : true))
@@ -95,7 +95,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     }).ToList();
 
                 var FullTotalCount = _ArbitrationRepository
-                    .Where(x => x.isAccepted && x.isAcceptedFromChairman)
+                    .Where(x => x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false))
                     .Select(x => x.Type)
                     .GroupBy(x => x)
                     .Select(g => new { Type = g.Key, Count = g.Count() })
@@ -158,7 +158,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
 
                     List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
                         .Where(x => ArbitratorsIdsInCommittee.Contains(x.ArbitratorId) && 
-                            x.isAccepted && x.isAcceptedFromChairman &&
+                            x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false) &&
                             (Request.ArbitrationType != null
                                 ? x.Type == Request.ArbitrationType
                                 : true))
@@ -201,7 +201,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         }).ToList();
 
                     var FullTotalCount = _ArbitrationRepository
-                        .Where(x => x.isAccepted && x.isAcceptedFromChairman)
+                        .Where(x => x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false))
                         .Select(x => x.Type)
                         .GroupBy(x => x)
                         .Select(g => new { Type = g.Key, Count = g.Count() })
@@ -219,7 +219,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     };
 
                     int TotalCount = await _ArbitrationRepository.GetCountAsync(x => ArbitratorsIdsInCommittee.Contains(x.ArbitratorId) &&
-                        x.isAccepted && x.isAcceptedFromChairman &&
+                        x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false) &&
                         (Request.ArbitrationType != null
                             ? x.Type == Request.ArbitrationType
                             : true));
@@ -233,7 +233,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                 {
                     List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
                         .Where(x => UserId == x.ArbitratorId &&
-                            x.isAccepted && x.isAcceptedFromChairman &&
+                            x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false) &&
                             (Request.ArbitrationType != null
                                 ? x.Type == Request.ArbitrationType
                                 : true))
@@ -272,11 +272,13 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                 : x.ProvidedForm!.Category!.ArabicName,
                             DateOfArbitration = x.DateOfArbitration,
                             Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
-                            FullArbitrationScore = FullArbitrationScore
+                            FullArbitrationScore = FullArbitrationScore,
+                            isAcceptedFromChairman = x.isAcceptedFromChairman
                         }).ToList();
 
                     var FullTotalCount = _ArbitrationRepository
-                        .Where(x => x.isAccepted && x.isAcceptedFromChairman)
+                        .Where(x => x.isAccepted && 
+                            (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false))
                         .Select(x => x.Type)
                         .GroupBy(x => x)
                         .Select(g => new { Type = g.Key, Count = g.Count() })
@@ -294,7 +296,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     };
 
                     int TotalCount = await _ArbitrationRepository.GetCountAsync(x => UserId == x.ArbitratorId &&
-                        x.isAccepted && x.isAcceptedFromChairman &&
+                        x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false) &&
                         (Request.ArbitrationType != null
                             ? x.Type == Request.ArbitrationType
                             : true));
