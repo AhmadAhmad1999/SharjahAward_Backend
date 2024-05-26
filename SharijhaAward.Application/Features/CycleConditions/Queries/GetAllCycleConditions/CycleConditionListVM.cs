@@ -23,6 +23,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
         public AttachmentType? AttachmentType { get; set; }
         public int CycleId { get; set; }
         public DateTime CreatedAt { get; set; }
+        public CycleConditionProvidedFormListVm? Acceptance { get; set; }
         public List<CycleConditionAttachmentListVm> Attachments { get; set; } = null!;
     }
 }

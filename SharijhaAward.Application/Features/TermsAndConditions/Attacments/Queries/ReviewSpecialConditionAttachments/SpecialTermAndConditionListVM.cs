@@ -24,6 +24,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queri
         public bool? IsSpecial { get; set; } = false;
         public int CategoryId { get; set; }
         public DateTime CreateAt { get; set; }
-        public List<AttachmentListVM> Attachments { get; set; } = null!;
+        public ConditionProvidedFormListVm? Acceptance { get; set; }
+        public List<AttachmentListVM>? Attachments { get; set; } = null!;
     }
 }

@@ -5,11 +5,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NPOI.SS.UserModel;
+using NPOI.SS.Util;
+using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Domain.Entities.LoggerModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace SharijhaAward.Infrastructure.ExcelHelper
+namespace SharijhaAward.Application.Helpers.ExcelHelper
 {
     public class ExcelHelper<T> : IExcelHelper<T> where T : class
     {
+        private IServiceProvider _ServiceProvider;
+        
+
+        public ExcelHelper(IServiceProvider serviceProvider)
+        {
+            _ServiceProvider = serviceProvider;
+        }
+
+        IAsyncRepository<object> AnynomousTable;
         public byte[] ExportToExcel (List<T> data)
         {
             var workbook = new XSSFWorkbook();
@@ -77,9 +93,6 @@ namespace SharijhaAward.Infrastructure.ExcelHelper
                     else cellContent.SetCellValue(value.ToString());
                     colContentIndex++;
                 }
-            
-                    
-                
 
                 rowNum++;
             }
@@ -150,6 +163,11 @@ namespace SharijhaAward.Infrastructure.ExcelHelper
                             var stringListValue = cellValue.Split(',').Select(s => s.Trim()).ToList();
                             property.SetValue(item, stringListValue);
                         }
+                        else if(property.Name.EndsWith("Id") && property.PropertyType == typeof(int))
+                        {
+                            IAsyncRepository<EducationalEntity> _educationalEntityRepository = _ServiceProvider.GetService<IAsyncRepository<EducationalEntity>>();
+                            int EducationalEntityId = _educationalEntityRepository.FirstOrDefault(e => e.ArabicName == "").Id;
+                        }
                     }
                 }
 
@@ -159,6 +177,7 @@ namespace SharijhaAward.Infrastructure.ExcelHelper
             return dataList;
         }
 
+
         public byte[] GeneratePrototype()
         {
             var workbook = new XSSFWorkbook();
@@ -167,7 +186,7 @@ namespace SharijhaAward.Infrastructure.ExcelHelper
 
             var properties = typeof(T).GetProperties();
 
-            //header
+            // Header font and style
             var font = workbook.CreateFont();
             font.IsBold = true;
             var style = workbook.CreateCellStyle();
@@ -181,13 +200,64 @@ namespace SharijhaAward.Infrastructure.ExcelHelper
                 cell.CellStyle = style;
                 colIndex++;
             }
-            //end header
+
+            // Create rows for foreign key dropdowns
+            colIndex = 0;
+            foreach (var property in properties)
+            {
+                
+                if (property.Name.EndsWith("Id") && property.PropertyType == typeof(int))
+                {
+                    var fkValues = GetForeignKeyValues(property.Name);
+                    if (fkValues != null && fkValues.Any())
+                    {
+                        // Create a sheet to hold the list of foreign key values
+                        var listSheet = workbook.CreateSheet(property.Name + "_List");
+                        for (int i = 0; i < fkValues.Count; i++)
+                        {
+                            var listRow = listSheet.CreateRow(i);
+                            listRow.CreateCell(0).SetCellValue(fkValues[i]);
+                        }
+
+                        // Create a named range for the list
+                        var rangeName = property.Name + "_List";
+                        var name = workbook.CreateName();
+                        name.NameName = rangeName;
+                        name.RefersToFormula = $"{property.Name}_List!$A$1:$A${fkValues.Count}";
+
+                        // Create a dropdown list for the foreign key column
+                        var constraint = sheet.GetDataValidationHelper().CreateExplicitListConstraint(fkValues.ToArray());
+                        var addressList = new CellRangeAddressList(1, 65535, colIndex, colIndex);
+                        var validation = sheet.GetDataValidationHelper().CreateValidation(constraint, addressList);
+                        sheet.AddValidationData(validation);
+                    }
+                }
+                colIndex++;
+            }
 
             var stream = new MemoryStream();
             workbook.Write(stream);
             var content = stream.ToArray();
 
             return content;
+        }
+
+        private List<string> GetForeignKeyValues(string foreignKeyName)
+        {
+            //string TableName = foreignKeyName.Split("Id")[0];
+
+           // using (var context = new )
+                switch (foreignKeyName)
+                {
+                    case "EducationalEntityId":
+                        {
+                            IAsyncRepository<EducationalEntity> _educationalEntityRepository = _ServiceProvider.GetService<IAsyncRepository<EducationalEntity>>();
+                            var Edu = _educationalEntityRepository.Select(e => e.ArabicName).ToList();
+                            return Edu;
+                        }
+                    default:
+                        return null;
+                }
         }
     }
 }

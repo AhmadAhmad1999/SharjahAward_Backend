@@ -356,25 +356,12 @@ namespace SharijhaAward.Persistence
                 .Property(a => a.Id)
                 .ValueGeneratedNever();
 
-            modelBuilder.Entity<PermissionHeader>()
-                .HasData(new PermissionHeader()
-                {
-                    Id = 1,
-                    Name = "إدارة الدورات",
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null
-                });
-
             modelBuilder.Entity<Permission>()
                 .HasData(new Permission()
                 {
                     Id = 1,
                     Name = "عرض الدورات",
-                    PermissionHeaderId = 1,
+                    PermissionHeaderId = 9,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -385,7 +372,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 2,
                     Name = "إضافة دورة",
-                    PermissionHeaderId = 1,
+                    PermissionHeaderId = 9,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -396,7 +383,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 3,
                     Name = "عرض معلومات دورة",
-                    PermissionHeaderId = 1,
+                    PermissionHeaderId = 9,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -407,7 +394,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 4,
                     Name = "تعديل دورة",
-                    PermissionHeaderId = 1,
+                    PermissionHeaderId = 9,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -418,7 +405,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 5,
                     Name = "حذف دورة",
-                    PermissionHeaderId = 1,
+                    PermissionHeaderId = 9,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -1916,6 +1903,317 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     DynamicAttributeId = 8,
                     Value = "Test Value 5"
+                });
+            modelBuilder.Entity<PermissionHeader>()
+                .HasData(
+                new PermissionHeader()
+                {
+                    Id = 1,
+                    Name = "AboutAward",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, 
+                new PermissionHeader()
+                {
+                    Id = 2,
+                    Name = "Album",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, 
+                new PermissionHeader()
+                {
+                    Id = 3,
+                    Name = "AppVersion",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, 
+                new PermissionHeader()
+                {
+                    Id = 4,
+                    Name = "AwardPublication",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },
+                new PermissionHeader()
+                {
+                    Id = 5,
+                    Name = "AwardSponsor",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, 
+                new PermissionHeader()
+                {
+                    Id = 6,
+                    Name = "Circular",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, 
+                new PermissionHeader()
+                {
+                    Id = 7,
+                    Name = "Class",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, 
+                new PermissionHeader()
+                {
+                    Id = 8,
+                    Name = "ClassArbitrator",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },
+                new PermissionHeader()
+                {
+                    Id = 9,
+                    Name = "Cycle",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 10,
+                    Name = "Agenda",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 11,
+                    Name = "Category",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 12,
+                    Name = "GeneralCondition",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 13,
+                    Name = "EducationalEntity",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 14,
+                    Name = "SystemFiles",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 15,
+                    Name = "GeneralWorkshop",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 16,
+                    Name = "Instruction",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 17,
+                    Name = "Meeting",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 18,
+                    Name = "News",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 19,
+                    Name = "Notification",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 20,
+                    Name = "NotificationTemplate",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 21,
+                    Name = "Role",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 22,
+                    Name = "User",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 23,
+                    Name = "Coordinator",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 24,
+                    Name = "Arbitrator",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 25,
+                    Name = "Committee",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 26,
+                    Name = "SubscriberAccount",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 27,
+                    Name = "SubscriberProfile",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 28,
+                    Name = "SubscriberForm",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 29,
+                    Name = "Event",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                },new PermissionHeader()
+                {
+                    Id = 30,
+                    Name = "ContactUs",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
                 });
 
             modelBuilder.Entity<Arbitrator>()

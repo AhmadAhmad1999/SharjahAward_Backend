@@ -6,7 +6,7 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Infrastructure.Authentication;
 using SharijhaAward.Infrastructure.EmailSernder;
-using SharijhaAward.Infrastructure.ExcelHelper;
+using SharijhaAward.Application.Helpers.ExcelHelper;
 using SharijhaAward.Infrastructure.FileServices;
 using SharijhaAward.Infrastructure.JobServices;
 using SharijhaAward.Infrastructure.QRGenerator;
@@ -26,7 +26,7 @@ namespace SharijhaAward.Infrastructure
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IEmailCodesGenerator,EmailCodesGenerator>();
             services.AddScoped<IFileService, FileService>();
-            services.AddScoped(typeof(IExcelHelper<>), typeof(ExcelHelper<>));
+
             //services.AddHostedService<BackGroundJobService>();
 
 
