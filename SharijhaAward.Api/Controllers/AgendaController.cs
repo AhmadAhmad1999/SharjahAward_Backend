@@ -149,6 +149,7 @@ namespace SharijhaAward.Api.Controllers
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
+            //get token from header
             var token = HttpContext.Request.Headers.Authorization;
 
             if(token.IsNullOrEmpty())
