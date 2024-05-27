@@ -17,6 +17,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
         public int Id { get; set; }
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
+        public bool IsPrivate { get; set; }
         public bool UpdateOnIcone {  get; set; }
         public IFormFile? Icon { get; set; } = null!;
         public DateTime StartDate { get; set; }

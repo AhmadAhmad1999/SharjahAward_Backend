@@ -1,11 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda;
 using SharijhaAward.Application.Features.Agendas.Commands.DeleteAgenda;
 using SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
+using SharijhaAward.Application.Features.Agendas.Queries.GetAgendasForAwardTeam;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 
 namespace SharijhaAward.Api.Controllers
@@ -132,6 +134,33 @@ namespace SharijhaAward.Api.Controllers
                 page = page,
                 pageSize = pageSize,
                 CycleId = Id,
+                lang = Language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        } 
+        [HttpGet("GetAgendasForAwardTeam", Name = "GetAgendasForAwardTeam")]
+        public async Task<IActionResult> GetAgendasForAwardTeam(int? CycleId ,int page = 1, int pageSize = 10)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
+
+            if(token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+
+            var response = await _mediator.Send(new GetAgendasForAwardTeamQuery()
+            {
+                page = page,
+                pageSize = pageSize,
+                CycleId = CycleId,
                 lang = Language!
             });
 

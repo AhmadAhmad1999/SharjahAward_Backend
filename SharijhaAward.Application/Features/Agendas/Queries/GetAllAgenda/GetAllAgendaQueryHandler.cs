@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
         public async Task<BaseResponse<List<AgendaListVm>>> Handle(GetAllAgendaQuery request, CancellationToken cancellationToken)
         {
             var agendas = await _agendaRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+                .OrderByDescending(x => x.CreatedAt, request.page, request.pageSize).Where(a=>!a.IsPrivate)
                 .ToListAsync();
 
             var data = _mapper.Map<List<AgendaListVm>>(agendas);

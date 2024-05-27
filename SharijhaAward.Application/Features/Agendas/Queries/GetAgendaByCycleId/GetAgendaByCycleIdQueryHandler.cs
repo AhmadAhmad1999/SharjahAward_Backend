@@ -41,7 +41,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId
 
                 return new BaseResponse<List<AgendaListVm>>(msg, false, 400);
             }
-            var Agendas = await _agendaRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id,request.page,request.pageSize);
+            var Agendas = await _agendaRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id && !a.IsPrivate, request.page,request.pageSize);
              
             var data = _mapper.Map<List<AgendaListVm>>(Agendas).OrderBy(a => a.StartDate).ToList();
 
