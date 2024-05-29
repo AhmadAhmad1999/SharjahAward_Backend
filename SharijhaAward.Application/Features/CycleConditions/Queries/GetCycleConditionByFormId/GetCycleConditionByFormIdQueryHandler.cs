@@ -65,6 +65,17 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
 
                 if (conditionsProvidedsobject != null)
                     conditionsProvideds.Add(conditionsProvidedsobject!);
+                else
+                {
+                    var CycleConditionsProvidedForm = new CycleConditionsProvidedForm()
+                    {
+                        ProvidedFormId = form!.Id,
+                        CycleConditionId = Terms[i].Id,
+                        IsAgree = false,
+                    };
+                    var conditionProvided = await _conditionsProvidedFormsRepository.AddAsync(CycleConditionsProvidedForm);
+                    conditionsProvideds.Add(conditionProvided);
+                }
             }
 
 

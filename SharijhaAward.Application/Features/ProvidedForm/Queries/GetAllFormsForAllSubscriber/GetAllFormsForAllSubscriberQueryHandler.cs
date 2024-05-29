@@ -25,13 +25,15 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public GetAllFormsForAllSubscriberQueryHandler(IAsyncRepository<Category> categoryRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository, IMapper mapper,
+        public GetAllFormsForAllSubscriberQueryHandler(IUserRepository userRepository, IAsyncRepository<Category> categoryRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository, IMapper mapper,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
         {
             _formRepository = formRepository;
             _categoryRepository = categoryRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
         }
@@ -39,7 +41,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery request, CancellationToken cancellationToken)
         {
             var forms = await _formRepository.GetPagedReponseAsync(request.page, request.pageSize);
-            
+            var Subscribers = await _userRepository.Where(s => s.SubscriberId != null).ToListAsync();
             if (forms.Any())
             {
                 var SubscribersNames = await _DynamicAttributeValueRepository
@@ -64,6 +66,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
                         ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
                         : null,
+                    subscriberCode = Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId,
                     PercentCompletion = x.PercentCompletion,
                     CycleNumber = x.CycleNumber,
                     CycleYear = x.CycleYear,
@@ -82,7 +85,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
                     SubCategoryName = request.lang == "en"
                         ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
-                        : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName
+                        : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
+
                 }).ToList();
 
                 //foreach (var form in data)
