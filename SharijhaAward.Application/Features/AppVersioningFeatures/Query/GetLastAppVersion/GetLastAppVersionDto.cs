@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SharijhaAward.Domain.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetLastAppVersion
 {
@@ -6,8 +7,8 @@ namespace SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetLast
     {
         public int Id { get; set; }
         public string VersionNumber { get; set; } = null!;
-        public string GooglePlayLink { get; set; } = null!;
-        public string AppleLink { get; set; } = null!;
+        public string AppLink { get; set; } = null!;
+        public AppType AppType { get; set; }
         public DateTime VersionDate { get; set; }
         public bool isRequired { get; set; }
         [MaxLength]
