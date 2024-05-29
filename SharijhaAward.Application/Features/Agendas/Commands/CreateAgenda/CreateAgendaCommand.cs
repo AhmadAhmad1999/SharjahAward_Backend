@@ -15,6 +15,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
         public string lang { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
+        public bool IsPrivate { get; set; }
         public IFormFile Icon { get; set; } = null!;
         public DateTime StartDate { get; set; }
         public DateTime CurrentDate { get; set; }

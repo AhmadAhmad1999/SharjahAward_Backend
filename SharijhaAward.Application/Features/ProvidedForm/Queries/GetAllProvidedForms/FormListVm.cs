@@ -5,7 +5,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
     public class FormListVm
     {
         public int Id { get; set; }
-        public string? SubscriberName {  get; set; }
+        public string? SubscriberName { get; set; }
+        public string? subscriberCode { get; set; }
         public int PercentCompletion { get; set; }
         public int CycleNumber { get; set; }
         public string CycleYear { get; set; } = string.Empty;

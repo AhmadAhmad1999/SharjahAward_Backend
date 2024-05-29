@@ -50,6 +50,7 @@ public class Category : AuditableEntity
     [ForeignKey(nameof(Cycle))]
     public int CycleId { get; set; }
     
+    public virtual List<Category> SubCategories { get; set; } = null!;
     public virtual List<TermAndCondition> TermsAndConditions { get; set; } = new();
     public virtual List<TrainingWorkshop> TrainingWorkshops { get; set; } = new();
     public virtual List<Criterion> Criterions { get; set; } = new();

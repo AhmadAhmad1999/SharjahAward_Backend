@@ -10,6 +10,7 @@ namespace SharijhaAward.Domain.Constants.AttachmentConstant
     {
         Pic,
         PDF,
-        Video
+        Video,
+        Multiple
     }
 }

@@ -14,6 +14,7 @@ public class Agenda : AuditableEntity
     public string ArabicTitle { get; set; } = string.Empty;
     public string EnglishTitle { get; set; } = string.Empty;
     public string Icon { get; set; } = string.Empty;
+    public bool IsPrivate { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public DateTime CurrentDate { get; set; }

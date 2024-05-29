@@ -15,6 +15,7 @@ using SharijhaAward.Api.Logger;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Cycles.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -143,6 +144,22 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(response),
                 200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Cycles.xlsx"),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpPost("ImportDataForCycle", Name = "ImportDataForCycle")]
+        public async Task<IActionResult> ImportDataForCycle([FromBody] CycleImportLastDataQuery query)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            query.lang = Language!;
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
                 _ => BadRequest(response)
             };
         }
