@@ -16,7 +16,6 @@ namespace SharijhaAward.Domain.Entities.ArbitrationModel
         public ProvidedForm? ProvidedForm { get; set; }
         public ArbitrationType Type { get; set; } = 0;
         public DateTime? DateOfArbitration { get; set; }
-        public bool? IsRejectedFromArbitrationAuditStep { get; set; }
         public float FullScore { get; set; }
     }
 }

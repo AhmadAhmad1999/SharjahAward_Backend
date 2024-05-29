@@ -4,13 +4,15 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
 {
     public class SubCriterionForFinalArbitrationScoreDto
     {
+        public int SubCriterionId { get; set; }
+        public int FinalArbitrationScoreId { get; set; }
         public string Title { get; set; } = null!;
         public int SubCriterionScore { get; set; }
         public string? StrengthPoint { get; set; }
         public string? ImprovementAreas { get; set; }
         public int ArbitrationScore { get; set; }
-        public List<AttachmanetsDto>? SubCriterionAttachmanetsDto { get; set; }
-        public List<ChairmanNotesOnFinalArbitrationScoreDto>? ChairmanNotesOnFinalArbitrationScoreDto { get; set; }
-        public List<CriterionItemForFinalArbitrationScoreDto>? SubCriterionItemForFinalArbitrationScoreDtos { get; set; }
+        public List<AttachmanetsDto> SubCriterionAttachmanetsDto { get; set; } = new List<AttachmanetsDto>();
+        public List<ChairmanNotesOnFinalArbitrationScoreDto> ChairmanNotesOnFinalArbitrationScoreDto { get; set; } = new List<ChairmanNotesOnFinalArbitrationScoreDto>();
+        public List<CriterionItemForFinalArbitrationScoreDto> SubCriterionItemForFinalArbitrationScoreDtos { get; set; } = new List<CriterionItemForFinalArbitrationScoreDto>();
     }
 }

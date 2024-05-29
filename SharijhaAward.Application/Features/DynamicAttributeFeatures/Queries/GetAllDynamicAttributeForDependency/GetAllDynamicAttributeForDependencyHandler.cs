@@ -1,27 +1,17 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributeForDependency
 {
     public class GetAllDynamicAttributeForDependencyHandler : IRequestHandler<GetAllDynamicAttributeForDependencyQuery,
         BaseResponse<List<GetAllDynamicAttributeForDependencyListVM>>>
     {
-        private readonly IMapper _Mapper;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
-        public GetAllDynamicAttributeForDependencyHandler(IMapper Mapper,
-            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository)
+        public GetAllDynamicAttributeForDependencyHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository)
         {
-            _Mapper = Mapper;
             _DynamicAttributeRepository = DynamicAttributeRepository;
         }
         public async Task<BaseResponse<List<GetAllDynamicAttributeForDependencyListVM>>> 

@@ -40,10 +40,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
             {
                 try
                 {
-                    await _ArbitrationRepository
-                        .Where(x => x.ProvidedFormId == Request.FormId)
-                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsRejectedFromArbitrationAuditStep, Request.IsAccepted));
-
                     if (!Request.IsAccepted)
                     {
                         FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
@@ -51,6 +47,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
 
                         if (FinalArbitrationEntity is not null)
                             await _FinalArbitrationRepository.DeleteAsync(FinalArbitrationEntity);
+
+                        ResponseMessage = Request.lang == "en"
+                            ? "Initial arbitration has been rejected successfully"
+                            : "تم رفض التحكيم الأولي على الاستمارة بنجاح";
                     }
                     else
                     {
@@ -77,13 +77,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                         };
 
                         await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);
+
+                        ResponseMessage = Request.lang == "en"
+                            ? "Initial arbitration has been accepted successfully"
+                            : "تم قبول التحكيم الأولي على الاستمارة بنجاح";
                     }
 
                     Transaction.Complete();
-
-                    ResponseMessage = Request.lang == "en"
-                        ? "Initial arbitration has been rejected successfully"
-                        : "تم رفض التحكيم الأولي على الاستمارة بنجاح";
 
                     return new BaseResponse<object>(ResponseMessage, true, 200);
                 }

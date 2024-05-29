@@ -9,7 +9,7 @@ namespace SharijhaAward.Domain.Entities.AdvancedFormBuilderModel
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
         public bool TableTypeSection { get; set; }
-        public int VirtualTableForSectioniD { get; set; }
+        public int VirtualTableForSectionId { get; set; }
         public VirtualTableForSection? VirtualTableForSection { get; set; }
     }
 }

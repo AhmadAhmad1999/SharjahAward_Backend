@@ -52,7 +52,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
             if (CheckIfThisUserHasFullAccessOrArbitratorRole is null)
             {
                 List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
-                    .Where(x => x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false) && 
+                    .Where(x => x.isAccepted && 
                         (Request.ArbitrationType != null
                             ? x.Type == Request.ArbitrationType
                             : true))
@@ -91,11 +91,12 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             : x.ProvidedForm!.Category!.ArabicName,
                         DateOfArbitration = x.DateOfArbitration,
                         Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
-                        FullArbitrationScore = FullArbitrationScore
+                        FullArbitrationScore = FullArbitrationScore,
+                        isAcceptedFromChairman = x.isAcceptedFromChairman
                     }).ToList();
 
                 var FullTotalCount = _ArbitrationRepository
-                    .Where(x => x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false))
+                    .Where(x => x.isAccepted)
                     .Select(x => x.Type)
                     .GroupBy(x => x)
                     .Select(g => new { Type = g.Key, Count = g.Count() })
@@ -157,83 +158,9 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         .ToListAsync();
 
                     List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
-                        .Where(x => ArbitratorsIdsInCommittee.Contains(x.ArbitratorId) && 
-                            x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false) &&
-                            (Request.ArbitrationType != null
-                                ? x.Type == Request.ArbitrationType
-                                : true))
-                        .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
-                        .Include(x => x.ProvidedForm!)
-                        .Include(x => x.ProvidedForm!.Category!)
-                        .ToListAsync();
-
-                    var SubscribersNames = await _DynamicAttributeValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableName!)
-                        .Where(x => ArbitrationEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId) &&
-                            x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableName!.Name.ToLower() == "ProvidedForm".ToLower() &&
-                            x.DynamicAttribute.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
-                        .Select(x => new
-                        {
-                            x.RecordId,
-                            x.Value
-                        }).ToListAsync();
-
-                    int FullArbitrationScore = await _InitialArbitrationRepository
-                        .Where(x => ArbitrationEntities.Select(y => y.Id).Contains(x.ArbitrationId))
-                        .SumAsync(x => x.ArbitrationScore);
-
-                    List<GetAllFromsForInitialArbitrationListVM> Response = ArbitrationEntities
-                        .Select(x => new GetAllFromsForInitialArbitrationListVM()
-                        {
-                            Id = x.Id,
-                            ArbitrationType = x.Type,
-                            CategoryId = x.ProvidedForm!.categoryId,
-                            CategoryName = Request.lang == "en"
-                                ? x.ProvidedForm!.Category!.EnglishName
-                                : x.ProvidedForm!.Category!.ArabicName,
-                            DateOfArbitration = x.DateOfArbitration,
-                            Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
-                            FullArbitrationScore = FullArbitrationScore
-                        }).ToList();
-
-                    var FullTotalCount = _ArbitrationRepository
-                        .Where(x => x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false))
-                        .Select(x => x.Type)
-                        .GroupBy(x => x)
-                        .Select(g => new { Type = g.Key, Count = g.Count() })
-                        .ToList();
-
-                    GetAllFromsForInitialArbitrationFullResponse FullResponse = new GetAllFromsForInitialArbitrationFullResponse()
-                    {
-                        GetAllFromsForInitialArbitrationListVM = Response,
-                        NumberOfNotBeenArbitratedForms = FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.NotBeenArbitrated) != null
-                            ? FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.NotBeenArbitrated)!.Count : 0,
-                        NumberOfBeingReviewedForms = FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.BeingReviewed) != null
-                            ? FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.BeingReviewed)!.Count : 0,
-                        NumberOfDoneArbitratodForms = FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.DoneArbitratod) != null
-                            ? FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.DoneArbitratod)!.Count : 0,
-                    };
-
-                    int TotalCount = await _ArbitrationRepository.GetCountAsync(x => ArbitratorsIdsInCommittee.Contains(x.ArbitratorId) &&
-                        x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false) &&
-                        (Request.ArbitrationType != null
-                            ? x.Type == Request.ArbitrationType
-                            : true));
-
-                    Pagination PaginationParameter = new Pagination(Request.page,
-                        Request.pageSize, TotalCount);
-
-                    return new BaseResponse<GetAllFromsForInitialArbitrationFullResponse>(ResponseMessage, true, 200, FullResponse, PaginationParameter);
-                }
-                else
-                {
-                    List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
-                        .Where(x => UserId == x.ArbitratorId &&
-                            x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false) &&
+                        .Where(x => (ArbitratorsIdsInCommittee.Contains(x.ArbitratorId) ||
+                            x.ArbitratorId == ArbitratorEntity.Id) &&
+                            x.isAccepted &&
                             (Request.ArbitrationType != null
                                 ? x.Type == Request.ArbitrationType
                                 : true))
@@ -277,8 +204,83 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         }).ToList();
 
                     var FullTotalCount = _ArbitrationRepository
-                        .Where(x => x.isAccepted && 
-                            (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false))
+                        .Where(x => x.isAccepted)
+                        .Select(x => x.Type)
+                        .GroupBy(x => x)
+                        .Select(g => new { Type = g.Key, Count = g.Count() })
+                        .ToList();
+
+                    GetAllFromsForInitialArbitrationFullResponse FullResponse = new GetAllFromsForInitialArbitrationFullResponse()
+                    {
+                        GetAllFromsForInitialArbitrationListVM = Response,
+                        NumberOfNotBeenArbitratedForms = FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.NotBeenArbitrated) != null
+                            ? FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.NotBeenArbitrated)!.Count : 0,
+                        NumberOfBeingReviewedForms = FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.BeingReviewed) != null
+                            ? FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.BeingReviewed)!.Count : 0,
+                        NumberOfDoneArbitratodForms = FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.DoneArbitratod) != null
+                            ? FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.DoneArbitratod)!.Count : 0,
+                    };
+
+                    int TotalCount = await _ArbitrationRepository.GetCountAsync(x => ArbitratorsIdsInCommittee.Contains(x.ArbitratorId) &&
+                        x.isAccepted &&
+                        (Request.ArbitrationType != null
+                            ? x.Type == Request.ArbitrationType
+                            : true));
+
+                    Pagination PaginationParameter = new Pagination(Request.page,
+                        Request.pageSize, TotalCount);
+
+                    return new BaseResponse<GetAllFromsForInitialArbitrationFullResponse>(ResponseMessage, true, 200, FullResponse, PaginationParameter);
+                }
+                else
+                {
+                    List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
+                        .Where(x => UserId == x.ArbitratorId &&
+                            x.isAccepted &&
+                            (Request.ArbitrationType != null
+                                ? x.Type == Request.ArbitrationType
+                                : true))
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.pageSize)
+                        .Take(Request.pageSize)
+                        .Include(x => x.ProvidedForm!)
+                        .Include(x => x.ProvidedForm!.Category!)
+                        .ToListAsync();
+
+                    var SubscribersNames = await _DynamicAttributeValueRepository
+                        .Include(x => x.DynamicAttribute!)
+                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableName!)
+                        .Where(x => ArbitrationEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId) &&
+                            x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableName!.Name.ToLower() == "ProvidedForm".ToLower() &&
+                            x.DynamicAttribute.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
+                        .Select(x => new
+                        {
+                            x.RecordId,
+                            x.Value
+                        }).ToListAsync();
+
+                    int FullArbitrationScore = await _InitialArbitrationRepository
+                        .Where(x => ArbitrationEntities.Select(y => y.Id).Contains(x.ArbitrationId))
+                        .SumAsync(x => x.ArbitrationScore);
+
+                    List<GetAllFromsForInitialArbitrationListVM> Response = ArbitrationEntities
+                        .Select(x => new GetAllFromsForInitialArbitrationListVM()
+                        {
+                            Id = x.Id,
+                            ArbitrationType = x.Type,
+                            CategoryId = x.ProvidedForm!.categoryId,
+                            CategoryName = Request.lang == "en"
+                                ? x.ProvidedForm!.Category!.EnglishName
+                                : x.ProvidedForm!.Category!.ArabicName,
+                            DateOfArbitration = x.DateOfArbitration,
+                            Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
+                            FullArbitrationScore = FullArbitrationScore,
+                            isAcceptedFromChairman = x.isAcceptedFromChairman
+                        }).ToList();
+
+                    var FullTotalCount = _ArbitrationRepository
+                        .Where(x => x.isAccepted)
                         .Select(x => x.Type)
                         .GroupBy(x => x)
                         .Select(g => new { Type = g.Key, Count = g.Count() })
@@ -296,7 +298,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     };
 
                     int TotalCount = await _ArbitrationRepository.GetCountAsync(x => UserId == x.ArbitratorId &&
-                        x.isAccepted && (x.isAcceptedFromChairman != null ? x.isAcceptedFromChairman.Value : false) &&
+                        x.isAccepted &&
                         (Request.ArbitrationType != null
                             ? x.Type == Request.ArbitrationType
                             : true));

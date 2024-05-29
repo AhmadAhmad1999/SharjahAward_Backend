@@ -1,15 +1,17 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 
 namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetInitialArbitrationByArbitrationId
 {
     public class GetInitialArbitrationByArbitrationIdHandler
-        : IRequestHandler<GetInitialArbitrationByArbitrationIdQuery, BaseResponse<List<MainCriterionDto>>>
+        : IRequestHandler<GetInitialArbitrationByArbitrationIdQuery, BaseResponse<GetInitialArbitrationByArbitrationIdResponse>>
     {
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository;
@@ -18,6 +20,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
         private readonly IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository;
         private readonly IAsyncRepository<ChairmanNotesOnInitialArbitration> _ChairmanNotesOnInitialArbitrationRepository;
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IJwtProvider _JwtProvider;
 
         public GetInitialArbitrationByArbitrationIdHandler(IAsyncRepository<Criterion> CriterionRepository,
             IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
@@ -25,7 +29,9 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
             IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<CriterionItem> CriterionItemRepository,
             IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository,
-            IAsyncRepository<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrationRepository)
+            IAsyncRepository<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrationRepository,
+            IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IJwtProvider JwtProvider)
         {
             _CriterionRepository = CriterionRepository;
             _CriterionAttachmentRepository = CriterionAttachmentRepository;
@@ -34,10 +40,26 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
             _CriterionItemRepository = CriterionItemRepository;
             _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
             _ChairmanNotesOnInitialArbitrationRepository = ChairmanNotesOnInitialArbitrationRepository;
+            _ArbitratorRepository = ArbitratorRepository;
+            _JwtProvider = JwtProvider;
         }
-        public async Task<BaseResponse<List<MainCriterionDto>>> Handle(GetInitialArbitrationByArbitrationIdQuery Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<GetInitialArbitrationByArbitrationIdResponse>> Handle(GetInitialArbitrationByArbitrationIdQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
+            Arbitrator? ArbitraorEntity = await _ArbitratorRepository
+                .FirstOrDefaultAsync(x => x.Id == UserId);
+
+            if (ArbitraorEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Arbitrator is not Found"
+                    : "المحكم غير موجود";
+
+                return new BaseResponse<GetInitialArbitrationByArbitrationIdResponse>(ResponseMessage, false, 404);
+            }
 
             Arbitration? ArbitrationEntity = await _ArbitrationRepository
                 .Include(x => x.ProvidedForm!)
@@ -49,8 +71,13 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     ? "Arbitration is not Found"
                     : "التحكيم غير موجود";
 
-                return new BaseResponse<List<MainCriterionDto>>(ResponseMessage, false, 404);
+                return new BaseResponse<GetInitialArbitrationByArbitrationIdResponse>(ResponseMessage, false, 404);
             }
+
+            bool isItHisForm = false;
+
+            if (ArbitrationEntity.ArbitratorId == UserId)
+                isItHisForm = true;
 
             int CategoryId = ArbitrationEntity.ProvidedForm!.categoryId;
 
@@ -105,6 +132,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                 {
                     SubCriterionDto SubCriterionDto = new SubCriterionDto()
                     {
+                        SubCriterionId = SubCriterionEntityForThisMainCriterion.Id,
                         Title = Request.lang == "en"
                             ? SubCriterionEntityForThisMainCriterion.EnglishTitle
                             : SubCriterionEntityForThisMainCriterion.ArabicTitle,
@@ -117,8 +145,6 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
 
                     if (!CriterionItemEntitiesForThisSubCriterion.Any())
                     {
-                        SubCriterionDto.SubCriterionItemDtos = null;
-
                         InitialArbitration? InitialArbitrationEntitiesForThisSubCriterion = InitialArbitrationEntities
                             .FirstOrDefault(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id && x.CriterionItemId == null);
 
@@ -127,10 +153,10 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             SubCriterionDto.StrengthPoint = null;
                             SubCriterionDto.ImprovementAreas = null;
                             SubCriterionDto.ArbitrationScore = 0;
-                            SubCriterionDto.ChairmanNotesOnInitialArbitrationDtos = null;
 
                             SubCriterionDto.SubCriterionAttachmanetsDto = CriterionAttachmentEntities
-                                .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
+                                .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id && 
+                                    x.ProvidedFormId == ArbitrationEntity.ProvidedFormId)
                                 .Select(x => new AttachmanetsDto()
                                 {
                                     Id = x.Id,
@@ -144,19 +170,22 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             SubCriterionDto.StrengthPoint = InitialArbitrationEntitiesForThisSubCriterion.StrengthPoint;
                             SubCriterionDto.ImprovementAreas = InitialArbitrationEntitiesForThisSubCriterion.ImprovementAreas;
                             SubCriterionDto.ArbitrationScore = InitialArbitrationEntitiesForThisSubCriterion.ArbitrationScore;
+                            SubCriterionDto.InitialArbitrationId = InitialArbitrationEntitiesForThisSubCriterion.Id;
 
                             SubCriterionDto.ChairmanNotesOnInitialArbitrationDtos = ChairmanNotesOnInitialArbitrationEntities
                                 .Where(x => x.InitialArbitrationId == InitialArbitrationEntitiesForThisSubCriterion.Id)
                                 .Select(x => new ChairmanNotesOnInitialArbitrationDto()
                                 {
                                     Id = x.Id,
-                                    Note = x.Note
+                                    Note = x.Note,
+                                    CreatedAt = x.CreatedAt
                                 })
                                 .OrderBy(x => x.Id)
                                 .ToList();
 
                             SubCriterionDto.SubCriterionAttachmanetsDto = CriterionAttachmentEntities
-                                .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
+                                .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
+                                    x.ProvidedFormId == ArbitrationEntity.ProvidedFormId)
                                 .Select(x => new AttachmanetsDto()
                                 {
                                     Id = x.Id,
@@ -175,13 +204,12 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         SubCriterionDto.StrengthPoint = null;
                         SubCriterionDto.ImprovementAreas = null;
                         SubCriterionDto.ArbitrationScore = 0;
-                        SubCriterionDto.SubCriterionAttachmanetsDto = null;
-                        SubCriterionDto.ChairmanNotesOnInitialArbitrationDtos = null;
 
                         foreach (CriterionItem CriterionItemEntityForThisSubCriterion in CriterionItemEntitiesForThisSubCriterion)
                         {
                             CriterionItemDto CriterionItemDto = new CriterionItemDto()
                             {
+                                CriterionItemId = CriterionItemEntityForThisSubCriterion.Id,
                                 Name = Request.lang == "en"
                                     ? CriterionItemEntityForThisSubCriterion.EnglishName
                                     : CriterionItemEntityForThisSubCriterion.ArabicName,
@@ -199,7 +227,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                 CriterionItemDto.ChairmanNotesOnInitialArbitrationDtos = new List<ChairmanNotesOnInitialArbitrationDto>();
 
                                 CriterionItemDto.CriterionItemAttachmanetsDto = CriterionItemAttachmentEntities
-                                    .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id)
+                                    .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
+                                        x.ProvidedFormId == ArbitrationEntity.ProvidedFormId)
                                     .Select(x => new AttachmanetsDto()
                                     {
                                         Id = x.Id,
@@ -213,9 +242,11 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                 CriterionItemDto.StrengthPoint = InitialArbitrationEntitiesForThisCriterionItem.StrengthPoint;
                                 CriterionItemDto.ImprovementAreas = InitialArbitrationEntitiesForThisCriterionItem.ImprovementAreas;
                                 CriterionItemDto.ArbitrationScore = InitialArbitrationEntitiesForThisCriterionItem.ArbitrationScore;
+                                CriterionItemDto.InitialArbitrationId = InitialArbitrationEntitiesForThisCriterionItem.Id;
 
                                 CriterionItemDto.CriterionItemAttachmanetsDto = CriterionItemAttachmentEntities
-                                    .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id)
+                                    .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
+                                        x.ProvidedFormId == ArbitrationEntity.ProvidedFormId)
                                     .Select(x => new AttachmanetsDto()
                                     {
                                         Id = x.Id,
@@ -229,7 +260,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                     .Select(x => new ChairmanNotesOnInitialArbitrationDto()
                                     {
                                         Id = x.Id,
-                                        Note = x.Note
+                                        Note = x.Note,
+                                        CreatedAt = x.CreatedAt
                                     })
                                     .OrderBy(x => x.Id)
                                     .ToList();
@@ -245,7 +277,16 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                 FullResponse.Add(MainCriterionDto);
             }
 
-            return new BaseResponse<List<MainCriterionDto>>(ResponseMessage, true, 200, FullResponse);
+            GetInitialArbitrationByArbitrationIdResponse FinalResponse = new GetInitialArbitrationByArbitrationIdResponse()
+            {
+                isChairman = ArbitraorEntity.isChairman,
+                MainCriterionDtos = FullResponse,
+                isItHisForm = isItHisForm,
+                isAcceptedFromChairman = ArbitrationEntity.isAcceptedFromChairman,
+                ReasonForRejecting = ArbitrationEntity.ReasonForRejecting
+            };
+
+            return new BaseResponse<GetInitialArbitrationByArbitrationIdResponse>(ResponseMessage, true, 200, FinalResponse);
         }
     }
 }

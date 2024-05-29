@@ -48,6 +48,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 GroupOfArbitrationEntities = await _ArbitrationRepository
                     .Where(x => x.ArbitratorId == UserId)
                     .Include(x => x.ProvidedForm!)
+                    .Include(x => x.ProvidedForm!.Category!)
                     .GroupBy(x => x.ProvidedFormId)
                     .ToListAsync();
             }
@@ -55,14 +56,19 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
             {
                 GroupOfArbitrationEntities = await _ArbitrationRepository
                     .Include(x => x.ProvidedForm!)
+                    .Include(x => x.ProvidedForm!.Category!)
                     .GroupBy(x => x.ProvidedFormId)
                     .ToListAsync();
             }
 
-            List<InitialArbitration> InitialArbitrationEntities = await _InitialArbitrationRepository
-                .Where(x => GroupOfArbitrationEntities.ToList().Select(y => y.Select(z => z.Id)).Any(y => y.Contains(x.ArbitrationId)))
-                .ToListAsync();
+            List<int> ArbitrationIds = GroupOfArbitrationEntities
+                .SelectMany(group => group.Select(arbitration => arbitration.Id))
+                .ToList();
 
+            List<InitialArbitration> InitialArbitrationEntities = await _InitialArbitrationRepository
+                .Where(x => ArbitrationIds.Contains(x.ArbitrationId))
+                .ToListAsync();
+            
             int MarginOfDifferenceBetweenArbitrators = await _ArbitrationRepository
                 .Include(x => x.ProvidedForm!)
                 .Include(x => x.ProvidedForm!.Category!.Cycle!)
@@ -148,13 +154,20 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                         if (!BreakOuterLoop)
                         {
                             List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
-                                .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
+                                .Where(x => ArbitrationIds.Contains(x.ArbitrationId))
                                 .ToList();
 
                             GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                                .Sum(x => x.ArbitrationScore) / InitialArbitrationEntitiesForThisArbitrations.Count();
+                                .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
 
                             GetAllFormsForArbitrationAuditListVM.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+
+                            foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                            {
+                                ArbitrationEntity.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+                            }
+
+                            await _ArbitrationRepository.UpdateListAsync(GroupOfArbitrationEntity.ToList());
 
                             Response.Add(GetAllFormsForArbitrationAuditListVM);
                         }
@@ -196,13 +209,20 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     if (!BreakOuterLoop)
                     {
                         List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
-                            .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
+                            .Where(x => ArbitrationIds.Contains(x.ArbitrationId))
                             .ToList();
 
                         GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                            .Sum(x => x.ArbitrationScore) / InitialArbitrationEntitiesForThisArbitrations.Count();
+                            .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
 
                         GetAllFormsForArbitrationAuditListVM.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+
+                        foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                        {
+                            ArbitrationEntity.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+                        }
+
+                        await _ArbitrationRepository.UpdateListAsync(GroupOfArbitrationEntity.ToList());
 
                         GetAllFormsForArbitrationAuditListVM.ItExceededTheMarginOfDifferenceInArbitrationScores = false;
 

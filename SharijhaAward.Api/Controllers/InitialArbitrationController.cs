@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.ChangeArbitrationStatus;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateChairmanNotesOnInitialArbitration;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateInitialArbitration;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.DeleteChairmanNotesOnInitialArbitration;
@@ -135,7 +136,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllFromsForInitialArbitration(ArbitrationType ArbitrationType, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllFromsForInitialArbitration(ArbitrationType? ArbitrationType, int Page = 1, int PerPage = 10)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
@@ -173,21 +174,52 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetInitialArbitrationByArbitrationId(int ArbitrationId)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<MainCriterionDto>> Response = await _Mediator.Send(new GetInitialArbitrationByArbitrationIdQuery()
+            BaseResponse<GetInitialArbitrationByArbitrationIdResponse> Response = await _Mediator.Send(new GetInitialArbitrationByArbitrationIdQuery()
             {
                 lang = HeaderValue!,
-                ArbitrationId = ArbitrationId
+                ArbitrationId = ArbitrationId,
+                Token = Token
             });
 
             return Response.statusCode switch
             {
                 404 => NotFound(Response),
                 200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("ChangeArbitrationStatus")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ChangeArbitrationStatus([FromBody] ChangeArbitrationStatusMainCommand ChangeArbitrationStatusMainCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            ChangeArbitrationStatusMainCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(ChangeArbitrationStatusMainCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
                 _ => BadRequest(Response)
             };
         }

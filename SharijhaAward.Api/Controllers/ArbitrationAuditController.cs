@@ -52,7 +52,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPatch("ChangeInitialArbiitrationFromArbitrationAuditStatus/{FormId}")]
+        [HttpPatch("ChangeInitialArbitrationStatusFromArbitrationAuditStep/{FormId}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
