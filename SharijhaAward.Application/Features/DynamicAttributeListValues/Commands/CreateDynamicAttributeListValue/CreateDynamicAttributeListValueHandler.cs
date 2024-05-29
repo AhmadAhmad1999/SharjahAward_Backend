@@ -24,10 +24,10 @@ namespace SharijhaAward.Application.Features.DynamicAttributeListValues.Commands
         {
             string ResponseMessage = string.Empty;
 
-            DynamicAttribute? CheckIfAttributeTableNameIdDoesExist = await _DynamicAttributeRepository
+            DynamicAttribute? CheckIfDynamicAttributeIdDoesExist = await _DynamicAttributeRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributeId);
 
-            if (CheckIfAttributeTableNameIdDoesExist == null)
+            if (CheckIfDynamicAttributeIdDoesExist == null)
             {
                 ResponseMessage = Request.lang == "en"
                   ? "field is not Found"
@@ -36,8 +36,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeListValues.Commands
                 return new BaseResponse<CreateDynamicAttributeListValueResponse>(ResponseMessage, false, 404);
             }
 
-            DynamicAttributeListValue NewDynamicAttributeSectionEntity = _Mapper.Map<DynamicAttributeListValue>(Request);
-            await _DynamicAttributeListValueRepository.AddAsync(NewDynamicAttributeSectionEntity);
+            DynamicAttributeListValue NewDynamicAttributeListValueEntity = _Mapper.Map<DynamicAttributeListValue>(Request);
+            await _DynamicAttributeListValueRepository.AddAsync(NewDynamicAttributeListValueEntity);
 
             ResponseMessage = Request.lang == "en"
                 ? "Created successfully"
@@ -49,7 +49,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeListValues.Commands
                 {
                     CreateDynamicAttributeListValueDto = new CreateDynamicAttributeListValueDto()
                     {
-                        Id = NewDynamicAttributeSectionEntity.Id,
+                        Id = NewDynamicAttributeListValueEntity.Id,
                         Value = Request.Value,
                         DynamicAttributeId = Request.DynamicAttributeId
                     }

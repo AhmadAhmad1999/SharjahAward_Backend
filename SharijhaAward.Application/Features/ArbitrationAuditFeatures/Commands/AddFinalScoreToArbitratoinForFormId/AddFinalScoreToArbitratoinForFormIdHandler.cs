@@ -52,10 +52,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.A
                         .Where(x => x.ProvidedFormId == Request.FormId)
                         .ExecuteUpdateAsync(x => x.SetProperty(y => y.FullScore, Request.FinalScore));
 
-                    await _ArbitrationRepository
-                        .Where(x => x.ProvidedFormId == Request.FormId)
-                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsRejectedFromArbitrationAuditStep, false));
-
                     FinalArbitration? CheckIfFinalArbitrationEntityIsAlreadyExist = await _FinalArbitrationRepository
                         .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
 
@@ -99,8 +95,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.A
                     Transaction.Complete();
 
                     ResponseMessage = Request.lang == "en"
-                        ? "Final score has been updated successfully"
-                        : "تم تعديل العلامة النهائية بنجاح";
+                        ? "Final score has been addded successfully"
+                        : "تم إضافة العلامة النهائية بنجاح";
 
                     return new BaseResponse<object>(ResponseMessage, true, 200);
                 }

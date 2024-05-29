@@ -26,10 +26,23 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
 
             if (Request.isCanceled is not null)
             {
-                List<GetAllInterviewsForInterviewStepListVM> Meetings = _Mapper.Map<List<GetAllInterviewsForInterviewStepListVM>>(await _InterviewRepository
+                List<GetAllInterviewsForInterviewStepListVM> Meetings = await _InterviewRepository
                     .WhereThenFilter(x => x.isCanceled == Request.isCanceled, filterObject)
                     .OrderByDescending(x => x.CreatedAt)
-                    .ToListAsync());
+                    .Select(x => new GetAllInterviewsForInterviewStepListVM()
+                    {
+                        Date = x.Date,
+                        Description = Request.lang == "en"
+                            ? x.EnglishDescription
+                            : x.ArabicDescription,
+                        Id = x.Id,
+                        isCanceled = x.isCanceled,
+                        isImplemented = x.isImplemented,
+                        Name = Request.lang == "en"
+                            ? x.EnglishName
+                            : x.ArabicName,
+                        Type = x.Type
+                    }).ToListAsync();
 
                 int TotalCount = await _InterviewRepository.GetCountAsync(null);
 
@@ -40,10 +53,23 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
             }
             else if (Request.isImplemented is not null)
             {
-                List<GetAllInterviewsForInterviewStepListVM> Meetings = _Mapper.Map<List<GetAllInterviewsForInterviewStepListVM>>(await _InterviewRepository
+                List<GetAllInterviewsForInterviewStepListVM> Meetings = await _InterviewRepository
                     .WhereThenFilter(x => x.isImplemented == Request.isImplemented, filterObject)
                     .OrderByDescending(x => x.CreatedAt)
-                    .ToListAsync());
+                    .Select(x => new GetAllInterviewsForInterviewStepListVM()
+                    {
+                        Date = x.Date,
+                        Description = Request.lang == "en"
+                            ? x.EnglishDescription
+                            : x.ArabicDescription,
+                        Id = x.Id,
+                        isCanceled = x.isCanceled,
+                        isImplemented = x.isImplemented,
+                        Name = Request.lang == "en"
+                            ? x.EnglishName
+                            : x.ArabicName,
+                        Type = x.Type
+                    }).ToListAsync();
 
                 int TotalCount = await _InterviewRepository.GetCountAsync(null);
 
@@ -54,8 +80,22 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
             }
             else
             {
-                List<GetAllInterviewsForInterviewStepListVM> Meetings = _Mapper.Map<List<GetAllInterviewsForInterviewStepListVM>>(await _InterviewRepository
-                    .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
+                List<GetAllInterviewsForInterviewStepListVM> Meetings = await _InterviewRepository
+                    .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize)
+                    .Select(x => new GetAllInterviewsForInterviewStepListVM()
+                    {
+                        Date = x.Date,
+                        Description = Request.lang == "en"
+                            ? x.EnglishDescription
+                            : x.ArabicDescription,
+                        Id = x.Id,
+                        isCanceled = x.isCanceled,
+                        isImplemented = x.isImplemented,
+                        Name = Request.lang == "en"
+                            ? x.EnglishName
+                            : x.ArabicName,
+                        Type = x.Type
+                    }).ToListAsync();
 
                 int TotalCount = await _InterviewRepository.GetCountAsync(null);
 

@@ -6,8 +6,8 @@ namespace SharijhaAward.Domain.Entities.AdvancedFormBuilderModel
     {
         public int Id { get; set; }
         public string Value { get; set; } = null!;
-        public int RecordId { get; set; }
-        public VirtualTable? Record { get; set; }
+        public int VirtualTableId { get; set; }
+        public VirtualTable? VirtualTable { get; set; }
         public int AdvancedFormBuilderId { get; set; }
         public AdvancedFormBuilder? AdvancedFormBuilder { get; set; }
     }

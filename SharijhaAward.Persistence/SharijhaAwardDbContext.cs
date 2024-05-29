@@ -95,6 +95,7 @@ namespace SharijhaAward.Persistence
 
         }
 
+        public DbSet<AdvancedFormBuilderGeneralValidation> AdvancedFormBuilderGeneralValidations { get; set; }
         public DbSet<VirtualTable> VirtualTables { get; set; }
         public DbSet<VirtualTableForSection> VirtualTableForSections { get; set; }
         public DbSet<AdvancedFormBuilderValue> AdvancedFormBuilderValues { get; set; }
@@ -237,6 +238,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<FinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<FinalArbitration>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AdvancedFormBuilderValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AdvancedFormBuilderTableValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AdvancedFormBuilderPatternValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AdvancedFormBuilderPattern>().HasQueryFilter(p => !p.isDeleted);

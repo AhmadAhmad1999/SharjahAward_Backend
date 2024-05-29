@@ -105,99 +105,107 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
             using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
                 TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
             {
-                // Add Dynamic Attribute Main Data..
-                DynamicAttribute NewDynamicAttributeEntity = _Mapper.Map<DynamicAttribute>(Request);
-                NewDynamicAttributeEntity.Status = DynamicAttributeStatus.Active;
-                NewDynamicAttributeEntity.OrderId = LastOrderIdInSection++;
-                NewDynamicAttributeEntity.ArabicTitle = NewDynamicAttributeEntity.ArabicLabel;
-                NewDynamicAttributeEntity.EnglishTitle = NewDynamicAttributeEntity.EnglishLabel;
+                try
+                {
+                    // Add Dynamic Attribute Main Data..
+                    DynamicAttribute NewDynamicAttributeEntity = _Mapper.Map<DynamicAttribute>(Request);
+                    NewDynamicAttributeEntity.Status = DynamicAttributeStatus.Active;
+                    NewDynamicAttributeEntity.OrderId = LastOrderIdInSection++;
+                    NewDynamicAttributeEntity.ArabicTitle = NewDynamicAttributeEntity.ArabicLabel;
+                    NewDynamicAttributeEntity.EnglishTitle = NewDynamicAttributeEntity.EnglishLabel;
 
-                await _DynamicAttributeRepository.AddAsync(NewDynamicAttributeEntity);
+                    await _DynamicAttributeRepository.AddAsync(NewDynamicAttributeEntity);
 
-                string? AttributeDataTypeName = _AttributeDataTypeRepository
-                    .FirstOrDefault(x => x.Id == Request.AttributeDataTypeId)?.Name;
+                    string? AttributeDataTypeName = _AttributeDataTypeRepository
+                        .FirstOrDefault(x => x.Id == Request.AttributeDataTypeId)?.Name;
 
-                if (!string.IsNullOrEmpty(AttributeDataTypeName)
+                    if (!string.IsNullOrEmpty(AttributeDataTypeName)
                         ? AttributeDataTypeName.ToLower().Contains("List".ToLower())
                         : false)
-                {
-                    if (Request.Values == null)
                     {
-                        ResponseMessage = Request.lang == "en"
-                            ? "This field must have values"
-                            : "يجب أن يتم تعبئة قيم لهذا الحقل";
-
-                        Transaction.Dispose();
-                        return new BaseResponse<CreateDynamicAttributeResponse>(ResponseMessage, false, 400);
-                    }
-
-                    await _DynamicAttributeListValueRepository.AddRangeAsync(Request.Values.Select(DynamicAttributeListValue => 
-                        new DynamicAttributeListValue()
+                        if (Request.Values == null)
                         {
-                            Value = DynamicAttributeListValue,
-                            DynamicAttributeId = NewDynamicAttributeEntity.Id,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            DeletedAt = null,
-                            isDeleted = false,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null
-                        }));
-                }
+                            ResponseMessage = Request.lang == "en"
+                                ? "This field must have values"
+                                : "يجب أن يتم تعبئة قيم لهذا الحقل";
 
-                // Add General Validaiton if The Request.GeneralValidationObject is NOT NULL..
-                if (Request.GeneralValidationObject is not null)
-                {
-                    GeneralValidation NewGeneralValidationEntity = _Mapper.Map<GeneralValidation>(Request.GeneralValidationObject);
-                    NewGeneralValidationEntity.DynamicAttributeId = NewDynamicAttributeEntity.Id;
-
-                    await _GeneralValidationRepository.AddAsync(NewGeneralValidationEntity);
-                }
-
-                // Add Dependency Validaiton if The Request.DependencyValidations is NOT NULL..
-                if (Request.DependencyValidations is not null)
-                {
-                    foreach (CreateDependencyValidation DependencyValidationDTO in Request.DependencyValidations)
-                    {
-                        // Create New DependencyGroupId To Combine The Group Of Dependenies With Each Other and With Their Validation..
-                        DependencyGroup NewDependencyGroup = new DependencyGroup();
-                        await _DependencyGroupRepository.AddAsync(NewDependencyGroup);
-
-                        foreach (CreateDependency DependencyDTO in DependencyValidationDTO.Dependencies)
-                        {
-                            Dependency NewDependencyEntity = _Mapper.Map<Dependency>(DependencyDTO);
-                            NewDependencyEntity.DependencyGroupId = NewDependencyGroup.Id;
-                            NewDependencyEntity.MainDynamicAttributeId = NewDynamicAttributeEntity.Id;
-                            await _DependencyRepository.AddAsync(NewDependencyEntity);
+                            Transaction.Dispose();
+                            return new BaseResponse<CreateDynamicAttributeResponse>(ResponseMessage, false, 400);
                         }
 
-                        DependencyValidation NewDependencyValidationEntity = _Mapper.Map<DependencyValidation>(DependencyValidationDTO);
-                        NewDependencyValidationEntity.DependencyGroupId = NewDependencyGroup.Id;
-                        await _DependencyValidationRepository.AddAsync(NewDependencyValidationEntity);
+                        await _DynamicAttributeListValueRepository.AddRangeAsync(Request.Values.Select(DynamicAttributeListValue =>
+                            new DynamicAttributeListValue()
+                            {
+                                Value = DynamicAttributeListValue,
+                                DynamicAttributeId = NewDynamicAttributeEntity.Id,
+                                CreatedAt = DateTime.UtcNow,
+                                CreatedBy = null,
+                                DeletedAt = null,
+                                isDeleted = false,
+                                LastModifiedAt = null,
+                                LastModifiedBy = null
+                            }));
                     }
-                }
 
-                Transaction.Complete();
-
-                ResponseMessage = Request.lang == "en"
-                    ? "Created successfully"
-                    : "تم إنشاء الحقل بنجاح";
-
-                return new BaseResponse<CreateDynamicAttributeResponse>()
-                {
-                    data = new CreateDynamicAttributeResponse()
+                    // Add General Validaiton if The Request.GeneralValidationObject is NOT NULL..
+                    if (Request.GeneralValidationObject is not null)
                     {
-                        CreateDynamicAttributeDto = new CreateDynamicAttributeDto()
+                        GeneralValidation NewGeneralValidationEntity = _Mapper.Map<GeneralValidation>(Request.GeneralValidationObject);
+                        NewGeneralValidationEntity.DynamicAttributeId = NewDynamicAttributeEntity.Id;
+
+                        await _GeneralValidationRepository.AddAsync(NewGeneralValidationEntity);
+                    }
+
+                    // Add Dependency Validaiton if The Request.DependencyValidations is NOT NULL..
+                    if (Request.DependencyValidations is not null)
+                    {
+                        foreach (CreateDependencyValidation DependencyValidationDTO in Request.DependencyValidations)
                         {
-                            Id = NewDynamicAttributeEntity.Id,
-                            ArabicLabel = NewDynamicAttributeEntity.ArabicLabel,
-                            EnglishLabel = NewDynamicAttributeEntity.EnglishLabel
+                            // Create New DependencyGroupId To Combine The Group Of Dependenies With Each Other and With Their Validation..
+                            DependencyGroup NewDependencyGroup = new DependencyGroup();
+                            await _DependencyGroupRepository.AddAsync(NewDependencyGroup);
+
+                            foreach (CreateDependency DependencyDTO in DependencyValidationDTO.Dependencies)
+                            {
+                                Dependency NewDependencyEntity = _Mapper.Map<Dependency>(DependencyDTO);
+                                NewDependencyEntity.DependencyGroupId = NewDependencyGroup.Id;
+                                NewDependencyEntity.MainDynamicAttributeId = NewDynamicAttributeEntity.Id;
+                                await _DependencyRepository.AddAsync(NewDependencyEntity);
+                            }
+
+                            DependencyValidation NewDependencyValidationEntity = _Mapper.Map<DependencyValidation>(DependencyValidationDTO);
+                            NewDependencyValidationEntity.DependencyGroupId = NewDependencyGroup.Id;
+                            await _DependencyValidationRepository.AddAsync(NewDependencyValidationEntity);
                         }
-                    },
-                    success = true,
-                    message = ResponseMessage,
-                    statusCode = 200
-                };
+                    }
+
+                    Transaction.Complete();
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Created successfully"
+                        : "تم إنشاء الحقل بنجاح";
+
+                    return new BaseResponse<CreateDynamicAttributeResponse>()
+                    {
+                        data = new CreateDynamicAttributeResponse()
+                        {
+                            CreateDynamicAttributeDto = new CreateDynamicAttributeDto()
+                            {
+                                Id = NewDynamicAttributeEntity.Id,
+                                ArabicLabel = NewDynamicAttributeEntity.ArabicLabel,
+                                EnglishLabel = NewDynamicAttributeEntity.EnglishLabel
+                            }
+                        },
+                        success = true,
+                        message = ResponseMessage,
+                        statusCode = 200
+                    };
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
             }
         }
     }

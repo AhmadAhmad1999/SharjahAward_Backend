@@ -309,6 +309,17 @@ using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.CreateFinalArbitrationScore;
 using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.UpdateChairmanNotesOnFinalArbitrationScore;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllCriterionsForCoordinator;
+using SharijhaAward.Domain.Entities.AdvancedFormBuilderModel;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.CreateAdvancedFormBuilder;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.UpdateAdvancedFormBuilder;
+using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateInitialArbitration;
+using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Application.Features.AdvancedFormBuilderListValues.Commands.CreateAdvancedFormBuilderListValue;
+using SharijhaAward.Application.Features.AdvancedFormBuilderListValues.Commands.UpdateAdvancedFormBuilderListValue;
+using SharijhaAward.Application.Features.AdvancedFormBuilderPatterns.Queries.GetAllAdvancedFormBuilderPattern;
+using SharijhaAward.Application.Features.AdvancedFormBuilderPatterns.Queries.GetAdvancedFormBuilderPatternById;
+using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.CreateAdvancedFormBuilderSection;
+using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.UpdateAdvancedFormBuilderSection;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -591,6 +602,14 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ArbitrationScalesCriterion, ArbitrationScaleCriterionDto>().ReverseMap();
             CreateMap<Interview, CreateInterviewCommand>().ReverseMap();
             CreateMap<FinalArbitrationScore, CreateFinalArbitrationScoreMainCommand>().ReverseMap();
+            CreateMap<AdvancedFormBuilder, CreateAdvancedFormBuilderCommand>().ReverseMap();
+            CreateMap<AdvancedFormBuilderGeneralValidation, CreateGeneralValidation>().ReverseMap();
+            CreateMap<AdvancedFormBuilderDependency, CreateDependency>().ReverseMap();
+            CreateMap<AdvancedFormBuilderDependencyValidation, CreateDependencyValidation>().ReverseMap();
+            CreateMap<InitialArbitration, InitialArbitrationMainCommand>().ReverseMap();
+            CreateMap<AdvancedFormBuilderListValue, CreateAdvancedFormBuilderListValueCommand>().ReverseMap();
+            CreateMap<AdvancedFormBuilder, AdvancedFormBuilderPattern>().ReverseMap();
+            CreateMap<AdvancedFormBuilderSection, CreateAdvancedFormBuilderSectionCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -615,6 +634,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Meeting, UpdateMeetingCommand>().ReverseMap();
             CreateMap<Interview, UpdateInterviewCommand>().ReverseMap();
             CreateMap<ChairmanNotesOnFinalArbitrationScore, UpdateChairmanNotesOnFinalArbitrationScoreCommand>().ReverseMap();
+            CreateMap<AdvancedFormBuilder, UpdateAdvancedFormBuilderCommand>().ReverseMap();
+            CreateMap<AdvancedFormBuilderListValue, UpdateAdvancedFormBuilderListValueCommand>().ReverseMap();
+            CreateMap<AdvancedFormBuilderSection, UpdateAdvancedFormBuilderSectionCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -673,6 +695,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Interview, GetAllInterviewsForInterviewStepListVM>().ReverseMap();
             CreateMap<CriterionAttachment, GetAllCriterionsForCoordinatorAttachment>().ReverseMap();
             CreateMap<CriterionItemAttachment, GetAllCriterionsForCoordinatorAttachment>().ReverseMap();
+            CreateMap<AdvancedFormBuilderPattern, GetAllAdvancedFormBuilderPatternListVM>().ReverseMap();
+            CreateMap<AdvancedFormBuilderPattern, GetAdvancedFormBuilderPatternByIdDto>().ReverseMap();
+            CreateMap<AdvancedFormBuilderPatternValue, GetAdvancedFormBuilderPatternByIdValues>().ReverseMap();
         }
     }
 }

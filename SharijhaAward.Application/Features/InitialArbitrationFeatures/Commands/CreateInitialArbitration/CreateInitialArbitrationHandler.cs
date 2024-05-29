@@ -26,6 +26,9 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
         {
             string ResponseMessage = string.Empty;
 
+            IEnumerable<InitialArbitrationMainCommand> InitialArbitrationMainCommands = Request.InitialArbitrationMainCommand
+                .Where(x => x.ArbitrationScore != null);
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -37,7 +40,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
             {
                 try
                 {
-                    foreach (InitialArbitrationMainCommand InitialArbitrationMainCommand in Request.InitialArbitrationMainCommand)
+                    foreach (InitialArbitrationMainCommand InitialArbitrationMainCommand in InitialArbitrationMainCommands)
                     {
                         if (InitialArbitrationMainCommand.InitialArbitrationId == 0)
                         {
@@ -63,7 +66,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
 
                             InitialArbitrationEntity.StrengthPoint = InitialArbitrationMainCommand.StrengthPoint;
                             InitialArbitrationEntity.ImprovementAreas = InitialArbitrationMainCommand.ImprovementAreas;
-                            InitialArbitrationEntity.ArbitrationScore = InitialArbitrationMainCommand.ArbitrationScore;
+                            InitialArbitrationEntity.ArbitrationScore = InitialArbitrationMainCommand.ArbitrationScore!.Value;
 
                             await _InitialArbitrationRepository.UpdateAsync(InitialArbitrationEntity);
                         }
@@ -90,7 +93,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                     else
                         ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
 
-                    ArbitrationEntity.FullScore = Request.InitialArbitrationMainCommand.Sum(x => x.ArbitrationScore);
+                    ArbitrationEntity.FullScore = Request.InitialArbitrationMainCommand.Sum(x => x.ArbitrationScore!.Value);
 
                     await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
 

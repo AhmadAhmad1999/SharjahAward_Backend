@@ -66,7 +66,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Commands.Creat
                     await _NotificationRepository.AddAsync(NewNotificationEntity);
 
                     List<FirebaseAdmin.Messaging.Message> NotificationMessages = await _UserTokenRepository
-                        .Where(x => Request.UsersIds.Any(y => y == x.UserId))
+                        .Where(x => Request.UsersIds.Any(y => y == x.UserId) && !string.IsNullOrEmpty(x.DeviceToken))
                         .Include(x => x.User!)
                         .Select(x => x.AppLanguage == "en"
                             ? new FirebaseAdmin.Messaging.Message()

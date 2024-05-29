@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
         public bool? ItExceededTheMarginOfDifferenceInArbitrationScores { get; set; }
         public string? Token { get; set; }
         public string? lang { get; set; }
-        public int page { get; set; }
-        public int pageSize { get; set; }
+        public int page { get; set; } = 1;
+        public int pageSize { get; set; } = 10;
     }
 }

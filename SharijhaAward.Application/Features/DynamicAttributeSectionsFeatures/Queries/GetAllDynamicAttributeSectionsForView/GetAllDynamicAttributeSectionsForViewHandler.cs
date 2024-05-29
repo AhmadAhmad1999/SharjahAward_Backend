@@ -7,6 +7,7 @@ using SharijhaAward.Domain.Constants.DynamicAttribute;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using RestSharp;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView
 {
@@ -53,7 +54,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                 List<DynamicAttributeSectionListVM> DynamicAttributeSections = new List<DynamicAttributeSectionListVM>();
 
                 if (Request.page != 0 && Request.pageSize != -1)
-                    DynamicAttributeSections = _DynamicAttributeSectionRepository
+                    DynamicAttributeSections = await _DynamicAttributeSectionRepository
                         .IncludeThenWhere(x => x.AttributeTableName!,
                             x => x.RecordIdOnRelation == Request.CategoryId &&
                             x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower())
@@ -67,10 +68,10 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 ? x.ArabicName
                                 : x.EnglishName,
                             TableTypeSection = x.TableTypeSection
-                        }).ToList();
+                        }).ToListAsync();
 
                 else
-                    DynamicAttributeSections = _DynamicAttributeSectionRepository
+                    DynamicAttributeSections = await _DynamicAttributeSectionRepository
                         .IncludeThenWhere(x => x.AttributeTableName!,
                             x => x.RecordIdOnRelation == Request.CategoryId &&
                             x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower())
@@ -82,7 +83,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 ? x.ArabicName
                                 : x.EnglishName,
                             TableTypeSection = x.TableTypeSection
-                        }).ToList();
+                        }).ToListAsync();
 
                 if (DynamicAttributeSections.FirstOrDefault(x => x.Name.ToLower() == "Main Information".ToLower() ||
                     x.Name == "المعلومات الأساسية") == null)

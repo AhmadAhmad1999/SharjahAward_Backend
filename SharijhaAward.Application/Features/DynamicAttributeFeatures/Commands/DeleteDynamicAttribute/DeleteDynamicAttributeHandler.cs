@@ -1,13 +1,7 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.DeleteDynamicAttributeSection;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute
 {

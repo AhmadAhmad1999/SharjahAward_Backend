@@ -60,7 +60,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, false, 404);
                 }
 
-                List<GetAllDynamicAttributeSectionsForAddListVM> DynamicAttributeSections = _DynamicAttributeSectionRepository
+                List<GetAllDynamicAttributeSectionsForAddListVM> DynamicAttributeSections = await _DynamicAttributeSectionRepository
                     .IncludeThenWhere(x => x.AttributeTableName!, x => x.RecordIdOnRelation == ProvidedFormEntity.categoryId &&
                         x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower())
                     .OrderBy(x => x.OrderId)
@@ -71,7 +71,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             ? x.ArabicName
                             : x.EnglishName,
                         TableTypeSection = x.TableTypeSection
-                    }).ToList();
+                    }).ToListAsync();
 
                 IReadOnlyList<AttributeDataType> DataTypes = await _AttributeDataTypeRepository.ListAllAsync();
 
@@ -287,7 +287,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                 string Language = !string.IsNullOrEmpty(Request.lang)
                     ? Request.lang.ToLower() : "ar";
 
-                List<GetAllDynamicAttributeSectionsForAddListVM> DynamicAttributeSections = _DynamicAttributeSectionRepository
+                List<GetAllDynamicAttributeSectionsForAddListVM> DynamicAttributeSections = await _DynamicAttributeSectionRepository
                     .IncludeThenWhere(x => x.AttributeTableName!,
                         x => Request.isArbitrator.Value
                             ? x.AttributeTableName!.Name.ToLower() == TableNames.Arbitrator.ToString().ToLower() &&
@@ -302,7 +302,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             ? x.ArabicName
                             : x.EnglishName,
                         TableTypeSection = x.TableTypeSection
-                    }).ToList();
+                    }).ToListAsync();
 
                 IReadOnlyList<AttributeDataType> DataTypes = await _AttributeDataTypeRepository.ListAllAsync();
 
