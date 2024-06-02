@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.FAQs.Queries.GetFAQById;
 using SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId;
 using SharijhaAward.Application.Features.FAQs.Queries.SearchForFAQs;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.FAQs.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -160,6 +161,19 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(response),
                 404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("FAQExportToExcel", Name = "FAQExportToExcel")]
+        public async Task<IActionResult> FAQExportToExcel()
+        {
+            var response = await _mediator.Send(new ExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "FAQs.xlsx"),
                 _ => BadRequest(response)
             };
         }

@@ -81,7 +81,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
 
             var data = _mapper.Map<List<CyclePublicConditionListVm>>(Terms);
 
-            for (int i = 0; i < conditionsProvideds.Count(); i++)
+            for (int i = 0; i < data.Count(); i++)
             {
              
                 data[i].ConditionsAttachments = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvideds[i]);

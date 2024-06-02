@@ -6,6 +6,7 @@ using SharijhaAward.Application.Features.AppVersioningFeatures.Command.CreateNew
 using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllAppVersions;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetLastAppVersion;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants;
 using System.Text.Json;
 
 namespace SharijhaAward.Api.Controllers
@@ -54,7 +55,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetLastAppVersion()
+        public async Task<IActionResult> GetLastAppVersion(AppType AppType)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -63,7 +64,8 @@ namespace SharijhaAward.Api.Controllers
 
             BaseResponse<GetLastAppVersionDto> Response = await _Mediator.Send(new GetLastAppVersionQuery()
             {
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                AppType = AppType
             });
 
             return Response.statusCode switch
@@ -81,7 +83,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllAppVersions(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllAppVersions(AppType? AppType, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -92,7 +94,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = HeaderValue!,
                 page = Page,
-                pageSize = PerPage
+                pageSize = PerPage,
+                AppType = AppType
             });
 
             return Response.statusCode switch

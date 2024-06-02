@@ -21,6 +21,7 @@ using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 using System;
 using System.Text.Json.Nodes;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.TrainingWorkshops.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -188,6 +189,19 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(response),
                 404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("TrainingWorkshopsExportToExcel", Name = "TrainingWorkshopsExportToExcel")]
+        public async Task<IActionResult> TrainingWorkshopsExportToExcel()
+        {
+            var response = await _mediator.Send(new ExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "TrainingWorkshops.xlsx"),
                 _ => BadRequest(response)
             };
         }

@@ -24,6 +24,7 @@ namespace SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetLast
 
             GetLastAppVersionDto LastAppVersion = _Mapper.Map<GetLastAppVersionDto>(await _AppVersionRepository
                 .OrderBy(x => x.VersionNumber)
+                .Where(x=>x.AppType == Request.AppType)
                 .LastOrDefaultAsync());
 
             return new BaseResponse<GetLastAppVersionDto>(ResponseMessage, true, 200, LastAppVersion);

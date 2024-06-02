@@ -17,6 +17,7 @@ using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsB
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermAndConditionById;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -254,6 +255,18 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(response),
                 200 => Ok(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpGet("TermAndConditionExportToExcel", Name = "TermAndConditionExportToExcel")]
+        public async Task<IActionResult> TermAndConditionExportToExcel()
+        {
+            var response = await _mediator.Send(new ExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "TermsAndConditions.xlsx"),
                 _ => BadRequest(response)
             };
         }
