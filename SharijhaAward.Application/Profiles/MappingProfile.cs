@@ -320,6 +320,11 @@ using SharijhaAward.Application.Features.AdvancedFormBuilderPatterns.Queries.Get
 using SharijhaAward.Application.Features.AdvancedFormBuilderPatterns.Queries.GetAdvancedFormBuilderPatternById;
 using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.CreateAdvancedFormBuilderSection;
 using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.UpdateAdvancedFormBuilderSection;
+using SharijhaAward.Application.Features.TermsAndConditions.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.CycleConditions.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.TrainingWorkshops.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.Agendas.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.FAQs.Queries.ExportToExcel;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -385,12 +390,14 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<TrainingWorkshop, UpdateTrainingWorkshopCommand>().ReverseMap();
             CreateMap<TrainingWorkshop, DeleteTrainingWorkshopCommand>().ReverseMap();
             CreateMap<TrainingWorkshop, TrainingWorkshopDto>().ReverseMap();
+            CreateMap<TrainingWorkshop, TrainingWorkshopExportDto>().ReverseMap();
             CreateMap<TrainingWorkshop, TrainingWorkshopListVm>().ReverseMap();
 
             CreateMap<FrequentlyAskedQuestion, CreateFAQCommand>().ReverseMap();
             CreateMap<FrequentlyAskedQuestion, UpdateFAQCommand>().ReverseMap();
             CreateMap<FrequentlyAskedQuestion, DeleteFAQCommand>().ReverseMap();
             CreateMap<FrequentlyAskedQuestion, FAQDto>().ReverseMap();
+            CreateMap<FrequentlyAskedQuestion, FAQExportDto>().ReverseMap();
             CreateMap<FrequentlyAskedQuestion, FAQListVm>().ReverseMap();
 
             CreateMap<Cycle, CreateCycleCommand>().ReverseMap();
@@ -409,11 +416,13 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Agenda, CreateAgendaCommand>().ReverseMap();
             CreateMap<Agenda, UpdateAgendaCommand>().ReverseMap();
             CreateMap<Agenda, AgendaDto>().ReverseMap();
+            CreateMap<Agenda, AgendaExportDto>().ReverseMap();
             CreateMap<Agenda, AgendaListVm>().ReverseMap();
 
             CreateMap<CycleCondition, CreateCycleConditionCommand>().ReverseMap();
             CreateMap<CycleCondition, UpdateCycleConditionCommand>().ReverseMap();
             CreateMap<CycleCondition, CycleConditionDto>().ReverseMap();
+            CreateMap<CycleCondition, CycleConditionExportDto>().ReverseMap();
             CreateMap<CycleCondition, CycleConditionListVM>().ReverseMap();
             CreateMap<CycleCondition, CyclePublicConditionListVm>().ReverseMap();
             CreateMap<CycleCondition, CycleConditionProvidedFormListVm>().ReverseMap();
@@ -426,6 +435,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<TermAndCondition, CreateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, UpdateTermAndConditionCommand>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionDto>().ReverseMap();
+            CreateMap<TermAndCondition, TermExportDto>().ReverseMap();
             CreateMap<TermAndCondition, TermAndConditionListVM>().ReverseMap();
             CreateMap<TermAndCondition, SpecialTermAndConditionListVM>().ReverseMap();
 

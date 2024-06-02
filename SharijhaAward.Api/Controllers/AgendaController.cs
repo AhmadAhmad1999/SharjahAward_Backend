@@ -5,6 +5,7 @@ using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda;
 using SharijhaAward.Application.Features.Agendas.Commands.DeleteAgenda;
 using SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda;
+using SharijhaAward.Application.Features.Agendas.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendasForAwardTeam;
@@ -169,6 +170,19 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(response),
                 404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("AgendasExportToExcel", Name = "AgendasExportToExcel")]
+        public async Task<IActionResult> AgendasExportToExcel()
+        {
+            var response = await _mediator.Send(new ExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Agendas.xlsx"),
                 _ => BadRequest(response)
             };
         }

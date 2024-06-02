@@ -15,6 +15,7 @@ using SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnTerms
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAllConditions;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.CycleConditions.Attachments.Queries.ReviewCycleConditionAttachments;
+using SharijhaAward.Application.Features.CycleConditions.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -220,6 +221,19 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(response),
                 200 => Ok(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("CycleConditionExportToExcel", Name = "CycleConditionExportToExcel")]
+        public async Task<IActionResult> CycleConditionExportToExcel()
+        {
+            var response = await _mediator.Send(new ExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CycleConditions.xlsx"),
                 _ => BadRequest(response)
             };
         }

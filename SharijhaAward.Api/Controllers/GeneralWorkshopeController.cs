@@ -7,6 +7,7 @@ using SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGeneral
 using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGeneralWorkshops;
 using SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetGeneralWorkshopById;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.GeneralWorkshops.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -113,6 +114,19 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(response),
                 404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GeneralWorkshopExportToExcel", Name = "GeneralWorkshopExportToExcel")]
+        public async Task<IActionResult> GeneralWorkshopExportToExcel()
+        {
+            var response = await _mediator.Send(new ExportToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "GeneralWorkshops.xlsx"),
                 _ => BadRequest(response)
             };
         }
