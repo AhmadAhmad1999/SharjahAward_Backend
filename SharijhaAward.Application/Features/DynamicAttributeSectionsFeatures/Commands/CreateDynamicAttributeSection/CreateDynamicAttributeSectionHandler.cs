@@ -81,7 +81,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
 
             ResponseMessage = Request.lang == "en"
                 ? "Created successfully"
-                : "تم إنشاء الحقل بنجاح";
+                : "تم إنشاء القسم بنجاح";
 
             return new BaseResponse<CreateDynamicAttributeSectionResponse>()
             {

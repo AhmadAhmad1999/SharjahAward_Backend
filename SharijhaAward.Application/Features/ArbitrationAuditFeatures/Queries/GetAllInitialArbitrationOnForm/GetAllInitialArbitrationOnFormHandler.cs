@@ -88,7 +88,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                         ChairmanNotesOnInitialArbitrationDto ChairmanNotesOnInitialArbitrationDto = new ChairmanNotesOnInitialArbitrationDto()
                         {
                             Id = ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.Id,
-                            Note = ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.Note
+                            Note = ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.Note,
+                            CreatedAt = ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.CreatedAt
                         };
 
                         InitialArbitrationDto.ChairmanNotesOnInitialArbitrationDtos.Add(ChairmanNotesOnInitialArbitrationDto);

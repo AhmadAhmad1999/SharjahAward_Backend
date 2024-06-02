@@ -29,15 +29,14 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             string Language = !string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() : "ar";
 
-            GetDynamicAttributeSectionByIdDto DynamicAttributeSection = _Mapper.Map<GetDynamicAttributeSectionByIdDto>
-                (await _DynamicAttributeSectionRepository.Where(x => x.Id == Request.Id)
-                    .Select(x => new GetDynamicAttributeSectionByIdDto()
-                    {
-                        Id = x.Id,
-                        ArabicName = x.ArabicName,
-                        EnglishName = x.EnglishName,
-                        TableTypeSection = x.TableTypeSection
-                    }).FirstOrDefaultAsync());
+            GetDynamicAttributeSectionByIdDto? DynamicAttributeSection = await _DynamicAttributeSectionRepository.Where(x => x.Id == Request.Id)
+                .Select(x => new GetDynamicAttributeSectionByIdDto()
+                {
+                    Id = x.Id,
+                    ArabicName = x.ArabicName,
+                    EnglishName = x.EnglishName,
+                    TableTypeSection = x.TableTypeSection
+                }).FirstOrDefaultAsync();
 
             if (DynamicAttributeSection == null)
             {

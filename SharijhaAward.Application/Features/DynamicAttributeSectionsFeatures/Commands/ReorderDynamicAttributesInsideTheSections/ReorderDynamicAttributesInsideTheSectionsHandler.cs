@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System.Linq;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.ReorderDynamicAttributesInsideTheSections
@@ -69,9 +68,23 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
                                 
                                 if (DynamicAttributeEntity is not null)
                                 {
-                                    if (DynamicAttributeEntity.OrderId != DynamicAttributesDto.OrderId)
+                                    if (DynamicAttributeEntity.OrderId != DynamicAttributesDto.OrderId &&
+                                        DynamicAttributeEntity.DynamicAttributeSectionId != DynamicAttributeSectionsDto.SectionId)
                                     {
                                         DynamicAttributeEntity.OrderId = DynamicAttributesDto.OrderId;
+                                        DynamicAttributeEntity.DynamicAttributeSectionId = DynamicAttributeSectionsDto.SectionId;
+
+                                        await _DynamicAttributeRepository.UpdateAsync(DynamicAttributeEntity);
+                                    }
+                                    else if (DynamicAttributeEntity.OrderId != DynamicAttributesDto.OrderId)
+                                    {
+                                        DynamicAttributeEntity.OrderId = DynamicAttributesDto.OrderId;
+
+                                        await _DynamicAttributeRepository.UpdateAsync(DynamicAttributeEntity);
+                                    }
+                                    else if (DynamicAttributeEntity.DynamicAttributeSectionId != DynamicAttributeSectionsDto.SectionId)
+                                    {
+                                        DynamicAttributeEntity.DynamicAttributeSectionId = DynamicAttributeSectionsDto.SectionId;
 
                                         await _DynamicAttributeRepository.UpdateAsync(DynamicAttributeEntity);
                                     }

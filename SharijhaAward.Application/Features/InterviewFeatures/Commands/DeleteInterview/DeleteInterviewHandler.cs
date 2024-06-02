@@ -70,7 +70,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteIn
 
                     ResponseMessage = Request.lang == "en"
                         ? "Interview has been deleted successfully"
-                        : "تم حذف الاجتماع بنجاح";
+                        : "تم حذف المقابلة بنجاح";
 
                     Transaction.Complete();
 

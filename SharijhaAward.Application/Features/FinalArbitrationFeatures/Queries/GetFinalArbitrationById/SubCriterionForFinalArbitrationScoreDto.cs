@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
         public string? ImprovementAreas { get; set; }
         public int ArbitrationScore { get; set; }
         public List<AttachmanetsDto> SubCriterionAttachmanetsDto { get; set; } = new List<AttachmanetsDto>();
-        public List<ChairmanNotesOnFinalArbitrationScoreDto> ChairmanNotesOnFinalArbitrationScoreDto { get; set; } = new List<ChairmanNotesOnFinalArbitrationScoreDto>();
+        public List<ChairmanNotesOnFinalArbitrationScoreDto> ChairmanNotesOnFinalArbitrationScoreDtos { get; set; } = new List<ChairmanNotesOnFinalArbitrationScoreDto>();
         public List<CriterionItemForFinalArbitrationScoreDto> SubCriterionItemForFinalArbitrationScoreDtos { get; set; } = new List<CriterionItemForFinalArbitrationScoreDto>();
     }
 }

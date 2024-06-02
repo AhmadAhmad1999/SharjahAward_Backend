@@ -68,9 +68,23 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
 
                                 if (AdvancedFormBuilderEntity is not null)
                                 {
-                                    if (AdvancedFormBuilderEntity.OrderId != AdvancedFormBuildersDto.OrderId)
+                                    if (AdvancedFormBuilderEntity.OrderId != AdvancedFormBuildersDto.OrderId &&
+                                        AdvancedFormBuilderEntity.AdvancedFormBuilderSectionId != AdvancedFormBuilderSectionsDto.SectionId)
                                     {
                                         AdvancedFormBuilderEntity.OrderId = AdvancedFormBuildersDto.OrderId;
+                                        AdvancedFormBuilderEntity.AdvancedFormBuilderSectionId = AdvancedFormBuilderSectionsDto.SectionId;
+
+                                        await _AdvancedFormBuilderRepository.UpdateAsync(AdvancedFormBuilderEntity);
+                                    }
+                                    else if (AdvancedFormBuilderEntity.OrderId != AdvancedFormBuildersDto.OrderId)
+                                    {
+                                        AdvancedFormBuilderEntity.OrderId = AdvancedFormBuildersDto.OrderId;
+                                        
+                                        await _AdvancedFormBuilderRepository.UpdateAsync(AdvancedFormBuilderEntity);
+                                    }
+                                    else if (AdvancedFormBuilderEntity.AdvancedFormBuilderSectionId != AdvancedFormBuilderSectionsDto.SectionId)
+                                    {
+                                        AdvancedFormBuilderEntity.AdvancedFormBuilderSectionId = AdvancedFormBuilderSectionsDto.SectionId;
 
                                         await _AdvancedFormBuilderRepository.UpdateAsync(AdvancedFormBuilderEntity);
                                     }

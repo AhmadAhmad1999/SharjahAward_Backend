@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetInitialArbitrationByArbitrationId;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
@@ -11,7 +13,7 @@ using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.GetFinalArbitrationById
 {
     public class GetFinalArbitrationByIdHandler
-        : IRequestHandler<GetFinalArbitrationByIdQuery, BaseResponse<List<MainCriterionForFinalArbitrationScoreDto>>>
+        : IRequestHandler<GetFinalArbitrationByIdQuery, BaseResponse<GetFinalArbitrationByIdMainDto>>
     {
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository;
@@ -21,6 +23,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
         private readonly IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository;
         private readonly IAsyncRepository<ChairmanNotesOnFinalArbitrationScore> _ChairmanNotesOnFinalArbitrationScoreRepository;
         private readonly IAsyncRepository<ChairmanNotesOnInitialArbitration> _ChairmanNotesOnInitialArbitrationRepository;
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IJwtProvider _JwtProvider;
 
         public GetFinalArbitrationByIdHandler(IAsyncRepository<Criterion> CriterionRepository,
             IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
@@ -29,7 +33,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             IAsyncRepository<CriterionItem> CriterionItemRepository,
             IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository,
             IAsyncRepository<ChairmanNotesOnFinalArbitrationScore> ChairmanNotesOnFinalArbitrationScoreRepository,
-            IAsyncRepository<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrationRepository)
+            IAsyncRepository<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrationRepository,
+            IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IJwtProvider JwtProvider)
         {
             _CriterionRepository = CriterionRepository;
             _CriterionAttachmentRepository = CriterionAttachmentRepository;
@@ -39,15 +45,19 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
             _ChairmanNotesOnFinalArbitrationScoreRepository = ChairmanNotesOnFinalArbitrationScoreRepository;
             _ChairmanNotesOnInitialArbitrationRepository = ChairmanNotesOnInitialArbitrationRepository;
+            _ArbitratorRepository = ArbitratorRepository;
+            _JwtProvider = JwtProvider;
         }
-        public async Task<BaseResponse<List<MainCriterionForFinalArbitrationScoreDto>>> 
+        public async Task<BaseResponse<GetFinalArbitrationByIdMainDto>> 
             Handle(GetFinalArbitrationByIdQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
             FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
                 .Include(x => x.ProvidedForm!)
-                .FirstOrDefaultAsync(x => x.Id == Request.FormId);
+                .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
 
             if (FinalArbitrationEntity is null)
             {
@@ -55,7 +65,19 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     ? "Final arbitration is not Found"
                     : "التحكيم النهائي غير موجود";
 
-                return new BaseResponse<List<MainCriterionForFinalArbitrationScoreDto>>(ResponseMessage, false, 404);
+                return new BaseResponse<GetFinalArbitrationByIdMainDto>(ResponseMessage, false, 404);
+            }
+
+            Arbitrator? ArbitratorEntity = await _ArbitratorRepository
+                .FirstOrDefaultAsync(x => x.Id == UserId);
+
+            if (ArbitratorEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Arbitrator is not Found"
+                    : "المحكم غير موجود";
+
+                return new BaseResponse<GetFinalArbitrationByIdMainDto>(ResponseMessage, false, 404);
             }
 
             int CategoryId = FinalArbitrationEntity.ProvidedForm!.categoryId;
@@ -101,7 +123,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     x.Id,
                     x.Note,
                     x.InitialArbitration!.CriterionId,
-                    x.InitialArbitration!.CriterionItemId
+                    x.InitialArbitration!.CriterionItemId,
+                    x.CreatedAt
                 }).ToListAsync();
 
             List<MainCriterionForFinalArbitrationScoreDto> FullResponse = new List<MainCriterionForFinalArbitrationScoreDto>();
@@ -144,6 +167,17 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             SubCriterionDto.StrengthPoint = null;
                             SubCriterionDto.ImprovementAreas = null;
                             SubCriterionDto.ArbitrationScore = 0;
+                            SubCriterionDto.FinalArbitrationScoreId = 0;
+
+                            SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
+                                .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                {
+                                    Id = x.Id,
+                                    Note = x.Note,
+                                    isFromArbitrationAudit = true,
+                                    CreatedAt = x.CreatedAt
+                                }).ToList();
 
                             SubCriterionDto.SubCriterionAttachmanetsDto = CriterionAttachmentEntities
                                 .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
@@ -161,21 +195,24 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             SubCriterionDto.StrengthPoint = FinalArbitrationScoreEntitiesForThisSubCriterion.StrengthPoint;
                             SubCriterionDto.ImprovementAreas = FinalArbitrationScoreEntitiesForThisSubCriterion.ImprovementAreas;
                             SubCriterionDto.ArbitrationScore = FinalArbitrationScoreEntitiesForThisSubCriterion.ArbitrationScore;
+                            SubCriterionDto.FinalArbitrationScoreId = FinalArbitrationScoreEntitiesForThisSubCriterion.Id;
 
-                            SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDto = ChairmanNotesOnFinalArbitrationScoreEntities
+                            SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnFinalArbitrationScoreEntities
                                 .Where(x => x.FinalArbitrationScoreId == FinalArbitrationScoreEntitiesForThisSubCriterion.Id)
                                 .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
                                 {
                                     Id = x.Id,
                                     Note = x.Note,
-                                    isFromArbitrationAudit = false
+                                    isFromArbitrationAudit = false,
+                                    CreatedAt = x.CreatedAt
                                 }).Concat(ChairmanNotesOnInitialArbitrationEnttities
                                     .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
                                     .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
                                     {
                                         Id = x.Id,
                                         Note = x.Note,
-                                        isFromArbitrationAudit = true
+                                        isFromArbitrationAudit = true,
+                                        CreatedAt = x.CreatedAt
                                     })).ToList();
 
                             SubCriterionDto.SubCriterionAttachmanetsDto = CriterionAttachmentEntities
@@ -220,6 +257,17 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                 CriterionItemDto.ImprovementAreas = null;
                                 CriterionItemDto.ArbitrationScore = 0;
                                 CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = new List<ChairmanNotesOnFinalArbitrationScoreDto>();
+                                CriterionItemDto.FinalArbitrationScoreId = 0;
+
+                                CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                    .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id)
+                                    .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                    {
+                                        Id = x.Id,
+                                        Note = x.Note,
+                                        isFromArbitrationAudit = true,
+                                        CreatedAt = x.CreatedAt
+                                    }).ToList();
 
                                 CriterionItemDto.CriterionItemAttachmanetsDto = CriterionItemAttachmentEntities
                                     .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
@@ -237,6 +285,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                 CriterionItemDto.StrengthPoint = FinalArbitrationScoreEntitiesForThisCriterionItem.StrengthPoint;
                                 CriterionItemDto.ImprovementAreas = FinalArbitrationScoreEntitiesForThisCriterionItem.ImprovementAreas;
                                 CriterionItemDto.ArbitrationScore = FinalArbitrationScoreEntitiesForThisCriterionItem.ArbitrationScore;
+                                CriterionItemDto.FinalArbitrationScoreId = FinalArbitrationScoreEntitiesForThisCriterionItem.Id;
 
                                 CriterionItemDto.CriterionItemAttachmanetsDto = CriterionItemAttachmentEntities
                                     .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
@@ -255,14 +304,16 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                     {
                                         Id = x.Id,
                                         Note = x.Note,
-                                        isFromArbitrationAudit = false
+                                        isFromArbitrationAudit = false,
+                                        CreatedAt = x.CreatedAt
                                     }).Concat(ChairmanNotesOnInitialArbitrationEnttities
                                         .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id)
                                         .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
                                         {
                                             Id = x.Id,
                                             Note = x.Note,
-                                            isFromArbitrationAudit = true
+                                            isFromArbitrationAudit = true,
+                                            CreatedAt = x.CreatedAt
                                         })).ToList();
                             }
 
@@ -276,7 +327,14 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 FullResponse.Add(MainCriterionForFinalArbitrationScoreDto);
             }
 
-            return new BaseResponse<List<MainCriterionForFinalArbitrationScoreDto>>(ResponseMessage, true, 200, FullResponse);
+            GetFinalArbitrationByIdMainDto FinalResponse = new GetFinalArbitrationByIdMainDto()
+            {
+                MainCriterions = FullResponse,
+                FinalArbitrationId = FinalArbitrationEntity.Id,
+                isChairman = ArbitratorEntity.isChairman
+            };
+
+            return new BaseResponse<GetFinalArbitrationByIdMainDto>(ResponseMessage, true, 200, FinalResponse);
         }
     }
 }
