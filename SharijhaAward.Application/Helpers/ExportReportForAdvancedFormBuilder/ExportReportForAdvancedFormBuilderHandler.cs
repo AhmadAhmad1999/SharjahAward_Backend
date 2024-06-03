@@ -47,6 +47,9 @@ namespace SharijhaAward.Application.Helpers.ExportReportForAdvancedFormBuilder
                 .Where(x => x.AdvancedFormBuilderSection!.VirtualTableForSectionId == Request.VirtualTableForSectionId)
                 .ToListAsync();
 
+            int Count = _AdvancedFormBuilderValueRepository
+                .GetCount(x => AdvancedFormBuilderEntities.Select(y => y.Id).Any(y => y == x.AdvancedFormBuilderId));
+
             if (Request.page != 0 && Request.pageSize != -1)
             {
                 var AdvancedFormBuilderValueEntities = _AdvancedFormBuilderValueRepository
@@ -247,7 +250,7 @@ namespace SharijhaAward.Application.Helpers.ExportReportForAdvancedFormBuilder
 
             if (!Request.ExportDataToExcel)
             {
-                return new BaseResponse<List<object>>(ResponseMessage, true, 200, OutPutList);
+                return new BaseResponse<List<object>>(ResponseMessage, true, 200, OutPutList, Count);
             }
             else
             {

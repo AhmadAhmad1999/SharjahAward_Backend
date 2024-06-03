@@ -6,7 +6,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
     public class GetAllAdvancedFormBuildersBySectionIdQuery : IRequest<BaseResponse<List<AdvancedFormBuilderListVM>>>
     {
         public int SectionId { get; set; }
-        public string lang { get; set; } = string.Empty;
+        public string? lang { get; set; }
         public int page { get; set; }
         public int pageSize { get; set; }
     }

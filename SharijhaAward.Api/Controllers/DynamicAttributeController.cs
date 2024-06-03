@@ -17,6 +17,7 @@ using SharijhaAward.Application.Helpers.RejectDynamicAttributeValue;
 using SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllListDynamicAttributes;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -398,6 +399,34 @@ namespace SharijhaAward.Api.Controllers
             {
                 CategoryId = CategoryId,
                 AttributeTableNameId = AttributeTableNameId,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllListDynamicAttributes")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllListDynamicAttributes(int SectionId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllListDynamicAttributesListVM>> Response = await _Mediator.Send(new GetAllListDynamicAttributesQuery()
+            {
+                SectionId = SectionId,
                 lang = HeaderValue!
             });
 

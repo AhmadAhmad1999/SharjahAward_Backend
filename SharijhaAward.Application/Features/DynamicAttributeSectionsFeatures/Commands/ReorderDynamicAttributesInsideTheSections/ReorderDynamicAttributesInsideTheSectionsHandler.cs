@@ -25,16 +25,15 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
         {
             string ResponseMessage = string.Empty;
 
+            List<DynamicAttributeSection> AllDynamicAttributeSectionsEntities = await _DynamicAttributeSectionRepository
+                .Where(x => Request.DynamicAttributeSectionsDto.Select(y => y.SectionId).Any(y => y == x.Id))
+                .ToListAsync();
+
             List<DynamicAttribute> AllDynamicAttributeEntities = await _DynamicAttributeRepository
                 .Where(x => Request.DynamicAttributeSectionsDto.Select(y => y.SectionId)
                     .Any(y => y == x.DynamicAttributeSectionId))
                 .Include(x => x.DynamicAttributeSection!)
                 .ToListAsync();
-
-            List<DynamicAttributeSection> AllDynamicAttributeSectionsEntities = AllDynamicAttributeEntities
-                .Select(x => x.DynamicAttributeSection!)
-                .Distinct()
-                .ToList();
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {
