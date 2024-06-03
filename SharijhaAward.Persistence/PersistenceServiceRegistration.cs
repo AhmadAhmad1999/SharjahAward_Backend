@@ -31,6 +31,7 @@ namespace SharijhaAward.Persistence
             services.AddScoped<IGroupInviteeRepository, GroupInviteeRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICategoryRepository , CategoryRepository>();
+            services.AddScoped<IReportService, ReportService>();
 
             return services;
         }
