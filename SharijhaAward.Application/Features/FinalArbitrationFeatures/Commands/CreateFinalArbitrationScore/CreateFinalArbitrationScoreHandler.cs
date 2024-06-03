@@ -86,12 +86,11 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                     {
                         FinalArbitrationEntity.DateOfArbitration = DateTime.UtcNow;
                         FinalArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
+                        FinalArbitrationEntity.FinalScore = Request.CreateFinalArbitrationScoreMainCommand.Sum(x => x.ArbitrationScore);
                     }
 
                     else
                         FinalArbitrationEntity.Type = ArbitrationType.BeingReviewed;
-
-                    FinalArbitrationEntity.FullScore = Request.CreateFinalArbitrationScoreMainCommand.Sum(x => x.ArbitrationScore);
 
                     await _FinalArbitrationRepository.UpdateAsync(FinalArbitrationEntity);
 

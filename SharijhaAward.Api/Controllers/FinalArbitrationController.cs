@@ -134,7 +134,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllFormsForFinalArbitration(ArbitrationType ArbitrationType, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllFormsForFinalArbitration(ArbitrationType? ArbitrationType, int Page = 1, int PerPage = 10)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
@@ -162,7 +162,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("GetFinalArbitrationByFormId/{ArbitrationId}")]
+        [HttpGet("GetFinalArbitrationByFormId/{FormId}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -172,15 +172,21 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetFinalArbitrationById(int FormId)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<MainCriterionForFinalArbitrationScoreDto>> Response = await _Mediator.Send(new GetFinalArbitrationByIdQuery()
+            BaseResponse<GetFinalArbitrationByIdMainDto> Response = await _Mediator.Send(new GetFinalArbitrationByIdQuery()
             {
                 lang = HeaderValue!,
-                FormId = FormId
+                FormId = FormId,
+                Token = Token
             });
 
             return Response.statusCode switch

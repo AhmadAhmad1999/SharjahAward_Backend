@@ -8,6 +8,7 @@ using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using RestSharp;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView
 {
@@ -18,16 +19,19 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
 
         public GetAllDynamicAttributeSectionsForViewHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
-            IAsyncRepository<Category> CategoryRepository)
+            IAsyncRepository<Category> CategoryRepository,
+            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository)
         {
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _CategoryRepository = CategoryRepository;
+            _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
         }
         public async Task<BaseResponse<List<DynamicAttributeSectionListVM>>> Handle(GetAllDynamicAttributeSectionsForViewQuery Request,
             CancellationToken cancellationToken)
@@ -229,8 +233,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     };
 
                     if (CategoryEntity.RelatedToClasses is not null
-                            ? CategoryEntity.RelatedToClasses.Value
-                            : false)
+                        ? CategoryEntity.RelatedToClasses.Value
+                        : false)
                     {
                         MainInformationDynamicAttribute.Add(new DynamicAttribute()
                         {
@@ -372,6 +376,46 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                         await _DynamicAttributeListValueRepository.AddRangeAsync(GendersValues);
                     }
+
+                    DynamicAttribute? ClassDynamicAttributes = MainInformationDynamicAttribute
+                        .FirstOrDefault(x => x.AttributeDataTypeId == 8 && x.EnglishTitle.ToLower() == "Class".ToLower());
+
+                    if (ClassDynamicAttributes is not null)
+                    {
+                        List<DynamicAttributeListValue> ArabicEducationalClasses = await _CategoryEducationalClassRepository
+                            .Where(x => x.CategoryId == Request.CategoryId)
+                            .Include(x => x.EducationalClass!)
+                            .Select(x => new DynamicAttributeListValue()
+                            {
+                                isDeleted = false,
+                                DeletedAt = null,
+                                CreatedAt = DateTime.UtcNow,
+                                CreatedBy = null,
+                                LastModifiedAt = null,
+                                LastModifiedBy = null,
+                                DynamicAttributeId = ClassDynamicAttributes.Id,
+                                Value = x.EducationalClass!.ArabicName
+                            }).ToListAsync();
+
+                        List<DynamicAttributeListValue> EnglishEducationalClasses = await _CategoryEducationalClassRepository
+                            .Where(x => x.CategoryId == Request.CategoryId)
+                            .Include(x => x.EducationalClass!)
+                            .Select(x => new DynamicAttributeListValue()
+                            {
+                                isDeleted = false,
+                                DeletedAt = null,
+                                CreatedAt = DateTime.UtcNow,
+                                CreatedBy = null,
+                                LastModifiedAt = null,
+                                LastModifiedBy = null,
+                                DynamicAttributeId = ClassDynamicAttributes.Id,
+                                Value = x.EducationalClass!.EnglishName
+                            }).ToListAsync();
+
+                        ArabicEducationalClasses.AddRange(EnglishEducationalClasses);
+
+                        await _DynamicAttributeListValueRepository.AddRangeAsync(ArabicEducationalClasses);
+                    }
                 }
 
                 foreach (DynamicAttributeSectionListVM DynamicAttributeSection in DynamicAttributeSections)
@@ -411,7 +455,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     }
                 }
 
-                int TotalCount = await _DynamicAttributeSectionRepository.GetCountAsync(null);
+                int TotalCount = await _DynamicAttributeSectionRepository.GetCountAsync(x => x.RecordIdOnRelation == Request.CategoryId &&
+                    x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower());
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.pageSize, TotalCount);
@@ -485,7 +530,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         }).ToList();
                 }
 
-                int TotalCount = await _DynamicAttributeSectionRepository.GetCountAsync(null);
+                int TotalCount = await _DynamicAttributeSectionRepository.GetCountAsync(x => Request.isArbitrator.Value
+                    ? (x.AttributeTableName!.Name.ToLower() == TableNames.Arbitrator.ToString().ToLower() &&
+                        x.RecordIdOnRelation == -1)
+                    : (x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower() &&
+                        x.RecordIdOnRelation == -2));
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.pageSize, TotalCount);

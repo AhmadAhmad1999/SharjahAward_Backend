@@ -12,12 +12,15 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
         : IRequestHandler<GetAllFormsForFinalArbitrationQuery, BaseResponse<GetAllFormsForFinalArbitrationMainListVM>>
     {
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
+        private readonly IAsyncRepository<FinalArbitrationScore> _FinalArbitrationScoreRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
 
         public GetAllFormsForFinalArbitrationHandler(IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
+            IAsyncRepository<FinalArbitrationScore> FinalArbitrationScoreRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
         {
             _FinalArbitrationRepository = FinalArbitrationRepository;
+            _FinalArbitrationScoreRepository = FinalArbitrationScoreRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
         }
         public async Task<BaseResponse<GetAllFormsForFinalArbitrationMainListVM>>
@@ -62,6 +65,10 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     x.RecordId,
                     x.Value
                 }).ToListAsync();
+
+            List<FinalArbitrationScore> FinalArbitrationScoreEntities = await _FinalArbitrationScoreRepository
+                .Where(x => FinalArbitrationEntities.Select(y => y.Id).Contains(x.FinalArbitrationId))
+                .ToListAsync();
 
             List<GetAllFormsForFinalArbitrationListVM> GetAllFormsForFinalArbitrationListVM = FinalArbitrationEntities
                 .Select(x => new GetAllFormsForFinalArbitrationListVM()

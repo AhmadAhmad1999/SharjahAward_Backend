@@ -6,6 +6,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
     {
         public int Id { get; set; }
         public string Label { get; set; } = null!;
+        public string ArabicTitle { get; set; } = null!;
+        public string EnglishTitle { get; set; } = null!;
         public string PlaceHolder { get; set; } = null!;
         public int AttributeDataTypeId { get; set; }
         public string AttributeDataTypeName { get; set; } = null!;

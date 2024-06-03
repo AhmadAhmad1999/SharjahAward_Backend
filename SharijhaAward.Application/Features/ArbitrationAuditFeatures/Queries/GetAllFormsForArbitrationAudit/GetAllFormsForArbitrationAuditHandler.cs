@@ -160,14 +160,32 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                             GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
                                 .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
 
-                            GetAllFormsForArbitrationAuditListVM.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+                            float CheckFullScore = GroupOfArbitrationEntity.FirstOrDefault()!.FullScore;
 
-                            foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                            bool AllHaveSameFullScore = GroupOfArbitrationEntity.All(x => x.FullScore == CheckFullScore);
+
+                            if (!AllHaveSameFullScore)
                             {
-                                ArbitrationEntity.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
-                            }
+                                foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                                {
+                                    ArbitrationEntity.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+                                }
 
-                            await _ArbitrationRepository.UpdateListAsync(GroupOfArbitrationEntity.ToList());
+                                GetAllFormsForArbitrationAuditListVM.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+
+                                await _ArbitrationRepository.UpdateListAsync(GroupOfArbitrationEntity.ToList());
+                            }
+                            else
+                            {
+                                foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                                {
+                                    ArbitrationEntity.FullScore = CheckFullScore;
+                                }
+
+                                GetAllFormsForArbitrationAuditListVM.FullScore = CheckFullScore;
+
+                                await _ArbitrationRepository.UpdateListAsync(GroupOfArbitrationEntity.ToList());
+                            }
 
                             Response.Add(GetAllFormsForArbitrationAuditListVM);
                         }
@@ -215,16 +233,32 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                         GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
                             .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
 
-                        GetAllFormsForArbitrationAuditListVM.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+                        float CheckFullScore = GroupOfArbitrationEntity.FirstOrDefault()!.FullScore;
 
-                        foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                        bool AllHaveSameFullScore = GroupOfArbitrationEntity.All(x => x.FullScore == CheckFullScore);
+
+                        if (!AllHaveSameFullScore)
                         {
-                            ArbitrationEntity.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+                            foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                            {
+                                ArbitrationEntity.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+                            }
+
+                            GetAllFormsForArbitrationAuditListVM.FullScore = GetAllFormsForArbitrationAuditListVM.Average;
+
+                            await _ArbitrationRepository.UpdateListAsync(GroupOfArbitrationEntity.ToList());
                         }
+                        else
+                        {
+                            foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                            {
+                                ArbitrationEntity.FullScore = CheckFullScore;
+                            }
 
-                        await _ArbitrationRepository.UpdateListAsync(GroupOfArbitrationEntity.ToList());
+                            GetAllFormsForArbitrationAuditListVM.FullScore = CheckFullScore;
 
-                        GetAllFormsForArbitrationAuditListVM.ItExceededTheMarginOfDifferenceInArbitrationScores = false;
+                            await _ArbitrationRepository.UpdateListAsync(GroupOfArbitrationEntity.ToList());
+                        }
 
                         Response.Add(GetAllFormsForArbitrationAuditListVM);
                     }

@@ -103,7 +103,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     ? x.ArabicPlaceHolder
                                     : x.EnglishPlaceHolder,
                                 isRequired = x.IsRequired,
-                                MaxSizeInKB = x.MaxSizeInKB
+                                MaxSizeInKB = x.MaxSizeInKB,
+                                ArabicTitle = x.ArabicTitle,
+                                EnglishTitle = x.EnglishTitle
                             }).ToListAsync();
 
                         foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)

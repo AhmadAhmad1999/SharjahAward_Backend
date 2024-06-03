@@ -1,21 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using OpenQA.Selenium.DevTools.V119.Network;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.Categories.Command.CreateCategory;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.DynamicAttribute;
-using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
@@ -26,18 +18,21 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
+        private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
         public UpdateCategoryCommandHandler(IAsyncRepository<Category> categoryRepository, IMapper mapper, IFileService fileService,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
-            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository)
+            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
+            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository)
         {
             _categoryRepository = categoryRepository;
             _fileService = fileService;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _mapper = mapper;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
+            _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
@@ -126,12 +121,30 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             .Where(x => !IntersectEducationalClassIds.Contains(x))
                             .ToList();
 
-                        IQueryable<CategoryEducationalClass> DeleteCategoryEducationalClassEntites = _CategoryEducationalClassRepository
+                        List<CategoryEducationalClass> DeleteCategoryEducationalClassEntites = await _CategoryEducationalClassRepository
                             .Where(x => x.CategoryId == request.Id &&
-                                DeleteEducationalClassIds.Contains(x.EducationalClassId));
+                                DeleteEducationalClassIds.Contains(x.EducationalClassId))
+                            .Include(x => x.EducationalClass!)
+                            .ToListAsync();
 
                         if (DeleteCategoryEducationalClassEntites.Count() > 0)
+                        {
                             await _CategoryEducationalClassRepository.DeleteListAsync(DeleteCategoryEducationalClassEntites);
+
+                            List<DynamicAttributeListValue> DeleteClassesValues = await _DynamicAttributeListValueRepository
+                                .Include(x => x.DynamicAttribute!)
+                                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                                .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
+                                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
+                                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Class".ToLower() &&
+                                    x.DynamicAttribute!.ArabicTitle == "الصف" &&
+                                    (DeleteCategoryEducationalClassEntites.Select(y => y.EducationalClass!.EnglishName).Contains(x.Value) ||
+                                    DeleteCategoryEducationalClassEntites.Select(y => y.EducationalClass!.ArabicName).Contains(x.Value)))
+                                .ToListAsync();
+
+                            if (DeleteClassesValues.Any())
+                                await _DynamicAttributeListValueRepository.DeleteListAsync(DeleteClassesValues);
+                        }
 
                         List<CategoryEducationalClass> NewCategoryEducationalClassEntities = request.EducationalClasses
                             .Where(x => !IntersectEducationalClassIds.Contains(x.EducationalClassId))
@@ -143,13 +156,53 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             }).ToList();
 
                         if (NewCategoryEducationalClassEntities.Count() > 0)
+                        {
                             await _CategoryEducationalClassRepository.AddRangeAsync(NewCategoryEducationalClassEntities);
+
+                            List<CategoryEducationalClass> NewCategoryEducationalClassEntitiesWithInclude = await _CategoryEducationalClassRepository
+                                .Where(x => NewCategoryEducationalClassEntities.Select(y => y.EducationalClassId).Contains(x.EducationalClassId) &&
+                                    NewCategoryEducationalClassEntities.Select(y => y.CategoryId).Contains(x.CategoryId))
+                                .Include(x => x.EducationalClass!)
+                                .ToListAsync();
+
+                            DynamicAttributeListValue? AlreadyInsertedClassesListValues = await _DynamicAttributeListValueRepository
+                                .Include(x => x.DynamicAttribute!)
+                                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                                .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
+                                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
+                                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Class".ToLower() &&
+                                    x.DynamicAttribute!.ArabicTitle == "الصف")
+                                .FirstOrDefaultAsync();
+
+                            if (AlreadyInsertedClassesListValues is not null)
+                            {
+                                List<DynamicAttributeListValue> ArabicClasses = NewCategoryEducationalClassEntitiesWithInclude
+                                    .Select(x => new DynamicAttributeListValue()
+                                    {
+                                        DynamicAttributeId = AlreadyInsertedClassesListValues.DynamicAttributeId,
+                                        Value = x.EducationalClass!.ArabicName
+                                    }).ToList();
+
+                                List<DynamicAttributeListValue> EnglishClasses = NewCategoryEducationalClassEntitiesWithInclude
+                                    .Select(x => new DynamicAttributeListValue()
+                                    {
+                                        DynamicAttributeId = AlreadyInsertedClassesListValues.DynamicAttributeId,
+                                        Value = x.EducationalClass!.EnglishName
+                                    }).ToList();
+
+                                ArabicClasses.AddRange(EnglishClasses);
+
+                                await _DynamicAttributeListValueRepository.AddRangeAsync(ArabicClasses);
+                            }
+                        }
                     }
                     else
                     {
                         DynamicAttribute? ClassDynamicAttribute = await _DynamicAttributeRepository
                             .Include(x => x.DynamicAttributeSection!)
-                            .FirstOrDefaultAsync(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id && x.EnglishTitle == "Class");
+                            .FirstOrDefaultAsync(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id && 
+                                x.EnglishTitle == "Class" && x.ArabicTitle == "الصف" &&
+                                x.DynamicAttributeSection!.AttributeTableNameId == 1);
 
                         if (ClassDynamicAttribute is not null)
                         {

@@ -92,7 +92,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         DateOfArbitration = x.DateOfArbitration,
                         Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
                         FullArbitrationScore = FullArbitrationScore,
-                        isAcceptedFromChairman = x.isAcceptedFromChairman
+                        isAcceptedFromChairman = x.isAcceptedFromChairman,
+                        ArbitratorName = null
                     }).ToList();
 
                 var FullTotalCount = _ArbitrationRepository
@@ -200,7 +201,10 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             DateOfArbitration = x.DateOfArbitration,
                             Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
                             FullArbitrationScore = FullArbitrationScore,
-                            isAcceptedFromChairman = x.isAcceptedFromChairman
+                            isAcceptedFromChairman = x.isAcceptedFromChairman,
+                            ArbitratorName = Request.lang == "en"
+                                ? ArbitratorEntity.EnglishName
+                                : ArbitratorEntity.ArabicName
                         }).ToList();
 
                     var FullTotalCount = _ArbitrationRepository
@@ -276,7 +280,10 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             DateOfArbitration = x.DateOfArbitration,
                             Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
                             FullArbitrationScore = FullArbitrationScore,
-                            isAcceptedFromChairman = x.isAcceptedFromChairman
+                            isAcceptedFromChairman = x.isAcceptedFromChairman,
+                            ArbitratorName = Request.lang == "en"
+                                ? ArbitratorEntity.EnglishName
+                                : ArbitratorEntity.ArabicName
                         }).ToList();
 
                     var FullTotalCount = _ArbitrationRepository

@@ -2,10 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllAdvancedFormBuildersBySectionId;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AdvancedFormBuilderModel;
-using SharijhaAward.Domain.Entities.CategoryModel;
 
 namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Queries.GetAllAdvancedFormBuilderSectionsForView
 {
@@ -48,10 +46,10 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
                 return new BaseResponse<List<AdvancedFormBuilderSectionListVM>>(ResponseMessage, false, 404);
             }
 
-            List<AdvancedFormBuilderSectionListVM> DynamicAttributeSections = new List<AdvancedFormBuilderSectionListVM>();
+            List<AdvancedFormBuilderSectionListVM> AdvancedFormBuilderSections = new List<AdvancedFormBuilderSectionListVM>();
 
             if (Request.page != 0 && Request.pageSize != -1)
-                DynamicAttributeSections = await _AdvancedFormBuilderSectionRepository
+                AdvancedFormBuilderSections = await _AdvancedFormBuilderSectionRepository
                     .Where(x => x.VirtualTableForSectionId == Request.VirtualTableForSectionId)
                     .OrderBy(x => x.OrderId)
                     .Skip((Request.page - 1) * Request.pageSize)
@@ -66,7 +64,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
                     }).ToListAsync();
 
             else
-                DynamicAttributeSections = await _AdvancedFormBuilderSectionRepository
+                AdvancedFormBuilderSections = await _AdvancedFormBuilderSectionRepository
                     .Where(x => x.VirtualTableForSectionId == Request.VirtualTableForSectionId)
                     .OrderBy(x => x.OrderId)
                     .Select(x => new AdvancedFormBuilderSectionListVM()
@@ -79,14 +77,14 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
                     }).ToListAsync();
 
             List<AdvancedFormBuilder> AdvancedFormBuilderEntities = await _AdvancedFormBuilderRepository
-                .Where(x => DynamicAttributeSections.Select(y => y.Id).Contains(x.AdvancedFormBuilderSectionId))
+                .Where(x => AdvancedFormBuilderSections.Select(y => y.Id).Contains(x.AdvancedFormBuilderSectionId))
                 .Include(x => x.AttributeDataType!)
                 .ToListAsync();
 
-            foreach (AdvancedFormBuilderSectionListVM DynamicAttributeSection in DynamicAttributeSections)
+            foreach (AdvancedFormBuilderSectionListVM AdvancedFormBuilderSection in AdvancedFormBuilderSections)
             {
-                DynamicAttributeSection.AdvancedFormBuilders = AdvancedFormBuilderEntities
-                    .Where(x => x.AdvancedFormBuilderSectionId == DynamicAttributeSection.Id)
+                AdvancedFormBuilderSection.AdvancedFormBuilders = AdvancedFormBuilderEntities
+                    .Where(x => x.AdvancedFormBuilderSectionId == AdvancedFormBuilderSection.Id)
                     .OrderBy(x => x.OrderId)
                     .Select(x => new AdvancedFormBuilderListVM()
                     {
@@ -102,10 +100,12 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
                     }).ToList();
             }
 
+            int TotalCount = await _AdvancedFormBuilderSectionRepository.GetCountAsync(x => x.VirtualTableForSectionId == Request.VirtualTableForSectionId);
 
+            Pagination PaginationParameter = new Pagination(Request.page,
+                Request.pageSize, TotalCount);
 
-
-            throw new NotImplementedException();
+            return new BaseResponse<List<AdvancedFormBuilderSectionListVM>>(ResponseMessage, true, 200, AdvancedFormBuilderSections, PaginationParameter);
         }
     }
 }
