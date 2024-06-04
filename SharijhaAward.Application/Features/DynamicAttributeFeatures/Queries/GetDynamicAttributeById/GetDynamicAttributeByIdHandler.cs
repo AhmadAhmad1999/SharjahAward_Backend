@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
@@ -57,7 +58,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
 
             IQueryable<IGrouping<int, Dependency>> Dependencies = _DependencyRepository
                 .WhereThenInclude(x => x.MainDynamicAttributeId == Request.Id, x => x.AttributeOperation!, 
-                    x => x.DynamicAttribute, x => x.StaticAttribute)
+                    x => x.DynamicAttribute!, x => x.StaticAttribute!)
                 .GroupBy(x => x.DependencyGroupId);
 
             foreach (IGrouping<int, Dependency> Dependency in Dependencies)
@@ -91,8 +92,17 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                 }
             }
 
-            DynamicAttribute.Values = _Mapper.Map<List<DynamicAttributeListValueListVM>>(_DynamicAttributeListValueRepository
-                .Where(x => x.DynamicAttributeId == Request.Id));
+            DynamicAttribute.Values = await _DynamicAttributeListValueRepository
+                .Where(x => x.DynamicAttributeId == Request.Id)
+                .Select(x => new DynamicAttributeListValueListVM()
+                {
+                    Id = x.Id,
+                    EnglishValue = x.EnglishValue,
+                    ArabicValue = x.ArabicValue,
+                    Value = Request.lang == "en"
+                        ? x.EnglishValue
+                        : x.ArabicValue
+                }).ToListAsync();
 
             return new BaseResponse<GetDynamicAttributeByIdDto>(ResponseMessage, true, 200, DynamicAttribute);
         }

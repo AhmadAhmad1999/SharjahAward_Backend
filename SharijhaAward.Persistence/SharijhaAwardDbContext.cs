@@ -1860,7 +1860,8 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DynamicAttributeId = 8,
-                    Value = "Test Value 1"
+                    EnglishValue = "Test Value 1",
+                    ArabicValue = "Test Value 1"
                 }, new DynamicAttributeListValue()
                 {
                     Id = 2,
@@ -1871,7 +1872,8 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DynamicAttributeId = 8,
-                    Value = "Test Value 2"
+                    EnglishValue = "Test Value 2",
+                    ArabicValue = "Test Value 2"
                 }, new DynamicAttributeListValue()
                 {
                     Id = 3,
@@ -1882,7 +1884,8 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DynamicAttributeId = 8,
-                    Value = "Test Value 3"
+                    EnglishValue = "Test Value 3",
+                    ArabicValue = "Test Value 3"
                 }, new DynamicAttributeListValue()
                 {
                     Id = 4,
@@ -1893,7 +1896,8 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DynamicAttributeId = 8,
-                    Value = "Test Value 4"
+                    EnglishValue = "Test Value 4",
+                    ArabicValue = "Test Value 4"
                 }, new DynamicAttributeListValue()
                 {
                     Id = 5,
@@ -1904,7 +1908,8 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DynamicAttributeId = 8,
-                    Value = "Test Value 5"
+                    EnglishValue = "Test Value 5",
+                    ArabicValue = "Test Value 5"
                 });
             modelBuilder.Entity<PermissionHeader>()
                 .HasData(

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System.Text.RegularExpressions;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllListDynamicAttributes
 {
@@ -54,12 +53,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                         Id = x.Id,
                         Label = x.EnglishLabel,
                         Values = DynamicAttributeListValueEntities
-                            .Where(y => y.DynamicAttributeId == x.Id &&
-                                !Regex.IsMatch(y.Value, @"\p{IsArabic}"))
+                            .Where(y => y.DynamicAttributeId == x.Id)
                             .Select(y => new DynamicAttributeListValueDto()
                             {
                                 Id = y.Id,
-                                Value = y.Value
+                                Value = y.EnglishValue
                             }).ToList()
                     }).ToList();
 
@@ -73,12 +71,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                         Id = x.Id,
                         Label = x.ArabicLabel,
                         Values = DynamicAttributeListValueEntities
-                            .Where(y => y.DynamicAttributeId == x.Id &&
-                                Regex.IsMatch(y.Value, @"\p{IsArabic}"))
+                            .Where(y => y.DynamicAttributeId == x.Id)
                             .Select(y => new DynamicAttributeListValueDto()
                             {
                                 Id = y.Id,
-                                Value = y.Value
+                                Value = y.ArabicValue
                             }).ToList()
                     }).ToList();
 
