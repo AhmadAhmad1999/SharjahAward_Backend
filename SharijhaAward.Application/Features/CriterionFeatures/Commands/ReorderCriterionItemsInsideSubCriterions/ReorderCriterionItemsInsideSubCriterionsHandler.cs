@@ -36,17 +36,15 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.ReorderC
             {
                 try
                 {
-                    List<CriterionItem> AllCriterionItems = await _CriterionItemRepository
-                        .Include(x => x.Criterion!)
+                    List<Criterion> AllCriterions = await _CriterionRepository
                         .Where(x => Request.MainCriterionsDtos.Select(y => y.MainCriterionId)
-                            .Any(y => y == x.CriterionId || y == x.Criterion!.ParentId))
+                            .Any(y => y == x.Id || y == x.ParentId))
                         .ToListAsync();
 
-                    List<Criterion> AllCriterions = AllCriterionItems
-                        .Select(x => x.Criterion!)
-                        .Distinct()
-                        .ToList();
-
+                    List<CriterionItem> AllCriterionItems = await _CriterionItemRepository
+                        .Where(x => AllCriterions.Select(y => y.Id).Contains(x.CriterionId))
+                        .ToListAsync();
+                    
                     foreach (MainCriterionsDto MainCriterionsDto in Request.MainCriterionsDtos)
                     {
                         Criterion? MainCriterionEntity = AllCriterions
@@ -76,9 +74,26 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.ReorderC
 
                                         if (CriterionItemEntity is not null)
                                         {
-                                            CriterionItemEntity.OrderId = CriterionItemDtos.OrderId;
+                                            if (CriterionItemEntity.OrderId != CriterionItemDtos.OrderId &&
+                                                CriterionItemEntity.CriterionId != SubCriterionEntity.Id)
+                                            {
+                                                CriterionItemEntity.OrderId = CriterionItemDtos.OrderId;
+                                                CriterionItemEntity.CriterionId = SubCriterionEntity.Id;
 
-                                            await _CriterionItemRepository.UpdateAsync(CriterionItemEntity);
+                                                await _CriterionItemRepository.UpdateAsync(CriterionItemEntity);
+                                            }
+                                            else if (CriterionItemEntity.OrderId != CriterionItemDtos.OrderId)
+                                            {
+                                                CriterionItemEntity.OrderId = CriterionItemDtos.OrderId;
+
+                                                await _CriterionItemRepository.UpdateAsync(CriterionItemEntity);
+                                            }
+                                            else if (CriterionItemEntity.CriterionId != SubCriterionEntity.Id)
+                                            {
+                                                CriterionItemEntity.CriterionId = SubCriterionEntity.Id;
+
+                                                await _CriterionItemRepository.UpdateAsync(CriterionItemEntity);
+                                            }
                                         }
                                     }
                                 }

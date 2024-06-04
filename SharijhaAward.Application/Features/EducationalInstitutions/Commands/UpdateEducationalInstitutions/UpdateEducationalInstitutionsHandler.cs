@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 
 namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.UpdateEducationalInstitutions
 {
-    public class UpdateEducationalInstitutionsHandler : IRequestHandler<UpdateEducationalInstitutionsCommand, BaseResponse<object>>
+    public class UpdateEducationalInstitutionsHandler 
+        : IRequestHandler<UpdateEducationalInstitutionsMainCommand, BaseResponse<object>>
     {
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository;
@@ -16,29 +18,24 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.Up
             _Mapper = Mapper;
             _EducationalInstitutionRepository = EducationalInstitutionRepository;
         }
-        public async Task<BaseResponse<object>> Handle(UpdateEducationalInstitutionsCommand Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(UpdateEducationalInstitutionsMainCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
-            EducationalInstitution? EducationalInstitutionEntityToUpdate = await _EducationalInstitutionRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+            List<EducationalInstitution>? EducationalInstitutionEntitiesToUpdate = await _EducationalInstitutionRepository
+                .Where(x => Request.UpdateEducationalInstitutionsCommand.Select(y => y.Id).Contains(x.Id))
+                .ToListAsync();
 
-            if (EducationalInstitutionEntityToUpdate == null)
+            foreach (EducationalInstitution EducationalInstitutionEntityToUpdate in EducationalInstitutionEntitiesToUpdate)
             {
-                ResponseMessage = Request.lang == "en"
-                    ? "Educational institution is not found"
-                    : "المؤسسة التعليمية غير موجودة";
-
-                return new BaseResponse<object>(ResponseMessage, false, 404);
+                _Mapper.Map(Request, EducationalInstitutionEntityToUpdate, typeof(UpdateEducationalInstitutionsCommand), typeof(EducationalInstitution));
             }
 
-            _Mapper.Map(Request, EducationalInstitutionEntityToUpdate, typeof(UpdateEducationalInstitutionsCommand), typeof(EducationalInstitution));
-
-            await _EducationalInstitutionRepository.UpdateAsync(EducationalInstitutionEntityToUpdate);
+            await _EducationalInstitutionRepository.UpdateListAsync(EducationalInstitutionEntitiesToUpdate);
 
             ResponseMessage = Request.lang == "en"
-                ? "Educational institution has been updated successfully"
-                : "تم تعديل المؤسسة التعليمية بنجاح";
+                ? "Educational institutions has been updated successfully"
+                : "تم تعديل المؤسسات التعليمية بنجاح";
 
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }

@@ -32,13 +32,12 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name= "CreateEducationalInstitution")]
-        public async Task<IActionResult> CreateEducationalInstitution(CreateEducationalInstitutionCommand command)
+        public async Task<IActionResult> CreateEducationalInstitution(CreateEducationalInstitutionMainCommand CreateEducationalInstitutionMainCommand)
         {
-            //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
-            command.lang = Language!;
+            CreateEducationalInstitutionMainCommand.lang = Language!;
             
-            var response = await _Mediator.Send(command);
+            var response = await _Mediator.Send(CreateEducationalInstitutionMainCommand);
 
             return response.statusCode switch
             {
@@ -74,15 +73,15 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> UpdateEducationalInstitutions([FromBody] UpdateEducationalInstitutionsCommand UpdateEducationalInstitutionsCommand)
+        public async Task<IActionResult> UpdateEducationalInstitutions([FromBody] UpdateEducationalInstitutionsMainCommand UpdateEducationalInstitutionsMainCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            UpdateEducationalInstitutionsCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+            UpdateEducationalInstitutionsMainCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
 
-            BaseResponse<object>? Response = await _Mediator.Send(UpdateEducationalInstitutionsCommand);
+            BaseResponse<object>? Response = await _Mediator.Send(UpdateEducationalInstitutionsMainCommand);
 
             return Response.statusCode switch
             {

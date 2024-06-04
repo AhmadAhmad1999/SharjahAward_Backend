@@ -1,21 +1,14 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.CreateEducationalInstitution
 {
-    public class CreateEducationalInstitutionCommand :IRequest<BaseResponse<int>>
+    public class CreateEducationalInstitutionCommand 
     {
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicName { get; set; } = string.Empty;
         public EducationType EducationType { get; set; }
         public Emirates Emirates { get; set; }
-        public int EducationalEntityId { get; set; }
-        public string lang { get; set; }= string.Empty;
     }
 }
