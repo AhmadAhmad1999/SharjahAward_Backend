@@ -81,7 +81,10 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         Score = x.Score,
                         ArabicTitle = x.ArabicTitle,
                         EnglishTitle = x.EnglishTitle,
-                        SizeOfAttachmentInKB = x.SizeOfAttachmentInKB
+                        SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                        MaxAttachmentNumber = x.MaxAttachmentNumber != null
+                            ? x.MaxAttachmentNumber.Value
+                            : null
                     }).ToListAsync();
 
                 MainCriterion.SubCriterions = SubCriterions;
@@ -99,7 +102,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                             Score = x.Score,
                             SizeOfAttachmentInKB = x.SizeOfAttachmentInKB != null
                                 ? x.SizeOfAttachmentInKB.Value
-                                : 0
+                                : 0,
+                            MaxAttachmentNumber = x.MaxAttachmentNumber
                         }).ToListAsync();
 
                     SubCriterion.CriterionItems = CriterionItems;

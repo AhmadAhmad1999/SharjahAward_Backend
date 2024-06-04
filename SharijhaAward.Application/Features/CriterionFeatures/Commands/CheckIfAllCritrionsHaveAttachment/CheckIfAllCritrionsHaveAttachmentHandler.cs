@@ -55,6 +55,27 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
                 return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
+            if (InsertedSubCriterionAttachment.Any()
+                ? InsertedSubCriterionAttachment.FirstOrDefault()!.Criterion!.MaxAttachmentNumber > 0
+                : false)
+            {
+                IGrouping<int, CriterionAttachment>? CheckMaxAttachment = InsertedSubCriterionAttachment
+                    .GroupBy(x => x.CriterionId)
+                    .FirstOrDefault(x => x.ToList().FirstOrDefault()!.Criterion!.MaxAttachmentNumber < x.Count());
+
+                if (CheckMaxAttachment is not null
+                    ? CheckMaxAttachment.Any()
+                    : false)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? $"You can't attach more than {CheckMaxAttachment.FirstOrDefault()!.Criterion!.MaxAttachmentNumber}" +
+                            $" files to this criterion: {CriterionEntitiesWithNoAttachments[0].EnglishTitle}"
+                        : $"لا يمكن أن يتم إدخال أكثر من {CheckMaxAttachment.FirstOrDefault()!.Criterion!.MaxAttachmentNumber}ملحق للمعيار: {CriterionEntitiesWithNoAttachments[0].ArabicTitle}";
+
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                }
+            }
+
             List<CriterionItemAttachment> InsertedCriterionItemAttachment = await _CriterionItemAttachmentRepository
                 .Include(x => x.CriterionItem!).Include(x => x.CriterionItem!.Criterion!)
                 .Where(x => x.CriterionItem!.Criterion!.CategoryId == Request.CategoryId)
@@ -70,6 +91,27 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
                     : $"يجب أن يتم إدخال ملحق واحد على الأقل لعنصر المعيار: {CriterionItemEntitiesWithNoAttachments[0].ArabicName}";
 
                 return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
+            if (InsertedCriterionItemAttachment.Any()
+                ? InsertedCriterionItemAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber
+                : false)
+            {
+                IGrouping<int, CriterionItemAttachment>? CheckMaxAttachment = InsertedCriterionItemAttachment
+                    .GroupBy(x => x.CriterionItemId)
+                    .FirstOrDefault(x => x.ToList().FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber < x.Count());
+
+                if (CheckMaxAttachment is not null
+                    ? CheckMaxAttachment.Any()
+                    : false)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? $"You can't attach more than {CheckMaxAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber}" +
+                            $" files to this criterion item: {CriterionItemEntitiesWithNoAttachments[0].EnglishName}"
+                        : $"لا يمكن أن يتم إدخال أكثر من {CheckMaxAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber}ملحق لعنصر المعيار: {CriterionItemEntitiesWithNoAttachments[0].ArabicName}";
+
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                }
             }
 
             return new BaseResponse<object>(ResponseMessage, true, 200);

@@ -15,8 +15,7 @@ namespace SharijhaAward.Domain.Entities.CriterionModel
         public Criterion? Parent { get; set; } = null!;
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
-        //public int ArbitrationProcedureId { get; set; }
-        //public ArbitrationProcedure ArbitrationProcedure { get; set; } = null!;
+        public int? MaxAttachmentNumber { get; set; }
     }
 }
 

@@ -81,7 +81,10 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         Title = Language == "ar"
                             ? x.ArabicTitle
                             : x.EnglishTitle,
-                        SizeOfAttachmentInKB = x.SizeOfAttachmentInKB
+                        SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                        MaxAttachmentNumber = x.MaxAttachmentNumber != null
+                            ? x.MaxAttachmentNumber.Value
+                            : null
                     }).ToList();
 
                 foreach (SubCriterionListVM SubCriterionObject in MainCriterionObject.SubCriterionListVM)
@@ -98,7 +101,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                             Name = Language == "ar"
                                 ? x.ArabicName
                                 : x.EnglishName,
-                            SizeOfAttachmentInKB = x.SizeOfAttachmentInKB
+                            SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                            MaxAttachmentNumber = x.MaxAttachmentNumber
                         }).ToList();
 
                     foreach (CriterionItemListVM CriterionItemObject in SubCriterionObject.CriterionItemListVM)

@@ -14,6 +14,7 @@ namespace SharijhaAward.Domain.Entities.CriterionItemModel
         public int? SizeOfAttachmentInKB { get; set; }
         public int CriterionId { get; set; }
         public Criterion Criterion { get; set; } = null!;
+        public int MaxAttachmentNumber { get; set; }
         //public virtual List<Scale> Scales { get; set; } = new();
         //public virtual List<CriterionItemScale> CriterionItemScales { get; set; } = new();
     }
