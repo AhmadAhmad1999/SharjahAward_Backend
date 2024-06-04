@@ -138,8 +138,8 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                                     x.DynamicAttribute!.EnglishTitle.ToLower() == "Class".ToLower() &&
                                     x.DynamicAttribute!.ArabicTitle == "الصف" &&
-                                    (DeleteCategoryEducationalClassEntites.Select(y => y.EducationalClass!.EnglishName).Contains(x.Value) ||
-                                    DeleteCategoryEducationalClassEntites.Select(y => y.EducationalClass!.ArabicName).Contains(x.Value)))
+                                    (DeleteCategoryEducationalClassEntites.Select(y => y.EducationalClass!.EnglishName).Contains(x.EnglishValue) ||
+                                    DeleteCategoryEducationalClassEntites.Select(y => y.EducationalClass!.ArabicName).Contains(x.ArabicValue)))
                                 .ToListAsync();
 
                             if (DeleteClassesValues.Any())
@@ -180,17 +180,9 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                                     .Select(x => new DynamicAttributeListValue()
                                     {
                                         DynamicAttributeId = AlreadyInsertedClassesListValues.DynamicAttributeId,
-                                        Value = x.EducationalClass!.ArabicName
+                                        ArabicValue = x.EducationalClass!.ArabicName,
+                                        EnglishValue = x.EducationalClass!.EnglishName
                                     }).ToList();
-
-                                List<DynamicAttributeListValue> EnglishClasses = NewCategoryEducationalClassEntitiesWithInclude
-                                    .Select(x => new DynamicAttributeListValue()
-                                    {
-                                        DynamicAttributeId = AlreadyInsertedClassesListValues.DynamicAttributeId,
-                                        Value = x.EducationalClass!.EnglishName
-                                    }).ToList();
-
-                                ArabicClasses.AddRange(EnglishClasses);
 
                                 await _DynamicAttributeListValueRepository.AddRangeAsync(ArabicClasses);
                             }

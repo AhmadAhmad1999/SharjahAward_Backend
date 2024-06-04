@@ -136,7 +136,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                         await _DynamicAttributeListValueRepository.AddRangeAsync(Request.Values.Select(DynamicAttributeListValue =>
                             new DynamicAttributeListValue()
                             {
-                                Value = DynamicAttributeListValue,
+                                ArabicValue = DynamicAttributeListValue.ArabicValue,
+                                EnglishValue = DynamicAttributeListValue.EnglishValue,
                                 DynamicAttributeId = NewDynamicAttributeEntity.Id,
                                 CreatedAt = DateTime.UtcNow,
                                 CreatedBy = null,

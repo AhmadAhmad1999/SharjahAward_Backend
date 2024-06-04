@@ -81,7 +81,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributePatterns.Commands.S
                         .Where(x => x.DynamicAttributePatternId == Request.DynamicAttributePatternId)
                         .Select(x => new DynamicAttributeListValue()
                         {
-                            Value = x.Value,
+                            ArabicValue = x.ArabicValue,
+                            EnglishValue = x.EnglishValue,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
                             DeletedAt = null,

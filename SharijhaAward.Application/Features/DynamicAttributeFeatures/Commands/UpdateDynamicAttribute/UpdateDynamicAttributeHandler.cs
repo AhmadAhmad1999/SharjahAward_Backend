@@ -73,7 +73,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                             .Where(x => x.Id == 0)
                             .Select(x => new DynamicAttributeListValue()
                             {
-                                Value = x.Value,
+                                ArabicValue = x.ArabicValue,
+                                EnglishValue = x.EnglishValue,
                                 DynamicAttributeId = Request.Id
                             }).ToList();
 
@@ -90,9 +91,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
 
                             if (DynamicAttributeListValueEntity is not null)
                             {
-                                if (DynamicAttributeListValueEntity.Value.ToLower() != DynamicAttributeValue.Value.ToLower())
+                                if (DynamicAttributeListValueEntity.ArabicValue.ToLower() != DynamicAttributeValue.ArabicValue.ToLower() ||
+                                    DynamicAttributeListValueEntity.EnglishValue.ToLower() != DynamicAttributeValue.EnglishValue.ToLower())
                                 {
-                                    DynamicAttributeListValueEntity.Value = DynamicAttributeValue.Value;
+                                    DynamicAttributeListValueEntity.EnglishValue = DynamicAttributeValue.EnglishValue;
+                                    DynamicAttributeListValueEntity.ArabicValue = DynamicAttributeValue.ArabicValue;
 
                                     await _DynamicAttributeListValueRepository.UpdateAsync(DynamicAttributeListValueEntity);
                                 }

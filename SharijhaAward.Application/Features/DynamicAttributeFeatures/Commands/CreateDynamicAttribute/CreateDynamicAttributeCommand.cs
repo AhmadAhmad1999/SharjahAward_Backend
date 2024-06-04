@@ -15,7 +15,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
         public int AttributeDataTypeId { get; set; }
         public int DynamicAttributeSectionId { get; set; }
         public int? MaxSizeInKB { get; set; }
-        public List<string>? Values { get; set; }
+        public List<DynamicAttrbiuteValuesDto>? Values { get; set; }
         public CreateGeneralValidation? GeneralValidationObject { get; set; }
         public List<CreateDependencyValidation>? DependencyValidations { get; set; }
         public string? lang { get; set; }

@@ -292,7 +292,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                         if (NationalityDynamicAttributes is not null)
                         {
-                            IEnumerable<DynamicAttributeListValue> EnglishNationalitiesValues = FormattedResponse
+                            IEnumerable<DynamicAttributeListValue> NewNationalitiesValues = FormattedResponse
                                 .Select(x => new DynamicAttributeListValue()
                                 {
                                     isDeleted = false,
@@ -302,25 +302,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     LastModifiedAt = null,
                                     LastModifiedBy = null,
                                     DynamicAttributeId = NationalityDynamicAttributes.Id,
-                                    Value = x.EnglishName
+                                    EnglishValue = x.EnglishName,
+                                    ArabicValue = x.ArabicName
                                 });
 
-                            await _DynamicAttributeListValueRepository.AddRangeAsync(EnglishNationalitiesValues);
-
-                            IEnumerable<DynamicAttributeListValue> ArabicNationalitiesValues = FormattedResponse
-                                .Select(x => new DynamicAttributeListValue()
-                                {
-                                    isDeleted = false,
-                                    DeletedAt = null,
-                                    CreatedAt = DateTime.UtcNow,
-                                    CreatedBy = null,
-                                    LastModifiedAt = null,
-                                    LastModifiedBy = null,
-                                    DynamicAttributeId = NationalityDynamicAttributes.Id,
-                                    Value = x.ArabicName
-                                });
-
-                            await _DynamicAttributeListValueRepository.AddRangeAsync(ArabicNationalitiesValues);
+                            await _DynamicAttributeListValueRepository.AddRangeAsync(NewNationalitiesValues);
                         }
                     }
 
@@ -340,7 +326,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 LastModifiedAt = null,
                                 LastModifiedBy = null,
                                 DynamicAttributeId = GenderDynamicAttributes.Id,
-                                Value = "Male"
+                                EnglishValue = "Male",
+                                ArabicValue = "ذكر"
                             }, new DynamicAttributeListValue()
                             {
                                 isDeleted = false,
@@ -350,27 +337,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 LastModifiedAt = null,
                                 LastModifiedBy = null,
                                 DynamicAttributeId = GenderDynamicAttributes.Id,
-                                Value = "Female"
-                            }, new DynamicAttributeListValue()
-                            {
-                                isDeleted = false,
-                                DeletedAt = null,
-                                CreatedAt = DateTime.UtcNow,
-                                CreatedBy = null,
-                                LastModifiedAt = null,
-                                LastModifiedBy = null,
-                                DynamicAttributeId = GenderDynamicAttributes.Id,
-                                Value = "ذكر"
-                            }, new DynamicAttributeListValue()
-                            {
-                                isDeleted = false,
-                                DeletedAt = null,
-                                CreatedAt = DateTime.UtcNow,
-                                CreatedBy = null,
-                                LastModifiedAt = null,
-                                LastModifiedBy = null,
-                                DynamicAttributeId = GenderDynamicAttributes.Id,
-                                Value = "أنثى"
+                                EnglishValue = "Female",
+                                ArabicValue =  "أنثى"
                             }
                         };
 
@@ -382,7 +350,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                     if (ClassDynamicAttributes is not null)
                     {
-                        List<DynamicAttributeListValue> ArabicEducationalClasses = await _CategoryEducationalClassRepository
+                        List<DynamicAttributeListValue> NewEducationalClasses = await _CategoryEducationalClassRepository
                             .Where(x => x.CategoryId == Request.CategoryId)
                             .Include(x => x.EducationalClass!)
                             .Select(x => new DynamicAttributeListValue()
@@ -394,27 +362,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 LastModifiedAt = null,
                                 LastModifiedBy = null,
                                 DynamicAttributeId = ClassDynamicAttributes.Id,
-                                Value = x.EducationalClass!.ArabicName
+                                ArabicValue = x.EducationalClass!.ArabicName,
+                                EnglishValue = x.EducationalClass!.EnglishName
                             }).ToListAsync();
 
-                        List<DynamicAttributeListValue> EnglishEducationalClasses = await _CategoryEducationalClassRepository
-                            .Where(x => x.CategoryId == Request.CategoryId)
-                            .Include(x => x.EducationalClass!)
-                            .Select(x => new DynamicAttributeListValue()
-                            {
-                                isDeleted = false,
-                                DeletedAt = null,
-                                CreatedAt = DateTime.UtcNow,
-                                CreatedBy = null,
-                                LastModifiedAt = null,
-                                LastModifiedBy = null,
-                                DynamicAttributeId = ClassDynamicAttributes.Id,
-                                Value = x.EducationalClass!.EnglishName
-                            }).ToListAsync();
-
-                        ArabicEducationalClasses.AddRange(EnglishEducationalClasses);
-
-                        await _DynamicAttributeListValueRepository.AddRangeAsync(ArabicEducationalClasses);
+                        await _DynamicAttributeListValueRepository.AddRangeAsync(NewEducationalClasses);
                     }
                 }
 
