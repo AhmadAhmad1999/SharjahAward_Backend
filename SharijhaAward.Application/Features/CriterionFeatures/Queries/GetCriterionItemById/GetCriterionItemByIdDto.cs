@@ -8,5 +8,6 @@
         public int Score { get; set; }
         public int ActualScore { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
+        public int MaxAttachmentNumber { get; set; }
     }
 }

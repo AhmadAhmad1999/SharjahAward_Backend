@@ -1,11 +1,4 @@
 ﻿using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
-using SharijhaAward.Domain.Entities.CategoryModel;
-using SharijhaAward.Domain.Entities.CriterionModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId
 {
@@ -14,6 +7,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public int? SizeOfAttachmentInKB { get; set; }
+        public int? MaxAttachmentNumber { get; set; }
         public List<AttachmentListVM> SubCriterionAttachments { get; set; } = new List<AttachmentListVM>();
         public List<CriterionItemListVM> CriterionItemListVM { get; set; } = new List<CriterionItemListVM>();
     }

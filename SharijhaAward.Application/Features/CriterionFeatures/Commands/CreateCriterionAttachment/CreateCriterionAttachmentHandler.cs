@@ -40,6 +40,22 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            if (CheckIfCriterionIdIsExist.MaxAttachmentNumber > 0)
+            {
+                int CountOfPreviousAttachments = await _CriterionAttachmentRepository
+                    .GetCountAsync(x => x.CriterionId == Request.CriterionId);
+
+                if (CountOfPreviousAttachments + 1 > CheckIfCriterionIdIsExist.MaxAttachmentNumber)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? $"You can't attach more than {CheckIfCriterionIdIsExist.MaxAttachmentNumber}" +
+                            $" files to this criterion: {CheckIfCriterionIdIsExist.EnglishTitle}"
+                        : $"لا يمكن أن يتم إدخال أكثر من {CheckIfCriterionIdIsExist.MaxAttachmentNumber}ملحق للمعيار: {CheckIfCriterionIdIsExist.ArabicTitle}";
+
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                }
+            }
+
             CriterionAttachment NewCriterionEntity = _Mapper.Map<CriterionAttachment>(Request);
 
             NewCriterionEntity.AttachementPath = await _AttachmentFileService.SaveFileAsync(Request.Attachment);

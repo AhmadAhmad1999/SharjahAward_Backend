@@ -10,6 +10,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
         public int Score { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public int ParentId { get; set; }
+        public int MaxAttachmentNumber { get; set; }
         public string? lang { get; set; }
     }
 }

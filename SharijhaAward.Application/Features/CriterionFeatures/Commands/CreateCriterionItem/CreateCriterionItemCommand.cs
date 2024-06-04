@@ -10,6 +10,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
         public int Score { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public int CriterionId { get; set; }
+        public int MaxAttachmentNumber { get; set; }
         public string? lang { get; set; }
     }
 }
