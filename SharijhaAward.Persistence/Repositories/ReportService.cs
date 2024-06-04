@@ -47,6 +47,7 @@ namespace SharijhaAward.Persistence.Repositories
                 
                 foreach(var cycleColumn in cyclesColumns)
                 {
+                   
                     var value = cycle.GetType().GetProperty(cycleColumn)?.GetValue(cycle, null);
                     cyclesDict[cycleColumn] = value!;
                 }

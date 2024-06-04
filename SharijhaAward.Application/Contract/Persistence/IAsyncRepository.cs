@@ -11,6 +11,7 @@ namespace SharijhaAward.Application.Contract.Persistence
 {
     public interface IAsyncRepository<T> where T : class
     {
+        Task<List<string>> GetPropertyNames();
         Task<int> GetCountAsync(Expression<Func<T, bool>>? predicate);
         int GetCount(Expression<Func<T, bool>>? predicate);
         Task<T> GetByIdAsync(int? id);
