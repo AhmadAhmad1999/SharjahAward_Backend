@@ -325,6 +325,10 @@ using SharijhaAward.Application.Features.CycleConditions.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Agendas.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.FAQs.Queries.ExportToExcel;
+using SharijhaAward.Domain.Entities.ExplanatoryMessageModel;
+using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Commands.UpdateExplanatoryMessage;
+using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetAllExplanatoryMessage;
+using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetExplanatoryMessageById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -647,6 +651,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AdvancedFormBuilder, UpdateAdvancedFormBuilderCommand>().ReverseMap();
             CreateMap<AdvancedFormBuilderListValue, UpdateAdvancedFormBuilderListValueCommand>().ReverseMap();
             CreateMap<AdvancedFormBuilderSection, UpdateAdvancedFormBuilderSectionCommand>().ReverseMap();
+            CreateMap<ExplanatoryMessage, UpdateExplanatoryMessageCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -708,6 +713,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AdvancedFormBuilderPattern, GetAllAdvancedFormBuilderPatternListVM>().ReverseMap();
             CreateMap<AdvancedFormBuilderPattern, GetAdvancedFormBuilderPatternByIdDto>().ReverseMap();
             CreateMap<AdvancedFormBuilderPatternValue, GetAdvancedFormBuilderPatternByIdValues>().ReverseMap();
+            CreateMap<ExplanatoryMessage, GetAllExplanatoryMessageListVM>().ReverseMap();
+            CreateMap<ExplanatoryMessage, GetExplanatoryMessageByIdDto>().ReverseMap();
         }
     }
 }
