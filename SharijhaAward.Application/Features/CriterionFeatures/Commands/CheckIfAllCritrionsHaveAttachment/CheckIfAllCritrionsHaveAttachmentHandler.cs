@@ -94,7 +94,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
             }
 
             if (InsertedCriterionItemAttachment.Any()
-                ? InsertedCriterionItemAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber
+                ? InsertedCriterionItemAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber > 0
                 : false)
             {
                 IGrouping<int, CriterionItemAttachment>? CheckMaxAttachment = InsertedCriterionItemAttachment
