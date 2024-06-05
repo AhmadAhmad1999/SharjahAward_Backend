@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper.Internal;
+using Microsoft.EntityFrameworkCore;
 using PdfSharpCore.Pdf;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Common;
@@ -694,6 +695,17 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task<int> ExecuteUpdateAsync(string sql)
         {
             return await _dbContext.Database.ExecuteSqlRawAsync(sql);
+        }
+
+        public async Task<List<string>> GetPropertyNames()
+        {
+            List<string> PropertyNames = new List<string>();
+            foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
+            {
+                if(!propertyInfo.GetModifiedPropertyType().IsListType())
+                    PropertyNames.Add(propertyInfo.Name);
+            }
+            return PropertyNames;
         }
     }
 }

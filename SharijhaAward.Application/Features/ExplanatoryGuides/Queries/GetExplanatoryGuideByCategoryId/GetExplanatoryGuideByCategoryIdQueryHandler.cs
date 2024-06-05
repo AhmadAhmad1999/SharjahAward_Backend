@@ -35,7 +35,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             if (category == null)
             {
-                return new BaseResponse<ExplanatoryGuideDto>("Not Found", false, 404);
+                return new BaseResponse<ExplanatoryGuideDto>("Category Not Found", false, 404);
             }
             var Guide = _explanatoryGuideRepository.Where(g=>g.CategoryId==category.Id).FirstOrDefault();
             byte [] fileContent;
