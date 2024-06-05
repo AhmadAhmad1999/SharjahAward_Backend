@@ -131,9 +131,7 @@ namespace SharijhaAward.Api.Controllers
                 page = Page,
                 perPage = PerPage,
                 DeviceToken = DeviceToken
-                pageSize = PerPage,
-                DeviceToken = DeviceToken,
-                Token = Token
+                //Token = Token
             });
 
             return Response.statusCode switch
