@@ -3,7 +3,6 @@ using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
-using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateEducationalEntity
