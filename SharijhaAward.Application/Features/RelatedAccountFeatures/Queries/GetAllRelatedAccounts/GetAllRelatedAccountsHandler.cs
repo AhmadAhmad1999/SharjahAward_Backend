@@ -27,56 +27,47 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
 
                 int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
-                List<RelatedAccount> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
+                List<GetAllRelatedAccountsListVM> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
                     ? await _RelatedAccountRepository
-                        .Where(x => x.User1Id == UserId || x.User2Id == UserId)
+                        .Where(x => x.User1Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Include(x => x.User1).Include(x => x.User2).ToListAsync()
-                    : await _RelatedAccountRepository
-                        .Where(x => x.User1Id == UserId || x.User2Id == UserId)
-                        .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.perPage)
-                        .Take(Request.perPage)
-                        .Include(x => x.User1).Include(x => x.User2).ToListAsync();
-
-                IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber2Id = ReceivedRequests
-                    .Where(x => x.User1Id == UserId)
-                    .Select(x => new GetAllRelatedAccountsListVM()
-                    {
-                        Id = x.Id,
-                        Name = Request.lang == "ar"
+                        .Include(x => x.User1).Include(x => x.User2)
+                        .Select(x => new GetAllRelatedAccountsListVM()
+                        {
+                            Id = x.Id,
+                            Name = Request.lang == "ar"
                             ? x.User2!.ArabicName
                             : x.User2!.EnglishName,
-                        Email = x.User2!.Email,
-                        Gender = x.User2!.Gender,
-                        ImageURL = x.User2!.ImageURL,
-                        CreatedAt = x.CreatedAt
-                    });
-
-                IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber1Id = ReceivedRequests
-                    .Where(x => x.User2Id == UserId)
-                    .Select(x => new GetAllRelatedAccountsListVM()
-                    {
-                        Id = x.Id,
-                        Name = Request.lang == "ar"
-                            ? x.User1!.ArabicName
-                            : x.User1!.EnglishName,
-                        Email = x.User1!.Email,
-                        Gender = x.User1!.Gender,
-                        ImageURL = x.User1!.ImageURL,
-                        CreatedAt = x.CreatedAt
-                    });
-
-                List<GetAllRelatedAccountsListVM> RelatedAccounts = RelatedAccountsFromSubscriber2Id
-                    .Concat(RelatedAccountsFromSubscriber1Id).ToList();
+                            Email = x.User2!.Email,
+                            Gender = x.User2!.Gender,
+                            ImageURL = x.User2!.ImageURL,
+                            CreatedAt = x.CreatedAt
+                        }).ToListAsync()
+                    : await _RelatedAccountRepository
+                        .Where(x => x.User1Id == UserId)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.pageSize)
+                        .Take(Request.pageSize)
+                        .Include(x => x.User1).Include(x => x.User2)
+                        .Select(x => new GetAllRelatedAccountsListVM()
+                        {
+                            Id = x.Id,
+                            Name = Request.lang == "ar"
+                            ? x.User2!.ArabicName
+                            : x.User2!.EnglishName,
+                            Email = x.User2!.Email,
+                            Gender = x.User2!.Gender,
+                            ImageURL = x.User2!.ImageURL,
+                            CreatedAt = x.CreatedAt
+                        }).ToListAsync();
 
                 int TotalCount = await _RelatedAccountRepository
-                    .GetCountAsync(x => x.User1Id == UserId || x.User2Id == UserId);
+                    .GetCountAsync(x => x.User1Id == UserId);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
 
-                return new BaseResponse<List<GetAllRelatedAccountsListVM>>(ResponseMessage, true, 200, RelatedAccounts, PaginationParameter);
+                return new BaseResponse<List<GetAllRelatedAccountsListVM>>(ResponseMessage, true, 200, ReceivedRequests, PaginationParameter);
             }
             else
             {
@@ -84,56 +75,47 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
 
                 int UserId = Request.Id.Value;
 
-                List<RelatedAccount> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
+                List<GetAllRelatedAccountsListVM> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
                     ? await _RelatedAccountRepository
                         .Where(x => x.User1Id == UserId || x.User2Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Include(x => x.User1).Include(x => x.User2).ToListAsync()
+                        .Include(x => x.User1).Include(x => x.User2)
+                        .Select(x => new GetAllRelatedAccountsListVM()
+                        {
+                            Id = x.Id,
+                            Name = Request.lang == "ar"
+                            ? x.User2!.ArabicName
+                            : x.User2!.EnglishName,
+                            Email = x.User2!.Email,
+                            Gender = x.User2!.Gender,
+                            ImageURL = x.User2!.ImageURL,
+                            CreatedAt = x.CreatedAt
+                        }).ToListAsync()
                     : await _RelatedAccountRepository
                         .Where(x => x.User1Id == UserId || x.User2Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.perPage)
-                        .Take(Request.perPage)
-                        .Include(x => x.User1).Include(x => x.User2).ToListAsync();
-
-                IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber2Id = ReceivedRequests
-                    .Where(x => x.User1Id == UserId)
-                    .Select(x => new GetAllRelatedAccountsListVM()
-                    {
-                        Id = x.Id,
-                        Name = Request.lang == "ar"
+                        .Skip((Request.page - 1) * Request.pageSize)
+                        .Take(Request.pageSize)
+                        .Include(x => x.User1).Include(x => x.User2)
+                        .Select(x => new GetAllRelatedAccountsListVM()
+                        {
+                            Id = x.Id,
+                            Name = Request.lang == "ar"
                             ? x.User2!.ArabicName
                             : x.User2!.EnglishName,
-                        Email = x.User2!.Email,
-                        Gender = x.User2!.Gender,
-                        ImageURL = x.User2!.ImageURL,
-                        CreatedAt = x.CreatedAt
-                    });
-
-                IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber1Id = ReceivedRequests
-                    .Where(x => x.User2Id == UserId)
-                    .Select(x => new GetAllRelatedAccountsListVM()
-                    {
-                        Id = x.Id,
-                        Name = Request.lang == "ar"
-                            ? x.User1!.ArabicName
-                            : x.User1!.EnglishName,
-                        Email = x.User1!.Email,
-                        Gender = x.User1!.Gender,
-                        ImageURL = x.User1!.ImageURL,
-                        CreatedAt = x.CreatedAt
-                    });
-
-                List<GetAllRelatedAccountsListVM> RelatedAccounts = RelatedAccountsFromSubscriber2Id
-                    .Concat(RelatedAccountsFromSubscriber1Id).ToList();
+                            Email = x.User2!.Email,
+                            Gender = x.User2!.Gender,
+                            ImageURL = x.User2!.ImageURL,
+                            CreatedAt = x.CreatedAt
+                        }).ToListAsync();
 
                 int TotalCount = await _RelatedAccountRepository
-                    .GetCountAsync(x => x.User1Id == UserId || x.User2Id == UserId);
+                    .GetCountAsync(x => x.User1Id == UserId);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
 
-                return new BaseResponse<List<GetAllRelatedAccountsListVM>>(ResponseMessage, true, 200, RelatedAccounts, PaginationParameter);
+                return new BaseResponse<List<GetAllRelatedAccountsListVM>>(ResponseMessage, true, 200, ReceivedRequests, PaginationParameter);
             }
         }
     }

@@ -42,6 +42,11 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.Cr
             List<EducationalInstitution> NewEducationalInstitutionEntities = _Mapper.Map<List<EducationalInstitution>>
                 (Request.CreateEducationalInstitutionCommand);
 
+            foreach (EducationalInstitution NewEducationalInstitutionEntity in NewEducationalInstitutionEntities)
+            {
+                NewEducationalInstitutionEntity.EducationalEntityId = EducationalEntity.Id;
+            }
+
             await _EducationalInstitutionRepository.AddRangeAsync(NewEducationalInstitutionEntities);
 
             ResponseMessage = Request.lang == "en"

@@ -70,8 +70,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
             }
 
             RelatedAccount? CheckIfRelatedAccountIsAlreadyExist = await _RelatedAccountRepository
-                .FirstOrDefaultAsync(x => (x.User1Id == SenderId || x.User2Id == SenderId) &&
-                    (x.User1Id == UserRole.UserId || x.User2Id == UserRole.UserId));
+                .FirstOrDefaultAsync(x => x.User1Id == SenderId && x.User2Id == UserRole.UserId);
 
             if (CheckIfRelatedAccountIsAlreadyExist is not null)
             {

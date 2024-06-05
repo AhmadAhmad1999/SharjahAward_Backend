@@ -34,15 +34,11 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
         {
             string ResponseMessage = string.Empty;
 
-            if (string.IsNullOrEmpty(Request.token))
-            {
-                ResponseMessage = "You must enter the token in the request";
-
-                return new BaseResponse<GetRelatedAccoutProfileByIdResponse>(ResponseMessage, false, 400);
-            }
+            int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
             RelatedAccount? RelatedAccountEntity = await _RelatedAccountRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.RelatedAccountId);
+                .FirstOrDefaultAsync(x => x.Id == Request.RelatedAccountId &&
+                    x.User1Id == UserId);
 
             if (RelatedAccountEntity == null)
             {
@@ -53,24 +49,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
                 return new BaseResponse<GetRelatedAccoutProfileByIdResponse>(ResponseMessage, false, 404);
             }
 
-            int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
-            int RelatedAccountSubscriberId;
-
-            if (RelatedAccountEntity.User1Id == UserId)
-                RelatedAccountSubscriberId = RelatedAccountEntity.User2Id;
-
-            else if (RelatedAccountEntity.User2Id == UserId)
-                RelatedAccountSubscriberId = RelatedAccountEntity.User1Id;
-
-            else
-            {
-                ResponseMessage = "You can't view this profile because you aren't related to it";
-
-                return new BaseResponse<GetRelatedAccoutProfileByIdResponse>(ResponseMessage, false, 400);
-            }
-
             Domain.Entities.IdentityModels.User? RelatedAccountUserEntity = await _UserRepository
-                .FirstOrDefaultAsync(x => x.Id == RelatedAccountSubscriberId);
+                .FirstOrDefaultAsync(x => x.Id == RelatedAccountEntity.User2Id);
 
             if (RelatedAccountUserEntity == null)
             {
@@ -89,7 +69,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
 
             List<RelatedAccountProvidedForms> ProvidedForms = await _FormRepository
                 .Include(x => x.Category!)
-                .Where(x => x.userId == RelatedAccountSubscriberId && 
+                .Where(x => x.userId == RelatedAccountEntity.User2Id && 
                     (Request.Type != null 
                         ? x.Type == Request.Type
                         : true))

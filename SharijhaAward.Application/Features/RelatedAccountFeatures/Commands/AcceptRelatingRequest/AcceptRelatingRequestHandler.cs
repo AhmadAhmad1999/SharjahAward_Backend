@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
@@ -10,18 +11,24 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Acc
     {
         private readonly IAsyncRepository<RelatedAccountRequest> _RelatedAccountRequestRepository;
         private readonly IAsyncRepository<RelatedAccount> _RelatedAccountRepository;
+        private readonly IJwtProvider _JwtProvider;
         public AcceptRelatingRequestHandler(IAsyncRepository<RelatedAccountRequest> RelatedAccountRequestRepository,
-            IAsyncRepository<RelatedAccount> RelatedAccountRepository)
+            IAsyncRepository<RelatedAccount> RelatedAccountRepository,
+            IJwtProvider JwtProvider)
         {
             _RelatedAccountRequestRepository = RelatedAccountRequestRepository;
             _RelatedAccountRepository = RelatedAccountRepository;
+            _JwtProvider = JwtProvider;
         }
         public async Task<BaseResponse<object>> Handle(AcceptRelatingRequestCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
             RelatedAccountRequest? RelatedAccountRequestEntity = await _RelatedAccountRequestRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+                .FirstOrDefaultAsync(x => x.Id == Request.Id &&
+                    x.ReceiverId == UserId);
 
             if (RelatedAccountRequestEntity == null)
             {

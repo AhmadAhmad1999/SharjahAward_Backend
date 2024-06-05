@@ -8,6 +8,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
         public int page { get; set; }
         public int perPage { get; set; }
         public string? DeviceToken { get; set; }
+        public string? Token { get; set; }
         public string? lang { get; set; }
     }
 }
