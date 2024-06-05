@@ -115,7 +115,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 page = page,
-                pageSize = perPage,
+                perPage = perPage,
                 CycleId = CycleId
 
             });

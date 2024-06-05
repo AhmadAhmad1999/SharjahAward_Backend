@@ -41,7 +41,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpGet(Name = "GetAllGeneralWorkshope")]
-        public async Task<IActionResult> GetAllGeneralWorkshope(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllGeneralWorkshope(int page = 1, int perPage = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -50,7 +50,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 page = page,
-                pageSize = pageSize
+                perPage = perPage
             });
 
             return response.statusCode switch

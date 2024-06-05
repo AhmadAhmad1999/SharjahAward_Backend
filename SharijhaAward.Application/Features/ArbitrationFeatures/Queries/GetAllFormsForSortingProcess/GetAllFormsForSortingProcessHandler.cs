@@ -92,8 +92,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                                 ? Request.Filter.CategoriesIds.Any(y => y == x.ProvidedForm!.categoryId)
                                 : true))
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .ToListAsync();
                 }
                 else
@@ -101,8 +101,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                     ArbitrationsEntities = await _ArbitrationRepository
                         .Where(x => ArbitratorsIds.Contains(x.ArbitratorId))
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .Include(x => x.Arbitrator!)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
@@ -158,7 +158,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                 }
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllFormsForSortingProcessListVM>>(ResponseMessage, true, 200,
                     Response, PaginationParameter);
@@ -188,8 +188,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                                 ? Request.Filter.CategoriesIds.Any(y => y == x.ProvidedForm!.categoryId)
                                 : true))
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .ToListAsync();
                 }
                 else
@@ -199,8 +199,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                             ? x.ArbitratorId == UserId
                             : true)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .Include(x => x.Arbitrator!)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
@@ -260,7 +260,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                 }
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllFormsForSortingProcessListVM>>(ResponseMessage, true, 200,
                     Response, PaginationParameter);

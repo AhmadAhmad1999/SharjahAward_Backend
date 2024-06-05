@@ -118,7 +118,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAllTermAndConditionQuery()
             {
                 page = page,
-                pageSize =  perPage ,
+                perPage =  perPage ,
                 lang = Language!,
                 CategoryId = CategoryId
             });

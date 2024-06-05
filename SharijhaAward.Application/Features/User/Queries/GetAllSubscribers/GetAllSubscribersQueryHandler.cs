@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
 
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
-            if (request.page != 0 && request.pageSize != -1)
+            if (request.page != 0 && request.perPage != -1)
                 Subscribers = await _UserRoleRepository
                     .Include(x => x.User!, filterObject)
                     .Where(x => x.RoleId == SubscriberRole.Id &&
@@ -45,8 +45,8 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
                             : true))
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => x.User!)
-                    .Skip((request.page - 1) * request.pageSize)
-                    .Take(request.pageSize)
+                    .Skip((request.page - 1) * request.perPage)
+                    .Take(request.perPage)
                     .ToListAsync();
 
             else
@@ -68,7 +68,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
                     (request.isValidAccount != null
                         ? u.User!.isValidAccount == request.isValidAccount
                         : true));
-            Pagination pagination = new Pagination(request.page, request.pageSize, Count);
+            Pagination pagination = new Pagination(request.page, request.perPage, Count);
             return new BaseResponse<List<UserListVm>>("", true, 200, data, pagination);
         }
     }

@@ -104,7 +104,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAllUsersQuery()
             {
                 page = page,
-                pageSize = perPage
+                perPage = perPage
             });
 
             return response.statusCode switch

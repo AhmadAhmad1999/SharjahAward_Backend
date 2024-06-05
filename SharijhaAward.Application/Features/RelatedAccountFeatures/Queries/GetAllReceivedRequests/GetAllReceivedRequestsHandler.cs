@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
 
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
-            List<GetAllReceivedRequestsListVM> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
+            List<GetAllReceivedRequestsListVM> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
                 ? await _RelatedAccountRequestRepository
                     .Where(x => x.ReceiverId == UserId)
                     .OrderByDescending(x => x.CreatedAt)
@@ -46,8 +46,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                     .Where(x => x.ReceiverId == UserId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Include(x => x.Sender)
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
                     .Select(x => new GetAllReceivedRequestsListVM()
                     {
                         Id = x.Id,
@@ -63,7 +63,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                 .GetCountAsync(x => x.ReceiverId == UserId);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllReceivedRequestsListVM>>(ResponseMessage, true, 200, ReceivedRequests, PaginationParameter);
         }

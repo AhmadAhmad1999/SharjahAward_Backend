@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllA
             Handle(GetAllArbitratorsForArbitrationQuery Request, CancellationToken cancellationToken)
         {
             List<Arbitrator> Arbitrators = await _ArbitratorRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
                 .ToListAsync();
 
             List<CategoryArbitrator> CategoryArbitratorEntities = await _CategoryArbitratorRepository
@@ -63,7 +63,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllA
             int TotalCount = await _ArbitratorRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllArbitratorsForArbitrationListVM>>(ResponseMessage, true, 200,
                 ArbitratorsForArbitration, PaginationParameter);

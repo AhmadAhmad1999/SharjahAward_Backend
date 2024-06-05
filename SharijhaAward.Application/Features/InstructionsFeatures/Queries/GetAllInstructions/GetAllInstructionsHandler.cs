@@ -24,12 +24,12 @@ namespace SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAll
             string ResponseMessage = string.Empty;
 
             List<GetAllInstructionsListVM> Instructions = _Mapper.Map<List<GetAllInstructionsListVM>>(await _InstructionRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
 
             int TotalCount = await _InstructionRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllInstructionsListVM>>(ResponseMessage, true, 200, Instructions, PaginationParameter);
         }

@@ -27,12 +27,12 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 
         public async Task<BaseResponse<List<NewsListVM>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
-            var newsList = await _newsRepository.OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+            var newsList = await _newsRepository.OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
                 .ToListAsync();
            
             int count = _newsRepository.GetCount(n => n.isDeleted == false);
             
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
             
             if (!request.query.IsNullOrEmpty())
             {

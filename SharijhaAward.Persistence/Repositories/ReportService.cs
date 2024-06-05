@@ -17,7 +17,7 @@ namespace SharijhaAward.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<List<Dictionary<string, object>>> GetDynamicReportAsync(string[] cyclesColumns, string[] categoryColumns, string[] subCategoryColumns, string[] providedFormColums)
+        public async Task<List<Dictionary<string, object>>> GetDynamicReportAsync(string[] cyclesColumns, string[] categoryColumns, string[] providedFormColums)
         {
             var cyclesQuery = _context.Cycles.AsQueryable();
             
@@ -27,7 +27,7 @@ namespace SharijhaAward.Persistence.Repositories
             //    //cyclesQuery = _context.Cycles.FromSqlRaw($"SELECT {selectedColumnsFromCycle} FROM Cycles")!;
                 
             //}
-            if(categoryColumns.Length > 0 || subCategoryColumns.Length > 0)
+            if(categoryColumns.Length > 0)
             {
                 cyclesQuery = cyclesQuery.Include(c => c.Categories);
             }

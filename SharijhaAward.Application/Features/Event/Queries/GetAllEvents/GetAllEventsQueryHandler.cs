@@ -24,9 +24,9 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
 
         public async Task<BaseResponse<List<EventListVM>>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
         {
-            var allEvents = request.pageSize == -1 || request.page==0
+            var allEvents = request.perPage == -1 || request.page==0
                 ? await _eventRepository.OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync()
-                : await _eventRepository.OrderByDescending(x => x.CreatedAt, request.page,request.pageSize).ToListAsync();
+                : await _eventRepository.OrderByDescending(x => x.CreatedAt, request.page,request.perPage).ToListAsync();
            
             List<EventListVM> allEventsVM = new List<EventListVM>();
          

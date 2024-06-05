@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.AdvanceReports.Commands.CreateAdvan
             {
                 request.subCategoryColums = new string[0];
             }
-            var data = await _reportService.GetDynamicReportAsync(request.cycleColums, request.categoryColums, request.subCategoryColums, request.ProvidedFormColums);
+            var data = await _reportService.GetDynamicReportAsync(request.cycleColums, request.categoryColums, request.ProvidedFormColums);
 
             return new BaseResponse<List<Dictionary<string, object>>>("", true, 200, data);
             

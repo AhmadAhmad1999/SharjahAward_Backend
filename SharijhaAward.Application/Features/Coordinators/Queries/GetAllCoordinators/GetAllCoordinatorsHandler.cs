@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
         {
             FilterObject filterObject = new FilterObject() { Filters = Request.filters };
             List<CoordinatorsListVM> Coordinators = _Mapper.Map<List<CoordinatorsListVM>>(await _CoordinatorRepository
-                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize)
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                 .ToListAsync());
 
             List<EduEntitiesCoordinator> CoordinatorsEducationalEntities = await _EduEntitiesCoordinatorRepository
@@ -59,7 +59,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
             int TotalCount = await _CoordinatorRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<CoordinatorsListVM>>(ResponseMessage, true, 200, Coordinators, PaginationParameter);
         }

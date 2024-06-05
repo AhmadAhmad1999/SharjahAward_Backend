@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
             FilterObject filterObject = new FilterObject() { Filters = Request.filters };
            
             List<ArbitratorsListVM> Arbitrators = _Mapper.Map<List<ArbitratorsListVM>>(await _ArbitratorRepository
-                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize)
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                 .ToListAsync());
 
             List<CategoryArbitrator> CategoryArbitratorEntities = await _CategoryArbitratorRepository
@@ -58,7 +58,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
             int TotalCount = await _ArbitratorRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<ArbitratorsListVM>>(ResponseMessage, true, 200, Arbitrators, PaginationParameter);
         }

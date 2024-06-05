@@ -28,17 +28,17 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
         public async Task<BaseResponse<List<CycleConditionListVM>>> Handle(GetAllCycleConditionsQuery request, CancellationToken cancellationToken)
         {
             var allCycleCondition = await _cycleConditionRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
                 .ToListAsync();
 
             if (request.CycleId != null)
             {
-                if (request.page != 0 && request.pageSize != -1)
+                if (request.page != 0 && request.perPage != -1)
                     allCycleCondition = await _cycleConditionRepository
                         .Where(c => c.CycleId == request.CycleId)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((request.page - 1) * request.pageSize)
-                        .Take(request.pageSize)
+                        .Skip((request.page - 1) * request.perPage)
+                        .Take(request.perPage)
                         .ToListAsync();
 
                 else
@@ -62,7 +62,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
                 ? _cycleConditionRepository.GetCount(c => !c.isDeleted)
                 : _cycleConditionRepository.GetCount(c => c.CycleId == request.CycleId);
 
-            Pagination pagination = new Pagination(request.page,request.pageSize,count);
+            Pagination pagination = new Pagination(request.page,request.perPage,count);
             return new BaseResponse<List<CycleConditionListVM>>("", true, 200, data, pagination);
         }
     }

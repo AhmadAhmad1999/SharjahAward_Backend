@@ -35,7 +35,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeeti
                 int TotalCount = await _MeetingRepository.GetCountAsync(null);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllMeetingsListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
             }
@@ -49,19 +49,19 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeeti
                 int TotalCount = await _MeetingRepository.GetCountAsync(null);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllMeetingsListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
             }
             else
             {
                 List<GetAllMeetingsListVM> Meetings = _Mapper.Map<List<GetAllMeetingsListVM>>(await _MeetingRepository
-                    .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
+                    .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
 
                 int TotalCount = await _MeetingRepository.GetCountAsync(null);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllMeetingsListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
             }

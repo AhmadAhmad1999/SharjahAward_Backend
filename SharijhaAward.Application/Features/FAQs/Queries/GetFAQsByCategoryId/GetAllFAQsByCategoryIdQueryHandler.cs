@@ -43,11 +43,11 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId
             
             List<FrequentlyAskedQuestion> FAQs = new List<FrequentlyAskedQuestion>();
 
-            if (request.page != 0 && request.pageSize != -1)
+            if (request.page != 0 && request.perPage != -1)
                 FAQs = await _faqRepository.Where(f => f.CategoryId == category.Id)
                     .OrderByDescending(x => x.CreatedAt)
-                    .Skip((request.page - 1) * request.pageSize)
-                    .Take(request.pageSize).ToListAsync();
+                    .Skip((request.page - 1) * request.perPage)
+                    .Take(request.perPage).ToListAsync();
             else
                 FAQs = await _faqRepository.Where(f => f.CategoryId == category.Id)
                     .OrderByDescending(x => x.CreatedAt).ToListAsync();
@@ -60,7 +60,7 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId
             }
             var count = await _faqRepository.GetCountAsync(t => t.CategoryId == request.CategoryId);
 
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
             return new BaseResponse<List<FAQListVm>>("", true, 200, data, pagination);
         }
     }

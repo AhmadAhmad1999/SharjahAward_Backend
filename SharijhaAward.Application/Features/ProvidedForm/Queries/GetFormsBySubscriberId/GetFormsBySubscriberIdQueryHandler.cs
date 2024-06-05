@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsBySubs
                 return new BaseResponse<List<FormsBySubscriberIdListVM>>("", false, 404);
             }
 
-            var forms = await _formRepository.GetWhereThenPagedReponseAsync(f => f.userId == subscriber.Id, request.page, request.pageSize);
+            var forms = await _formRepository.GetWhereThenPagedReponseAsync(f => f.userId == subscriber.Id, request.page, request.perPage);
 
             var data = _mapper.Map<List<FormsBySubscriberIdListVM>>(forms);
             
@@ -52,7 +52,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsBySubs
             }
             var count = _formRepository.GetCount(f => f.userId == subscriber.Id);
             
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
            
             return new BaseResponse<List<FormsBySubscriberIdListVM>>("", true, 200, data,pagination);
         }

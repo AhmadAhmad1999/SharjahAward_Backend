@@ -75,7 +75,12 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             var FormsOfUser = _Providedrepository.Where(p => p.userId == int.Parse(UserId)).ToList();
             
             var category =await _CategoryRepository.GetByIdAsync(request.categoryId);
-            
+           
+            if(category == null)
+            {
+                return new BaseResponse<int>("Category not Found", false, 404);
+            }
+           
             for(int i=0; i < FormsOfUser.Count(); i++)
             {
                 if (FormsOfUser[i].categoryId == category!.Id)
@@ -88,7 +93,37 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
                 }
             }
             var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
-            var cycle = await _CycleRepository.GetByIdAsync(category.CycleId);
+            var cycle = await _CycleRepository.GetByIdAsync(category!.CycleId);
+
+            if (cycle == null)
+            {
+                return new BaseResponse<int>("cycle not Found", false, 404);
+            }
+            else if(cycle.Status != Domain.Constants.Common.Status.Active)
+            {
+                msg = request.lang == "en"
+                    ? "Cycle is not Active"
+                    : "الدورة غير فعالة";
+
+                return new BaseResponse<int>("", false, 400);
+            }
+
+            if (cycle.RegistrationPortalClosingDate <= DateTime.Now)
+            {
+                msg = request.lang == "en"
+                         ? "Time of Registration is over"
+                         : "لقد إنتهى وقت التسجيل";
+
+                return new BaseResponse<int>(msg, false, 400);
+            }
+            else if(cycle.RegistrationPortalOpeningDate > DateTime.Now)
+            {
+                msg = request.lang == "en"
+                    ? "You Can not subscribe in this Time"
+                    : "لا يمكنك الإشتراك بعد";
+
+                return new BaseResponse<int>(msg, false, 400);
+            }
 
             if (category.CategoryClassification == Domain.Constants.CategoryConstants.CategoryClassification.Individual)
             {
@@ -104,7 +139,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             }
             else
             {
-                if (User.NumberOfGroupCategories >= cycle.GroupCategoryNumber)
+                if (User!.NumberOfGroupCategories >= cycle.GroupCategoryNumber)
                 {
                     msg = request.lang == "en"
                         ? "You cannot subscribe to more Group Categories"

@@ -13,7 +13,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendasForAwardT
     {
         public int? CycleId { get; set; }
         public int page { get; set; } = 1;
-        public int pageSize { get; set; } = 10;
+        public int perPage { get; set; } = 10;
         public string token { get; set; } = string.Empty;
         public string? lang { get; set; }
     }

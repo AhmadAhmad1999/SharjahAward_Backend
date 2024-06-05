@@ -31,7 +31,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
             var CycleList = await _cycleRepository
-                .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.pageSize)
+                .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
                 .ToListAsync();
 
             var data = _mapper.Map<List<CycleListVM>>(CycleList);
@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles
             }
             int count = _cycleRepository.GetCount(c => c.isDeleted == false);
             
-            Pagination pagination =new Pagination(request.page, request.pageSize, count);
+            Pagination pagination =new Pagination(request.page, request.perPage, count);
            
             return new BaseResponse<List<CycleListVM>>("",true,200, data,pagination);
         }

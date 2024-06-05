@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTra
 
         public async Task<BaseResponse<List<TrainingWorkshopListVm>>> Handle(GetAllTrainingWorkshopsQuery request, CancellationToken cancellationToken)
         {
-            var workShops = await _trainingWorkshopRepository.OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+            var workShops = await _trainingWorkshopRepository.OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
                 .ToListAsync();
 
             if (workShops.Count == 0)
@@ -42,7 +42,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTra
                  data[i].EnglishTitle;
             }
             int count = _trainingWorkshopRepository.GetCount(t =>!t.isDeleted);
-            var pagenation = new Pagination(request.page, request.pageSize, count);
+            var pagenation = new Pagination(request.page, request.perPage, count);
             return new BaseResponse<List<TrainingWorkshopListVm>>("", true, 200,data,pagenation);
         }
     }

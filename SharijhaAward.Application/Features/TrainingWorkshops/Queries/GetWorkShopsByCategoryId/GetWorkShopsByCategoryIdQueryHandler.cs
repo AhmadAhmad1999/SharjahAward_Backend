@@ -42,7 +42,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
             {
                 var WorkShops = _workShopRepository.WhereThenIncludeThenPagination(
                     w => w.CategoryId == request.CategoryId,
-                    request.page, request.pageSize,
+                    request.page, request.perPage,
                     w => w.Attachments).ToList();
 
                 var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops);
@@ -63,7 +63,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
                 data = data.OrderByDescending(t => t.CreatedAt).ToList();
 
                 var count = await _workShopRepository.GetCountAsync(w => w.CategoryId == category.Id);
-                Pagination pagination = new Pagination(request.page, request.pageSize, count);
+                Pagination pagination = new Pagination(request.page, request.perPage, count);
                
                 return new BaseResponse<List<TrainingWorkshopListVm>>("", true, 200, data,pagination);
             }

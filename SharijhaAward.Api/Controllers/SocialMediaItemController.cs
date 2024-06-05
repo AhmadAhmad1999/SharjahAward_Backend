@@ -82,13 +82,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllSocialMediaItem")]
-        public async Task<IActionResult> GetAllSocialMediaItem(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllSocialMediaItem(int page = 1, int perPage = 10)
         {
 
             var response = await _mediator.Send(new GetAllSocialMediaItemsQuery()
             {
                 page = page,
-                pageSize = pageSize
+                perPage = perPage
             });
 
             return response.statusCode switch

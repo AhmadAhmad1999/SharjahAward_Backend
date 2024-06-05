@@ -132,7 +132,7 @@ namespace SharijhaAward.Api.Controllers
                 SectionId = SectionId,
                 lang = HeaderValue!,
                 page = Page,
-                pageSize = PerPage
+                perPage = PerPage
             });
 
             return Response.statusCode switch

@@ -81,13 +81,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllStrategicPartners")]
-        public async Task<IActionResult> GetAllStrategicPartners(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllStrategicPartners(int page = 1, int perPage = 10)
         {
 
             var response = await _mediator.Send(new GetAllStrategicPartnersQuery()
             {
                 page = page,
-                pageSize = pageSize
+                perPage = perPage
             });
 
             return response.statusCode switch

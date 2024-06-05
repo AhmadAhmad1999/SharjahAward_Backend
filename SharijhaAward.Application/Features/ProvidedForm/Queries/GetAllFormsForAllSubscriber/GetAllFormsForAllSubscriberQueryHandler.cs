@@ -40,7 +40,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery request, CancellationToken cancellationToken)
         {
-            var forms = await _formRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var forms = await _formRepository.GetPagedReponseAsync(request.page, request.perPage);
             var Subscribers = await _userRepository.Where(s => s.SubscriberId != null).ToListAsync();
             if (forms.Any())
             {
@@ -106,7 +106,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
                 int count = _formRepository.GetCount(f => !f.isDeleted);
 
-                Pagination pagination = new Pagination(request.page, request.pageSize, count);
+                Pagination pagination = new Pagination(request.page, request.perPage, count);
 
                 return new BaseResponse<List<FormListVm>>("", true, 200, data, pagination);
 

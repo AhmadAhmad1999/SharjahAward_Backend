@@ -40,7 +40,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 FilterId = FilterId,
                 page = Page,
-                pageSize = PerPage,
+                perPage = PerPage,
                 lang = HeaderValue
             });
 

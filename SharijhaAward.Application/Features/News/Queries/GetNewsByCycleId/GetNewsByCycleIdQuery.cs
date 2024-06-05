@@ -13,7 +13,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
     {
         public int? CycleId { get; set; }
         public int page { get; set; } 
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public string? query { get; set; }
         public string lang { get; set; } = string.Empty;
     }

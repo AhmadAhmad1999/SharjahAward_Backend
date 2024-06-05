@@ -94,7 +94,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = HeaderValue!,
                 page = Page,
-                pageSize = PerPage
+                perPage = PerPage
             });
 
             return Response.statusCode switch
@@ -128,7 +128,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = HeaderValue!,
                 page = Page,
-                pageSize = PerPage,
+                perPage = PerPage,
                 DeviceToken = DeviceToken
             });
 

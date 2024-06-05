@@ -25,13 +25,13 @@ namespace SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStr
 
         public async Task<BaseResponse<List<StrategicPartnerListVM>>> Handle(GetAllStrategicPartnersQuery request, CancellationToken cancellationToken)
         {
-            var AllStrategicPartners = await _strategicPartnerRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var AllStrategicPartners = await _strategicPartnerRepository.GetPagedReponseAsync(request.page, request.perPage);
 
             var data = _mapper.Map<List<StrategicPartnerListVM>>(AllStrategicPartners);
 
             int Count = _strategicPartnerRepository.GetCount(p => !p.isDeleted);
 
-            Pagination pagination = new Pagination(request.page, request.pageSize, Count);
+            Pagination pagination = new Pagination(request.page, request.perPage, Count);
 
             return new BaseResponse<List<StrategicPartnerListVM>>("", true, 200, data, pagination);
         }

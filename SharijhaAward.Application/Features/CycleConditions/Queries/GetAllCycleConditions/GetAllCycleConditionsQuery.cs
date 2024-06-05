@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
     public class GetAllCycleConditionsQuery : IRequest<BaseResponse<List<CycleConditionListVM>>>
     {
         public int page {  get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public string lang { get; set; } = string.Empty;
         public int? CycleId { get; set; }
 

@@ -13,7 +13,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         : IRequest<BaseResponse<List<FormListVm>>>
     {
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public string? lang { get; set; }
     }
 }

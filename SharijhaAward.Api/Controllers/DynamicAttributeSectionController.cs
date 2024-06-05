@@ -124,7 +124,7 @@ namespace SharijhaAward.Api.Controllers
                 isArbitrator = isArbitrator != null ? isArbitrator.Value : false,
                 lang = HeaderValue!,
                 page = Page,
-                pageSize = PerPage
+                perPage = PerPage
             });
 
             return Response.statusCode switch

@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
 
                 int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
-                List<RelatedAccount> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
+                List<RelatedAccount> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
                     ? await _RelatedAccountRepository
                         .Where(x => x.User1Id == UserId || x.User2Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
@@ -35,8 +35,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                     : await _RelatedAccountRepository
                         .Where(x => x.User1Id == UserId || x.User2Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .Include(x => x.User1).Include(x => x.User2).ToListAsync();
 
                 IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber2Id = ReceivedRequests
@@ -74,7 +74,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                     .GetCountAsync(x => x.User1Id == UserId || x.User2Id == UserId);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllRelatedAccountsListVM>>(ResponseMessage, true, 200, RelatedAccounts, PaginationParameter);
             }
@@ -84,7 +84,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
 
                 int UserId = Request.Id.Value;
 
-                List<RelatedAccount> ReceivedRequests = (Request.pageSize == -1 || Request.page == 0)
+                List<RelatedAccount> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
                     ? await _RelatedAccountRepository
                         .Where(x => x.User1Id == UserId || x.User2Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
@@ -92,8 +92,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                     : await _RelatedAccountRepository
                         .Where(x => x.User1Id == UserId || x.User2Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .Include(x => x.User1).Include(x => x.User2).ToListAsync();
 
                 IEnumerable<GetAllRelatedAccountsListVM> RelatedAccountsFromSubscriber2Id = ReceivedRequests
@@ -131,7 +131,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                     .GetCountAsync(x => x.User1Id == UserId || x.User2Id == UserId);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllRelatedAccountsListVM>>(ResponseMessage, true, 200, RelatedAccounts, PaginationParameter);
             }

@@ -8,6 +8,6 @@ namespace SharijhaAward.Application.Features.NotificationTemplateFeatures.Querie
     {
         public string? lang { get; set; }
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
     }
 }

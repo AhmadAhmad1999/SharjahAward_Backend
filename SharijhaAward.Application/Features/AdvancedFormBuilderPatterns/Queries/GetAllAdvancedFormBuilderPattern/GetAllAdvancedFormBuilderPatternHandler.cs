@@ -25,13 +25,13 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderPatterns.Queries
             string ResponseMessage = string.Empty;
 
             List<GetAllAdvancedFormBuilderPatternListVM> AdvancedFormBuilderPatterns = _Mapper.Map<List<GetAllAdvancedFormBuilderPatternListVM>>(
-                await _AdvancedFormBuilderPatternRepository.OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                await _AdvancedFormBuilderPatternRepository.OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
                     .ToListAsync());
 
             int TotalCount = await _AdvancedFormBuilderPatternRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllAdvancedFormBuilderPatternListVM>>(ResponseMessage, true, 200,
                 AdvancedFormBuilderPatterns, PaginationParameter);

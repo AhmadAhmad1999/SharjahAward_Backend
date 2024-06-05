@@ -85,7 +85,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllAlbums")]
-        public async Task<IActionResult> GetAllAlbums(int? CycleId, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllAlbums(int? CycleId, int page = 1, int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -94,7 +94,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = Language!,
                 page = page,
-                pageSize = pageSize,
+                perPage = perPage,
                 CycleId = CycleId
             });
 
@@ -164,7 +164,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllGalleries/{AlbumId}", Name = "GetAllGalleries")]
-        public async Task<IActionResult> GetAllGalleries(int AlbumId, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllGalleries(int AlbumId, int page = 1, int perPage = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -174,7 +174,7 @@ namespace SharijhaAward.Api.Controllers
                 AlbumId = AlbumId,
                 lang = language!,
                 page = page,
-                pageSize = pageSize
+                perPage = perPage
             });
             return response.statusCode switch
             {

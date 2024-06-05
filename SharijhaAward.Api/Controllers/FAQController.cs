@@ -108,7 +108,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 page = page,
-                pageSize = perPage
+                perPage = perPage
                 
             });
 
@@ -122,7 +122,7 @@ namespace SharijhaAward.Api.Controllers
 
 
         [HttpGet("GetAllFAQsByCategoryId/{Id}", Name = "GetAllFAQsByCategoryId")]
-        public async Task<IActionResult> GetAllFAQsByCategoryId(int Id,int page = 1 , int pageSize = 10)
+        public async Task<IActionResult> GetAllFAQsByCategoryId(int Id,int page = 1 , int perPage = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -132,7 +132,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 page = page,
-                pageSize = pageSize,
+                perPage = perPage,
                 CategoryId = Id
             });
 

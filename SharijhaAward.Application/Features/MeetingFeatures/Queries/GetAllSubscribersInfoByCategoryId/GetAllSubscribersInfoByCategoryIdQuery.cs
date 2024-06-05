@@ -7,7 +7,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllSubsc
     {
         public List<int> Ids { get; set; } = new List<int>();
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public string? lang { get; set; }
     }
 }

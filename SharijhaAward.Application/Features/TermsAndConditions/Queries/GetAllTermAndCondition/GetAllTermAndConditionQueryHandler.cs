@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
         public async Task<BaseResponse<List<TermAndConditionListVM>>> Handle(GetAllTermAndConditionQuery request, CancellationToken cancellationToken)
         {
             var termsAndConditions = await _termAndConditionRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
                 .Where(x => request.CategoryId != null 
                     ? x.CategoryId == request.CategoryId
                     : true)
@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
                 ? await _termAndConditionRepository.GetCountAsync(t => t.isDeleted == false)
                 : await _termAndConditionRepository.GetCountAsync(t => t.CategoryId == request.CategoryId);
 
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
             return new BaseResponse<List<TermAndConditionListVM>>("", true, 200, data, pagination);    
             
         }

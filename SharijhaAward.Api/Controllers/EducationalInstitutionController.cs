@@ -139,7 +139,7 @@ namespace SharijhaAward.Api.Controllers
                     EducationalEntityId = EducationalEntityId,
                     lang = HeaderValue!,
                     page = Page,
-                    pageSize = PerPage
+                    perPage = PerPage
                 });
 
             return Response.statusCode switch

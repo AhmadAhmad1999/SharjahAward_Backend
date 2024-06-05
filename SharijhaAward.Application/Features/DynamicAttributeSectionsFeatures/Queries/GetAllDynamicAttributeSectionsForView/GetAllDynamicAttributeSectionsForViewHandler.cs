@@ -57,14 +57,14 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                 
                 List<DynamicAttributeSectionListVM> DynamicAttributeSections = new List<DynamicAttributeSectionListVM>();
 
-                if (Request.page != 0 && Request.pageSize != -1)
+                if (Request.page != 0 && Request.perPage != -1)
                     DynamicAttributeSections = await _DynamicAttributeSectionRepository
                         .IncludeThenWhere(x => x.AttributeTableName!,
                             x => x.RecordIdOnRelation == Request.CategoryId &&
                             x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower())
                         .OrderBy(x => x.OrderId)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .Select(x => new DynamicAttributeSectionListVM()
                         {
                             Id = x.Id,
@@ -411,7 +411,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     x.AttributeTableName!.Name.ToLower() == TableNames.ProvidedForm.ToString().ToLower());
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 200, DynamicAttributeSections, PaginationParameter);
             }
@@ -424,7 +424,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 List<DynamicAttributeSectionListVM> DynamicAttributeSections = new List<DynamicAttributeSectionListVM>();
 
-                if (Request.page != 0 && Request.pageSize != -1)
+                if (Request.page != 0 && Request.perPage != -1)
                     DynamicAttributeSections = _DynamicAttributeSectionRepository
                         .IncludeThenWhere(x => x.AttributeTableName!,
                             x => Request.isArbitrator.Value
@@ -433,8 +433,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 : (x.AttributeTableName!.Name.ToLower() == TableNames.Coordinator.ToString().ToLower() &&
                                     x.RecordIdOnRelation == -2))
                         .OrderBy(x => x.OrderId)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .Select(x => new DynamicAttributeSectionListVM()
                         {
                             Id = x.Id,
@@ -489,7 +489,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         x.RecordIdOnRelation == -2));
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 200, DynamicAttributeSections, PaginationParameter);
             }

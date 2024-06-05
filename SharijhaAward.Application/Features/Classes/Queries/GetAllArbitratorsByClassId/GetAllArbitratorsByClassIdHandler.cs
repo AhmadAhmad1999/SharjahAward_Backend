@@ -33,12 +33,12 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
         {
             List<Arbitrator> ArbitratorClassesEntities = new List<Arbitrator>();
             
-            if (Request.page != 0 && Request.pageSize != -1)
+            if (Request.page != 0 && Request.perPage != -1)
                 ArbitratorClassesEntities = await _ArbitratorClassRepository
                     .Where(x => x.EducationalClassId == Request.EducationalClassId)
                     .OrderByDescending(x => x.CreatedAt)
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
                     .Include(x => x.Arbitrator!)
                     .Select(x => x.Arbitrator!)
                     .ToListAsync();
@@ -78,7 +78,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
             int TotalCount = await _ArbitratorRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<ArbitratorsListVM>>(ResponseMessage, true, 200, Arbitrators, PaginationParameter);
         }

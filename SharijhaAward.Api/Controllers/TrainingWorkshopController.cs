@@ -111,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAllTrainingWorkshopsQuery()
             {
                 lang = Language!,
-                pageSize=perPage,
+                perPage=perPage,
                 page = page,
                 
                 
@@ -125,7 +125,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpGet("GetWorkShopsByCategoryId/{Id}",Name= "GetWorkShopsByCategoryId")]
-        public async Task<IActionResult> GetTrainingWorkShopsByCategoryId(int Id,int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetTrainingWorkShopsByCategoryId(int Id,int page = 1, int perPage = 10)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
@@ -133,7 +133,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetWorkShopsByCategoryIdQuery()
             {
                 page = page,
-                pageSize = pageSize,
+                perPage = perPage,
                 CategoryId = Id,
                 lang = language!
             });

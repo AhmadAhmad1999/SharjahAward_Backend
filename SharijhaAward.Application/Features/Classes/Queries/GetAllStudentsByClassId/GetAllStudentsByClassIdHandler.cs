@@ -25,14 +25,14 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByCla
 
             List<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormsEntities = new List<Domain.Entities.ProvidedFormModel.ProvidedForm>();
 
-            if (Request.page != 0 && Request.pageSize != -1)
+            if (Request.page != 0 && Request.perPage != -1)
                 ProvidedFormsEntities = await _ProvidedFormRepository
                     .Where(x => x.CategoryEducationalClassId != null && x.PercentCompletion == 100)
                     .Include(x => x.CategoryEducationalClass!)
                     .Where(x => x.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
                     .OrderByDescending(x => x.CreatedAt)
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
                     .Include(x => x.Category!)
                     .ToListAsync();
             else
@@ -71,7 +71,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByCla
                 .CountAsync();
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllStudentsByClassIdListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
         }

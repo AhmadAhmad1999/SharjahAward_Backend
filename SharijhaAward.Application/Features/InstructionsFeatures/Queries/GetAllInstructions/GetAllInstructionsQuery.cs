@@ -7,6 +7,6 @@ namespace SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAll
     {
         public string? lang { get; set; }
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
     public class GetWorkShopsByCategoryIdQuery : IRequest<BaseResponse<List<TrainingWorkshopListVm>>>
     {
         public int page { get; set; }
-        public int pageSize {  get; set; }
+        public int perPage {  get; set; }
         public int CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
     }

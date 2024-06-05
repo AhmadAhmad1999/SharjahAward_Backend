@@ -24,15 +24,15 @@ namespace SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllA
             string ResponseMessage = string.Empty;
 
             var AllAppVersions = Request.AppType == null
-                ? await _AppVersionRepository.OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync()
-                : await _AppVersionRepository.OrderByDescending(x => x.CreatedAt, Request.page,Request.pageSize).Where(x=>x.AppType == Request.AppType).ToListAsync();
+                ? await _AppVersionRepository.OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage).ToListAsync()
+                : await _AppVersionRepository.OrderByDescending(x => x.CreatedAt, Request.page,Request.perPage).Where(x=>x.AppType == Request.AppType).ToListAsync();
                 
             var data = _Mapper.Map<List<GetAllAppVersionsListVM>>(AllAppVersions);
 
             int TotalCount = await _AppVersionRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllAppVersionsListVM>>(ResponseMessage, true, 200, data, PaginationParameter);
         }

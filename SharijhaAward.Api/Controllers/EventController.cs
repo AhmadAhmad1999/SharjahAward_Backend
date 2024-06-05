@@ -95,11 +95,11 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = headerValue,
                 page = page,
-                pageSize = pageSize
+                perPage = pageSize
             });
 
             var totalCount = response.totalItem;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
             return Ok(
                 new
                 {
@@ -111,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
                         current_page = page,
                         last_page = totalPage,
                         total_row = totalCount,
-                        per_page = pageSize
+                        per_page = perPage
                     }
                 });
         }
