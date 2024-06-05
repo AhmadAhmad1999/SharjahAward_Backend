@@ -120,16 +120,18 @@ namespace SharijhaAward.Api.Controllers
                 HeaderValue = "en";
 
             StringValues? DeviceToken = HttpContext.Request.Headers["fcm_token"];
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
 
-            if (string.IsNullOrEmpty(DeviceToken))
-                return Unauthorized("You must send the fcm token");
+            if (string.IsNullOrEmpty(Token) && string.IsNullOrEmpty(DeviceToken))
+                return Unauthorized("You must send either the token or the device token");
 
             BaseResponse<List<GetAllNotificationsByFCM_TokenListVM>> Response = await _Mediator.Send(new GetAllNotificationsByFCM_TokenQuery()
             {
                 lang = HeaderValue!,
                 page = Page,
                 pageSize = PerPage,
-                DeviceToken = DeviceToken
+                DeviceToken = DeviceToken,
+                Token = Token
             });
 
             return Response.statusCode switch

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
@@ -8,13 +9,19 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Can
     public class CancelRelatingHandler : IRequestHandler<CancelRelatingCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<RelatedAccount> _RelatedAccountRepository;
-        public CancelRelatingHandler(IAsyncRepository<RelatedAccount> RelatedAccountRepository)
+        private readonly IJwtProvider _JwtProvider;
+
+        public CancelRelatingHandler(IAsyncRepository<RelatedAccount> RelatedAccountRepository,
+            IJwtProvider JwtProvider)
         {
             _RelatedAccountRepository = RelatedAccountRepository;
+            _JwtProvider = JwtProvider;
         }
         public async Task<BaseResponse<object>> Handle(CancelRelatingCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
             RelatedAccount? RelatedAccountEntity = await _RelatedAccountRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);

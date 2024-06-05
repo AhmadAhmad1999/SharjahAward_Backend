@@ -1,9 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
-using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.AcceptRelatingRequest;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.CancelRelating;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.CreateDirectRelating;
@@ -37,6 +34,11 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> AcceptRelatingRequest(int RelatingRequestId)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
@@ -45,7 +47,8 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<object> Response = await _Mediator.Send(new AcceptRelatingRequestCommand()
             {
                 Id = RelatingRequestId,
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                Token = Token
             });
 
             return Response.statusCode switch
@@ -93,6 +96,11 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> CancelRelating(int RelatingRequestId)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
@@ -101,7 +109,8 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<object> Response = await _Mediator.Send(new CancelRelatingCommand()
             {
                 Id = RelatingRequestId,
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                Token = Token
             });
 
             return Response.statusCode switch
@@ -121,16 +130,16 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> SendRelatingRequest(string ReceiverEmail)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
-
-            StringValues? Token = HttpContext.Request.Headers.Authorization;
             
-            if (string.IsNullOrEmpty(Token))
-                return Unauthorized("You must send the token");
-
             BaseResponse<object> Response = await _Mediator.Send(new SendRelatingRequestCommand()
             {
                 ReceiverEmail = ReceiverEmail,
@@ -255,16 +264,16 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetRelatedAccoutProfileById(int RelatedAccountId)
         {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            if (string.IsNullOrEmpty(HeaderValue))
-                HeaderValue = "en";
-
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
             if (string.IsNullOrEmpty(Token))
                 return Unauthorized("You must send the token");
 
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+            
             BaseResponse<GetRelatedAccoutProfileByIdResponse> Response = await _Mediator.Send(new GetRelatedAccoutProfileByIdQuery()
             {
                 lang = HeaderValue,
