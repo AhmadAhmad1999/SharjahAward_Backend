@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.AdvanceReports.Queries.GetPropertyNames
 {
     public class GetPropertyNamesQueryHandler
-        : IRequestHandler<GetPropertyNamesQuery, BaseResponse<List<string>>>
+        : IRequestHandler<GetPropertyNamesQuery, BaseResponse<CyclePropertyDto>>
     {
         private readonly IAsyncRepository<Cycle> _cycleRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
@@ -34,11 +34,32 @@ namespace SharijhaAward.Application.Features.AdvanceReports.Queries.GetPropertyN
             _userRepository = userRepository;
         }
 
-        public async Task<BaseResponse<List<string>>> Handle(GetPropertyNamesQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<CyclePropertyDto>> Handle(GetPropertyNamesQuery request, CancellationToken cancellationToken)
         {
+
             var cyclePropertyNames = await _cycleRepository.GetPropertyNames();
 
-            return new BaseResponse<List<string>>("", true, 200, cyclePropertyNames);
+            var categoryPropertyNames = await _cycleRepository.GetPropertyNames();
+
+            var providedFormPropertyNames = await _cycleRepository.GetPropertyNames();
+
+            var ProvidedForms = new ProvidedFormPropertyDto()
+            {
+                ProvidedFormProperties = providedFormPropertyNames
+            };
+
+            var Category = new CategoryPropertyDto()
+            {
+                CatgegoryProperties = categoryPropertyNames,
+                ProvidedForms = ProvidedForms
+            };
+            var data = new CyclePropertyDto()
+            {
+                CycleProperties = cyclePropertyNames,
+                Category = Category
+            };
+
+            return new BaseResponse<CyclePropertyDto>("", true, 200, data);
         }
     }
 }
