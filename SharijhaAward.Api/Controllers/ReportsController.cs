@@ -18,15 +18,9 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GenerateReport",Name = "GenerateReport")]
-        public async Task<IActionResult> GenerateReport([FromQuery]
-        string[] cycleColumns, [FromQuery] string[] categoryColumns, [FromQuery] string[] providedFormColumns)
+        public async Task<IActionResult> GenerateReport([FromQuery] CreateAdvanceReportsCommand command)
         {
-            var response = await _mediator.Send(new CreateAdvanceReportsCommand()
-            {
-                categoryColums = categoryColumns,
-                cycleColums = cycleColumns,
-                ProvidedFormColums = providedFormColumns
-            });
+            var response = await _mediator.Send(command);
 
             return response.statusCode switch
             {

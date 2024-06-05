@@ -17,30 +17,53 @@ namespace SharijhaAward.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<List<Dictionary<string, object>>> GetDynamicReportAsync(string[] cyclesColumns, string[] categoryColumns, string[] providedFormColums)
+        public async Task<List<Dictionary<string, object>>> GetDynamicReportAsync(
+            string[] cyclesColumns, 
+            string[] categoryColumns, 
+            string[] providedFormColumns, 
+            string[] userColumns,
+            string[] coordinatorColumns,
+            string[] arbitratorColumns)
         {
             var cyclesQuery = _context.Cycles.AsQueryable();
-            
-            //if(cyclesColumns.Length > 0)
-            //{
-            //    //var selectedColumnsFromCycle = string.Join(", ", cyclesColumns);
-            //    //cyclesQuery = _context.Cycles.FromSqlRaw($"SELECT {selectedColumnsFromCycle} FROM Cycles")!;
-                
-            //}
-            if(categoryColumns.Length > 0)
+
+            if (userColumns.Length > 0)
+            {
+                cyclesQuery = cyclesQuery
+                    .Include(c => c.Categories)
+                    .ThenInclude(c => c.ProvidedForms)
+                    .ThenInclude(c => c.User);
+            }
+            if (arbitratorColumns.Length > 0)
+            {
+                cyclesQuery = cyclesQuery
+                   .Include(c => c.Categories)
+                   .ThenInclude(c => c.ProvidedForms)
+                   .ThenInclude(c => c.ArbitratorProvidedForms)
+                   .ThenInclude(c => c.Arbitrator);
+            }
+            if (coordinatorColumns.Length > 0)
+            {
+                cyclesQuery = cyclesQuery
+                    .Include(c => c.Categories)
+                    .ThenInclude(c => c.ProvidedForms)
+                    .ThenInclude(c => c.CoordinatorProvidedForms)
+                    .ThenInclude(c => c.Coordinator);
+            }
+            else if (providedFormColumns.Length > 0)
+            {
+                cyclesQuery = cyclesQuery.Include(c => c.Categories.Where(c => c.ParentId != null)).ThenInclude(c => c.ProvidedForms);
+            }
+
+            else if (categoryColumns.Length > 0)
             {
                 cyclesQuery = cyclesQuery.Include(c => c.Categories);
             }
 
-            if(providedFormColums.Length > 0)
-            {
-                cyclesQuery = cyclesQuery.Include(c => c.Categories).ThenInclude(c => c.ProvidedForms);
-            }
-            
             var cycles = await cyclesQuery.ToListAsync();
             
             var result = new List<Dictionary<string, object>>();
-           
+            
             foreach( var cycle in cycles)
             {
                 var cyclesDict = new Dictionary<string, object>();
@@ -65,24 +88,83 @@ namespace SharijhaAward.Persistence.Repositories
                             categoryDict[categoryColumn] = value!;
                         }
 
-                        if(providedFormColums.Length > 0 && category.ProvidedForms != null)
+                        if(providedFormColumns.Length > 0 && category.ProvidedForms != null)
                         {
                             var providedForms = new List<Dictionary<string, object>>();
 
                             foreach (var form in category.ProvidedForms)
                             {
                                 var formDict = new Dictionary<string, object>();
-                                foreach (var formColumn in providedFormColums)
+                                foreach (var formColumn in providedFormColumns)
                                 {
                                     var value = form.GetType().GetProperty(formColumn)?.GetValue(form, null);
                                     formDict[formColumn] = value!;
                                 }
+
+                                if (userColumns.Length > 0 && form.User != null)
+                                {
+                                    var userDic = new Dictionary<string, object>();
+                                    foreach( var userColumn in userColumns)
+                                    {
+                                        var value = form.User.GetType().GetProperty(userColumn)?.GetValue(form.User, null);
+                                        userDic[userColumn] = value!;
+                                    }
+
+                                    formDict["Subscriber"] = userDic;
+
+                                }
+
+                                if (coordinatorColumns.Length > 0 && form.CoordinatorProvidedForms != null)
+                                {
+                                    var coordinators = new List<Dictionary<string, object>>();
+
+                                    foreach (var coordinatorForm in form.CoordinatorProvidedForms)
+                                    {
+                                        var coordinatorDic = new Dictionary<string, object>();
+                                       
+                                        var coordinator = coordinatorForm.Coordinator;
+                                        
+                                        foreach(var coordinatorColumn in coordinatorColumns)
+                                        {
+                                            var value = coordinator.GetType().GetProperty(coordinatorColumn)?.GetValue(coordinator, null);
+                                            coordinatorDic[coordinatorColumn] = value!;
+                                        }
+
+                                        coordinators.Add(coordinatorDic);
+                                    }
+
+                                    formDict["Coordinators"] = coordinators;
+                                }
+
+                                if (arbitratorColumns.Length > 0 && form.ArbitratorProvidedForms != null)
+                                {
+                                    var arbitrators = new List<Dictionary<string, object>>();
+
+                                    foreach (var arbitratorForm in form.ArbitratorProvidedForms)
+                                    {
+                                        var arbitratorDic = new Dictionary<string, object>();
+                                       
+                                        var arbitrator = arbitratorForm.Arbitrator;
+                                       
+                                        foreach (var arbitratorColumn in arbitratorColumns)
+                                        {
+                                            var value = arbitrator.GetType().GetProperty(arbitratorColumn)?.GetValue(arbitrator, null);
+                                            arbitratorDic[arbitratorColumn] = value!;
+                                        }
+
+                                        arbitrators.Add(arbitratorDic);
+                                    }
+
+                                    formDict["Arbitrators"] = arbitrators;
+                                }
+
                                 providedForms.Add(formDict);
                             }
 
                             categoryDict["ProvidedForms"] = providedForms;
 
                         }
+                        
                         categories.Add(categoryDict);
                         
                     }
