@@ -34,7 +34,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery request, CancellationToken cancellationToken)
         {
-            var forms = await _FormRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var forms = await _FormRepository.GetPagedReponseAsync(request.page, request.perPage);
             var Subscribers = await _UserRepository.Where(s => s.SubscriberId != null).ToListAsync();
             if (forms.Any())
             {
