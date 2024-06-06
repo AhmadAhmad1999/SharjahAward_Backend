@@ -969,11 +969,9 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     Id = 10,
                     ArabicName = "منسق 1",
-                    EducationType = EducationType.Government,
                     Email = "Coordinator@Coordinator.com",
-                    Emirates = Emirates.Sharjah,
                     EnglishName = "Coordinator 1",
-                    PersonalPhoto = "https://backend.stg.award-shj.ae/UploadedFiles/02ef2561-b108-4b12-8a3f-6734b4e0345f.jpg",
+                   
                     PhoneNumber = "0993521579"
                 }, new Coordinator()
                 {
@@ -985,11 +983,8 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     Id = 11,
                     ArabicName = "منسق 2",
-                    EducationType = EducationType.Government,
                     Email = "Coordinator2@Coordinator2.com",
-                    Emirates = Emirates.Dubai,
                     EnglishName = "Coordinator 2",
-                    PersonalPhoto = "https://backend.stg.award-shj.ae/UploadedFiles/e6258b6f-5ca5-4168-bb7c-fe1f24a6e553.jpg",
                     PhoneNumber = "0993521579"
                 }, new Coordinator()
                 {
@@ -1001,11 +996,8 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     Id = 12,
                     ArabicName = "منسق 3",
-                    EducationType = EducationType.Private,
                     Email = "Coordinator3@Coordinator3.com",
-                    Emirates = Emirates.Ajman,
                     EnglishName = "Coordinator 3",
-                    PersonalPhoto = "https://backend.stg.award-shj.ae/UploadedFiles/eecad556-2d56-4010-b10a-780f7500f693.png",
                     PhoneNumber = "0993521579"
                 }, new Coordinator()
                 {
@@ -1017,11 +1009,8 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     Id = 13,
                     ArabicName = "منسق 4",
-                    EducationType = EducationType.Private,
                     Email = "Coordinator4@Coordinator4.com",
-                    Emirates = Emirates.Dubai,
                     EnglishName = "Coordinator 4",
-                    PersonalPhoto = "https://backend.stg.award-shj.ae/UploadedFiles/eecad556-2d56-4010-b10a-780f7500f693.png",
                     PhoneNumber = "0993521579"
                 });
 

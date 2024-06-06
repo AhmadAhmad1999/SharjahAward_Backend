@@ -8,6 +8,7 @@ using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
+using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,14 +25,17 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
         private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
         private readonly IAsyncRepository<EduEntitiesCoordinator> _educationalEntityRepository;
         private readonly IAsyncRepository<EducationalInstitution> _educationalInstitutionRepository;
+        private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
         private readonly IMapper _mapper;
 
-        public SearchForCoordinatorQueryHandler(IAsyncRepository<EducationalInstitution> educationalInstitutionRepository,IAsyncRepository<Coordinator> coordinatorRepository, IAsyncRepository<EduEntitiesCoordinator> educationalEntityRepository, IMapper mapper)
+        public SearchForCoordinatorQueryHandler(IAsyncRepository<EducationalInstitution> educationalInstitutionRepository,IAsyncRepository<Coordinator> coordinatorRepository, IAsyncRepository<EduEntitiesCoordinator> educationalEntityRepository, IMapper mapper,
+            IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository)
         {
             _coordinatorRepository = coordinatorRepository;
             _educationalInstitutionRepository = educationalInstitutionRepository;
             _educationalEntityRepository = educationalEntityRepository;
             _mapper = mapper;
+            _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
         }
 
         public async Task<BaseResponse<List<CoordinatorSearchListVM>>> Handle(SearchForCoordinatorQuery request, CancellationToken cancellationToken)
@@ -40,20 +44,20 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
             if (request.Emirates != null || request.EducationType != null)
             {
 
-                var CoordinatorParam = Expression.Parameter(typeof(Coordinator), "c");
+                var EducationalInstitutionParam = Expression.Parameter(typeof(EducationalInstitution), "I");
                 
                 var filters = new List<Expression>();
 
                 if (request.Emirates != null)
                 {
                     filters.Add(Expression.Equal(
-                        Expression.Property(CoordinatorParam, "Emirates"),
+                        Expression.Property(EducationalInstitutionParam, "Emirates"),
                         Expression.Constant(request.Emirates)));
                 }
                 if (request.EducationType != null)
                 {
                     filters.Add(Expression.Equal(
-                        Expression.Property(CoordinatorParam, "EducationType"),
+                        Expression.Property(EducationalInstitutionParam, "EducationType"),
                         Expression.Constant(request.EducationType)));
                 }
                 
@@ -67,20 +71,24 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                       filters[i]
                     );
                 }
-                var predicate1 = Expression.Lambda<Func<Coordinator, bool>>(
-                      predicateBody, CoordinatorParam);
+                var predicate1 = Expression.Lambda<Func<EducationalInstitution, bool>>(
+                      predicateBody, EducationalInstitutionParam);
 
+                var EducationalInstitutions = await _educationalInstitutionRepository.Where(predicate1).ToListAsync();
 
-                 Coordinators = await _coordinatorRepository.WhereThenInclude(predicate1, c => c.EducationCoordinators!).Include(c=>c.InstitutionCoordinators).ToListAsync();
+                Coordinators = await _EduInstitutionCoordinatorRepository
+                    .Include(x => x.Coordinator!)
+                    .Where(x => EducationalInstitutions.Select(y => y.Id).Contains(x.EducationalInstitutionId))
+                    .Select(x => x.Coordinator!)
+                    .Include(c => c.EducationCoordinators).Include(c => c.InstitutionCoordinators)
+                    .ToListAsync();
             }
 
             if (request.EducationalEntity != null)
             {
-
                 Coordinators = Coordinators
                      .Where(x => x.EducationCoordinators!
                      .Any(ec => ec.EducationalEntityId == request.EducationalEntity)).ToList();
-
             }
 
             if(request.Shcool != null)

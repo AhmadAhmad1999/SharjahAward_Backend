@@ -1,6 +1,7 @@
 ﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharijhaAward.Domain.Entities.EducationalInstitutionModel
@@ -17,5 +18,7 @@ namespace SharijhaAward.Domain.Entities.EducationalInstitutionModel
 
         [ForeignKey(nameof(EducationalEntity))]
         public int EducationalEntityId { get; set; }
+
+        public List<EduInstitutionCoordinator> EduInstitutionCoordinators { get; set; } = null!;
     }
 }

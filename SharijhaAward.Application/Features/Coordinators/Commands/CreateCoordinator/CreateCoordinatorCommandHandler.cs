@@ -109,7 +109,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
 
                     var Coordinator = _mapper.Map<Coordinator>(Request);
                     Coordinator.Id = UserId;
-                    Coordinator.PersonalPhoto = await _fileService.SaveFileAsync(Request.PersonalPhoto);
+                    
 
                     await _coordinatorRepository.AddAsync(Coordinator);
 

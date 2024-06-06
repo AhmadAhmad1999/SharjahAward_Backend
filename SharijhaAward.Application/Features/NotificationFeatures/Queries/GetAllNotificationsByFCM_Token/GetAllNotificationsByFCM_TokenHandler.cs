@@ -29,10 +29,10 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
         {
             string ResponseMessage = string.Empty;
 
-            if (!string.IsNullOrEmpty(Request.DeviceToken))
+            if (!string.IsNullOrEmpty(Request.Token))
             {
                 UserToken? CheckUserTokenIfExist = await _UserTokenRepository
-                    .FirstOrDefaultAsync(x => x.DeviceToken == Request.DeviceToken);
+                    .FirstOrDefaultAsync(x => x.Token == Request.Token);
 
                 if (CheckUserTokenIfExist == null)
                 {
@@ -101,12 +101,12 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
 
                 return new BaseResponse<List<GetAllNotificationsByFCM_TokenListVM>>(ResponseMessage, true, 200, UserNotifications, PaginationParameter);
             }
-            else if (!string.IsNullOrEmpty(Request.DeviceToken))
+            else if (!string.IsNullOrEmpty(Request.Token))
             {
-                int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.DeviceToken!));
+                int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
                 UserToken? CheckUserTokenIfExist = await _UserTokenRepository
-                    .FirstOrDefaultAsync(x => x.Token == Request.DeviceToken &&
+                    .FirstOrDefaultAsync(x => x.Token == Request.Token &&
                         x.UserId == UserId);
 
                 if (CheckUserTokenIfExist == null)
