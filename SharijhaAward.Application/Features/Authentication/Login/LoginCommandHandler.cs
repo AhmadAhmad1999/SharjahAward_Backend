@@ -44,16 +44,30 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             if (!string.IsNullOrEmpty(response.token) && !string.IsNullOrWhiteSpace(response.token) && 
                 request.Platform != null)
             {
-                UserToken NewUserTokenEntity = new UserToken()
-                {
-                    Token = response.token,
-                    UserId = response.user.Id,
-                    AppLanguage = request.lang!,
-                    DeviceToken = request.DeviceToken,
-                    Platform = request.Platform!.Value
-                };
+                UserToken? CheckIfAlreadyExistUserToken = await _UserTokenRepository
+                    .FirstOrDefaultAsync(x => x.UserId == response.user.Id);
 
-                await _UserTokenRepository.AddAsync(NewUserTokenEntity);
+                if (CheckIfAlreadyExistUserToken is not null)
+                {
+                    CheckIfAlreadyExistUserToken.Token = response.token;
+                    CheckIfAlreadyExistUserToken.AppLanguage = request.lang!;
+                    CheckIfAlreadyExistUserToken.DeviceToken = request.DeviceToken;
+
+                    await _UserTokenRepository.UpdateAsync(CheckIfAlreadyExistUserToken);
+                }
+                else
+                {
+                    UserToken NewUserTokenEntity = new UserToken()
+                    {
+                        Token = response.token,
+                        UserId = response.user.Id,
+                        AppLanguage = request.lang!,
+                        DeviceToken = request.DeviceToken,
+                        Platform = request.Platform!.Value
+                    };
+
+                    await _UserTokenRepository.AddAsync(NewUserTokenEntity);
+                }
             }
 
             response.ActiveCycleId = ActiveCycleEntity?.Id;

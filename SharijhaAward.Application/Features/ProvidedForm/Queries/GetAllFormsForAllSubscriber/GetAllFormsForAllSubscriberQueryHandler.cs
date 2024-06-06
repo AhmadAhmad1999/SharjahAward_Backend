@@ -1,49 +1,47 @@
-﻿using AutoMapper;
-using ErrorOr;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForms;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedFormsForAllSubscriber;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Constants.Common;
-using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using SharijhaAward.Domain.Entities.ProvidedFormModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
 namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsForAllSubscriber
 {
     public class GetAllFormsForAllSubscriberQueryHandler
         : IRequestHandler<GetAllFormsForAllSubscriberQuery, BaseResponse<List<FormListVm>>>
     {
-        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formRepository;
-        private readonly IAsyncRepository<Category> _categoryRepository;
+        private readonly IUserRepository _UserRepository;
+        private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _FormRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
 
-        public GetAllFormsForAllSubscriberQueryHandler(IUserRepository userRepository, IAsyncRepository<Category> categoryRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository, IMapper mapper,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
+        public GetAllFormsForAllSubscriberQueryHandler(IUserRepository UserRepository,
+            IAsyncRepository<Category> CategoryRepository,
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> FormRepository,
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<FinalArbitration> FinalArbitrationRepository)
         {
-            _formRepository = formRepository;
-            _categoryRepository = categoryRepository;
-            _userRepository = userRepository;
-            _mapper = mapper;
+            _UserRepository = UserRepository;
+            _CategoryRepository = CategoryRepository;
+            _FormRepository = FormRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _FinalArbitrationRepository = FinalArbitrationRepository;
         }
 
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery request, CancellationToken cancellationToken)
         {
-            var forms = await _formRepository.GetPagedReponseAsync(request.page, request.pageSize);
-            var Subscribers = await _userRepository.Where(s => s.SubscriberId != null).ToListAsync();
+            var forms = await _FormRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var Subscribers = await _UserRepository.Where(s => s.SubscriberId != null).ToListAsync();
             if (forms.Any())
             {
+                List<FinalArbitration> GetAllFromsInFinalArbitration = await _FinalArbitrationRepository
+                    .Where(x => forms.Select(y => y.Id).Contains(x.ProvidedFormId))
+                    .ToListAsync();
+
                 var SubscribersNames = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
@@ -56,7 +54,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         x.Value
                     }).ToListAsync();
 
-                var Categories = await _categoryRepository
+                var Categories = await _CategoryRepository
                     .Where(x => forms.Select(y => y.categoryId).Contains(x.Id))
                     .Include(x => x.Parent!).ToListAsync();
 
@@ -86,32 +84,16 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                     SubCategoryName = request.lang == "en"
                         ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
                         : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
-
+                    SucceedToFinalArbitration = GetAllFromsInFinalArbitration
+                        .Any(y => y.ProvidedFormId == x.Id)
                 }).ToList();
 
-                //foreach (var form in data)
-                //{
-                //    var SubCategory = await _categoryRepository.GetByIdAsync(form.categoryId);
-                //    var Category = await _categoryRepository.GetByIdAsync(SubCategory!.ParentId);
-
-                //    if(Category != null)
-                //         form.CategoryName = request.lang == "en"
-                //            ? Category.EnglishName 
-                //            : Category.ArabicName;
-
-                //    form.SubCategoryName = request.lang == "en"
-                //            ? SubCategory.EnglishName 
-                //            : SubCategory.ArabicName;
-                //}
-
-                int count = _formRepository.GetCount(f => !f.isDeleted);
+                int count = _FormRepository.GetCount(f => !f.isDeleted);
 
                 Pagination pagination = new Pagination(request.page, request.pageSize, count);
 
                 return new BaseResponse<List<FormListVm>>("", true, 200, data, pagination);
-
             }
-
             else
             {
                 return new BaseResponse<List<FormListVm>>("", true, 200, new List<FormListVm>());
