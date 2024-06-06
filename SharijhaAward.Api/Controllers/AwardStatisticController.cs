@@ -77,7 +77,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllAwardStatistics")]
-        public async Task<IActionResult> GetAllAwardStatistics(int CycleId, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllAwardStatistics(int CycleId, int page = 1, int perPage = 10)
         {
             var language = HttpContext.Request.Headers["lang"];
 
@@ -85,7 +85,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 CycleId = CycleId,
                 page = page,
-                pageSize = pageSize,
+                perPage = perPage,
                 lang = language!
             });
 

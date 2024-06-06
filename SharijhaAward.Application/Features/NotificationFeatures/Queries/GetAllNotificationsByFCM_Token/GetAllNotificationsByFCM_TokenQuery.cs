@@ -6,7 +6,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
     public class GetAllNotificationsByFCM_TokenQuery : IRequest<BaseResponse<List<GetAllNotificationsByFCM_TokenListVM>>>
     {
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public string? DeviceToken { get; set; }
         public string? Token { get; set; }
         public string? lang { get; set; }

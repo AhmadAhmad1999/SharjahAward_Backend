@@ -22,7 +22,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGene
         public async Task<BaseResponse<List<GeneralWorkshopsListVM>>> Handle(GetAllGeneralWorkshopsQuery request, CancellationToken cancellationToken)
         {
             var generalWorkshops = await _generalWorkshopRepository
-                .OrderByDescending(x => x.CreatedAt, request.page,request.pageSize)
+                .OrderByDescending(x => x.CreatedAt, request.page,request.perPage)
                 .ToListAsync();
 
             var data = _mapper.Map<List<GeneralWorkshopsListVM>>(generalWorkshops);
@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGene
             }
             int count = await _generalWorkshopRepository.GetCountAsync(g => !g.isDeleted);
 
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
 
             return new BaseResponse<List<GeneralWorkshopsListVM>>("", true, 200, data, pagination);
         }

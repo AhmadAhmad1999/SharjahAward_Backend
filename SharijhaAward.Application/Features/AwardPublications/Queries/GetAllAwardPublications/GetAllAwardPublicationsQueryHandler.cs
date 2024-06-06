@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwa
                 return new BaseResponse<List<AwardPublicationListVM>>("", false, 404);
             }
 
-            var AwardPublications = await _awardPublicationRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id,request.page,request.pageSize);
+            var AwardPublications = await _awardPublicationRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id,request.page,request.perPage);
 
             var data = _mapper.Map<List<AwardPublicationListVM>>(AwardPublications);
             foreach (var item in data)
@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwa
             }
             var Count = _awardPublicationRepository.GetCount(a => !a.isDeleted && a.CycleId == Cycle.Id);
             
-            Pagination pagination = new Pagination(request.page, request.pageSize, Count);
+            Pagination pagination = new Pagination(request.page, request.perPage, Count);
 
             return new BaseResponse<List<AwardPublicationListVM>>("", true, 200, data, pagination);
 

@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
             FilterObject filterObject = new FilterObject() { Filters = Request.filters };
 
             List<GetAllCommitteesListVM> Committees = await _CommitteeRepository
-                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize)
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                 .Include(x => x.Chairman!)
                 .Select(x => new GetAllCommitteesListVM()
                 {
@@ -41,7 +41,7 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
             int TotalCount = await _CommitteeRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllCommitteesListVM>>(ResponseMessage, true, 200, Committees, PaginationParameter);
         }

@@ -26,8 +26,8 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllSubsc
             var FormsEntities = await _ProvidedFormRepository
                 .Where(x => Request.Ids.Any(y => y == x.categoryId) && x.PercentCompletion == 100)
                 .OrderByDescending(x => x.CreatedAt)
-                .Skip((Request.page - 1) * Request.pageSize)
-                .Take(Request.pageSize)
+                .Skip((Request.page - 1) * Request.perPage)
+                .Take(Request.perPage)
                 .Include(x => x.User!)
                 .Select(x => new
                 {
@@ -60,7 +60,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllSubsc
                 .GetCountAsync(x => Request.Ids.Any(y => y == x.categoryId) && x.PercentCompletion == 100);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllSubscribersInfoByCategoryIdListVM>>(ResponseMessage, true, 200,
                 Response, PaginationParameter);

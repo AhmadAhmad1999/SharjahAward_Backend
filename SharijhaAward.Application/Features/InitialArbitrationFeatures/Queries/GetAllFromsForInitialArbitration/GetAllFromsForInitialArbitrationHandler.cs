@@ -57,8 +57,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             ? x.Type == Request.ArbitrationType
                             : true))
                     .OrderByDescending(x => x.CreatedAt)
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
                     .Include(x => x.ProvidedForm!)
                     .Include(x => x.ProvidedForm!.Category!)
                     .ToListAsync();
@@ -121,7 +121,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         : FullTotalCount.Sum(x => x.Count);
 
                     Pagination PaginationParameter = new Pagination(Request.page,
-                        Request.pageSize, TotalCount);
+                        Request.perPage, TotalCount);
 
                     return new BaseResponse<GetAllFromsForInitialArbitrationFullResponse>(ResponseMessage, true, 200, FullResponse, PaginationParameter);
                 }
@@ -130,7 +130,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     int TotalCount = FullTotalCount.Sum(x => x.Count);
 
                     Pagination PaginationParameter = new Pagination(Request.page,
-                        Request.pageSize, TotalCount);
+                        Request.perPage, TotalCount);
 
                     return new BaseResponse<GetAllFromsForInitialArbitrationFullResponse>(ResponseMessage, true, 200, FullResponse, PaginationParameter);
                 }
@@ -166,8 +166,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                 ? x.Type == Request.ArbitrationType
                                 : true))
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .ToListAsync();
@@ -232,7 +232,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             : true));
 
                     Pagination PaginationParameter = new Pagination(Request.page,
-                        Request.pageSize, TotalCount);
+                        Request.perPage, TotalCount);
 
                     return new BaseResponse<GetAllFromsForInitialArbitrationFullResponse>(ResponseMessage, true, 200, FullResponse, PaginationParameter);
                 }
@@ -245,8 +245,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                 ? x.Type == Request.ArbitrationType
                                 : true))
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .ToListAsync();
@@ -311,7 +311,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             : true));
 
                     Pagination PaginationParameter = new Pagination(Request.page,
-                        Request.pageSize, TotalCount);
+                        Request.perPage, TotalCount);
 
                     return new BaseResponse<GetAllFromsForInitialArbitrationFullResponse>(ResponseMessage, true, 200, FullResponse, PaginationParameter);
                 }

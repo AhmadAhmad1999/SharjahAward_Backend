@@ -7,6 +7,6 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
         public int CategoryId { get; set; }
         public string lang { get; set; } = string.Empty;
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
     }
 }

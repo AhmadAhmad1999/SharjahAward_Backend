@@ -28,14 +28,14 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
 
         public async Task<BaseResponse<List<UserListVm>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            var Users = await _userRepository.OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+            var Users = await _userRepository.OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
                 .ToListAsync();
 
             var data = _mapper.Map<List<UserListVm>>(Users );
 
             var count = _userRepository.GetCount(u => true);
            
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
            
             return new BaseResponse<List<UserListVm>>("", true, 200, data, pagination);
         }

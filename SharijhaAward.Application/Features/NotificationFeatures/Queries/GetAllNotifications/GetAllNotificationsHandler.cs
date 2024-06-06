@@ -24,12 +24,12 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
             string ResponseMessage = string.Empty;
 
             List<GetAllNotificationsListVM> Classes = _Mapper.Map<List<GetAllNotificationsListVM>>(await _NotificationRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
 
             int TotalCount = await _NotificationRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllNotificationsListVM>>(ResponseMessage, true, 200, Classes, PaginationParameter);
         }

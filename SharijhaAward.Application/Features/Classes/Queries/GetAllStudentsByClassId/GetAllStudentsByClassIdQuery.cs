@@ -7,7 +7,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByCla
     {
         public int EducationalClassId { get; set; }
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public string? lang { get; set; }
     }
 }

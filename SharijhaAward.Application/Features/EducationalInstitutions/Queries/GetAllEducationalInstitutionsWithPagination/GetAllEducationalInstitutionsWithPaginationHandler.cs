@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Get
             int TotalCount = await _EducationalInstitutionRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<EducationalInstitutionListVM>>(ResponseMessage, true, 200, 
                 EducationalInstitutions, PaginationParameter);

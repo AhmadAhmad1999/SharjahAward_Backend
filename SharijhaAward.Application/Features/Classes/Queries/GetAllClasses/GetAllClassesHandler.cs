@@ -23,12 +23,12 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllClasses
             string ResponseMessage = string.Empty;
 
             List<GetAllClassesListVM> Classes = _Mapper.Map<List<GetAllClassesListVM>>(await _EducationalClassRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize).ToListAsync());
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
 
             int TotalCount = await _EducationalClassRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllClassesListVM>>(ResponseMessage, true, 200, Classes, PaginationParameter);
         }

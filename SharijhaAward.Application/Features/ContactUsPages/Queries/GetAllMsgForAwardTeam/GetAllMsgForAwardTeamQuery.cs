@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
     public class GetAllMsgForAwardTeamQuery : IRequest<BaseResponse<List<EmailMessageListVM>>>
     {
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public string token { get; set; } = string.Empty;
         public string? lang {  get; set; }
 

@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
 
                 return new BaseResponse<List<NewsListVM>>(msg, false, 400);
             }
-            var NewsListByCycle = await _newsRepository.GetWhereThenPagedReponseAsync(n => n.CycleId == Cycle!.Id, request.page, request.pageSize);
+            var NewsListByCycle = await _newsRepository.GetWhereThenPagedReponseAsync(n => n.CycleId == Cycle!.Id, request.page, request.perPage);
             
             if (!request.query.IsNullOrEmpty())
             {
@@ -82,7 +82,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
            
             int count = _newsRepository.GetCount(n => n.CycleId == Cycle.Id);
             
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
 
             if (!request.query.IsNullOrEmpty())
                 return new BaseResponse<List<NewsListVM>>("", true, 200, data);

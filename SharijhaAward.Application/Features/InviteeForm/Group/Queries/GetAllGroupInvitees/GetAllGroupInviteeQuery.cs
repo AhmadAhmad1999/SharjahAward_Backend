@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
     {
         public int? EventId { get; set; }
         public int page {  get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public string? name { get; set; } = string.Empty;
     }
 }

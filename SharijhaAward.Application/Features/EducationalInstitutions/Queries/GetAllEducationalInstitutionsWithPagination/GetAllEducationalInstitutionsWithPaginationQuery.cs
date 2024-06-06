@@ -9,6 +9,6 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Get
         public int EducationalEntityId { get; set; }
         public string? lang { get; set; }
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
     }
 }

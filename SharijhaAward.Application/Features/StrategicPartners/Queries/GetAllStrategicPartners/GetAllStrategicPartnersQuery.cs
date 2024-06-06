@@ -11,6 +11,6 @@ namespace SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStr
     public class GetAllStrategicPartnersQuery : IRequest<BaseResponse<List<StrategicPartnerListVM>>>
     {
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
     }
 }

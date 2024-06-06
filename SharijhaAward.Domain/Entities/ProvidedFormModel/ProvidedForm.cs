@@ -2,8 +2,11 @@
 using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Constants.ProvidedFromConstants;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.ArbitratorFormModel;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.CoordinatorFormModel;
+using SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -35,6 +38,8 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public int categoryId { get; set; }
         public int? CategoryEducationalClassId { get; set; }
         public CategoryEducationalClass? CategoryEducationalClass { get; set; }
+        public List<CoordinatorForm> CoordinatorProvidedForms { get; set; } = null!;
+        public List<ArbitratorForm> ArbitratorProvidedForms { get; set; } = null!;
 
         //public virtual List<Arbitration> Arbitrations { get; set; } = new();
 

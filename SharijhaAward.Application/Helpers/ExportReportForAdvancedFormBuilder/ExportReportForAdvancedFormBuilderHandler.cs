@@ -50,7 +50,7 @@ namespace SharijhaAward.Application.Helpers.ExportReportForAdvancedFormBuilder
             int Count = _AdvancedFormBuilderValueRepository
                 .GetCount(x => AdvancedFormBuilderEntities.Select(y => y.Id).Any(y => y == x.AdvancedFormBuilderId));
 
-            if (Request.page != 0 && Request.pageSize != -1)
+            if (Request.page != 0 && Request.perPage != -1)
             {
                 var AdvancedFormBuilderValueEntities = _AdvancedFormBuilderValueRepository
                     .Where(x => AdvancedFormBuilderEntities.Select(y => y.Id).Any(y => y == x.AdvancedFormBuilderId))
@@ -65,8 +65,8 @@ namespace SharijhaAward.Application.Helpers.ExportReportForAdvancedFormBuilder
                     })
                     .GroupBy(x => x.VirtualTableId)
                     .AsEnumerable()
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
                     .ToList();
 
                 if (Request.lang == "en")

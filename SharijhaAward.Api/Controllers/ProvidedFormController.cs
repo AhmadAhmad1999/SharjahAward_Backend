@@ -111,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllFormsForAllSubscriber", Name = "GetAllFormsForAllSubscriber")]
-        public async Task<IActionResult> GetAllFormsForAllSubscriber(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllFormsForAllSubscriber(int page = 1, int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -124,7 +124,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAllFormsForAllSubscriberQuery()
             {
                 page=page,
-                pageSize = pageSize,
+                perPage = perPage,
                 lang = Language!
             });
 
@@ -179,7 +179,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetProvidedFormsBySubscriberId/{Id}", Name = "GetProvidedFormsBySubscriberId")]
-        public async Task<IActionResult> GetProvidedFormsBySubscriberId(int Id , int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetProvidedFormsBySubscriberId(int Id , int page = 1, int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -193,7 +193,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = Language!,
                 page= page,
-                pageSize = pageSize,
+                perPage = perPage,
                 Id = Id
             });
 

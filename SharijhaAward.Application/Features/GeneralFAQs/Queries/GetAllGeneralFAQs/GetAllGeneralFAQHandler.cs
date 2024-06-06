@@ -39,7 +39,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
 
             int TotalCount = _GeneralFAQRepository.GetCount(null);
 
-            Pagination Pagination = new Pagination(Request.page, Request.pageSize, TotalCount);
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllGeneralFAQListVM>>(ResponseMessage, true, 200, GeneralFAQs, Pagination);
         }

@@ -29,16 +29,16 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
                             ? g.EventId == request.EventId.Value
                             : true), g => g.StudentNames!)
                     .OrderByDescending(x => x.CreatedAt).ToList();
-                AllGroupInvitees = request.pageSize == -1 || request.page == 0
+                AllGroupInvitees = request.perPage == -1 || request.page == 0
                     ? allDataWithoutPagenation
                     : allDataWithoutPagenation
-                      .Skip((request.page - 1) * request.pageSize)
-                      .Take(request.pageSize)
+                      .Skip((request.page - 1) * request.perPage)
+                      .Take(request.perPage)
                       .ToList();
             }
             else
             {
-                AllGroupInvitees = request.pageSize == -1 || request.page == 0
+                AllGroupInvitees = request.perPage == -1 || request.page == 0
                     ? _groupInviteeRepository.WhereThenInclude(g => request.EventId != null
                             ? g.EventId == request.EventId.Value
                             : true, g => g.StudentNames!)
@@ -48,8 +48,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGro
                             ? g.EventId == request.EventId.Value
                             : true, g => g.StudentNames!)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((request.page - 1) * request.pageSize)
-                        .Take(request.pageSize)
+                        .Skip((request.page - 1) * request.perPage)
+                        .Take(request.perPage)
                         .ToList();
             }
             var data =  _mapper.Map<List<GroupInviteeListVM>>(AllGroupInvitees);

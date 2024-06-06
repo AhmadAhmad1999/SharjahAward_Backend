@@ -9,6 +9,11 @@ namespace SharijhaAward.Application.Contract.Persistence
     public interface IReportService
     {
         public Task<List<Dictionary<string, object>>> GetDynamicReportAsync(
-        string[] cyclesColumns, string[] categoryColumns, string[] subCategoryColumns, string[] providedFormColums);
+        string[] cyclesColumns, 
+        string[] categoryColumns, 
+        string[] providedFormColumns, 
+        string[] userColumns,
+        string[] coordinatorColums,
+        string[] arbitratorColums);
     }
 }

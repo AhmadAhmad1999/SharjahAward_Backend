@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
                 return new BaseResponse<List<AwardStatisticListVM>>("There is no Active Cycle", false, 404);
             }
 
-            var AllStatistics = await _awardStatisticRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == cycle.Id, request.page, request.pageSize);
+            var AllStatistics = await _awardStatisticRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == cycle.Id, request.page, request.perPage);
 
             var data = _mapper.Map<List<AwardStatisticListVM>>(AllStatistics);
 
@@ -49,7 +49,7 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
 
             int count = _awardStatisticRepository.GetCount(a => a.CycleId == request.CycleId);
 
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
 
             return new BaseResponse<List<AwardStatisticListVM>>("", true, 200, data, pagination);
         }

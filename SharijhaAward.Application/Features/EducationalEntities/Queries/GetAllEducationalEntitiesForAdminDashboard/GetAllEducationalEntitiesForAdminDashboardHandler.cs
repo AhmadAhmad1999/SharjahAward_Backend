@@ -35,7 +35,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
         {
             List<GetAllEducationalEntitiesForAdminDashboardListVM> EducationalEntities = _Mapper.Map<List<GetAllEducationalEntitiesForAdminDashboardListVM>>
                 (await _EducationalEntityRepository
-                    .OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                    .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
                     .ToListAsync());
 
             List<EducationalInstitution> EducationalInstitutionEntities = await _EducationalInstitutionRepository
@@ -86,7 +86,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
             int TotalCount = await _EducationalEntityRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllEducationalEntitiesForAdminDashboardListVM>>(ResponseMessage, true, 200, EducationalEntities, PaginationParameter);
         }

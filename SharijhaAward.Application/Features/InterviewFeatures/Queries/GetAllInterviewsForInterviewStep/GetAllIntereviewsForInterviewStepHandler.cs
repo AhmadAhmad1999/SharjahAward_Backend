@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
                 int TotalCount = await _InterviewRepository.GetCountAsync(null);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllInterviewsForInterviewStepListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
             }
@@ -74,14 +74,14 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
                 int TotalCount = await _InterviewRepository.GetCountAsync(null);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllInterviewsForInterviewStepListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
             }
             else
             {
                 List<GetAllInterviewsForInterviewStepListVM> Meetings = await _InterviewRepository
-                    .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.pageSize)
+                    .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                     .Select(x => new GetAllInterviewsForInterviewStepListVM()
                     {
                         Date = x.Date,
@@ -100,7 +100,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
                 int TotalCount = await _InterviewRepository.GetCountAsync(null);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllInterviewsForInterviewStepListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
             }

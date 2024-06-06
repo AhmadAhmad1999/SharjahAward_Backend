@@ -152,7 +152,7 @@ namespace SharijhaAward.Api.Controllers
                 CategoryId = CategoryId,
                 lang = HeaderValue!,
                 page = Page,
-                pageSize = PerPage
+                perPage = PerPage
             });
 
             return Response.statusCode switch

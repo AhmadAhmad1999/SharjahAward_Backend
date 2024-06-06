@@ -29,21 +29,43 @@ namespace SharijhaAward.Application.Features.AdvanceReports.Commands.CreateAdvan
 
         public async Task<BaseResponse<List<Dictionary<string, object>>>> Handle(CreateAdvanceReportsCommand request, CancellationToken cancellationToken)
         {
-            if(request.categoryColums == null)
+            if(request.categoryColumns == null)
             {
-                request.categoryColums = new string[0];
+                request.categoryColumns = new string[0];
             }
 
-            if(request.ProvidedFormColums == null)
+            if(request.providedFormColumns == null)
             {
-                request.ProvidedFormColums = new string[0];
+                request.providedFormColumns = new string[0];
             }
             
-            if(request.subCategoryColums == null)
+            if(request.subCategoryColumns == null)
             {
-                request.subCategoryColums = new string[0];
+                request.subCategoryColumns = new string[0];
             }
-            var data = await _reportService.GetDynamicReportAsync(request.cycleColums, request.categoryColums, request.subCategoryColums, request.ProvidedFormColums);
+
+            if(request.userColumns == null)
+            {
+                request.userColumns = new string[0];
+            } 
+            
+            if(request.coordinatorColumns == null)
+            {
+                request.coordinatorColumns = new string[0];
+            } 
+            
+            if(request.arbitratorColumns == null)
+            {
+                request.arbitratorColumns = new string[0];
+            }
+
+            var data = await _reportService.GetDynamicReportAsync(
+                request.cycleColumns, 
+                request.categoryColumns, 
+                request.providedFormColumns,
+                request.userColumns,
+                request.coordinatorColumns,
+                request.arbitratorColumns);
 
             return new BaseResponse<List<Dictionary<string, object>>>("", true, 200, data);
             

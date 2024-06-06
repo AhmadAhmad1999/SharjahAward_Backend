@@ -34,13 +34,13 @@ namespace SharijhaAward.Application.Features.Albums.Galleries.Queries.GetAllGall
                 return new BaseResponse<List<GalleryListVm>>("", false, 404);
             }
          
-            var AllGalleries = await _galleryRepository.GetWhereThenPagedReponseAsync(g => g.AlbumId == album.Id, request.page, request.pageSize);
+            var AllGalleries = await _galleryRepository.GetWhereThenPagedReponseAsync(g => g.AlbumId == album.Id, request.page, request.perPage);
           
             var data = _mapper.Map<List<GalleryListVm>>(AllGalleries);
 
             int Count = _galleryRepository.GetCount(g => g.AlbumId == album.Id && !g.isDeleted);
            
-            Pagination pagination = new Pagination(request.page, request.pageSize, Count);
+            Pagination pagination = new Pagination(request.page, request.perPage, Count);
           
             return new BaseResponse<List<GalleryListVm>>("", true, 200, data, pagination);
         }

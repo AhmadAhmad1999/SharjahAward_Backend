@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
         public async Task<BaseResponse<List<AgendaListVm>>> Handle(GetAllAgendaQuery request, CancellationToken cancellationToken)
         {
             var agendas = await _agendaRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.pageSize).Where(a=>!a.IsPrivate)
+                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage).Where(a=>!a.IsPrivate)
                 .ToListAsync();
 
             var data = _mapper.Map<List<AgendaListVm>>(agendas);
@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
             }
             
             int count = await _agendaRepository.GetCountAsync(a => a.isDeleted == false);
-            Pagination pagination = new Pagination(request.page,request.pageSize,count);
+            Pagination pagination = new Pagination(request.page,request.perPage,count);
             
             return new BaseResponse<List<AgendaListVm>>("", true, 200, data, pagination);
         }

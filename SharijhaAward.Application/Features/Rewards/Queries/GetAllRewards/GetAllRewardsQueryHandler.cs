@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards
 
         public async Task<BaseResponse<List<RewardListVm>>> Handle(GetAllRewardsQuery request, CancellationToken cancellationToken)
         {
-            var Rewards = await _rewardRepository.GetWhereThenPagedReponseAsync(r => r.CategoryId == request.CategoryId, request.page, request.pageSize);
+            var Rewards = await _rewardRepository.GetWhereThenPagedReponseAsync(r => r.CategoryId == request.CategoryId, request.page, request.perPage);
             
             var data = _mapper.Map<List<RewardListVm>>(Rewards);
 
@@ -37,7 +37,7 @@ namespace SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards
             }
             int count = _rewardRepository.GetCount(r => r.CategoryId == request.CategoryId);
            
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
            
             return new BaseResponse<List<RewardListVm>>("", true, 200, data, pagination);
         }

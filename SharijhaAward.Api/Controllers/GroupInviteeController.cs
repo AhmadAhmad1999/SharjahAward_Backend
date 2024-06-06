@@ -167,7 +167,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 EventId = EventId,
                 page = page,
-                pageSize = perPage,
+                perPage = perPage,
                 name = name
             });
   

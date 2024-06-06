@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllA
     {
         public string? lang { get; set; }
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public AppType? AppType { get; set; }
     }
 }

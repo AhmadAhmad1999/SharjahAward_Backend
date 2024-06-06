@@ -11,9 +11,13 @@ namespace SharijhaAward.Application.Features.AdvanceReports.Commands.CreateAdvan
     public class CreateAdvanceReportsCommand 
         : IRequest<BaseResponse<List<Dictionary<string,object>>>>
     {
-        public string[] cycleColums { get; set; } = null!;
-        public string[]? categoryColums { get; set; }
-        public string[]? subCategoryColums { get; set; } 
-        public string[]? ProvidedFormColums { get; set; } 
+        public string[] cycleColumns { get; set; } = null!;
+        public string[]? categoryColumns { get; set; }
+        public string[]? subCategoryColumns { get; set; } 
+        public string[]? providedFormColumns { get; set; } 
+        public string[]? userColumns { get; set; } 
+        public string[]? coordinatorColumns { get; set; } 
+        public string[]? arbitratorColumns { get; set; } 
+
     }
 }

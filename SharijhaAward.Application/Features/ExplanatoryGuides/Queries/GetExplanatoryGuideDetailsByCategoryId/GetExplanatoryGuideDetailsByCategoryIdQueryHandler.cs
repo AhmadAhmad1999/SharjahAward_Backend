@@ -55,7 +55,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
                 ? data.EnglishTitle
                 : data.ArabicTitle;
 
-            return new BaseResponse<ExplanatoryGuideDetailsDto>("",true,200,data);
+            return new BaseResponse<ExplanatoryGuideDetailsDto>("", true, 200, data);
         }
     }
 }

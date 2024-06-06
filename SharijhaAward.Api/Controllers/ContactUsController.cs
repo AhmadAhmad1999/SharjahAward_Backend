@@ -51,7 +51,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet(Name = "GetAllMessages")]
-        public async Task<IActionResult> GetAllMessages(string? query, int? filter, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllMessages(string? query, int? filter, int page = 1, int perPage = 10)
         {
             var token = HttpContext.Request.Headers.Authorization;
 
@@ -66,7 +66,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 filter = filter,
                 page = page,
-                pageSize = pageSize,
+                perPage = perPage,
                 query = query,
                 lang = Language!,
                 token = token!
@@ -162,7 +162,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllMessagesForAwardTeam", Name = "GetAllMessagesForAwardTeam")]
-        public async Task<IActionResult> GetAllMessagesForAwardTeam(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllMessagesForAwardTeam(int page = 1, int perPage = 10)
         {
             var token = HttpContext.Request.Headers.Authorization;
 
@@ -177,7 +177,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 token = token!,
                 page = page,
-                pageSize = pageSize,
+                perPage = perPage,
                 lang = Language!
             });
             return response.statusCode switch

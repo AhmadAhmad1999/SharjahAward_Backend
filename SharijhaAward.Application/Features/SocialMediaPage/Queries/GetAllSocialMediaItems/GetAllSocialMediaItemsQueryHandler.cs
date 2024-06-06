@@ -25,13 +25,13 @@ namespace SharijhaAward.Application.Features.SocialMediaPage.Queries.GetAllSocia
 
         public async Task<BaseResponse<List<SocialMediaItemListVM>>> Handle(GetAllSocialMediaItemsQuery request, CancellationToken cancellationToken)
         {
-            var AllItems = await _socialMediaRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var AllItems = await _socialMediaRepository.GetPagedReponseAsync(request.page, request.perPage);
             
             var data = _mapper.Map<List<SocialMediaItemListVM>>(AllItems);
 
             int Count = _socialMediaRepository.GetCount(s => !s.isDeleted);
 
-            Pagination pagination = new Pagination(request.page, request.pageSize, Count);
+            Pagination pagination = new Pagination(request.page, request.perPage, Count);
 
             return new BaseResponse<List<SocialMediaItemListVM>>("", true, 200, data, pagination);
         }

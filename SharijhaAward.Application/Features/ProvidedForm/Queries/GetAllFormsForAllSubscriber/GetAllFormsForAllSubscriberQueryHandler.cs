@@ -90,7 +90,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
                 int count = _FormRepository.GetCount(f => !f.isDeleted);
 
-                Pagination pagination = new Pagination(request.page, request.pageSize, count);
+                Pagination pagination = new Pagination(request.page, request.perPage, count);
 
                 return new BaseResponse<List<FormListVm>>("", true, 200, data, pagination);
             }

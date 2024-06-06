@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs
 
         public async Task<BaseResponse<List<FAQListVm>>> Handle(GetAllFAQsQuery request, CancellationToken cancellationToken)
         {
-            var FAQs = await _faqRepository.OrderByDescending(x => x.CreatedAt, request.page,request.pageSize)
+            var FAQs = await _faqRepository.OrderByDescending(x => x.CreatedAt, request.page,request.perPage)
                 .ToListAsync();
 
             var data = _mapper.Map<List<FAQListVm>>(FAQs);
@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs
                 }
             }
             int count = _faqRepository.GetCount(f => f.isDeleted == false);
-            Pagination pagination = new Pagination(request.page, request.pageSize, count);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
             
             return new BaseResponse<List<FAQListVm>>("", true, 200, data, pagination);
         }

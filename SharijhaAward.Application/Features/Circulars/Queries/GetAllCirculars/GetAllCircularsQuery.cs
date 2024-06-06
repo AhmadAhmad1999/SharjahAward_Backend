@@ -11,6 +11,6 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
     public class GetAllCircularsQuery : IRequest<BaseResponse<List<CircularListVm>>>
     {
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
     }
 }

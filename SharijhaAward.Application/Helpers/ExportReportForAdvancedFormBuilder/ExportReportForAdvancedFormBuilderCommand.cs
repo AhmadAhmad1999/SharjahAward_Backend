@@ -9,6 +9,6 @@ namespace SharijhaAward.Application.Helpers.ExportReportForAdvancedFormBuilder
         public string? lang { get; set; }
         public bool ExportDataToExcel { get; set; }
         public int page { get; set; } = 1;
-        public int pageSize { get; set; } = 10;
+        public int perPage { get; set; } = 10;
     }
 }

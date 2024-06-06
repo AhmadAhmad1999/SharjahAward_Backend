@@ -48,12 +48,12 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
 
             List<AdvancedFormBuilderSectionListVM> AdvancedFormBuilderSections = new List<AdvancedFormBuilderSectionListVM>();
 
-            if (Request.page != 0 && Request.pageSize != -1)
+            if (Request.page != 0 && Request.perPage != -1)
                 AdvancedFormBuilderSections = await _AdvancedFormBuilderSectionRepository
                     .Where(x => x.VirtualTableForSectionId == Request.VirtualTableForSectionId)
                     .OrderBy(x => x.OrderId)
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
                     .Select(x => new AdvancedFormBuilderSectionListVM()
                     {
                         Id = x.Id,
@@ -103,7 +103,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
             int TotalCount = await _AdvancedFormBuilderSectionRepository.GetCountAsync(x => x.VirtualTableForSectionId == Request.VirtualTableForSectionId);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<AdvancedFormBuilderSectionListVM>>(ResponseMessage, true, 200, AdvancedFormBuilderSections, PaginationParameter);
         }

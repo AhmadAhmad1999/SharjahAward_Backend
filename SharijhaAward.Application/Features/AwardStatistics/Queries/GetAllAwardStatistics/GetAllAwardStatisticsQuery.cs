@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
     public class GetAllAwardStatisticsQuery : IRequest<BaseResponse<List<AwardStatisticListVM>>>
     {
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public int? CycleId { get; set; }
         public string? lang { get; set; }
     }

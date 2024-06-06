@@ -93,7 +93,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = Language!,
                 page = page,
-                pageSize = perPage 
+                perPage = perPage 
             });
 
             return response.statusCode switch
@@ -125,7 +125,7 @@ namespace SharijhaAward.Api.Controllers
 
         }
         [HttpGet("GetAgendasByCycleId",Name ="GetAgendasByCycleId")]
-        public async Task<IActionResult> GetAgendasByCycleId(int? Id ,int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAgendasByCycleId(int? Id ,int page = 1, int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -133,7 +133,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAgendaByCycleIdQuery()
             {
                 page = page,
-                pageSize = pageSize,
+                perPage = perPage,
                 CycleId = Id,
                 lang = Language!
             });
@@ -146,7 +146,7 @@ namespace SharijhaAward.Api.Controllers
             };
         } 
         [HttpGet("GetAgendasForAwardTeam", Name = "GetAgendasForAwardTeam")]
-        public async Task<IActionResult> GetAgendasForAwardTeam(int? CycleId ,int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAgendasForAwardTeam(int? CycleId ,int page = 1, int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -161,7 +161,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAgendasForAwardTeamQuery()
             {
                 page = page,
-                pageSize = pageSize,
+                perPage = perPage,
                 CycleId = CycleId,
                 lang = Language!
             });

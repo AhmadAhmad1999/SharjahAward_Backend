@@ -150,7 +150,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = HeaderValue!,
                 page = Page,
-                pageSize = PerPage,
+                perPage = PerPage,
                 Token = Token,
                 ArbitrationType = ArbitrationType
             });

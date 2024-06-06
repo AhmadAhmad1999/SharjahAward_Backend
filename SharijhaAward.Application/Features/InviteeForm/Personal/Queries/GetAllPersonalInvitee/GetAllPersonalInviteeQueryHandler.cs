@@ -24,7 +24,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
             List<PersonalInvitee> allPersonalInvitee;
             if (request.name != null)
             {
-                allPersonalInvitee = request.pageSize == -1 || request.page == 0
+                allPersonalInvitee = request.perPage == -1 || request.page == 0
                     ? _PersonalInviteeRepository
                         .Where(g => g.Name.ToLower().Contains(request.name.ToLower()) &&
                             request.EventId != null
@@ -36,13 +36,13 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
                                 ? g.EventId == request.EventId
                                 : true)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Skip((request.page - 1) * request.pageSize)
-                        .Take(request.pageSize)
+                        .Skip((request.page - 1) * request.perPage)
+                        .Take(request.perPage)
                         .ToList();
             }
             else
             {
-                allPersonalInvitee = (List<PersonalInvitee>)(request.pageSize == -1 || request.page == 0
+                allPersonalInvitee = (List<PersonalInvitee>)(request.perPage == -1 || request.page == 0
                     ? await _PersonalInviteeRepository
                         .Where(g => request.EventId != null
                             ? g.EventId == request.EventId
@@ -52,8 +52,8 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
                         .Where(g => request.EventId != null
                             ? g.EventId == request.EventId : true)
                         .OrderByDescending(x => x.CreatedAt) 
-                        .Skip((request.page - 1) * request.pageSize)
-                        .Take(request.pageSize)
+                        .Skip((request.page - 1) * request.perPage)
+                        .Take(request.perPage)
                         .ToListAsync());
             }
             

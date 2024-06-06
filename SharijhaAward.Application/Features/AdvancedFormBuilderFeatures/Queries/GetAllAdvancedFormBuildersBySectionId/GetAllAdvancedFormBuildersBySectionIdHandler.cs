@@ -23,12 +23,12 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
 
             List<AdvancedFormBuilderListVM> AdvancedFormBuilders = new List<AdvancedFormBuilderListVM>();
 
-            if (Request.page != 0 && Request.pageSize != -1)
+            if (Request.page != 0 && Request.perPage != -1)
                 AdvancedFormBuilders = await _AdvancedFormBuilderRepository
                     .Where(x => x.AdvancedFormBuilderSectionId == Request.SectionId)
                     .OrderByDescending(x => x.CreatedAt)
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
                     .Include(x => x.AttributeDataType!)
                     .Select(x => new AdvancedFormBuilderListVM()
                     {
@@ -47,8 +47,8 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                 AdvancedFormBuilders = await _AdvancedFormBuilderRepository
                     .Where(x => x.AdvancedFormBuilderSectionId == Request.SectionId)
                     .OrderByDescending(x => x.CreatedAt)
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
                     .Include(x => x.AttributeDataType!)
                     .Select(x => new AdvancedFormBuilderListVM()
                     {
@@ -69,7 +69,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                 .GetCountAsync(x => x.AdvancedFormBuilderSectionId == Request.SectionId);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<AdvancedFormBuilderListVM>>(ResponseMessage, true, 200, AdvancedFormBuilders, PaginationParameter);
         }

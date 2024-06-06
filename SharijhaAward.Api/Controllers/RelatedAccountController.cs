@@ -179,7 +179,7 @@ namespace SharijhaAward.Api.Controllers
                 lang = HeaderValue!,
                 token = Token,
                 page = Page,
-                pageSize = PerPage
+                perPage = PerPage
             });
 
             return Response.statusCode switch
@@ -214,7 +214,7 @@ namespace SharijhaAward.Api.Controllers
                 lang = HeaderValue!,
                 token = Token,
                 page = Page,
-                pageSize = PerPage
+                perPage = PerPage
             });
 
             return Response.statusCode switch
@@ -244,7 +244,7 @@ namespace SharijhaAward.Api.Controllers
                 Id = UserId,
                 lang = HeaderValue!,
                 page = Page,
-                pageSize = PerPage
+                perPage = PerPage
             });
 
             return Response.statusCode switch

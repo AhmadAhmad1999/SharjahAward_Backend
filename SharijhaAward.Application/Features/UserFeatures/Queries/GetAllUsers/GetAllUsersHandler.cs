@@ -36,8 +36,8 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers
             List<GetAllUsersListVM> Users = await _UserRepository
                 .Where(x => x.isValidAccount)
                 .OrderByDescending(x => x.CreatedAt)
-                .Skip((Request.page - 1) * Request.pageSize)
-                .Take(Request.pageSize)
+                .Skip((Request.page - 1) * Request.perPage)
+                .Take(Request.perPage)
                 .Select(x => new GetAllUsersListVM()
                 {
                     Id = x.Id,
@@ -58,7 +58,7 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers
             int TotalCount = await _UserRepository.GetCountAsync(x => x.isValidAccount);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllUsersListVM>>(ResponseMessage, true, 200, Users, PaginationParameter);
         }

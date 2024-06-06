@@ -25,13 +25,13 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
 
         public async Task<BaseResponse<List<CircularListVm>>> Handle(GetAllCircularsQuery request, CancellationToken cancellationToken)
         {
-            var allCircular = await _circularRepository.GetPagedReponseAsync(request.page, request.pageSize);
+            var allCircular = await _circularRepository.GetPagedReponseAsync(request.page, request.perPage);
             
             var data = _mapper.Map<List<CircularListVm>>(allCircular);
 
             int Count = _circularRepository.GetCount(c => !c.isDeleted);
            
-            Pagination pagination = new Pagination(request.page, request.pageSize, Count);
+            Pagination pagination = new Pagination(request.page, request.perPage, Count);
           
             return new BaseResponse<List<CircularListVm>>("", true, 200, data, pagination);
         }

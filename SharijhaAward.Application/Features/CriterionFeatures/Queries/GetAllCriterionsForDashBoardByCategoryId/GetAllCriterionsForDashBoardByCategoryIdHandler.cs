@@ -42,12 +42,12 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
 
             List<GetAllCriterionsForDashBoardCategoryIdDto> MainCriterions = new List<GetAllCriterionsForDashBoardCategoryIdDto>();
 
-            if (Request.page != 0 && Request.pageSize != -1)
+            if (Request.page != 0 && Request.perPage != -1)
                 MainCriterions = await _CriterionRepository
                     .Where(x => x.CategoryId == Request.CategoryId && x.ParentId == null)
                     .OrderBy(x => x.OrderId)
-                    .Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
                     .Select(x => new GetAllCriterionsForDashBoardCategoryIdDto()
                     {
                         Id = x.Id,
@@ -114,7 +114,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                 .GetCountAsync(x => x.CategoryId == Request.CategoryId && x.ParentId != null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllCriterionsForDashBoardCategoryIdDto>>(ResponseMessage, true, 200, MainCriterions, PaginationParameter);
         }

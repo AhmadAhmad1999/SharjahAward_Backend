@@ -11,6 +11,6 @@ namespace SharijhaAward.Application.Features.SocialMediaPage.Queries.GetAllSocia
     public class GetAllSocialMediaItemsQuery : IRequest<BaseResponse<List<SocialMediaItemListVM>>>
     {
         public int page {  get; set; }
-        public int pageSize { get; set;}
+        public int perPage { get; set;}
     }
 }

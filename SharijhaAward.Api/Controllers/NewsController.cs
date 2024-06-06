@@ -102,7 +102,7 @@ namespace SharijhaAward.Api.Controllers
             var response = await _mediator.Send(new GetAllNewsQuery()
             {
                 page = page,
-                pageSize = perPage,
+                perPage = perPage,
                 lang = language!,
                 query = query
             });
@@ -116,7 +116,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetNewsByCycleId",Name = "GetNewsByCycleId")]
-        public async Task<IActionResult> GetNewsByCycleId(int? CycleId, string? query, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetNewsByCycleId(int? CycleId, string? query, int page = 1, int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
@@ -127,7 +127,7 @@ namespace SharijhaAward.Api.Controllers
                 lang = Language!,
                 CycleId = CycleId,
                 page = page,
-                pageSize = pageSize,
+                perPage = perPage,
                 query = query
             });
             return response.statusCode switch

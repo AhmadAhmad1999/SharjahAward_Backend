@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
         {
             
             var categories = await _categoryRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.pageSize)
+                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
                 .ToListAsync();
 
             categories = categories.Where(c => c.ParentId == null).ToList();
@@ -74,7 +74,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
            
             int count = _categoryRepository.GetCount(c=>c.isDeleted == false);
            
-            Pagination pagination = new Pagination(request.page,request.pageSize,count);
+            Pagination pagination = new Pagination(request.page,request.perPage,count);
            
             return new BaseResponse<List<CategoryListVM>>("", true, 200,data, pagination);
         }

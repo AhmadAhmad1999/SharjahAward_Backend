@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 int TotalCount = await _CriterionAttachmentRepository.GetCountAsync(null);
 
                 List<GetAllFilesByFilterListVM> FilesFromCriterionAttachmentes = await _CriterionAttachmentRepository
-                    .OrderByDescending(x => x.Id, Request.page, Request.pageSize)
+                    .OrderByDescending(x => x.Id, Request.page, Request.perPage)
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -57,7 +57,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                     }).ToListAsync();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesFromCriterionAttachmentes, PaginationParameter);
@@ -67,7 +67,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 int TotalCount = await _CriterionItemAttachmentRepository.GetCountAsync(null);
 
                 List<GetAllFilesByFilterListVM> FilesFromCriterionItemAttachmentes = await _CriterionItemAttachmentRepository
-                    .OrderByDescending(x => x.Id, Request.page, Request.pageSize)
+                    .OrderByDescending(x => x.Id, Request.page, Request.perPage)
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -79,7 +79,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                     }).ToListAsync();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesFromCriterionItemAttachmentes, PaginationParameter);
@@ -89,7 +89,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 int TotalCount = await _ConditionAttachmentRepository.GetCountAsync(null);
 
                 List<GetAllFilesByFilterListVM> FilesFromSpecialConditions = await _ConditionAttachmentRepository
-                    .OrderByDescending(x => x.Id, Request.page, Request.pageSize)
+                    .OrderByDescending(x => x.Id, Request.page, Request.perPage)
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -101,7 +101,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                     }).ToListAsync();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesFromSpecialConditions, PaginationParameter);
@@ -111,7 +111,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 int TotalCount = await _CycleConditionAttachmentRepository.GetCountAsync(null);
 
                 List<GetAllFilesByFilterListVM> FilesFromGeneralConditions = await _CycleConditionAttachmentRepository
-                    .OrderByDescending(x => x.Id, Request.page, Request.pageSize)
+                    .OrderByDescending(x => x.Id, Request.page, Request.perPage)
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -123,7 +123,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                     }).ToListAsync();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesFromGeneralConditions, PaginationParameter);
@@ -177,14 +177,14 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                             FileType = Path.GetExtension(x.Value)
                         }).ToListAsync())
                     .OrderByDescending(x => x.Id)
-                    .Skip((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : 0)
-                    .Take((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : TotalCount)
+                    .Skip((Request.page != 0 || Request.perPage != -1)
+                        ? (Request.page - 1) * Request.perPage : 0)
+                    .Take((Request.page != 0 || Request.perPage != -1)
+                        ? (Request.page - 1) * Request.perPage : TotalCount)
                     .ToListAsync();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesValues, PaginationParameter);
@@ -235,14 +235,14 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                             FileType = Path.GetExtension(x.Value)
                         }).ToListAsync())
                     .OrderByDescending(x => x.Id)
-                    .Skip((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : 0)
-                    .Take((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : TotalCount)
+                    .Skip((Request.page != 0 || Request.perPage != -1)
+                        ? (Request.page - 1) * Request.perPage : 0)
+                    .Take((Request.page != 0 || Request.perPage != -1)
+                        ? (Request.page - 1) * Request.perPage : TotalCount)
                     .ToListAsync();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesValues, PaginationParameter);
@@ -293,14 +293,14 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                             FileType = Path.GetExtension(x.Value)
                         }).ToListAsync())
                     .OrderByDescending(x => x.Id)
-                    .Skip((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : 0)
-                    .Take((Request.page != 0 || Request.pageSize != -1)
-                        ? (Request.page - 1) * Request.pageSize : TotalCount)
+                    .Skip((Request.page != 0 || Request.perPage != -1)
+                        ? (Request.page - 1) * Request.perPage : 0)
+                    .Take((Request.page != 0 || Request.perPage != -1)
+                        ? (Request.page - 1) * Request.perPage : TotalCount)
                     .ToListAsync();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllFilesByFilterListVM>>(ResponseMessage, true, 200,
                     FilesValues, PaginationParameter);

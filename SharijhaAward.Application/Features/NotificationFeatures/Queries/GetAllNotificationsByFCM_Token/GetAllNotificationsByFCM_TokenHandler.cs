@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
 
                 List<GetAllNotificationsByFCM_TokenListVM> UserNotifications = new List<GetAllNotificationsByFCM_TokenListVM>();
 
-                if (Request.page != 0 && Request.pageSize != -1)
+                if (Request.page != 0 && Request.perPage != -1)
                 {
                     UserNotifications = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
@@ -66,8 +66,8 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                                 Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
                             })
                         .OrderByDescending(x => x.Id)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .ToListAsync();
                 }
                 else
@@ -97,16 +97,16 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                 int TotalCount = await _UserNotificationRepository.GetCountAsync(x => x.UserId == CheckUserTokenIfExist.UserId);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllNotificationsByFCM_TokenListVM>>(ResponseMessage, true, 200, UserNotifications, PaginationParameter);
             }
-            else if (!string.IsNullOrEmpty(Request.Token))
+            else if (!string.IsNullOrEmpty(Request.DeviceToken))
             {
-                int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+                int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.DeviceToken!));
 
                 UserToken? CheckUserTokenIfExist = await _UserTokenRepository
-                    .FirstOrDefaultAsync(x => x.Token == Request.Token &&
+                    .FirstOrDefaultAsync(x => x.Token == Request.DeviceToken &&
                         x.UserId == UserId);
 
                 if (CheckUserTokenIfExist == null)
@@ -120,7 +120,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
 
                 List<GetAllNotificationsByFCM_TokenListVM> UserNotifications = new List<GetAllNotificationsByFCM_TokenListVM>();
 
-                if (Request.page != 0 && Request.pageSize != -1)
+                if (Request.page != 0 && Request.perPage != -1)
                 {
                     UserNotifications = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
@@ -141,8 +141,8 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                                 Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
                             })
                         .OrderByDescending(x => x.Id)
-                        .Skip((Request.page - 1) * Request.pageSize)
-                        .Take(Request.pageSize)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
                         .ToListAsync();
                 }
                 else
@@ -172,7 +172,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                 int TotalCount = await _UserNotificationRepository.GetCountAsync(x => x.UserId == CheckUserTokenIfExist.UserId);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.pageSize, TotalCount);
+                    Request.perPage, TotalCount);
 
                 return new BaseResponse<List<GetAllNotificationsByFCM_TokenListVM>>(ResponseMessage, true, 200, UserNotifications, PaginationParameter);
             }

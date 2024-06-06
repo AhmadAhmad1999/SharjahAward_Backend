@@ -10,6 +10,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
         public string? Token { get; set; }
         public string? lang { get; set; }
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
     }
 }

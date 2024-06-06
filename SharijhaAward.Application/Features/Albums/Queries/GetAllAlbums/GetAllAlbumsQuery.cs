@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums
     public class GetAllAlbumsQuery : IRequest<BaseResponse<List<AlbumListVm>>>
     {
         public int page { get; set; }
-        public int pageSize { get; set; }
+        public int perPage { get; set; }
         public int? CycleId {  get; set; }
         public string? lang { get; set; }
 

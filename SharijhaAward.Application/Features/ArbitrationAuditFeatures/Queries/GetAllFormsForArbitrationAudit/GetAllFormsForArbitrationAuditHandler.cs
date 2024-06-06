@@ -268,12 +268,12 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
             int TotalCount = Response.Count();
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
-            if (Request.page != 0 && Request.pageSize != -1)
+            if (Request.page != 0 && Request.perPage != -1)
             {
-                Response = Response.Skip((Request.page - 1) * Request.pageSize)
-                    .Take(Request.pageSize)
+                Response = Response.Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
                     .ToList();
             }
 

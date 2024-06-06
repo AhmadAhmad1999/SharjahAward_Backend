@@ -46,18 +46,18 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                 return new BaseResponse<List<EmailMessageListVM>>(msg, false, 401);
             }
 
-            var EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.From == User.Email || m.To == User.Email && m.MessageId == m.Id, request.page, request.pageSize, m => m.Attachments!)
+            var EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.From == User.Email || m.To == User.Email && m.MessageId == m.Id, request.page, request.perPage, m => m.Attachments!)
                 .OrderByDescending(x => x.CreatedAt).ToListAsync();
 
             if (request.filter == 1)
             {
-                EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.From == User.Email , request.page, request.pageSize, m => m.Attachments!)
+                EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.From == User.Email , request.page, request.perPage, m => m.Attachments!)
                 .OrderByDescending(x => x.CreatedAt).ToListAsync();
             }
 
             if (request.filter == 2)
             {
-                EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.To == User.Email, request.page, request.pageSize, m => m.Attachments!)
+                EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.To == User.Email, request.page, request.perPage, m => m.Attachments!)
                 .OrderByDescending(x => x.CreatedAt).ToListAsync();
             }
             if (request.query != null)
@@ -85,7 +85,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
             
             int Count = _emailMessageRepository.GetCount(m => m.To == User.Email || m.From == User.Email && m.MessageId == m.Id);
             
-            Pagination pagination = new Pagination(request.page,request.pageSize, Count);
+            Pagination pagination = new Pagination(request.page,request.perPage, Count);
                
             return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data, pagination,UnReadingMessages);
             

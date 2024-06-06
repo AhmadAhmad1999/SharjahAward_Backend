@@ -24,13 +24,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributePatterns.Queries.Ge
             string ResponseMessage = string.Empty;
 
             List<GetAllDynamicAttributePatternListVM> DynamicAttributePatterns = _Mapper.Map<List<GetAllDynamicAttributePatternListVM>>(
-                await _DynamicAttributePatternRepository.OrderByDescending(x => x.CreatedAt, Request.page, Request.pageSize)
+                await _DynamicAttributePatternRepository.OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
                     .ToListAsync());
 
             int TotalCount = await _DynamicAttributePatternRepository.GetCountAsync(null);
 
             Pagination PaginationParameter = new Pagination(Request.page,
-                Request.pageSize, TotalCount);
+                Request.perPage, TotalCount);
 
             return new BaseResponse<List<GetAllDynamicAttributePatternListVM>>(ResponseMessage, true, 200,
                 DynamicAttributePatterns, PaginationParameter);
