@@ -112,9 +112,20 @@ namespace SharijhaAward.Api.Controllers
                 return StatusCode(400,
                     new
                     {
-                        message = response.message
+                        message = response.message,
                     });
             }
+            else if (response.isSucceed && response.NeedVerification)
+                return Ok(
+                    new
+                    {
+                        message = response.message,
+                        data = new
+                        {
+                            NeedVerification = response.NeedVerification,
+                            Id = response.user?.Id ?? 0
+                        }
+                    });
             else
                 return Ok(
                     new
@@ -151,9 +162,20 @@ namespace SharijhaAward.Api.Controllers
                 return StatusCode(400,
                     new
                     {
-                        message = response.message
+                        message = response.message,
                     });
             }
+            else if (response.isSucceed && response.NeedVerification)
+                return StatusCode(400,
+                    new
+                    {
+                        message = response.message,
+                        data = new
+                        {
+                            response.NeedVerification,
+                            Id = response.user?.Id ?? 0
+                        }
+                    });
             else
                 return Ok(
                     new

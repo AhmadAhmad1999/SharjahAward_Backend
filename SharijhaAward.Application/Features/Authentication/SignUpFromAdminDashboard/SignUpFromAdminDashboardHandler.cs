@@ -58,7 +58,8 @@ namespace SharijhaAward.Application.Features.Authentication.SignUpFromAdminDashb
                     {
                         isSucceed = false,
                         message = msg,
-                        user = _mapper.Map<UserDataResponse>(CheckEmail)
+                        user = _mapper.Map<UserDataResponse>(CheckEmail),
+                        NeedVerification = true
                     };
                 }
             }

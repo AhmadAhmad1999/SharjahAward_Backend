@@ -89,9 +89,10 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
                             return new AuthenticationResponse()
                             {
-                                isSucceed = false,
+                                isSucceed = true,
                                 message = msg,
-                                user = _mapper.Map<UserDataResponse>(CheckEmail)
+                                user = _mapper.Map<UserDataResponse>(CheckEmail),
+                                NeedVerification = true
                             };
                         }
                     }
