@@ -7,6 +7,9 @@
         LinkedAccounts = 2,
         HomePage = 3,
         TheLastStepAfterSendingTheForm = 4,
-        TheFirstStepInTheForm = 5
+        TheFirstStepInTheForm = 5,
+        SpecialConditions = 6,
+        Criterions = 7,
+        SignaturePage = 8
     }
 }

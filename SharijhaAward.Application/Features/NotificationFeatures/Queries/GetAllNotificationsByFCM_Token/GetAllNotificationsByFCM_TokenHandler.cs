@@ -112,7 +112,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                 if (CheckUserTokenIfExist == null)
                 {
                     ResponseMessage = Request.lang == "en"
-                        ? "User Token is not Found"
+                        ? "User token is not Found"
                         : "تعريف المستخدم غير موجود";
 
                     return new BaseResponse<List<GetAllNotificationsByFCM_TokenListVM>>(ResponseMessage, false, 404);

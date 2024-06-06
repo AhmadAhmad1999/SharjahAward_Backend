@@ -61,14 +61,14 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
 
                     await _DynamicAttributeRepository.UpdateAsync(DynamicAttributeOldData);
 
-                    if (Request.Values is not null 
-                            ? Request.Values.Any()
-                            : false)
-                    {
-                        List<DynamicAttributeListValue> OldDynamicAttributeValueEntities = await _DynamicAttributeListValueRepository
-                            .Where(x => x.DynamicAttributeId == Request.Id)
-                            .ToListAsync();
+                    List<DynamicAttributeListValue> OldDynamicAttributeValueEntities = await _DynamicAttributeListValueRepository
+                        .Where(x => x.DynamicAttributeId == Request.Id)
+                        .ToListAsync();
 
+                    if (Request.Values is not null
+                        ? Request.Values.Any()
+                        : false)
+                    {
                         List<DynamicAttributeListValue> NewDynamicAttributeListValuesEntities = Request.Values
                             .Where(x => x.Id == 0)
                             .Select(x => new DynamicAttributeListValue()
@@ -101,6 +101,17 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                                 }
                             }
                         }
+                    }
+
+                    List<DynamicAttributeListValue> DeleteDynamicAttributeListValuesEntities = OldDynamicAttributeValueEntities
+                        .Where(x => Request.Values != null
+                            ? !Request.Values.Select(y => y.Id).Contains(x.Id)
+                            : true)
+                        .ToList();
+
+                    if (DeleteDynamicAttributeListValuesEntities.Any())
+                    {
+                        await _DynamicAttributeListValueRepository.DeleteListAsync(DeleteDynamicAttributeListValuesEntities);
                     }
 
                     Transaction.Complete();
