@@ -52,14 +52,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
-            var personalPhoto = CoordinatorToUpdate.PersonalPhoto;
-
+            
             _mapper.Map(Request, CoordinatorToUpdate, typeof(UpdateCoordinatorCommand), typeof(Coordinator));
-
-            if (Request.updateOnPersonalPhoto)
-                CoordinatorToUpdate.PersonalPhoto = await _fileService.SaveFileAsync(Request.personalPhoto);
-            else
-                CoordinatorToUpdate.PersonalPhoto = personalPhoto;
 
             Domain.Entities.IdentityModels.User? UserEntity = await _userRepository.FirstOrDefaultAsync(x => x.Id == Request.Id);
 
