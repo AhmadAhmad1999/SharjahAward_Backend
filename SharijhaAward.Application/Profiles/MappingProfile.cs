@@ -329,6 +329,7 @@ using SharijhaAward.Domain.Entities.ExplanatoryMessageModel;
 using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Commands.UpdateExplanatoryMessage;
 using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetAllExplanatoryMessage;
 using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetExplanatoryMessageById;
+using SharijhaAward.Application.Features.GeneralWorkshops.Queries.ExportToExcel;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -480,6 +481,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GeneralWorkshop, UpdateGeneralWorkshopCommand>().ReverseMap();
             CreateMap<GeneralWorkshop, GeneralWorkshopsListVM>().ReverseMap();
             CreateMap<GeneralWorkshop, GeneralWorkshopDto>().ReverseMap();
+            CreateMap<GeneralWorkshop, GeneralWorkshopExportDto>().ReverseMap();
 
             CreateMap<AboutAwardPage, CreateAboutPageCommand>().ReverseMap();
             CreateMap<AboutAwardPage, AboutPageDto>().ReverseMap();
