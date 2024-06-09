@@ -46,6 +46,13 @@ namespace SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums
             
             var data = _mapper.Map<List<AlbumListVm>>(AllAlbums);
 
+            foreach(var item in data)
+            {
+                item.Title = request.lang == "en"
+                    ? item.EnglishTitle
+                    : item.ArabicTitle;
+            }
+
             int Count = _albumRepository.GetCount(a => a.CycleId == Cycle.Id && !a.isDeleted);
            
             Pagination pagination = new Pagination(request.page, request.perPage, Count);

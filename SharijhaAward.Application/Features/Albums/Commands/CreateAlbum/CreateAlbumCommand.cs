@@ -13,7 +13,8 @@ namespace SharijhaAward.Application.Features.Albums.Commands.CreateAlbum
 {
     public class CreateAlbumCommand : IRequest<BaseResponse<int>>
     {
-        public string Title { get; set; } = string.Empty;
+        public string ArabicTitle { get; set; } = string.Empty;
+        public string EnglishTitle { get; set; } = string.Empty;
         public IFormFile Thumbnail { get; set; } = null!;
         public int CycleId { get; set; }
         public string? lang { get; set; }

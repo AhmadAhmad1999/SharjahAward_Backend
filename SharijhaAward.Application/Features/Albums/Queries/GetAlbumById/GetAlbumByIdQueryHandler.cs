@@ -37,6 +37,10 @@ namespace SharijhaAward.Application.Features.Albums.Queries.GetAlbumById
 
             var data = _mapper.Map<AlbumDto>(album);
 
+            data.Title = request.lang == "en"
+                ? data.EnglishTitle
+                : data.ArabicTitle;
+
             return new BaseResponse<AlbumDto>("", true, 200, data);
         }
     }
