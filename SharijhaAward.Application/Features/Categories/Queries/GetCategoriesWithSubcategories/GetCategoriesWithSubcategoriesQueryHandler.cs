@@ -14,14 +14,17 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
     {
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
+        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
         private readonly IAsyncRepository<Cycle> _CycleRepository;
 
         public GetCategoriesWithSubcategoriesQueryHandler(IAsyncRepository<Category> CategoryRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
+            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository,
             IAsyncRepository<Cycle> CycleRepository)
         {
             _CategoryRepository = CategoryRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
+            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
             _CycleRepository = CycleRepository;
         }
 
@@ -59,9 +62,25 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
                     Icon = x.Icon
                 }).ToListAsync();
 
+            List<Category> AllSubCategories = await _CategoryRepository
+                .Where(x => x.ParentId != null
+                    ? (MainCategories.Select(y => y.Id).Any(y => y == x.ParentId))
+                    : false)
+                .ToListAsync();
+
+            List<CategoryEducationalClass> AllCategoryEducationalClasses = await _CategoryEducationalClassRepository
+                .Where(x => AllSubCategories.Select(y => y.Id).Contains(x.CategoryId))
+                .Include(x => x.EducationalClass!)
+                .ToListAsync();
+
+            List<CategoryEducationalEntity> AllCategoryEducationalEntities = await _CategoryEducationalEntityRepository
+                .Where(x => AllSubCategories.Select(y => y.Id).Contains(x.CategoryId))
+                .Include(x => x.EducationalEntity!)
+                .ToListAsync();
+
             foreach (CategoriesSubcategoriesDto MainCategory in MainCategories)
             {
-                MainCategory.subcategories = await _CategoryRepository
+                MainCategory.subcategories = AllSubCategories
                     .Where(x => x.ParentId != null 
                         ? (x.ParentId == MainCategory.Id ) 
                         : false)
@@ -72,25 +91,35 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
                             ? x.EnglishName
                             : x.ArabicName,
                         Icon = x.Icon,
-                        RelatedToClasses = x.RelatedToClasses
-                    }).ToListAsync();
-
-                foreach (SubcategoriesListVM SubCategory in MainCategory.subcategories
-                    .Where(x => x.RelatedToClasses != null 
-                        ? x.RelatedToClasses.Value 
-                        : false))
-                {
-                    SubCategory.SubCategoryClasses = await _CategoryEducationalClassRepository
-                        .Where(x => x.CategoryId == SubCategory.Id)
-                        .Include(x => x.EducationalClass!)
-                        .Select(x => new GetAllCategoryClassesByCategoryIdDto()
-                        {
-                            Id = x.Id,
-                            Name = Request.lang == "en"
-                                ? x.EducationalClass!.EnglishName
-                                : x.EducationalClass!.ArabicName
-                        }).ToListAsync();
-                }
+                        RelatedToClasses = x.RelatedToClasses,
+                        SubCategoryClasses = (x.RelatedToClasses != null
+                            ? x.RelatedToClasses.Value 
+                                ? AllCategoryEducationalClasses
+                                    .Where(y => y.CategoryId == x.Id)
+                                    .Select(y => new GetAllCategoryClassesByCategoryIdDto()
+                                    {
+                                        Id = y.Id,
+                                        Name = Request.lang == "en"
+                                            ? y.EducationalClass!.EnglishName
+                                            : y.EducationalClass!.ArabicName
+                                    }).ToList()
+                                : new List<GetAllCategoryClassesByCategoryIdDto>()
+                            : new List<GetAllCategoryClassesByCategoryIdDto>()),
+                        RelatedToEducationalEntities = x.RelatedToEducationalEntities,
+                        SubCategoryEducationalEntities = (x.RelatedToEducationalEntities != null
+                            ? x.RelatedToEducationalEntities.Value
+                                ? AllCategoryEducationalEntities
+                                    .Where(y => y.CategoryId == x.Id)
+                                    .Select(y => new GetAllCategoryEducationalEntitiesByCategoryIdDto()
+                                    {
+                                        Id = y.Id,
+                                        Name = Request.lang == "en"
+                                            ? y.EducationalEntity!.EnglishName
+                                            : y.EducationalEntity!.ArabicName
+                                    }).ToList()
+                                : new List<GetAllCategoryEducationalEntitiesByCategoryIdDto>()
+                            : new List<GetAllCategoryEducationalEntitiesByCategoryIdDto>())
+                    }).ToList();
             }
 
             return new BaseResponse<List<CategoriesSubcategoriesDto>>(ResponseMessage, true, 200, MainCategories);

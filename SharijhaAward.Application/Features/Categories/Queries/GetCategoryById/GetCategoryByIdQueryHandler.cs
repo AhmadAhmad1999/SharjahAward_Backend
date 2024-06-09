@@ -6,11 +6,6 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
 {
@@ -21,16 +16,19 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<ExplanatoryGuide> _explanatoryGuideRepository;
         private readonly IMapper _mapper;
+        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
 
         public GetCategoryByIdQueryHandler(IAsyncRepository<Category> categoryRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
             IAsyncRepository<ExplanatoryGuide> explanatoryGuideRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository)
         {
             _categoryRepository = categoryRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _explanatoryGuideRepository = explanatoryGuideRepository;
             _mapper = mapper;
+            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
         }
 
         public async Task<BaseResponse<CategoryDto>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
@@ -60,7 +58,9 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
                 data.MainCategoryName = request.lang == "ar" ? mainCategory!.ArabicName : mainCategory!.EnglishName;
             }
 
-            if (data.RelatedToClasses)
+            if (data.RelatedToClasses != null
+                ? data.RelatedToClasses.Value
+                : false)
             {
                 data.EducationalClasses = await _CategoryEducationalClassRepository
                     .Where(x => x.CategoryId == request.Id)
@@ -74,7 +74,22 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
                         NumberOfExpectedWinners = x.NumberOfExpectedWinners
                     }).ToListAsync();
             }
-            
+            if (data.RelatedToEducationalEntities != null
+                ? data.RelatedToEducationalEntities.Value
+                : false)
+            {
+                data.EducationalEntities = await _CategoryEducationalEntityRepository
+                    .Where(x => x.CategoryId == request.Id)
+                    .Include(x => x.EducationalEntity!)
+                    .Select(x => new CategoryEducationalEntitiesDto()
+                    {
+                        Id = x.EducationalEntityId,
+                        Name = request.lang == "en"
+                            ? x.EducationalEntity!.EnglishName
+                            : x.EducationalEntity!.ArabicName
+                    }).ToListAsync();
+            }
+
             return new BaseResponse<CategoryDto>("",true, 200, data);
         }
     }

@@ -2,12 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.CategoryConstants;
-using SharijhaAward.Domain.Constants.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
 {
@@ -28,6 +22,8 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         public List<CreateCategoryEducationalClassDto>? EducationalClasses { get; set; }
         public int? ParentId { get; set; }
         public int? CycleId { get; set; }
+        public bool? RelatedToEducationalEntities { get; set; }
+        public List<int>? EducationalEntityIds { get; set; }
         public string lang {  get; set; } = string.Empty;
     }
 }

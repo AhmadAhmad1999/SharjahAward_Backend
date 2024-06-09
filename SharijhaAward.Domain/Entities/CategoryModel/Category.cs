@@ -36,6 +36,7 @@ public class Category : AuditableEntity
     public int? ExpectedNumberOfWinners { get; set; }
 
     public bool? RelatedToClasses { get; set; }
+    public bool? RelatedToEducationalEntities { get; set; }
     public Category? Parent { get; set; }
     [ForeignKey(nameof(Parent))]
     public int? ParentId { get; set; }
