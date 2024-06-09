@@ -11,6 +11,8 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
         public string Description { get; set; } = string.Empty;
         public bool? RelatedToClasses { get; set; }
         public List<GetAllCategoryClassesByCategoryIdDto> SubCategoryClasses { get; set; } = new List<GetAllCategoryClassesByCategoryIdDto>();
+        public bool? RelatedToEducationalEntities { get; set; }
+        public List<GetAllCategoryEducationalEntitiesByCategoryIdDto> SubCategoryEducationalEntities { get; set; } = new List<GetAllCategoryEducationalEntitiesByCategoryIdDto>();
         public List<RewardListVm> Rewards { get; set; } = null!;
     }
 }

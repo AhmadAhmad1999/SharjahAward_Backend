@@ -16,6 +16,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
+        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
@@ -23,12 +24,14 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
             IAsyncRepository<Category> categoryRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
             IAsyncRepository<Cycle> cycleRepository,
+            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository,
             IFileService fileService,
             IMapper mapper)
         {
             _categoryRepository = categoryRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _cycleRepository = cycleRepository;
+            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
             _fileService = fileService;
             _mapper = mapper;
         }
@@ -98,12 +101,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
                                 .Select(x => new CategoryEducationalClass()
                                 {
                                     CategoryId = category.Id,
-                                    isDeleted = false,
-                                    CreatedAt = DateTime.UtcNow,
-                                    CreatedBy = null,
-                                    DeletedAt = null,
-                                    LastModifiedAt = null,
-                                    LastModifiedBy = null,
                                     EducationalClassId = x.EducationalClassId,
                                     NumberOfExpectedWinners = x.NumberOfExpectedWinners
                                 });
@@ -111,7 +108,24 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
                             await _CategoryEducationalClassRepository.AddRangeAsync(CategoryEducationalClasses);
                         }
                     }
+                    if (request.RelatedToEducationalEntities != null
+                        ? request.RelatedToEducationalEntities.Value
+                        : false)
+                    {
+                        if (request.EducationalEntityIds != null
+                            ? request.EducationalEntityIds.Any()
+                            : false)
+                        {
+                            IEnumerable<CategoryEducationalEntity> NewCategoryEducationalEntityEntities = request.EducationalEntityIds!
+                                .Select(x => new CategoryEducationalEntity()
+                                {
+                                    EducationalEntityId = x,
+                                    CategoryId = category.Id
+                                });
 
+                            await _CategoryEducationalEntityRepository.AddRangeAsync(NewCategoryEducationalEntityEntities);
+                        }
+                    }
                     msg = request.lang == "en"
                         ? "Created successfully"
                         : "تم إنشاء الفئة بنجاح";

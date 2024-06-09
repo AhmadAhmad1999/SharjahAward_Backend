@@ -29,8 +29,10 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
         public float? MinimumAmountToParticipateInTheAward { get; set; }
         public float? MinimumAmountToObtainACertificateOfParticipation { get; set; }
         public Status Status { get; set; } = Status.InActive;
-        public bool RelatedToClasses { get; set; }
+        public bool? RelatedToClasses { get; set; }
         public List<CategoryEducationalClassesDto>? EducationalClasses { get; set; }
+        public bool? RelatedToEducationalEntities { get; set; }
+        public List<CategoryEducationalEntitiesDto>? EducationalEntities { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
         public string MainCategoryName { get; set; } = string.Empty;
         public bool isHasFile { get; set; }
