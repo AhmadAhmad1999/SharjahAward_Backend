@@ -330,6 +330,11 @@ using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Commands.Upd
 using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetAllExplanatoryMessage;
 using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetExplanatoryMessageById;
 using SharijhaAward.Application.Features.GeneralWorkshops.Queries.ExportToExcel;
+using SharijhaAward.Domain.Entities.ResponsibilityModel;
+using SharijhaAward.Application.Features.Responsibilities.Commands.CreateResponsibility;
+using SharijhaAward.Application.Features.Responsibilities.Queries.GetResponsibilityById;
+using SharijhaAward.Application.Features.Responsibilities.Commands.UpdateResponsibility;
+using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilities;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -580,6 +585,12 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AwardStatistic, AwardStatisticListVM>().ReverseMap();
 
             CreateMap<Committee, CommitteeExportDto>().ReverseMap();
+
+            CreateMap<Responsibility, CreateResponsibilityCommand>().ReverseMap();
+            CreateMap<Responsibility, UpdateResponsibilityCommand>().ReverseMap();
+            CreateMap<Responsibility, ResponsibilityDto>().ReverseMap();
+            CreateMap<Responsibility, ResponsibilityListVM>().ReverseMap();
+
 
 
             //
