@@ -74,7 +74,6 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditProfile
                 UserEntity.PhoneNumber = Request.PhoneNumber;
                 UserEntity.Gender = Request.Gender;
             }
-                
 
             await _UserRepository.UpdateAsync(UserEntity);
 

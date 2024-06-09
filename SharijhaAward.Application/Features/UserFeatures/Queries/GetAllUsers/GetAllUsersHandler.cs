@@ -43,17 +43,21 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers
                     Id = x.Id,
                     Email = x.Email,
                     PhoneNumber = x.PhoneNumber,
-                    CreatedAt = x.CreatedAt,
-                    UserRoles = UserRoleEntities
-                        .Where(y => y.UserId == x.Id)
-                        .Select(y => new GetAllUserRolesDto()
-                        {
-                            Id = y.RoleId,
-                            Name = Request.lang == "en"
-                                ? y.Role!.EnglishName
-                                : y.Role!.ArabicName
-                        }).ToList()
+                    CreatedAt = x.CreatedAt
                 }).ToListAsync();
+
+            foreach (GetAllUsersListVM User in Users)
+            {
+                User.UserRoles = UserRoleEntities
+                    .Where(x => x.UserId == User.Id)
+                    .Select(x => new GetAllUserRolesDto()
+                    {
+                        Id = x.RoleId,
+                        Name = Request.lang == "en"
+                            ? x.Role!.EnglishName
+                            : x.Role!.ArabicName
+                    }).ToList();
+            }
 
             int TotalCount = await _UserRepository.GetCountAsync(x => x.isValidAccount);
 
