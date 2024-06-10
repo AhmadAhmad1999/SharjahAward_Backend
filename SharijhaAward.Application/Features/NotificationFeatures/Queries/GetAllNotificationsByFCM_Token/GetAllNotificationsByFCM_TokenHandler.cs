@@ -29,10 +29,10 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
         {
             string ResponseMessage = string.Empty;
 
-            if (!string.IsNullOrEmpty(Request.Token))
+            if (!string.IsNullOrEmpty(Request.DeviceToken))
             {
                 UserToken? CheckUserTokenIfExist = await _UserTokenRepository
-                    .FirstOrDefaultAsync(x => x.Token == Request.Token);
+                    .FirstOrDefaultAsync(x => x.DeviceToken == Request.DeviceToken);
 
                 if (CheckUserTokenIfExist == null)
                 {

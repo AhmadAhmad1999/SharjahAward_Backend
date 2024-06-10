@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetResponsibilityById
 {
-    public class GetResponsibilityByIdQuery : IRequest<BaseResponse<ResponsibilityDto>
+    public class GetResponsibilityByIdQuery : IRequest<BaseResponse<ResponsibilityDto>>
     {
         public int Id { get; set; } 
         public string? lang { get; set; }
