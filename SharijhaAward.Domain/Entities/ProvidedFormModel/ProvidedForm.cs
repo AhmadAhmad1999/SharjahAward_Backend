@@ -38,6 +38,8 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public int categoryId { get; set; }
         public int? CategoryEducationalClassId { get; set; }
         public CategoryEducationalClass? CategoryEducationalClass { get; set; }
+        public int? CategoryEducationalEntityId { get; set; }
+        public CategoryEducationalEntity? CategoryEducationalEntity { get; set; }
         public List<CoordinatorForm> CoordinatorProvidedForms { get; set; } = null!;
         public List<ArbitratorForm> ArbitratorProvidedForms { get; set; } = null!;
 

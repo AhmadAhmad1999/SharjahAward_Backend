@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
+using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.EducationalClassModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using System.Transactions;
 
@@ -15,8 +17,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         BaseResponse<AddDynamicAttributeValueResponse>>
     {
         private readonly IAsyncRepository<EducationalClass> _EducationalClassRepository;
-        private readonly IAsyncRepository<ProvidedForm> _ProvidedFormClassRepository;
-        private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassClassRepository;
+        private readonly IAsyncRepository<ProvidedForm> _ProvidedFormRepository;
+        private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<Dependency> _DependencyRepository;
         private readonly IAsyncRepository<DependencyValidation> _DependencyValidationRepository;
@@ -24,21 +26,25 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
         private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
+        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
+        private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
 
         public AddDynamicAttributeValueHandler(IAsyncRepository<EducationalClass> EducationalClassRepository,
-            IAsyncRepository<ProvidedForm> ProvidedFormClassRepository,
-            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassClassRepository,
+            IAsyncRepository<ProvidedForm> ProvidedFormRepository,
+            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<Dependency> DependencyRepository,
             IAsyncRepository<DependencyValidation> DependencyValidationRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
             IAsyncRepository<GeneralValidation> GeneralValidationRepository,
             IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
-            IHttpContextAccessor HttpContextAccessor)
+            IHttpContextAccessor HttpContextAccessor,
+            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository,
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository)
         {
             _EducationalClassRepository = EducationalClassRepository;
-            _ProvidedFormClassRepository = ProvidedFormClassRepository;
-            _CategoryEducationalClassClassRepository = CategoryEducationalClassClassRepository;
+            _ProvidedFormRepository = ProvidedFormRepository;
+            _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DependencyRepository = DependencyRepository;
             _DependencyValidationRepository = DependencyValidationRepository;
@@ -46,6 +52,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             _GeneralValidationRepository = GeneralValidationRepository;
             _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
             _HttpContextAccessor = HttpContextAccessor;
+            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
+            _EducationalEntityRepository = EducationalEntityRepository;
         }
         public async Task<BaseResponse<AddDynamicAttributeValueResponse>> Handle(AddDynamicAttributeValueCommand Request, 
             CancellationToken cancellationToken)
@@ -2920,15 +2928,27 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 
                     await _DynamicAttributeTableValueRepository.AddRangeAsync(DynamicAttributeTableValueEntitiesToAdd);
 
-                    DynamicAttribute? CheckIfThereisClassAttribute = _DynamicAttributeRepository
+                    DynamicAttribute? CheckIfThereisClassAttribute = await _DynamicAttributeRepository
                         .Include(x => x.DynamicAttributeSection!)
                         .Include(x => x.DynamicAttributeSection!.AttributeTableName!)
-                        .FirstOrDefault(x => x.Id == Request.DynamicAttributesWithValues[0].DynamicAttributeId);
+                        .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithValues[0].DynamicAttributeId);
 
                     if (CheckIfThereisClassAttribute is not null)
                     {
                         if (CheckIfThereisClassAttribute.DynamicAttributeSection!.AttributeTableName!.Name.ToLower() == "ProvidedForm".ToLower())
                         {
+                            ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
+                                .FirstOrDefaultAsync(x => x.Id == Request.RecordId);
+
+                            if (ProvidedFormEntity is null)
+                            {
+                                ResponseMessage = Request.lang == "en"
+                                    ? "Form is not found"
+                                    : "الاستمارة غير موجودة";
+
+                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 404);
+                            }
+
                             DynamicAttribute? ClassDynamicAttribute = await _DynamicAttributeRepository
                                 .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId)
                                     .Contains(x.Id) && x.EnglishTitle.ToLower() == "Class".ToLower());
@@ -2939,26 +2959,53 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                     .ValueAsString;
 
                                 EducationalClass? Classes = await _EducationalClassRepository
-                                    .FirstOrDefaultAsync(x => x.EnglishName.ToLower() == StringValueForClass!.ToLower());
+                                    .FirstOrDefaultAsync(x => Request.lang == "en"
+                                        ? x.EnglishName.ToLower() == StringValueForClass!.ToLower()
+                                        : x.ArabicName.ToLower() == StringValueForClass!.ToLower());
 
                                 if (Classes is not null)
                                 {
-                                    ProvidedForm? ProvidedFormEntity = await _ProvidedFormClassRepository
-                                        .FirstOrDefaultAsync(x => x.Id == Request.RecordId);
-
                                     CategoryEducationalClass NewCategoryEducationalClassEntity = new CategoryEducationalClass()
                                     {
                                         CategoryId = ProvidedFormEntity!.categoryId,
                                         EducationalClassId = Classes.Id
                                     };
 
-                                    await _CategoryEducationalClassClassRepository.AddAsync(NewCategoryEducationalClassEntity);
+                                    await _CategoryEducationalClassRepository.AddAsync(NewCategoryEducationalClassEntity);
 
                                     ProvidedFormEntity.CategoryEducationalClassId = NewCategoryEducationalClassEntity.Id;
-
-                                    await _ProvidedFormClassRepository.UpdateAsync(ProvidedFormEntity);
                                 }
                             }
+
+                            DynamicAttribute? EducationalEntityDynamicAttribute = await _DynamicAttributeRepository
+                                .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId)
+                                    .Contains(x.Id) && x.EnglishTitle.ToLower() == "Educational Entity".ToLower());
+
+                            if (EducationalEntityDynamicAttribute is not null)
+                            {
+                                string? StringValueForEducatiolaEntity = Request.DynamicAttributesWithValues.FirstOrDefault(x => x.DynamicAttributeId == EducationalEntityDynamicAttribute.Id)!
+                                    .ValueAsString;
+
+                                EducationalEntity? EducationalEntity = await _EducationalEntityRepository
+                                    .FirstOrDefaultAsync(x => Request.lang == "en"
+                                        ? x.EnglishName.ToLower() == StringValueForEducatiolaEntity!.ToLower()
+                                        : x.ArabicName.ToLower() == StringValueForEducatiolaEntity!.ToLower());
+
+                                if (EducationalEntity is not null)
+                                {
+                                    CategoryEducationalEntity NewCategoryEducationalEntityEntity = new CategoryEducationalEntity()
+                                    {
+                                        CategoryId = ProvidedFormEntity!.categoryId,
+                                        EducationalEntityId = EducationalEntity.Id
+                                    };
+
+                                    await _CategoryEducationalEntityRepository.AddAsync(NewCategoryEducationalEntityEntity);
+
+                                    ProvidedFormEntity.CategoryEducationalEntityId = NewCategoryEducationalEntityEntity.Id;
+                                }
+                            }
+
+                            await _ProvidedFormRepository.UpdateAsync(ProvidedFormEntity);
                         }
                     }
 
