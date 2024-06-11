@@ -6,6 +6,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,8 +40,9 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGen
             GeneralWorkshop.AgendaImage = request.AgendaImage != null
                 ? await _fileService.SaveFileAsync(request.AgendaImage)
                 : string.Empty;
+            CultureInfo culture = new CultureInfo("ar");
 
-            GeneralWorkshop.DayName = request.DateOfWorkShop.Day.ToString();
+            GeneralWorkshop.DayName = request.DateOfWorkShop.Day.ToString(culture);
 
             var data = await _generalWorkshopeRepository.AddAsync(GeneralWorkshop);
             string msg = request.lang == "en"

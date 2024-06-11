@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.Responsibilities.Commands.DeleteRespons
 using SharijhaAward.Application.Features.Responsibilities.Commands.UpdateResponsibility;
 using SharijhaAward.Application.Features.Responsibilities.Queries.AcceptOnResponsibility;
 using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilities;
+using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilitiesByUserId;
 using SharijhaAward.Application.Features.Responsibilities.Queries.GetResponsibilityById;
 
 namespace SharijhaAward.Api.Controllers
@@ -108,6 +109,27 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 Id = Id
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetAllResponsibilitiesByUserId", Name = "GetAllResponsibilitiesByUserId")]
+        public async Task<IActionResult> GetAllResponsibilitiesByUserId(int UserId)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
+
+            var response = await _mediator.Send(new GetAllResponsibilitiesByUserIdQuery()
+            {
+                lang = language!,
+                UserId = UserId,
+                UserToken = token
             });
 
             return response.statusCode switch

@@ -20,15 +20,19 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
         : IRequestHandler<GetAllResponsibilitiesByUserIdQuery, BaseResponse<List<ResponsibilityListVM>>>
     {
         private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;
+        private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
         private readonly IAsyncRepository<Role> _roleRepository;
+        private readonly IAsyncRepository<UserRole> _userRoleRepository;
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
-        public GetAllResponsibilitiesByUserIdQueryHandler(IAsyncRepository<Role> roleRepository, IAsyncRepository<ResponsibilityUser> responsibilityUserRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetAllResponsibilitiesByUserIdQueryHandler(IAsyncRepository<UserRole> userRoleRepository, IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<Role> roleRepository, IAsyncRepository<ResponsibilityUser> responsibilityUserRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
         {
             _responsibilityUserRepository = responsibilityUserRepository;
+            _responsibilityRepository = responsibilityRepository;
             _roleRepository = roleRepository;
+            _userRoleRepository = userRoleRepository;
             _userRepository = userRepository;
             _jwtProvider = jwtProvider;
             _mapper = mapper;
@@ -37,9 +41,9 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
         public async Task<BaseResponse<List<ResponsibilityListVM>>> Handle(GetAllResponsibilitiesByUserIdQuery request, CancellationToken cancellationToken)
         {
 
-            var UserId = request.UserToken != null
-                ? int.Parse(_jwtProvider.GetUserIdFromToken(request.UserToken!))
-                : request.UserId;
+            var UserId = request.UserId != null
+                ? request.UserId
+                : int.Parse(_jwtProvider.GetUserIdFromToken(request.UserToken!));
 
             if (UserId == null && request.UserId == null)
             {
@@ -56,20 +60,35 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
                 return new BaseResponse<List<ResponsibilityListVM>>("", false, 404);
             }
 
+            var RoleIds = _userRoleRepository
+                .Where(u => u.UserId == User.Id)
+                .Select(u => u.RoleId)
+                .ToList();
 
-            var Responsibilities = _responsibilityUserRepository
-                .Include(x => x.Responsibility)
-                .Where(x => x.UserId == UserId)
-                .Select(x => x.Responsibility)
-                .Include(x=>x.ResponsibilityUsers).ToList();
+            var Responsibilities = new List<Responsibility>();
             
+            foreach(var role in RoleIds)
+            {
+                var Responsibility = _responsibilityRepository
+                    .Where(r => r.RoleId == role)
+                    .Include(r => r.ResponsibilityUsers)
+                    .Include(r=>r.Role)
+                    .ToList();
+
+                if(Responsibility != null)
+                {
+                    Responsibilities.AddRange(Responsibility);
+                }
+                    
+            }
+
             var data = _mapper.Map<List<ResponsibilityListVM>>(Responsibilities);
             
             for(int i=0; i < data.Count(); i++)
             {
                 data[i].ResponsibilityUsers = _mapper.Map<List<ResponsibilityUserDto>>(Responsibilities[i].ResponsibilityUsers);
 
-                data[i].RoleName = (await _roleRepository.GetByIdAsync(Responsibilities[i].RoleId))!.ArabicName;
+                data[i].RoleName = Responsibilities[i].Role!.ArabicName;
             }
 
             return new BaseResponse<List<ResponsibilityListVM>>("", true, 200, data);

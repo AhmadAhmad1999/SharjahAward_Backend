@@ -16,7 +16,7 @@ namespace SharijhaAward.Domain.Entities.ResponsibilityModel
         public Role Role { get; set; } = null!;
         [ForeignKey(nameof(Role))]
         public int RoleId { get; set; }
-        public List<ResponsibilityUser>? ResponsibilityUsers { get; set; }
+        public List<ResponsibilityUser> ResponsibilityUsers { get; set; } = null!;
 
     }
 }
