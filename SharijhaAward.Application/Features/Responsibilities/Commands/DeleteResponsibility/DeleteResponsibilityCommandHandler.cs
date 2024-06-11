@@ -16,6 +16,10 @@ namespace SharijhaAward.Application.Features.Responsibilities.Commands.DeleteRes
     {
         private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
         
+        public DeleteResponsibilityCommandHandler(IAsyncRepository<Responsibility> responsibilityRepository)
+        {
+            _responsibilityRepository = responsibilityRepository;
+        }
         public async Task<BaseResponse<object>> Handle(DeleteResponsibilityCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"

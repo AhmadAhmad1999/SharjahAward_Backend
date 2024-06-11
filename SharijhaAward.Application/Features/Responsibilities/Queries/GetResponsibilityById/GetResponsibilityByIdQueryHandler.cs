@@ -2,6 +2,7 @@
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetRespons
         : IRequestHandler<GetResponsibilityByIdQuery, BaseResponse<ResponsibilityDto>>
     {
         private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
+        private readonly IAsyncRepository<Role> _roleRepository;
         private readonly IMapper _mapper;
 
-        public GetResponsibilityByIdQueryHandler(IAsyncRepository<Responsibility> responsibilityRepository, IMapper mapper)
+        public GetResponsibilityByIdQueryHandler(IAsyncRepository<Role> roleRepository, IAsyncRepository<Responsibility> responsibilityRepository, IMapper mapper)
         {
             _responsibilityRepository = responsibilityRepository;
+            _roleRepository = roleRepository;
             _mapper = mapper;
         }
 
@@ -36,6 +39,8 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetRespons
                 return new BaseResponse<ResponsibilityDto>(msg, false, 404);
             }
             var data = _mapper.Map<ResponsibilityDto>(Responsibility);
+
+            data.RoleName = (await _roleRepository.GetByIdAsync(Responsibility.RoleId))!.ArabicName;
 
             return new BaseResponse<ResponsibilityDto>("", true, 200, data);
         }
