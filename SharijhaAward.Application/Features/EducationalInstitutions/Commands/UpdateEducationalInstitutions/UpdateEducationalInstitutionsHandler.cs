@@ -28,7 +28,10 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Commands.Up
 
             foreach (EducationalInstitution EducationalInstitutionEntityToUpdate in EducationalInstitutionEntitiesToUpdate)
             {
-                _Mapper.Map(Request, EducationalInstitutionEntityToUpdate, typeof(UpdateEducationalInstitutionsCommand), typeof(EducationalInstitution));
+                UpdateEducationalInstitutionsCommand NewRequestData = Request.UpdateEducationalInstitutionsCommand
+                    .FirstOrDefault(x => x.Id == EducationalInstitutionEntityToUpdate.Id)!;
+
+                _Mapper.Map(NewRequestData, EducationalInstitutionEntityToUpdate, typeof(UpdateEducationalInstitutionsCommand), typeof(EducationalInstitution));
             }
 
             await _EducationalInstitutionRepository.UpdateListAsync(EducationalInstitutionEntitiesToUpdate);

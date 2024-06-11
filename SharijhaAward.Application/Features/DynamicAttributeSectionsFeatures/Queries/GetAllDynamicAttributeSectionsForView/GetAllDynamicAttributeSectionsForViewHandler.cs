@@ -20,18 +20,21 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
+        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
 
         public GetAllDynamicAttributeSectionsForViewHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<Category> CategoryRepository,
-            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository)
+            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
+            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository)
         {
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _CategoryRepository = CategoryRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
+            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
         }
         public async Task<BaseResponse<List<DynamicAttributeSectionListVM>>> Handle(GetAllDynamicAttributeSectionsForViewQuery Request,
             CancellationToken cancellationToken)
@@ -261,6 +264,35 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         });
                     }
 
+                    if(CategoryEntity.RelatedToEducationalEntities != null
+                        ? CategoryEntity.RelatedToEducationalEntities.Value
+                        : false)
+                    {
+                        MainInformationDynamicAttribute.Add(new DynamicAttribute()
+                        {
+                            isDeleted = false,
+                            DeletedAt = null,
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            DynamicAttributeSectionId = PersonalInformationSection.Id,
+                            EnglishLabel = "Educational Entity",
+                            EnglishTitle = "Educational Entity",
+                            ArabicLabel = "الجهة التعليمية",
+                            ArabicTitle = "الجهة التعليمية",
+                            AttributeDataTypeId = 8,
+                            IsRequired = true,
+                            IsUnique = false,
+                            LinkedToAnotherAttribute = false,
+                            MaxSizeInKB = null,
+                            Status = DynamicAttributeStatus.Active,
+                            ArabicPlaceHolder = "الجهة التعليمية مرتبطة بالفئة",
+                            EnglishPlaceHolder = "The educational entity is related to the category",
+                            OrderId = 7
+                        });
+                    }
+
                     await _DynamicAttributeRepository.AddRangeAsync(MainInformationDynamicAttribute);
 
                     DynamicAttribute? NationalityDynamicAttributes = MainInformationDynamicAttribute
@@ -367,6 +399,30 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             }).ToListAsync();
 
                         await _DynamicAttributeListValueRepository.AddRangeAsync(NewEducationalClasses);
+                    }
+
+                    DynamicAttribute? EducationalEntityDynamicAttributes = MainInformationDynamicAttribute
+                        .FirstOrDefault(x => x.AttributeDataTypeId == 8 && x.EnglishTitle.ToLower() == "Educational Entity".ToLower());
+
+                    if (EducationalEntityDynamicAttributes is not null)
+                    {
+                        List<DynamicAttributeListValue> NewEducationalEntities = await _CategoryEducationalEntityRepository
+                            .Where(x => x.CategoryId == Request.CategoryId)
+                            .Include(x => x.EducationalEntity!)
+                            .Select(x => new DynamicAttributeListValue()
+                            {
+                                isDeleted = false,
+                                DeletedAt = null,
+                                CreatedAt = DateTime.UtcNow,
+                                CreatedBy = null,
+                                LastModifiedAt = null,
+                                LastModifiedBy = null,
+                                DynamicAttributeId = EducationalEntityDynamicAttributes.Id,
+                                ArabicValue = x.EducationalEntity!.ArabicName,
+                                EnglishValue = x.EducationalEntity!.EnglishName
+                            }).ToListAsync();
+
+                        await _DynamicAttributeListValueRepository.AddRangeAsync(NewEducationalEntities);
                     }
                 }
 

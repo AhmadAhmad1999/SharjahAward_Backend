@@ -63,9 +63,21 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
             {
                 try
                 {
-                    if ((request.RelatedToClasses != null && categoryToUpdate.RelatedToClasses != null)
-                        ? request.RelatedToClasses!.Value && request.RelatedToClasses!.Value != categoryToUpdate.RelatedToClasses.Value
-                        : false)
+                    DynamicAttribute? ClassDynamicAttribute = await _DynamicAttributeRepository
+                        .Include(x => x.DynamicAttributeSection!)
+                        .FirstOrDefaultAsync(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
+                            x.EnglishTitle == "Class" && x.ArabicTitle == "الصف" &&
+                            x.DynamicAttributeSection!.AttributeTableNameId == 1);
+
+                    int? ClassDynamicAttributeId = null;
+
+                    if (((request.RelatedToClasses != null && categoryToUpdate.RelatedToClasses != null)
+                            ? (request.RelatedToClasses!.Value && request.RelatedToClasses!.Value != categoryToUpdate.RelatedToClasses.Value &&
+                                ClassDynamicAttribute == null)
+                            : false) ||
+                        ((request.RelatedToClasses != null && categoryToUpdate.RelatedToClasses == null)
+                            ? request.RelatedToClasses!.Value
+                            : false))
                     {
                         var LastOrderId = await _DynamicAttributeRepository
                             .Include(x => x.DynamicAttributeSection!)
@@ -99,24 +111,32 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                         };
 
                         await _DynamicAttributeRepository.AddAsync(DynamicAttribute);
+
+                        ClassDynamicAttributeId = DynamicAttribute.Id;
                     }
                     else
                     {
-                        DynamicAttribute? ClassDynamicAttribute = await _DynamicAttributeRepository
-                            .Include(x => x.DynamicAttributeSection!)
-                            .FirstOrDefaultAsync(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
-                                x.EnglishTitle == "Class" && x.ArabicTitle == "الصف" &&
-                                x.DynamicAttributeSection!.AttributeTableNameId == 1);
-
                         if (ClassDynamicAttribute is not null)
                         {
                             await _DynamicAttributeRepository.DeleteAsync(ClassDynamicAttribute);
                         }
                     }
 
-                    if ((request.RelatedToEducationalEntities != null && categoryToUpdate.RelatedToEducationalEntities != null)
-                        ? request.RelatedToEducationalEntities!.Value && request.RelatedToEducationalEntities!.Value != categoryToUpdate.RelatedToEducationalEntities.Value
-                        : false)
+                    DynamicAttribute? EducationalEntityDynamicAttribute = await _DynamicAttributeRepository
+                        .Include(x => x.DynamicAttributeSection!)
+                        .FirstOrDefaultAsync(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
+                            x.EnglishTitle == "Educational Entity" && x.ArabicTitle == "الجهة التعليمية" &&
+                            x.DynamicAttributeSection!.AttributeTableNameId == 1);
+
+                    int? EducationalEntityDynamicAttributeId = null;
+
+                    if (((request.RelatedToEducationalEntities != null && categoryToUpdate.RelatedToEducationalEntities != null)
+                            ? (request.RelatedToEducationalEntities!.Value && request.RelatedToEducationalEntities!.Value != categoryToUpdate.RelatedToEducationalEntities.Value &&
+                                EducationalEntityDynamicAttribute == null)
+                            : false) ||
+                        ((request.RelatedToEducationalEntities != null && categoryToUpdate.RelatedToEducationalEntities == null)
+                            ? request.RelatedToEducationalEntities!.Value
+                            : false))
                     {
                         var LastOrderId = await _DynamicAttributeRepository
                             .Include(x => x.DynamicAttributeSection!)
@@ -150,18 +170,14 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                         };
 
                         await _DynamicAttributeRepository.AddAsync(DynamicAttribute);
+
+                        EducationalEntityDynamicAttributeId = DynamicAttribute.Id;
                     }
                     else
                     {
-                        DynamicAttribute? ClassDynamicAttribute = await _DynamicAttributeRepository
-                            .Include(x => x.DynamicAttributeSection!)
-                            .FirstOrDefaultAsync(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
-                                x.EnglishTitle == "Educational Entity" && x.ArabicTitle == "الجهة التعليمية" &&
-                                x.DynamicAttributeSection!.AttributeTableNameId == 1);
-
-                        if (ClassDynamicAttribute is not null)
+                        if (EducationalEntityDynamicAttribute is not null)
                         {
-                            await _DynamicAttributeRepository.DeleteAsync(ClassDynamicAttribute);
+                            await _DynamicAttributeRepository.DeleteAsync(EducationalEntityDynamicAttribute);
                         }
                     }
 
@@ -232,21 +248,12 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                                 .Include(x => x.EducationalClass!)
                                 .ToListAsync();
 
-                            DynamicAttributeListValue? AlreadyInsertedClassesListValues = await _DynamicAttributeListValueRepository
-                                .Include(x => x.DynamicAttribute!)
-                                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                                .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
-                                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
-                                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Class".ToLower() &&
-                                    x.DynamicAttribute!.ArabicTitle == "الصف")
-                                .FirstOrDefaultAsync();
-
-                            if (AlreadyInsertedClassesListValues is not null)
+                            if (ClassDynamicAttributeId is not null)
                             {
                                 List<DynamicAttributeListValue> ArabicClasses = NewCategoryEducationalClassEntitiesWithInclude
                                     .Select(x => new DynamicAttributeListValue()
                                     {
-                                        DynamicAttributeId = AlreadyInsertedClassesListValues.DynamicAttributeId,
+                                        DynamicAttributeId = ClassDynamicAttributeId!.Value,
                                         ArabicValue = x.EducationalClass!.ArabicName,
                                         EnglishValue = x.EducationalClass!.EnglishName
                                     }).ToList();
@@ -339,21 +346,12 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                                 .Include(x => x.EducationalEntity!)
                                 .ToListAsync();
 
-                            DynamicAttributeListValue? AlreadyInsertedEntityesListValues = await _DynamicAttributeListValueRepository
-                                .Include(x => x.DynamicAttribute!)
-                                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                                .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
-                                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
-                                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Educational Entity".ToLower() &&
-                                    x.DynamicAttribute!.ArabicTitle == "الجهة التعليمية")
-                                .FirstOrDefaultAsync();
-
-                            if (AlreadyInsertedEntityesListValues is not null)
+                            if (EducationalEntityDynamicAttributeId is not null)
                             {
                                 List<DynamicAttributeListValue> ArabicEntityes = NewCategoryEducationalEntityEntitiesWithInclude
                                     .Select(x => new DynamicAttributeListValue()
                                     {
-                                        DynamicAttributeId = AlreadyInsertedEntityesListValues.DynamicAttributeId,
+                                        DynamicAttributeId = EducationalEntityDynamicAttributeId!.Value,
                                         ArabicValue = x.EducationalEntity!.ArabicName,
                                         EnglishValue = x.EducationalEntity!.EnglishName
                                     }).ToList();
