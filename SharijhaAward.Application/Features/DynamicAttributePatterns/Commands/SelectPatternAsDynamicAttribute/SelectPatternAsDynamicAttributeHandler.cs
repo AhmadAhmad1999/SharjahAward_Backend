@@ -70,6 +70,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributePatterns.Commands.S
             NewDynamicAttributeEntity.DynamicAttributeSectionId = Request.DynamicAttributeSectionId;
             NewDynamicAttributeEntity.Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active;
             NewDynamicAttributeEntity.AttributeDataTypeId = AttributeListDataTypeEntity.Id;
+            NewDynamicAttributeEntity.ArabicTitle = SelectedDynamicAttributePattern.ArabicTitle;
+            NewDynamicAttributeEntity.EnglishTitle = SelectedDynamicAttributePattern.EnglishTitle;
 
             using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {

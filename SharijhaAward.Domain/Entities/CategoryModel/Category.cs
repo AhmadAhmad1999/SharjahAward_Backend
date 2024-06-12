@@ -30,10 +30,13 @@ public class Category : AuditableEntity
     public string Icon { get; set; } = string.Empty;
     public CategoryClassification? CategoryClassification { get; set; }
     public float? FinalArbitrationQualificationMark { get; set; }
-    public float? WinningScore { get; set; }
-    public float? MinimumAmountToParticipateInTheAward { get; set; }
-    public float? MinimumAmountToObtainACertificateOfParticipation { get; set; }
     public int? ExpectedNumberOfWinners { get; set; }
+
+    public int? MinimumAmountToObtainAStatement { get; set; }
+    public int? MaximumAmountToObtainAStatement { get; set; }
+    public int? MinimumRequirementToObtainACertificate { get; set; }
+    public int? MaximumRequirementToObtainACertificate { get; set; }
+    public int? MinimumWinningScore { get; set; }
 
     public bool? RelatedToClasses { get; set; }
     public bool? RelatedToEducationalEntities { get; set; }

@@ -9,7 +9,6 @@
         TheLastStepAfterSendingTheForm = 4,
         TheFirstStepInTheForm = 5,
         SpecialConditions = 6,
-        Criterions = 7,
-        SignaturePage = 8
+        SignaturePage = 7
     }
 }

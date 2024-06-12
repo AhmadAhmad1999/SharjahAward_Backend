@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.ArbitrationResultModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 using System.Transactions;
 
@@ -12,14 +14,17 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
     {
         private readonly IAsyncRepository<FinalArbitrationScore> _FinalArbitrationScoreRepository;
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
+        private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
         private readonly IMapper _Mapper;
 
         public CreateFinalArbitrationScoreHandler(IAsyncRepository<FinalArbitrationScore> FinalArbitrationScoreRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
+            IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
             IMapper Mapper)
         {
             _FinalArbitrationScoreRepository = FinalArbitrationScoreRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
+            _ArbitrationResultRepository = ArbitrationResultRepository;
             _Mapper = Mapper;
         }
 
@@ -38,6 +43,20 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
             {
                 try
                 {
+                    FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
+                        .Include(x => x.ProvidedForm!)
+                        .Include(x => x.ProvidedForm!.Category!)
+                        .FirstOrDefaultAsync(x => x.Id == Request.FinalArbitrationId);
+
+                    if (FinalArbitrationEntity is null)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? "Final arbitration is not Found"
+                            : "التحكيم النهائي غير موجود";
+
+                        return new BaseResponse<object>(ResponseMessage, false, 404);
+                    }
+
                     foreach (CreateFinalArbitrationScoreMainCommand CreateFinalArbitrationScoreMainCommand in Request.CreateFinalArbitrationScoreMainCommand)
                     {
                         if (CreateFinalArbitrationScoreMainCommand.FinalArbitrationScoreId == 0)
@@ -69,24 +88,39 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                             await _FinalArbitrationScoreRepository.UpdateAsync(FinalArbitrationScoreEntity);
                         }
                     }
-
-                    FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
-                        .FirstOrDefaultAsync(x => x.Id == Request.FinalArbitrationId);
-
-                    if (FinalArbitrationEntity is null)
-                    {
-                        ResponseMessage = Request.lang == "en"
-                            ? "Final arbitration is not Found"
-                            : "التحكيم النهائي غير موجود";
-
-                        return new BaseResponse<object>(ResponseMessage, false, 404);
-                    }
-
+                    
                     if (Request.isDoneArbitration)
                     {
                         FinalArbitrationEntity.DateOfArbitration = DateTime.UtcNow;
                         FinalArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
                         FinalArbitrationEntity.FinalScore = Request.CreateFinalArbitrationScoreMainCommand.Sum(x => x.ArbitrationScore);
+
+                        bool EligibleForCertification = false;
+                        if (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumRequirementToObtainACertificate <= FinalArbitrationEntity.FinalScore &&
+                            FinalArbitrationEntity.ProvidedForm!.Category!.MaximumRequirementToObtainACertificate >= FinalArbitrationEntity.FinalScore)
+                               EligibleForCertification = true;
+
+                        bool EligibleForAStatement = false;
+                        if (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumAmountToObtainAStatement <= FinalArbitrationEntity.FinalScore &&
+                            FinalArbitrationEntity.ProvidedForm!.Category!.MaximumAmountToObtainAStatement >= FinalArbitrationEntity.FinalScore)
+                                EligibleForAStatement = true;
+
+                        bool EligibleToWin = true;
+                        if (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumWinningScore <= FinalArbitrationEntity.FinalScore)
+                            EligibleToWin = true;
+
+                        ArbitrationResult NewArbitrationResultEntity = new ArbitrationResult()
+                        {
+                            ProvidedFormId = FinalArbitrationEntity.ProvidedFormId,
+                            EligibleForCertification = EligibleForCertification,
+                            EligibleForAStatement = EligibleForAStatement,
+                            EligibleToWin = EligibleToWin,
+                            GotCertification = false,
+                            GotStatement = false,
+                            Winner = false
+                        };
+
+                        await _ArbitrationResultRepository.AddAsync(NewArbitrationResultEntity);
                     }
 
                     else

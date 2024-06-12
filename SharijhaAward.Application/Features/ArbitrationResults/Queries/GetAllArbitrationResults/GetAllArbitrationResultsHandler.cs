@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
-using SharijhaAward.Domain.Entities.EducationalClassModel;
+using SharijhaAward.Domain.Entities.ArbitrationResultModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
 namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllArbitrationResults
@@ -13,21 +13,35 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
         : IRequestHandler<GetAllArbitrationResultsQuery, BaseResponse<List<GetAllArbitrationResultsListVM>>>
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
-        private readonly IAsyncRepository<InitialArbitration> _InitialArbitrationRepository;
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
+        private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
         private readonly IMapper _Mapper;
         public GetAllArbitrationResultsHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
-            IAsyncRepository<InitialArbitration> InitialArbitrationRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
+            IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
             IMapper Mapper)
         {
             _ArbitrationRepository = ArbitrationRepository;
-            _InitialArbitrationRepository = InitialArbitrationRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
+            _ArbitrationResultRepository = ArbitrationResultRepository;
             _Mapper = Mapper;
         }
-        public async Task<BaseResponse<List<GetAllArbitrationResultsListVM>>> Handle(GetAllArbitrationResultsQuery Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<GetAllArbitrationResultsListVM>>> 
+            Handle(GetAllArbitrationResultsQuery Request, CancellationToken cancellationToken)
         {
+            List<ArbitrationResult> ArbitrationResultEntities = await _ArbitrationResultRepository
+                .Include(x => x.ProvidedForm!)
+                .Include(x => x.ProvidedForm!.Category!)
+                .Include(x => x.ProvidedForm!.Category!.Cycle!)
+                .ToListAsync();
+
+            List<FinalArbitration> FinalArbitrationEntities = await _FinalArbitrationRepository
+                .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
+                .ToListAsync();
+
+            //var xx = await _ArbitrationRepository
+            //    .Where(x => x)
+
             var FormData = await _FinalArbitrationRepository
                 .Include(x => x.ProvidedForm!)
                 .Include(x => x.ProvidedForm!.Category!)
