@@ -14,5 +14,8 @@ namespace SharijhaAward.Domain.Entities.ArbitrationResultModel
         public bool GotCertification { get; set; }
         public bool GotStatement { get; set; }
         public bool Winner { get; set; }
+        public DateTime? DateOfObtainingTheCertificate { get; set; }
+        public DateTime? DateOfObtainingTheStatement { get; set; }
+        public DateTime? WinningDate { get; set; }
     }
 }

@@ -143,26 +143,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                         DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                     }
                                 }
-                                else if (DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "List".ToLower())
-                                {
-                                    DynamicAttributeValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeValues
-                                        .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id);
-
-                                    if (CheckIfValueIsAlreadyInserted != null)
-                                    {
-                                        DynamicAttributeListValue? CheckIfValueIsAlreadyInsertedIsExist = AllInsertedDynamicAttributeListValueEntities
-                                            .FirstOrDefault(x => x.Id == int.Parse(CheckIfValueIsAlreadyInserted.Value));
-
-                                        if (CheckIfValueIsAlreadyInsertedIsExist is not null)
-                                        {
-                                            DynamicAttributeInSection.InsertedValueAsString = Request.lang == "en"
-                                                ? CheckIfValueIsAlreadyInsertedIsExist.EnglishValue
-                                                : CheckIfValueIsAlreadyInsertedIsExist.ArabicValue;
-                                            DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
-                                            DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
-                                        }
-                                    }
-                                }
                                 else
                                 {
                                     DynamicAttributeValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeValues
@@ -253,26 +233,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                             DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
                                             DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                                             DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
-                                        }
-                                    }
-                                    else if (DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "List".ToLower())
-                                    {
-                                        DynamicAttributeTableValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeTableValues
-                                            .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id);
-
-                                        if (CheckIfValueIsAlreadyInserted != null)
-                                        {
-                                            DynamicAttributeListValue? CheckIfValueIsAlreadyInsertedIsExist = AllInsertedDynamicAttributeListValueEntities
-                                                .FirstOrDefault(x => x.Id == int.Parse(CheckIfValueIsAlreadyInserted.Value));
-
-                                            if (CheckIfValueIsAlreadyInsertedIsExist is not null)
-                                            {
-                                                DynamicAttributeInSection.InsertedValueAsString = Request.lang == "en"
-                                                    ? CheckIfValueIsAlreadyInsertedIsExist.EnglishValue
-                                                    : CheckIfValueIsAlreadyInsertedIsExist.ArabicValue;
-                                                DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
-                                                DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
-                                            }
                                         }
                                     }
                                     else
@@ -417,26 +377,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
                                     DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                                     DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
-                                }
-                            }
-                            else if (DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "List".ToLower())
-                            {
-                                DynamicAttributeValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeValues
-                                    .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id);
-
-                                if (CheckIfValueIsAlreadyInserted != null)
-                                {
-                                    DynamicAttributeListValue? CheckIfValueIsAlreadyInsertedIsExist = AllInsertedDynamicAttributeListValueEntities
-                                        .FirstOrDefault(x => x.Id == int.Parse(CheckIfValueIsAlreadyInserted.Value));
-
-                                    if (CheckIfValueIsAlreadyInsertedIsExist is not null)
-                                    {
-                                        DynamicAttributeInSection.InsertedValueAsString = Request.lang == "en"
-                                            ? CheckIfValueIsAlreadyInsertedIsExist.EnglishValue
-                                            : CheckIfValueIsAlreadyInsertedIsExist.ArabicValue;
-                                        DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
-                                        DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
-                                    }
                                 }
                             }
                             else
