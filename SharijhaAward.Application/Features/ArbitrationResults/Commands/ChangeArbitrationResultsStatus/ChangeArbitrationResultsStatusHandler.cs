@@ -33,32 +33,54 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
 
             if (Request.isCerticate)
             {
-                if (!ArbitrationResultEntityToUpdate.GotCertification)
+                if (ArbitrationResultEntityToUpdate.EligibleForCertification)
                 {
-                    ArbitrationResultEntityToUpdate.GotCertification = !ArbitrationResultEntityToUpdate.GotCertification;
-                    ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = DateTime.UtcNow;
+                    if (!ArbitrationResultEntityToUpdate.GotCertification)
+                    {
+                        ArbitrationResultEntityToUpdate.GotCertification = !ArbitrationResultEntityToUpdate.GotCertification;
+                        ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        ArbitrationResultEntityToUpdate.GotCertification = !ArbitrationResultEntityToUpdate.GotCertification;
+
+                        if (ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate is not null)
+                            ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = null;
+                    }
                 }
                 else
                 {
-                    ArbitrationResultEntityToUpdate.GotCertification = !ArbitrationResultEntityToUpdate.GotCertification;
+                    ResponseMessage = Request.lang == "en"
+                        ? "You can't change the status of the this arbitration result because it's not eligible for certification"
+                        : "لا يمكنك تغيير حالة نتيجة التحكيم هذه لأنها غير مؤهلة للحصول على الشهادة";
 
-                    if (ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate is not null)
-                        ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = null;
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
                 }
             }
             else
             {
-                if (!ArbitrationResultEntityToUpdate.GotStatement)
+                if (ArbitrationResultEntityToUpdate.EligibleForAStatement)
                 {
-                    ArbitrationResultEntityToUpdate.GotStatement = !ArbitrationResultEntityToUpdate.GotStatement;
-                    ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = DateTime.UtcNow;
+                    if (!ArbitrationResultEntityToUpdate.GotStatement)
+                    {
+                        ArbitrationResultEntityToUpdate.GotStatement = !ArbitrationResultEntityToUpdate.GotStatement;
+                        ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        ArbitrationResultEntityToUpdate.GotStatement = !ArbitrationResultEntityToUpdate.GotStatement;
+
+                        if (ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement is not null)
+                            ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = null;
+                    }
                 }
                 else
                 {
-                    ArbitrationResultEntityToUpdate.GotStatement = !ArbitrationResultEntityToUpdate.GotStatement;
+                    ResponseMessage = Request.lang == "en"
+                        ? "You can't change the status of the this arbitration result because it's not eligible for a statement"
+                        : "لا يمكنك تغيير حالة نتيجة التحكيم هذه لأنها غير مؤهلة للحصول على إفادة";
 
-                    if (ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement is not null)
-                        ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = null;
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
                 }
             }
 

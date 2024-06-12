@@ -96,17 +96,25 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                         FinalArbitrationEntity.FinalScore = Request.CreateFinalArbitrationScoreMainCommand.Sum(x => x.ArbitrationScore);
 
                         bool EligibleForCertification = false;
-                        if (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumRequirementToObtainACertificate <= FinalArbitrationEntity.FinalScore &&
-                            FinalArbitrationEntity.ProvidedForm!.Category!.MaximumRequirementToObtainACertificate >= FinalArbitrationEntity.FinalScore)
-                               EligibleForCertification = true;
+                        if ((FinalArbitrationEntity.ProvidedForm!.Category!.MinimumRequirementToObtainACertificate != null &&
+                            FinalArbitrationEntity.ProvidedForm!.Category!.MaximumRequirementToObtainACertificate != null)
+                                ? (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumRequirementToObtainACertificate <= FinalArbitrationEntity.FinalScore &&
+                                   FinalArbitrationEntity.ProvidedForm!.Category!.MaximumRequirementToObtainACertificate >= FinalArbitrationEntity.FinalScore)
+                                : false)
+                            EligibleForCertification = true;
 
                         bool EligibleForAStatement = false;
-                        if (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumAmountToObtainAStatement <= FinalArbitrationEntity.FinalScore &&
-                            FinalArbitrationEntity.ProvidedForm!.Category!.MaximumAmountToObtainAStatement >= FinalArbitrationEntity.FinalScore)
-                                EligibleForAStatement = true;
+                        if ((FinalArbitrationEntity.ProvidedForm!.Category!.MinimumAmountToObtainAStatement != null &&
+                            FinalArbitrationEntity.ProvidedForm!.Category!.MaximumAmountToObtainAStatement != null)
+                                ? (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumAmountToObtainAStatement <= FinalArbitrationEntity.FinalScore &&
+                                   FinalArbitrationEntity.ProvidedForm!.Category!.MaximumAmountToObtainAStatement >= FinalArbitrationEntity.FinalScore)
+                                : false)
+                            EligibleForAStatement = true;
 
                         bool EligibleToWin = true;
-                        if (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumWinningScore <= FinalArbitrationEntity.FinalScore)
+                        if (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumWinningScore != null
+                                ? FinalArbitrationEntity.ProvidedForm!.Category!.MinimumWinningScore <= FinalArbitrationEntity.FinalScore
+                                : false)
                             EligibleToWin = true;
 
                         ArbitrationResult NewArbitrationResultEntity = new ArbitrationResult()

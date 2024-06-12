@@ -3995,6 +3995,18 @@ namespace SharijhaAward.Persistence
                     ArabicText = "عزيزي المشترك الرجاء تأكيد الموافقة على كافة المعلومات الواردة ضمن الإستمارة الخاصة بك كون هذه الخطوة غير قابلة للتراجع.",
                     EnglishText = "Dear subscriber, please confirm your approval of all the information contained in your form, as this step is irreversible.",
                     Type = TypeOfExplantoryMessage.SignaturePage
+                }, new ExplanatoryMessage()
+                {
+                    Id = 9,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicText = "يمكنك رفع عدد غير محدود من الملفات والتعديل عليها قبل إرسال الاستمارة",
+                    EnglishText = "You can upload an unlimited number of files and modify them before submitting the form",
+                    Type = TypeOfExplantoryMessage.SignaturePage
                 });
             #endregion
         }
