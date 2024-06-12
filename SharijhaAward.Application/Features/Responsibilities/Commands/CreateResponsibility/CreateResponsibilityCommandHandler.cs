@@ -44,6 +44,15 @@ namespace SharijhaAward.Application.Features.Responsibilities.Commands.CreateRes
                 return new BaseResponse<object>(msg, false, 404);
             }
 
+            if(role.EnglishName != "Coordinator" && role.EnglishName != "Arbitrator")
+            {
+                msg = request.lang == "en"
+                    ? "You can't Add Responsibility for this Role"
+                    : "لا يمكنك إضافة مسؤوليات لهذا الدور";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
+
             var Responsibility = _mapper.Map<Responsibility>(request);
 
             await _responsibilityRepository.AddAsync(Responsibility);

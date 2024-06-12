@@ -335,6 +335,7 @@ using SharijhaAward.Application.Features.Responsibilities.Commands.CreateRespons
 using SharijhaAward.Application.Features.Responsibilities.Queries.GetResponsibilityById;
 using SharijhaAward.Application.Features.Responsibilities.Commands.UpdateResponsibility;
 using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilities;
+using SharijhaAward.Domain.Entities;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -590,6 +591,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Responsibility, UpdateResponsibilityCommand>().ReverseMap();
             CreateMap<Responsibility, ResponsibilityDto>().ReverseMap();
             CreateMap<Responsibility, ResponsibilityListVM>().ReverseMap();
+            CreateMap<ResponsibilityUser, ResponsibilityUserDto>().ReverseMap();
 
 
 

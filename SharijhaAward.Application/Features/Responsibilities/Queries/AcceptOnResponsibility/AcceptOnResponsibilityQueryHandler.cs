@@ -1,8 +1,11 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using System;
 using System.Collections.Generic;
@@ -17,20 +20,61 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.AcceptOnRe
     {
         private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
         private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;
+        private readonly IAsyncRepository<Role> _roleRepository;
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
 
-        public AcceptOnResponsibilityQueryHandler(IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<ResponsibilityUser> responsibilityUserRepository, IUserRepository userRepository, IJwtProvider jwtProvider)
+        public AcceptOnResponsibilityQueryHandler(IAsyncRepository<Role> roleRepository, IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<ResponsibilityUser> responsibilityUserRepository, IUserRepository userRepository, IJwtProvider jwtProvider)
         {
             _responsibilityRepository = responsibilityRepository;
             _responsibilityUserRepository = responsibilityUserRepository;
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
             _jwtProvider = jwtProvider;
         }
 
-        public Task<BaseResponse<object>> Handle(AcceptOnResponsibilityQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(AcceptOnResponsibilityQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
+            
+            if (UserId.IsNullOrEmpty())
+            {
+                return new BaseResponse<object>("Un Auth", false, 401);
+            }
+            
+            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
+           
+            if (User == null)
+            {
+                return new BaseResponse<object>("Un Auth", false, 401);
+            }
+
+            var Responsibility = await _responsibilityRepository
+                .Include(r => r.ResponsibilityUsers!.FirstOrDefault(x=>x.UserId == User.Id && x.ResponsibilityId == request.ResponsibilityId)!)
+                .FirstOrDefaultAsync(r => r.Id == request.ResponsibilityId);
+
+            if(Responsibility == null)
+            {
+                return new BaseResponse<object>("Responsibility not found", false, 404);
+            }
+            
+            if(Responsibility.ResponsibilityUsers == null)
+            {
+                var ResponsibilityUser = new ResponsibilityUser()
+                {
+                    IsAccept = request.Accept,
+                    UserId = User.Id,
+                    ResponsibilityId = Responsibility.Id
+                };
+
+                await _responsibilityUserRepository.AddAsync(ResponsibilityUser);
+            }
+            else
+            {
+                Responsibility.ResponsibilityUsers.FirstOrDefault()!.IsAccept = request.Accept;
+            }
+
+            return new BaseResponse<object>("", true, 200);
         }
     }
 }

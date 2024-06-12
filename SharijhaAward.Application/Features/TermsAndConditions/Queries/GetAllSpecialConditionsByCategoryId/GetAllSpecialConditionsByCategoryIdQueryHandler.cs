@@ -77,8 +77,21 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                 var conditionsProvidedsobject =
                  _conditionsProvidedFormsRepository.WhereThenInclude(
                      c => c.ProvidedFormId == form!.Id && c.TermAndConditionId == Terms[i].Id,
+                   
                      c => c.Attachments).FirstOrDefault();
 
+                if(conditionsProvidedsobject == null)
+                {
+                    var conditionsProvided = new ConditionsProvidedForms()
+                    {
+                        ProvidedFormId = form!.Id,
+                        TermAndConditionId = Terms[i].Id,
+                        IsAgree = false
+                    };
+
+                    await _conditionsProvidedFormsRepository.AddAsync(conditionsProvided);
+                    conditionsProvideds.Add(conditionsProvided);
+                }
                 if (conditionsProvidedsobject != null)
                     conditionsProvideds.Add(conditionsProvidedsobject!);
             }
