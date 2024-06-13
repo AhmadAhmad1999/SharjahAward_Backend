@@ -1,4 +1,6 @@
-﻿namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionsForDashBoardByCategoryId
+﻿using SharijhaAward.Domain.Constants.AttachmentConstant;
+
+namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionsForDashBoardByCategoryId
 {
     public class GetAllSubCriterionItems
     {
@@ -8,5 +10,6 @@
         public int Score { get; set; }
         public int SizeOfAttachmentInKB { get; set; }
         public int MaxAttachmentNumber { get; set; }
+        public AttachmentType AttachmentType { get; set; }
     }
 }
