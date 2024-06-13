@@ -84,7 +84,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
                         MaxAttachmentNumber = x.MaxAttachmentNumber != null
                             ? x.MaxAttachmentNumber.Value
-                            : null
+                            : null,
+                        AttachmentType = x.AttachmentType
                     }).ToList();
 
                 foreach (SubCriterionListVM SubCriterionObject in MainCriterionObject.SubCriterionListVM)
@@ -102,7 +103,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                                 ? x.ArabicName
                                 : x.EnglishName,
                             SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
-                            MaxAttachmentNumber = x.MaxAttachmentNumber
+                            MaxAttachmentNumber = x.MaxAttachmentNumber,
+                            AttachmentType = x.AttachmentType
                         }).ToList();
 
                     foreach (CriterionItemListVM CriterionItemObject in SubCriterionObject.CriterionItemListVM)

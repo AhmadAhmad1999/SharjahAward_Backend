@@ -10,6 +10,7 @@
         TheFirstStepInTheForm = 5,
         SpecialConditions = 6,
         SignaturePage = 7,
-        Criterions = 8
+        Criterions = 8,
+        TheFirstStepInTheForm2 = 9
     }
 }

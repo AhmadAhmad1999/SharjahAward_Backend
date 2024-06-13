@@ -4007,7 +4007,19 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                     ArabicText = "يمكنك رفع عدد غير محدود من الملفات والتعديل عليها قبل إرسال الاستمارة",
                     EnglishText = "You can upload an unlimited number of files and modify them before submitting the form",
-                    Type = TypeOfExplantoryMessage.SignaturePage
+                    Type = TypeOfExplantoryMessage.Criterions
+                }, new ExplanatoryMessage()
+                {
+                    Id = 10,
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    ArabicText = "الرجاء إتمام جميع المراحل الخاصة بالاستمارة الجديدة لتتمكن من الاشتراك بنجاح     --  يمكن الاشتراك بفئتين فقط (فئة ذات طابع فردي وفئة ذات طابع جماعي )خلال الدورة الواحدة ورفع الملفات المطلوبة عند تعبئة الاستمارة.",
+                    EnglishText = "Please complete all stages of the new form to be able to participate successfully. You can participate in only two categories (an individual category and a group category) during one session and upload the required files when filling out the form.",
+                    Type = TypeOfExplantoryMessage.TheFirstStepInTheForm2
                 });
             #endregion
         }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterion
 {
@@ -10,7 +11,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCr
         public string EnglishTitle { get; set; } = string.Empty;
         public int Score { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
-        public int MaxAttachmentNumber { get; set; }
+        public int? MaxAttachmentNumber { get; set; }
+        public AttachmentType? AttachmentType { get; set; }
         public string? lang { get; set; }
     }
 }

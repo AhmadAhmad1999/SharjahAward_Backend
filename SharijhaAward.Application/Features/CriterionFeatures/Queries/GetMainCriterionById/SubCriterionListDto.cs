@@ -1,4 +1,6 @@
-﻿namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCriterionById
+﻿using SharijhaAward.Domain.Constants.AttachmentConstant;
+
+namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCriterionById
 {
     public class SubCriterionListDto
     {
@@ -8,6 +10,7 @@
         public int Score { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public int? MaxAttachmentNumber { get; set; }
+        public AttachmentType? AttachmentType { get; set; }
         public List<CriterionItemListDto>? CriterionItems { get; set; }
     }
 }

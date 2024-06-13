@@ -1,5 +1,6 @@
 ﻿using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 
 namespace SharijhaAward.Domain.Entities.CriterionModel
 {
@@ -16,6 +17,7 @@ namespace SharijhaAward.Domain.Entities.CriterionModel
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
         public int? MaxAttachmentNumber { get; set; }
+        public AttachmentType? AttachmentType { get; set; }
     }
 }
 
