@@ -1,7 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.WinnersFeatures.Commands.SelectWinningForms;
 using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersDashboard;
+using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersForWebsite;
+using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersByLevel;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -15,6 +18,31 @@ namespace SharijhaAward.Api.Controllers
         public WinnersController(IMediator Mediator)
         {
             _Mediator = Mediator;
+        }
+        [HttpPut("SelectWinningForms")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> SelectWinningForms([FromBody] SelectWinningFormsCommand SelectWinningFormsCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            SelectWinningFormsCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(SelectWinningFormsCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
         [HttpGet("GetAllWinnersDashboard")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -34,6 +62,58 @@ namespace SharijhaAward.Api.Controllers
             GetAllWinnersDashboardQuery.lang = HeaderValue;
 
             BaseResponse<List<GetAllWinnersDashboardListVM>> Response = await _Mediator.Send(GetAllWinnersDashboardQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllWinnersForWebsite")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllWinnersForWebsite([FromQuery] GetAllWinnersForWebsiteQuery GetAllWinnersForWebsiteQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllWinnersForWebsiteQuery.lang = HeaderValue;
+
+            BaseResponse<List<GetAllWinnersForWebsiteMainResponse>> Response = await _Mediator.Send(GetAllWinnersForWebsiteQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetWinnersByLevel")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetWinnersByLevel([FromQuery] GetWinnersByLevelQuery GetWinnersByLevelQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetWinnersByLevelQuery.lang = HeaderValue;
+
+            BaseResponse<GetWinnersByLevelMainResponse> Response = await _Mediator.Send(GetWinnersByLevelQuery);
 
             return Response.statusCode switch
             {

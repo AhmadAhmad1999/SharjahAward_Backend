@@ -56,7 +56,6 @@
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
     <Folder Include="Features\TrainingWorkshops\Attacments\Queries\" />
-    <Folder Include="Features\WinnersFeatures\Commands\" />
   </ItemGroup>
 
 </Project>

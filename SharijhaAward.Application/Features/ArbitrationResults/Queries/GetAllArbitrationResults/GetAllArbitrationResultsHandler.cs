@@ -12,14 +12,11 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
         : IRequestHandler<GetAllArbitrationResultsQuery, BaseResponse<List<GetAllArbitrationResultsListVM>>>
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
-        private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
         private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
         public GetAllArbitrationResultsHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
-            IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
             IAsyncRepository<ArbitrationResult> ArbitrationResultRepository)
         {
             _ArbitrationRepository = ArbitrationRepository;
-            _FinalArbitrationRepository = FinalArbitrationRepository;
             _ArbitrationResultRepository = ArbitrationResultRepository;
         }
         public async Task<BaseResponse<List<GetAllArbitrationResultsListVM>>> 
@@ -48,6 +45,7 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                         .Take(Request.PerPage)
                         .Include(x => x.ProvidedForm!.Category!)
                         .Include(x => x.ProvidedForm!.Category!.Cycle!)
+                        .Include(x => x.FinalArbitration!)
                         .ToListAsync();
                 }
                 else
@@ -58,6 +56,7 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                         .OrderByDescending(x => x.CreatedAt)
                         .Include(x => x.ProvidedForm!.Category!)
                         .Include(x => x.ProvidedForm!.Category!.Cycle!)
+                        .Include(x => x.FinalArbitration!)
                         .ToListAsync();
                 }
             }
@@ -72,6 +71,7 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .Include(x => x.ProvidedForm!.Category!.Cycle!)
+                        .Include(x => x.FinalArbitration!)
                         .ToListAsync();
                 }
                 else
@@ -81,6 +81,7 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .Include(x => x.ProvidedForm!.Category!.Cycle!)
+                        .Include(x => x.FinalArbitration!)
                         .ToListAsync();
                 }
             }
@@ -89,9 +90,9 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                 .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
                 .ToListAsync();
 
-            List<FinalArbitration> FinalArbitrationEntities = await _FinalArbitrationRepository
-                .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
-                .ToListAsync();
+            List<FinalArbitration> FinalArbitrationEntities = ArbitrationResultEntities
+                .Select(x => x.FinalArbitration!)
+                .ToList();
             
             List<GetAllArbitrationResultsListVM> Response = ArbitrationResultEntities
                 .Select(x => new GetAllArbitrationResultsListVM()

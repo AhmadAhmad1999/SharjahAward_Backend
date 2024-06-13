@@ -23,21 +23,44 @@ namespace SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.
         {
             string ResponseMessage = string.Empty;
 
-            ExplanatoryMessage? ExplanatoryMessageEntity = await _ExplanatoryMessageRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.Id);
-
-            if (ExplanatoryMessageEntity == null)
+            if (Request.Id is not null)
             {
-                ResponseMessage = Request.lang == "en"
-                    ? "Explanatory message is not Found"
-                    : "الرسالة التوضيحية غير موجودة";
+                ExplanatoryMessage? ExplanatoryMessageEntity = await _ExplanatoryMessageRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
-                return new BaseResponse<GetExplanatoryMessageByIdDto>(ResponseMessage, false, 404);
+                if (ExplanatoryMessageEntity == null)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? "Explanatory message is not Found"
+                        : "الرسالة التوضيحية غير موجودة";
+
+                    return new BaseResponse<GetExplanatoryMessageByIdDto>(ResponseMessage, false, 404);
+                }
+
+                GetExplanatoryMessageByIdDto GetClassByIdDto = _Mapper.Map<GetExplanatoryMessageByIdDto>(ExplanatoryMessageEntity);
+
+                return new BaseResponse<GetExplanatoryMessageByIdDto>(ResponseMessage, true, 200, GetClassByIdDto);
+            }
+            else if (Request.Type is not null)
+            {
+                ExplanatoryMessage? ExplanatoryMessageEntity = await _ExplanatoryMessageRepository
+                    .FirstOrDefaultAsync(x => x.Type == Request.Type);
+
+                if (ExplanatoryMessageEntity == null)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? "Explanatory message is not Found"
+                        : "الرسالة التوضيحية غير موجودة";
+
+                    return new BaseResponse<GetExplanatoryMessageByIdDto>(ResponseMessage, false, 404);
+                }
+
+                GetExplanatoryMessageByIdDto GetClassByIdDto = _Mapper.Map<GetExplanatoryMessageByIdDto>(ExplanatoryMessageEntity);
+
+                return new BaseResponse<GetExplanatoryMessageByIdDto>(ResponseMessage, true, 200, GetClassByIdDto);
             }
 
-            GetExplanatoryMessageByIdDto GetClassByIdDto = _Mapper.Map<GetExplanatoryMessageByIdDto>(ExplanatoryMessageEntity);
-
-            return new BaseResponse<GetExplanatoryMessageByIdDto>(ResponseMessage, true, 200, GetClassByIdDto);
+            return new BaseResponse<GetExplanatoryMessageByIdDto>(ResponseMessage, false, 400);
         }
     }
 }
