@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
     public class GetAllEventsQuery : IRequest<BaseResponse<List<EventListVM>>>
     {
         public string lang { get; set; }=string.Empty;
-        public int page {  get; set; }
-        public int perPage { get; set; }
+        public int page { get; set; } = 1;
+        public int perPage { get; set; } = 10;
     }
 }

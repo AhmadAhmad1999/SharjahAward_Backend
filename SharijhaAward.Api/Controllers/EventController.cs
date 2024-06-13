@@ -83,7 +83,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetAllEvents(int page, int perPage)
+        public async Task<ActionResult> GetAllEvents(int page = 1, int perPage = 10)
         {
             //get Language from header
             var headerValue = HttpContext.Request.Headers["lang"];

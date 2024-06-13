@@ -99,7 +99,8 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Commands.Creat
 
                     await _UserNotificationRepository.AddRangeAsync(UserNotificationEntities);
 
-                    await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendEachAsync(NotificationMessages);
+                    if (NotificationMessages.Any())
+                        await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendEachAsync(NotificationMessages);
 
                     Transaction.Complete();
 

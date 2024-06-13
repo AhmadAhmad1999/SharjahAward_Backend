@@ -1183,6 +1183,69 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("ArbitrationProcedure");
                 });
 
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitrationResultModel.ArbitrationResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateOfObtainingTheCertificate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateOfObtainingTheStatement")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("EligibleForAStatement")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EligibleForCertification")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EligibleToWin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("GotCertification")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("GotStatement")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProvidedFormId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Winner")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("WinningDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProvidedFormId");
+
+                    b.ToTable("ArbitrationResults");
+                });
+
             modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitrationScaleModel.ArbitrationScale", b =>
                 {
                     b.Property<int>("Id")
@@ -2089,11 +2152,20 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float?>("MinimumAmountToObtainACertificateOfParticipation")
-                        .HasColumnType("real");
+                    b.Property<int?>("MaximumAmountToObtainAStatement")
+                        .HasColumnType("int");
 
-                    b.Property<float?>("MinimumAmountToParticipateInTheAward")
-                        .HasColumnType("real");
+                    b.Property<int?>("MaximumRequirementToObtainACertificate")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MinimumAmountToObtainAStatement")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MinimumRequirementToObtainACertificate")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MinimumWinningScore")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
@@ -2103,9 +2175,6 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.Property<bool?>("RelatedToEducationalEntities")
                         .HasColumnType("bit");
-
-                    b.Property<float?>("WinningScore")
-                        .HasColumnType("real");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
@@ -2145,11 +2214,13 @@ namespace SharijhaAward.Persistence.Migrations
                             ExpectedNumberOfWinners = 4,
                             FinalArbitrationQualificationMark = 100f,
                             Icon = "https://award-shj.ae/media/cb2igx0d/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%A7%D9%84%D8%AC%D9%88%D9%87%D8%B1%D8%A9.png",
-                            MinimumAmountToObtainACertificateOfParticipation = 80f,
-                            MinimumAmountToParticipateInTheAward = 60f,
+                            MaximumAmountToObtainAStatement = 60,
+                            MaximumRequirementToObtainACertificate = 80,
+                            MinimumAmountToObtainAStatement = 50,
+                            MinimumRequirementToObtainACertificate = 65,
+                            MinimumWinningScore = 90,
                             ParentId = 1,
                             RelatedToClasses = false,
-                            WinningScore = 90f,
                             isDeleted = false
                         },
                         new
@@ -2179,11 +2250,13 @@ namespace SharijhaAward.Persistence.Migrations
                             ExpectedNumberOfWinners = 3,
                             FinalArbitrationQualificationMark = 100f,
                             Icon = "https://award-shj.ae/media/iqzhrizm/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%82%D8%A7%D8%A6%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%88%D9%8A-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2.png",
-                            MinimumAmountToObtainACertificateOfParticipation = 80f,
-                            MinimumAmountToParticipateInTheAward = 60f,
+                            MaximumAmountToObtainAStatement = 60,
+                            MaximumRequirementToObtainACertificate = 80,
+                            MinimumAmountToObtainAStatement = 50,
+                            MinimumRequirementToObtainACertificate = 65,
+                            MinimumWinningScore = 90,
                             ParentId = 3,
                             RelatedToClasses = false,
-                            WinningScore = 90f,
                             isDeleted = false
                         },
                         new
@@ -2199,11 +2272,13 @@ namespace SharijhaAward.Persistence.Migrations
                             ExpectedNumberOfWinners = 4,
                             FinalArbitrationQualificationMark = 100f,
                             Icon = "https://award-shj.ae/media/5kbhcktn/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%85-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2.png",
-                            MinimumAmountToObtainACertificateOfParticipation = 80f,
-                            MinimumAmountToParticipateInTheAward = 60f,
+                            MaximumAmountToObtainAStatement = 60,
+                            MaximumRequirementToObtainACertificate = 80,
+                            MinimumAmountToObtainAStatement = 50,
+                            MinimumRequirementToObtainACertificate = 65,
+                            MinimumWinningScore = 90,
                             ParentId = 3,
                             RelatedToClasses = false,
-                            WinningScore = 90f,
                             isDeleted = false
                         },
                         new
@@ -2233,11 +2308,13 @@ namespace SharijhaAward.Persistence.Migrations
                             ExpectedNumberOfWinners = 4,
                             FinalArbitrationQualificationMark = 100f,
                             Icon = "https://award-shj.ae/media/ceihv5g3/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%85%D8%A4%D8%B3%D8%B3%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%B9%D9%84%D9%8A%D9%85%D9%8A%D8%A9-%D8%A7%D9%84%D8%AD%D8%B6%D8%A7%D9%86%D8%A9-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2%D8%A9.png",
-                            MinimumAmountToObtainACertificateOfParticipation = 80f,
-                            MinimumAmountToParticipateInTheAward = 60f,
+                            MaximumAmountToObtainAStatement = 60,
+                            MaximumRequirementToObtainACertificate = 80,
+                            MinimumAmountToObtainAStatement = 50,
+                            MinimumRequirementToObtainACertificate = 65,
+                            MinimumWinningScore = 90,
                             ParentId = 6,
                             RelatedToClasses = false,
-                            WinningScore = 90f,
                             isDeleted = false
                         },
                         new
@@ -2253,11 +2330,13 @@ namespace SharijhaAward.Persistence.Migrations
                             ExpectedNumberOfWinners = 4,
                             FinalArbitrationQualificationMark = 100f,
                             Icon = "https://award-shj.ae/media/1dlpga1u/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%85%D8%A4%D8%B3%D8%B3%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%B9%D9%84%D9%8A%D9%85%D9%8A%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D8%B1%D8%B3%D8%A9-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2%D8%A9.png",
-                            MinimumAmountToObtainACertificateOfParticipation = 80f,
-                            MinimumAmountToParticipateInTheAward = 60f,
+                            MaximumAmountToObtainAStatement = 60,
+                            MaximumRequirementToObtainACertificate = 80,
+                            MinimumAmountToObtainAStatement = 50,
+                            MinimumRequirementToObtainACertificate = 65,
+                            MinimumWinningScore = 90,
                             ParentId = 6,
                             RelatedToClasses = false,
-                            WinningScore = 90f,
                             isDeleted = false
                         });
                 });
@@ -3339,8 +3418,8 @@ namespace SharijhaAward.Persistence.Migrations
                             GroupCategoryNumber = 1,
                             IndividualCategoryNumber = 1,
                             MarginOfDifferenceBetweenArbitrators = 10,
-                            RegistrationPortalClosingDate = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RegistrationPortalOpeningDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RegistrationPortalClosingDate = new DateTime(2030, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RegistrationPortalOpeningDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0,
                             TheUpperLimitForObtainingInformation = 10,
                             Year = "2024 - 2025",
@@ -4088,6 +4167,10 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ArabicTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -4105,15 +4188,15 @@ namespace SharijhaAward.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EnglishTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsRequired")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsUnique")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
@@ -5186,7 +5269,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicText = "عزيزي المشترك الرجاء تأكيد الموافقة على كافة المعلومات الواردة ضمن الإستمارة الخاصة بك كون هذه الخطوة غير قابلة للتراجع.",
                             CreatedAt = new DateTime(2024, 6, 13, 8, 7, 45, 301, DateTimeKind.Utc).AddTicks(7492),
                             EnglishText = "Dear subscriber, please confirm your approval of all the information contained in your form, as this step is irreversible.",
-                            Type = 8,
+                            Type = 7,
                             isDeleted = false
                         });
                 });
@@ -9627,6 +9710,17 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("CreatedBy");
 
                     b.Navigation("UpdatedBy");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitrationResultModel.ArbitrationResult", b =>
+                {
+                    b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
+                        .WithMany()
+                        .HasForeignKey("ProvidedFormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProvidedForm");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.ArbitrationScaleModel.ArbitrationScale", b =>

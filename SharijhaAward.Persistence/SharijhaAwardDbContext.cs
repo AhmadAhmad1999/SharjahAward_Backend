@@ -87,6 +87,7 @@ using SharijhaAward.Domain.Entities.AdvancedFormBuilderModel;
 using SharijhaAward.Domain.Entities.ExplanatoryMessageModel;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using SharijhaAward.Domain.Entities;
+using SharijhaAward.Domain.Entities.ArbitrationResultModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -98,6 +99,7 @@ namespace SharijhaAward.Persistence
 
         }
 
+        public DbSet<ArbitrationResult> ArbitrationResults { get; set; }
         public DbSet<CategoryEducationalEntity> CategoryEducationalEntities { get; set; }
         public DbSet<ExplanatoryMessage> ExplanatoryMessages { get; set; }
         public DbSet<AdvancedFormBuilderGeneralValidation> AdvancedFormBuilderGeneralValidations { get; set; }
@@ -247,6 +249,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<AdvancedFormBuilderValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryEducationalEntity>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitrationResult>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ExplanatoryMessage>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AdvancedFormBuilderTableValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AdvancedFormBuilderPatternValue>().HasQueryFilter(p => !p.isDeleted);
@@ -2858,8 +2861,8 @@ namespace SharijhaAward.Persistence
                     ArabicName = "جائزة الشارقة للتفوق والتميز التربوي",
                     EnglishName = "Sharjah Award for Educational Excellence",
                     Status = Domain.Constants.Common.Status.Active,
-                    RegistrationPortalOpeningDate = new DateTime(2025, 1, 1),
-                    RegistrationPortalClosingDate = new DateTime(2025, 5, 1),
+                    RegistrationPortalOpeningDate = new DateTime(2024, 1, 1),
+                    RegistrationPortalClosingDate = new DateTime(2030, 5, 1),
                     SubscriberPortalClosingDate = null,
                     InitialArbitrationStartDate = null,
                     InitialArbitrationEndDate = null,
@@ -2889,9 +2892,6 @@ namespace SharijhaAward.Persistence
                     Icon = "https://award-shj.ae/media/cb2igx0d/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%A7%D9%84%D8%AC%D9%88%D9%87%D8%B1%D8%A9.png",
                     CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
                     FinalArbitrationQualificationMark = null,
-                    WinningScore = null,
-                    MinimumAmountToParticipateInTheAward = null,
-                    MinimumAmountToObtainACertificateOfParticipation = null,
                     ExpectedNumberOfWinners = null,
                     RelatedToClasses = null,
                     ParentId = null,
@@ -2912,9 +2912,11 @@ namespace SharijhaAward.Persistence
                     Icon = "https://award-shj.ae/media/cb2igx0d/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%A7%D9%84%D8%AC%D9%88%D9%87%D8%B1%D8%A9.png",
                     CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
                     FinalArbitrationQualificationMark = 100,
-                    WinningScore = 90,
-                    MinimumAmountToParticipateInTheAward = 60,
-                    MinimumAmountToObtainACertificateOfParticipation = 80,
+                    MinimumWinningScore = 90,
+                    MinimumAmountToObtainAStatement = 50,
+                    MaximumAmountToObtainAStatement = 60,
+                    MinimumRequirementToObtainACertificate = 65,
+                    MaximumRequirementToObtainACertificate = 80,
                     ExpectedNumberOfWinners = 4,
                     RelatedToClasses = false,
                     ParentId = 1,
@@ -2935,9 +2937,7 @@ namespace SharijhaAward.Persistence
                     Icon = "https://award-shj.ae/media/iqzhrizm/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%82%D8%A7%D8%A6%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%88%D9%8A-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2.png",
                     CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
                     FinalArbitrationQualificationMark = null,
-                    WinningScore = null,
-                    MinimumAmountToParticipateInTheAward = null,
-                    MinimumAmountToObtainACertificateOfParticipation = null,
+                    MinimumWinningScore = null,
                     ExpectedNumberOfWinners = null,
                     RelatedToClasses = false,
                     ParentId = null,
@@ -2958,9 +2958,11 @@ namespace SharijhaAward.Persistence
                     Icon = "https://award-shj.ae/media/iqzhrizm/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%82%D8%A7%D8%A6%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%88%D9%8A-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2.png",
                     CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
                     FinalArbitrationQualificationMark = 100,
-                    WinningScore = 90,
-                    MinimumAmountToParticipateInTheAward = 60,
-                    MinimumAmountToObtainACertificateOfParticipation = 80,
+                    MinimumWinningScore = 90,
+                    MinimumAmountToObtainAStatement = 50,
+                    MaximumAmountToObtainAStatement = 60,
+                    MinimumRequirementToObtainACertificate = 65,
+                    MaximumRequirementToObtainACertificate = 80,
                     ExpectedNumberOfWinners = 3,
                     RelatedToClasses = false,
                     ParentId = 3,
@@ -2981,9 +2983,11 @@ namespace SharijhaAward.Persistence
                     Icon = "https://award-shj.ae/media/5kbhcktn/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%85-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2.png",
                     CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
                     FinalArbitrationQualificationMark = 100,
-                    WinningScore = 90,
-                    MinimumAmountToParticipateInTheAward = 60,
-                    MinimumAmountToObtainACertificateOfParticipation = 80,
+                    MinimumWinningScore = 90,
+                    MinimumAmountToObtainAStatement = 50,
+                    MaximumAmountToObtainAStatement = 60,
+                    MinimumRequirementToObtainACertificate = 65,
+                    MaximumRequirementToObtainACertificate = 80,
                     ExpectedNumberOfWinners = 4,
                     RelatedToClasses = false,
                     ParentId = 3,
@@ -3004,9 +3008,7 @@ namespace SharijhaAward.Persistence
                     Icon = "https://award-shj.ae/media/ceihv5g3/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%85%D8%A4%D8%B3%D8%B3%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%B9%D9%84%D9%8A%D9%85%D9%8A%D8%A9-%D8%A7%D9%84%D8%AD%D8%B6%D8%A7%D9%86%D8%A9-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2%D8%A9.png",
                     CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Group,
                     FinalArbitrationQualificationMark = null,
-                    WinningScore = null,
-                    MinimumAmountToParticipateInTheAward = null,
-                    MinimumAmountToObtainACertificateOfParticipation = null,
+                    MinimumWinningScore = null,
                     ExpectedNumberOfWinners = null,
                     RelatedToClasses = false,
                     ParentId = null,
@@ -3027,9 +3029,11 @@ namespace SharijhaAward.Persistence
                     Icon = "https://award-shj.ae/media/ceihv5g3/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%85%D8%A4%D8%B3%D8%B3%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%B9%D9%84%D9%8A%D9%85%D9%8A%D8%A9-%D8%A7%D9%84%D8%AD%D8%B6%D8%A7%D9%86%D8%A9-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2%D8%A9.png",
                     CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Group,
                     FinalArbitrationQualificationMark = 100,
-                    WinningScore = 90,
-                    MinimumAmountToParticipateInTheAward = 60,
-                    MinimumAmountToObtainACertificateOfParticipation = 80,
+                    MinimumWinningScore = 90,
+                    MinimumAmountToObtainAStatement = 50,
+                    MaximumAmountToObtainAStatement = 60,
+                    MinimumRequirementToObtainACertificate = 65,
+                    MaximumRequirementToObtainACertificate = 80,
                     ExpectedNumberOfWinners = 4,
                     RelatedToClasses = false,
                     ParentId = 6,
@@ -3050,9 +3054,11 @@ namespace SharijhaAward.Persistence
                     Icon = "https://award-shj.ae/media/1dlpga1u/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%85%D8%A4%D8%B3%D8%B3%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%B9%D9%84%D9%8A%D9%85%D9%8A%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D8%B1%D8%B3%D8%A9-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2%D8%A9.png",
                     CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Group,
                     FinalArbitrationQualificationMark = 100,
-                    WinningScore = 90,
-                    MinimumAmountToParticipateInTheAward = 60,
-                    MinimumAmountToObtainACertificateOfParticipation = 80,
+                    MinimumWinningScore = 90,
+                    MinimumAmountToObtainAStatement = 50,
+                    MaximumAmountToObtainAStatement = 60,
+                    MinimumRequirementToObtainACertificate = 65,
+                    MaximumRequirementToObtainACertificate = 80,
                     ExpectedNumberOfWinners = 4,
                     RelatedToClasses = false,
                     ParentId = 6,
@@ -3987,9 +3993,9 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    ArabicText = "يمكنك رفع عدد غير محدود من الملفات والتعديل عليها قبل إرسال الاستمارة.",
-                    EnglishText = "You can upload an unlimited number of files and modify them before submitting the form.",
-                    Type = TypeOfExplantoryMessage.Criterions
+                    ArabicText = "عزيزي المشترك الرجاء تأكيد الموافقة على كافة المعلومات الواردة ضمن الإستمارة الخاصة بك كون هذه الخطوة غير قابلة للتراجع.",
+                    EnglishText = "Dear subscriber, please confirm your approval of all the information contained in your form, as this step is irreversible.",
+                    Type = TypeOfExplantoryMessage.SignaturePage
                 }, new ExplanatoryMessage()
                 {
                     Id = 9,
@@ -3999,8 +4005,8 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                    ArabicText = "عزيزي المشترك الرجاء تأكيد الموافقة على كافة المعلومات الواردة ضمن الإستمارة الخاصة بك كون هذه الخطوة غير قابلة للتراجع.",
-                    EnglishText = "Dear subscriber, please confirm your approval of all the information contained in your form, as this step is irreversible.",
+                    ArabicText = "يمكنك رفع عدد غير محدود من الملفات والتعديل عليها قبل إرسال الاستمارة",
+                    EnglishText = "You can upload an unlimited number of files and modify them before submitting the form",
                     Type = TypeOfExplantoryMessage.SignaturePage
                 });
             #endregion

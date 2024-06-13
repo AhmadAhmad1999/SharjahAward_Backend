@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.ExplanatoryMessageModel;
 
 namespace SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetExplanatoryMessageById
 {

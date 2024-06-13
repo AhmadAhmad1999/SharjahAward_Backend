@@ -78,7 +78,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
                 ? data.RelatedToEducationalEntities.Value
                 : false)
             {
-                data.EducationalEntities = await _CategoryEducationalEntityRepository
+                data.EducationalEntityIds = await _CategoryEducationalEntityRepository
                     .Where(x => x.CategoryId == request.Id)
                     .Include(x => x.EducationalEntity!)
                     .Select(x => new CategoryEducationalEntitiesDto()

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -11,12 +10,9 @@ namespace SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.
         : IRequestHandler<GetAllExplanatoryMessageQuery, BaseResponse<List<GetAllExplanatoryMessageListVM>>>
     {
         private readonly IAsyncRepository<ExplanatoryMessage> _ExplanatoryMessageRepository;
-        private readonly IMapper _Mapper;
-        public GetAllExplanatoryMessageHandler(IAsyncRepository<ExplanatoryMessage> ExplanatoryMessageRepository,
-            IMapper Mapper)
+        public GetAllExplanatoryMessageHandler(IAsyncRepository<ExplanatoryMessage> ExplanatoryMessageRepository)
         {
             _ExplanatoryMessageRepository = ExplanatoryMessageRepository;
-            _Mapper = Mapper;
         }
 
         public async Task<BaseResponse<List<GetAllExplanatoryMessageListVM>>> 
@@ -24,8 +20,18 @@ namespace SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.
         {
             string ResponseMessage = string.Empty;
 
-            List<GetAllExplanatoryMessageListVM> ExplanatoryMessages = _Mapper.Map<List<GetAllExplanatoryMessageListVM>>(await _ExplanatoryMessageRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
+            List<GetAllExplanatoryMessageListVM> ExplanatoryMessages = await _ExplanatoryMessageRepository
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
+                .Select(x => new GetAllExplanatoryMessageListVM()
+                {
+                    Id = x.Id,
+                    Type = x.Type,
+                    ArabicText = x.ArabicText,
+                    EnglishText = x.EnglishText,
+                    Text = Request.lang == "en"
+                        ? x.EnglishText
+                        : x.ArabicText
+                }).ToListAsync();
 
             int TotalCount = await _ExplanatoryMessageRepository.GetCountAsync(null);
 

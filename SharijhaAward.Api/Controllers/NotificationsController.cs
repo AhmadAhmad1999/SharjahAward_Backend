@@ -131,7 +131,7 @@ namespace SharijhaAward.Api.Controllers
                 page = Page,
                 perPage = PerPage,
                 DeviceToken = DeviceToken,
-                Token = Token
+                Token = Token?.ToString().Replace("Bearer ", string.Empty)
             });
 
             return Response.statusCode switch

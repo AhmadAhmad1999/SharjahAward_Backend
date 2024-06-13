@@ -71,13 +71,11 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
 
                     int? ClassDynamicAttributeId = null;
 
-                    if (((request.RelatedToClasses != null && categoryToUpdate.RelatedToClasses != null)
-                            ? (request.RelatedToClasses!.Value && request.RelatedToClasses!.Value != categoryToUpdate.RelatedToClasses.Value &&
-                                ClassDynamicAttribute == null)
-                            : false) ||
-                        ((request.RelatedToClasses != null && categoryToUpdate.RelatedToClasses == null)
-                            ? request.RelatedToClasses!.Value
-                            : false))
+                    if (request.RelatedToClasses != null
+                            ? (categoryToUpdate.RelatedToClasses != null
+                                ? (request.RelatedToClasses.Value && !categoryToUpdate.RelatedToClasses.Value)
+                                : (request.RelatedToClasses.Value))
+                            : false)
                     {
                         var LastOrderId = await _DynamicAttributeRepository
                             .Include(x => x.DynamicAttributeSection!)
@@ -114,7 +112,9 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
 
                         ClassDynamicAttributeId = DynamicAttribute.Id;
                     }
-                    else
+                    else if ((request.RelatedToClasses != null && categoryToUpdate.RelatedToClasses != null)
+                        ? (!request.RelatedToClasses.Value && categoryToUpdate.RelatedToClasses.Value)
+                        : false)
                     {
                         if (ClassDynamicAttribute is not null)
                         {
@@ -130,13 +130,11 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
 
                     int? EducationalEntityDynamicAttributeId = null;
 
-                    if (((request.RelatedToEducationalEntities != null && categoryToUpdate.RelatedToEducationalEntities != null)
-                            ? (request.RelatedToEducationalEntities!.Value && request.RelatedToEducationalEntities!.Value != categoryToUpdate.RelatedToEducationalEntities.Value &&
-                                EducationalEntityDynamicAttribute == null)
-                            : false) ||
-                        ((request.RelatedToEducationalEntities != null && categoryToUpdate.RelatedToEducationalEntities == null)
-                            ? request.RelatedToEducationalEntities!.Value
-                            : false))
+                    if (request.RelatedToEducationalEntities != null
+                            ? (categoryToUpdate.RelatedToEducationalEntities != null
+                                ? (request.RelatedToEducationalEntities.Value && !categoryToUpdate.RelatedToEducationalEntities.Value)
+                                : (request.RelatedToEducationalEntities.Value))
+                            : false)
                     {
                         var LastOrderId = await _DynamicAttributeRepository
                             .Include(x => x.DynamicAttributeSection!)
@@ -173,7 +171,9 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
 
                         EducationalEntityDynamicAttributeId = DynamicAttribute.Id;
                     }
-                    else
+                    else if ((request.RelatedToEducationalEntities != null && categoryToUpdate.RelatedToEducationalEntities != null)
+                        ? (!request.RelatedToEducationalEntities.Value && categoryToUpdate.RelatedToEducationalEntities.Value)
+                        : false)
                     {
                         if (EducationalEntityDynamicAttribute is not null)
                         {

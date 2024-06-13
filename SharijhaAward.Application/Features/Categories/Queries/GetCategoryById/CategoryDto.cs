@@ -25,14 +25,18 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
         public DateTime? FinalArbitrationStartDate { get; set; }
         public DateTime? FinalArbitrationEndDate { get; set; }
         public float? FinalArbitrationQualificationMark { get; set; }
-        public float? WinningScore { get; set; }
-        public float? MinimumAmountToParticipateInTheAward { get; set; }
-        public float? MinimumAmountToObtainACertificateOfParticipation { get; set; }
+
+        public int? MinimumAmountToObtainAStatement { get; set; }
+        public int? MaximumAmountToObtainAStatement { get; set; }
+        public int? MinimumRequirementToObtainACertificate { get; set; }
+        public int? MaximumRequirementToObtainACertificate { get; set; }
+        public int? MinimumWinningScore { get; set; }
+
         public Status Status { get; set; } = Status.InActive;
         public bool? RelatedToClasses { get; set; }
         public List<CategoryEducationalClassesDto>? EducationalClasses { get; set; }
         public bool? RelatedToEducationalEntities { get; set; }
-        public List<CategoryEducationalEntitiesDto>? EducationalEntities { get; set; }
+        public List<CategoryEducationalEntitiesDto>? EducationalEntityIds { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
         public string MainCategoryName { get; set; } = string.Empty;
         public bool isHasFile { get; set; }

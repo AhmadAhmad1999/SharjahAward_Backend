@@ -124,7 +124,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                                     },
                                     Token = x.DeviceToken
                                 }).FirstOrDefaultAsync();
-
+                        
                         UserNotification? UserNotificationEntities = await _UserTokenRepository
                             .Where(x => User.Id == x.UserId)
                             .GroupBy(x => x.UserId)
@@ -135,7 +135,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                                 isReaded = false
                             }).FirstOrDefaultAsync();
 
-                        await _UserNotificationRepository.AddAsync(UserNotificationEntities!);
+                        if (UserNotificationEntities is not null)
+                            await _UserNotificationRepository.AddAsync(UserNotificationEntities!);
 
                         string EmailSubject = $"Complete the steps to register for {form.Category.EnglishName} category" + " - " + $"تهانينا\r\nلقد اتممت خطوات التسجيل في فئة ال{form.Category.ArabicName}";
 
@@ -196,7 +197,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                             form.User!.Email
                         }, EmailSubject, FullEmailBody, AlternateView);
 
-                        await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendAsync(NotificationMessages);
+                        if (NotificationMessages is not null)
+                            await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendAsync(NotificationMessages);
 
                         Transaction.Complete();
                     }
