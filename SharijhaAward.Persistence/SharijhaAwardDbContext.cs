@@ -225,7 +225,7 @@ namespace SharijhaAward.Persistence
         public DbSet<CoordinatorForm> CoordinatorForms { get; set; }
         public DbSet<Responsibility> Responsibilities { get; set; }
         public DbSet<ResponsibilityUser> ResponsibilitiesUsers { get; set; }
-
+        public DbSet<NewsImage> NewsImages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -354,6 +354,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<ArbitratorForm>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Responsibility>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ResponsibilityUser>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<NewsImage>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)

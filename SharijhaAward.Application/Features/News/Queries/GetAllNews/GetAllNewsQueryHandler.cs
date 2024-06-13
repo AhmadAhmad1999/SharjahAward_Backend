@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.News.Queries.GetNewsById;
 using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,9 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 
         public async Task<BaseResponse<List<NewsListVM>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
-            var newsList = await _newsRepository.OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+            var newsList = await _newsRepository
+                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+                .Include(n=>n.NewsImages)
                 .ToListAsync();
            
             int count = _newsRepository.GetCount(n => n.isDeleted == false);
@@ -60,6 +63,8 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
                     data[i].Description = request.lang == "en"
                         ? data[i].EnglishDescription!
                         : data[i].ArabicDescription!;
+
+                    data[i].Images = _mapper.Map<List<NewsImagesDto>>(newsList[i].NewsImages);
                 }
 
             }

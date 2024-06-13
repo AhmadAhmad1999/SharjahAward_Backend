@@ -10,6 +10,7 @@ using SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId;
 using SharijhaAward.Application.Features.News.Queries.GetNewsById;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.News.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.News.Commands.DeleteNewsImage;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -59,6 +60,27 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+
+        [HttpDelete("DeleteNewsImage/{Id}", Name = "DeleteNewsImage")]
+        public async Task<IActionResult> DeleteNewsImage(int Id)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new DeleteNewsImageCommand()
+            {
+                Id = Id,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
         [HttpPut(Name = "UpdateNews")]
         public async Task<IActionResult> UpdateNews([FromForm] UpdateNewsCommand command)
         {

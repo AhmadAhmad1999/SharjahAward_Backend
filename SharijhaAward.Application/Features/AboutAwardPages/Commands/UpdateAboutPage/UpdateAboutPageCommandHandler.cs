@@ -37,20 +37,18 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAbou
             {
                 return new BaseResponse<object>("About Page Not Found", false, 400);
             }
-            var aboutPageObject = aboutPage;
+            var aboutPageImage = aboutPage.AboutImage;
+            var OurVisionImage = aboutPage.OurVisionImage;
             
             _mapper.Map(request, aboutPage, typeof(UpdateAboutPageCommand), typeof(AboutAwardPage));
 
-            if (request.EditeOnAboutImage)
-                aboutPage.AboutImage = await _fileService.SaveFileAsync(request.AboutImage);
-            else
-                aboutPage.AboutImage = aboutPageObject.AboutImage;
+            aboutPage.AboutImage =  request.EditeOnAboutImage
+                ? aboutPage.AboutImage = await _fileService.SaveFileAsync(request.AboutImage!)
+                : aboutPage.AboutImage = aboutPageImage;
 
-
-            if (request.EditeOnOurVisionImage)
-                aboutPage.OurVisionImage = await _fileService.SaveFileAsync(request.OurVisionImage);
-            else
-                aboutPage.OurVisionImage = aboutPageObject.OurVisionImage;
+            aboutPage.OurVisionImage = request.EditeOnOurVisionImage == true
+                ? aboutPage.OurVisionImage = await _fileService.SaveFileAsync(request.OurVisionImage!)
+                : aboutPage.OurVisionImage = OurVisionImage;
 
             await _aboutAwardPageRepository.UpdateAsync(aboutPage);
 
