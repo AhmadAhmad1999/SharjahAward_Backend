@@ -40,9 +40,9 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGen
             GeneralWorkshop.AgendaImage = request.AgendaImage != null
                 ? await _fileService.SaveFileAsync(request.AgendaImage)
                 : string.Empty;
-            CultureInfo culture = new CultureInfo("ar");
 
-            GeneralWorkshop.DayName = request.DateOfWorkShop.Day.ToString(culture);
+
+            GeneralWorkshop.DayName = request.DateOfWorkShop.ToString("dddd", new CultureInfo("ar-AE"));
 
             var data = await _generalWorkshopeRepository.AddAsync(GeneralWorkshop);
             string msg = request.lang == "en"

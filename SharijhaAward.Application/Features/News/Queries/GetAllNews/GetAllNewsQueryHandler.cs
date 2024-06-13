@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
         {
             var newsList = await _newsRepository
                 .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
-                .Include(n=>n.NewsImages)
+                .Include(n => n.NewsImages)
                 .ToListAsync();
            
             int count = _newsRepository.GetCount(n => n.isDeleted == false);
