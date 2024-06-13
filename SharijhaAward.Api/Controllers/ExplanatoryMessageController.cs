@@ -6,6 +6,7 @@ using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Commands.Upd
 using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetAllExplanatoryMessage;
 using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetExplanatoryMessageById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.ExplanatoryMessageModel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -72,7 +73,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("GetExplanatoryMessageById/{Id}")]
+        [HttpGet("GetExplanatoryMessageById")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -80,7 +81,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetExplanatoryMessageById(int Id)
+        public async Task<IActionResult> GetExplanatoryMessageById(int? Id, TypeOfExplantoryMessage? Type)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -90,6 +91,7 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<GetExplanatoryMessageByIdDto> Response = await _Mediator.Send(new GetExplanatoryMessageByIdQuery()
             {
                 Id = Id,
+                Type = Type,
                 lang = HeaderValue!
             });
 

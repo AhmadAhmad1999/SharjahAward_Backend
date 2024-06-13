@@ -125,7 +125,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                             EligibleToWin = EligibleToWin,
                             GotCertification = false,
                             GotStatement = false,
-                            Winner = false
+                            Winner = false,
+                            FinalArbitrationId = FinalArbitrationEntity.Id
                         };
 
                         await _ArbitrationResultRepository.AddAsync(NewArbitrationResultEntity);
