@@ -420,7 +420,8 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<News, CreateNewsCommand>().ReverseMap();
             CreateMap<News, UpdateNewsCommand>().ReverseMap();
-            CreateMap<News, NewsVM>().ReverseMap();
+            CreateMap<News, NewsDto>().ReverseMap();
+            CreateMap<NewsImage, NewsImagesDto>().ReverseMap();
             CreateMap<News, NewsExportDto>().ReverseMap();
             CreateMap<News, NewsListVM>().ReverseMap();
 

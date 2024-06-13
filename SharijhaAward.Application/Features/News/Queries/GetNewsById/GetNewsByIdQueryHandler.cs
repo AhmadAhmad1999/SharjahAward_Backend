@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.News.Queries.GetNewsById
 {
     public class GetNewsByIdQueryHandler
-        : IRequestHandler<GetNewsByIdQuery, BaseResponse<NewsVM>>
+        : IRequestHandler<GetNewsByIdQuery, BaseResponse<NewsDto>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
         private readonly IMapper _mapper;
@@ -22,9 +23,12 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsById
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<NewsVM>> Handle(GetNewsByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<NewsDto>> Handle(GetNewsByIdQuery request, CancellationToken cancellationToken)
         {
-            var news = await _newsRepository.GetByIdAsync(request.Id);
+            var news = await _newsRepository
+                .WhereThenInclude(n => n.Id == request.Id, n => n.NewsImages!)
+                .FirstOrDefaultAsync();
+                
             string msg;
 
             if (news == null)
@@ -33,14 +37,15 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsById
                     ? "The News is Not Found"
                     : "الخبر غير موجود";
 
-                return new BaseResponse<NewsVM>(msg, false, 404);
+                return new BaseResponse<NewsDto>(msg, false, 404);
             }
-            var data = _mapper.Map<NewsVM>(news);
+            var data = _mapper.Map<NewsDto>(news);
 
             data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle;
             data.Description = request.lang == "en" ? data.EnglishDescription! : data.ArabicDescription!;
-
-            return new BaseResponse<NewsVM>("", true, 200, data);
+            data.Images = _mapper.Map<List<NewsImagesDto>>(news.NewsImages);
+            
+            return new BaseResponse<NewsDto>("", true, 200, data);
         }
     }
 }

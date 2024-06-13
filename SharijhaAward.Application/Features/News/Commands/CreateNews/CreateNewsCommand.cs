@@ -17,7 +17,9 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
         public string EnglishTitle { get; set; } = string.Empty;
         public string? ArabicDescription { get; set; }
         public string? EnglishDescription { get; set; }
+        public DateTime NewsDate { get; set; }
         public IFormFile? Image { get; set; }
+        public List<IFormFile>? Images { get; set; }
         public int CycleId { get; set; }
     }
 }

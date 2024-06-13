@@ -19,8 +19,12 @@ public class News : AuditableEntity
     public string? EnglishDescription { get; set; }
     // the image of the news (attachment)
     public string? Image { get; set; }
+    public DateTime NewsDate { get; set; }
+
     // navigation property to the cycle table
     public Cycle Cycle { get; set; } = null!;
     public int CycleId { get; set; }
+
+    public List<NewsImage>? NewsImages { get; set; }
 
 }

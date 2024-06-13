@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CycleModel;
@@ -16,13 +17,17 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
         : IRequestHandler<CreateNewsCommand , BaseResponse<object>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
+        private readonly IAsyncRepository<NewsImage> _newsImageRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public CreateNewsCommandHandler(IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
+        public CreateNewsCommandHandler(IFileService fileService, IAsyncRepository<NewsImage> newsImageRepository, IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
         {
             _newsRepository = newsRepository;
+            _newsImageRepository = newsImageRepository;
             _cycleRepository = cycleRepository;
+            _fileService = fileService;
             _mapper = mapper;
         }
 
@@ -48,8 +53,25 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
                 return new BaseResponse<object>(msg, false, 400);
             }
             var news = _mapper.Map<Domain.Entities.NewsModel.News>(request);
+            
+            news.Image = request.Image != null
+                ? await _fileService.SaveFileAsync(request.Image!)
+                : null;
 
-            await _newsRepository.AddAsync(news);
+            var data = await _newsRepository.AddAsync(news);
+
+            if(request.Images != null)
+            {
+                foreach(var image in request.Images)
+                {
+                    var newsImage = new NewsImage()
+                    {
+                        ImageUrl = await _fileService.SaveFileAsync(image),
+                        NewsId = data.Id
+                    };
+                    await _newsImageRepository.AddAsync(newsImage);
+                }
+            }
 
              msg = request.lang == "en"
                 ? "Created Succsess"
