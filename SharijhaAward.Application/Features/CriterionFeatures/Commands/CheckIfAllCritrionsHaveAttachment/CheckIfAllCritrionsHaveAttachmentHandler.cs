@@ -27,9 +27,14 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
         {
             string ResponseMessage = string.Empty;
 
+            List<Criterion> MainCriterionEntities = await _CriterionRepository
+                .Where(x => x.CategoryId == Request.CategoryId &&
+                    x.ParentId == null).ToListAsync();
+
             List<Criterion> SubCriterionEntities = await _CriterionRepository
                 .Where(x => x.CategoryId == Request.CategoryId &&
-                    x.ParentId != null).ToListAsync();
+                    x.ParentId != null &&
+                    MainCriterionEntities.Select(y => y.Id).Any(y => y == x.ParentId)).ToListAsync();
 
             List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
                 .Where(x => SubCriterionEntities.Select(y => y.Id).Contains(x.CriterionId)).ToListAsync();

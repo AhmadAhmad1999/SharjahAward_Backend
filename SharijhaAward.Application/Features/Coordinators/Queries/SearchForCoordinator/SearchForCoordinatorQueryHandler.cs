@@ -80,22 +80,33 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                     .Include(x => x.Coordinator!)
                     .Where(x => EducationalInstitutions.Select(y => y.Id).Contains(x.EducationalInstitutionId))
                     .Select(x => x.Coordinator!)
-                    .Include(c => c.EducationCoordinators).Include(c => c.InstitutionCoordinators)
                     .ToListAsync();
             }
 
             if (request.EducationalEntity != null)
             {
-                Coordinators = Coordinators
-                     .Where(x => x.EducationCoordinators!
-                     .Any(ec => ec.EducationalEntityId == request.EducationalEntity)).ToList();
+                //Coordinators = Coordinators
+                //     .Where(c => c.EducationCoordinators!
+                //     .Any(e=>e.EducationalEntityId == request.EducationalEntity)).ToList();
+                Coordinators = _educationalEntityRepository
+                    .Include(x => x.Coordinator!)
+                    .Where(x => x.EducationalEntityId == request.EducationalEntity)
+                    .Select(x => x.Coordinator)
+                    .ToList()!;
+
+                
             }
 
-            if(request.Shcool != null)
+            if(request.School != null)
             {
-                Coordinators = Coordinators
-                     .Where(x => x.InstitutionCoordinators!
-                     .Any(ec => ec.EducationalInstitutionId == request.Shcool)).ToList();
+                Coordinators = _EduInstitutionCoordinatorRepository
+                    .Include(x => x.Coordinator!)
+                    .Where(x => x.EducationalInstitutionId == request.School)
+                    .Select(x => x.Coordinator)
+                    .ToList()!;
+
+                
+
             }
             var data = _mapper.Map<List<CoordinatorSearchListVM>>(Coordinators);
 

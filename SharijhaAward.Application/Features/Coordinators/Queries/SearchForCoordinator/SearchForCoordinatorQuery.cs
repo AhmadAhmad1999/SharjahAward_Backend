@@ -13,7 +13,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
     {
         public int? EducationalEntity { get; set; } 
         public EducationType? EducationType { get; set; }
-        public int? Shcool { get; set; } 
+        public int? School { get; set; } 
         public Emirates? Emirates { get; set; }
         public string lang { get; set;} = string.Empty;
     }

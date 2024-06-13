@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -16,19 +17,23 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
         : IRequestHandler<UpdateNewsCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
+        private readonly IAsyncRepository<NewsImage> _newsImageRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public UpdateNewsCommandHandler(IFileService fileService, IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
+        public UpdateNewsCommandHandler(IAsyncRepository<NewsImage> newsImageRepository, IFileService fileService, IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
         {
             _newsRepository = newsRepository;
+            _newsImageRepository = newsImageRepository;
             _fileService = fileService;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateNewsCommand request, CancellationToken cancellationToken)
         {
-            var newsToUpdate = await _newsRepository.GetByIdAsync(request.Id);
+            var newsToUpdate = await _newsRepository
+                .WhereThenInclude(n => n.Id == request.Id, n => n.NewsImages!)
+                .FirstOrDefaultAsync();
            
             string msg;
             if (newsToUpdate == null)
@@ -39,13 +44,34 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
 
                 return new BaseResponse<object>(msg,false,404);
             }
-            var news = newsToUpdate;
+            var Image = newsToUpdate.Image;
+            var Images = newsToUpdate.NewsImages;
+
             _mapper.Map(request,newsToUpdate,typeof(UpdateNewsCommand),typeof(Domain.Entities.NewsModel.News));
-           
-            if (request.EditeOnImage)
-                newsToUpdate.Image = await _fileService.SaveFileAsync(request.Image!);
+
+            newsToUpdate.Image = request.EditeOnImage == true
+                ? newsToUpdate.Image = await _fileService.SaveFileAsync(request.Image!)
+                : newsToUpdate.Image = Image;
+
+            if (request.AddNewImages)
+            {
+                if (request.Images != null)
+                {
+                    foreach (var image in request.Images!)
+                    {
+                        var NewsImage = new NewsImage()
+                        {
+                            NewsId = newsToUpdate.Id,
+                            ImageUrl = await _fileService.SaveFileAsync(image)
+                        };
+                        await _newsImageRepository.AddAsync(NewsImage); 
+                    }
+                }
+            }
             else
-                newsToUpdate.Image = news.Image;
+            {
+                newsToUpdate.NewsImages = Images;
+            }
 
             await _newsRepository.UpdateAsync(newsToUpdate);
 
