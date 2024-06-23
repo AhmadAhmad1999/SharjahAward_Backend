@@ -20,6 +20,7 @@ public class News : AuditableEntity
     // the image of the news (attachment)
     public string? Image { get; set; }
     public DateTime NewsDate { get; set; }
+    public bool IsHidden { get; set; }
 
     // navigation property to the cycle table
     public Cycle Cycle { get; set; } = null!;

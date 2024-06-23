@@ -30,23 +30,24 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
         {
             var newsList = await _newsRepository
                 .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+                .Where(n => !n.IsHidden)
                 .Include(n => n.NewsImages)
                 .ToListAsync();
            
-            int count = _newsRepository.GetCount(n => n.isDeleted == false);
+            int count = _newsRepository.GetCount(n => n.isDeleted == false && !n.IsHidden);
             
             Pagination pagination = new Pagination(request.page, request.perPage, count);
             
             if (!request.query.IsNullOrEmpty())
             {
                 newsList = await _newsRepository
-                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
+                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()) && !n.IsHidden)
                     .OrderByDescending(x => x.CreatedAt).ToListAsync();
 
                 if (newsList.Count() == 0)
                 {
                     newsList = await _newsRepository
-                        .Where(n => n.ArabicTitle.ToLower().Contains(request.query.ToLower()))
+                        .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()) && !n.IsHidden)
                         .OrderByDescending(x => x.CreatedAt).ToListAsync();
                 }
             }

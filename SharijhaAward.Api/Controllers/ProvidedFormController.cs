@@ -51,7 +51,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpDelete(Name="DeleteProvidedForm")]
+        [HttpDelete("{Id}",Name="DeleteProvidedForm")]
         public async Task<IActionResult> DeleteProvidedForm(int Id)
         {
             //get Language from header

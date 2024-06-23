@@ -12,6 +12,7 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateGoal
     {
         public string ArabicGoal { get; set; } = string.Empty;
         public string EnglishGoal { get; set; } = string.Empty;
-       
+        public bool IsHidden { get; set; }
+
     }
 }

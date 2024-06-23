@@ -17,6 +17,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsById
         public string? ArabicDescription { get; set; }
         public string? EnglishDescription { get; set; }
         public DateTime NewsDate { get; set; }
+        public bool IsHidden { get; set; }
         public List<NewsImagesDto>? Images { get; set; } 
         public DateTime CreatedAt { get; set; }
         public int CycleId { get; set; }
