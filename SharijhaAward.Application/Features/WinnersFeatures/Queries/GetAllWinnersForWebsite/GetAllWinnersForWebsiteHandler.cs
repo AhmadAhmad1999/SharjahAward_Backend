@@ -1,22 +1,29 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersByLevel;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
 namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersForWebsite
 {
     public class GetAllWinnersForWebsiteHandler 
         : IRequestHandler<GetAllWinnersForWebsiteQuery, BaseResponse<List<GetAllWinnersForWebsiteMainResponse>>>
     {
+        private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
+        private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
         private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
-        public GetAllWinnersForWebsiteHandler(IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
+        public GetAllWinnersForWebsiteHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
+            IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
+            IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
         {
+            _ArbitrationRepository = ArbitrationRepository;
+            _FinalArbitrationRepository = FinalArbitrationRepository;
             _ArbitrationResultRepository = ArbitrationResultRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
         }
@@ -31,9 +38,14 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                     x.Winner && x.WinningLevel != null && x.WinningDate != null)
                 .Include(x => x.ProvidedForm!.CategoryEducationalEntity!)
                 .Include(x => x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!)
+                .Include(x => x.FinalArbitration!)
                 .GroupBy(x => x.ProvidedForm!.Category!)
                 .ToListAsync();
 
+            List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
+                .Where(x => WinnersEntities.Any(y => y.Select(z => z.ProvidedFormId).Any(y => y == x.ProvidedFormId)))
+                .ToListAsync();
+            
             var DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
                 .Include(x => x.DynamicAttribute!)
                 .Where(x => WinnersEntities.Any(y => y.Select(z => z.ProvidedFormId).Any(y => y == x.RecordId)) &&
@@ -66,7 +78,23 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                                 ? (Request.lang == "en"
                                     ? x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!.EnglishName
                                     : x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!.EnglishName)
-                                : null
+                                : null,
+                            InitialArbitrationScore = ArbitrationEntities
+                                .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                                .Select(y => y.FullScore)
+                                .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                            ArbitrationAuditScore = ArbitrationEntities
+                                .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                                .Select(y => y.FullScore)
+                                .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                            FinalArbitrationScore = x.FinalArbitration! ?.FinalScore ?? 0,
+                            CycleNumber = x.ProvidedForm!.CycleNumber,
+                            CycleYear = x.ProvidedForm!.CycleYear,
+                            EducationalClassName = Request.lang == "en"
+                                ? x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName ?? null
+                                : x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName ?? null,
+                            ProfilePhoto = x.ProvidedForm!.User.ImageURL,
+                            Gender = x.ProvidedForm!.User.Gender
                         }).ToList()
                 });
             }

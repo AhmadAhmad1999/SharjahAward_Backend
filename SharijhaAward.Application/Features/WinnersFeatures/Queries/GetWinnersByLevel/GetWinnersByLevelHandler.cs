@@ -6,7 +6,6 @@ using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
-using System.Linq;
 
 namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersByLevel
 {
@@ -39,6 +38,12 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     x.Winner && x.EligibleToWin)
                 .OrderByDescending(x => x.FinalArbitration!.FinalScore)
                 .Include(x => x.FinalArbitration!)
+                .Include(x => x.ProvidedForm!.Category!)
+                .Include(x => x.ProvidedForm!.CategoryEducationalClass!)
+                .Include(x => x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!)
+                .Include(x => x.ProvidedForm!.CategoryEducationalEntity!)
+                .Include(x => x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!)
+                .Include(x => x.ProvidedForm!.User!)
                 .GroupBy(x => x.FinalArbitration!.FinalScore)
                 .ToListAsync();
 
@@ -52,6 +57,10 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     SubscriberName = x.Value
                 }).ToListAsync();
 
+            List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
+                .Where(x => ArbitrationResultEntities.Any(y => y.Select(z => z.ProvidedFormId).Any(y => y == x.ProvidedFormId)))
+                .ToListAsync();
+
             List<IGrouping<float, ArbitrationResult>> RequestedWinnersList = ArbitrationResultEntities
                 .Take(Request.MaxLevelOfWinners)
                 .ToList();
@@ -64,10 +73,33 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     .Select(x => new GetWinnersByLevelListVM()
                     {
                         FormId = x.ProvidedFormId,
-                        FinalScore = x.FinalArbitration!.FinalScore,
+                        FinalArbitrationScore = x.FinalArbitration!.FinalScore,
                         SubscriberName = DynamicAttributeValueEntities
                             .FirstOrDefault(y => y.FormId == x.ProvidedFormId)
-                            ? .SubscriberName ?? string.Empty
+                            ? .SubscriberName ?? string.Empty,
+                        CategoryId = x.ProvidedForm!.categoryId,
+                        CategoryName = Request.lang == "en"
+                            ? x.ProvidedForm!.Category!.EnglishName
+                            : x.ProvidedForm!.Category!.ArabicName,
+                        InitialArbitrationScore = ArbitrationEntities
+                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                            .Select(y => y.FullScore)
+                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                        ArbitrationAuditScore = ArbitrationEntities
+                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                            .Select(y => y.FullScore)
+                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                        CycleNumber = x.ProvidedForm!.CycleNumber,
+                        CycleYear = x.ProvidedForm!.CycleYear,
+                        EducationalClassName = Request.lang == "en"
+                            ? x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName ?? null
+                            : x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName ?? null,
+                        EducationalEntityName = Request.lang == "en"
+                            ? x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.EnglishName ?? null
+                            : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
+                        ProfilePhoto = x.ProvidedForm!.User.ImageURL,
+                        Gender = x.ProvidedForm!.User.Gender,
+                        WinningLevel = x.WinningLevel!.Value
                     }).ToList());
             }
 
@@ -85,9 +117,36 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                 .Select(x => new GetWinnersByLevelListVM()
                 {
                     FormId = x.ProvidedFormId,
-                    FinalScore = x.FinalArbitration!.FinalScore,
+                    FinalArbitrationScore = x.FinalArbitration!.FinalScore,
                     SubscriberName = DynamicAttributeValueEntities
-                        .FirstOrDefault(y => y.FormId == x.ProvidedFormId)!.SubscriberName
+                        .FirstOrDefault(y => y.FormId == x.ProvidedFormId)!.SubscriberName,
+                    CategoryId = x.ProvidedForm!.categoryId,
+                    CategoryName = Request.lang == "en"
+                            ? x.ProvidedForm!.Category!.EnglishName
+                            : x.ProvidedForm!.Category!.ArabicName,
+                    InitialArbitrationScore = ArbitrationEntities
+                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                            .Select(y => y.FullScore)
+                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                    ArbitrationAuditScore = ArbitrationEntities
+                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                            .Select(y => y.FullScore)
+                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                    CycleNumber = x.ProvidedForm!.CycleNumber,
+                    CycleYear = x.ProvidedForm!.CycleYear,
+                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass != null
+                        ? (Request.lang == "en"
+                            ? x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!.EnglishName ?? null
+                            : x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!.ArabicName ?? null)
+                        : null,
+                    EducationalEntityName = x.ProvidedForm!.CategoryEducationalEntity != null
+                        ? (Request.lang == "en"
+                            ? x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!.EnglishName ?? null
+                            : x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!.ArabicName ?? null)
+                        : null,
+                    ProfilePhoto = x.ProvidedForm!.User.ImageURL,
+                    Gender = x.ProvidedForm!.User.Gender,
+                    WinningLevel = x.WinningLevel!.Value
                 }).ToListAsync();
 
             GetWinnersByLevelMainResponse Response = new GetWinnersByLevelMainResponse()

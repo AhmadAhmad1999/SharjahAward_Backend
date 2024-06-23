@@ -33,278 +33,111 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
         {
             string ResponseMessage = string.Empty;
 
-            int TotalCount = 0;
+            List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
+                .Include(x => x.DynamicAttribute!)
+                .Where(x => x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)" &&
+                    (!string.IsNullOrEmpty(Request.SubscriberName)
+                        ? x.Value.ToLower().StartsWith(Request.SubscriberName.ToLower())
+                        : true))
+                .ToListAsync();
 
-            List<ArbitrationResult> ArbitrationResultEntities = new List<ArbitrationResult>();
+            List<ArbitrationResult> ArbitrationResultEntities = await _ArbitrationResultRepository
+                .Include(x => x.ProvidedForm!)
+                .Where(x => x.Winner && x.EligibleToWin &&
+                    (Request.CategoryId != null
+                        ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
+                        : true) &&
+                    (Request.CycleYear != null
+                        ? x.ProvidedForm!.CycleYear == Request.CycleYear
+                        : true) &&
+                    (Request.CycleNumber != null
+                        ? x.ProvidedForm!.CycleNumber == Request.CycleNumber
+                        : true) &&
+                    (DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId)))
+                .Include(x => x.ProvidedForm!.User!)
+                .Include(x => x.ProvidedForm!.Category!)
+                .Include(x => x.ProvidedForm!.Category!.Cycle!)
+                .Include(x => x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!)
+                .Include(x => x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!)
+                .Include(x => x.FinalArbitration!)
+                .ToListAsync();
 
-            if (!Request.GetDataRandomly)
+            int TotalCount = ArbitrationResultEntities.Count();
+
+            if (Request.GetDataRandomly)
             {
-                if (Request.CategoryId is not null)
+                // Shuffle the data randomly
+                using (RandomNumberGenerator RandomNumberGenerator = RandomNumberGenerator.Create())
                 {
-                    TotalCount = await _ArbitrationResultRepository
-                        .Include(x => x.ProvidedForm!)
-                        .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId.Value &&
-                            x.Winner && x.EligibleToWin)
-                        .CountAsync();
-
-                    if (Request.page != 0 && Request.PerPage != -1)
+                    int TotelRows = ArbitrationResultEntities.Count;
+                    while (TotelRows > 1)
                     {
-                        ArbitrationResultEntities = await _ArbitrationResultRepository
-                            .Include(x => x.ProvidedForm!)
-                            .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId.Value &&
-                                x.Winner && x.EligibleToWin)
-                            .OrderByDescending(x => x.CreatedAt)
-                            .Skip((Request.page - 1) * Request.PerPage)
-                            .Take(Request.PerPage)
-                            .Include(x => x.ProvidedForm!.Category!)
-                            .Include(x => x.ProvidedForm!.Category!.Cycle!)
-                            .ToListAsync();
-                    }
-                    else
-                    {
-                        ArbitrationResultEntities = await _ArbitrationResultRepository
-                            .Include(x => x.ProvidedForm!)
-                            .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId.Value &&
-                                x.Winner && x.EligibleToWin)
-                            .OrderByDescending(x => x.CreatedAt)
-                            .Include(x => x.ProvidedForm!.Category!)
-                            .Include(x => x.ProvidedForm!.Category!.Cycle!)
-                            .ToListAsync();
+                        byte[] buffer = new byte[4];
+                        RandomNumberGenerator.GetBytes(buffer);
+                        int k = BitConverter.ToInt32(buffer, 0) % TotelRows;
+                        TotelRows--;
+                        ArbitrationResultEntities[TotelRows] = ArbitrationResultEntities[k];
+                        ArbitrationResultEntities[k] = ArbitrationResultEntities[TotelRows];
                     }
                 }
-                else
-                {
-                    TotalCount = await _ArbitrationResultRepository.GetCountAsync(null);
-
-                    if (Request.page != 0 && Request.PerPage != -1)
-                    {
-                        ArbitrationResultEntities = await _ArbitrationResultRepository
-                            .Where(x => x.Winner && x.EligibleToWin)
-                            .OrderByDescending(x => x.CreatedAt)
-                            .Skip((Request.page - 1) * Request.PerPage)
-                            .Take(Request.PerPage)
-                            .Include(x => x.ProvidedForm!)
-                            .Include(x => x.ProvidedForm!.Category!)
-                            .Include(x => x.ProvidedForm!.Category!.Cycle!)
-                            .ToListAsync();
-                    }
-                    else
-                    {
-                        ArbitrationResultEntities = await _ArbitrationResultRepository
-                            .Where(x => x.Winner && x.EligibleToWin)
-                            .OrderByDescending(x => x.CreatedAt)
-                            .Include(x => x.ProvidedForm!)
-                            .Include(x => x.ProvidedForm!.Category!)
-                            .Include(x => x.ProvidedForm!.Category!.Cycle!)
-                            .ToListAsync();
-                    }
-                }
-
-                List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
-                    .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
-                    .ToListAsync();
-
-                List<FinalArbitration> FinalArbitrationEntities = await _FinalArbitrationRepository
-                    .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
-                    .ToListAsync();
-
-                List<GetAllWinnersDashboardListVM> Response = ArbitrationResultEntities
-                    .Select(x => new GetAllWinnersDashboardListVM()
-                    {
-                        FormId = x.ProvidedFormId,
-                        CategoryId = x.ProvidedForm!.categoryId,
-                        CategoryName = Request.lang == "en"
-                            ? x.ProvidedForm!.Category!.EnglishName
-                            : x.ProvidedForm!.Category!.ArabicName,
-                        InitialArbitrationScore = ArbitrationEntities
-                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                            .Select(y => y.FullScore)
-                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
-                        ArbitrationAuditScore = ArbitrationEntities
-                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                            .Select(y => y.FullScore)
-                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
-                        FinalArbitrationScore = FinalArbitrationEntities
-                            .FirstOrDefault(y => y.ProvidedFormId == x.ProvidedFormId)
-                                ?.FinalScore ?? 0
-                    }).ToList();
-
-                Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.PerPage, TotalCount);
-
-                return new BaseResponse<List<GetAllWinnersDashboardListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
             }
-            else
+
+            if (Request.page != 0 && Request.PerPage != -1)
             {
-                ArbitrationResultEntities = await _ArbitrationResultRepository
-                    .Where(x => x.Winner && x.EligibleToWin)
-                    .Include(x => x.ProvidedForm!)
-                    .Include(x => x.ProvidedForm!.Category!)
-                    .Include(x => x.ProvidedForm!.Category!.Cycle!)
-                    .ToListAsync();
-
-                List<DynamicAttributeValue> DynamicAttributeValueEntities = new List<DynamicAttributeValue>();
-
-                if (!string.IsNullOrEmpty(Request.SubscriberName))
-                {
-                    DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId) &&
-                            x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)" &&
-                            x.Value.ToLower().StartsWith(Request.SubscriberName.ToLower()))
-                        .ToListAsync();
-
-                    ArbitrationResultEntities = ArbitrationResultEntities
-                        .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId))
-                        .ToList();
-                }
-                else
-                {
-                    DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId) &&
-                            x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
-                        .ToListAsync();
-                }
-                
-                if (Request.CategoryId is not null)
-                {
-                    TotalCount = ArbitrationResultEntities.Count();
-                    
-                    if (Request.page != 0 && Request.PerPage != -1)
-                    {
-                        // Shuffle the data randomly
-                        using (RandomNumberGenerator RandomNumberGenerator = RandomNumberGenerator.Create())
-                        {
-                            int TotelRows = ArbitrationResultEntities.Count;
-                            while (TotelRows > 1)
-                            {
-                                byte[] buffer = new byte[4];
-                                RandomNumberGenerator.GetBytes(buffer);
-                                int k = BitConverter.ToInt32(buffer, 0) % TotelRows;
-                                TotelRows--;
-                                ArbitrationResultEntities[TotelRows] = ArbitrationResultEntities[k];
-                                ArbitrationResultEntities[k] = ArbitrationResultEntities[TotelRows];
-                            }
-                        }
-
-                        ArbitrationResultEntities = ArbitrationResultEntities
-                            .Skip((Request.page - 1) * Request.PerPage)
-                            .Take(Request.PerPage)
-                            .ToList();
-                    }
-                    else
-                    {
-                        ArbitrationResultEntities = ArbitrationResultEntities
-                            .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId.Value &&
-                                x.Winner && x.EligibleToWin)
-                            .ToList();
-
-                        // Shuffle the data randomly
-                        using (RandomNumberGenerator RandomNumberGenerator = RandomNumberGenerator.Create())
-                        {
-                            int TotelRows = ArbitrationResultEntities.Count;
-                            while (TotelRows > 1)
-                            {
-                                byte[] buffer = new byte[4];
-                                RandomNumberGenerator.GetBytes(buffer);
-                                int k = BitConverter.ToInt32(buffer, 0) % TotelRows;
-                                TotelRows--;
-                                ArbitrationResultEntities[TotelRows] = ArbitrationResultEntities[k];
-                                ArbitrationResultEntities[k] = ArbitrationResultEntities[TotelRows];
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    TotalCount = await _ArbitrationResultRepository.GetCountAsync(null);
-
-                    if (Request.page != 0 && Request.PerPage != -1)
-                    {
-                        // Shuffle the data randomly
-                        using (RandomNumberGenerator RandomNumberGenerator = RandomNumberGenerator.Create())
-                        {
-                            int TotelRows = ArbitrationResultEntities.Count;
-                            while (TotelRows > 1)
-                            {
-                                byte[] buffer = new byte[4];
-                                RandomNumberGenerator.GetBytes(buffer);
-                                int k = BitConverter.ToInt32(buffer, 0) % TotelRows;
-                                TotelRows--;
-                                ArbitrationResultEntities[TotelRows] = ArbitrationResultEntities[k];
-                                ArbitrationResultEntities[k] = ArbitrationResultEntities[TotelRows];
-                            }
-                        }
-
-                        ArbitrationResultEntities = ArbitrationResultEntities
-                            .Skip((Request.page - 1) * Request.PerPage)
-                            .Take(Request.PerPage)
-                            .ToList();
-                    }
-                    else
-                    {
-                        // Shuffle the data randomly
-                        using (RandomNumberGenerator RandomNumberGenerator = RandomNumberGenerator.Create())
-                        {
-                            int TotelRows = ArbitrationResultEntities.Count;
-                            while (TotelRows > 1)
-                            {
-                                byte[] buffer = new byte[4];
-                                RandomNumberGenerator.GetBytes(buffer);
-                                int k = BitConverter.ToInt32(buffer, 0) % TotelRows;
-                                TotelRows--;
-                                ArbitrationResultEntities[TotelRows] = ArbitrationResultEntities[k];
-                                ArbitrationResultEntities[k] = ArbitrationResultEntities[TotelRows];
-                            }
-                        }
-                    }
-                }
-
-                List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
-                    .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
-                    .ToListAsync();
-
-                var SubscribersNames = DynamicAttributeValueEntities
-                    .Select(x => new
-                    {
-                        FormId = x.RecordId,
-                        SubscriberName = x.Value
-                    }).ToList();
-
-                List<FinalArbitration> FinalArbitrationEntities = await _FinalArbitrationRepository
-                    .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
-                    .ToListAsync();
-
-                List<GetAllWinnersDashboardListVM> Response = ArbitrationResultEntities
-                    .Select(x => new GetAllWinnersDashboardListVM()
-                    {
-                        FormId = x.ProvidedFormId,
-                        CategoryId = x.ProvidedForm!.categoryId,
-                        CategoryName = Request.lang == "en"
-                            ? x.ProvidedForm!.Category!.EnglishName
-                            : x.ProvidedForm!.Category!.ArabicName,
-                        InitialArbitrationScore = ArbitrationEntities
-                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                            .Select(y => y.FullScore)
-                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
-                        ArbitrationAuditScore = ArbitrationEntities
-                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                            .Select(y => y.FullScore)
-                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
-                        FinalArbitrationScore = FinalArbitrationEntities
-                            .FirstOrDefault(y => y.ProvidedFormId == x.ProvidedFormId)
-                                ?.FinalScore ?? 0,
-                        SubscriberName = SubscribersNames
-                            .FirstOrDefault(y => y.FormId == x.ProvidedFormId)
-                            ? .SubscriberName ?? string.Empty
-                    }).ToList();
-
-                Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.PerPage, TotalCount);
-
-                return new BaseResponse<List<GetAllWinnersDashboardListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
+                ArbitrationResultEntities = ArbitrationResultEntities
+                    .Skip((Request.page - 1) * Request.PerPage)
+                    .Take(Request.PerPage)
+                    .ToList();
             }
+
+            var SubscribersNames = DynamicAttributeValueEntities
+                .Select(x => new
+                {
+                    FormId = x.RecordId,
+                    SubscriberName = x.Value
+                }).ToList();
+
+            List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
+                .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
+                .ToListAsync();
+
+            List<GetAllWinnersDashboardListVM> Response = ArbitrationResultEntities
+                .Select(x => new GetAllWinnersDashboardListVM()
+                {
+                    FormId = x.ProvidedFormId,
+                    CategoryId = x.ProvidedForm!.categoryId,
+                    CategoryName = Request.lang == "en"
+                        ? x.ProvidedForm!.Category!.EnglishName
+                        : x.ProvidedForm!.Category!.ArabicName,
+                    InitialArbitrationScore = ArbitrationEntities
+                        .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                        .Select(y => y.FullScore)
+                        .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                    ArbitrationAuditScore = ArbitrationEntities
+                        .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                        .Select(y => y.FullScore)
+                        .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                    FinalArbitrationScore = x.FinalArbitration! ?.FinalScore ?? 0,
+                    SubscriberName = SubscribersNames
+                        .FirstOrDefault(y => y.FormId == x.ProvidedFormId)
+                            ?.SubscriberName ?? string.Empty,
+                    CycleNumber = x.ProvidedForm!.CycleNumber,
+                    CycleYear = x.ProvidedForm!.CycleYear,
+                    EducationalClassName = Request.lang == "en"
+                        ? x.ProvidedForm!.CategoryEducationalClass? .EducationalClass!.EnglishName ?? null
+                        : x.ProvidedForm!.CategoryEducationalClass? .EducationalClass!.ArabicName ?? null,
+                    EducationalEntityName = Request.lang == "en"
+                        ? x.ProvidedForm!.CategoryEducationalEntity? .EducationalEntity!.EnglishName ?? null
+                        : x.ProvidedForm!.CategoryEducationalEntity? .EducationalEntity!.ArabicName ?? null,
+                    ProfilePhoto = x.ProvidedForm!.User.ImageURL,
+                    Gender = x.ProvidedForm!.User.Gender,
+                    WinningLevel = x.WinningLevel!.Value
+                }).ToList();
+
+            Pagination PaginationParameter = new Pagination(Request.page,
+                Request.PerPage, TotalCount);
+
+            return new BaseResponse<List<GetAllWinnersDashboardListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
         }
     }
 }

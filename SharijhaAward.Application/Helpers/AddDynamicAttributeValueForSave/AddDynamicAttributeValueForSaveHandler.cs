@@ -120,7 +120,11 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                             RecordId = Request.RecordId,
                             LastModifiedAt = null,
                             LastModifiedBy = null,
-                            Value = x.ValueAsString!
+                            Value = x.ValueAsString!,
+                            isAccepted = CheckForUpdateValues.FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)
+                                ? .isAccepted ?? null,
+                            ReasonForRejecting = CheckForUpdateValues.FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)
+                                ?.ReasonForRejecting ?? null,
                         }).ToList();
 
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
@@ -130,7 +134,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                         .ToListAsync();
 
                     if (DynamicAttributeTableValueEnititiesToDelete.Any())
-                        await _DynamicAttributeTableValueRepository.DeleteListAsync(DynamicAttributeTableValueEnititiesToDelete);
+                        await _DynamicAttributeTableValueRepository.RemoveListAsync(DynamicAttributeTableValueEnititiesToDelete);
 
                     List<AddDynamicAttributeTableValueForSaveMainCommand> DynamicAttributesTableValueAsFile = Request.DynamicAttributesWithTableValues
                         .Where(x => x.ValueAsBinaryFile != null).ToList();
@@ -178,7 +182,11 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                             LastModifiedAt = null,
                             LastModifiedBy = null,
                             Value = x.ValueAsString!,
-                            RowId = x.RowId
+                            RowId = x.RowId,
+                            isAccepted = DynamicAttributeTableValueEnititiesToDelete
+                                .FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId) ? .isAccepted ?? null,
+                            ReasonForRejecting = DynamicAttributeTableValueEnititiesToDelete
+                                .FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)?.ReasonForRejecting ?? null
                         }).ToList();
 
                     await _DynamicAttributeTableValueRepository.AddRangeAsync(DynamicAttributeTableValueEntitiesToAdd);
@@ -266,10 +274,11 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
 
                     Transaction.Complete();
 
-                    if (CheckForUpdateValues.Count() > 0)
-                        ResponseMessage = Request.lang == "en"
-                            ? "Updated successfully"
-                            : "تم تعديل المعلومات بنجاح";
+                    if (CheckForUpdateValues.Any() ||
+                        DynamicAttributeTableValueEnititiesToDelete.Any())
+                            ResponseMessage = Request.lang == "en"
+                                ? "Updated successfully"
+                                : "تم تعديل المعلومات بنجاح";
 
                     else
                         ResponseMessage = Request.lang == "en"
