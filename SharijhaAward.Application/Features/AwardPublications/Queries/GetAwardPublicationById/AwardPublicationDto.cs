@@ -15,7 +15,5 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAwardP
         public string PublicationDescription { get; set; } = string.Empty;
         public string PublicationUrl { get; set; } = null!;
         public string AutherName { get; set; } = string.Empty;
-        public string? AutherDescription { get; set; } = string.Empty;
-        public int CycleId { get; set; }
     }
 }

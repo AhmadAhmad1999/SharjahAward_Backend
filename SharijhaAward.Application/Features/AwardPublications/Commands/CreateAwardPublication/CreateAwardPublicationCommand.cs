@@ -16,8 +16,6 @@ namespace SharijhaAward.Application.Features.AwardPublications.Commands.CreateAw
         public string PublicationDescription { get; set; } = string.Empty;
         public IFormFile Publication { get; set; } = null!;
         public string AutherName { get; set; } = string.Empty;
-        public string? AutherDescription { get; set; } = string.Empty;
-        public int CycleId { get; set; }
         public string? lang { get; set; }
     }
 }

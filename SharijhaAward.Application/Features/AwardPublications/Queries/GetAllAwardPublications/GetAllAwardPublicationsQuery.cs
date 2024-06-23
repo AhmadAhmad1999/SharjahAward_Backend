@@ -12,7 +12,6 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwa
     {
         public int page { get; set; }
         public int perPage { get; set; }
-        public int? CycleId { get; set; }
         public string? lang { get; set; }
     }
 }

@@ -19,8 +19,5 @@ namespace SharijhaAward.Domain.Entities.AwardPublicationsModel
         public string AutherName { get; set; } = string.Empty;
         public string AutherDescription { get; set; } = string.Empty;
 
-        public Cycle Cycle { get; set; } = null!;
-        [ForeignKey(nameof(Cycle))]
-        public int CycleId { get; set; }
     }
 }

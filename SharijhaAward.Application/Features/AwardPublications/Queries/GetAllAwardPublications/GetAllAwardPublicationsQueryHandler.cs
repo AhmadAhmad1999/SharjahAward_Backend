@@ -29,23 +29,12 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwa
 
         public async Task<BaseResponse<List<AwardPublicationListVM>>> Handle(GetAllAwardPublicationsQuery request, CancellationToken cancellationToken)
         {
-            var Cycle = request.CycleId == null
-                ? await _cycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active)
-                : await _cycleRepository.GetByIdAsync(request.CycleId);
-           
-            if(Cycle == null)
-            {
-                return new BaseResponse<List<AwardPublicationListVM>>("", false, 404);
-            }
-
-            var AwardPublications = await _awardPublicationRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id,request.page,request.perPage);
+            
+            var AwardPublications = await _awardPublicationRepository.GetPagedReponseAsync(request.page,request.perPage);
 
             var data = _mapper.Map<List<AwardPublicationListVM>>(AwardPublications);
-            foreach (var item in data)
-            {
-                item.CycleName = Cycle.ArabicName;
-            }
-            var Count = _awardPublicationRepository.GetCount(a => !a.isDeleted && a.CycleId == Cycle.Id);
+
+            var Count = _awardPublicationRepository.GetCount(a => !a.isDeleted);
             
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
 

@@ -14,8 +14,6 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwa
         public string Title { get; set; } = string.Empty;
         public string PublicationUrl { get; set; } = null!;
         public string AutherName { get; set; } = string.Empty;
-        public int CycleId { get; set; }
-        public string CycleName { get; set; } = string.Empty;
         public string? lang { get; set; }
     }
 }

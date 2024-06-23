@@ -17,14 +17,13 @@ namespace SharijhaAward.Application.Features.AwardPublications.Commands.CreateAw
         : IRequestHandler<CreateAwardPublicationCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<AwardPublication> _awardPublicationRepository;
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
+
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public CreateAwardPublicationCommandHandler(IFileService fileService, IAsyncRepository<AwardPublication> awardPublicationRepository, IAsyncRepository<Cycle> cycleRepository, IMapper mapper)
+        public CreateAwardPublicationCommandHandler(IFileService fileService, IAsyncRepository<AwardPublication> awardPublicationRepository, IMapper mapper)
         {
             _awardPublicationRepository = awardPublicationRepository;
-            _cycleRepository = cycleRepository;
             _fileService = fileService;
             _mapper = mapper;
         }
@@ -34,17 +33,6 @@ namespace SharijhaAward.Application.Features.AwardPublications.Commands.CreateAw
             string msg = request.lang == "en"
                 ? "Award Publication has been Created"
                 : "تم إنشاء إصدار الجائزة";
-
-            var Cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
-            
-            if(Cycle == null)
-            {
-                msg = request.lang == "en"
-                ? "Cycle Not Found"
-                : "الدورة غير موجودة";
-
-                return new BaseResponse<int>(msg, false, 404);
-            }
 
             var AwardPublication = _mapper.Map<AwardPublication>(request);
             AwardPublication.ImageUrl = await _fileService.SaveFileAsync(request.Image);
