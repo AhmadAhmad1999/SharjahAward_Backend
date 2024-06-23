@@ -30,7 +30,6 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
         {
             var newsList = await _newsRepository
                 .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
-                .Where(n => !n.IsHidden)
                 .Include(n => n.NewsImages)
                 .ToListAsync();
            
@@ -41,13 +40,13 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
             if (!request.query.IsNullOrEmpty())
             {
                 newsList = await _newsRepository
-                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()) && !n.IsHidden)
+                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
                     .OrderByDescending(x => x.CreatedAt).ToListAsync();
 
                 if (newsList.Count() == 0)
                 {
                     newsList = await _newsRepository
-                        .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()) && !n.IsHidden)
+                        .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()))
                         .OrderByDescending(x => x.CreatedAt).ToListAsync();
                 }
             }

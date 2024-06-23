@@ -8,6 +8,7 @@ using SharijhaAward.Application.Features.AboutAwardPages.Commands.DeleteGoal;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAboutPage;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateGoal;
 using SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage;
+using SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPageWebSite;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -63,6 +64,25 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new GetAboutPageQuery()
+            {
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetAboutPageWebSite", Name = "GetAboutPageWebSite")]
+        public async Task<IActionResult> GetAboutPageWebSite()
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAboutPageWebSiteQuery()
             {
                 lang = language!
             });
