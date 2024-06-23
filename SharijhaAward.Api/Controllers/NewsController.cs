@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.News.Queries.GetNewsById;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.News.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.News.Commands.DeleteNewsImage;
+using SharijhaAward.Application.Features.News.Queries.HideNews;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -152,6 +153,21 @@ namespace SharijhaAward.Api.Controllers
                 perPage = perPage,
                 query = query
             });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPut("HideNews", Name = "HideNews")]
+        public async Task<IActionResult> HideNews(HideNewsQuery query)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(query);
             return response.statusCode switch
             {
                 200 => Ok(response),
