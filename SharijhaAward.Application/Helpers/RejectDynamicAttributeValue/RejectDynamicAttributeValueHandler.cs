@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.NotificationModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
@@ -12,20 +15,32 @@ namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
-
+        private readonly IAsyncRepository<Notification> _NotificationRepository;
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
+        private readonly IAsyncRepository<UserNotification> _UserNotificationRepository;
+        private readonly IEmailSender _EmailSender;
         public RejectDynamicAttributeValueHandler(IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
             IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
-            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository)
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository,
+            IAsyncRepository<Notification> NotificationRepository,
+            IAsyncRepository<UserToken> UserTokenRepository,
+            IAsyncRepository<UserNotification> UserNotificationRepository,
+            IEmailSender EmailSender)
         {
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
             _ProvidedFormRepository = ProvidedFormRepository;
+            _NotificationRepository = NotificationRepository;
+            _UserTokenRepository = UserTokenRepository;
+            _UserNotificationRepository = UserNotificationRepository;
+            _EmailSender = EmailSender;
         }
         public async Task<BaseResponse<object>> Handle(RejectDynamicAttributeValueMainCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
             Domain.Entities.ProvidedFormModel.ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
+                .Include(x => x.Category!)
                 .FirstOrDefaultAsync(x => Request.RejectDynamicAttributeValueCommand.Any()
                     ? x.Id == Request.RejectDynamicAttributeValueCommand.FirstOrDefault()!.FormId
                     : false);

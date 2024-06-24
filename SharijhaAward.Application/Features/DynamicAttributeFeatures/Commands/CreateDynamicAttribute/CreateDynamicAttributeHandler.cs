@@ -70,6 +70,12 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                 return new BaseResponse<CreateDynamicAttributeResponse>(ResponseMessage, false, 404);
             }
 
+            if (CheckIfDynamicAttributeSectionIdDoesExist.TableTypeSection)
+            {
+                Request.IsUnique = false;
+                Request.IsRequired = false;
+            }
+
             DynamicAttribute? CheckIfDynamicAttributeNameIsUsed = await _DynamicAttributeRepository
                 .FirstOrDefaultAsync(x => x.DynamicAttributeSectionId == Request.DynamicAttributeSectionId &&
                     (x.ArabicLabel.ToLower() == Request.ArabicLabel.ToLower() ||

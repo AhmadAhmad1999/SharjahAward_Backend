@@ -39,7 +39,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                 {
                     string ResponseMessage = string.Empty;
 
-                    DynamicAttribute? DynamicAttributeOldData = await _DynamicAttributeRepository.GetByIdAsync(Request.Id);
+                    DynamicAttribute? DynamicAttributeOldData = await _DynamicAttributeRepository
+                        .Include(x => x.DynamicAttributeSection!)
+                        .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
                     if (DynamicAttributeOldData == null)
                     {
@@ -48,6 +50,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                             : "هذا الحقل غير موجود";
 
                         return new BaseResponse<object>(ResponseMessage, false, 404);
+                    }
+
+                    if (DynamicAttributeOldData.DynamicAttributeSection!.TableTypeSection)
+                    {
+                        Request.IsRequired = false;
                     }
 
                     UpdateDynamicAttributeValidator Validator = new UpdateDynamicAttributeValidator();

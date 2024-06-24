@@ -68,6 +68,15 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
 
             DynamicAttributeSection NewDynamicAttributeSectionEntity = _Mapper.Map<DynamicAttributeSection>(Request);
 
+            if (NewDynamicAttributeSectionEntity.TableTypeSection)
+            {
+                if (NewDynamicAttributeSectionEntity.MinNumberOfRows == null)
+                    NewDynamicAttributeSectionEntity.MinNumberOfRows = 0;
+
+                if (NewDynamicAttributeSectionEntity.MaxNumberOfRows == null)
+                    NewDynamicAttributeSectionEntity.MaxNumberOfRows = 0;
+            }
+
             int CheckIfSesctionNameIsAlreadyUsed = await _DynamicAttributeSectionRepository
                 .Where(x => x.AttributeTableNameId == Request.AttributeTableNameId &&
                     x.RecordIdOnRelation == Request.RecordIdOnRelation)
