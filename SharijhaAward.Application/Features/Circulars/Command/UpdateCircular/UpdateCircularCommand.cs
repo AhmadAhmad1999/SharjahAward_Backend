@@ -11,13 +11,9 @@ namespace SharijhaAward.Application.Features.Circulars.Command.UpdateCircular
 {
     public class UpdateCircularCommand : IRequest<BaseResponse<object>>
     {
-        public int Id {  get; set; }
-        public string arabicTitle { get; set; } = string.Empty;
-        public string englishTitle { get; set; } = string.Empty;
-        public bool updateOnArabicFile {  get; set; }
-        public IFormFile? arabicFile { get; set; }
-        public bool updateOnEnglishFile {  get; set; }
-        public IFormFile? englishFile { get; set; }
+        public int Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string CircularText { get; set; } = string.Empty;
         public string? lang { get; set; }
     }
 }

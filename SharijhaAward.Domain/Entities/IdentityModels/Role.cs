@@ -1,4 +1,5 @@
 ﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.CircularModel;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
 
 namespace SharijhaAward.Domain.Entities.IdentityModels; 

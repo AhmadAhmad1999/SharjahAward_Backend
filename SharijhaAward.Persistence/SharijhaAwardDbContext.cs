@@ -226,6 +226,10 @@ namespace SharijhaAward.Persistence
         public DbSet<Responsibility> Responsibilities { get; set; }
         public DbSet<ResponsibilityUser> ResponsibilitiesUsers { get; set; }
         public DbSet<NewsImage> NewsImages { get; set; }
+        public DbSet<CircularArbitrator> CircularArbitrators { get; set; }
+        public DbSet<CircularCoordinator> CircularCoordinators { get; set; }
+        public DbSet<CircularChairman> CircularChairmans { get; set; }
+        public DbSet<CircularAttachment> CircularAttachments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -355,6 +359,10 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Responsibility>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ResponsibilityUser>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<NewsImage>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CircularAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CircularCoordinator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CircularArbitrator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)

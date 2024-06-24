@@ -525,6 +525,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Circular, CircularListVm>().ReverseMap();
             CreateMap<Circular, CircularDto>().ReverseMap();
             CreateMap<Circular, CircularExportDto>().ReverseMap();
+            CreateMap<CircularAttachment, CircularAttachmentDto>().ReverseMap();
 
             CreateMap<AwardPublication, CreateAwardPublicationCommand>().ReverseMap();
             CreateMap<AwardPublication, UpdateAwardPublicationCommand>().ReverseMap();

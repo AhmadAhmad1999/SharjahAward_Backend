@@ -8,6 +8,7 @@ using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
 using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -82,11 +83,18 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> GetAllCircular(int page = 1, int perPage = 10)
         {
             var language = HttpContext.Request.Headers["lang"];
+           
+            var token = HttpContext.Request.Headers.Authorization;
+            if(token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
 
             var response = await _mediator.Send(new GetAllCircularsQuery()
             {
                 page = page,
-                perPage = perPage
+                perPage = perPage,
+                lang = language
             });
 
             return response.statusCode switch

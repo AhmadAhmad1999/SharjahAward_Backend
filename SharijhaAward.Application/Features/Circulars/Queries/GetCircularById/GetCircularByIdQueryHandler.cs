@@ -1,6 +1,7 @@
 ﻿using Aspose.Pdf.Drawing;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CircularModel;
@@ -26,13 +27,18 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
 
         public async Task<BaseResponse<CircularDto>> Handle(GetCircularByIdQuery request, CancellationToken cancellationToken)
         {
-            var Circular = await _circularRepository.GetByIdAsync(request.Id);
+            var Circular = await _circularRepository
+                .Where(c => c.Id == request.Id)
+                .Include(c => c.CircularAttachments)
+                .FirstOrDefaultAsync();
+
             if(Circular == null)
             {
                 return new BaseResponse<CircularDto>("", false, 404);
             }
 
             var data = _mapper.Map<CircularDto>(Circular);
+            data.CircularAttachments = _mapper.Map<List<CircularAttachmentDto>>(Circular.CircularAttachments);
 
             return new BaseResponse<CircularDto>("", true, 200, data);
         }

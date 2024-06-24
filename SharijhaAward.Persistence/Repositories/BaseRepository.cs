@@ -465,6 +465,10 @@ namespace SharijhaAward.Persistence.Repositories
                 size = 10;
                 query.AsNoTracking().OrderByDescending(keySelector).Skip((page - 1) * size).Take(size);
             }
+            else
+            {
+                query.AsNoTracking().OrderByDescending(keySelector).Skip((page - 1) * size).Take(size);
+            }
 
             return query;
         }

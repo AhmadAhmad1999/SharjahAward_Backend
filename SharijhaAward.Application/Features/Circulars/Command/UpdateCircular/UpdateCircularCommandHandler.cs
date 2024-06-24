@@ -42,21 +42,8 @@ namespace SharijhaAward.Application.Features.Circulars.Command.UpdateCircular
 
                 return new BaseResponse<object>(msg, false, 404);
             }
-            var arabicFile = CircularToUpdate.ArabicFileUrl;
-            var englishFile = CircularToUpdate.EnglishFileUrl;
 
             _mapper.Map(request, CircularToUpdate, typeof(UpdateCircularCommand), typeof(Circular));
-
-
-            if(request.updateOnEnglishFile)
-                CircularToUpdate.EnglishFileUrl = await _fileService.SaveFileAsync(request.englishFile!);
-            else
-                CircularToUpdate.EnglishFileUrl = englishFile;
-
-            if (request.updateOnArabicFile)
-                CircularToUpdate.ArabicFileUrl = await _fileService.SaveFileAsync(request.arabicFile!);
-            else
-                CircularToUpdate.ArabicFileUrl = arabicFile;
 
             await _circularRepository.UpdateAsync(CircularToUpdate);
 
