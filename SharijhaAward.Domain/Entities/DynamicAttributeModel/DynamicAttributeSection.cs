@@ -10,6 +10,8 @@ namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
         public string EnglishName { get; set; } = null!;
         public int? RecordIdOnRelation { get; set; }
         public bool TableTypeSection { get; set; }
+        public int? MinNumberOfRows { get; set; }
+        public int? MaxNumberOfRows { get; set; }
         public int AttributeTableNameId { get; set; }
         public AttributeTableName? AttributeTableName { get; set; }
     }

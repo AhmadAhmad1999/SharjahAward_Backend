@@ -8,6 +8,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
         public int Id { get; set; }
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
+        public int? MinNumberOfRows { get; set; }
+        public int? MaxNumberOfRows { get; set; }
         public string? lang { get; set; }
     }
 }

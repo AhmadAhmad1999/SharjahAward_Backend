@@ -52,9 +52,13 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
         {
             string ResponseMessage = string.Empty;
 
-            int DynamicAttributeEntitiesCount = await _DynamicAttributeRepository
-                .Where(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId).Contains(x.Id))
-                .CountAsync();
+            List<DynamicAttribute> DynamicAttributeEntities = await _DynamicAttributeRepository
+                .Where(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId).Contains(x.Id) ||
+                    Request.DynamicAttributesWithTableValues.Select(y => y.DynamicAttributeId).Contains(x.Id))
+                .Include(x => x.DynamicAttributeSection!)
+                .ToListAsync();
+
+            int DynamicAttributeEntitiesCount = DynamicAttributeEntities.Count();
 
             if (DynamicAttributeEntitiesCount != Request.DynamicAttributesWithValues.Count())
             {
@@ -63,6 +67,35 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                     : "الحقل غير موجود";
 
                 return new BaseResponse<AddDynamicAttributeValueForSaveResponse>(ResponseMessage, false, 404);
+            }
+
+            List<DynamicAttributeSection> AllDynamicAttributeSections = DynamicAttributeEntities
+                .Select(x => x.DynamicAttributeSection!)
+                .ToList();
+
+            foreach (DynamicAttributeSection DynamicAttributeSection in AllDynamicAttributeSections)
+            {
+                List<DynamicAttribute> DynamicAttributesInThisDynamicAttributeSection = DynamicAttributeEntities
+                    .Where(x => x.DynamicAttributeSectionId == DynamicAttributeSection.Id)
+                    .ToList();
+
+                int NumberOfInputedRows = Request.DynamicAttributesWithTableValues
+                    .Where(x => DynamicAttributesInThisDynamicAttributeSection.Select(y => y.Id).Contains(x.DynamicAttributeId))
+                    .DistinctBy(x => x.RowId)
+                    .Count();
+
+                if (DynamicAttributeSection.MaxNumberOfRows != null
+                    ? (DynamicAttributeSection.MaxNumberOfRows != 0 &&
+                       DynamicAttributeSection.MaxNumberOfRows < NumberOfInputedRows)
+                    : false)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? $"You can't enter more than {DynamicAttributeSection.MaxNumberOfRows} rows in the " +
+                            $"{DynamicAttributeSection.EnglishName} section"
+                        : $"لا يمكنك إدخال عدد سطور أكثر من {DynamicAttributeSection.MaxNumberOfRows} في قسم ال{DynamicAttributeSection.ArabicName}";
+
+                    return new BaseResponse<AddDynamicAttributeValueForSaveResponse>(ResponseMessage, false, 400);
+                }
             }
 
             using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -124,7 +157,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                             isAccepted = CheckForUpdateValues.FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)
                                 ? .isAccepted ?? null,
                             ReasonForRejecting = CheckForUpdateValues.FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)
-                                ?.ReasonForRejecting ?? null,
+                                ?.ReasonForRejecting ?? null
                         }).ToList();
 
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);

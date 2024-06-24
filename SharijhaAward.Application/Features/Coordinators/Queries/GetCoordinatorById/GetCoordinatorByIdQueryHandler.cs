@@ -81,10 +81,12 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                         : x.EducationalEntity!.ArabicName
                 }).ToListAsync();
 
-            data.InstitutionEntities = await _EduInstitutionCoordinatorRepository
-                .Where(x => x.CoordinatorId == CoordinatorEntity.Id)
+            data.InstitutionEntities = _EduInstitutionCoordinatorRepository
                 .Include(x => x.EducationalInstitution!)
                 .Include(x => x.EducationalInstitution!.EducationalEntity!)
+                .AsEnumerable()
+                .Where(x => data.EducationalEntities.Select(y => y.Id).Contains(x.EducationalInstitution!.EducationalEntityId))
+                .DistinctBy(x => x.EducationalInstitutionId)
                 .Select(x => new EduInstitutionCoordinatorDto()
                 {
                     Id = x.EducationalInstitution!.Id,
@@ -94,7 +96,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                         ? x.EducationalInstitution!.EnglishName
                         : x.EducationalInstitution!.ArabicName,
                     EducationalEntityId = x.EducationalInstitution!.EducationalEntityId
-                }).ToListAsync();
+                }).ToList();
 
             data.EduEntitiesWithInstitution = data.EducationalEntities
                 .Select(EducationalEntity => new EduEntitiesWithInstitutionDto()

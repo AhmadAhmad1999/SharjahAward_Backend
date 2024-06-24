@@ -10,6 +10,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
         public int AttributeTableNameId { get; set; }
         public int? RecordIdOnRelation { get; set; }
         public bool TableTypeSection { get; set; }
+        public int? MinNumberOfRows { get; set; }
+        public int? MaxNumberOfRows { get; set; }
         public string? lang { get; set; }
     }
 }

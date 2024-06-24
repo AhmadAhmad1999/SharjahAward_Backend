@@ -166,24 +166,48 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             .GroupBy(x => x.RowId)
                             .ToListAsync();
 
-                        List<DynamicAttributeListWithListValuesVM> DynamicAttributesEntities = AllDynamicAttributeEntitiesInSections
-                            .Where(x => x.Status == Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active &&
-                                DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId) &&
-                                x.DynamicAttributeSectionId == DynamicAttributeSection.Id)
-                            .OrderBy(x => x.OrderId)
-                            .Select(x => new DynamicAttributeListWithListValuesVM()
+                        if (!DynamicAttributeTableValueEntities.Any())
+                        {
+                            DynamicAttributeSection.DynamicAttributes = AllDynamicAttributeEntitiesInSections
+                                .Where(x => x.Status == Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active &&
+                                    DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId) &&
+                                    x.DynamicAttributeSectionId == DynamicAttributeSection.Id)
+                                .OrderBy(x => x.OrderId)
+                                .Select(x => new DynamicAttributeListWithListValuesVM()
+                                {
+                                    Id = x.Id,
+                                    AttributeDataTypeId = x.AttributeDataTypeId,
+                                    Label = Language.ToLower() == "ar"
+                                        ? x.ArabicLabel
+                                        : x.EnglishLabel,
+                                    PlaceHolder = Language.ToLower() == "ar"
+                                        ? x.ArabicPlaceHolder
+                                        : x.EnglishPlaceHolder,
+                                    isRequired = x.IsRequired,
+                                    MaxSizeInKB = x.MaxSizeInKB,
+                                    ArabicTitle = x.ArabicTitle,
+                                    EnglishTitle = x.EnglishTitle,
+                                    RowId = 0
+                                }).ToList();
+
+                            foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
                             {
-                                Id = x.Id,
-                                AttributeDataTypeId = x.AttributeDataTypeId,
-                                Label = Language.ToLower() == "ar"
-                                    ? x.ArabicLabel
-                                    : x.EnglishLabel,
-                                PlaceHolder = Language.ToLower() == "ar"
-                                    ? x.ArabicPlaceHolder
-                                    : x.EnglishPlaceHolder,
-                                isRequired = x.IsRequired,
-                                MaxSizeInKB = x.MaxSizeInKB
-                            }).ToList();
+                                DynamicAttributeInSection.DynamicAttributeListValues = AllInsertedDynamicAttributeListValueEntities
+                                    .Where(x => x.DynamicAttributeId == DynamicAttributeInSection.Id)
+                                    .Select(x => new DynamicAttributeListValueListVM()
+                                    {
+                                        Id = x.Id,
+                                        EnglishValue = x.EnglishValue,
+                                        ArabicValue = x.ArabicValue,
+                                        Value = Request.lang == "en"
+                                            ? x.EnglishValue
+                                            : x.ArabicValue
+                                    }).ToList();
+
+                                DynamicAttributeInSection.AttributeDataTypeName = DataTypes
+                                    .FirstOrDefault(y => y.Id == DynamicAttributeInSection.AttributeDataTypeId)!.Name;
+                            }
+                        }
 
                         foreach (IGrouping<int, DynamicAttributeTableValue> DynamicAttributeTableValueEntity in DynamicAttributeTableValueEntities)
                         {

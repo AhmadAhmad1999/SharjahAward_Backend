@@ -18,6 +18,7 @@ using SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllListDynamicAttributes;
+using SharijhaAward.Application.Helpers.AddDynamicAttributeForNewRow;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -429,6 +430,31 @@ namespace SharijhaAward.Api.Controllers
                 SectionId = SectionId,
                 lang = HeaderValue!
             });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("AddDynamicAttributeForNewRow")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            AddDynamicAttributeForNewRow([FromForm] AddDynamicAttributeForNewRowCommand AddDynamicAttributeForNewRowCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            AddDynamicAttributeForNewRowCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<List<AddDynamicAttributeTableValueForSaveMainCommand>>? Response = await _Mediator.Send(AddDynamicAttributeForNewRowCommand);
 
             return Response.statusCode switch
             {
