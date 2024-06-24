@@ -8,8 +8,10 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
         public string? SubscriberName { get; set; }
         public bool GetDataRandomly { get; set; }
         public int? CategoryId { get; set; }
+        public int? CycleNumber { get; set; }
+        public string? CycleYear { get; set; }
         public string? lang { get; set; }
-        public int page { get; set; }
-        public int PerPage { get; set; }
+        public int page { get; set; } = 1;
+        public int PerPage { get; set; } = 10;
     }
 }

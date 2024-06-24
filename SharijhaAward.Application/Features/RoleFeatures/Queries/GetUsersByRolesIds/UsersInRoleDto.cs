@@ -3,6 +3,7 @@
     public class UsersInRoleDto
     {
         public int Id { get; set; }
+        public string? ArabicName { get; set; }
         public string Email { get; set; } = null!;
     }
 }

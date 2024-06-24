@@ -21,23 +21,53 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRole
         {
             string ResponseMessage = string.Empty;
 
-            List<int> UserIds = await _UserRoleRepository
+            var UserRolesIds = await _UserRoleRepository
                 .Where(x => Request.RolesIds.Contains(x.RoleId))
-                .Select(x => x.UserId)
-                .Distinct()
-                .ToListAsync();
-
-            List<UsersInRoleDto> UsersInRoleDtos = await _UserTokenRepository
-                .Include(x => x.User!)
-                .Where(x => UserIds.Contains(x.UserId) && x.User!.isValidAccount)
-                .GroupBy(x => x.UserId)
-                .Select(x => new UsersInRoleDto()
+                .Include(x => x.Role!)
+                .Select(x => new 
                 {
-                    Id = x.Key,
-                    Email = x.First().User!.Email
+                    x.UserId,
+                    x.Role!.EnglishName
                 }).ToListAsync();
 
-            return new BaseResponse<List<UsersInRoleDto>>(ResponseMessage, true, 200, UsersInRoleDtos);
+            List<int> SubscribersIds = UserRolesIds
+                .Where(x => x.EnglishName != "Arbitrator" ||
+                    x.EnglishName != "Coordinator")
+                .Select(x => x.UserId)
+                .Distinct()
+                .ToList();
+
+            List<UsersInRoleDto> SubscriberInRoleDtos = await _UserTokenRepository
+                .Include(x => x.User!)
+                .Where(x => SubscribersIds.Contains(x.UserId) && x.User!.isValidAccount)
+                .DistinctBy(x => x.UserId)
+                .Select(x => new UsersInRoleDto()
+                {
+                    Id = x.UserId,
+                    Email = x.User!.Email
+                }).ToListAsync();
+
+            List<int> NotSubscribersIds = UserRolesIds
+                .Where(x => x.EnglishName == "Arbitrator" ||
+                    x.EnglishName == "Coordinator")
+                .Select(x => x.UserId)
+                .Distinct()
+                .ToList();
+
+            List<UsersInRoleDto> NotSubscriberInRoleDtos = await _UserTokenRepository
+                .Include(x => x.User!)
+                .Where(x => NotSubscribersIds.Contains(x.UserId) && x.User!.isValidAccount)
+                .DistinctBy(x => x.UserId)
+                .Select(x => new UsersInRoleDto()
+                {
+                    Id = x.UserId,
+                    Email = x.User!.Email,
+                    ArabicName = x.User!.ArabicName
+                }).ToListAsync();
+
+            SubscriberInRoleDtos.AddRange(NotSubscriberInRoleDtos);
+
+            return new BaseResponse<List<UsersInRoleDto>>(ResponseMessage, true, 200, SubscriberInRoleDtos);
         }
     }
 }
