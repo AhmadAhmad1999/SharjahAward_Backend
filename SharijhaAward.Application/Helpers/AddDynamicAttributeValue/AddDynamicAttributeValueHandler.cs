@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         private readonly IHttpContextAccessor _HttpContextAccessor;
         private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
-        //private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
+        private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
 
         public AddDynamicAttributeValueHandler(IAsyncRepository<EducationalClass> EducationalClassRepository,
             IAsyncRepository<ProvidedForm> ProvidedFormRepository,
@@ -41,8 +41,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
             IHttpContextAccessor HttpContextAccessor,
             IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository,
-            IAsyncRepository<EducationalEntity> EducationalEntityRepository/*,
-            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository*/)
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository,
+            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository)
         {
             _EducationalClassRepository = EducationalClassRepository;
             _ProvidedFormRepository = ProvidedFormRepository;
@@ -56,7 +56,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             _HttpContextAccessor = HttpContextAccessor;
             _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
             _EducationalEntityRepository = EducationalEntityRepository;
-            //_ViewWhenRelationRepository = ViewWhenRelationRepository;
+            _ViewWhenRelationRepository = ViewWhenRelationRepository;
         }
         public async Task<BaseResponse<AddDynamicAttributeValueResponse>> Handle(AddDynamicAttributeValueCommand Request, 
             CancellationToken cancellationToken)
@@ -70,9 +70,9 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                 .Include(x => x.DynamicAttributeSection!)
                 .ToListAsync();
 
-            //List<ViewWhenRelation> ViewWhenRelationEntities = await _ViewWhenRelationRepository
-            //    .Where(x => DynamicAttributeEntities.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
-            //    .ToListAsync();
+            List<ViewWhenRelation> ViewWhenRelationEntities = await _ViewWhenRelationRepository
+                .Where(x => DynamicAttributeEntities.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
+                .ToListAsync();
 
             foreach (AddDynamicAttributeValueMainCommand InputDynamicAttributeWithValues in Request.DynamicAttributesWithValues)
             {
