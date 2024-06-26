@@ -99,6 +99,7 @@ namespace SharijhaAward.Persistence
 
         }
 
+        public DbSet<ViewWhenRelation> ViewWhenRelations { get; set; }
         public DbSet<ArbitrationResult> ArbitrationResults { get; set; }
         public DbSet<CategoryEducationalEntity> CategoryEducationalEntities { get; set; }
         public DbSet<ExplanatoryMessage> ExplanatoryMessages { get; set; }
@@ -254,6 +255,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CategoryEducationalEntity>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ArbitrationResult>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ViewWhenRelation>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ExplanatoryMessage>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AdvancedFormBuilderTableValue>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AdvancedFormBuilderPatternValue>().HasQueryFilter(p => !p.isDeleted);
@@ -1395,11 +1397,12 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     ArabicTitle = "اختبار عنوان جدول أعمال 1",
                     DateType = Domain.Constants.AgendaConstants.AgendaDateType.Date,
-                    EndDate = DateTime.UtcNow.AddDays(10),
                     EnglishTitle = "Test Agenda Titile 1",
                     Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (1).png",
                     StartDate = DateTime.UtcNow.AddDays(5),
-                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous
+                    EndDate = DateTime.UtcNow.AddDays(10),
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous,
+                    CurrentDate = DateTime.UtcNow.AddDays(6)
                 }, new Agenda()
                 {
                     CycleId = 1,
@@ -1412,11 +1415,12 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     ArabicTitle = "اختبار عنوان جدول أعمال 2",
                     DateType = Domain.Constants.AgendaConstants.AgendaDateType.Full,
-                    EndDate = DateTime.UtcNow.AddDays(15),
+                    EndDate = DateTime.UtcNow.AddDays(16),
                     EnglishTitle = "Test Agenda Titile 2",
                     Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (2).png",
-                    StartDate = DateTime.UtcNow.AddDays(10),
-                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Active
+                    StartDate = DateTime.UtcNow.AddDays(11),
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Active,
+                    CurrentDate = DateTime.UtcNow.AddDays(12)
                 }, new Agenda()
                 {
                     CycleId = 1,
@@ -1429,11 +1433,12 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     ArabicTitle = "اختبار عنوان جدول أعمال 3",
                     DateType = Domain.Constants.AgendaConstants.AgendaDateType.YearMonth,
-                    EndDate = DateTime.UtcNow.AddDays(20),
+                    EndDate = DateTime.UtcNow.AddDays(22),
                     EnglishTitle = "Test Agenda Titile 3",
                     Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png",
-                    StartDate = DateTime.UtcNow.AddDays(15),
-                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later
+                    StartDate = DateTime.UtcNow.AddDays(17),
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later,
+                    CurrentDate = DateTime.UtcNow.AddDays(18)
                 }, new Agenda()
                 {
                     CycleId = 1,
@@ -1446,11 +1451,12 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     ArabicTitle = "اختبار عنوان جدول أعمال 4",
                     DateType = Domain.Constants.AgendaConstants.AgendaDateType.YearMonth,
-                    EndDate = DateTime.UtcNow.AddDays(25),
+                    EndDate = DateTime.UtcNow.AddDays(28),
                     EnglishTitle = "Test Agenda Titile 4",
                     Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png",
-                    StartDate = DateTime.UtcNow.AddDays(20),
-                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later
+                    StartDate = DateTime.UtcNow.AddDays(23),
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later,
+                    CurrentDate = DateTime.UtcNow.AddDays(24)
                 }, new Agenda()
                 {
                     CycleId = 1,
@@ -1463,11 +1469,12 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     ArabicTitle = "اختبار عنوان جدول أعمال 5",
                     DateType = Domain.Constants.AgendaConstants.AgendaDateType.YearMonth,
-                    EndDate = DateTime.UtcNow.AddDays(30),
+                    EndDate = DateTime.UtcNow.AddDays(34),
                     EnglishTitle = "Test Agenda Titile 5",
                     Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png",
-                    StartDate = DateTime.UtcNow.AddDays(25),
-                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later
+                    StartDate = DateTime.UtcNow.AddDays(29),
+                    Status = Domain.Constants.AgendaConstants.AgendaStatus.Later,
+                    CurrentDate = DateTime.UtcNow.AddDays(30)
                 });
 
             modelBuilder.Entity<TrainingWorkshop>()

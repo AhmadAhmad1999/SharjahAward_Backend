@@ -19,5 +19,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         public string? ReasonForRejecting { get; set; }
         public int? MaxSizeInKB { get; set; }
         public List<DynamicAttributeListValueListVM>? DynamicAttributeListValues { get; set; }
+        public List<ViewWhenForAddDto>? ViewWhenForAddDtos { get; set; }
     }
 }

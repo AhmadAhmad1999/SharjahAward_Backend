@@ -21,6 +21,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
         private readonly IAsyncRepository<AttributeDataType> _AttributeDataTypeRepository;
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
+        private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
         private readonly IMapper _Mapper;
         public CreateDynamicAttributeHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<GeneralValidation> GeneralValidationRepository,
@@ -30,6 +31,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
             IAsyncRepository<AttributeDataType> AttributeDataTypeRepository,
             IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
+            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository,
             IMapper Mapper)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
@@ -40,6 +42,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
             _AttributeDataTypeRepository = AttributeDataTypeRepository;
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
+            _ViewWhenRelationRepository = ViewWhenRelationRepository;
             _Mapper = Mapper;
         }
         public async Task<BaseResponse<CreateDynamicAttributeResponse>> Handle(CreateDynamicAttributeCommand Request, CancellationToken cancellationToken)
@@ -184,6 +187,19 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                             NewDependencyValidationEntity.DependencyGroupId = NewDependencyGroup.Id;
                             await _DependencyValidationRepository.AddAsync(NewDependencyValidationEntity);
                         }
+                    }
+
+                    // Add ViewWhen Relation Data..
+                    if (Request.ViewWhenDtos? .Any() ?? false)
+                    {
+                        List<ViewWhenRelation> NewViewWhenRelationEntities = Request.ViewWhenDtos
+                            .Select(x => new ViewWhenRelation()
+                            {
+                                DynamicAttributeId = NewDynamicAttributeEntity.Id,
+                                DynamicAttributeListValueId = x.DynamicAttributeListValueId
+                            }).ToList();
+
+                        await _ViewWhenRelationRepository.AddRangeAsync(NewViewWhenRelationEntities);
                     }
 
                     Transaction.Complete();
