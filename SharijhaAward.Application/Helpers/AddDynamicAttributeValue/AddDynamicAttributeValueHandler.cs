@@ -28,6 +28,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         private readonly IHttpContextAccessor _HttpContextAccessor;
         private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
+        //private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
 
         public AddDynamicAttributeValueHandler(IAsyncRepository<EducationalClass> EducationalClassRepository,
             IAsyncRepository<ProvidedForm> ProvidedFormRepository,
@@ -40,7 +41,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
             IHttpContextAccessor HttpContextAccessor,
             IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository,
-            IAsyncRepository<EducationalEntity> EducationalEntityRepository)
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository/*,
+            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository*/)
         {
             _EducationalClassRepository = EducationalClassRepository;
             _ProvidedFormRepository = ProvidedFormRepository;
@@ -54,6 +56,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             _HttpContextAccessor = HttpContextAccessor;
             _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
             _EducationalEntityRepository = EducationalEntityRepository;
+            //_ViewWhenRelationRepository = ViewWhenRelationRepository;
         }
         public async Task<BaseResponse<AddDynamicAttributeValueResponse>> Handle(AddDynamicAttributeValueCommand Request, 
             CancellationToken cancellationToken)
@@ -66,6 +69,10 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                 .Include(x => x.AttributeDataType!)
                 .Include(x => x.DynamicAttributeSection!)
                 .ToListAsync();
+
+            //List<ViewWhenRelation> ViewWhenRelationEntities = await _ViewWhenRelationRepository
+            //    .Where(x => DynamicAttributeEntities.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
+            //    .ToListAsync();
 
             foreach (AddDynamicAttributeValueMainCommand InputDynamicAttributeWithValues in Request.DynamicAttributesWithValues)
             {
@@ -2978,84 +2985,87 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 
                     await _DynamicAttributeTableValueRepository.AddRangeAsync(DynamicAttributeTableValueEntitiesToAdd);
 
-                    DynamicAttribute? CheckIfThereisClassAttribute = await _DynamicAttributeRepository
-                        .Include(x => x.DynamicAttributeSection!)
-                        .Include(x => x.DynamicAttributeSection!.AttributeTableName!)
-                        .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithValues[0].DynamicAttributeId);
-
-                    if (CheckIfThereisClassAttribute is not null)
+                    if (Request.DynamicAttributesWithValues.Any())
                     {
-                        if (CheckIfThereisClassAttribute.DynamicAttributeSection!.AttributeTableName!.Name.ToLower() == "ProvidedForm".ToLower())
+                        DynamicAttribute? CheckIfThereisClassAttribute = await _DynamicAttributeRepository
+                            .Include(x => x.DynamicAttributeSection!)
+                            .Include(x => x.DynamicAttributeSection!.AttributeTableName!)
+                            .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithValues[0].DynamicAttributeId);
+
+                        if (CheckIfThereisClassAttribute is not null)
                         {
-                            ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
-                                .FirstOrDefaultAsync(x => x.Id == Request.RecordId);
-
-                            if (ProvidedFormEntity is null)
+                            if (CheckIfThereisClassAttribute.DynamicAttributeSection!.AttributeTableName!.Name.ToLower() == "ProvidedForm".ToLower())
                             {
-                                ResponseMessage = Request.lang == "en"
-                                    ? "Form is not found"
-                                    : "الاستمارة غير موجودة";
+                                ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
+                                    .FirstOrDefaultAsync(x => x.Id == Request.RecordId);
 
-                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 404);
-                            }
-
-                            DynamicAttribute? ClassDynamicAttribute = await _DynamicAttributeRepository
-                                .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId)
-                                    .Contains(x.Id) && x.EnglishTitle.ToLower() == "Class".ToLower());
-
-                            if (ClassDynamicAttribute is not null)
-                            {
-                                string? StringValueForClass = Request.DynamicAttributesWithValues.FirstOrDefault(x => x.DynamicAttributeId == ClassDynamicAttribute.Id)!
-                                    .ValueAsString;
-
-                                EducationalClass? Classes = await _EducationalClassRepository
-                                    .FirstOrDefaultAsync(x => Request.lang == "en"
-                                        ? x.EnglishName.ToLower() == StringValueForClass!.ToLower()
-                                        : x.ArabicName.ToLower() == StringValueForClass!.ToLower());
-
-                                if (Classes is not null)
+                                if (ProvidedFormEntity is null)
                                 {
-                                    CategoryEducationalClass NewCategoryEducationalClassEntity = new CategoryEducationalClass()
-                                    {
-                                        CategoryId = ProvidedFormEntity!.categoryId,
-                                        EducationalClassId = Classes.Id
-                                    };
+                                    ResponseMessage = Request.lang == "en"
+                                        ? "Form is not found"
+                                        : "الاستمارة غير موجودة";
 
-                                    await _CategoryEducationalClassRepository.AddAsync(NewCategoryEducationalClassEntity);
-
-                                    ProvidedFormEntity.CategoryEducationalClassId = NewCategoryEducationalClassEntity.Id;
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 404);
                                 }
-                            }
 
-                            DynamicAttribute? EducationalEntityDynamicAttribute = await _DynamicAttributeRepository
-                                .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId)
-                                    .Contains(x.Id) && x.EnglishTitle.ToLower() == "Educational Entity".ToLower());
+                                DynamicAttribute? ClassDynamicAttribute = await _DynamicAttributeRepository
+                                    .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId)
+                                        .Contains(x.Id) && x.EnglishTitle.ToLower() == "Class".ToLower());
 
-                            if (EducationalEntityDynamicAttribute is not null)
-                            {
-                                string? StringValueForEducatiolaEntity = Request.DynamicAttributesWithValues.FirstOrDefault(x => x.DynamicAttributeId == EducationalEntityDynamicAttribute.Id)!
-                                    .ValueAsString;
-
-                                EducationalEntity? EducationalEntity = await _EducationalEntityRepository
-                                    .FirstOrDefaultAsync(x => Request.lang == "en"
-                                        ? x.EnglishName.ToLower() == StringValueForEducatiolaEntity!.ToLower()
-                                        : x.ArabicName.ToLower() == StringValueForEducatiolaEntity!.ToLower());
-
-                                if (EducationalEntity is not null)
+                                if (ClassDynamicAttribute is not null)
                                 {
-                                    CategoryEducationalEntity NewCategoryEducationalEntityEntity = new CategoryEducationalEntity()
+                                    string? StringValueForClass = Request.DynamicAttributesWithValues.FirstOrDefault(x => x.DynamicAttributeId == ClassDynamicAttribute.Id)!
+                                        .ValueAsString;
+
+                                    EducationalClass? Classes = await _EducationalClassRepository
+                                        .FirstOrDefaultAsync(x => Request.lang == "en"
+                                            ? x.EnglishName.ToLower() == StringValueForClass!.ToLower()
+                                            : x.ArabicName.ToLower() == StringValueForClass!.ToLower());
+
+                                    if (Classes is not null)
                                     {
-                                        CategoryId = ProvidedFormEntity!.categoryId,
-                                        EducationalEntityId = EducationalEntity.Id
-                                    };
+                                        CategoryEducationalClass NewCategoryEducationalClassEntity = new CategoryEducationalClass()
+                                        {
+                                            CategoryId = ProvidedFormEntity!.categoryId,
+                                            EducationalClassId = Classes.Id
+                                        };
 
-                                    await _CategoryEducationalEntityRepository.AddAsync(NewCategoryEducationalEntityEntity);
+                                        await _CategoryEducationalClassRepository.AddAsync(NewCategoryEducationalClassEntity);
 
-                                    ProvidedFormEntity.CategoryEducationalEntityId = NewCategoryEducationalEntityEntity.Id;
+                                        ProvidedFormEntity.CategoryEducationalClassId = NewCategoryEducationalClassEntity.Id;
+                                    }
                                 }
-                            }
 
-                            await _ProvidedFormRepository.UpdateAsync(ProvidedFormEntity);
+                                DynamicAttribute? EducationalEntityDynamicAttribute = await _DynamicAttributeRepository
+                                    .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId)
+                                        .Contains(x.Id) && x.EnglishTitle.ToLower() == "Educational Entity".ToLower());
+
+                                if (EducationalEntityDynamicAttribute is not null)
+                                {
+                                    string? StringValueForEducatiolaEntity = Request.DynamicAttributesWithValues.FirstOrDefault(x => x.DynamicAttributeId == EducationalEntityDynamicAttribute.Id)!
+                                        .ValueAsString;
+
+                                    EducationalEntity? EducationalEntity = await _EducationalEntityRepository
+                                        .FirstOrDefaultAsync(x => Request.lang == "en"
+                                            ? x.EnglishName.ToLower() == StringValueForEducatiolaEntity!.ToLower()
+                                            : x.ArabicName.ToLower() == StringValueForEducatiolaEntity!.ToLower());
+
+                                    if (EducationalEntity is not null)
+                                    {
+                                        CategoryEducationalEntity NewCategoryEducationalEntityEntity = new CategoryEducationalEntity()
+                                        {
+                                            CategoryId = ProvidedFormEntity!.categoryId,
+                                            EducationalEntityId = EducationalEntity.Id
+                                        };
+
+                                        await _CategoryEducationalEntityRepository.AddAsync(NewCategoryEducationalEntityEntity);
+
+                                        ProvidedFormEntity.CategoryEducationalEntityId = NewCategoryEducationalEntityEntity.Id;
+                                    }
+                                }
+
+                                await _ProvidedFormRepository.UpdateAsync(ProvidedFormEntity);
+                            }
                         }
                     }
 

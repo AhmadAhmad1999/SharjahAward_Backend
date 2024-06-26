@@ -16,6 +16,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
+        //private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
         public GetAllDynamicAttributeSectionsForAddHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
@@ -23,6 +24,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
+            //IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository)
         {
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
@@ -31,6 +33,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
+            //_ViewWhenRelationRepository = ViewWhenRelationRepository;
             _ProvidedFormRepository = ProvidedFormRepository;
         }
         public async Task<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>> 
@@ -73,7 +76,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                 List<DynamicAttribute> AllDynamicAttributeEntitiesInSections = await _DynamicAttributeRepository
                     .Where(x => DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
                     .ToListAsync();
-                
+
+                //List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
+                //    .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
+                //    .ToListAsync();
+
                 List<DynamicAttributeValue> AlreadyInsertedDynamicAttributeValues = await _DynamicAttributeValueRepository
                     .Where(x => x.RecordId != null
                         ? x.RecordId == Request.ProvidedFormId
@@ -88,6 +95,14 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 foreach (GetAllDynamicAttributeSectionsForAddListVM DynamicAttributeSection in DynamicAttributeSections)
                 {
+                    //DynamicAttributeSection.ViewWhenForAddDtos = AllViewWhenRelationEntities
+                    //    .Where(y => y.DynamicAttributeSectionId == DynamicAttributeSection.Id)
+                    //    .Select(y => new ViewWhenForAddDto()
+                    //    {
+                    //        Id = y.Id,
+                    //        DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                    //    }).ToList();
+
                     if (!DynamicAttributeSection.TableTypeSection)
                     {
                         DynamicAttributeSection.DynamicAttributes = AllDynamicAttributeEntitiesInSections
@@ -108,7 +123,15 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 isRequired = x.IsRequired,
                                 MaxSizeInKB = x.MaxSizeInKB,
                                 ArabicTitle = x.ArabicTitle,
-                                EnglishTitle = x.EnglishTitle
+                                EnglishTitle = x.EnglishTitle,
+                                RowId = -1,
+                                //ViewWhenForAddDtos = AllViewWhenRelationEntities
+                                //    .Where(y => y.DynamicAttributeId == x.Id)
+                                //    .Select(y => new ViewWhenForAddDto()
+                                //    {
+                                //        Id = y.Id,
+                                //        DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                                //    }).ToList()
                             }).ToList();
 
                         foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
@@ -161,7 +184,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     else
                     {
                         List<IGrouping<int, DynamicAttributeTableValue>> DynamicAttributeTableValueEntities = await _DynamicAttributeTableValueRepository
-                            .Where(x => DynamicAttributeSection.DynamicAttributes.Select(y => y.Id).Contains(x.DynamicAttributeId))
+                            .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Contains(x.DynamicAttributeId) &&
+                                x.RecordId == Request.ProvidedFormId)
                             .Include(x => x.DynamicAttribute!)
                             .GroupBy(x => x.RowId)
                             .ToListAsync();
@@ -187,12 +211,20 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     MaxSizeInKB = x.MaxSizeInKB,
                                     ArabicTitle = x.ArabicTitle,
                                     EnglishTitle = x.EnglishTitle,
-                                    RowId = 0
+                                    RowId = 0,
+                                    //ViewWhenForAddDtos = AllViewWhenRelationEntities
+                                    //    .Where(y => y.DynamicAttributeId == x.Id)
+                                    //    .Select(y => new ViewWhenForAddDto()
+                                    //    {
+                                    //        Id = y.Id,
+                                    //        DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                                    //    }).ToList()
                                 }).ToList();
 
                             foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
                             {
                                 DynamicAttributeInSection.DynamicAttributeListValues = AllInsertedDynamicAttributeListValueEntities
+                                    .DistinctBy(x => x.Id)
                                     .Where(x => x.DynamicAttributeId == DynamicAttributeInSection.Id)
                                     .Select(x => new DynamicAttributeListValueListVM()
                                     {
@@ -213,68 +245,80 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         {
                             foreach (DynamicAttributeTableValue OneDynamicAttributeTableValueEntity in DynamicAttributeTableValueEntity)
                             {
-                                DynamicAttributeListWithListValuesVM DynamicAttributeInSection = new DynamicAttributeListWithListValuesVM()
+                                if (!DynamicAttributeSection.DynamicAttributes
+                                    .Any(y => y.Id == OneDynamicAttributeTableValueEntity.DynamicAttributeId &&
+                                        y.RowId == DynamicAttributeTableValueEntity.Key))
                                 {
-                                    Id = OneDynamicAttributeTableValueEntity.DynamicAttributeId,
-                                    AttributeDataTypeId = OneDynamicAttributeTableValueEntity.DynamicAttribute!.AttributeDataTypeId,
-                                    Label = Language.ToLower() == "ar"
-                                        ? OneDynamicAttributeTableValueEntity.DynamicAttribute!.ArabicLabel
-                                        : OneDynamicAttributeTableValueEntity.DynamicAttribute!.EnglishLabel,
-                                    PlaceHolder = Language.ToLower() == "ar"
-                                        ? OneDynamicAttributeTableValueEntity.DynamicAttribute!.ArabicPlaceHolder
-                                        : OneDynamicAttributeTableValueEntity.DynamicAttribute!.EnglishPlaceHolder,
-                                    isRequired = OneDynamicAttributeTableValueEntity.DynamicAttribute!.IsRequired,
-                                    MaxSizeInKB = OneDynamicAttributeTableValueEntity.DynamicAttribute!.MaxSizeInKB,
-                                    RowId = DynamicAttributeTableValueEntity.Key
-                                };
-
-                                DynamicAttributeInSection.DynamicAttributeListValues = AllInsertedDynamicAttributeListValueEntities
-                                    .Where(x => x.DynamicAttributeId == DynamicAttributeInSection.Id)
-                                    .Select(x => new DynamicAttributeListValueListVM()
+                                    DynamicAttributeListWithListValuesVM DynamicAttributeInSection = new DynamicAttributeListWithListValuesVM()
                                     {
-                                        Id = x.Id,
-                                        EnglishValue = x.EnglishValue,
-                                        ArabicValue = x.ArabicValue,
-                                        Value = Request.lang == "en"
-                                            ? x.EnglishValue
-                                            : x.ArabicValue
-                                    }).ToList();
+                                        Id = OneDynamicAttributeTableValueEntity.DynamicAttributeId,
+                                        AttributeDataTypeId = OneDynamicAttributeTableValueEntity.DynamicAttribute!.AttributeDataTypeId,
+                                        Label = Language.ToLower() == "ar"
+                                            ? OneDynamicAttributeTableValueEntity.DynamicAttribute!.ArabicLabel
+                                            : OneDynamicAttributeTableValueEntity.DynamicAttribute!.EnglishLabel,
+                                        PlaceHolder = Language.ToLower() == "ar"
+                                            ? OneDynamicAttributeTableValueEntity.DynamicAttribute!.ArabicPlaceHolder
+                                            : OneDynamicAttributeTableValueEntity.DynamicAttribute!.EnglishPlaceHolder,
+                                        isRequired = OneDynamicAttributeTableValueEntity.DynamicAttribute!.IsRequired,
+                                        MaxSizeInKB = OneDynamicAttributeTableValueEntity.DynamicAttribute!.MaxSizeInKB,
+                                        RowId = DynamicAttributeTableValueEntity.Key,
+                                        //ViewWhenForAddDtos = AllViewWhenRelationEntities
+                                        //    .Where(y => y.DynamicAttributeId == OneDynamicAttributeTableValueEntity.DynamicAttributeId)
+                                        //    .Select(y => new ViewWhenForAddDto()
+                                        //    {
+                                        //        Id = y.Id,
+                                        //        DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                                        //    }).ToList()
+                                    };
 
-                                DynamicAttributeInSection.AttributeDataTypeName = DataTypes
-                                    .FirstOrDefault(y => y.Id == DynamicAttributeInSection.AttributeDataTypeId)!.Name;
-
-                                if (AlreadyInsertedDynamicAttributeTableValues.Count() > 0)
-                                {
-                                    if (DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "File".ToLower() ||
-                                        DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "Image".ToLower())
-                                    {
-                                        DynamicAttributeTableValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeTableValues
-                                            .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id &&
-                                                y.RowId == DynamicAttributeTableValueEntity.Key);
-
-                                        if (CheckIfValueIsAlreadyInserted != null)
+                                    DynamicAttributeInSection.DynamicAttributeListValues = AllInsertedDynamicAttributeListValueEntities
+                                        .Where(x => x.DynamicAttributeId == DynamicAttributeInSection.Id)
+                                        .Select(x => new DynamicAttributeListValueListVM()
                                         {
-                                            DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
-                                            DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
-                                            DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
+                                            Id = x.Id,
+                                            EnglishValue = x.EnglishValue,
+                                            ArabicValue = x.ArabicValue,
+                                            Value = Request.lang == "en"
+                                                ? x.EnglishValue
+                                                : x.ArabicValue
+                                        }).ToList();
+
+                                    DynamicAttributeInSection.AttributeDataTypeName = DataTypes
+                                        .FirstOrDefault(y => y.Id == DynamicAttributeInSection.AttributeDataTypeId)!.Name;
+
+                                    if (AlreadyInsertedDynamicAttributeTableValues.Count() > 0)
+                                    {
+                                        if (DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "File".ToLower() ||
+                                            DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "Image".ToLower())
+                                        {
+                                            DynamicAttributeTableValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeTableValues
+                                                .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id &&
+                                                    y.RowId == DynamicAttributeTableValueEntity.Key);
+
+                                            if (CheckIfValueIsAlreadyInserted != null)
+                                            {
+                                                DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                                DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                                DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            DynamicAttributeTableValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeTableValues
+                                                .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id &&
+                                                    y.RowId == DynamicAttributeTableValueEntity.Key);
+
+                                            if (CheckIfValueIsAlreadyInserted != null)
+                                            {
+                                                DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value;
+                                                DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                                DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
+                                            }
                                         }
                                     }
-                                    else
-                                    {
-                                        DynamicAttributeTableValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeTableValues
-                                            .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id &&
-                                                y.RowId == DynamicAttributeTableValueEntity.Key);
 
-                                        if (CheckIfValueIsAlreadyInserted != null)
-                                        {
-                                            DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value;
-                                            DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
-                                            DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
-                                        }
-                                    }
+                                    DynamicAttributeSection.DynamicAttributes.Add(DynamicAttributeInSection);
                                 }
-
-                                DynamicAttributeSection.DynamicAttributes.Add(DynamicAttributeInSection);
                             }
                         }
                     }
@@ -329,6 +373,10 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     .Where(x => DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
                     .ToListAsync();
 
+                //List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
+                //    .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
+                //    .ToListAsync();
+
                 List<DynamicAttributeListValue> AllInsertedDynamicAttributeListValueEntities = await _DynamicAttributeListValueRepository
                     .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Contains(x.DynamicAttributeId))
                     .ToListAsync();
@@ -368,7 +416,15 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 ? x.ArabicPlaceHolder
                                 : x.EnglishPlaceHolder,
                             isRequired = x.IsRequired,
-                            MaxSizeInKB = x.MaxSizeInKB
+                            MaxSizeInKB = x.MaxSizeInKB,
+                            RowId = -1,
+                            //ViewWhenForAddDtos = AllViewWhenRelationEntities
+                            //    .Where(y => y.DynamicAttributeId == x.Id)
+                            //    .Select(y => new ViewWhenForAddDto()
+                            //    {
+                            //        Id = y.Id,
+                            //        DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                            //    }).ToList()
                         }).ToList();
 
                     foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)

@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute
 {
@@ -9,11 +11,17 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.D
     {
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<Dependency> _DependencyRepository;
+        private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
         public DeleteDynamicAttributeHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
-            IAsyncRepository<Dependency> DependencyRepository)
+            IAsyncRepository<Dependency> DependencyRepository,
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DependencyRepository = DependencyRepository;
+            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _ViewWhenRelationRepository = ViewWhenRelationRepository;
         }
         public async Task<BaseResponse<object>> Handle(DeleteDynamicAttributeCommand Request, CancellationToken cancellationToken)
         {
@@ -54,13 +62,48 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.D
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            await _DynamicAttributeRepository.DeleteAsync(DynamicAttributeToDelete);
+            List<DynamicAttributeValue> DynamicAttributeValueToDelete = await _DynamicAttributeValueRepository
+                .Where(x => x.DynamicAttributeId == Request.Id)
+                .ToListAsync();
 
-            ResponseMessage = Request.lang == "en"
-                ? "Field has been deleted successfully"
-                : "تم حذف الحقل بنجاح";
+            List<ViewWhenRelation> ViewWhenRelationToDelete = await _ViewWhenRelationRepository
+                .Where(x => x.DynamicAttributeId == Request.Id ||
+                    x.DynamicAttributeListValue!.DynamicAttributeId == Request.Id)
+                .ToListAsync();
 
-            return new BaseResponse<object>(ResponseMessage, true, 200);
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
+
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    await _DynamicAttributeRepository.DeleteAsync(DynamicAttributeToDelete);
+
+                    if (DynamicAttributeValueToDelete.Any())
+                        await _DynamicAttributeValueRepository.DeleteListAsync(DynamicAttributeValueToDelete);
+
+                    if (ViewWhenRelationToDelete.Any())
+                        await _ViewWhenRelationRepository.DeleteListAsync(ViewWhenRelationToDelete);
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Field has been deleted successfully"
+                        : "تم حذف الحقل بنجاح";
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

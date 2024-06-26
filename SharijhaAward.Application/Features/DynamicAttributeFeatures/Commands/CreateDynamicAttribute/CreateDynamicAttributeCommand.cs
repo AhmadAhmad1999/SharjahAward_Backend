@@ -18,6 +18,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
         public List<DynamicAttrbiuteValuesDto>? Values { get; set; }
         public CreateGeneralValidation? GeneralValidationObject { get; set; }
         public List<CreateDependencyValidation>? DependencyValidations { get; set; }
+        public List<ViewWhenDto>? ViewWhenDtos { get; set; }
         public string? lang { get; set; }
     }
 }
