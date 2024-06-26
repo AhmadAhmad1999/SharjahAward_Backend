@@ -20,6 +20,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
         public DateTime CurrentDate { get; set; }
         public AgendaStatus Status { get; set; }
         public AgendaDateType DateType { get; set; }
+        public bool IsPrivate { get; set; }
         public int CycleId { get; set; }
     }
 }

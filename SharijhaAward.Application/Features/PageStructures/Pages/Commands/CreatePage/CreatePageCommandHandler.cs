@@ -28,11 +28,15 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
 
         public async Task<BaseResponse<object>> Handle(CreatePageCommand request, CancellationToken cancellationToken)
         {
-            var ParentPage = await _pageStructureRepository.GetByIdAsync(request.ParentId);
-            if(ParentPage == null)
+            if(request.ParentId != null)
             {
-                return new BaseResponse<object>("", false, 404);
+                var ParentPage = await _pageStructureRepository.GetByIdAsync(request.ParentId);
+                if (ParentPage == null)
+                {
+                    return new BaseResponse<object>("", false, 404);
+                }
             }
+
             var page = _mapper.Map<PageStructure>(request);
 
             if(request.Icon != null)

@@ -6,6 +6,7 @@ using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSub
 using SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.RewardModel;
 using System;
 using System.Collections.Generic;
@@ -20,29 +21,27 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
     {
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<Reward> _rewardRepository;
+        private readonly IAsyncRepository<Cycle> _cycleRepository;
         private readonly IMapper _mapper;
 
-        public GetAllCategoryQueryHandler(IAsyncRepository<Reward> rewardRepository, IAsyncRepository<Category> categoryRepository, IMapper mapper)
+        public GetAllCategoryQueryHandler(IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Reward> rewardRepository, IAsyncRepository<Category> categoryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
             _rewardRepository = rewardRepository;
+            _cycleRepository = cycleRepository;
             _mapper = mapper;
         }
         public async Task<BaseResponse<List<CategoryListVM>>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
         {
+            var Cycle =  request.CycleId == null
+                ? await _cycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active)
+                : await _cycleRepository.GetByIdAsync(request.CycleId);
             
-            var categories = await _categoryRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
-                .ToListAsync();
-
-            categories = categories.Where(c => c.ParentId == null).ToList();
-            if (request.CycleId != null)
-            {
-                categories = await _categoryRepository
-                    .Where(c => c.CycleId == request.CycleId && c.ParentId == null)
+                var categories = await _categoryRepository
+                    .Where(c => c.CycleId == Cycle!.Id && c.ParentId == null)
                     .OrderByDescending(x => x.CreatedAt)
                     .ToListAsync();
-            }
+            
           
             var data = _mapper.Map<List<CategoryListVM>>(categories);
 

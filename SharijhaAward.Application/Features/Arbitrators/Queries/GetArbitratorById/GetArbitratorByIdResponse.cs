@@ -1,5 +1,6 @@
 ﻿using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionForAddAdminDashboard;
+using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilities;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById
 {
@@ -9,5 +10,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
         public List<GetAllDynamicAttributeSectionsForAddListVMAdminDashboard> DynamicAttributesSections { get; set; } =
             new List<GetAllDynamicAttributeSectionsForAddListVMAdminDashboard>();
         public List<GetAllClassesListVM> ArbitratorClasses { get; set; } = new List<GetAllClassesListVM>();
+        public List<ResponsibilityUserDto>? ResponsibilityUsers { get; set; }        
     }
 }

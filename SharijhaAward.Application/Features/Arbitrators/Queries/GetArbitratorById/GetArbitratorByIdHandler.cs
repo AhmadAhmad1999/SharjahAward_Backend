@@ -5,7 +5,9 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionForAddAdminDashboard;
+using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilities;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
@@ -15,6 +17,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
 {
     public class GetArbitratorByIdHandler : IRequestHandler<GetArbitratorByIdQuery, BaseResponse<GetArbitratorByIdResponse>>
     {
+        private readonly IAsyncRepository<ResponsibilityUser> _userRepository;
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
         private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
         private readonly IMapper _Mapper;
@@ -25,6 +28,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
         public GetArbitratorByIdHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IAsyncRepository<ResponsibilityUser> userRepository,
             IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
             IMapper Mapper,
             IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
@@ -34,6 +38,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<ArbitratorClass> ArbitratorClassRepository)
         {
+            _userRepository = userRepository;
             _ArbitratorRepository = ArbitratorRepository;
             _CategoryArbitratorRepository = CategoryArbitratorRepository;
             _Mapper = Mapper;
@@ -166,11 +171,16 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                     EnglishName = x.EducationalClass!.EnglishName
                 }).ToListAsync();
 
+            var ResponsibilitiesUser = await _userRepository
+                .Where(u => u.UserId == Request.ArbitratorId)
+                .ToListAsync();
+
             GetArbitratorByIdResponse Response = new GetArbitratorByIdResponse()
             {
                 ArbitratorDto = ArbitratorDto,
                 DynamicAttributesSections = DynamicAttributeSections,
-                ArbitratorClasses = ArbitratorClasses
+                ArbitratorClasses = ArbitratorClasses,
+                ResponsibilityUsers = _Mapper.Map<List<ResponsibilityUserDto>>(ResponsibilitiesUser)
             };
 
             return new BaseResponse<GetArbitratorByIdResponse>(ResponseMessage, true, 200, Response);

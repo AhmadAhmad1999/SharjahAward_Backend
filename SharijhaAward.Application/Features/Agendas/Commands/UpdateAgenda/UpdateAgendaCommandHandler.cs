@@ -51,7 +51,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
 
             var countOfAgenda = await _agendaRepository.GetCountAsync(a => !a.isDeleted);
 
-            if (countOfAgenda > 0)
+            if (countOfAgenda > 1)
             {
                 var AllAgenda = await _agendaRepository.ListAllAsync();
                 var LastAgenda = await _agendaRepository.OrderBy(a => a.CreatedAt).LastOrDefaultAsync(a => true);

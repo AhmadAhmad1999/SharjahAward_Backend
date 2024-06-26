@@ -51,47 +51,59 @@ namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
             var Coordinators = request.AllCoordinators == true
                 ? await _coordinatorRepository.Select(c=>c.Id).ToListAsync()
                 : request.CoordinatorId;
-
-            foreach (var coordinatorId in Coordinators!)
+           
+            if(Coordinators != null)
             {
-                CircularCoordinator circularCoordinator = new CircularCoordinator()
+                foreach (var coordinatorId in Coordinators!)
                 {
-                    CoordinatorId = coordinatorId,
-                    CircularId = data.Id
-                };
+                    CircularCoordinator circularCoordinator = new CircularCoordinator()
+                    {
+                        CoordinatorId = coordinatorId,
+                        CircularId = data.Id
+                    };
 
-                await _circularCoordinatorRepository.AddAsync(circularCoordinator);
+                    await _circularCoordinatorRepository.AddAsync(circularCoordinator);
+                }
             }
+         
 
             var Arbitrators = request.AllArbitrators == true
                 ? await _arbitratorRepository.Select(c => c.Id).ToListAsync()
                 : request.ArbitratorId;
 
-            foreach (var arbitratorId in Arbitrators!)
+            if(Arbitrators != null)
             {
-                CircularArbitrator circularArbitrator = new CircularArbitrator()
+                foreach (var arbitratorId in Arbitrators!)
                 {
-                    ArbitratorId = arbitratorId,
-                    CircularId = data.Id
-                };
+                    CircularArbitrator circularArbitrator = new CircularArbitrator()
+                    {
+                        ArbitratorId = arbitratorId,
+                        CircularId = data.Id
+                    };
 
-                await _circularArbitratorRepository.AddAsync(circularArbitrator);
+                    await _circularArbitratorRepository.AddAsync(circularArbitrator);
+                }
             }
+            
 
             var Chairmans = request.AllChairmans == true
                 ? await _arbitratorRepository.Where(a => a.isChairman).Select(a => a.Id).ToListAsync()
                 : request.ChairmanId;
 
-            foreach (var chairmanId in Chairmans!)
+            if(Chairmans != null)
             {
-                CircularChairman circularChairman = new CircularChairman()
+                foreach (var chairmanId in Chairmans!)
                 {
-                    ChairmanId = chairmanId,
-                    CircularId = data.Id
-                };
+                    CircularChairman circularChairman = new CircularChairman()
+                    {
+                        ChairmanId = chairmanId,
+                        CircularId = data.Id
+                    };
 
-                await _circularChairmanRepository.AddAsync(circularChairman);
-            }
+                    await _circularChairmanRepository.AddAsync(circularChairman);
+                }
+            }    
+           
 
             if (request.CircularFiles != null)
             {

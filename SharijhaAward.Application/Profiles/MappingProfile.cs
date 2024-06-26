@@ -594,6 +594,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Responsibility, ResponsibilityDto>().ReverseMap();
             CreateMap<Responsibility, ResponsibilityListVM>().ReverseMap();
             CreateMap<ResponsibilityUser, ResponsibilityUserDto>().ReverseMap();
+            CreateMap<ResponsibilityUser, UserRepositoryDto>().ReverseMap();
 
 
 

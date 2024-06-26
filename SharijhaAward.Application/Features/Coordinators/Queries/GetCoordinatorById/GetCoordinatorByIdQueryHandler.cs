@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionForAddAdminDashboard;
+using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilities;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
@@ -15,6 +17,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
     public class GetCoordinatorByIdQueryHandler
         : IRequestHandler<GetCoordinatorByIdQuery, BaseResponse<GetCoordinatorByIdResponse>>
     {
+        private readonly IAsyncRepository<ResponsibilityUser> _userRepository;
         private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
         private readonly IMapper _Mapper;
@@ -26,6 +29,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
         private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
 
         public GetCoordinatorByIdQueryHandler(IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
+            IAsyncRepository<ResponsibilityUser> userRepository,
             IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
             IMapper Mapper,
             IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
@@ -35,6 +39,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<Coordinator> CoordinatorRepository)
         {
+            _userRepository = userRepository;
             _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
             _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
             _Mapper = Mapper;
@@ -194,11 +199,15 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                     }
                 }
             }
+            var ResponsibilitiesUser = await _userRepository
+                .Where(u => u.UserId == Request.CoordinatorId)
+                .ToListAsync();
 
             GetCoordinatorByIdResponse Response = new GetCoordinatorByIdResponse()
             {
                 CoordinatorDto = data,
-                DynamicAttributesSections = DynamicAttributeSections
+                DynamicAttributesSections = DynamicAttributeSections,
+                ResponsibilityUsers = _Mapper.Map<List<ResponsibilityUserDto>>(ResponsibilitiesUser)
             };
 
             return new BaseResponse<GetCoordinatorByIdResponse>(ResponseMessage, true, 200, Response);

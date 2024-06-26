@@ -34,7 +34,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
         {
             var page = await _pageStructureRepository.GetByIdAsync(request.Id);
            
-            if (page is {})
+            if (page == null)
             {
                 return new BaseResponse<PageDto>("", false, 404);
             }

@@ -20,5 +20,6 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById
         public AgendaStatus Status { get; set; }
         public AgendaDateType DateType { get; set; }
         public int CycleId { get; set; }
+        public bool IsPrivate { get; set; }
     }
 }
