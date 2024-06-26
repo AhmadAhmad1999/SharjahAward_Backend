@@ -16,7 +16,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
-        //private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
+        private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
         public GetAllDynamicAttributeSectionsForAddHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
@@ -24,7 +24,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
-            //IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository,
+            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository)
         {
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
-            //_ViewWhenRelationRepository = ViewWhenRelationRepository;
+            _ViewWhenRelationRepository = ViewWhenRelationRepository;
             _ProvidedFormRepository = ProvidedFormRepository;
         }
         public async Task<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>> 
@@ -77,9 +77,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     .Where(x => DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
                     .ToListAsync();
 
-                //List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
-                //    .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
-                //    .ToListAsync();
+                List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
+                    .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
+                    .ToListAsync();
 
                 List<DynamicAttributeValue> AlreadyInsertedDynamicAttributeValues = await _DynamicAttributeValueRepository
                     .Where(x => x.RecordId != null
@@ -95,13 +95,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 foreach (GetAllDynamicAttributeSectionsForAddListVM DynamicAttributeSection in DynamicAttributeSections)
                 {
-                    //DynamicAttributeSection.ViewWhenForAddDtos = AllViewWhenRelationEntities
-                    //    .Where(y => y.DynamicAttributeSectionId == DynamicAttributeSection.Id)
-                    //    .Select(y => new ViewWhenForAddDto()
-                    //    {
-                    //        Id = y.Id,
-                    //        DynamicAttributeListValueId = y.DynamicAttributeListValueId
-                    //    }).ToList();
+                    DynamicAttributeSection.ViewWhenForAddDtos = AllViewWhenRelationEntities
+                        .Where(y => y.DynamicAttributeSectionId == DynamicAttributeSection.Id)
+                        .Select(y => new ViewWhenForAddDto()
+                        {
+                            Id = y.Id,
+                            DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                        }).ToList();
 
                     if (!DynamicAttributeSection.TableTypeSection)
                     {
@@ -125,13 +125,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 ArabicTitle = x.ArabicTitle,
                                 EnglishTitle = x.EnglishTitle,
                                 RowId = -1,
-                                //ViewWhenForAddDtos = AllViewWhenRelationEntities
-                                //    .Where(y => y.DynamicAttributeId == x.Id)
-                                //    .Select(y => new ViewWhenForAddDto()
-                                //    {
-                                //        Id = y.Id,
-                                //        DynamicAttributeListValueId = y.DynamicAttributeListValueId
-                                //    }).ToList()
+                                ViewWhenForAddDtos = AllViewWhenRelationEntities
+                                    .Where(y => y.DynamicAttributeId == x.Id)
+                                    .Select(y => new ViewWhenForAddDto()
+                                    {
+                                        Id = y.Id,
+                                        DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                                    }).ToList()
                             }).ToList();
 
                         foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
@@ -212,13 +212,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     ArabicTitle = x.ArabicTitle,
                                     EnglishTitle = x.EnglishTitle,
                                     RowId = 0,
-                                    //ViewWhenForAddDtos = AllViewWhenRelationEntities
-                                    //    .Where(y => y.DynamicAttributeId == x.Id)
-                                    //    .Select(y => new ViewWhenForAddDto()
-                                    //    {
-                                    //        Id = y.Id,
-                                    //        DynamicAttributeListValueId = y.DynamicAttributeListValueId
-                                    //    }).ToList()
+                                    ViewWhenForAddDtos = AllViewWhenRelationEntities
+                                        .Where(y => y.DynamicAttributeId == x.Id)
+                                        .Select(y => new ViewWhenForAddDto()
+                                        {
+                                            Id = y.Id,
+                                            DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                                        }).ToList()
                                 }).ToList();
 
                             foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
@@ -262,13 +262,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                         isRequired = OneDynamicAttributeTableValueEntity.DynamicAttribute!.IsRequired,
                                         MaxSizeInKB = OneDynamicAttributeTableValueEntity.DynamicAttribute!.MaxSizeInKB,
                                         RowId = DynamicAttributeTableValueEntity.Key,
-                                        //ViewWhenForAddDtos = AllViewWhenRelationEntities
-                                        //    .Where(y => y.DynamicAttributeId == OneDynamicAttributeTableValueEntity.DynamicAttributeId)
-                                        //    .Select(y => new ViewWhenForAddDto()
-                                        //    {
-                                        //        Id = y.Id,
-                                        //        DynamicAttributeListValueId = y.DynamicAttributeListValueId
-                                        //    }).ToList()
+                                        ViewWhenForAddDtos = AllViewWhenRelationEntities
+                                            .Where(y => y.DynamicAttributeId == OneDynamicAttributeTableValueEntity.DynamicAttributeId)
+                                            .Select(y => new ViewWhenForAddDto()
+                                            {
+                                                Id = y.Id,
+                                                DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                                            }).ToList()
                                     };
 
                                     DynamicAttributeInSection.DynamicAttributeListValues = AllInsertedDynamicAttributeListValueEntities
@@ -373,9 +373,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     .Where(x => DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
                     .ToListAsync();
 
-                //List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
-                //    .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
-                //    .ToListAsync();
+                List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
+                    .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
+                    .ToListAsync();
 
                 List<DynamicAttributeListValue> AllInsertedDynamicAttributeListValueEntities = await _DynamicAttributeListValueRepository
                     .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Contains(x.DynamicAttributeId))
@@ -418,13 +418,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             isRequired = x.IsRequired,
                             MaxSizeInKB = x.MaxSizeInKB,
                             RowId = -1,
-                            //ViewWhenForAddDtos = AllViewWhenRelationEntities
-                            //    .Where(y => y.DynamicAttributeId == x.Id)
-                            //    .Select(y => new ViewWhenForAddDto()
-                            //    {
-                            //        Id = y.Id,
-                            //        DynamicAttributeListValueId = y.DynamicAttributeListValueId
-                            //    }).ToList()
+                            ViewWhenForAddDtos = AllViewWhenRelationEntities
+                                .Where(y => y.DynamicAttributeId == x.Id)
+                                .Select(y => new ViewWhenForAddDto()
+                                {
+                                    Id = y.Id,
+                                    DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                                }).ToList()
                         }).ToList();
 
                     foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
