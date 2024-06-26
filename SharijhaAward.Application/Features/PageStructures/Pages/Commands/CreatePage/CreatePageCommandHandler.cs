@@ -36,13 +36,16 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
                     return new BaseResponse<object>("", false, 404);
                 }
             }
-
+            
             var page = _mapper.Map<PageStructure>(request);
 
             if(request.Icon != null)
             {
                 page.IconUrl = await _fileService.SaveFileAsync(request.Icon);
             }
+
+            var slug = page.EnglishTitle.Replace(" ", "_");
+            page.Slug = slug;
 
             await _pageStructureRepository.AddAsync(page);
 

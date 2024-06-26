@@ -8,6 +8,7 @@ using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAllMain
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
 
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageBySlug;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -103,6 +104,25 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 Id = Id
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("{Slug}", Name = "GetPageBySlug")]
+        public async Task<IActionResult> GetPageBySlug(string Slug)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetPageBySlugQuery()
+            {
+                lang = language!,
+                Slug = Slug
             });
 
             return response.statusCode switch

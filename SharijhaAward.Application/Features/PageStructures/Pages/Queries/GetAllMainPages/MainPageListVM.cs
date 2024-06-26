@@ -15,6 +15,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAll
         public string Title { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
+        public string Slug { get; set; } = string.Empty;
         public List<SubPageListVM>? SubPages { get; set; } 
     }
 }

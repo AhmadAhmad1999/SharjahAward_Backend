@@ -17,7 +17,7 @@ namespace SharijhaAward.Domain.Entities.PageStructureModel
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public string? EnglishSubTitle { get; set; }
-        public string? ArabicSubTitle {  get; set; }
+        public string? ArabicSubTitle { get; set; }
         public string? EnglishContent { get; set; }
         public string? ArabicContent { get; set; }
         public string Slug { get; set; } = string.Empty;

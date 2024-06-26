@@ -366,6 +366,14 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CircularArbitrator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => !p.isDeleted);
 
+            modelBuilder.Entity<PageStructure>()
+                .HasIndex(p => p.EnglishTitle)
+                .IsUnique();
+
+            modelBuilder.Entity<PageStructure>()
+                .HasIndex(p => p.Slug)
+                .IsUnique();
+
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.SubscriberId)
                 .IsUnique();
