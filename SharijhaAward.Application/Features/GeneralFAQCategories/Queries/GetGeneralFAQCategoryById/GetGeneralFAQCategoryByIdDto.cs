@@ -6,7 +6,8 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetGen
     public class GetGeneralFAQCategoryByIdDto
     {
         public int Id { get; set; }
-        public string Name { get; set; } = null!;
+        public string ArabicName { get; set; } = null!;
+        public string EnglishName { get; set; } = null!;
         public List<GetAllGeneralFAQListVM> GeneralFAQListVM { get; set; } = new List<GetAllGeneralFAQListVM>();
     }
 }
