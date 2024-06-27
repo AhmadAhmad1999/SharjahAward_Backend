@@ -24,21 +24,28 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
         {
             string ResponseMessage = string.Empty;
 
-            DynamicAttributeSection? DynamicAttributeSectionEntity = await _DynamicAttributeSectionRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.SectionId);
+            DynamicAttributeSection? DynamicAttributeSectionEntity = null;
 
-            if (DynamicAttributeSectionEntity is null)
+            if (Request.SectionId is not null)
             {
-                ResponseMessage = Request.lang == "en"
-                    ? "Section is not Found"
-                    : "القسم غير موجود";
+                DynamicAttributeSectionEntity = await _DynamicAttributeSectionRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.SectionId);
 
-                return new BaseResponse<List<GetAllListDynamicAttributesListVM>>(ResponseMessage, false, 404);
+                if (DynamicAttributeSectionEntity is null)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? "Section is not Found"
+                        : "القسم غير موجود";
+
+                    return new BaseResponse<List<GetAllListDynamicAttributesListVM>>(ResponseMessage, false, 404);
+                }
             }
 
             List<DynamicAttribute> DynamicAttributeEntities = await _DynamicAttributeRepository
                 .Where(x => x.AttributeDataTypeId == 8 &&
-                    x.DynamicAttributeSectionId == DynamicAttributeSectionEntity.Id)
+                    DynamicAttributeSectionEntity != null 
+                        ? x.DynamicAttributeSectionId == DynamicAttributeSectionEntity.Id
+                        : true)
                 .ToListAsync();
 
             List<DynamicAttributeListValue> DynamicAttributeListValueEntities = await _DynamicAttributeListValueRepository

@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
 {
     public class GetAllListDynamicAttributesQuery : IRequest<BaseResponse<List<GetAllListDynamicAttributesListVM>>>
     {
-        public int SectionId { get; set; }
+        public int? SectionId { get; set; }
         public string? lang { get; set; }
     }
 }

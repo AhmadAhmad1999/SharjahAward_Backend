@@ -78,7 +78,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     .ToListAsync();
 
                 List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
-                    .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
+                    .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId) ||
+                        AllDynamicAttributeEntitiesInSections.Select(y => y.DynamicAttributeSectionId).Any(y => y == x.DynamicAttributeSectionId))
                     .ToListAsync();
 
                 List<DynamicAttributeValue> AlreadyInsertedDynamicAttributeValues = await _DynamicAttributeValueRepository
@@ -374,7 +375,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     .ToListAsync();
 
                 List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
-                    .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId))
+                    .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId) ||
+                        AllDynamicAttributeEntitiesInSections.Select(y => y.DynamicAttributeSectionId).Any(y => y == x.DynamicAttributeSectionId))
                     .ToListAsync();
 
                 List<DynamicAttributeListValue> AllInsertedDynamicAttributeListValueEntities = await _DynamicAttributeListValueRepository
@@ -400,6 +402,14 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 foreach (GetAllDynamicAttributeSectionsForAddListVM DynamicAttributeSection in DynamicAttributeSections)
                 {
+                    DynamicAttributeSection.ViewWhenForAddDtos = AllViewWhenRelationEntities
+                        .Where(y => y.DynamicAttributeSectionId == DynamicAttributeSection.Id)
+                        .Select(y => new ViewWhenForAddDto()
+                        {
+                            Id = y.Id,
+                            DynamicAttributeListValueId = y.DynamicAttributeListValueId
+                        }).ToList();
+
                     DynamicAttributeSection.DynamicAttributes = AllDynamicAttributeEntitiesInSections
                         .Where(x => x.Status == Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active &&
                             DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId) &&
