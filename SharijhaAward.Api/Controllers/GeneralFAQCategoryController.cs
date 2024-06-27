@@ -135,7 +135,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllGeneralFAQCategories()
+        public async Task<IActionResult> GetAllGeneralFAQCategories(int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -144,7 +144,9 @@ namespace SharijhaAward.Api.Controllers
 
             BaseResponse<List<GetAllGeneralFAQCategoryListVM>> Response = await _Mediator.Send(new GetAllGeneralFAQCategoryQuery()
             {
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                page = Page,
+                perPage = PerPage
             });
 
             return Response.statusCode switch

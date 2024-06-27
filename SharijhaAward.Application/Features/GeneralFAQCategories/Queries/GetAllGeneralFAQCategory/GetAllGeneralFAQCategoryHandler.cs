@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
             string ResponseMessage = string.Empty;
 
             List<GetAllGeneralFAQCategoryListVM> GeneralFAQCategories = await _GeneralFAQCategoryRepository
-                .OrderByDescending(x => x.CreatedAt, 0, -1)
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
                 .Select(x => new GetAllGeneralFAQCategoryListVM()
                 {
                     Id = x.Id,
@@ -53,7 +54,12 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
                     }).ToListAsync();
             }
 
-            return new BaseResponse<List<GetAllGeneralFAQCategoryListVM>>(ResponseMessage, true, 200, GeneralFAQCategories);
+            int TotalCount = await _GeneralFAQCategoryRepository.GetCountAsync(null);
+
+            Pagination PaginationParameter = new Pagination(Request.page,
+                Request.perPage, TotalCount);
+
+            return new BaseResponse<List<GetAllGeneralFAQCategoryListVM>>(ResponseMessage, true, 200, GeneralFAQCategories, PaginationParameter);
         }
     }
 }
