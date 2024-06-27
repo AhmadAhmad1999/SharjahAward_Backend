@@ -418,7 +418,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllListDynamicAttributes(int SectionId)
+        public async Task<IActionResult> GetAllListDynamicAttributes(int? SectionId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
