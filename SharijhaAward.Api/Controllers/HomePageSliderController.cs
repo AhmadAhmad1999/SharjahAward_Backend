@@ -57,11 +57,16 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllHomeSliderItems")]
-        public async Task<IActionResult> GetAllHomeSliderItems()
+        public async Task<IActionResult> GetAllHomeSliderItems(int page = 1, int perPage = 10)
         {
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllHomePageSliderItemsQuery());
+            var response = await _mediator.Send(new GetAllHomePageSliderItemsQuery()
+            {
+                page = page,
+                perPage = perPage,
+                lang = language!
+            });
 
             return response.statusCode switch
             {

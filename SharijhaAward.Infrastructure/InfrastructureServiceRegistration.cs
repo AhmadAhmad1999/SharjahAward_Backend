@@ -29,8 +29,6 @@ namespace SharijhaAward.Infrastructure
 
             //services.AddHostedService<BackGroundJobService>();
 
-
-
             return services;
         }
     }

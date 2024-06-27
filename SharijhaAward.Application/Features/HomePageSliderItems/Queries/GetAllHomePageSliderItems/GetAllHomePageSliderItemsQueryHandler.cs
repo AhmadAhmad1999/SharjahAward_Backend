@@ -24,7 +24,8 @@ namespace SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllH
         }
         public async Task<BaseResponse<List<SliderItemsListVM>>> Handle(GetAllHomePageSliderItemsQuery request, CancellationToken cancellationToken)
         {
-            var AllSliderItem = await _homePageSliderRepository.ListAllAsync();
+            var AllSliderItem = await _homePageSliderRepository
+                .GetPagedReponseAsync(request.page, request.perPage);
 
             var data  = _mapper.Map<List<SliderItemsListVM>>(AllSliderItem);
 
@@ -39,7 +40,10 @@ namespace SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllH
                     : sliderItem.ArabicDescription;
             }
 
-            return new BaseResponse<List<SliderItemsListVM>>("", true, 200, data);
+            int count = _homePageSliderRepository.GetCount(h => !h.isDeleted);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
+            
+            return new BaseResponse<List<SliderItemsListVM>>("", true, 200, data, pagination);
         }
     }
 }

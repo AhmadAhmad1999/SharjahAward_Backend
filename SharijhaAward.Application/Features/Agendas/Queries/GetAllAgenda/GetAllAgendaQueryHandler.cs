@@ -30,6 +30,23 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
                 .OrderByDescending(x => x.CreatedAt, request.page, request.perPage).Where(a=>!a.IsPrivate)
                 .ToListAsync();
 
+            foreach (var agenda in agendas)
+            {
+                if (DateTime.Now >= agenda.StartDate && DateTime.Now <= agenda.EndDate)
+                {
+                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Active;
+                }
+                else if (DateTime.Now > agenda.StartDate && DateTime.Now > agenda.EndDate)
+                {
+                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous;
+                }
+                else if (DateTime.Now < agenda.StartDate && DateTime.Now < agenda.EndDate)
+                {
+                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Later;
+                }
+                await _agendaRepository.UpdateAsync(agenda);
+            }
+
             var data = _mapper.Map<List<AgendaListVm>>(agendas);
          
             for(int i=0; i < data.Count; i++)
