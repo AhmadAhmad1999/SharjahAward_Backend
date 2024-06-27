@@ -336,6 +336,7 @@ using SharijhaAward.Application.Features.Responsibilities.Queries.GetResponsibil
 using SharijhaAward.Application.Features.Responsibilities.Commands.UpdateResponsibility;
 using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilities;
 using SharijhaAward.Domain.Entities;
+using SharijhaAward.Application.Features.HomePageSliderItems.Commands.UpdateHomePageSliderItem;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -542,6 +543,7 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<HomePageSlider, CreateHomePageSliderItemCommand>().ReverseMap();
             CreateMap<HomePageSlider, SliderItemsListVM>().ReverseMap();
+            CreateMap<HomePageSlider, UpdateHomePageSliderItemQuery>().ReverseMap();
 
             CreateMap<ReferenceSource, UpdateReferenceSourcePageCommand>().ReverseMap();
             CreateMap<ReferenceSource, ReferenceSourceDto>().ReverseMap();
