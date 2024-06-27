@@ -39,8 +39,8 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
             if (newsToUpdate == null)
             {
                 msg = request.lang == "en"
-                    ? "The News is not Found"
-                    : "الخبر غير موجود";
+                    ? "The Home Page Slider Item is not Found"
+                    : "سلايدر الصور غير موجود";
 
                 return new BaseResponse<object>(msg,false,404);
             }
@@ -76,8 +76,8 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
             await _newsRepository.UpdateAsync(newsToUpdate);
 
             msg = request.lang == "en"
-                ? "The news has been Updated"
-                : "تم تعديل الخبر بنجاح";
+                ? "The Home Page Slider Item has been Updated"
+                : "تم تعديل سلايدر الصور بنجاح";
 
             return new BaseResponse<object>(msg, true, 200);
         }
