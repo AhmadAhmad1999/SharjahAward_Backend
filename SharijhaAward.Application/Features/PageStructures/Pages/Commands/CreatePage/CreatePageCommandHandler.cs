@@ -44,8 +44,9 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
                 page.IconUrl = await _fileService.SaveFileAsync(request.Icon);
             }
 
-            var slug = page.EnglishTitle.Replace(" ", "_");
-            page.Slug = slug;
+            var slug = page.EnglishTitle;
+            slug.ToLower();
+            page.Slug = slug.Replace(" ", "_");
 
             await _pageStructureRepository.AddAsync(page);
 
