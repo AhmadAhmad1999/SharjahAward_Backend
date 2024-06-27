@@ -56,6 +56,5 @@ public class Cycle : AuditableEntity
     public virtual List<Agenda> Agendas { get; set; } = new();
     
     // navigation property to the News
-    public virtual List<News> News { get; set; } = new();
    
 }

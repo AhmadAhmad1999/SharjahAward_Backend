@@ -114,7 +114,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet("{Slug}", Name = "GetPageBySlug")]
+        [HttpGet("GetPageBySlug/{Slug}", Name = "GetPageBySlug")]
         public async Task<IActionResult> GetPageBySlug(string Slug)
         {
             var language = HttpContext.Request.Headers["lang"];

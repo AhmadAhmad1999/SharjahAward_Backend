@@ -18,40 +18,21 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
         private readonly IAsyncRepository<NewsImage> _newsImageRepository;
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public CreateNewsCommandHandler(IFileService fileService, IAsyncRepository<NewsImage> newsImageRepository, IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
+        public CreateNewsCommandHandler(IFileService fileService, IAsyncRepository<NewsImage> newsImageRepository, IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
         {
             _newsRepository = newsRepository;
             _newsImageRepository = newsImageRepository;
-            _cycleRepository = cycleRepository;
             _fileService = fileService;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
-        {
-            var cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
+        {   
             string msg;
 
-            if (cycle == null)
-            {
-                 msg = request.lang == "en"
-                  ?  "Cycle is not Found"
-                  :  "الدورة غير موجودة";
-
-                return new BaseResponse<object>(msg, false, 404);
-            }
-            if (cycle.Status == Domain.Constants.Common.Status.Close)
-            {
-                msg = request.lang == "en"
-                    ? "The Status of Cycle is Close"
-                    : "حالة الدورة مغلقة";
-
-                return new BaseResponse<object>(msg, false, 400);
-            }
             var news = _mapper.Map<Domain.Entities.NewsModel.News>(request);
             
             news.Image = request.Image != null

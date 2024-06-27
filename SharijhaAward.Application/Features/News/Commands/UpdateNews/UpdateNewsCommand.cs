@@ -21,7 +21,6 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
         public bool AddNewImages { get; set; }
         public List<IFormFile>? Images { get; set; }
         public bool IsHidden { get; set; }
-        public int CycleId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

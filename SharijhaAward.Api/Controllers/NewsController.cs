@@ -138,17 +138,16 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet("GetNewsByCycleId",Name = "GetNewsByCycleId")]
-        public async Task<IActionResult> GetNewsByCycleId(int? CycleId, string? query, int page = 1, int perPage = 10)
+        [HttpGet("GetNewsForWebsite", Name = "GetNewsForWebsite")]
+        public async Task<IActionResult> GetNewsForWebsite(string? query, int page = 1, int perPage = 10)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
             //get data from mediator
-            var response = await _mediator.Send(new GetNewsByCycleIdQuery()
+            var response = await _mediator.Send(new GetNewsForWebsiteQuery()
             {
                 lang = Language!,
-                CycleId = CycleId,
                 page = page,
                 perPage = perPage,
                 query = query

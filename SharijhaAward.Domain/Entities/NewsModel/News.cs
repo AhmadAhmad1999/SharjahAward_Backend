@@ -23,8 +23,6 @@ public class News : AuditableEntity
     public bool IsHidden { get; set; }
 
     // navigation property to the cycle table
-    public Cycle Cycle { get; set; } = null!;
-    public int CycleId { get; set; }
 
     public List<NewsImage>? NewsImages { get; set; }
 

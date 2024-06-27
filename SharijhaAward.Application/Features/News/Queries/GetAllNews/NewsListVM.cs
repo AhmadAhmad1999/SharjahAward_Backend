@@ -21,6 +21,5 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
         public bool IsHidden { get; set; }
         public List<NewsImagesDto>? Images { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int CycleId { get; set; }
     }
 }

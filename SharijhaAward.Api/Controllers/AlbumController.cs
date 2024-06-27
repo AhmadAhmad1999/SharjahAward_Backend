@@ -94,8 +94,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = Language!,
                 page = page,
-                perPage = perPage,
-                CycleId = CycleId
+                perPage = perPage
             });
 
             return response.statusCode switch
