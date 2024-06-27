@@ -16,7 +16,6 @@ namespace SharijhaAward.Application.Features.Albums.Commands.UpdateAlbum
         public string EnglishTitle { get; set; } = string.Empty;
         public bool UpdateOnThumbnail {  get; set; }
         public IFormFile? Thumbnail { get; set; } = null!;
-        public int CycleId { get; set; }
         public string? lang { get; set; }
     }
 }

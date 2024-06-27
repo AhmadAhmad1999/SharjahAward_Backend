@@ -15,9 +15,6 @@ namespace SharijhaAward.Domain.Entities.AlbumModel
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishTitle { get; set; } = string.Empty;
         public string ThumbnailUrl { get; set; } = string.Empty;
-        public Cycle Cycle { get; set; } = null!;
-        [ForeignKey(nameof(Cycle))]
-        public int CycleId { get; set; }
 
         public virtual List<Gallery> Galleries { get; set; } = null!;
 

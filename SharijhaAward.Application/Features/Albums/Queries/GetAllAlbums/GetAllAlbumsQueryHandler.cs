@@ -16,33 +16,17 @@ namespace SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums
         : IRequestHandler<GetAllAlbumsQuery, BaseResponse<List<AlbumListVm>>>
     {
         private readonly IAsyncRepository<Album> _albumRepository;
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
         private readonly IMapper _mapper;
 
-        public GetAllAlbumsQueryHandler(IAsyncRepository<Album> albumRepository, IAsyncRepository<Cycle> cycleRepository, IMapper mapper)
+        public GetAllAlbumsQueryHandler(IAsyncRepository<Album> albumRepository, IMapper mapper)
         {
             _albumRepository = albumRepository;
-            _cycleRepository = cycleRepository;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<List<AlbumListVm>>> Handle(GetAllAlbumsQuery request, CancellationToken cancellationToken)
         {
-
-            var Cycle = request.CycleId == null
-                ? await _cycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active)
-                : await _cycleRepository.GetByIdAsync(request.CycleId);
-          
-            if(Cycle == null)
-            {
-                string msg = request.lang == "en"
-                            ? "Cycle Not Found"
-                            : "الدورة غير موجودة";
-
-                return new BaseResponse<List<AlbumListVm>>(msg, false, 404);
-            }
-
-            var AllAlbums = await _albumRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id, request.page, request.perPage);
+            var AllAlbums = await _albumRepository.GetPagedReponseAsync(request.page, request.perPage);
             
             var data = _mapper.Map<List<AlbumListVm>>(AllAlbums);
 
@@ -53,7 +37,7 @@ namespace SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums
                     : item.ArabicTitle;
             }
 
-            int Count = _albumRepository.GetCount(a => a.CycleId == Cycle.Id && !a.isDeleted);
+            int Count = _albumRepository.GetCount(a => !a.isDeleted);
            
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
           

@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
 {
-    public class GetNewsByCycleIdQuery : IRequest<BaseResponse<List<NewsListVM>>>
+    public class GetNewsForWebsiteQuery : IRequest<BaseResponse<List<NewsListVM>>>
     {
-        public int? CycleId { get; set; }
         public int page { get; set; } 
         public int perPage { get; set; }
         public string? query { get; set; }

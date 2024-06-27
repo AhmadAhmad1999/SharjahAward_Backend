@@ -17,14 +17,12 @@ namespace SharijhaAward.Application.Features.Albums.Commands.CreateAlbum
         : IRequestHandler<CreateAlbumCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<Album> _albumRepository;
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public CreateAlbumCommandHandler(IAsyncRepository<Album> albumRepository, IAsyncRepository<Cycle> cycleRepository, IFileService fileService, IMapper mapper)
+        public CreateAlbumCommandHandler(IAsyncRepository<Album> albumRepository, IFileService fileService, IMapper mapper)
         {
             _albumRepository = albumRepository;
-            _cycleRepository = cycleRepository;
             _fileService = fileService;
             _mapper = mapper;
         }
@@ -34,16 +32,6 @@ namespace SharijhaAward.Application.Features.Albums.Commands.CreateAlbum
             string msg = request.lang == "en"
                 ? "Album has been Created"
                 : "تمت إضافة الألبوم";
-
-            var Cycle = await _cycleRepository.GetByIdAsync(request.CycleId);
-            if(Cycle == null)
-            {
-                msg = request.lang == "en"
-                ? "Cycle Not Found"
-                : "الدورة غير موجودة";
-
-                return new BaseResponse<int>(msg, false, 404);
-            }
 
             var album = _mapper.Map<Album>(request);
 

@@ -16,50 +16,38 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
 {
-    public class GetNewsByCycleIdQueryHandler
-        : IRequestHandler<GetNewsByCycleIdQuery, BaseResponse<List<NewsListVM>>>
+    public class GetNewsForWebsiteQueryHandler
+        : IRequestHandler<GetNewsForWebsiteQuery, BaseResponse<List<NewsListVM>>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
         private readonly IMapper _mapper;
         
-        public GetNewsByCycleIdQueryHandler(IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
+        public GetNewsForWebsiteQueryHandler(IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
         {
-            _cycleRepository = cycleRepository;
             _newsRepository = newsRepository;
             _mapper = mapper;
         }
-        public async Task<BaseResponse<List<NewsListVM>>> Handle(GetNewsByCycleIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<NewsListVM>>> Handle(GetNewsForWebsiteQuery request, CancellationToken cancellationToken)
         {
             string msg;
-            var Cycle = request.CycleId == null
-                ? await _cycleRepository.FirstOrDefaultAsync(a => a.Status == 0)
-                : await _cycleRepository.FirstOrDefaultAsync(a => a.Id == request.CycleId);
-            if (Cycle == null)
-            {
-                 msg = request.lang == "en"
-                   ? "There is no Active Cycle yet"
-                   : "لا يوجد دورات فعالة ";
 
-                return new BaseResponse<List<NewsListVM>>(msg, false, 400);
-            }
-            var NewsListByCycle = await _newsRepository.GetWhereThenPagedReponseAsync(n => n.CycleId == Cycle!.Id && !n.IsHidden, request.page, request.perPage);
+            var NewsList = await _newsRepository.GetWhereThenPagedReponseAsync(n=>!n.IsHidden, request.page, request.perPage);
             
             if (!request.query.IsNullOrEmpty())
             {
-                NewsListByCycle = await _newsRepository
+                NewsList = await _newsRepository
                     .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()) && !n.IsHidden)
                     .OrderByDescending(x => x.CreatedAt).ToListAsync();
 
-                if (NewsListByCycle.Count() == 0)
+                if (NewsList.Count() == 0)
                 {
-                    NewsListByCycle = await _newsRepository
+                    NewsList = await _newsRepository
                         .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()) && !n.IsHidden)
                         .OrderByDescending(x => x.CreatedAt).ToListAsync();
                 }
             }
 
-            if (NewsListByCycle == null)
+            if (NewsList == null)
             {
                 msg = request.lang == "en"
                     ? "There is No News"
@@ -67,20 +55,20 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
 
                 return new BaseResponse<List<NewsListVM>>(msg, true, 200);
             }
-            var data = _mapper.Map<List<NewsListVM>>(NewsListByCycle);
+            var data = _mapper.Map<List<NewsListVM>>(NewsList);
 
             for (int i = 0; i < data.Count; i++)
             {
                 data[i].Title = request.lang == "en"
-                        ? NewsListByCycle[i].EnglishTitle
-                        : NewsListByCycle[i].ArabicTitle;
+                        ? NewsList[i].EnglishTitle
+                        : NewsList[i].ArabicTitle;
 
                 data[i].Description = request.lang == "en"
-                        ? NewsListByCycle[i].EnglishDescription!
-                        : NewsListByCycle[i].ArabicDescription!;
+                        ? NewsList[i].EnglishDescription!
+                        : NewsList[i].ArabicDescription!;
             }
            
-            int count = _newsRepository.GetCount(n => n.CycleId == Cycle.Id && !n.IsHidden);
+            int count = _newsRepository.GetCount(n => !n.IsHidden);
             
             Pagination pagination = new Pagination(request.page, request.perPage, count);
 

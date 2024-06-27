@@ -16,6 +16,5 @@ namespace SharijhaAward.Application.Features.News.Queries.ExportToExcel
         public string? EnglishDescription { get; set; }
         public string? Image { get; set; }
         public bool IsHidden { get; set; }
-        public int CycleId { get; set; }
     }
 }
