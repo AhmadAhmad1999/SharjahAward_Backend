@@ -140,7 +140,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllGeneralFAQs(int? CategoryId, int PerPage = 10, int Page = 1)
+        public async Task<IActionResult> GetAllGeneralFAQs(int? CategoryId, int perPage = 10, int Page = 1)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -152,7 +152,7 @@ namespace SharijhaAward.Api.Controllers
                 CategoryId = CategoryId,
                 lang = HeaderValue!,
                 page = Page,
-                perPage = PerPage
+                perPage = perPage
             });
 
             return Response.statusCode switch

@@ -36,9 +36,8 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetGen
             GetGeneralFAQCategoryByIdDto GetGeneralFAQCategoryByIdDto = new GetGeneralFAQCategoryByIdDto()
             {
                 Id = GeneralFAQCategory.Id,
-                Name = Request.lang == "ar"
-                    ? GeneralFAQCategory.ArabicName
-                    : GeneralFAQCategory.EnglishName,
+                ArabicName = GeneralFAQCategory.ArabicName,
+                EnglishName = GeneralFAQCategory.EnglishName,
                 GeneralFAQListVM = await _GeneralFAQRepository.Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == GeneralFAQCategory.Id)
                     .Select(x => new GetAllGeneralFAQCategory.GetAllGeneralFAQListVM()
                     {

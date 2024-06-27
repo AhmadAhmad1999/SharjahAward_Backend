@@ -30,7 +30,11 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Commands.Creat
 
             await _GeneralFAQCategoryRepository.AddAsync(NewGeneralFAQCategoryEntity);
 
-            return new BaseResponse<object>(string.Empty, true, 200);
+            string ResponseMessage = Request.lang == "en"
+                ? "Created successfully"
+                : "تم إنشاء التصنيف بنجاح";
+
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

@@ -337,6 +337,7 @@ using SharijhaAward.Application.Features.Responsibilities.Commands.UpdateRespons
 using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilities;
 using SharijhaAward.Domain.Entities;
 using SharijhaAward.Application.Features.HomePageSliderItems.Commands.UpdateHomePageSliderItem;
+using SharijhaAward.Application.Features.GeneralFAQs.Queries.GetGeneralFAQById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -735,6 +736,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AdvancedFormBuilderPatternValue, GetAdvancedFormBuilderPatternByIdValues>().ReverseMap();
             CreateMap<ExplanatoryMessage, GetAllExplanatoryMessageListVM>().ReverseMap();
             CreateMap<ExplanatoryMessage, GetExplanatoryMessageByIdDto>().ReverseMap();
+            CreateMap<GeneralFAQ, GeneralFAQDto>().ReverseMap();
         }
     }
 }
