@@ -11,6 +11,8 @@ namespace SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllH
     public class GetAllHomePageSliderItemsQuery 
         : IRequest<BaseResponse<List<SliderItemsListVM>>>
     {
+        public int page { get; set; } = 1;
+        public int perPage { get; set; } = 10;
         public string? lang {  get; set; }
     }
 }

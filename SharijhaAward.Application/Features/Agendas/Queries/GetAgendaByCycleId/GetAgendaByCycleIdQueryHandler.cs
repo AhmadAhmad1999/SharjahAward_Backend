@@ -42,7 +42,24 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId
                 return new BaseResponse<List<AgendaListVm>>(msg, false, 400);
             }
             var Agendas = await _agendaRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id && !a.IsPrivate, request.page,request.perPage);
-             
+           
+            foreach (var agenda in Agendas)
+            {
+                if (DateTime.Now >= agenda.StartDate && DateTime.Now <= agenda.EndDate)
+                {
+                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Active;
+                }
+                else if (DateTime.Now > agenda.StartDate && DateTime.Now > agenda.EndDate)
+                {
+                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous;
+                }
+                else if (DateTime.Now < agenda.StartDate && DateTime.Now < agenda.EndDate)
+                {
+                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Later;
+                }
+                await _agendaRepository.UpdateAsync(agenda);
+            }
+
             var data = _mapper.Map<List<AgendaListVm>>(Agendas).OrderBy(a => a.StartDate).ToList();
 
             for(int i = 0; i < data.Count(); i++)
@@ -51,6 +68,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId
                     ? data[i].EnglishTitle
                     : data[i].ArabicTitle;
             }
+
             var count = await _agendaRepository.GetCountAsync(a => !a.isDeleted && a.CycleId == Cycle.Id);
             Pagination pagination = new Pagination(request.page, request.perPage, count);
             
