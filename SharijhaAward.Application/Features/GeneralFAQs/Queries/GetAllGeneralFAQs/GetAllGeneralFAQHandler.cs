@@ -23,19 +23,75 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
         {
             string ResponseMessage = string.Empty;
 
-            List<GetAllGeneralFAQListVM> GeneralFAQs = await _GeneralFAQRepository
-                .Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId)
-                .OrderByDescending(x => x.CreatedAt)
-                .Select(x => new GetAllGeneralFAQListVM()
+            List<GetAllGeneralFAQListVM> GeneralFAQs = new List<GetAllGeneralFAQListVM>();
+
+            if (Request.CategoryId is not null)
+            {
+                if (Request.page != 0 && Request.perPage != -1)
                 {
-                    Id = x.Id,
-                    Answer = Request.lang! == "ar"
-                        ? x.ArabicAnswer
-                        : x.EnglishAnswer,
-                    Question = Request.lang! == "ar"
-                        ? x.ArabicQuestion
-                        : x.EnglishQuestion
-                }).ToListAsync();
+                    GeneralFAQs = await _GeneralFAQRepository
+                        .Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
+                        .Include(x => x.GeneralFrequentlyAskedQuestionCategory!)
+                        .Select(x => new GetAllGeneralFAQListVM()
+                        {
+                            Id = x.Id,
+                            Answer = Request.lang! == "ar"
+                                ? x.ArabicAnswer
+                                : x.EnglishAnswer,
+                            Question = Request.lang! == "ar"
+                                ? x.ArabicQuestion
+                                : x.EnglishQuestion,
+                            GeneralFrequentlyAskedQuestionCategoryId = x.GeneralFrequentlyAskedQuestionCategoryId,
+                            GeneralFrequentlyAskedQuestionCategoryName = Request.lang == "en"
+                                ? x.GeneralFrequentlyAskedQuestionCategory!.EnglishName
+                                : x.GeneralFrequentlyAskedQuestionCategory!.ArabicName
+                        }).ToListAsync();
+                }
+                else
+                {
+                    GeneralFAQs = await _GeneralFAQRepository
+                        .Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId)
+                        .Include(x => x.GeneralFrequentlyAskedQuestionCategory!)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Select(x => new GetAllGeneralFAQListVM()
+                        {
+                            Id = x.Id,
+                            Answer = Request.lang! == "ar"
+                                ? x.ArabicAnswer
+                                : x.EnglishAnswer,
+                            Question = Request.lang! == "ar"
+                                ? x.ArabicQuestion
+                                : x.EnglishQuestion,
+                            GeneralFrequentlyAskedQuestionCategoryId = x.GeneralFrequentlyAskedQuestionCategoryId,
+                            GeneralFrequentlyAskedQuestionCategoryName = Request.lang == "en"
+                                ? x.GeneralFrequentlyAskedQuestionCategory!.EnglishName
+                                : x.GeneralFrequentlyAskedQuestionCategory!.ArabicName
+                        }).ToListAsync();
+                }
+            }
+            else
+            {
+                GeneralFAQs = await _GeneralFAQRepository
+                    .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
+                    .Include(x => x.GeneralFrequentlyAskedQuestionCategory!)
+                    .Select(x => new GetAllGeneralFAQListVM()
+                    {
+                        Id = x.Id,
+                        Answer = Request.lang! == "ar"
+                            ? x.ArabicAnswer
+                            : x.EnglishAnswer,
+                        Question = Request.lang! == "ar"
+                            ? x.ArabicQuestion
+                            : x.EnglishQuestion,
+                        GeneralFrequentlyAskedQuestionCategoryId = x.GeneralFrequentlyAskedQuestionCategoryId,
+                        GeneralFrequentlyAskedQuestionCategoryName = Request.lang == "en"
+                            ? x.GeneralFrequentlyAskedQuestionCategory!.EnglishName
+                            : x.GeneralFrequentlyAskedQuestionCategory!.ArabicName
+                    }).ToListAsync();
+            }
 
             int TotalCount = _GeneralFAQRepository.GetCount(null);
 

@@ -6,5 +6,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
     public class GetAllGeneralFAQCategoryQuery : IRequest<BaseResponse<List<GetAllGeneralFAQCategoryListVM>>>
     {
         public string? lang { get; set; }
+        public int page { get; set; }
+        public int perPage { get; set; }
     }
 }

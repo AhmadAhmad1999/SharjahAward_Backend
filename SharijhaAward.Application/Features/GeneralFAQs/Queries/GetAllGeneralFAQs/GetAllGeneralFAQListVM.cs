@@ -11,5 +11,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
         public int Id { get; set; }
         public string Question { get; set; } = null!;
         public string Answer { get; set; } = null!;
+        public int GeneralFrequentlyAskedQuestionCategoryId { get; set; }
+        public string GeneralFrequentlyAskedQuestionCategoryName { get; set; } = null!;
     }
 }
