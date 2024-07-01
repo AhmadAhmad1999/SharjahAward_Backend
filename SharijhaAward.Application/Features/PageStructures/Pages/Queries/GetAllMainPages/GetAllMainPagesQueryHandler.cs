@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.PageStructureModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAllMainPages
 {
@@ -25,9 +21,24 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAll
 
         public async Task<BaseResponse<List<MainPageListVM>>> Handle(GetAllMainPagesQuery request, CancellationToken cancellationToken)
         {
-            var mainPages = _pageStructureRepository.Where(p => p.ParentId == null).ToList();
+            List<PageStructure> mainPages = new List<PageStructure>();
 
-            var subPages = _pageStructureRepository.Where(p => p.ParentId != null).ToList();
+            if (request.page != 0 && request.perPage != -1)
+            {
+                mainPages = await _pageStructureRepository
+                    .Where(p => p.ParentId == null)
+                    .Skip((request.page - 1) * request.perPage)
+                    .Take(request.perPage)
+                    .ToListAsync();
+            }
+            else
+            {
+                mainPages = await _pageStructureRepository
+                    .Where(p => p.ParentId == null)
+                    .ToListAsync();
+            }
+
+            var subPages = await _pageStructureRepository.Where(p => p.ParentId != null).ToListAsync();
             
             var MainPages = _mapper.Map<List<MainPageListVM>>(mainPages);
 
@@ -54,8 +65,14 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAll
 
                 page.SubPages = SubPages;
             }
-             
-            return new BaseResponse<List<MainPageListVM>>("", true, 200, MainPages);
+
+            int TotalCount = await _pageStructureRepository
+                .GetCountAsync(p => p.ParentId == null);
+
+            Pagination PaginationParameter = new Pagination(request.page,
+                request.perPage, TotalCount);
+
+            return new BaseResponse<List<MainPageListVM>>("", true, 200, MainPages, PaginationParameter);
         }
     }
 }

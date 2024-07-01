@@ -39,16 +39,22 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                 .Include(x => x.ProvidedForm!.CategoryEducationalEntity!)
                 .Include(x => x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!)
                 .Include(x => x.FinalArbitration!)
+                .Include(x => x.ProvidedForm!.User!)
                 .GroupBy(x => x.ProvidedForm!.Category!)
                 .ToListAsync();
 
+            List<int> ProvidedFormsIds = WinnersEntities
+                .SelectMany(group => group.Select(result => result))
+                .Select(x => x.ProvidedFormId)
+                .ToList();
+
             List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
-                .Where(x => WinnersEntities.Any(y => y.Select(z => z.ProvidedFormId).Any(y => y == x.ProvidedFormId)))
+                .Where(x => ProvidedFormsIds.Contains(x.ProvidedFormId))
                 .ToListAsync();
-            
+
             var DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
                 .Include(x => x.DynamicAttribute!)
-                .Where(x => WinnersEntities.Any(y => y.Select(z => z.ProvidedFormId).Any(y => y == x.RecordId)) &&
+                .Where(x => ProvidedFormsIds.Any(y => y == x.RecordId) &&
                     x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
                 .Select(x => new
                 {
@@ -66,6 +72,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                     CategoryName = Request.lang == "en"
                         ? WinnersEntity.Key.EnglishName
                         : WinnersEntity.Key.ArabicName,
+                    MainCateogryId = WinnersEntity.Key.ParentId != null
+                        ? WinnersEntity.Key.ParentId.Value : 0,
                     Winners = WinnersEntity
                         .Select(x => new GetAllWinnersForWebsiteListVM()
                         {
@@ -94,7 +102,11 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                                 ? x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName ?? null
                                 : x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName ?? null,
                             ProfilePhoto = x.ProvidedForm!.User.ImageURL,
-                            Gender = x.ProvidedForm!.User.Gender
+                            Gender = x.ProvidedForm!.User.Gender,
+                            CategoryId = WinnersEntity.Key.Id,
+                            CategoryName = Request.lang == "en"
+                                ? WinnersEntity.Key.EnglishName
+                                : WinnersEntity.Key.ArabicName,
                         }).ToList()
                 });
             }

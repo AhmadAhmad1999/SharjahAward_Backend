@@ -4,10 +4,10 @@ using Microsoft.Extensions.Primitives;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Command.CreateNewAppVersion;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllAppVersions;
+using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllLastVersionsForAllTypes;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetLastAppVersion;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
-using System.Text.Json;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -96,6 +96,33 @@ namespace SharijhaAward.Api.Controllers
                 page = Page,
                 perPage = PerPage,
                 AppType = AppType
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllLastVersionsForAllTypes")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllLastVersionsForAllTypes()
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllLastVersionsForAllTypesListVM>> Response = await _Mediator.Send(new GetAllLastVersionsForAllTypesQuery()
+            {
+                lang = HeaderValue!
             });
 
             return Response.statusCode switch

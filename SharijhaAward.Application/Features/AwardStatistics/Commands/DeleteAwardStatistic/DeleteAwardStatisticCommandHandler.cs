@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AwardStatisticModel;
@@ -14,6 +15,10 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Commands.DeleteAwar
         : IRequestHandler<DeleteAwardStatisticCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<AwardStatistic> _awardStatisticRepository;
+        public DeleteAwardStatisticCommandHandler(IAsyncRepository<AwardStatistic> awardStatisticRepository)
+        {
+            _awardStatisticRepository = awardStatisticRepository;
+        }
         public async Task<BaseResponse<object>> Handle(DeleteAwardStatisticCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"

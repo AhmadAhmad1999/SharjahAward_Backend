@@ -4,11 +4,6 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.HomePageSliderModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.HomePageSliderItems.Commands.UpdateHomePageSliderItem
 {
@@ -34,8 +29,8 @@ namespace SharijhaAward.Application.Features.HomePageSliderItems.Commands.Update
             if (item == null)
             {
                 msg = request.lang == "en"
-                    ? "The News is not Found"
-                    : "الخبر غير موجود";
+                    ? "The home page slider is not Found"
+                    : "سلايدر الصور غير موجود";
 
                 return new BaseResponse<object>(msg, false, 404);
             }
@@ -51,8 +46,8 @@ namespace SharijhaAward.Application.Features.HomePageSliderItems.Commands.Update
             await _homePageSliderRepository.UpdateAsync(item);
 
             msg = request.lang == "en"
-                ? "The news has been Updated"
-                : "تم تعديل الخبر بنجاح";
+                ? "The home page slider has been Updated"
+                : "تم تعديل سلايدر الصور بنجاح";
 
             return new BaseResponse<object>(msg, true, 200);
         }

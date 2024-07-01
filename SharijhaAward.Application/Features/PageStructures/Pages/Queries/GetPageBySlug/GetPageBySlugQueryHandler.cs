@@ -45,9 +45,44 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
 
             var data = _mapper.Map<PageDto>(page);
 
-            data.DarkCards = _mapper.Map<List<DarkCardListVM>>(DarkCards);
+            data.DarkCards = DarkCards
+                .Select(x => new DarkCardListVM()
+                {
+                    Id = x.Id,
+                    Title = request.lang == "en"
+                        ? x.EnglishTitle
+                        : x.ArabicTitle,
+                    Content = request.lang == "en"
+                        ? x.EnglishContent
+                        : x.ArabicContent,
+                    EnglishTitle = x.EnglishTitle,
+                    ArabicTitle = x.ArabicTitle,
+                    EnglishContent = x.EnglishContent,
+                    ArabicContent = x.ArabicContent
+                }).ToList();
 
-            data.ParagraphCards = _mapper.Map<List<ParagraphCardListVM>>(ParagraphCards);
+            //data.DarkCards = _mapper.Map<List<DarkCardListVM>>(DarkCards);
+
+            data.ParagraphCards = ParagraphCards
+                .Select(x => new ParagraphCardListVM()
+                {
+                    Id = x.Id,
+                    Title = request.lang == "en"
+                        ? x.EnglishTitle
+                        : x.ArabicTitle,
+                    Content = request.lang == "en"
+                        ? x.EnglishContent
+                        : x.ArabicContent,
+                    EnglishTitle = x.EnglishTitle,
+                    ArabicTitle = x.ArabicTitle,
+                    EnglishContent = x.EnglishContent,
+                    ArabicContent = x.ArabicContent,
+                    ImageInStart = x.ImageInStart,
+                    ImageUrl = x.ImageUrl,
+                    PageId = x.PageId
+                }).ToList();
+
+            //data.ParagraphCards = _mapper.Map<List<ParagraphCardListVM>>(ParagraphCards);
 
             data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle;
 

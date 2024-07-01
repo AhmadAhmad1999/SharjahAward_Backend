@@ -25,7 +25,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpPost(Name = "CreatePage")]
-        public async Task<IActionResult> CreatePage(CreatePageCommand command)
+        public async Task<IActionResult> CreatePage([FromForm] CreatePageCommand command)
         {
             var language = HttpContext.Request.Headers["lang"];
 
@@ -78,12 +78,14 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllMainPages", Name = "GetAllMainPages")]
-        public async Task<IActionResult> GetAllPage()
+        public async Task<IActionResult> GetAllPage(int page = 1, int perPage = 10)
         {
             var language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new GetAllMainPagesQuery()
             {
+                page = page,
+                perPage = perPage,
                 lang = language!
             });
 

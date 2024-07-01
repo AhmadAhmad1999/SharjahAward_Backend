@@ -45,7 +45,11 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Updat
 
             await _pageStructureRepository.UpdateAsync(page);
 
-            return new BaseResponse<object>("", true, 200);
+            string ResponseMessage = request.lang == "en"
+                ? "Updated successfully"
+                : "تم تعديل الصفحة بنجاح";
+
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

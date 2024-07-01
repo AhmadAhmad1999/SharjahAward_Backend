@@ -27,8 +27,8 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Commands.UpdateAwar
         public async Task<BaseResponse<object>> Handle(UpdateAwardStatisticCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"
-                       ? "Award Statistic has been Updated"
-                       : "تم تعديل الإحصائية";
+                ? "Award Statistic has been Updated"
+                : "تم تعديل الإحصائية";
 
             var Statistic = await _awardStatisticRepository.GetByIdAsync(request.Id);
 

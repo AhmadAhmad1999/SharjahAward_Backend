@@ -7,6 +7,11 @@ using SharijhaAward.Application.Features.HomePageSliderItems.Commands.DeleteHome
 using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllHomePageSliderItems;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.HomePageSliderItems.Commands.UpdateHomePageSliderItem;
+using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
+using SharijhaAward.Application.Responses;
+using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetHomePageSliderItemById;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -91,6 +96,34 @@ namespace SharijhaAward.Api.Controllers
                 200 => Ok(response),
                 404 => NotFound(response),
                 _ => BadRequest(response)
+            };
+        }
+        [HttpGet("GetHomePageSliderItemById/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetHomePageSliderItemById(int Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetHomePageSliderItemByIdDto> Response = await _mediator.Send(new GetHomePageSliderItemByIdQuery()
+            {
+                Id = Id,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
             };
         }
     }

@@ -36,14 +36,6 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetGeneralFAQBy
 
             GeneralFAQDto GeneralFAQDto = _Mapper.Map<GeneralFAQDto>(GeneralFAQEntity);
 
-            GeneralFAQDto.Answer = Request.lang == "en"
-               ? GeneralFAQEntity.EnglishAnswer
-               : GeneralFAQEntity.ArabicAnswer;
-
-            GeneralFAQDto.Question = Request.lang == "en"
-                ? GeneralFAQEntity.EnglishQuestion
-                : GeneralFAQEntity.ArabicQuestion;
-
             return new BaseResponse<GeneralFAQDto>(ResponseMessage, true, 200, GeneralFAQDto);
         }
     }

@@ -4,7 +4,10 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetGeneralFAQBy
     public class GeneralFAQDto
     {
         public int Id { get; set; }
-        public string Question { get; set; } = null!;
-        public string Answer { get; set; } = null!;
+        public string ArabicQuestion { get; set; } = null!;
+        public string EnglishQuestion { get; set; } = null!;
+        public string ArabicAnswer { get; set; } = null!;
+        public string EnglishAnswer { get; set; } = null!;
+        public int GeneralFrequentlyAskedQuestionCategoryId { get; set; }
     }
 }

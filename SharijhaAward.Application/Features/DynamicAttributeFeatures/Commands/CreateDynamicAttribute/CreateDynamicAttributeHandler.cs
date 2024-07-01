@@ -6,7 +6,6 @@ using SharijhaAward.Application.Features.DynamicAttributeFeaturesFeatures.Comman
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.DynamicAttribute;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute
@@ -23,8 +22,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
-        private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
-        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
         private readonly IMapper _Mapper;
         public CreateDynamicAttributeHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<GeneralValidation> GeneralValidationRepository,
@@ -35,8 +32,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
             IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository,
             IMapper Mapper)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
@@ -48,8 +43,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _ViewWhenRelationRepository = ViewWhenRelationRepository;
-            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
-            _ProvidedFormRepository = ProvidedFormRepository;
             _Mapper = Mapper;
         }
         public async Task<BaseResponse<CreateDynamicAttributeResponse>> Handle(CreateDynamicAttributeCommand Request, CancellationToken cancellationToken)
@@ -131,27 +124,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                     NewDynamicAttributeEntity.EnglishTitle = NewDynamicAttributeEntity.EnglishLabel;
 
                     await _DynamicAttributeRepository.AddAsync(NewDynamicAttributeEntity);
-
-                    //if (CheckIfDynamicAttributeSectionIdDoesExist.AttributeTableNameId == 1)
-                    //{
-                    //    List<int> ProvidedFormEntitiesIds = await _ProvidedFormRepository
-                    //        .Where(x => x.categoryId == CheckIfDynamicAttributeSectionIdDoesExist.RecordIdOnRelation &&
-                    //            x.CurrentStep >= 4)
-                    //        .Select(x => x.Id)
-                    //        .ToListAsync();
-
-                    //    List<DynamicAttributeValue> NewDynamicAttributeValuentities = ProvidedFormEntitiesIds
-                    //        .Select(x => new DynamicAttributeValue()
-                    //        {
-                    //            RecordId = x,
-                    //            isAccepted = false,
-                    //            DynamicAttributeId = NewDynamicAttributeEntity.Id,
-                    //            Value = string.Empty,
-                    //            ReasonForRejecting = "Added after this form completed step 4"
-                    //        }).ToList();
-
-                    //    await _DynamicAttributeValueRepository.AddRangeAsync(NewDynamicAttributeValuentities);
-                    //}
 
                     string? AttributeDataTypeName = _AttributeDataTypeRepository
                         .FirstOrDefault(x => x.Id == Request.AttributeDataTypeId)?.Name;

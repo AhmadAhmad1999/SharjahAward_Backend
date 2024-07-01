@@ -90,6 +90,22 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
                     }).ToListAsync();
             }
 
+            if (category.ParentId == null)
+            {
+                data.SubCategories = await _categoryRepository
+                    .Where(x => x.ParentId == category.Id)
+                    .Select(x => new SubCategoriesDto()
+                    {
+                        Id = x.Id,
+                        Name = request.lang == "en"
+                            ? x.EnglishName
+                            : x.ArabicName,
+                        Description = request.lang == "en"
+                            ? x.EnglishDescription
+                            : x.ArabicDescription
+                    }).ToListAsync();
+            }
+
             return new BaseResponse<CategoryDto>("",true, 200, data);
         }
     }

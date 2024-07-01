@@ -4,6 +4,8 @@ using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
+using SharijhaAward.Application.Features.DynamicAttributeFeaturesFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using System.Transactions;
@@ -14,18 +16,54 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
     {
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
+        private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
+        private readonly IAsyncRepository<DependencyGroup> _DependencyGroupRepository;
+        private readonly IAsyncRepository<Dependency> _DependencyRepository;
+        private readonly IAsyncRepository<DependencyValidation> _DependencyValidationRepository;
+        private readonly IAsyncRepository<AttributeDataType> _AttributeDataTypeRepository;
+        private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
+        private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
         private readonly IMapper _Mapper;
 
         public UpdateDynamicAttributeHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
+            IAsyncRepository<GeneralValidation> GeneralValidationRepository,
+            IAsyncRepository<DependencyGroup> DependencyGroupRepository,
+            IAsyncRepository<Dependency> DependencyRepository,
+            IAsyncRepository<DependencyValidation> DependencyValidationRepository,
+            IAsyncRepository<AttributeDataType> AttributeDataTypeRepository,
+            IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
+            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository,
             IMapper Mapper)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
+            _GeneralValidationRepository = GeneralValidationRepository;
+            _DependencyGroupRepository = DependencyGroupRepository;
+            _DependencyRepository = DependencyRepository;
+            _DependencyValidationRepository = DependencyValidationRepository;
+            _AttributeDataTypeRepository = AttributeDataTypeRepository;
+            _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
+            _ViewWhenRelationRepository = ViewWhenRelationRepository;
             _Mapper = Mapper;
         }
         public async Task<BaseResponse<object>> Handle(UpdateDynamicAttributeCommand Request, CancellationToken cancellationToken)
         {
+            GeneralValidation? GeneralValidationEntity = await _GeneralValidationRepository
+                .FirstOrDefaultAsync(x => x.DynamicAttributeId == Request.Id);
+
+            List<Dependency> DependenciesEntities = await _DependencyRepository
+                .Where(x => x.DynamicAttributeId == Request.Id)
+                .ToListAsync();
+
+            List<DependencyValidation> DependencyValidationEntities = await _DependencyValidationRepository
+                .Where(x => DependenciesEntities.Select(y => y.DependencyGroupId).Contains(x.DependencyGroupId))
+                .ToListAsync();
+
+            List<ViewWhenRelation> ViewWhenRelationEntities = await _ViewWhenRelationRepository
+                .Where(x => x.DynamicAttributeId == Request.Id)
+                .ToListAsync();
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -117,8 +155,63 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                         .ToList();
 
                     if (DeleteDynamicAttributeListValuesEntities.Any())
-                    {
                         await _DynamicAttributeListValueRepository.DeleteListAsync(DeleteDynamicAttributeListValuesEntities);
+
+                    if (GeneralValidationEntity is not null)
+                        await _GeneralValidationRepository.RemoveAsync(GeneralValidationEntity);
+
+                    if (DependenciesEntities.Any())
+                        await _DependencyRepository.RemoveListAsync(DependenciesEntities);
+
+                    if (DependencyValidationEntities.Any())
+                        await _DependencyValidationRepository.RemoveListAsync(DependencyValidationEntities);
+
+                    if (ViewWhenRelationEntities.Any())
+                        await _ViewWhenRelationRepository.RemoveListAsync(ViewWhenRelationEntities);
+
+                    // Add General Validaiton if The Request.GeneralValidationObject is NOT NULL..
+                    if (Request.GeneralValidationObject is not null)
+                    {
+                        GeneralValidation NewGeneralValidationEntity = _Mapper.Map<GeneralValidation>(Request.GeneralValidationObject);
+                        NewGeneralValidationEntity.DynamicAttributeId = Request.Id;
+
+                        await _GeneralValidationRepository.AddAsync(NewGeneralValidationEntity);
+                    }
+
+                    // Add Dependency Validaiton if The Request.DependencyValidations is NOT NULL..
+                    if (Request.DependencyValidations is not null)
+                    {
+                        foreach (CreateDependencyValidation DependencyValidationDTO in Request.DependencyValidations)
+                        {
+                            // Create New DependencyGroupId To Combine The Group Of Dependenies With Each Other and With Their Validation..
+                            DependencyGroup NewDependencyGroup = new DependencyGroup();
+                            await _DependencyGroupRepository.AddAsync(NewDependencyGroup);
+
+                            foreach (CreateDependency DependencyDTO in DependencyValidationDTO.Dependencies)
+                            {
+                                Dependency NewDependencyEntity = _Mapper.Map<Dependency>(DependencyDTO);
+                                NewDependencyEntity.DependencyGroupId = NewDependencyGroup.Id;
+                                NewDependencyEntity.MainDynamicAttributeId = Request.Id;
+                                await _DependencyRepository.AddAsync(NewDependencyEntity);
+                            }
+
+                            DependencyValidation NewDependencyValidationEntity = _Mapper.Map<DependencyValidation>(DependencyValidationDTO);
+                            NewDependencyValidationEntity.DependencyGroupId = NewDependencyGroup.Id;
+                            await _DependencyValidationRepository.AddAsync(NewDependencyValidationEntity);
+                        }
+                    }
+
+                    // Add ViewWhen Relation Data..
+                    if (Request.ViewWhenDtos?.Any() ?? false)
+                    {
+                        List<ViewWhenRelation> NewViewWhenRelationEntities = Request.ViewWhenDtos
+                            .Select(x => new ViewWhenRelation()
+                            {
+                                DynamicAttributeId = Request.Id,
+                                DynamicAttributeListValueId = x.DynamicAttributeListValueId
+                            }).ToList();
+
+                        await _ViewWhenRelationRepository.AddRangeAsync(NewViewWhenRelationEntities);
                     }
 
                     Transaction.Complete();

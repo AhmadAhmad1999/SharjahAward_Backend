@@ -338,6 +338,9 @@ using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsi
 using SharijhaAward.Domain.Entities;
 using SharijhaAward.Application.Features.HomePageSliderItems.Commands.UpdateHomePageSliderItem;
 using SharijhaAward.Application.Features.GeneralFAQs.Queries.GetGeneralFAQById;
+using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllLastVersionsForAllTypes;
+using SharijhaAward.Application.Features.GeneralFAQs.Commands.UpdateGeneralFAQ;
+using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetHomePageSliderItemById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -673,6 +676,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AdvancedFormBuilderListValue, UpdateAdvancedFormBuilderListValueCommand>().ReverseMap();
             CreateMap<AdvancedFormBuilderSection, UpdateAdvancedFormBuilderSectionCommand>().ReverseMap();
             CreateMap<ExplanatoryMessage, UpdateExplanatoryMessageCommand>().ReverseMap();
+            CreateMap<GeneralFAQ, UpdateGeneralFAQCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -737,6 +741,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ExplanatoryMessage, GetAllExplanatoryMessageListVM>().ReverseMap();
             CreateMap<ExplanatoryMessage, GetExplanatoryMessageByIdDto>().ReverseMap();
             CreateMap<GeneralFAQ, GeneralFAQDto>().ReverseMap();
+            CreateMap<AppVersion, GetAllLastVersionsForAllTypesListVM>().ReverseMap();
+            CreateMap<HomePageSlider, GetHomePageSliderItemByIdDto>().ReverseMap();
         }
     }
 }

@@ -40,5 +40,6 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
         public int ExpectedNumberOfWinners { get; set; }
         public string MainCategoryName { get; set; } = string.Empty;
         public bool isHasFile { get; set; }
+        public List<SubCategoriesDto> SubCategories { get; set; } = new List<SubCategoriesDto>();
     }
 }

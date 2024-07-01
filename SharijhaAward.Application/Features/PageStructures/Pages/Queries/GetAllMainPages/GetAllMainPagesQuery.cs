@@ -10,6 +10,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAll
 {
     public class GetAllMainPagesQuery : IRequest<BaseResponse<List<MainPageListVM>>>
     {
+        public int page { get; set; }
+        public int perPage { get; set; }
         public string? lang { get; set; }
     }
 }
