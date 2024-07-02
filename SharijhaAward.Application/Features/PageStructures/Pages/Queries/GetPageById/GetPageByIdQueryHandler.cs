@@ -45,6 +45,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
 
             var data = _mapper.Map<PageDto>(page);
 
+            data.Components = new List<Component>();
+
             var DarkCardsList = _mapper.Map<List<DarkCardListVM>>(DarkCards);
 
             var ParagraphCardsList = _mapper.Map<List<ParagraphCardListVM>>(ParagraphCards);
@@ -54,7 +56,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 var Component = new Component()
                 {
                     Card = Darkcard,
-                    CardType = "Darkcard"
+                    CardType = "Darkcard",
+                    orderId = Darkcard.orderId
                 };
 
                 data.Components!.Add(Component);
@@ -65,11 +68,14 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 var Component = new Component()
                 {
                     Card = Paragraphcard,
-                    CardType = "Paragraphcard"
+                    CardType = "Paragraphcard",
+                    orderId = Paragraphcard.orderId
                 };
 
                 data.Components!.Add(Component);
             }
+
+            data.Components.OrderBy(c => c.orderId);
 
             data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle;
 

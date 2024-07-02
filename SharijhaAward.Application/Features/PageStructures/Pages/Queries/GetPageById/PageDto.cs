@@ -25,7 +25,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
         public string? ArabicContent { get; set; }
         public string Slug { get; set; } = string.Empty;
 
-        public List<Component>? Components { get; set; }
+        public List<Component>? Components { get; set; } = null!; 
 
     }
 }

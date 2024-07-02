@@ -10,5 +10,6 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
     {
         public object Card { get; set; } = null!;
         public string CardType { get; set; } = string.Empty;
+        public int orderId { get; set; }
     }
 }

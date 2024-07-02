@@ -15,5 +15,6 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.Ge
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishContent { get; set; } = string.Empty;
         public string ArabicContent { get; set; } = string.Empty;
+        public int orderId { get; set; }
     }
 }

@@ -45,6 +45,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
 
             var data = _mapper.Map<PageDto>(page);
 
+            data.Components = new List<Component>();
+
             var DarkCardsList = DarkCards
                 .Select(x => new DarkCardListVM()
                 {

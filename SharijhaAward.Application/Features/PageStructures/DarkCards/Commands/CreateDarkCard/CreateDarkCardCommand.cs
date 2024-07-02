@@ -10,6 +10,7 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.C
 {
     public class CreateDarkCardCommand : IRequest<BaseResponse<object>>
     {
+        public int orderId { get; set; }
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishContent { get; set; } = string.Empty;
