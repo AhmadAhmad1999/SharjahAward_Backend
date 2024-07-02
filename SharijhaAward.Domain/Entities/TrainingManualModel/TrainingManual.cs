@@ -24,3 +24,4 @@ public class TrainingManual : AuditableEntity {
    public Category Category { get; set; } = null!;
 
 }
+

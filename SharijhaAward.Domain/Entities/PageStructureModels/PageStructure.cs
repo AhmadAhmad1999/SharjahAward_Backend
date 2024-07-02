@@ -29,5 +29,7 @@ namespace SharijhaAward.Domain.Entities.PageStructureModel
 
         public List<DarkCard>? DarkCards { get; set; }
         public List<ParagraphCard>? ParagraphCards { get; set; }
+        public List<TextCard>? TextCards { get; set; }
+        public List<ImageCard>? ImageCards { get; set; }
     }
 }

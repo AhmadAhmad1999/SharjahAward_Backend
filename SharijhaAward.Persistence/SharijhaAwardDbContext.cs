@@ -231,6 +231,9 @@ namespace SharijhaAward.Persistence
         public DbSet<CircularCoordinator> CircularCoordinators { get; set; }
         public DbSet<CircularChairman> CircularChairmans { get; set; }
         public DbSet<CircularAttachment> CircularAttachments { get; set; }
+        public DbSet<TextCard> TextCards { get; set; }
+        public DbSet<ImageCard> ImageCards { get; set; }
+        public DbSet<PageStructureImages> PageStructureImages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -365,6 +368,9 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CircularCoordinator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CircularArbitrator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<TextCard>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ImageCard>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<PageStructureImages>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<PageStructure>()
                 .HasIndex(p => p.EnglishTitle)

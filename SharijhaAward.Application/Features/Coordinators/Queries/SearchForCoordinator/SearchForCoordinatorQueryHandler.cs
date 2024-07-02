@@ -94,7 +94,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                     .Select(x => x.Coordinator)
                     .ToList()!;
 
-                
             }
 
             if(request.School != null)
@@ -104,9 +103,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                     .Where(x => x.EducationalInstitutionId == request.School)
                     .Select(x => x.Coordinator)
                     .ToList()!;
-
-                
-
+ 
             }
             var data = _mapper.Map<List<CoordinatorSearchListVM>>(Coordinators);
 
