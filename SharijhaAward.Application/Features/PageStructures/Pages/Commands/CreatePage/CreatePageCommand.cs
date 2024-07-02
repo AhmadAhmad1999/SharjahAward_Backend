@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.CreatePage
 {
-    public class CreatePageCommand : IRequest<BaseResponse<object>>
+    public class CreatePageCommand : IRequest<BaseResponse<int>>
     {
         public bool hasHelography { get; set; }
         public IFormFile? Icon { get; set; }
@@ -19,7 +19,9 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
         public string? ArabicSubTitle { get; set; }
         public string? EnglishContent { get; set; }
         public string? ArabicContent { get; set; }
+        public string? Slug { get; set; }
         public int? ParentId { get; set; }
+
 
         public string? lang { get; set; }
     }

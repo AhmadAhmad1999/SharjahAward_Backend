@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.CreatePage
 {
     public class CreatePageCommandHandler
-        : IRequestHandler<CreatePageCommand, BaseResponse<object>>
+        : IRequestHandler<CreatePageCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
         private readonly IFileService _fileService;
@@ -26,14 +26,14 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<object>> Handle(CreatePageCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreatePageCommand request, CancellationToken cancellationToken)
         {
             if(request.ParentId != null)
             {
                 var ParentPage = await _pageStructureRepository.GetByIdAsync(request.ParentId);
                 if (ParentPage == null)
                 {
-                    return new BaseResponse<object>("", false, 404);
+                    return new BaseResponse<int>("", false, 404);
                 }
             }
             
@@ -44,13 +44,16 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
                 page.IconUrl = await _fileService.SaveFileAsync(request.Icon);
             }
 
-            var slug = page.EnglishTitle;
+            var slug = request.Slug == null
+                ? request.EnglishTitle
+                : request.Slug;
+            
             slug.ToLower();
             page.Slug = slug.Replace(" ", "_");
 
-            await _pageStructureRepository.AddAsync(page);
+            var data = await _pageStructureRepository.AddAsync(page);
 
-            return new BaseResponse<object>("", true, 200);
+            return new BaseResponse<int>("", true, 200, data.Id);
 
         }
     }

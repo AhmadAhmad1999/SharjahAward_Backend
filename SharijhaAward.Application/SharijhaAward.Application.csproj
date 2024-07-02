@@ -54,6 +54,8 @@
   <ItemGroup>
     <Folder Include="Features\EducationalInstitutions\Queries\GetEducationalInstitutionsByEntityId\" />
     <Folder Include="Features\Identity\Role\Command\" />
+    <Folder Include="Features\PageStructures\ImageCards\Queries\" />
+    <Folder Include="Features\PageStructures\TextCards\" />
     <Folder Include="Features\Subscriber\Queries\" />
     <Folder Include="Features\TrainingWorkshops\Attacments\Queries\" />
   </ItemGroup>

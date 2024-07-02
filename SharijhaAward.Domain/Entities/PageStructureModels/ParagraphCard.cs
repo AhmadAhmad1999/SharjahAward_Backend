@@ -18,6 +18,7 @@ namespace SharijhaAward.Domain.Entities.PageStructureModels
         public string? ArabicContent { get; set; } = string.Empty;
         public string? ImageUrl { get; set; } = string.Empty;
         public bool? ImageInStart { get; set; }
+        public int orderId { get; set; }
         public PageStructure PageStructure { get; set; } = null!;
 
         [ForeignKey(nameof(PageStructure))]

@@ -12,6 +12,7 @@ namespace SharijhaAward.Domain.Entities.PageStructureModels
     public class DarkCard : AuditableEntity
     {
         public int Id { get; set; }
+        public int orderId { get; set; }
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishContent { get; set; } = string.Empty;

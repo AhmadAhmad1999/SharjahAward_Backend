@@ -10,6 +10,7 @@ namespace SharijhaAward.Domain.Entities.PageStructureModels
     public class ImageCard : AuditableEntity
     {
         public int Id { get; set; }
+        public int orderId { get; set; }
 
         public List<PageStructureImages> Images { get; set; } = null!;
     }

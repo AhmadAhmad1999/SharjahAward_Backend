@@ -91,6 +91,18 @@ namespace SharijhaAward.Api.MiddleWares
 
                                             await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                                         }
+                                        else if(error.Message.Contains("Cannot insert duplicate key row in object"))
+                                        {
+                                            Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                                            
+                                            BaseResponse<string> Response = new BaseResponse<string>
+                                                ("An error occurred. Cannot insert duplicate key row in object. " /*+*/
+                                                /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest,
+                                                $"Exception = {Ex.Message}" +
+                                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                        }
                                         else
                                         {
                                             Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -223,6 +235,18 @@ namespace SharijhaAward.Api.MiddleWares
 
                                         BaseResponse<string> Response = new BaseResponse<string>
                                             ("هذا الإيميل مستخدم مسبقاً.", false, (int)HttpStatusCode.BadRequest,
+                                            $"Exception = {Ex.Message}" +
+                                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                    }
+                                    else if(error.Message.Contains("Cannot insert duplicate key row in object"))
+                                    {
+                                        Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                                        BaseResponse<string> Response = new BaseResponse<string>
+                                            ("حدث خطأ. لا يمكن إضافة قيمة متشابهة . " /*+*/
+                                           /* $"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest,
                                             $"Exception = {Ex.Message}" +
                                                 (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
 

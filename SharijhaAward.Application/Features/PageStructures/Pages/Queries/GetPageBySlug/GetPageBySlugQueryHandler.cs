@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
 
             var data = _mapper.Map<PageDto>(page);
 
-            data.DarkCards = DarkCards
+            var DarkCardsList = DarkCards
                 .Select(x => new DarkCardListVM()
                 {
                     Id = x.Id,
@@ -63,7 +63,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
 
             //data.DarkCards = _mapper.Map<List<DarkCardListVM>>(DarkCards);
 
-            data.ParagraphCards = ParagraphCards
+            var ParagraphCardsList = ParagraphCards
                 .Select(x => new ParagraphCardListVM()
                 {
                     Id = x.Id,
@@ -81,6 +81,28 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                     ImageUrl = x.ImageUrl,
                     PageId = x.PageId
                 }).ToList();
+
+            foreach (var Darkcard in DarkCardsList)
+            {
+                var Component = new Component()
+                {
+                    Card = Darkcard,
+                    CardType = "Darkcard"
+                };
+
+                data.Components!.Add(Component);
+            }
+
+            foreach (var Paragraphcard in ParagraphCardsList)
+            {
+                var Component = new Component()
+                {
+                    Card = Paragraphcard,
+                    CardType = "Paragraphcard"
+                };
+
+                data.Components!.Add(Component);
+            }
 
             //data.ParagraphCards = _mapper.Map<List<ParagraphCardListVM>>(ParagraphCards);
 

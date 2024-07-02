@@ -45,10 +45,32 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
 
             var data = _mapper.Map<PageDto>(page);
 
-            data.DarkCards = _mapper.Map<List<DarkCardListVM>>(DarkCards);
+            var DarkCardsList = _mapper.Map<List<DarkCardListVM>>(DarkCards);
 
-            data.ParagraphCards = _mapper.Map<List<ParagraphCardListVM>>(ParagraphCards);
-            
+            var ParagraphCardsList = _mapper.Map<List<ParagraphCardListVM>>(ParagraphCards);
+
+            foreach(var Darkcard in DarkCardsList)
+            {
+                var Component = new Component()
+                {
+                    Card = Darkcard,
+                    CardType = "Darkcard"
+                };
+
+                data.Components!.Add(Component);
+            }
+
+            foreach (var Paragraphcard in ParagraphCardsList)
+            {
+                var Component = new Component()
+                {
+                    Card = Paragraphcard,
+                    CardType = "Paragraphcard"
+                };
+
+                data.Components!.Add(Component);
+            }
+
             data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle;
 
             data.SubTitle = request.lang == "en" ? data.EnglishSubTitle! : data.ArabicSubTitle!;
