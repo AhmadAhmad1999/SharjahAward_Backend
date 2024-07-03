@@ -31,6 +31,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
 
         public bool RelatedToClasses { get; set; }
         public int ExpectedNumberOfWinners { get; set; }
+        public string? ExplanatoryGuideUrl { get; set; }
         public List<SubcategoriesListVM> subcategories { get; set; } = null!;
 
     }

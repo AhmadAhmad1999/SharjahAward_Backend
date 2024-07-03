@@ -7,6 +7,7 @@ using SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using SharijhaAward.Domain.Entities.RewardModel;
 using System;
 using System.Collections.Generic;
@@ -22,13 +23,15 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<Reward> _rewardRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
+        private readonly IAsyncRepository<ExplanatoryGuide> _explanatoryGuideRepository;
         private readonly IMapper _mapper;
 
-        public GetAllCategoryQueryHandler(IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Reward> rewardRepository, IAsyncRepository<Category> categoryRepository, IMapper mapper)
+        public GetAllCategoryQueryHandler(IAsyncRepository<ExplanatoryGuide> explanatoryGuideRepository, IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Reward> rewardRepository, IAsyncRepository<Category> categoryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
             _rewardRepository = rewardRepository;
             _cycleRepository = cycleRepository;
+            _explanatoryGuideRepository = explanatoryGuideRepository;
             _mapper = mapper;
         }
         public async Task<BaseResponse<List<CategoryListVM>>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
@@ -51,11 +54,22 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
            
             for (int i = 0; i < data.Count; i++)
             {
-                List<Category> subCategories = _categoryRepository.Where(c => c.ParentId == data[i].Id).ToList();
+                List<Category> subCategories = _categoryRepository
+                    .Where(c => c.ParentId == data[i].Id)
+                    .ToList();
                
                 data[i].subcategories = _mapper.Map<List<SubcategoriesListVM>>(subCategories);
                 for(int j = 0; j < data[i].subcategories.Count(); j++)
                 {
+                    var expGiud = await _explanatoryGuideRepository.FirstOrDefaultAsync(e=>e.CategoryId == data[i].Id);
+                    
+                    if(expGiud != null)
+                    {
+                        data[i].ExplanatoryGuideUrl = request.lang == "en"
+                            ? expGiud.EnglishFilePath
+                            : expGiud.ArabicFilePath;
+                    }
+                   
                     data[i].subcategories[j].Name = request.lang == "en"
                         ? subCategories[j].EnglishName
                         : subCategories[j].ArabicName;   

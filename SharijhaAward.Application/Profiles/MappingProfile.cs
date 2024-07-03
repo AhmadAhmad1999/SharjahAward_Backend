@@ -341,6 +341,10 @@ using SharijhaAward.Application.Features.GeneralFAQs.Queries.GetGeneralFAQById;
 using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllLastVersionsForAllTypes;
 using SharijhaAward.Application.Features.GeneralFAQs.Commands.UpdateGeneralFAQ;
 using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetHomePageSliderItemById;
+using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.CreateTextCard;
+using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetTextCardById;
+using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetAllTextCard;
+using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.UpdateTextCard;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -602,7 +606,10 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ResponsibilityUser, ResponsibilityUserDto>().ReverseMap();
             CreateMap<ResponsibilityUser, UserRepositoryDto>().ReverseMap();
 
-
+            CreateMap<TextCard, CreateTextCardCommand>().ReverseMap();
+            CreateMap<TextCard, UpdateTextCardCommand>().ReverseMap();
+            CreateMap<TextCard, TextCardListVM>().ReverseMap();
+            CreateMap<TextCard, TextCardDto>().ReverseMap();
 
             //
             // Dynamic Attribute..ParagraphCard
