@@ -36,7 +36,8 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendasForAwardT
 
         public async Task<BaseResponse<List<AgendaListVm>>> Handle(GetAgendasForAwardTeamQuery request, CancellationToken cancellationToken)
         {
-            var AdminId = _jwtProvider.GetUserIdFromToken(request.token);
+            var AdminId = _jwtProvider.GetUserIdFromToken(request.token!);
+
             var Admin = AdminId != null
                 ? await _userRepository.GetByIdAsync(int.Parse(AdminId))
                 : null;
@@ -60,7 +61,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendasForAwardT
                 return new BaseResponse<List<AgendaListVm>>(msg, false, 400);
             }
 
-            var Agendas = await _agendaRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id && a.IsPrivate, request.page, request.perPage);
+            var Agendas = await _agendaRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id , request.page, request.perPage);
             
             foreach (var agenda in Agendas)
             {

@@ -163,6 +163,7 @@ namespace SharijhaAward.Api.Controllers
                 page = page,
                 perPage = perPage,
                 CycleId = CycleId,
+                token = token!,
                 lang = Language!
             });
 
