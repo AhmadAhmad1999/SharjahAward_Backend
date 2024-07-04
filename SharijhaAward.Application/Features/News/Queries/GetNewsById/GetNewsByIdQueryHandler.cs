@@ -31,7 +31,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsById
                 
             string msg;
 
-            if (news == null || news.IsHidden)
+            if (news == null)
             {
                 msg = request.lang == "en"
                     ? "The News is Not Found"

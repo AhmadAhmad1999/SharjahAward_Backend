@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.ReferenceSourcesModel;
 using System;
 using System.Collections.Generic;
@@ -15,11 +18,15 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferen
         : IRequestHandler<GetReferenceSourcePageQuery, BaseResponse<ReferenceSourceDto>>
     {
         private readonly IAsyncRepository<ReferenceSource> _referenceSourceRepository;
-        private IMapper _mapper;
+        private readonly IAsyncRepository<Category> _categoryRepository;
+        private readonly IAsyncRepository<Cycle> _cycleRepository;
+        private readonly IMapper _mapper;
 
-        public GetReferenceSourcePageQueryHandler(IAsyncRepository<ReferenceSource> referenceSourceRepository, IMapper mepper)
+        public GetReferenceSourcePageQueryHandler(IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Category> categoryRepository, IAsyncRepository<ReferenceSource> referenceSourceRepository, IMapper mepper)
         {
             _referenceSourceRepository = referenceSourceRepository;
+            _categoryRepository = categoryRepository;
+            _cycleRepository = cycleRepository;
             _mapper = mepper;
         }
 
@@ -36,7 +43,14 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferen
             //    return new BaseResponse<ReferenceSourceDto>(msg, false, 404);
             //}
 
-           
+            var Cycle = await _cycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active);
+            
+            if(Cycle != null)
+            {
+                var SubCategories = await _categoryRepository
+                    .Where(c => c.ParentId != null && c.CycleId == Cycle.Id)
+                    .ToListAsync();
+            }
             var data = _mapper.Map<ReferenceSourceDto>(ReferenceSourcePage);
 
             data.Title = request.lang == "en"
