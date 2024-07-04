@@ -24,6 +24,8 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateAbou
         public string EnglishOurVisionDescription { get; set; } = string.Empty;
         public IFormFile OurVisionImage { get; set; } = null!;
         public bool IsGoalsHidden { get; set; }
+        public string ArabicOurGoalTitle { get; set; } = string.Empty;
+        public string EnglishOurGoalTitle { get; set; } = string.Empty;
         public string lang {  get; set; } = string.Empty;
     }
 }

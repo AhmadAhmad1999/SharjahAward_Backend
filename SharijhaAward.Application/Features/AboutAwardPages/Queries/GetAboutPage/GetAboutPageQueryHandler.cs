@@ -63,6 +63,10 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPag
                 data.OurVisionDescription = request.lang == "en"
                     ? data.EnglishOurVisionDescription
                     : data.ArabicOurVisionDescription;
+
+                 data.OurGoalTitle = request.lang == "en"
+                     ? data.EnglishOurGoalTitle
+                     : data.ArabicOurGoalTitle;
             
 
             return new BaseResponse<AboutPageDto>("", true, 200, data);

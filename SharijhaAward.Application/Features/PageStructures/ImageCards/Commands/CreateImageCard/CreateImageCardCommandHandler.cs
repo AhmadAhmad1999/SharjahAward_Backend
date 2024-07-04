@@ -57,7 +57,7 @@ namespace SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.
                 var pageImage = new PageStructureImages()
                 {
                     ImageUrl = await _fileService.SaveFileAsync(image),
-                    ImageId = data.Id
+                    ImageCardId = data.Id
                 };
 
                 await _pageStructureImagesRepository.AddAsync(pageImage);

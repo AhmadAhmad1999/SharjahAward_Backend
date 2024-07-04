@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.PageStructureModels;
@@ -15,17 +16,37 @@ namespace SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.G
         : IRequestHandler<GetAllImageCardsQuery, BaseResponse<List<ImageCardListVM>>>
     {
         private readonly IAsyncRepository<ImageCard> _imageCardsRepository;
+        private readonly IAsyncRepository<PageStructureImages> _pageStructuresImagesRepository;
         private readonly IMapper _mapper;
 
-        public GetAllImageCardsQueryHandler(IAsyncRepository<ImageCard> imageCardsRepository, IMapper mapper)
+        public GetAllImageCardsQueryHandler(IAsyncRepository<PageStructureImages> pageStructuresImagesRepository, IAsyncRepository<ImageCard> imageCardsRepository, IMapper mapper)
         {
             _imageCardsRepository = imageCardsRepository;
             _mapper = mapper;
         }
 
-        public Task<BaseResponse<List<ImageCardListVM>>> Handle(GetAllImageCardsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<ImageCardListVM>>> Handle(GetAllImageCardsQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var ImageCards = request.pageId == null
+                ? await _imageCardsRepository.GetPagedReponseAsync(request.page, request.perPage)
+                : await _imageCardsRepository.GetWhereThenPagedReponseAsync(i => i.PageId == request.pageId, request.page, request.perPage);
+            
+            var data = _mapper.Map<List<ImageCardListVM>>(ImageCards);
+            
+            foreach(var imageCard in data)
+            {
+                var Images = await _pageStructuresImagesRepository
+                    .Where(p => p.ImageCardId == imageCard.Id)
+                    .ToListAsync();
+                
+                imageCard.CardImages = _mapper.Map<List<PageImageDto>>(Images);
+            }
+
+            int count = _imageCardsRepository.GetCount(i => !i.isDeleted);
+
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
+
+            return new BaseResponse<List<ImageCardListVM>>("", true, 200, data, pagination);
         }
     }
 }

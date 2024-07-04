@@ -10,6 +10,6 @@ namespace SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.G
     {
         public int Id { get; set;} 
         public int orderId { get; set;}
-        public List<PageImageDto> CardImages { get; set;}
+        public List<PageImageDto> CardImages { get; set; } = null!;
     }
 }

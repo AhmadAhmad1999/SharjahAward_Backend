@@ -48,6 +48,10 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPag
             var data = _mapper.Map<AboutPageDto>(AboutPage);
 
             data.OurGoals = AboutPage.IsGoalsHidden == true ? null! : ourGols;
+            
+            data.OurGoalTitle = request.lang == "en"
+                ? data.EnglishOurGoalTitle
+                : data.ArabicOurGoalTitle;
 
             if (AboutPage.IsAboutHidden)
             {

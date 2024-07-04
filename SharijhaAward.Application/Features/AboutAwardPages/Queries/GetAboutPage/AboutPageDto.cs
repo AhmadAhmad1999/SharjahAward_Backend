@@ -26,6 +26,9 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPag
         public string EnglishOurVisionDescription { get; set; } = string.Empty;
         public string OurVisionImage { get; set; } = string.Empty;
         public bool IsGoalsHidden { get; set; }
+        public string OurGoalTitle { get; set; } = string.Empty;
+        public string ArabicOurGoalTitle { get; set; } = string.Empty;
+        public string EnglishOurGoalTitle { get; set; } = string.Empty;
         public List<OurGoalsDto> OurGoals { get; set; } = null!;
     }
 }

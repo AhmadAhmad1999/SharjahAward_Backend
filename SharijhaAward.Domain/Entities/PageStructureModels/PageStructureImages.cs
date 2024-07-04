@@ -15,6 +15,6 @@ namespace SharijhaAward.Domain.Entities.PageStructureModels
 
         public ImageCard ImageCard { get; set; } = null!;
         [ForeignKey(nameof(ImageCard))]
-        public int ImageId { get; set; }
+        public int ImageCardId { get; set; }
     }
 }
