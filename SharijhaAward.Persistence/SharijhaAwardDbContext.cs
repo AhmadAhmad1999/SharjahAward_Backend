@@ -670,15 +670,15 @@ namespace SharijhaAward.Persistence
                  },
                  new Permission()
                  {
-                    Id = 23,
-                    Name = "حذف محكم صف",
-                    PermissionHeaderId = 8,
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null
+                     Id = 23,
+                     Name = "حذف محكم صف",
+                     PermissionHeaderId = 8,
+                     isDeleted = false,
+                     CreatedAt = DateTime.UtcNow,
+                     CreatedBy = null,
+                     DeletedAt = null,
+                     LastModifiedAt = null,
+                     LastModifiedBy = null
 
                  },
                 //-----------Cycle------------
@@ -1203,7 +1203,8 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Text"
+                    Name = "Text",
+                    ArabicName = "نص"
                 }, new AttributeDataType()
                 {
                     Id = 2,
@@ -1213,7 +1214,8 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Email"
+                    Name = "Email",
+                    ArabicName = "بريد إلكتروني"
                 }, new AttributeDataType()
                 {
                     Id = 3,
@@ -1223,7 +1225,8 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Image"
+                    Name = "Image",
+                    ArabicName = "صورة"
                 }, new AttributeDataType()
                 {
                     Id = 4,
@@ -1233,7 +1236,8 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "File"
+                    Name = "File",
+                    ArabicName = "ملف"
                 }, new AttributeDataType()
                 {
                     Id = 5,
@@ -1243,7 +1247,8 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Phone Number"
+                    Name = "Phone Number",
+                    ArabicName = "رقم هاتف متحرك"
                 }, new AttributeDataType()
                 {
                     Id = 6,
@@ -1253,7 +1258,8 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Number"
+                    Name = "Number",
+                    ArabicName = "رقم"
                 }, new AttributeDataType()
                 {
                     Id = 7,
@@ -1263,7 +1269,8 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Date"
+                    Name = "Date",
+                    ArabicName = "تاريخ"
                 }, new AttributeDataType()
                 {
                     Id = 8,
@@ -1273,7 +1280,8 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "List"
+                    Name = "List",
+                    ArabicName = "قائمة منسدلة"
                 }, new AttributeDataType()
                 {
                     Id = 9,
@@ -1283,7 +1291,8 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Location"
+                    Name = "Location",
+                    ArabicName = "موقع"
                 }, new AttributeDataType()
                 {
                     Id = 10,
@@ -1293,7 +1302,8 @@ namespace SharijhaAward.Persistence
                     isDeleted = false,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Name = "Emirates ID number"
+                    Name = "Emirates ID number",
+                    ArabicName = "رقم هوية إماراتية"
                 });
 
             modelBuilder.Entity<AttributeOperation>()
@@ -1537,7 +1547,7 @@ namespace SharijhaAward.Persistence
                     ArabicName = "منسق 1",
                     Email = "Coordinator@Coordinator.com",
                     EnglishName = "Coordinator 1",
-                   
+
                     PhoneNumber = "0993521579"
                 }, new Coordinator()
                 {
@@ -1860,7 +1870,7 @@ namespace SharijhaAward.Persistence
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     ArabicName = "ادمن 123",
-                    Email = "ahmad.a.ahmad.100011@gmail.com",
+                    Email = "admin@gmail.com",
                     PhoneNumber = "0993521579",
                     EnglishName = "Admin 123",
                     Gender = Gender.Male,
@@ -2483,7 +2493,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                }, 
+                },
                 new PermissionHeader()
                 {
                     Id = 2,
@@ -2494,7 +2504,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                }, 
+                },
                 new PermissionHeader()
                 {
                     Id = 3,
@@ -2505,7 +2515,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                }, 
+                },
                 new PermissionHeader()
                 {
                     Id = 4,
@@ -2527,7 +2537,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                }, 
+                },
                 new PermissionHeader()
                 {
                     Id = 6,
@@ -2538,7 +2548,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                }, 
+                },
                 new PermissionHeader()
                 {
                     Id = 7,
@@ -2549,7 +2559,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                }, 
+                },
                 new PermissionHeader()
                 {
                     Id = 8,
@@ -2571,7 +2581,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 10,
                     Name = "Agenda",
@@ -2581,7 +2591,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 11,
                     Name = "Category",
@@ -2591,7 +2601,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 12,
                     Name = "GeneralCondition",
@@ -2601,7 +2611,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 13,
                     Name = "EducationalEntity",
@@ -2611,7 +2621,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 14,
                     Name = "SystemFiles",
@@ -2621,7 +2631,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 15,
                     Name = "GeneralWorkshop",
@@ -2631,7 +2641,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 16,
                     Name = "Instruction",
@@ -2641,7 +2651,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 17,
                     Name = "Meeting",
@@ -2651,7 +2661,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 18,
                     Name = "News",
@@ -2661,7 +2671,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 19,
                     Name = "Notification",
@@ -2671,7 +2681,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 20,
                     Name = "NotificationTemplate",
@@ -2681,7 +2691,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 21,
                     Name = "Role",
@@ -2691,7 +2701,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 22,
                     Name = "User",
@@ -2701,7 +2711,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 23,
                     Name = "Coordinator",
@@ -2711,7 +2721,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 24,
                     Name = "Arbitrator",
@@ -2721,7 +2731,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 25,
                     Name = "Committee",
@@ -2731,7 +2741,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 26,
                     Name = "SubscriberAccount",
@@ -2741,7 +2751,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 27,
                     Name = "SubscriberProfile",
@@ -2751,7 +2761,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 28,
                     Name = "SubscriberForm",
@@ -2761,7 +2771,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 29,
                     Name = "Event",
@@ -2771,7 +2781,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 30,
                     Name = "ContactUs",
@@ -2781,7 +2791,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 31,
                     Name = "ExplanatoryMessage",
@@ -2791,7 +2801,7 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
-                },new PermissionHeader()
+                }, new PermissionHeader()
                 {
                     Id = 32,
                     Name = "Responsibility",
@@ -4600,7 +4610,7 @@ namespace SharijhaAward.Persistence
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            foreach (var entry in ChangeTracker.Entries <AuditableEntity> ())
+            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
                 switch (entry.State)
                 {

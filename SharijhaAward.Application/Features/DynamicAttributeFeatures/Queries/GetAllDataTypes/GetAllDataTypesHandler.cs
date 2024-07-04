@@ -23,8 +23,15 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
             string Language = !string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() : "ar";
 
-            List<GetAllDataTypesListVM> DataTypes = _Mapper.Map<List<GetAllDataTypesListVM>>(await _AttributeDataTypeRepository
-                .OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync());
+            List<GetAllDataTypesListVM> DataTypes = await _AttributeDataTypeRepository
+                .OrderByDescending(x => x.CreatedAt, 0, -1)
+                .Select(x => new GetAllDataTypesListVM()
+                {
+                    Id = x.Id,
+                    Name = Language == "en"
+                        ? x.Name
+                        : x.ArabicName
+                }).ToListAsync();
 
             string ResponseMessage = string.Empty;
 
