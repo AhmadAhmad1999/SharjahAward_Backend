@@ -345,6 +345,10 @@ using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.Creat
 using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetTextCardById;
 using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetAllTextCard;
 using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.UpdateTextCard;
+using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.CreateImageCard;
+using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.UpdateImageCard;
+using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetAllImageCards;
+using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetImageCardById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -610,6 +614,12 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<TextCard, UpdateTextCardCommand>().ReverseMap();
             CreateMap<TextCard, TextCardListVM>().ReverseMap();
             CreateMap<TextCard, TextCardDto>().ReverseMap();
+
+            CreateMap<ImageCard, CreateImageCardCommand>().ReverseMap();
+            CreateMap<ImageCard, UpdateImageCardCommand>().ReverseMap();
+            CreateMap<ImageCard, ImageCardListVM>().ReverseMap();
+            CreateMap<ImageCard, ImageCardDto>().ReverseMap();
+            CreateMap<PageStructureImages, PageImageDto>().ReverseMap();
 
             //
             // Dynamic Attribute..ParagraphCard
