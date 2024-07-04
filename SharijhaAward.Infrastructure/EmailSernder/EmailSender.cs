@@ -47,7 +47,8 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                 client.Credentials = Credentials;
                 client.Host = Host;
                 client.Port = Port;
-                client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
+                //client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
+                client.EnableSsl = true;
 
                 MailMessage Message = new MailMessage
                 {
@@ -87,7 +88,8 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                 client.Credentials = Credentials;
                 client.Host = Host;
                 client.Port = Port;
-                client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
+                //client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
+                client.EnableSsl = true;
 
                 MailMessage Message = new MailMessage
                 {
@@ -95,7 +97,7 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                     Subject = EmailRequest.Subject,
                     IsBodyHtml = true
                 };
-
+                // Message.AlternateViews.Add(AlternateView);
                 Message.To.Add(EmailRequest.ToEmail);
                 try
                 {
@@ -126,7 +128,8 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                 client.Credentials = Credentials;
                 client.Host = Host;
                 client.Port = Port;
-                client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
+                //client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
+                client.EnableSsl = true;
 
                 MailMessage Message = new MailMessage
                 {
@@ -184,7 +187,8 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                             client.Credentials = credentials;
                             client.Host = host;
                             client.Port = port;
-                            client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
+                            //client.EnableSsl = bool.Parse(_Configuration.GetSection("SMTP:EnableSsl").Value!);
+                            client.EnableSsl = true;
 
                             foreach (var recipient in batch)
                             {
