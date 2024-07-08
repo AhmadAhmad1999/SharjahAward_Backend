@@ -16,7 +16,6 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferen
         public string EnglishSources { get; set; } = string.Empty;
         public string ArabicSources { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
-        public string CategoryName { get; set; } = string.Empty;
-        public string ExplanatoryGuideUrl { get; set; } = string.Empty;
+        public List<CategoryExplanatoryGuideDto>? ExplanatoryGuides { get; set;}
     }
 }

@@ -5,6 +5,7 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForm
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedFormsForAllSubscriber;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
@@ -15,11 +16,12 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
     {
         private readonly IUserRepository _UserRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _FormRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
 
-        public GetAllFormsForAllSubscriberQueryHandler(IUserRepository UserRepository,
+        public GetAllFormsForAllSubscriberQueryHandler(IAsyncRepository<Cycle> CycleRepository, IUserRepository UserRepository,
             IAsyncRepository<Category> CategoryRepository,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> FormRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
@@ -27,6 +29,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
         {
             _UserRepository = UserRepository;
             _CategoryRepository = CategoryRepository;
+            _CycleRepository = CycleRepository;
             _FormRepository = FormRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
@@ -35,6 +38,27 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery request, CancellationToken cancellationToken)
         {
             var forms = await _FormRepository.GetPagedReponseAsync(request.page, request.perPage);
+
+            var cycle = await _CycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active);
+          
+            if(cycle != null)
+            {
+                forms = new List<Domain.Entities.ProvidedFormModel.ProvidedForm>();
+
+                var SubCategories = await _CategoryRepository
+                    .Where(c => c.CycleId == cycle!.Id && c.ParentId != null)
+                    .ToListAsync();
+                
+                foreach( var subCategory in SubCategories)
+                {
+                    var ProvidedForms = await _FormRepository
+                        .Where(f => f.categoryId == subCategory.Id)
+                        .ToListAsync();
+
+                    forms.ToList().AddRange(ProvidedForms);
+                }
+            }
+
             var Subscribers = await _UserRepository.Where(s => s.SubscriberId != null).ToListAsync();
             if (forms.Any())
             {

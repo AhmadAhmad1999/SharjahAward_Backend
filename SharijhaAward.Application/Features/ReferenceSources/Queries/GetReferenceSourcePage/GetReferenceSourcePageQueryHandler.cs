@@ -5,6 +5,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using SharijhaAward.Domain.Entities.ReferenceSourcesModel;
 using System;
 using System.Collections.Generic;
@@ -20,13 +21,15 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferen
         private readonly IAsyncRepository<ReferenceSource> _referenceSourceRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
+        private readonly IAsyncRepository<ExplanatoryGuide> _explanatoryGuideRepository;
         private readonly IMapper _mapper;
 
-        public GetReferenceSourcePageQueryHandler(IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Category> categoryRepository, IAsyncRepository<ReferenceSource> referenceSourceRepository, IMapper mepper)
+        public GetReferenceSourcePageQueryHandler(IAsyncRepository<ExplanatoryGuide> explanatoryGuideRepository, IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Category> categoryRepository, IAsyncRepository<ReferenceSource> referenceSourceRepository, IMapper mepper)
         {
             _referenceSourceRepository = referenceSourceRepository;
             _categoryRepository = categoryRepository;
             _cycleRepository = cycleRepository;
+            _explanatoryGuideRepository = explanatoryGuideRepository;
             _mapper = mepper;
         }
 
@@ -45,13 +48,36 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferen
 
             var Cycle = await _cycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active);
             
-            if(Cycle != null)
+            var data = _mapper.Map<ReferenceSourceDto>(ReferenceSourcePage);
+
+            data.ExplanatoryGuides = new List<CategoryExplanatoryGuideDto>();
+
+            if (Cycle != null)
             {
                 var SubCategories = await _categoryRepository
                     .Where(c => c.ParentId != null && c.CycleId == Cycle.Id)
                     .ToListAsync();
+
+                foreach(var subCategory in SubCategories)
+                {
+                    var ExplanatoryGuide = await _explanatoryGuideRepository.Where(e => e.CategoryId == subCategory.Id).FirstOrDefaultAsync();
+                    
+                    if(ExplanatoryGuide != null)
+                    {
+                        var CategoryExplanatoryGuide = new CategoryExplanatoryGuideDto()
+                        {
+                            SubCategoryName = request.lang == "en" ? subCategory.EnglishName : subCategory.ArabicName,
+
+                            ExplanatoryGuideUrl = request.lang == "en"
+                                ? ExplanatoryGuide!.EnglishFilePath
+                                : ExplanatoryGuide!.ArabicFilePath
+                        };
+
+                        data.ExplanatoryGuides.Add(CategoryExplanatoryGuide);
+                    }
+
+                }
             }
-            var data = _mapper.Map<ReferenceSourceDto>(ReferenceSourcePage);
 
             data.Title = request.lang == "en"
                 ? data.EnglishTitle
