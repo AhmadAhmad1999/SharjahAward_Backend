@@ -42,7 +42,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
             if (CheckIfCriterionItemIdIsExist.MaxAttachmentNumber > 0)
             {
                 int CountOfPreviousAttachments = await _CriterionItemAttachmentRepository
-                    .GetCountAsync(x => x.CriterionItemId == Request.CriterionItemId);
+                    .GetCountAsync(x => x.CriterionItemId == Request.CriterionItemId &&
+                        x.ProvidedFormId == Request.ProvidedFormId);
 
                 if (CountOfPreviousAttachments + 1 > CheckIfCriterionItemIdIsExist.MaxAttachmentNumber)
                 {

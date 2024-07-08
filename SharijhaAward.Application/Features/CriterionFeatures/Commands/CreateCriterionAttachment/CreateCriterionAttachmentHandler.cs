@@ -43,7 +43,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
             if (CheckIfCriterionIdIsExist.MaxAttachmentNumber > 0)
             {
                 int CountOfPreviousAttachments = await _CriterionAttachmentRepository
-                    .GetCountAsync(x => x.CriterionId == Request.CriterionId);
+                    .GetCountAsync(x => x.CriterionId == Request.CriterionId &&
+                        x.ProvidedFormId == Request.ProvidedFormId);
 
                 if (CountOfPreviousAttachments + 1 > CheckIfCriterionIdIsExist.MaxAttachmentNumber)
                 {
@@ -58,7 +59,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
 
             CriterionAttachment NewCriterionEntity = _Mapper.Map<CriterionAttachment>(Request);
 
-            NewCriterionEntity.AttachementPath = await _AttachmentFileService.SaveFileAsync(Request.Attachment);
+            NewCriterionEntity.AttachementPath = await _AttachmentFileService.SaveProvidedFormFilesAsync(Request.Attachment, Request.ProvidedFormId);
 
             await _CriterionAttachmentRepository.AddAsync(NewCriterionEntity);
 

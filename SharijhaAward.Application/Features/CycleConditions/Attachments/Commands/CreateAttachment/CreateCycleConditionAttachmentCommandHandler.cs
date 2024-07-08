@@ -80,7 +80,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Command
             {
                 if (term.RequiredAttachmentNumber > conditionsProvided.Attachments.Count || term.RequiredAttachmentNumber == 0)
                 {
-                    data.AttachementPath = await _attachmentFileService.SaveFileAsync(request.attachment);
+                    data.AttachementPath = await _attachmentFileService.SaveProvidedFormFilesAsync(request.attachment, form!.Id);
                     await _attachmentsRepository.AddAsync(data);
                 }
                 else

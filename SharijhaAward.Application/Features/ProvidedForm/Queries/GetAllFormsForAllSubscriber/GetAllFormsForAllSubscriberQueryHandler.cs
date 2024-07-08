@@ -37,86 +37,80 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery request, CancellationToken cancellationToken)
         {
-            var forms = await _FormRepository.GetPagedReponseAsync(request.page, request.perPage);
-
             var cycle = await _CycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active);
-          
-            if(cycle != null)
-            {
-                forms = new List<Domain.Entities.ProvidedFormModel.ProvidedForm>();
 
+            if (cycle != null)
+            {
                 var SubCategories = await _CategoryRepository
                     .Where(c => c.CycleId == cycle!.Id && c.ParentId != null)
+                    .Select(c => c.Id)
                     .ToListAsync();
-                
-                foreach( var subCategory in SubCategories)
+
+                var forms = await _FormRepository.GetPagedReponseWithPredicateAsync(f => f.Category.CycleId == cycle.Id, request.page, request.perPage);
+
+                var Subscribers = await _UserRepository.Where(s => s.SubscriberId != null).ToListAsync();
+                if (forms.Any())
                 {
-                    var ProvidedForms = await _FormRepository
-                        .Where(f => f.categoryId == subCategory.Id)
+                    List<FinalArbitration> GetAllFromsInFinalArbitration = await _FinalArbitrationRepository
+                        .Where(x => forms.Select(y => y.Id).Contains(x.ProvidedFormId))
                         .ToListAsync();
 
-                    forms.ToList().AddRange(ProvidedForms);
-                }
-            }
+                    var SubscribersNames = await _DynamicAttributeValueRepository
+                        .Include(x => x.DynamicAttribute!)
+                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                        .Where(x => forms.Select(y => y.Id).Any(y => y == x.RecordId) &&
+                            x.DynamicAttribute!.DynamicAttributeSection!.EnglishName == "Main Information" &&
+                            x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
+                        .Select(x => new
+                        {
+                            x.RecordId,
+                            x.Value
+                        }).ToListAsync();
 
-            var Subscribers = await _UserRepository.Where(s => s.SubscriberId != null).ToListAsync();
-            if (forms.Any())
-            {
-                List<FinalArbitration> GetAllFromsInFinalArbitration = await _FinalArbitrationRepository
-                    .Where(x => forms.Select(y => y.Id).Contains(x.ProvidedFormId))
-                    .ToListAsync();
+                    var Categories = await _CategoryRepository
+                        .Where(x => forms.Select(y => y.categoryId).Contains(x.Id))
+                        .Include(x => x.Parent!).ToListAsync();
 
-                var SubscribersNames = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                    .Where(x => forms.Select(y => y.Id).Any(y => y == x.RecordId) &&
-                        x.DynamicAttribute!.DynamicAttributeSection!.EnglishName == "Main Information" &&
-                        x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
-                    .Select(x => new
+                    var data = forms.Select(x => new FormListVm()
                     {
-                        x.RecordId,
-                        x.Value
-                    }).ToListAsync();
+                        Id = x.Id,
+                        SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
+                            ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
+                            : null,
+                        subscriberCode = Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId,
+                        PercentCompletion = x.PercentCompletion,
+                        CycleNumber = x.CycleNumber,
+                        CycleYear = x.CycleYear,
+                        Type = x.Type,
+                        Status = x.Status,
+                        SubscriberType = x.SubscriberType,
+                        CurrentStep = x.CurrentStep,
+                        TotalStep = x.TotalStep,
+                        FinalScore = x.FinalScore,
+                        IsAccepted = x.IsAccepted,
+                        ReasonOfRejection = x.ReasonOfRejection!,
+                        categoryId = x.categoryId,
+                        CreatedAt = x.CreatedAt,
+                        CategoryName = request.lang == "en"
+                            ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.EnglishName
+                            : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
+                        SubCategoryName = request.lang == "en"
+                            ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
+                            : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
+                        SucceedToFinalArbitration = GetAllFromsInFinalArbitration
+                            .Any(y => y.ProvidedFormId == x.Id)
+                    }).ToList();
 
-                var Categories = await _CategoryRepository
-                    .Where(x => forms.Select(y => y.categoryId).Contains(x.Id))
-                    .Include(x => x.Parent!).ToListAsync();
+                    int count = _FormRepository.GetCount(f => !f.isDeleted);
 
-                var data = forms.Select(x => new FormListVm()
+                    Pagination pagination = new Pagination(request.page, request.perPage, count);
+
+                    return new BaseResponse<List<FormListVm>>("", true, 200, data, pagination);
+                }
+                else
                 {
-                    Id = x.Id,
-                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
-                        ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
-                        : null,
-                    subscriberCode = Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId,
-                    PercentCompletion = x.PercentCompletion,
-                    CycleNumber = x.CycleNumber,
-                    CycleYear = x.CycleYear,
-                    Type = x.Type,
-                    Status = x.Status,
-                    SubscriberType = x.SubscriberType,
-                    CurrentStep = x.CurrentStep,
-                    TotalStep = x.TotalStep,
-                    FinalScore = x.FinalScore,
-                    IsAccepted = x.IsAccepted,
-                    ReasonOfRejection = x.ReasonOfRejection!,
-                    categoryId = x.categoryId,
-                    CreatedAt = x.CreatedAt,
-                    CategoryName = request.lang == "en"
-                        ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.EnglishName
-                        : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
-                    SubCategoryName = request.lang == "en"
-                        ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
-                        : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
-                    SucceedToFinalArbitration = GetAllFromsInFinalArbitration
-                        .Any(y => y.ProvidedFormId == x.Id)
-                }).ToList();
-
-                int count = _FormRepository.GetCount(f => !f.isDeleted);
-
-                Pagination pagination = new Pagination(request.page, request.perPage, count);
-
-                return new BaseResponse<List<FormListVm>>("", true, 200, data, pagination);
+                    return new BaseResponse<List<FormListVm>>("", true, 200, new List<FormListVm>());
+                }
             }
             else
             {

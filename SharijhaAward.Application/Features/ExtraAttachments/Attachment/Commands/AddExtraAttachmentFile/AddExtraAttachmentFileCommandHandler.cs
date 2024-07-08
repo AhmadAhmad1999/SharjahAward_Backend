@@ -45,7 +45,8 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
                 return new BaseResponse<object>(msg, false, 404);
             }
             var data = _mapper.Map<ExtraAttachmentFile>(request);
-            data.FileUrl = await _fileService.SaveFileAsync(request.File);
+
+            data.FileUrl = await _fileService.SaveProvidedFormFilesAsync(request.File, ExtraAttachment.ProvidedFormId);
 
             await _extraAttachmentsFileRepository.AddAsync(data);
 
