@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.SocialMediaModel;
 using System;
 using System.Collections.Generic;
@@ -48,13 +49,13 @@ namespace SharijhaAward.Application.Features.SocialMediaPage.Commands.UpdateSoci
             _mapper.Map(request, item, typeof(UpdateSocialMediaItemCommand), typeof(SocialMedia));
 
             if (request.UpdateOnThumbnail)
-                item.ThumbnailUrl = await _fileService.SaveFileAsync(request.Thumbnail!);
+                item.ThumbnailUrl = await _fileService.SaveFileAsync(request.Thumbnail!, SystemFileType.Images);
             else
                 item.ThumbnailUrl = thumbnail;
 
 
             if (request.UpdateOnLogo)
-                item.LogoUrl = await _fileService.SaveFileAsync(request.Logo!);
+                item.LogoUrl = await _fileService.SaveFileAsync(request.Logo!, SystemFileType.Icons);
             else
                 item.LogoUrl = logo;
 

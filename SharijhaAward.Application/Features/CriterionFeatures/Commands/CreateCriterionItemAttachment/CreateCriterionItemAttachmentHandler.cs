@@ -58,7 +58,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
 
             CriterionItemAttachment NewCriterionEntity = _Mapper.Map<CriterionItemAttachment>(Request);
 
-            NewCriterionEntity.AttachementPath = await _AttachmentFileService.SaveFileAsync(Request.Attachment);
+            NewCriterionEntity.AttachementPath = await _AttachmentFileService.SaveProvidedFormFilesAsync(Request.Attachment, Request.ProvidedFormId);
 
             await _CriterionItemAttachmentRepository.AddAsync(NewCriterionEntity);
 

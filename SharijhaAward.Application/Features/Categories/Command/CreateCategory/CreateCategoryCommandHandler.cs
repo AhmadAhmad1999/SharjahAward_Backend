@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CycleModel;
@@ -74,7 +75,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
             }
             var category = _mapper.Map<Category>(request);
 
-            category.Icon = await  _fileService.SaveFileAsync(request.Icon);
+            category.Icon = await  _fileService.SaveFileAsync(request.Icon, SystemFileType.Icons);
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {

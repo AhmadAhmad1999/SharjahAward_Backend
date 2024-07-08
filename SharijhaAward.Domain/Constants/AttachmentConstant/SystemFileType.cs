@@ -13,6 +13,9 @@ namespace SharijhaAward.Domain.Constants.AttachmentConstant
         ExplanatoryGuide,
         Icons,
         ContactUsFiles,
-        Circulars
+        Circulars,
+        Gallery,
+        ExcelFiles,
+        Videos
     }
 }

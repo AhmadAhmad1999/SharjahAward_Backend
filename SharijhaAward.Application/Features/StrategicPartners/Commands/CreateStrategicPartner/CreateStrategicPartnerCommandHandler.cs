@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.StrategicPartnerModel;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace SharijhaAward.Application.Features.StrategicPartners.Commands.CreateSt
 
             var StrategicPartner = _mapper.Map<StrategicPartner>(request);
 
-            StrategicPartner.LogoUrl = await _fileService.SaveFileAsync(request.Logo);
+            StrategicPartner.LogoUrl = await _fileService.SaveFileAsync(request.Logo, SystemFileType.Icons);
 
             await _strategicPartnerRepository.AddAsync(StrategicPartner);
 

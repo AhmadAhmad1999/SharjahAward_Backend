@@ -40,8 +40,8 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateAbou
             }
             var AboutPage = _mapper.Map<AboutAwardPage>(request);
 
-            AboutPage.AboutImage = await _fileService.SaveFileAsync(request.AboutImage);
-            AboutPage.OurVisionImage = await _fileService.SaveFileAsync(request.OurVisionImage);
+            AboutPage.AboutImage = await _fileService.SaveFileAsync(request.AboutImage, 0);
+            AboutPage.OurVisionImage = await _fileService.SaveFileAsync(request.OurVisionImage, 0);
 
             await _aboutAwardPageRepository.AddAsync(AboutPage);
 

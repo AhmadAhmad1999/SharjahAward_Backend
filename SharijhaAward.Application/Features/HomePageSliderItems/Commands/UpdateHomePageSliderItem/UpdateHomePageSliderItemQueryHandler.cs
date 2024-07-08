@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.HomePageSliderModel;
 
 namespace SharijhaAward.Application.Features.HomePageSliderItems.Commands.UpdateHomePageSliderItem
@@ -40,7 +41,7 @@ namespace SharijhaAward.Application.Features.HomePageSliderItems.Commands.Update
             _mapper.Map(request, item, typeof(UpdateHomePageSliderItemQuery), typeof(HomePageSlider));
 
             item.ImageUrl = request.EditOnImage == true
-                ? item.ImageUrl = await _fileService.SaveFileAsync(request.Image!)
+                ? item.ImageUrl = await _fileService.SaveFileAsync(request.Image!, SystemFileType.Images)
                 : item.ImageUrl = image;
 
             await _homePageSliderRepository.UpdateAsync(item);

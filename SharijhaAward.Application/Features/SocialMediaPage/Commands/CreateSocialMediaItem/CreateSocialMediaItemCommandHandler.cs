@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.SocialMediaModel;
 using System;
 using System.Collections.Generic;
@@ -36,9 +37,9 @@ namespace SharijhaAward.Application.Features.SocialMediaPage.Commands.CreateSoci
 
             if(request.Logo != null)
             {
-                item.LogoUrl = await _fileService.SaveFileAsync(request.Logo);
+                item.LogoUrl = await _fileService.SaveFileAsync(request.Logo, SystemFileType.Icons);
             }
-            item.ThumbnailUrl = await _fileService.SaveFileAsync(request.Thumbnail);
+            item.ThumbnailUrl = await _fileService.SaveFileAsync(request.Thumbnail, 0);
 
             await _socialMediaRepository.AddAsync(item);
 

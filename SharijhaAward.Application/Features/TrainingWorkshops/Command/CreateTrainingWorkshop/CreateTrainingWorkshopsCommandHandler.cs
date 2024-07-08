@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
                 return new BaseResponse<int>("Category Not Found",false,404);
             }
             TrainingWorkshop workshop = _mapper.Map<TrainingWorkshop>(request);
-            string ThumbnailPath = await _fileService.SaveFileAsync(request.Thumbnail);
+            string ThumbnailPath = await _fileService.SaveFileAsync(request.Thumbnail, 0);
             workshop.Thumbnail = ThumbnailPath;
 
             var data = await _trainingWorkshopRepository.AddAsync(workshop);

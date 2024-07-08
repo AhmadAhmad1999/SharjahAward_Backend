@@ -5,6 +5,7 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AgendaConstants;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AgendaModel;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.UpdateAgenda
             _mapper.Map(request, agendaToUpdate, typeof(UpdateAgendaCommand), typeof(Agenda));
 
             if (request.UpdateOnIcone)
-                agendaToUpdate.Icon = await _fileService.SaveFileAsync(request.Icon!);
+                agendaToUpdate.Icon = await _fileService.SaveFileAsync(request.Icon!, SystemFileType.Icons);
             else
                 agendaToUpdate.Icon = Icon;
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MimeKit;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AttachmentModel;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace SharijhaAward.Application.Contract.Infrastructure
 {
     public interface IFileService
     {
-        Task<string> SaveFileAsync(IFormFile file);
+        Task<string> SaveFileAsync(IFormFile file, SystemFileType fileType);
         Task<string> SaveFileAndGetPath(IFormFile file);
         Task<string> SaveProvidedFormFilesAsync(IFormFile file, int formId);
         Task<byte[]> ReadFileAsync(string filePath);

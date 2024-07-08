@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 using System;
 using System.Collections.Generic;
@@ -31,14 +32,14 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.CreateGen
         {
             var GeneralWorkshop = _mapper.Map<GeneralWorkshop>(request);
 
-            GeneralWorkshop.Thumbnale = await _fileService.SaveFileAsync(request.Thumbnale);
+            GeneralWorkshop.Thumbnale = await _fileService.SaveFileAsync(request.Thumbnale, 0);
 
             GeneralWorkshop.Video = request.Video != null
-                ? await _fileService.SaveFileAsync(request.Video) 
+                ? await _fileService.SaveFileAsync(request.Video, SystemFileType.Videos) 
                 : string.Empty;
 
             GeneralWorkshop.AgendaImage = request.AgendaImage != null
-                ? await _fileService.SaveFileAsync(request.AgendaImage)
+                ? await _fileService.SaveFileAsync(request.AgendaImage, SystemFileType.Images)
                 : string.Empty;
 
 

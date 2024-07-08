@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using System;
 using System.Collections.Generic;
@@ -45,10 +46,10 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Commands.UpdateEx
             _mapper.Map(request, GuideToUpdate, typeof(UpdateExplanatoryGuideCommand), typeof(ExplanatoryGuide));
             
             if(request.UpdateOnEnglishFile)
-                GuideToUpdate.EnglishFilePath = await _fileService.SaveFileAsync(request.EnglishFile!);
+                GuideToUpdate.EnglishFilePath = await _fileService.SaveFileAsync(request.EnglishFile!, SystemFileType.ExplanatoryGuide);
             
             if (request.UpdateOnArabicFile)
-                GuideToUpdate.ArabicFilePath = await _fileService.SaveFileAsync(request.ArabicFile!);
+                GuideToUpdate.ArabicFilePath = await _fileService.SaveFileAsync(request.ArabicFile!, SystemFileType.ExplanatoryGuide);
 
             await _explanatoryGuideRepository.UpdateAsync(GuideToUpdate);
 

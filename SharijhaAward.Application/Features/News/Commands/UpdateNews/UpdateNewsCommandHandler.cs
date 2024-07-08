@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.NewsModel;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
             _mapper.Map(request,newsToUpdate,typeof(UpdateNewsCommand),typeof(Domain.Entities.NewsModel.News));
 
             newsToUpdate.Image = request.EditeOnImage == true
-                ? newsToUpdate.Image = await _fileService.SaveFileAsync(request.Image!)
+                ? newsToUpdate.Image = await _fileService.SaveFileAsync(request.Image!, SystemFileType.Images)
                 : newsToUpdate.Image = Image;
 
             if (request.AddNewImages)
@@ -62,7 +63,7 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
                         var NewsImage = new NewsImage()
                         {
                             NewsId = newsToUpdate.Id,
-                            ImageUrl = await _fileService.SaveFileAsync(image)
+                            ImageUrl = await _fileService.SaveFileAsync(image, SystemFileType.Images)
                         };
                         await _newsImageRepository.AddAsync(NewsImage); 
                     }

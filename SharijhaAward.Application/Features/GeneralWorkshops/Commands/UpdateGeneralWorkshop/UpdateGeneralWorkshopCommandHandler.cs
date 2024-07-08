@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 using System;
 using System.Collections.Generic;
@@ -42,17 +43,17 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGen
             _mapper.Map(request, WorkshopToUpdate, typeof(UpdateGeneralWorkshopCommand), typeof(GeneralWorkshop));
 
             if (request.UpdateThumbnale)
-                WorkshopToUpdate.Thumbnale = await _fileService.SaveFileAsync(request.Thumbnale);
+                WorkshopToUpdate.Thumbnale = await _fileService.SaveFileAsync(request.Thumbnale, SystemFileType.Images);
             else
                 WorkshopToUpdate.Thumbnale = Workshop.Thumbnale;
 
             if (request.UpdateVideo)
-                WorkshopToUpdate.Video = await _fileService.SaveFileAsync(request.Video!);
+                WorkshopToUpdate.Video = await _fileService.SaveFileAsync(request.Video!, SystemFileType.Videos);
             else
                 WorkshopToUpdate.Video = Workshop.Video;
 
             if (request.UpdateAgendaImage)
-                WorkshopToUpdate.AgendaImage = await _fileService.SaveFileAsync(request.AgendaImage!);
+                WorkshopToUpdate.AgendaImage = await _fileService.SaveFileAsync(request.AgendaImage!, SystemFileType.Images);
             else
                 WorkshopToUpdate.AgendaImage = Workshop.AgendaImage;
 

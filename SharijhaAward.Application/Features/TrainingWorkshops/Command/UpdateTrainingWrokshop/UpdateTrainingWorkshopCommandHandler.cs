@@ -4,6 +4,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTra
             _mapper.Map(request, worksopToUpdate, typeof(UpdateTrainingWorkshopCommand), typeof(TrainingWorkshop));
            
             if (request.EditeOnThumbnail)
-                worksopToUpdate.Thumbnail = await _fileService.SaveFileAsync(request.Thumbnail!);
+                worksopToUpdate.Thumbnail = await _fileService.SaveFileAsync(request.Thumbnail!, SystemFileType.Images);
             else
                 worksopToUpdate.Thumbnail = thumbnail;
             

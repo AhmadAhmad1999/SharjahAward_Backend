@@ -5,6 +5,7 @@ using Org.BouncyCastle.Bcpg;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.ContactUsModels;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
@@ -120,7 +121,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                 {
                     EmailAttachment emailAttachment = new EmailAttachment()
                     {
-                        AttachmentUrl = await _fileService.SaveFileAsync(attachment),
+                        AttachmentUrl = await _fileService.SaveFileAsync(attachment, SystemFileType.ContactUsFiles),
                         MessageId = data.Id
                     };    
                     

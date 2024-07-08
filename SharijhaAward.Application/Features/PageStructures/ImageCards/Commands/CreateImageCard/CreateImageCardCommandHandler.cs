@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 using SharijhaAward.Domain.Entities.PageStructureModels;
 using System;
@@ -56,7 +57,7 @@ namespace SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.
             {
                 var pageImage = new PageStructureImages()
                 {
-                    ImageUrl = await _fileService.SaveFileAsync(image),
+                    ImageUrl = await _fileService.SaveFileAsync(image, SystemFileType.Images),
                     ImageCardId = data.Id
                 };
 

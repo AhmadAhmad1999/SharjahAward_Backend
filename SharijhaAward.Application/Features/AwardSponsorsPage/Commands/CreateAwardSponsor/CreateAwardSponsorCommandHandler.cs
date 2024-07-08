@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AwardSponsorModel;
 using System;
 using System.Collections.Generic;
@@ -30,9 +31,9 @@ namespace SharijhaAward.Application.Features.AwardSponsorsPage.Commands.CreateAw
         {
             var Sponser = _mapper.Map<AwardSponsor>(request);
 
-            Sponser.Image = await _fileService.SaveFileAsync(request.Image);
-            Sponser.Image2 = await _fileService.SaveFileAsync(request.Image2);
-            Sponser.Image3 = await _fileService.SaveFileAsync(request.Image3);
+            Sponser.Image = await _fileService.SaveFileAsync(request.Image, SystemFileType.Images);
+            Sponser.Image2 = await _fileService.SaveFileAsync(request.Image2, SystemFileType.Images);
+            Sponser.Image3 = await _fileService.SaveFileAsync(request.Image3, SystemFileType.Images);
 
             await _awardSponsorRepository.AddAsync(Sponser);
 

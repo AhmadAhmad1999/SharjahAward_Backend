@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.NewsModel;
 using System;
@@ -36,7 +37,7 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
             var news = _mapper.Map<Domain.Entities.NewsModel.News>(request);
             
             news.Image = request.Image != null
-                ? await _fileService.SaveFileAsync(request.Image!)
+                ? await _fileService.SaveFileAsync(request.Image!, SystemFileType.Images)
                 : null;
 
             var data = await _newsRepository.AddAsync(news);
@@ -47,7 +48,7 @@ namespace SharijhaAward.Application.Features.News.Commands.CreateNews
                 {
                     var newsImage = new NewsImage()
                     {
-                        ImageUrl = await _fileService.SaveFileAsync(image),
+                        ImageUrl = await _fileService.SaveFileAsync(image, SystemFileType.Images),
                         NewsId = data.Id
                     };
                     await _newsImageRepository.AddAsync(newsImage);

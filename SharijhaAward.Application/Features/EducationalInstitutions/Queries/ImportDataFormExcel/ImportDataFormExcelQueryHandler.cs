@@ -2,6 +2,7 @@
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Imp
 
         public async Task<BaseResponse<object>> Handle(ImportDataFormExcelQuery request, CancellationToken cancellationToken)
         {
-            var filePath = await _fileService.SaveFileAsync(request.ImporterFile);
+            var filePath = await _fileService.SaveFileAsync(request.ImporterFile, SystemFileType.ExcelFiles);
             byte[] file = await _fileService.ReadFileAsync(filePath);
             var EducationalInstitutions = _excelHelper.ImportFromExcel(file);
 

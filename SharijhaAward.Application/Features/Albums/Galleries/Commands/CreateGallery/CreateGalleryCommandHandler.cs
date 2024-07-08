@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AlbumModel;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace SharijhaAward.Application.Features.Albums.Galleries.Commands.CreateGal
 
             var Gallery = _mapper.Map<Gallery>(request);
 
-            Gallery.FileUrl = await _fileService.SaveFileAsync(request.FileUrl);
+            Gallery.FileUrl = await _fileService.SaveFileAsync(request.FileUrl, SystemFileType.Gallery);
 
             await _galleryRepository.AddAsync(Gallery);
 

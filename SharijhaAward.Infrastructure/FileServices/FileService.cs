@@ -10,6 +10,7 @@ using SharijhaAward.Domain.Entities.AttachmentModel;
 using System.Net;
 using Microsoft.Extensions.Hosting;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
+using EnumsNET;
 
 namespace SharijhaAward.Infrastructure.FileServices
 {
@@ -57,17 +58,21 @@ namespace SharijhaAward.Infrastructure.FileServices
             bool isHttps = _httpContextAccessor.HttpContext!.Request.IsHttps;
 
             return isHttps
-                  ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/ProvidedForm/${formId}/{filePath.Split('\\').LastOrDefault()}"
-                  : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/ProvidedForm/${formId}/{filePath.Split('\\').LastOrDefault()}";
+                  ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/ProvidedForm/{formId}/{filePath.Split('\\').LastOrDefault()}"
+                  : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/ProvidedForm/{formId}/{filePath.Split('\\').LastOrDefault()}";
         }
 
-        public async Task<string> SaveFileAsync(IFormFile file)
+        public async Task<string> SaveFileAsync(IFormFile file, SystemFileType fileType)
         {
-            SystemFileType fileType = new SystemFileType();
+            
+            string path = _SavePath + "/" + $"{fileType.GetName()}";
 
-            string path = _SavePath + "/" + $"{fileType}";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
 
-            var filePath = Path.Combine(_SavePath, Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
+            var filePath = Path.Combine(path, Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -76,8 +81,8 @@ namespace SharijhaAward.Infrastructure.FileServices
             bool isHttps = _httpContextAccessor.HttpContext!.Request.IsHttps;
 
             return isHttps
-                  ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{filePath.Split('\\').LastOrDefault()}"
-                  : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{filePath.Split('\\').LastOrDefault()}";
+                  ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{fileType.GetName()}/{filePath.Split('\\').LastOrDefault()}"
+                  : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{fileType.GetName()}/{filePath.Split('\\').LastOrDefault()}";
         }
         public async Task<string> SaveFileAndGetPath(IFormFile file)
         {

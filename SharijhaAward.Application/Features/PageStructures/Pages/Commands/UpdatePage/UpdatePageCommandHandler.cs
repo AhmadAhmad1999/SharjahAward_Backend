@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Updat
             _mapper.Map(request, page, typeof(UpdatePageCommand), typeof(PageStructure));
 
             if (request.UpdateOnIcon != null && request.UpdateOnIcon == true)
-                page.IconUrl = await _fileService.SaveFileAsync(request.Icon!);
+                page.IconUrl = await _fileService.SaveFileAsync(request.Icon!, SystemFileType.Icons);
             else
                 page.IconUrl = Icon;
 

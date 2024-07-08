@@ -5,6 +5,7 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AgendaConstants;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AgendaModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using System;
@@ -57,7 +58,7 @@ namespace SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda
 
                 return new BaseResponse<object>(msg, false, 400);
             }
-            agenda.Icon = await _fileService.SaveFileAsync(request.Icon);
+            agenda.Icon = await _fileService.SaveFileAsync(request.Icon, SystemFileType.Icons);
 
             var countOfAgenda = await _agendaRepository.GetCountAsync(a => !a.isDeleted && a.CycleId == cycle.Id);
            

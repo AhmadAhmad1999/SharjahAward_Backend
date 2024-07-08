@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
@@ -48,8 +49,8 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateEx
                 return new BaseResponse<object>(msg, false, 404);
             }
             var data = _mapper.Map<ExplanatoryGuide>(request);
-            data.ArabicFilePath = await _attachmentFileService.SaveFileAsync(request.ArabicFile);
-            data.EnglishFilePath = await _attachmentFileService.SaveFileAsync(request.EnglishFile);
+            data.ArabicFilePath = await _attachmentFileService.SaveFileAsync(request.ArabicFile, SystemFileType.ExplanatoryGuide);
+            data.EnglishFilePath = await _attachmentFileService.SaveFileAsync(request.EnglishFile, SystemFileType.ExplanatoryGuide);
             
             await _explanatoryGuideRepository.AddAsync(data);
 

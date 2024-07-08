@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 using System;
@@ -37,7 +38,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
                 return new BaseResponse<object>("", false, 404);
             }
             var data = _mapper.Map<TrainingWrokshopeAttachment>(request);
-            data.AttachementPath = await _fileService.SaveFileAsync(request.attachment);
+            data.AttachementPath = await _fileService.SaveFileAsync(request.attachment, SystemFileType.Pdf);
             await _attachmentRepository.AddAsync(data);
 
             return new BaseResponse<object>("", true, 200);

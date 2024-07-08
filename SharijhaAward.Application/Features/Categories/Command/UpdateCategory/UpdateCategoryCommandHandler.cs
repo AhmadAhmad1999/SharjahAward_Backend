@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Constants.DynamicAttribute;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -184,7 +185,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                     _mapper.Map(request, categoryToUpdate, typeof(UpdateCategoryCommand), typeof(Category));
 
                     if (request.UpdateOnIcon)
-                        categoryToUpdate.Icon = await _fileService.SaveFileAsync(request.Icon!);
+                        categoryToUpdate.Icon = await _fileService.SaveFileAsync(request.Icon!, SystemFileType.Icons);
                     else
                         categoryToUpdate.Icon = categoryIcon;
 

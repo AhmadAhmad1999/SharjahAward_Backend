@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.HomePageSliderModel;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace SharijhaAward.Application.Features.HomePageSliderItems.Commands.Create
         {
             var SliderItem = _mapper.Map<HomePageSlider>(request);
 
-            SliderItem.ImageUrl = await _fileService.SaveFileAsync(request.Image);
+            SliderItem.ImageUrl = await _fileService.SaveFileAsync(request.Image, SystemFileType.Images);
 
             await _homePageSliderRepository.AddAsync(SliderItem);
            

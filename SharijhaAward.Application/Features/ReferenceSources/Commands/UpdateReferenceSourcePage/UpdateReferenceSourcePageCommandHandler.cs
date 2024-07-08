@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.ReferenceSourcesModel;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Commands.UpdateRef
             _mapper.Map(request, ReferenceSourcePage, typeof(UpdateReferenceSourcePageCommand), typeof(ReferenceSource));
             
             if (request.UpdateOnImage)
-                ReferenceSourcePage.ImageUrl = await _fileService.SaveFileAsync(request.Image!);
+                ReferenceSourcePage.ImageUrl = await _fileService.SaveFileAsync(request.Image!, SystemFileType.Images);
             else
                 ReferenceSourcePage.ImageUrl = ImageUrl;
 

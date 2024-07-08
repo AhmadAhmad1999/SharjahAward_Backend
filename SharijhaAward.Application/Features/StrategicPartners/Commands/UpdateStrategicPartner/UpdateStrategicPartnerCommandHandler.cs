@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.StrategicPartnerModel;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace SharijhaAward.Application.Features.StrategicPartners.Commands.UpdateSt
             _mapper.Map(request, StrategicPartner, typeof(UpdateStrategicPartnerCommand), typeof(StrategicPartner));
           
             if (request.UpdateOnLogo)
-                StrategicPartner.LogoUrl = await _fileService.SaveFileAsync(request.Logo!);
+                StrategicPartner.LogoUrl = await _fileService.SaveFileAsync(request.Logo!, SystemFileType.Icons);
             else
                 StrategicPartner.LogoUrl = logoUrl;
 

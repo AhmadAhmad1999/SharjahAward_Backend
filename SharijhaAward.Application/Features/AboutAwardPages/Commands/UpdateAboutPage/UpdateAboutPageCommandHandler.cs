@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AboutAwardPageModel;
 using System;
 using System.Collections.Generic;
@@ -43,11 +44,11 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAbou
             _mapper.Map(request, aboutPage, typeof(UpdateAboutPageCommand), typeof(AboutAwardPage));
 
             aboutPage.AboutImage =  request.EditeOnAboutImage
-                ? aboutPage.AboutImage = await _fileService.SaveFileAsync(request.AboutImage!)
+                ? aboutPage.AboutImage = await _fileService.SaveFileAsync(request.AboutImage!, SystemFileType.Images)
                 : aboutPage.AboutImage = aboutPageImage;
 
             aboutPage.OurVisionImage = request.EditeOnOurVisionImage == true
-                ? aboutPage.OurVisionImage = await _fileService.SaveFileAsync(request.OurVisionImage!)
+                ? aboutPage.OurVisionImage = await _fileService.SaveFileAsync(request.OurVisionImage!, SystemFileType.Images)
                 : aboutPage.OurVisionImage = OurVisionImage;
 
             await _aboutAwardPageRepository.UpdateAsync(aboutPage);

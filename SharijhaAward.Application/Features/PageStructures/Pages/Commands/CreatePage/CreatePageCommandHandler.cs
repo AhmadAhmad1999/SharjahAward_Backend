@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
 
             if(request.Icon != null)
             {
-                page.IconUrl = await _fileService.SaveFileAsync(request.Icon);
+                page.IconUrl = await _fileService.SaveFileAsync(request.Icon, SystemFileType.Icons);
             }
 
             var slug = request.Slug == null

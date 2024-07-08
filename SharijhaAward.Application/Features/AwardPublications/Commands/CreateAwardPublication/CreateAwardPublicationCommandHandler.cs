@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AwardPublicationsModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using System;
@@ -35,8 +36,8 @@ namespace SharijhaAward.Application.Features.AwardPublications.Commands.CreateAw
                 : "تم إنشاء إصدار الجائزة";
 
             var AwardPublication = _mapper.Map<AwardPublication>(request);
-            AwardPublication.ImageUrl = await _fileService.SaveFileAsync(request.Image);
-            AwardPublication.PublicationUrl = await _fileService.SaveFileAsync(request.Publication);
+            AwardPublication.ImageUrl = await _fileService.SaveFileAsync(request.Image, 0);
+            AwardPublication.PublicationUrl = await _fileService.SaveFileAsync(request.Publication, SystemFileType.Pdf);
 
             var data = await _awardPublicationRepository.AddAsync(AwardPublication);
 

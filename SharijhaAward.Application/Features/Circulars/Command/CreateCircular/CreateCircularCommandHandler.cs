@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CircularModel;
 using SharijhaAward.Domain.Entities.ContactUsModels;
@@ -111,7 +112,7 @@ namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
                 {
                     CircularAttachment circularAttachment = new CircularAttachment()
                     {
-                        AttachementPath = await _fileService.SaveFileAsync(attachment),
+                        AttachementPath = await _fileService.SaveFileAsync(attachment, SystemFileType.Circulars),
                         CircularId = data.Id
                     };
 

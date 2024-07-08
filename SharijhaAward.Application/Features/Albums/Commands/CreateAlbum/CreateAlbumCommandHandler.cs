@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AlbumModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using System;
@@ -35,7 +36,7 @@ namespace SharijhaAward.Application.Features.Albums.Commands.CreateAlbum
 
             var album = _mapper.Map<Album>(request);
 
-            album.ThumbnailUrl = await _fileService.SaveFileAsync(request.Thumbnail);
+            album.ThumbnailUrl = await _fileService.SaveFileAsync(request.Thumbnail, SystemFileType.Images);
            
             var data = await _albumRepository.AddAsync(album);
 
