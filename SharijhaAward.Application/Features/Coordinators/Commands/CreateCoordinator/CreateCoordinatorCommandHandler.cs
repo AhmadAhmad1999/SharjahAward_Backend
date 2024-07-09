@@ -16,7 +16,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
          : IRequestHandler<CreateCoordinatorCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
-        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRepository _userRepository;
@@ -25,7 +24,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
         public CreateCoordinatorCommandHandler(IRoleRepository roleRepository,
-            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
             IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
             IAsyncRepository<Coordinator> coordinatorRepository, 
             IFileService fileService, 
@@ -34,7 +32,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
             IAsyncRepository<UserRole> UserRoleRepository)
         {
             _roleRepository = roleRepository;
-            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
             _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
             _coordinatorRepository = coordinatorRepository;
             _userRepository = userRepository;
@@ -124,22 +121,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
 
                         await _UserRoleRepository.AddAsync(NewUserRoleEntity);
                     }
-
-                    IEnumerable<EduEntitiesCoordinator> NewEducationalEntities = Request.EducationalEntitiesIds
-                        .Select(x => new EduEntitiesCoordinator()
-                    {
-                        CreatedAt = DateTime.UtcNow,
-                        CreatedBy = null,
-                        DeletedAt = null,
-                        isDeleted = false,
-                        LastModifiedAt = null,
-                        LastModifiedBy = null,
-                        CoordinatorId = Coordinator.Id,
-                        EducationalEntityId = x,
-                        RelatedDate = DateTime.UtcNow
-                    });
-
-                    await _EduEntitiesCoordinatorRepository.AddRangeAsync(NewEducationalEntities);
 
                     IEnumerable<EduInstitutionCoordinator> NewEducationalInstitutions = Request.EducationalInstitutionsIds
                         .Select(x => new EduInstitutionCoordinator()

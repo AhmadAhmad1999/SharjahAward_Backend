@@ -14,15 +14,13 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
         BaseResponse<List<CoordinatorsListVM>>>
     {
         private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
-        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IMapper _Mapper;
 
-        public GetAllCoordinatorsHandler(IAsyncRepository<Coordinator> CoordinatorRepository,
-            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
+        public GetAllCoordinatorsHandler(
+            IAsyncRepository<Coordinator> CoordinatorRepository,
             IMapper Mapper)
         {
             _CoordinatorRepository = CoordinatorRepository;
-            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
             _Mapper = Mapper;
         }
 
@@ -33,25 +31,13 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
                 .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                 .ToListAsync());
 
-            List<EduEntitiesCoordinator> CoordinatorsEducationalEntities = await _EduEntitiesCoordinatorRepository
-                .Where(x => Coordinators.Select(y => y.Id).Contains(x.CoordinatorId))
-                .Include(x => x.EducationalEntity!)
-                .ToListAsync();
-
             Coordinators = Coordinators.Select(x => new CoordinatorsListVM()
             {
                 Id = x.Id,
                 ArabicName = x.ArabicName,
                 Email = x.Email,
                 EnglishName = x.EnglishName,
-                PhoneNumber = x.PhoneNumber,
-                EducationalEntities = CoordinatorsEducationalEntities.Where(y => y.CoordinatorId == x.Id)
-                    .Select(y => new EduEntitiesCoordinatorDto()
-                    {
-                        Id = y.EducationalEntity!.Id,
-                        ArabicName = y.EducationalEntity.ArabicName,
-                        EnglishName = y.EducationalEntity.EnglishName
-                    }).ToList()
+                PhoneNumber = x.PhoneNumber
             }).ToList();
 
             string ResponseMessage = string.Empty;

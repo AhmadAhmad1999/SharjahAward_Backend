@@ -189,7 +189,6 @@ namespace SharijhaAward.Persistence
         public DbSet<ConditionAttachment> ConditionAttachments { get; set; }
         public DbSet<Coordinator> Coordinators { get; set; }
         public DbSet<EducationalEntity> EducationalEntities { get; set; }
-        public DbSet<EduEntitiesCoordinator> EducationCoordinators { get; set; }
         public DbSet<EducationalInstitution> EducationalInstitutions { get; set; }
         public DbSet<EduInstitutionCoordinator> InstitutionCoordinators { get; set; }
         public DbSet<CriterionAttachment> CriterionAttachments { get; set; }
@@ -329,7 +328,6 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CycleCondition>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Coordinator>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<EduEntitiesCoordinator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalEntity>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EduInstitutionCoordinator>().HasQueryFilter(p => !p.isDeleted);
@@ -1721,56 +1719,7 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Educational Entity 2"
                 });
 
-            modelBuilder.Entity<EduEntitiesCoordinator>()
-                .HasData(new EduEntitiesCoordinator()
-                {
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Id = 1,
-                    RelatedDate = DateTime.Now,
-                    EducationalEntityId = 1,
-                    CoordinatorId = 10
-                }, new EduEntitiesCoordinator()
-                {
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Id = 2,
-                    RelatedDate = DateTime.Now,
-                    EducationalEntityId = 1,
-                    CoordinatorId = 11
-                }, new EduEntitiesCoordinator()
-                {
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Id = 3,
-                    RelatedDate = DateTime.Now,
-                    EducationalEntityId = 2,
-                    CoordinatorId = 12
-                }, new EduEntitiesCoordinator()
-                {
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Id = 4,
-                    RelatedDate = DateTime.Now,
-                    EducationalEntityId = 2,
-                    CoordinatorId = 13
-                });
+           
 
             modelBuilder.Entity<EduInstitutionCoordinator>()
                 .HasData(new EduInstitutionCoordinator()

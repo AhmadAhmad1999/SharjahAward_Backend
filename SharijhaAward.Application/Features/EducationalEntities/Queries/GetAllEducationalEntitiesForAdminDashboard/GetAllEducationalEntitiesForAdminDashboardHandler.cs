@@ -15,18 +15,15 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
     {
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
         private readonly IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository;
-        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
         private readonly IMapper _Mapper;
         public GetAllEducationalEntitiesForAdminDashboardHandler(IAsyncRepository<EducationalEntity> EducationalEntityRepository,
             IAsyncRepository<EducationalInstitution> EducationalInstitutionRepository,
-            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
             IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
             IMapper Mapper)
         {
             _EducationalEntityRepository = EducationalEntityRepository;
             _EducationalInstitutionRepository = EducationalInstitutionRepository;
-            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
             _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
             _Mapper = Mapper;
         }
@@ -40,11 +37,6 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
 
             List<EducationalInstitution> EducationalInstitutionEntities = await _EducationalInstitutionRepository
                 .Where(x => EducationalEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
-                .ToListAsync();
-
-            List<EduEntitiesCoordinator> CoordinatorFromEducationalEntities = await _EduEntitiesCoordinatorRepository
-                .Where(x => EducationalEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
-                .Include(x => x.Coordinator!)
                 .ToListAsync();
 
             List<EduInstitutionCoordinator> CoordinatorFromEducationalInstitution = await _EduInstitutionCoordinatorRepository
@@ -64,21 +56,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
                         Id = y.Id,
                         ArabicName = y.ArabicName,
                         EnglishName = y.EnglishName
-                    }).ToList(),
-                Coordinators = CoordinatorFromEducationalEntities.Where(y => y.EducationalEntityId == x.Id)
-                    .Select(y => new EducaltionalEntitiesCoordinatorListVM()
-                    {
-                        Id = y.Coordinator!.Id,
-                        ArabicName = y.Coordinator!.ArabicName,
-                        EnglishName = y.Coordinator!.EnglishName
-                    }).Concat(CoordinatorFromEducationalInstitution.Where(y => y.EducationalInstitution.EducationalEntityId == x.Id)
-                    .Select(y => new EducaltionalEntitiesCoordinatorListVM()
-                    {
-                        Id = y.Coordinator!.Id,
-                        ArabicName = y.Coordinator!.ArabicName,
-                        EnglishName = y.Coordinator!.EnglishName
-                    }))
-                .Distinct().ToList() 
+                    }).ToList()
             }).ToList();
 
             string ResponseMessage = string.Empty;

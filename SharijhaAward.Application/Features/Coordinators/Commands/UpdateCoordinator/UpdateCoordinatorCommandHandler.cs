@@ -18,21 +18,18 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
         private readonly IUserRepository _userRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
-        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
 
         public UpdateCoordinatorCommandHandler(IUserRepository userRepository,
             IAsyncRepository<Coordinator> coordinatorRepository, 
             IFileService fileService, 
             IMapper mapper,
-            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
             IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository)
         {
             _coordinatorRepository = coordinatorRepository;
             _userRepository = userRepository;
             _fileService = fileService;
             _mapper = mapper;
-            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
             _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
         }
 
@@ -71,22 +68,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
             UserEntity.EnglishName = Request.englishName;
             UserEntity.PhoneNumber = Request.phoneNumber;
 
-            List<int> AlreadyExistEduEntitiesIds = await _EduEntitiesCoordinatorRepository
-                .Where(x => x.CoordinatorId == Request.Id)
-                .Select(x => x.EducationalEntityId)
-                .ToListAsync();
-
-            List<int> IntersectEduEntitiesIds = AlreadyExistEduEntitiesIds
-                .Intersect(Request.EducationalEntitiesIds).ToList();
-
-            List<int> NewEduEntitiesIds = Request.EducationalEntitiesIds
-                .Where(x => !IntersectEduEntitiesIds.Contains(x))
-                .ToList();
-
-            List<int> DeleteEduEntitiesIds = AlreadyExistEduEntitiesIds
-                .Where(x => !IntersectEduEntitiesIds.Contains(x))
-                .ToList();
-
             List<int> AlreadyExistEduInstitutionIds = await _EduInstitutionCoordinatorRepository
                 .Where(x => x.CoordinatorId == Request.Id)
                 .Select(x => x.EducationalInstitutionId)
@@ -116,30 +97,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
                 {
                     await _coordinatorRepository.UpdateAsync(CoordinatorToUpdate);
                     await _userRepository.UpdateAsync(UserEntity);
-
-                    IQueryable<EduEntitiesCoordinator> DeleteEduEntitiesCoordinatorEntites = _EduEntitiesCoordinatorRepository
-                        .Where(x => x.CoordinatorId == Request.Id &&
-                            DeleteEduEntitiesIds.Contains(x.EducationalEntityId));
-
-                    if (DeleteEduEntitiesCoordinatorEntites.Count() > 0)
-                        await _EduEntitiesCoordinatorRepository.DeleteListAsync(DeleteEduEntitiesCoordinatorEntites);
-
-                    IEnumerable<EduEntitiesCoordinator> NewEduEntitiesCoordinatorEntites = NewEduEntitiesIds.
-                        Select(x => new EduEntitiesCoordinator()
-                        {
-                            CoordinatorId = Request.Id,
-                            EducationalEntityId = x,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            DeletedAt = null,
-                            isDeleted = false,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            RelatedDate = DateTime.UtcNow
-                        });
-
-                    if (NewEduEntitiesCoordinatorEntites.Count() > 0)
-                        await _EduEntitiesCoordinatorRepository.AddRangeAsync(NewEduEntitiesCoordinatorEntites);
 
                     IQueryable<EduInstitutionCoordinator> DeleteEduInstitutionCoordinatorEntites = _EduInstitutionCoordinatorRepository
                         .Where(x => x.CoordinatorId == Request.Id &&

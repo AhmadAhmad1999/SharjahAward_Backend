@@ -40,7 +40,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
 
         public async Task<BaseResponse<List<CoordinatorSearchListVM>>> Handle(SearchForCoordinatorQuery request, CancellationToken cancellationToken)
         {
-            var Coordinators = await _coordinatorRepository.Include(c=>c.EducationCoordinators!).Include(c => c.InstitutionCoordinators).ToListAsync();
+            var Coordinators = await _coordinatorRepository.Include(c => c.InstitutionCoordinators!).ToListAsync();
             if (request.Emirates != null || request.EducationType != null)
             {
 
@@ -85,15 +85,12 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
 
             if (request.EducationalEntity != null)
             {
-                //Coordinators = Coordinators
-                //     .Where(c => c.EducationCoordinators!
-                //     .Any(e=>e.EducationalEntityId == request.EducationalEntity)).ToList();
-                Coordinators = _educationalEntityRepository
+                  Coordinators = await _EduInstitutionCoordinatorRepository
+                    .Include(x => x.EducationalInstitution!)
+                    .Where(x => x.EducationalInstitution!.EducationalEntityId == request.EducationalEntity)
                     .Include(x => x.Coordinator!)
-                    .Where(x => x.EducationalEntityId == request.EducationalEntity)
-                    .Select(x => x.Coordinator)
-                    .ToList()!;
-
+                    .Select(x => x.Coordinator!)
+                    .ToListAsync();
             }
 
             if(request.School != null)
@@ -103,8 +100,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                     .Where(x => x.EducationalInstitutionId == request.School)
                     .Select(x => x.Coordinator)
                     .ToList()!;
- 
             }
+
             var data = _mapper.Map<List<CoordinatorSearchListVM>>(Coordinators);
 
             for (int i = 0; i < data.Count; i++)

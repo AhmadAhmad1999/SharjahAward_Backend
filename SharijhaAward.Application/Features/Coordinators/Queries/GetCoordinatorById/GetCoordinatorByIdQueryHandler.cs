@@ -18,7 +18,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
         : IRequestHandler<GetCoordinatorByIdQuery, BaseResponse<GetCoordinatorByIdResponse>>
     {
         private readonly IAsyncRepository<ResponsibilityUser> _userRepository;
-        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
@@ -28,7 +27,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
 
-        public GetCoordinatorByIdQueryHandler(IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
+        public GetCoordinatorByIdQueryHandler(
             IAsyncRepository<ResponsibilityUser> userRepository,
             IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
             IMapper Mapper,
@@ -40,7 +39,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
             IAsyncRepository<Coordinator> CoordinatorRepository)
         {
             _userRepository = userRepository;
-            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
             _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
             _Mapper = Mapper;
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
@@ -73,24 +71,10 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                 ? data.EnglishName
                 : data.ArabicName;
 
-            data.EducationalEntities = await _EduEntitiesCoordinatorRepository
-                .Where(x => x.CoordinatorId == CoordinatorEntity.Id)
-                .Include(x => x.EducationalEntity!)
-                .Select(x => new EduEntitiesCoordinatorDto()
-                {
-                    Id = x.EducationalEntity!.Id,
-                    ArabicName = x.EducationalEntity!.ArabicName,
-                    EnglishName = x.EducationalEntity!.EnglishName,
-                    Name = Request.lang == "en"
-                        ? x.EducationalEntity!.EnglishName
-                        : x.EducationalEntity!.ArabicName
-                }).ToListAsync();
-
             data.InstitutionEntities = _EduInstitutionCoordinatorRepository
                 .Include(x => x.EducationalInstitution!)
                 .Include(x => x.EducationalInstitution!.EducationalEntity!)
                 .AsEnumerable()
-                .Where(x => data.EducationalEntities.Select(y => y.Id).Contains(x.EducationalInstitution!.EducationalEntityId))
                 .DistinctBy(x => x.EducationalInstitutionId)
                 .Select(x => new EduInstitutionCoordinatorDto()
                 {
@@ -103,19 +87,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                     EducationalEntityId = x.EducationalInstitution!.EducationalEntityId
                 }).ToList();
 
-            data.EduEntitiesWithInstitution = data.EducationalEntities
-                .Select(EducationalEntity => new EduEntitiesWithInstitutionDto()
-                {
-                    Id = EducationalEntity.Id,
-                    ArabicName = EducationalEntity.ArabicName,
-                    EnglishName = EducationalEntity!.EnglishName,
-                    Name = Request.lang == "en"
-                        ? EducationalEntity!.EnglishName
-                        : EducationalEntity!.ArabicName,
-                    InstitutionEntities = data.InstitutionEntities
-                        .Where(x => x.EducationalEntityId == EducationalEntity.Id)
-                        .ToList()
-                }).ToList();
 
             //
             // Dynamic Fields..
