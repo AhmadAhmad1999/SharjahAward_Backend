@@ -134,9 +134,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                         Id = y.Id,
                                         DynamicAttributeListValueId = y.DynamicAttributeListValueId
                                     }).ToList(),
-                                AttributeDataTypeName = Request.lang == "en"
-                                    ? x.AttributeDataType!.Name
-                                    : x.AttributeDataType!.ArabicName
+                                AttributeDataTypeName = x.AttributeDataType!.Name
                             }).ToList();
 
                         foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
@@ -192,6 +190,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Contains(x.DynamicAttributeId) &&
                                 x.RecordId == Request.ProvidedFormId)
                             .Include(x => x.DynamicAttribute!)
+                            .Include(x => x.DynamicAttribute!.AttributeDataType!)
                             .GroupBy(x => x.RowId)
                             .ToListAsync();
 
@@ -224,9 +223,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                             Id = y.Id,
                                             DynamicAttributeListValueId = y.DynamicAttributeListValueId
                                         }).ToList(),
-                                    AttributeDataTypeName = Request.lang == "en"
-                                        ? x.AttributeDataType!.Name
-                                        : x.AttributeDataType!.ArabicName
+                                    AttributeDataTypeName = x.AttributeDataType!.Name
                                 }).ToList();
 
                             foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
@@ -278,9 +275,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                         Id = y.Id,
                                         DynamicAttributeListValueId = y.DynamicAttributeListValueId
                                     }).ToList(),
-                                AttributeDataTypeName = Request.lang == "en"
-                                    ? x.AttributeDataType!.Name
-                                    : x.AttributeDataType!.ArabicName
+                                AttributeDataTypeName = x.AttributeDataType!.Name
                             }).ToList();
 
                         foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
@@ -330,9 +325,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                                 Id = y.Id,
                                                 DynamicAttributeListValueId = y.DynamicAttributeListValueId
                                             }).ToList(),
-                                        AttributeDataTypeName = Request.lang == "en"
-                                            ? OneDynamicAttributeTableValueEntity.DynamicAttribute!.AttributeDataType!.Name
-                                            : OneDynamicAttributeTableValueEntity.DynamicAttribute!.AttributeDataType!.ArabicName
+                                        AttributeDataTypeName = OneDynamicAttributeTableValueEntity.DynamicAttribute!.AttributeDataType!.Name
                                     };
 
                                     DynamicAttributeInSection.DynamicAttributeListValues = AllInsertedDynamicAttributeListValueEntities
@@ -498,9 +491,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     Id = y.Id,
                                     DynamicAttributeListValueId = y.DynamicAttributeListValueId
                                 }).ToList(),
-                            AttributeDataTypeName = Request.lang == "en"
-                                ? x.AttributeDataType!.Name
-                                : x.AttributeDataType!.ArabicName
+                            AttributeDataTypeName = x.AttributeDataType!.Name
                         }).ToList();
 
                     foreach (DynamicAttributeListWithListValuesVM DynamicAttributeInSection in DynamicAttributeSection.DynamicAttributes)
