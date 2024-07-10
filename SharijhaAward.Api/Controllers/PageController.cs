@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.PageStructures.Pages.Commands.CreatePage;
 using SharijhaAward.Application.Features.PageStructures.Pages.Commands.DeletePage;
 using SharijhaAward.Application.Features.PageStructures.Pages.Commands.UpdatePage;
-using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAllMainPages;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPagesWithSubPages;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
 
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageBySlug;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPages;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -77,12 +78,32 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpGet("GetAllMainPages", Name = "GetAllMainPages")]
-        public async Task<IActionResult> GetAllPage(int page = 1, int perPage = 10)
+        [HttpGet("GetMainPagesWithSubPages", Name = "GetMainPagesWithSubPages")]
+        public async Task<IActionResult> GetMainPagesWithSubPages(int page = 1, int perPage = 10)
         {
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllMainPagesQuery()
+            var response = await _mediator.Send(new GetMainPagesWithSubPagesQuery()
+            {
+                page = page,
+                perPage = perPage,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetMainPages", Name = "GetMainPages")]
+        public async Task<IActionResult> GetMainPages(int page = 1, int perPage = 10)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetMainPagesQuery()
             {
                 page = page,
                 perPage = perPage,

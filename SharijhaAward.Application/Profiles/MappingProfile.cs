@@ -270,7 +270,7 @@ using SharijhaAward.Domain.Entities.PageStructureModel;
 using SharijhaAward.Application.Features.PageStructures.Pages.Commands.CreatePage;
 using SharijhaAward.Application.Features.PageStructures.Pages.Commands.UpdatePage;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
-using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAllMainPages;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPagesWithSubPages;
 using SharijhaAward.Application.Features.Achievements.Commands.UpdateAchievementById;
 using SharijhaAward.Application.Features.Achievements.Queries.AcceptOnAchievement;
 using SharijhaAward.Application.Features.Coordinators.Queries.ExportToExcel;
@@ -348,6 +348,7 @@ using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.Crea
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.UpdateImageCard;
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetAllImageCards;
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetImageCardById;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPages;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -579,6 +580,7 @@ namespace SharijhaAward.Application.Profiles
 
             CreateMap<PageStructure, CreatePageCommand>().ReverseMap();
             CreateMap<PageStructure, UpdatePageCommand>().ReverseMap();
+            CreateMap<PageStructure, MainPageWithSubPageListVM>().ReverseMap();
             CreateMap<PageStructure, MainPageListVM>().ReverseMap();
             CreateMap<PageStructure, SubPageListVM>().ReverseMap();
             CreateMap<PageStructure, PageDto>().ReverseMap();
