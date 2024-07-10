@@ -53,6 +53,7 @@
 
   <ItemGroup>
     <Folder Include="Features\EducationalInstitutions\Queries\GetEducationalInstitutionsByEntityId\" />
+    <Folder Include="Features\HomePageFeatures\Commands\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />
     <Folder Include="Features\TrainingWorkshops\Attacments\Queries\" />

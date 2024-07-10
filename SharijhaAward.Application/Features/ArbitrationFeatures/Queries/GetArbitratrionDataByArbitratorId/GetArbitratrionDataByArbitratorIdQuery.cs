@@ -6,6 +6,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
     public class GetArbitratrionDataByArbitratorIdQuery : IRequest<BaseResponse<GetArbitratrionDataByArbitratorIdDto>>
     {
         public int Id { get; set; }
+        public bool GetRemainigForms { get; set; }
+        public int page { get; set; }
+        public int perPage { get; set; }
         public string? lang { get; set; }
     }
 }

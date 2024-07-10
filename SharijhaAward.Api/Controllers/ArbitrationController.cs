@@ -112,7 +112,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetArbitratrionDataByArbitratorId(int Id)
+        public async Task<IActionResult> GetArbitratrionDataByArbitratorId(int Id, bool GetRemainigForms,
+            int page = 1, int perPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -122,7 +123,10 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<GetArbitratrionDataByArbitratorIdDto> Response = await _Mediator.Send(new GetArbitratrionDataByArbitratorIdQuery()
             {
                 Id = Id,
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                GetRemainigForms = GetRemainigForms,
+                page = page,
+                perPage = perPage
             });
 
             return Response.statusCode switch
@@ -156,7 +160,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPost("GetAllFormsForSortingProcess")]
+        [HttpGet("GetAllFormsForSortingProcess")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -164,7 +168,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllFormsForSortingProcess([FromBody] GetAllFormsForSortingProcessFilter? Filter,
+        public async Task<IActionResult> GetAllFormsForSortingProcess([FromQuery] GetAllFormsForSortingProcessFilter? Filter,
             [FromQuery] int Page = 1, [FromQuery] int PerPage = 10)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;

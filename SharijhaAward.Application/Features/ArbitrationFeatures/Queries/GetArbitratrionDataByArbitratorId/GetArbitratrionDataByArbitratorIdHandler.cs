@@ -51,7 +51,6 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                     x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
                 .ToListAsync();
 
-
             Arbitrator? ArbitratorEntity = await _ArbitratorRepository.FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (ArbitratorEntity is null)
@@ -63,58 +62,167 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                 return new BaseResponse<GetArbitratrionDataByArbitratorIdDto>(ResponseMessage, false, 404);
             }
 
-            GetArbitratrionDataByArbitratorIdDto Response = new GetArbitratrionDataByArbitratorIdDto()
+            if (Request.GetRemainigForms)
             {
-                ArbitratorName = Request.lang == "en"
-                    ? ArbitratorEntity.EnglishName
-                    : ArbitratorEntity.ArabicName,
-                NumberOfAssignedForms = AllArbitratorAssingedForms.Count(),
+                int TotalCount = await _ProvidedFormRepository.GetCountAsync(x => x.PercentCompletion == 100 &&
+                    !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id));
 
-                AssignedForms = AllArbitratorAssingedForms
-                    .Select(x => Request.lang == "en"
-                        ? new FormsListVMForArbitrationDto() 
-                        {
-                            Id = x.ProvidedFormId,
-                            CategoryName = x.ProvidedForm!.Category!.EnglishName,
-                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
-                            EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName
-                        } 
-                        : new FormsListVMForArbitrationDto() 
-                        {
-                            Id = x.ProvidedFormId,
-                            CategoryName = x.ProvidedForm!.Category!.ArabicName,
-                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
-                            EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName
-                        }).ToList(),
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.perPage, TotalCount);
 
-                RemainingForms = await _ProvidedFormRepository
-                    .Where(x => x.PercentCompletion == 100 &&
-                        !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id))
-                    .OrderByDescending(x => x.CreatedAt)
-                    .Select(x => Request.lang == "en"
-                        ? new FormsListVMForArbitrationDto() 
-                        {
-                            Id = x.Id,
-                            CategoryName = x.Category!.EnglishName,
-                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
-                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
-                                : null,
-                            EducationalClassName = x.CategoryEducationalClass != null
-                                ? x.CategoryEducationalClass!.EducationalClass!.EnglishName
-                                : null
-                        } 
-                        : new FormsListVMForArbitrationDto() 
-                        {
-                            Id = x.Id,
-                            CategoryName = x.Category!.ArabicName,
-                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
-                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value : null,
-                            EducationalClassName = x.CategoryEducationalClass != null
-                                ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null
-                        }).ToListAsync()
-            };
+                if (Request.page != 0 && Request.perPage != -1)
+                {
+                    GetArbitratrionDataByArbitratorIdDto Response = new GetArbitratrionDataByArbitratorIdDto()
+                    {
+                        ArbitratorName = Request.lang == "en"
+                            ? ArbitratorEntity.EnglishName
+                            : ArbitratorEntity.ArabicName,
+                        NumberOfAssignedForms = AllArbitratorAssingedForms.Count(),
 
-            return new BaseResponse<GetArbitratrionDataByArbitratorIdDto>(ResponseMessage, true, 200, Response);
+                        RemainingForms = _ProvidedFormRepository
+                            .Where(x => x.PercentCompletion == 100 &&
+                                !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id))
+                            .Include(x => x.Category!)
+                            .Include(x => x.CategoryEducationalClass!)
+                            .Include(x => x.CategoryEducationalClass!.EducationalClass!)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .Skip((Request.page - 1) * Request.perPage)
+                            .Take(Request.perPage)
+                            .AsEnumerable()
+                            .Select(x => Request.lang == "en"
+                                ? new FormsListVMForArbitrationDto()
+                                {
+                                    Id = x.Id,
+                                    CategoryName = x.Category!.EnglishName,
+                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
+                                        ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
+                                        : null,
+                                    EducationalClassName = x.CategoryEducationalClass != null
+                                        ? x.CategoryEducationalClass!.EducationalClass!.EnglishName
+                                        : null
+                                }
+                                : new FormsListVMForArbitrationDto()
+                                {
+                                    Id = x.Id,
+                                    CategoryName = x.Category!.ArabicName,
+                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
+                                        ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value : null,
+                                    EducationalClassName = x.CategoryEducationalClass != null
+                                        ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null
+                                }).ToList()
+                    };
+
+                    return new BaseResponse<GetArbitratrionDataByArbitratorIdDto>(ResponseMessage, true, 200, Response, PaginationParameter);
+                }
+                else
+                {
+                    GetArbitratrionDataByArbitratorIdDto Response = new GetArbitratrionDataByArbitratorIdDto()
+                    {
+                        ArbitratorName = Request.lang == "en"
+                            ? ArbitratorEntity.EnglishName
+                            : ArbitratorEntity.ArabicName,
+                        NumberOfAssignedForms = AllArbitratorAssingedForms.Count(),
+
+                        RemainingForms = _ProvidedFormRepository
+                            .Where(x => x.PercentCompletion == 100 &&
+                                !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id))
+                            .Include(x => x.Category!)
+                            .Include(x => x.CategoryEducationalClass!)
+                            .Include(x => x.CategoryEducationalClass!.EducationalClass!)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .AsEnumerable()
+                            .Select(x => Request.lang == "en"
+                                ? new FormsListVMForArbitrationDto()
+                                {
+                                    Id = x.Id,
+                                    CategoryName = x.Category!.EnglishName,
+                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
+                                        ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
+                                        : null,
+                                    EducationalClassName = x.CategoryEducationalClass != null
+                                        ? x.CategoryEducationalClass!.EducationalClass!.EnglishName
+                                        : null
+                                }
+                                : new FormsListVMForArbitrationDto()
+                                {
+                                    Id = x.Id,
+                                    CategoryName = x.Category!.ArabicName,
+                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
+                                        ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value : null,
+                                    EducationalClassName = x.CategoryEducationalClass != null
+                                        ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null
+                                }).ToList()
+                    };
+
+                    return new BaseResponse<GetArbitratrionDataByArbitratorIdDto>(ResponseMessage, true, 200, Response, PaginationParameter);
+                }
+            }
+            else
+            {
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.perPage, AllArbitratorAssingedForms.Count());
+
+                if (Request.page != 0 && Request.perPage != -1)
+                {
+                    GetArbitratrionDataByArbitratorIdDto Response = new GetArbitratrionDataByArbitratorIdDto()
+                    {
+                        ArbitratorName = Request.lang == "en"
+                            ? ArbitratorEntity.EnglishName
+                            : ArbitratorEntity.ArabicName,
+                        NumberOfAssignedForms = AllArbitratorAssingedForms.Count(),
+
+                        AssignedForms = AllArbitratorAssingedForms
+                            .Skip((Request.page - 1) * Request.perPage)
+                            .Take(Request.perPage)
+                            .Select(x => Request.lang == "en"
+                                ? new FormsListVMForArbitrationDto()
+                                {
+                                    Id = x.ProvidedFormId,
+                                    CategoryName = x.ProvidedForm!.Category!.EnglishName,
+                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
+                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName
+                                }
+                                : new FormsListVMForArbitrationDto()
+                                {
+                                    Id = x.ProvidedFormId,
+                                    CategoryName = x.ProvidedForm!.Category!.ArabicName,
+                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
+                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName
+                                }).ToList()
+                    };
+
+                    return new BaseResponse<GetArbitratrionDataByArbitratorIdDto>(ResponseMessage, true, 200, Response, PaginationParameter);
+                }
+                else
+                {
+                    GetArbitratrionDataByArbitratorIdDto Response = new GetArbitratrionDataByArbitratorIdDto()
+                    {
+                        ArbitratorName = Request.lang == "en"
+                            ? ArbitratorEntity.EnglishName
+                            : ArbitratorEntity.ArabicName,
+                        NumberOfAssignedForms = AllArbitratorAssingedForms.Count(),
+
+                        AssignedForms = AllArbitratorAssingedForms
+                            .Select(x => Request.lang == "en"
+                                ? new FormsListVMForArbitrationDto()
+                                {
+                                    Id = x.ProvidedFormId,
+                                    CategoryName = x.ProvidedForm!.Category!.EnglishName,
+                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
+                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName
+                                }
+                                : new FormsListVMForArbitrationDto()
+                                {
+                                    Id = x.ProvidedFormId,
+                                    CategoryName = x.ProvidedForm!.Category!.ArabicName,
+                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
+                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName
+                                }).ToList()
+                    };
+
+                    return new BaseResponse<GetArbitratrionDataByArbitratorIdDto>(ResponseMessage, true, 200, Response, PaginationParameter);
+                }
+            }
         }
     }
 }
