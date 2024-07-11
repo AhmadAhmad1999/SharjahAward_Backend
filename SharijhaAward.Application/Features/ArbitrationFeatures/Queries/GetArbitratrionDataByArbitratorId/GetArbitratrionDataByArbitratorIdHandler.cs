@@ -81,7 +81,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
 
                         RemainingForms = _ProvidedFormRepository
                             .Where(x => x.PercentCompletion == 100 &&
-                                !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id))
+                                !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
+                                x.IsAccepted != null)
                             .Include(x => x.Category!)
                             .Include(x => x.CategoryEducationalClass!)
                             .Include(x => x.CategoryEducationalClass!.EducationalClass!)
@@ -99,7 +100,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                         : null,
                                     EducationalClassName = x.CategoryEducationalClass != null
                                         ? x.CategoryEducationalClass!.EducationalClass!.EnglishName
-                                        : null
+                                        : null,
+                                    IsAccepted = x.IsAccepted!.Value
                                 }
                                 : new FormsListVMForArbitrationDto()
                                 {
@@ -108,7 +110,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
                                         ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value : null,
                                     EducationalClassName = x.CategoryEducationalClass != null
-                                        ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null
+                                        ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null,
+                                    IsAccepted = x.IsAccepted!.Value
                                 }).ToList()
                     };
 
@@ -125,7 +128,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
 
                         RemainingForms = _ProvidedFormRepository
                             .Where(x => x.PercentCompletion == 100 &&
-                                !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id))
+                                !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
+                                x.IsAccepted != null)
                             .Include(x => x.Category!)
                             .Include(x => x.CategoryEducationalClass!)
                             .Include(x => x.CategoryEducationalClass!.EducationalClass!)
@@ -141,7 +145,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                         : null,
                                     EducationalClassName = x.CategoryEducationalClass != null
                                         ? x.CategoryEducationalClass!.EducationalClass!.EnglishName
-                                        : null
+                                        : null,
+                                    IsAccepted = x.IsAccepted!.Value
                                 }
                                 : new FormsListVMForArbitrationDto()
                                 {
@@ -150,7 +155,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
                                         ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value : null,
                                     EducationalClassName = x.CategoryEducationalClass != null
-                                        ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null
+                                        ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null,
+                                    IsAccepted = x.IsAccepted!.Value
                                 }).ToList()
                     };
 
@@ -180,14 +186,16 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     Id = x.ProvidedFormId,
                                     CategoryName = x.ProvidedForm!.Category!.EnglishName,
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
-                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName
+                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName,
+                                    IsAccepted = x.ProvidedForm!.IsAccepted!.Value
                                 }
                                 : new FormsListVMForArbitrationDto()
                                 {
                                     Id = x.ProvidedFormId,
                                     CategoryName = x.ProvidedForm!.Category!.ArabicName,
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
-                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName
+                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName,
+                                    IsAccepted = x.ProvidedForm!.IsAccepted!.Value
                                 }).ToList()
                     };
 
@@ -209,14 +217,16 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     Id = x.ProvidedFormId,
                                     CategoryName = x.ProvidedForm!.Category!.EnglishName,
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
-                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName
+                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName,
+                                    IsAccepted = x.ProvidedForm!.IsAccepted!.Value
                                 }
                                 : new FormsListVMForArbitrationDto()
                                 {
                                     Id = x.ProvidedFormId,
                                     CategoryName = x.ProvidedForm!.Category!.ArabicName,
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
-                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName
+                                    EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName,
+                                    IsAccepted = x.ProvidedForm!.IsAccepted!.Value
                                 }).ToList()
                     };
 
