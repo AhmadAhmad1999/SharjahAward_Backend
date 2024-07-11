@@ -41,9 +41,11 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
         public async Task<BaseResponse<List<CoordinatorSearchListVM>>> Handle(SearchForCoordinatorQuery request, CancellationToken cancellationToken)
         {
             var Coordinators = await _coordinatorRepository.Include(c => c.InstitutionCoordinators!).ToListAsync();
+            
+            var CoordinatorsResult = new List<Coordinator>();
+
             if (request.Emirates != null || request.EducationType != null)
             {
-
                 var EducationalInstitutionParam = Expression.Parameter(typeof(EducationalInstitution), "I");
                 
                 var filters = new List<Expression>();
@@ -76,39 +78,80 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
 
                 var EducationalInstitutions = await _educationalInstitutionRepository.Where(predicate1).ToListAsync();
 
-                Coordinators = await _EduInstitutionCoordinatorRepository
+                CoordinatorsResult = await _EduInstitutionCoordinatorRepository
                     .Include(x => x.Coordinator!)
                     .Where(x => EducationalInstitutions.Select(y => y.Id).Contains(x.EducationalInstitutionId))
                     .Select(x => x.Coordinator!)
                     .ToListAsync();
-            }
 
-            if (request.EducationalEntity != null)
-            {
-                  Coordinators = await _EduInstitutionCoordinatorRepository
-                    .Include(x => x.EducationalInstitution!)
-                    .Where(x => x.EducationalInstitution!.EducationalEntityId == request.EducationalEntity)
-                    .Include(x => x.Coordinator!)
-                    .Select(x => x.Coordinator!)
-                    .ToListAsync();
-            }
+                if (request.EducationalEntity != null)
+                {
+                     CoordinatorsResult = await _EduInstitutionCoordinatorRepository
+                        .Include(x => x.EducationalInstitution!)
+                        .Where(x => x.EducationalInstitution!.EducationalEntityId == request.EducationalEntity)
+                        .Where(x=>x.EducationalInstitution.Emirates == request.Emirates || x.EducationalInstitution.EducationType == request.EducationType)
+                        .Include(x => x.Coordinator!)
+                        .Select(x => x.Coordinator!)
+                        .ToListAsync();
 
-            if(request.School != null)
+                    if (request.School != null)
+                    {
+                        CoordinatorsResult = _EduInstitutionCoordinatorRepository
+                            .Include(x => x.Coordinator!)
+                            .Where(x => x.EducationalInstitutionId == request.School)
+                            .Where(x => x.EducationalInstitution.Emirates == request.Emirates || x.EducationalInstitution.EducationType == request.EducationType)
+                            .Where(x => x.EducationalInstitution.EducationalEntityId == request.EducationalEntity)
+                            .Select(x => x.Coordinator)
+                            .ToList()!;
+                    }
+                }
+
+                if (request.School != null)
+                {
+                    CoordinatorsResult = _EduInstitutionCoordinatorRepository
+                        .Include(x => x.Coordinator!)
+                        .Where(x => x.EducationalInstitutionId == request.School)
+                        .Where(x => x.EducationalInstitution.Emirates == request.Emirates || x.EducationalInstitution.EducationType == request.EducationType)
+                        .Select(x => x.Coordinator)
+                        .ToList()!;
+                }
+            }
+            else if (request.EducationalEntity != null)
             {
-                Coordinators = _EduInstitutionCoordinatorRepository
+                CoordinatorsResult = await _EduInstitutionCoordinatorRepository
+                   .Include(x => x.EducationalInstitution!)
+                   .Where(x => x.EducationalInstitution!.EducationalEntityId == request.EducationalEntity)
+                   .Include(x => x.Coordinator!)
+                   .Select(x => x.Coordinator!)
+                   .ToListAsync();
+
+                if (request.School != null)
+                {
+                    CoordinatorsResult = _EduInstitutionCoordinatorRepository
+                        .Include(x => x.Coordinator!)
+                        .Where(x => x.EducationalInstitutionId == request.School)
+                        .Where(x => x.EducationalInstitution.EducationalEntityId == request.EducationalEntity)
+                        .Select(x => x.Coordinator)
+                        .ToList()!;
+
+                }
+            }
+            else if (request.School != null)
+            {
+                CoordinatorsResult = _EduInstitutionCoordinatorRepository
                     .Include(x => x.Coordinator!)
                     .Where(x => x.EducationalInstitutionId == request.School)
                     .Select(x => x.Coordinator)
                     .ToList()!;
             }
 
-            var data = _mapper.Map<List<CoordinatorSearchListVM>>(Coordinators);
+            var data = _mapper.Map<List<CoordinatorSearchListVM>>(CoordinatorsResult);
 
             for (int i = 0; i < data.Count; i++)
             {
                 data[i].Name = request.lang == "en"
-                    ? Coordinators[i].EnglishName
-                    : Coordinators[i].ArabicName;
+                    ? CoordinatorsResult[i].EnglishName
+                    : CoordinatorsResult[i].ArabicName;
             }
 
             return new  BaseResponse<List<CoordinatorSearchListVM>>("", true, 200, data);
