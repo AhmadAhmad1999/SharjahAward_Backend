@@ -6,5 +6,6 @@
         public string? SubscriberName { get; set; } = null!;
         public string? EducationalClassName { get; set; }
         public string CategoryName { get; set; } = null!;
+        public bool IsAccepted { get; set; }
     }
 }

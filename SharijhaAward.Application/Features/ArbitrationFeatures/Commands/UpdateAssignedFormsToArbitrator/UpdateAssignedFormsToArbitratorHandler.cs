@@ -38,21 +38,22 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Update
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            List<int> AlreadyExistProvidedFormIds = await _ArbitrationRepository
-                .Where(x => x.ArbitratorId == Request.ArbitratorId)
-                .Select(x => x.ProvidedFormId)
+            List<Arbitration> ArbitrationEntitiesToDelete = await _ArbitrationRepository
+                .Where(x => Request.DeleteFormsIds.Contains(x.ProvidedFormId))
                 .ToListAsync();
 
-            List<int> IntersectProvidedFormIds = AlreadyExistProvidedFormIds
-                .Intersect(Request.FormsIds).ToList();
-
-            List<int> NewProvidedFormIds = Request.FormsIds
-                .Where(x => !IntersectProvidedFormIds.Contains(x))
-                .ToList();
-
-            List<int> DeleteProvidedFormIds = AlreadyExistProvidedFormIds
-                .Where(x => !IntersectProvidedFormIds.Contains(x))
-                .ToList();
+            IEnumerable<Arbitration> NewArbitrationEntites = Request.NewFormsIds
+                .Select(x => new Arbitration()
+                {
+                    ArbitratorId = Request.ArbitratorId,
+                    ProvidedFormId = x,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    isDeleted = false,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                });
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {
@@ -65,28 +66,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Update
             {
                 try
                 {
-                    IQueryable<Arbitration> DeleteArbitrationEntites = _ArbitrationRepository
-                        .Where(x => x.ArbitratorId == Request.ArbitratorId &&
-                            DeleteProvidedFormIds.Contains(x.ArbitratorId));
+                    await _ArbitrationRepository.DeleteListAsync(ArbitrationEntitiesToDelete);
 
-                    if (DeleteArbitrationEntites.Count() > 0)
-                        await _ArbitrationRepository.DeleteListAsync(DeleteArbitrationEntites);
-
-                    IEnumerable<Arbitration> NewArbitrationEntites = NewProvidedFormIds
-                        .Select(x => new Arbitration()
-                        {
-                            ArbitratorId = Request.ArbitratorId,
-                            ProvidedFormId = x,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            DeletedAt = null,
-                            isDeleted = false,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null
-                        });
-
-                    if (NewArbitrationEntites.Count() > 0)
-                        await _ArbitrationRepository.AddRangeAsync(NewArbitrationEntites);
+                    await _ArbitrationRepository.AddRangeAsync(NewArbitrationEntites);
 
                     Transaction.Complete();
 
