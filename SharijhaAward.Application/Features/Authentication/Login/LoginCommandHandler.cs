@@ -70,7 +70,9 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                 }
             }
 
-            response.ActiveCycleId = ActiveCycleEntity?.Id;
+            response.ActiveCycleId = ActiveCycleEntity!.Id;
+            response.CycleName = request.lang == "en" ? ActiveCycleEntity!.EnglishName : ActiveCycleEntity!.ArabicName;
+            response.CycleNumber = ActiveCycleEntity!.CycleNumber;
 
             if (response.user is not null)
             {

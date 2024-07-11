@@ -5,42 +5,28 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 
-namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAllMainPages
+namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPagesWithSubPages
 {
-    public class GetAllMainPagesQueryHandler
-        : IRequestHandler<GetAllMainPagesQuery, BaseResponse<List<MainPageListVM>>>
+    public class GetMainPagesWithSubPagesQueryHandler
+        : IRequestHandler<GetMainPagesWithSubPagesQuery, BaseResponse<List<MainPageWithSubPageListVM>>>
     {
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
         private readonly IMapper _mapper;
 
-        public GetAllMainPagesQueryHandler(IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
+        public GetMainPagesWithSubPagesQueryHandler(IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
         {
             _pageStructureRepository = pageStructureRepository;
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<List<MainPageListVM>>> Handle(GetAllMainPagesQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<MainPageWithSubPageListVM>>> Handle(GetMainPagesWithSubPagesQuery request, CancellationToken cancellationToken)
         {
-            List<PageStructure> mainPages = new List<PageStructure>();
-
-            if (request.page != 0 && request.perPage != -1)
-            {
-                mainPages = await _pageStructureRepository
-                    .Where(p => p.ParentId == null)
-                    .Skip((request.page - 1) * request.perPage)
-                    .Take(request.perPage)
-                    .ToListAsync();
-            }
-            else
-            {
-                mainPages = await _pageStructureRepository
-                    .Where(p => p.ParentId == null)
-                    .ToListAsync();
-            }
+            var mainPages = await _pageStructureRepository
+                    .GetWhereThenPagedReponseAsync(p => p.ParentId == null, request.page, request.perPage);
 
             var subPages = await _pageStructureRepository.Where(p => p.ParentId != null).ToListAsync();
             
-            var MainPages = _mapper.Map<List<MainPageListVM>>(mainPages);
+            var MainPages = _mapper.Map<List<MainPageWithSubPageListVM>>(mainPages);
 
             List<PageStructure> pages = new List<PageStructure>();
 
@@ -72,7 +58,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetAll
             Pagination PaginationParameter = new Pagination(request.page,
                 request.perPage, TotalCount);
 
-            return new BaseResponse<List<MainPageListVM>>("", true, 200, MainPages, PaginationParameter);
+            return new BaseResponse<List<MainPageWithSubPageListVM>>("", true, 200, MainPages, PaginationParameter);
         }
     }
 }

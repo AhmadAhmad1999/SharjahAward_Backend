@@ -11,6 +11,8 @@ namespace SharijhaAward.Application.Responses
         public string message { get; set; } = string.Empty;
         public bool isSucceed { get; set; } = false;
         public int? ActiveCycleId { get; set; }
+        public string? CycleName { get; set; }
+        public int? CycleNumber { get; set; } 
         public List<UserPermissionsDto>? UserPermissions { get; set; }
         public bool NeedVerification { get; set; }
     }
