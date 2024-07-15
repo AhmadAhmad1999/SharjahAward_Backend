@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -9,22 +10,32 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
     public class ChangeStatusForAssignedFormHandler : IRequestHandler<ChangeStatusForAssignedFormCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
+        private readonly IUserRepository _UserRepository;
         private readonly IJwtProvider _JWTProvider;
 
-        public ChangeStatusForAssignedFormHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
+        public ChangeStatusForAssignedFormHandler(IUserRepository UserRepository, IAsyncRepository<Arbitration> ArbitrationRepository,
             IJwtProvider JWTProvider)
         {
             _ArbitrationRepository = ArbitrationRepository;
+            _UserRepository = UserRepository;
             _JWTProvider = JWTProvider;
         }
 
         public async Task<BaseResponse<object>> Handle(ChangeStatusForAssignedFormCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+            
+            var UserId = _JWTProvider.GetUserIdFromToken(Request.token!);
+            if(UserId == null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Un Auth"
+                    : "غير مصرح له بالدخول";
 
-            int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
+                return new BaseResponse<object>(ResponseMessage, false, 401);
+            }
 
-            Arbitration? ArbitrationEntity = await _ArbitrationRepository.GetByIdAsync(Request.Id);
+            Arbitration? ArbitrationEntity = await _ArbitrationRepository.WhereThenInclude(a => a.Id == Request.Id, a => a.Arbitrator!).FirstOrDefaultAsync();
 
             if (ArbitrationEntity == null)
             {
@@ -35,7 +46,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            if (ArbitrationEntity.ArbitratorId == UserId && ArbitrationEntity.Arbitrator!.isChairman)
+            if (ArbitrationEntity.ArbitratorId == int.Parse(UserId) && ArbitrationEntity.Arbitrator!.isChairman)
             {
                 ArbitrationEntity.isAccepted = Request.isAccepted;
                 ArbitrationEntity.isAcceptedFromChairman = Request.isAcceptedFromChairman;

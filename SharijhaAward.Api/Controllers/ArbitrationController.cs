@@ -205,18 +205,18 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> ChangeStatusForAssignedForm(int Id, bool isAccepted)
+        public async Task<IActionResult> ChangeStatusForAssignedForm(ChangeStatusForAssignedFormCommand command)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<object>? Response = await _Mediator.Send(new ChangeStatusForAssignedFormCommand()
-            {
-                Id = Id,
-                isAccepted = isAccepted,
-                lang = HeaderValue!
-            });
+            var token = HttpContext.Request.Headers.Authorization;
+
+            command.lang = HeaderValue;
+            command.token = token!;
+
+            BaseResponse<object>? Response = await _Mediator.Send(command);
 
             return Response.statusCode switch
             {

@@ -422,27 +422,27 @@ namespace SharijhaAward.Persistence.Repositories
 
                         query = query.Where(entity => EF.Property<bool>(entity, filter.Key!) == Value);
                     }
-                    
-                    //else if (propertyType == typeof(DateTime) && filter.Value is DateTimeRange dateRange)
-                    //{
-                    //    // Process date range
-                    //    if (dateRange.StartDate != null && dateRange.EndDate != null)
-                    //    {
-                    //        query = query.Where(entity =>
-                    //            EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate &&
-                    //            EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
-                    //    }
-                    //    else if (dateRange.StartDate != null)
-                    //    {
-                    //        query = query.Where(entity =>
-                    //            EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate);
-                    //    }
-                    //    else if (dateRange.EndDate != null)
-                    //    {
-                    //        query = query.Where(entity =>
-                    //            EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
-                    //    }
-                    //}
+
+                    else if (propertyType == typeof(DateTime) && filter.DateRange is DateTimeRange dateRange)
+                    {
+                        // Process date range
+                        if (dateRange.StartDate != null && dateRange.EndDate != null)
+                        {
+                            query = query.Where(entity =>
+                                EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate &&
+                                EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
+                        }
+                        else if (dateRange.StartDate != null)
+                        {
+                            query = query.Where(entity =>
+                                EF.Property<DateTime>(entity, filter.Key) >= dateRange.StartDate);
+                        }
+                        else if (dateRange.EndDate != null)
+                        {
+                            query = query.Where(entity =>
+                                EF.Property<DateTime>(entity, filter.Key) <= dateRange.EndDate);
+                        }
+                    }
                     else
                     {
                         // Process other value types
