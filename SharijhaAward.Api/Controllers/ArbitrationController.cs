@@ -169,7 +169,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllFormsForSortingProcess([FromQuery] GetAllFormsForSortingProcessFilter? Filter,
+        public async Task<IActionResult> GetAllFormsForSortingProcess([FromQuery] GetAllFormsForSortingProcessFilter? filter,
             [FromQuery] int Page = 1, [FromQuery] int PerPage = 10)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
@@ -185,7 +185,7 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<List<GetAllFormsForSortingProcessListVM>> Response = await _Mediator.Send(new GetAllFormsForSortingProcessQuery()
             {
                 token = Token,
-                Filter = Filter,
+                Filter = filter,
                 lang = HeaderValue!,
                 page = Page,
                 perPage = PerPage

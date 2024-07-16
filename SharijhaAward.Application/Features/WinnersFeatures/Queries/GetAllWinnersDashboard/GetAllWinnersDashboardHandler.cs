@@ -109,14 +109,18 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                     CategoryName = Request.lang == "en"
                         ? x.ProvidedForm!.Category!.EnglishName
                         : x.ProvidedForm!.Category!.ArabicName,
-                    InitialArbitrationScore = ArbitrationEntities
-                        .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                        .Select(y => y.FullScore)
-                        .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
-                    ArbitrationAuditScore = ArbitrationEntities
-                        .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                        .Select(y => y.FullScore)
-                        .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                    InitialArbitrationScore = ArbitrationEntities.Any() 
+                        ? (ArbitrationEntities
+                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                            .Select(y => y.FullScore)
+                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
+                        : 0,
+                    ArbitrationAuditScore = ArbitrationEntities.Any() 
+                        ? (ArbitrationEntities
+                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                            .Select(y => y.FullScore)
+                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
+                        : 0,
                     FinalArbitrationScore = x.FinalArbitration! ?.FinalScore ?? 0,
                     SubscriberName = SubscribersNames
                         .FirstOrDefault(y => y.FormId == x.ProvidedFormId)

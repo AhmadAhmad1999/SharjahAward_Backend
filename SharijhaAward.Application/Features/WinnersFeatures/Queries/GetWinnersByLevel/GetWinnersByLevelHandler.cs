@@ -4,6 +4,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
+using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
@@ -16,21 +17,40 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
         private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IAsyncRepository<Category> _CategoryRepository;
+
         public GetWinnersByLevelHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
             IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<Category> CategoryRepository)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
             _ArbitrationResultRepository = ArbitrationResultRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _CategoryRepository = CategoryRepository;
         }
 
         public async Task<BaseResponse<GetWinnersByLevelMainResponse>> 
             Handle(GetWinnersByLevelQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            Category? CategoryEntity = await _CategoryRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.CategoryId);
+
+            if (CategoryEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Category is not found"
+                    : "ألفئة غير موجود";
+
+                return new BaseResponse<GetWinnersByLevelMainResponse>(ResponseMessage, false, 404);
+            }
+
+            if (Request.MaxLevelOfWinners == 0 && CategoryEntity.ExpectedNumberOfWinners != null)
+                Request.MaxLevelOfWinners = CategoryEntity.ExpectedNumberOfWinners.Value;
 
             List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = await _ArbitrationResultRepository
                 .Include(x => x.ProvidedForm!)
@@ -151,8 +171,20 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
 
             GetWinnersByLevelMainResponse Response = new GetWinnersByLevelMainResponse()
             {
-                RequestedWinners = RequestedWinners,
+                RequestedWinners = RequestedWinners
+                    .GroupBy(x => x.WinningLevel)
+                    .Select(x => new GetWinnersByLevelGroupByLevelListVM()
+                    {
+                        WinningLevel = x.Key,
+                        GetWinnersByLevelListVM = x.ToList()
+                    }).ToList(),
                 RemainingWinners = RemainingWinners
+                    .GroupBy(x => x.WinningLevel)
+                    .Select(x => new GetWinnersByLevelGroupByLevelListVM()
+                    {
+                        WinningLevel = x.Key,
+                        GetWinnersByLevelListVM = x.ToList()
+                    }).ToList()
             };
 
             Pagination PaginationParameter = new Pagination(Request.page,

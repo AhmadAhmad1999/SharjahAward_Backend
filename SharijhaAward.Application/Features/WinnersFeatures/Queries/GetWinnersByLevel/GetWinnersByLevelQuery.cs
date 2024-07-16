@@ -8,7 +8,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
         public int CategoryId { get; set; }
         public int MaxLevelOfWinners { get; set; }
         public string? lang { get; set; }
-        public int page { get; set; }
-        public int PerPage { get; set; }
+        public int page { get; set; } = 1;
+        public int PerPage { get; set; } = 10;
     }
 }

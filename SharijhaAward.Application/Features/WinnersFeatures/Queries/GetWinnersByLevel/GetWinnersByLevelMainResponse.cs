@@ -2,7 +2,7 @@
 {
     public class GetWinnersByLevelMainResponse
     {
-        public List<GetWinnersByLevelListVM> RequestedWinners { get; set; } = new List<GetWinnersByLevelListVM>();
-        public List<GetWinnersByLevelListVM> RemainingWinners { get; set; } = new List<GetWinnersByLevelListVM>();
+        public List<GetWinnersByLevelGroupByLevelListVM> RequestedWinners { get; set; } = new List<GetWinnersByLevelGroupByLevelListVM>();
+        public List<GetWinnersByLevelGroupByLevelListVM> RemainingWinners { get; set; } = new List<GetWinnersByLevelGroupByLevelListVM>();
     }
 }
