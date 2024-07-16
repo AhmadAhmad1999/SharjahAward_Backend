@@ -9,6 +9,9 @@ using SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEduca
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetEducationalEntityById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.EducationalEntities.Queries.GetExcelFilePrototype;
+using SharijhaAward.Application.Features.EducationalEntities.Queries.ImportDataFromExcel;
+
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -187,6 +190,32 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("GetExcelFilePrototypeForEducationalEntity", Name = "GetExcelFilePrototypeForEducationalEntity")]
+        public async Task<IActionResult> GetExcelFilePrototype()
+        {
+            var response = await _Mediator.Send(new GetExcelFilePrototypeQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EducationalEntityPrototype.xlsx"),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPost("ImportEducationalEntityFromExcel", Name = "ImportEducationalEntityFromExcel")]
+        public async Task<IActionResult> ImportFromExcel([FromForm] ImportDataFromExcelQuery query)
+        {
+            var response = await _Mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                _ => BadRequest(response)
             };
         }
     }

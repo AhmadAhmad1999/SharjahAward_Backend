@@ -32,12 +32,12 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFor
 
             var User = await _userRepository.GetByIdAsync(request.UserId);
 
-             if (User == null)
-             {
-                 return new BaseResponse<ProvidedFormDto>("User Not Found", false, 404);
-             }
-             
-             var form = await _formRepository.FirstOrDefaultAsync(f => f.Id == request.Id && f.userId == User.Id);
+            if (User == null)
+            {
+                return new BaseResponse<ProvidedFormDto>("User Not Found", false, 404);
+            }
+
+            var form = await _formRepository.FirstOrDefaultAsync(f => f.Id == request.Id);
 
              if (form == null)
              {

@@ -15,5 +15,6 @@ namespace SharijhaAward.Domain.Common
     {
         public string? Key { get; set; }
         public string? Value { get; set; } = null!;
+        public DateTimeRange? DateRange { get; set; }
     }
 }
