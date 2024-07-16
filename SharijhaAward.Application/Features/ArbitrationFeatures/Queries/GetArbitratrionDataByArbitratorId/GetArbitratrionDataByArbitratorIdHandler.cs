@@ -4,6 +4,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 
 namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbitratrionDataByArbitratorId
@@ -15,21 +16,29 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
         public GetArbitratrionDataByArbitratorIdHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _ArbitratorRepository = ArbitratorRepository;
             _ProvidedFormRepository = ProvidedFormRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _CategoryArbitratorRepository = CategoryArbitratorRepository;
         }
 
         public async Task<BaseResponse<GetArbitratrionDataByArbitratorIdDto>> 
             Handle(GetArbitratrionDataByArbitratorIdQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            List<int> ArbitratorCategoriesIds = await _CategoryArbitratorRepository
+                .Where(x => x.ArbitratorId == Request.Id)
+                .Select(x => x.CategoryId)
+                .ToListAsync();
 
             List<Arbitration> AllArbitratorAssingedForms = await _ArbitrationRepository
                 .Where(x => x.ArbitratorId == Request.Id)
@@ -83,7 +92,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                             .Where(x => x.PercentCompletion == 100 &&
                                 !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
                                 x.IsAccepted != null &&
-                                AllArbitratorAssingedForms.Select(y => y.ProvidedForm!.categoryId).Contains(x.categoryId))
+                                ArbitratorCategoriesIds.Contains(x.categoryId))
                             .Include(x => x.Category!)
                             .Include(x => x.CategoryEducationalClass!)
                             .Include(x => x.CategoryEducationalClass!.EducationalClass!)
@@ -131,7 +140,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                             .Where(x => x.PercentCompletion == 100 &&
                                 !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
                                 x.IsAccepted != null &&
-                                AllArbitratorAssingedForms.Select(y => y.ProvidedForm!.categoryId).Contains(x.categoryId))
+                                ArbitratorCategoriesIds.Contains(x.categoryId))
                             .Include(x => x.Category!)
                             .Include(x => x.CategoryEducationalClass!)
                             .Include(x => x.CategoryEducationalClass!.EducationalClass!)
