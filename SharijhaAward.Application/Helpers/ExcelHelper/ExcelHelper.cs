@@ -1,15 +1,7 @@
 ﻿using SharijhaAward.Application.Contract.Infrastructure;
 using NPOI.XSSF.UserModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NPOI.SS.UserModel;
 using NPOI.SS.Util;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Domain.Entities.LoggerModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,7 +17,7 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
             _ServiceProvider = serviceProvider;
         }
 
-        IAsyncRepository<object> AnynomousTable;
+
         public byte[] ExportToExcel (List<T> data)
         {
             var workbook = new XSSFWorkbook();

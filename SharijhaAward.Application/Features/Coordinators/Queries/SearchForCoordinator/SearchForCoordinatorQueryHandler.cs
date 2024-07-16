@@ -42,7 +42,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
         {
             var Coordinators = await _coordinatorRepository.Include(c => c.InstitutionCoordinators!).ToListAsync();
             
-            var CoordinatorsResult = new List<Coordinator>();
+            var CoordinatorsResult = Coordinators;
 
             if (request.Emirates != null || request.EducationType != null)
             {
