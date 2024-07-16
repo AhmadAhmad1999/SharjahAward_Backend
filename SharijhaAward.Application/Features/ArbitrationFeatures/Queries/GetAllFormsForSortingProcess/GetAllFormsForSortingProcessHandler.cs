@@ -132,7 +132,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                             ? x.ProvidedForm.Category.EnglishName
                             : x.ProvidedForm.Category.ArabicName,
                         isAccepted = x.isAccepted,
-                        Reason = string.Empty
+                        Reason = x.ReasonForRejecting
                     }).ToList();
 
                 int TotalCount = 0;
@@ -230,7 +230,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                             ? x.ProvidedForm.Category.EnglishName
                             : x.ProvidedForm.Category.ArabicName,
                         isAccepted = x.isAccepted,
-                        Reason = string.Empty
+                        Reason = x.ReasonForRejecting
                     }).ToList();
 
                 int TotalCount = 0;

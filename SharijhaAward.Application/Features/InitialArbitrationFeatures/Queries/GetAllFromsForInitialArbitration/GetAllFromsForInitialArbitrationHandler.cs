@@ -52,7 +52,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
             if (CheckIfThisUserHasFullAccessOrArbitratorRole is null)
             {
                 List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
-                    .Where(x => x.isAccepted && 
+                    .Where(x => x.isAccepted == FormStatus.Accepted && 
                         (Request.ArbitrationType != null
                             ? x.Type == Request.ArbitrationType
                             : true))
@@ -97,7 +97,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     }).ToList();
 
                 var FullTotalCount = _ArbitrationRepository
-                    .Where(x => x.isAccepted)
+                    .Where(x => x.isAccepted == FormStatus.Accepted)
                     .Select(x => x.Type)
                     .GroupBy(x => x)
                     .Select(g => new { Type = g.Key, Count = g.Count() })
@@ -161,7 +161,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
                         .Where(x => (ArbitratorsIdsInCommittee.Contains(x.ArbitratorId) ||
                             x.ArbitratorId == ArbitratorEntity.Id) &&
-                            x.isAccepted &&
+                            x.isAccepted == FormStatus.Accepted &&
                             (Request.ArbitrationType != null
                                 ? x.Type == Request.ArbitrationType
                                 : true))
@@ -208,7 +208,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         }).ToList();
 
                     var FullTotalCount = _ArbitrationRepository
-                        .Where(x => x.isAccepted)
+                        .Where(x => x.isAccepted == FormStatus.Accepted)
                         .Select(x => x.Type)
                         .GroupBy(x => x)
                         .Select(g => new { Type = g.Key, Count = g.Count() })
@@ -226,7 +226,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     };
 
                     int TotalCount = await _ArbitrationRepository.GetCountAsync(x => ArbitratorsIdsInCommittee.Contains(x.ArbitratorId) &&
-                        x.isAccepted &&
+                        x.isAccepted == FormStatus.Accepted &&
                         (Request.ArbitrationType != null
                             ? x.Type == Request.ArbitrationType
                             : true));
@@ -240,7 +240,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                 {
                     List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
                         .Where(x => UserId == x.ArbitratorId &&
-                            x.isAccepted &&
+                            x.isAccepted == FormStatus.Accepted &&
                             (Request.ArbitrationType != null
                                 ? x.Type == Request.ArbitrationType
                                 : true))
@@ -287,7 +287,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         }).ToList();
 
                     var FullTotalCount = _ArbitrationRepository
-                        .Where(x => x.isAccepted)
+                        .Where(x => x.isAccepted == FormStatus.Accepted)
                         .Select(x => x.Type)
                         .GroupBy(x => x)
                         .Select(g => new { Type = g.Key, Count = g.Count() })
@@ -305,7 +305,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     };
 
                     int TotalCount = await _ArbitrationRepository.GetCountAsync(x => UserId == x.ArbitratorId &&
-                        x.isAccepted &&
+                        x.isAccepted == FormStatus.Accepted &&
                         (Request.ArbitrationType != null
                             ? x.Type == Request.ArbitrationType
                             : true));

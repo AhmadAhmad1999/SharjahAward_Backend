@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                 {
                     ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
 
-                    if (!Request.isAccepted)
+                    if (Request.isAccepted == FormStatus.Accepted)
                     {
                         ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
 
@@ -66,7 +66,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
 
                     ResponseMessage = Request.lang == "en"
                         ? "Created successfully"
-                        : (Request.isAccepted 
+                        : (Request.isAccepted == FormStatus.Accepted
                             ? "تم قبول التحكيم بنجاح"
                             : "تم رفض التحكيم بنجاح");
 

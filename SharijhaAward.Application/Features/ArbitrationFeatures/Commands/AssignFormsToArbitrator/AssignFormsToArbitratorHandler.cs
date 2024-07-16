@@ -22,9 +22,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Assign
                 .Select(x => new Arbitration()
                 {
                     ArbitratorId = Request.ArbitratorId,
-                    isAccepted = true,
+                    isAccepted = FormStatus.NotArbitratedYet,
                     ProvidedFormId = x,
-                    isAcceptedFromChairman = null
+                    isAcceptedFromChairman = FormStatus.NotArbitratedYet
                 }).ToList();
 
             await _ArbitrationRepository.AddRangeAsync(NewArbitrationEntities);

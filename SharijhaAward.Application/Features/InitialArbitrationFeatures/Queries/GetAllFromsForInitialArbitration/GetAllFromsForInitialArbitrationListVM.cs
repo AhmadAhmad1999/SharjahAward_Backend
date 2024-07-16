@@ -12,6 +12,6 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
         public DateTime? DateOfArbitration { get; set; }
         public ArbitrationType ArbitrationType { get; set; }
         public int FullArbitrationScore { get; set; }
-        public bool? isAcceptedFromChairman { get; set; }
+        public FormStatus isAcceptedFromChairman { get; set; }
     }
 }

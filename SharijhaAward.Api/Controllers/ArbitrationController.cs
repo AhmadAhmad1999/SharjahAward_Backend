@@ -10,6 +10,7 @@ using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllForms
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbitratrionDataByArbitratorId;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetRemainingFormsWithFilters;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.ArbitrationModel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -205,9 +206,15 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> ChangeStatusForAssignedForm(int Id, bool isAccepted)
+        public async Task<IActionResult> ChangeStatusForAssignedForm(int Id, FormStatus isAccepted, string? ReasonForRejecting)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
@@ -215,7 +222,9 @@ namespace SharijhaAward.Api.Controllers
             {
                 Id = Id,
                 isAccepted = isAccepted,
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                ReasonForRejecting = ReasonForRejecting,
+                token = Token
             });
 
             return Response.statusCode switch

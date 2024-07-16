@@ -1,4 +1,6 @@
-﻿namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetInitialArbitrationByArbitrationId
+﻿using SharijhaAward.Domain.Entities.ArbitrationModel;
+
+namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetInitialArbitrationByArbitrationId
 {
     public class GetInitialArbitrationByArbitrationIdResponse
     {
@@ -6,6 +8,6 @@
         public bool isChairman { get; set; }
         public bool isItHisForm { get; set; }
         public string? ReasonForRejecting { get; set; }
-        public bool? isAcceptedFromChairman { get; set; }
+        public FormStatus isAcceptedFromChairman { get; set; }
     }
 }

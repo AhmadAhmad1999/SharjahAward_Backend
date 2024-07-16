@@ -54,8 +54,10 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllA
                             ArabicName = y.Category!.ArabicName,
                             EnglishName = y.Category!.EnglishName
                         }).ToList(),
-                    NumberOfAcceptedAssignedForms = AllArbitrations.Where(y => y.ArbitratorId == x.Id && y.isAccepted).Count(),
-                    NumberOfRejectedAssignedForms = AllArbitrations.Where(y => y.ArbitratorId == x.Id && !y.isAccepted).Count()
+                    NumberOfAcceptedAssignedForms = AllArbitrations.Where(y => y.ArbitratorId == x.Id && 
+                        y.isAccepted == FormStatus.Accepted).Count(),
+                    NumberOfRejectedAssignedForms = AllArbitrations.Where(y => y.ArbitratorId == x.Id &&
+                        y.isAccepted == FormStatus.Rejected).Count()
                 }).ToList();
 
             string ResponseMessage = string.Empty;

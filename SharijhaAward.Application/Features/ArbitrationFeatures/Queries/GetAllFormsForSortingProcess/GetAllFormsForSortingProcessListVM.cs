@@ -1,4 +1,6 @@
-﻿namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllFormsForSortingProcess
+﻿using SharijhaAward.Domain.Entities.ArbitrationModel;
+
+namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllFormsForSortingProcess
 {
     public class GetAllFormsForSortingProcessListVM
     {
@@ -9,7 +11,7 @@
         public string ArbitratorName { get; set; } = null!;
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
-        public bool isAccepted { get; set; }
+        public FormStatus isAccepted { get; set; }
         public string? Reason { get; set; }
     }
 }

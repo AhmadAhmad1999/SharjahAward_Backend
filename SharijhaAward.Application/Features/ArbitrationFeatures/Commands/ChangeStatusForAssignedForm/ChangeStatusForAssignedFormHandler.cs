@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -24,7 +25,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
 
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
-            Arbitration? ArbitrationEntity = await _ArbitrationRepository.GetByIdAsync(Request.Id);
+            Arbitration? ArbitrationEntity = await _ArbitrationRepository
+                .Include(x => x.Arbitrator!)
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (ArbitrationEntity == null)
             {
@@ -51,7 +54,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
 
             ArbitrationEntity.isAccepted = Request.isAccepted;
             
-            if (!Request.isAccepted)
+            if (Request.isAccepted == FormStatus.Rejected)
                 ArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
 
             await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
