@@ -82,7 +82,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                         RemainingForms = _ProvidedFormRepository
                             .Where(x => x.PercentCompletion == 100 &&
                                 !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
-                                x.IsAccepted != null)
+                                x.IsAccepted != null &&
+                                AllArbitratorAssingedForms.Select(y => y.ProvidedForm!.categoryId).Contains(x.categoryId))
                             .Include(x => x.Category!)
                             .Include(x => x.CategoryEducationalClass!)
                             .Include(x => x.CategoryEducationalClass!.EducationalClass!)
@@ -129,7 +130,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                         RemainingForms = _ProvidedFormRepository
                             .Where(x => x.PercentCompletion == 100 &&
                                 !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
-                                x.IsAccepted != null)
+                                x.IsAccepted != null &&
+                                AllArbitratorAssingedForms.Select(y => y.ProvidedForm!.categoryId).Contains(x.categoryId))
                             .Include(x => x.Category!)
                             .Include(x => x.CategoryEducationalClass!)
                             .Include(x => x.CategoryEducationalClass!.EducationalClass!)

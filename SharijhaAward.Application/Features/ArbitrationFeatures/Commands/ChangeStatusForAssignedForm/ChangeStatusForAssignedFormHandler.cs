@@ -40,8 +40,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
 
             if (ArbitrationEntity.ArbitratorId == UserId && ArbitrationEntity.Arbitrator!.isChairman)
             {
-                ArbitrationEntity.isAccepted = Request.isAccepted;
-                ArbitrationEntity.isAcceptedFromChairman = Request.isAcceptedFromChairman;
+                ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
 
                 await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
 

@@ -198,7 +198,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPatch("ChangeStatusForAssignedForm/{Id}")]
+        [HttpPut("ChangeStatusForAssignedForm")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -206,26 +206,23 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> ChangeStatusForAssignedForm(int Id, FormStatus isAccepted, string? ReasonForRejecting)
+        public async Task<IActionResult> ChangeStatusForAssignedForm(ChangeStatusForAssignedFormCommand ChangeStatusForAssignedFormCommand)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
             if (string.IsNullOrEmpty(Token))
                 return Unauthorized("You must send the token");
 
+            ChangeStatusForAssignedFormCommand.token = Token;
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<object>? Response = await _Mediator.Send(new ChangeStatusForAssignedFormCommand()
-            {
-                Id = Id,
-                isAccepted = isAccepted,
-                lang = HeaderValue!,
-                ReasonForRejecting = ReasonForRejecting,
-                token = Token
-            });
+            ChangeStatusForAssignedFormCommand.lang = HeaderValue;
+
+            BaseResponse<object>? Response = await _Mediator.Send(ChangeStatusForAssignedFormCommand);
 
             return Response.statusCode switch
             {
