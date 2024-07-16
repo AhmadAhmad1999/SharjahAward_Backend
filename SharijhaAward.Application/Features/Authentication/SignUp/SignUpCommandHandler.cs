@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Authentication.Login;
@@ -21,10 +22,12 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         private readonly IEmailSender _EmailSender;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IAsyncRepository<Achievement> _achievementRepository;
+        private readonly IAsyncRepository<RolePermission> _RolePermissionRepository;
 
         public SignUpCommandHandler(IAsyncRepository<Achievement> achievementRepository, IUserRepository userRepository,IRoleRepository roleRepository ,IMapper mapper,
             IEmailSender EmailSender,
-            IAsyncRepository<UserRole> UserRoleRepository)
+            IAsyncRepository<UserRole> UserRoleRepository,
+            IAsyncRepository<RolePermission> RolePermissionRepository)
         {
             _roleRepository = roleRepository;
             _UserRepository = userRepository;
@@ -32,6 +35,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
             _EmailSender = EmailSender;
             _UserRoleRepository = UserRoleRepository;
             _achievementRepository = achievementRepository;
+            _RolePermissionRepository = RolePermissionRepository;
         }
 
         public async Task<AuthenticationResponse> Handle(SignUpCommand Request, CancellationToken cancellationToken)
@@ -194,7 +198,16 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                     {
                         isSucceed = true,
                         message = msg,
-                        user = _mapper.Map<UserDataResponse>(User)
+                        user = _mapper.Map<UserDataResponse>(User),
+                        UserPermissions = await _RolePermissionRepository
+                            .Where(x => x.RoleId == NewUserRoleEntity.RoleId)
+                            .Include(x => x.Permission!)
+                            .Include(x => x.Permission!.PermissionHeader!)
+                            .Select(x => new UserPermissionsDto()
+                            {
+                                Action = x.Permission!.Name,
+                                Subject = x.Permission!.PermissionHeader!.Name
+                            }).ToListAsync()
                     };
                 }
                 catch (Exception)

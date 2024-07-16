@@ -82,7 +82,7 @@ namespace SharijhaAward.Api.Controllers
                     {
                         data = response.user,
                         key = response.token,
-                        permission = response.permissions,
+                        permission = response.UserPermissions,
                         message = response.message
                     }
                 );
@@ -132,7 +132,7 @@ namespace SharijhaAward.Api.Controllers
                     {
                         data = response.user,
                         key = response.token,
-                        permission = response.permissions,
+                        permission = response.UserPermissions,
                         message = response.message
 
                     });
