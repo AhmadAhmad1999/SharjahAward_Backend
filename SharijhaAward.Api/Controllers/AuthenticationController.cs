@@ -70,10 +70,14 @@ namespace SharijhaAward.Api.Controllers
 
             if (response.user == null)
             {
-                return StatusCode(400,
+                return StatusCode(200,
                     new
                     {
-                        message = response.message
+                        message = response.message,
+                        data = new
+                        {
+                            NeedVerification = response.NeedVerification,
+                        }
                     });
             }
             else
