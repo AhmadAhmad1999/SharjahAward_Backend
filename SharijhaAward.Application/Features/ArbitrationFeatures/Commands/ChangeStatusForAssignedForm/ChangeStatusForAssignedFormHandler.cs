@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            if (ArbitrationEntity.ArbitratorId == int.Parse(UserId) && ArbitrationEntity.Arbitrator!.isChairman)
+            if (ArbitrationEntity.ArbitratorId == UserId && ArbitrationEntity.Arbitrator!.isChairman)
             {
                 ArbitrationEntity.isAccepted = Request.isAccepted;
                 ArbitrationEntity.isAcceptedFromChairman = Request.isAcceptedFromChairman;

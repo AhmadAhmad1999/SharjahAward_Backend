@@ -206,7 +206,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> ChangeStatusForAssignedForm(int Id, bool isAccepted)
+        public async Task<IActionResult> ChangeStatusForAssignedForm(int Id, FormStatus isAccepted, string? ReasonForRejecting)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
