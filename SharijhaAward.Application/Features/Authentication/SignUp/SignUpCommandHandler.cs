@@ -192,6 +192,16 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
                     await _EmailSender.SendEmailForConfirmationCode(EmailRequest);
 
+                    List<UserPermissionsDto> ListOfUserPermissionsDto = await _RolePermissionRepository
+                        .Where(x => x.RoleId == NewUserRoleEntity.RoleId)
+                        .Include(x => x.Permission!)
+                        .Include(x => x.Permission!.PermissionHeader!)
+                        .Select(x => new UserPermissionsDto()
+                        {
+                            Action = x.Permission!.Name,
+                            Subject = x.Permission!.PermissionHeader!.Name
+                        }).ToListAsync();
+
                     Transaction.Complete();
 
                     return new AuthenticationResponse()
@@ -199,15 +209,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                         isSucceed = true,
                         message = msg,
                         user = _mapper.Map<UserDataResponse>(User),
-                        UserPermissions = await _RolePermissionRepository
-                            .Where(x => x.RoleId == NewUserRoleEntity.RoleId)
-                            .Include(x => x.Permission!)
-                            .Include(x => x.Permission!.PermissionHeader!)
-                            .Select(x => new UserPermissionsDto()
-                            {
-                                Action = x.Permission!.Name,
-                                Subject = x.Permission!.PermissionHeader!.Name
-                            }).ToListAsync()
+                        UserPermissions = ListOfUserPermissionsDto
                     };
                 }
                 catch (Exception)
