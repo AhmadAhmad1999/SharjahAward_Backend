@@ -58,6 +58,17 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                         ? "User has been created"
                         : "تم التسجيل بنجاح";
 
+                    Domain.Entities.IdentityModels.User User = _mapper.Map<Domain.Entities.IdentityModels.User>(Request);
+
+                    byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
+
+                    User.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: User.Password,
+                        salt: salt,
+                        prf: KeyDerivationPrf.HMACSHA256,
+                        iterationCount: 100000,
+                        numBytesRequested: 256 / 8));
+
                     if (CheckEmail is not null)
                     {
                         if (CheckEmail.isValidAccount)
@@ -72,7 +83,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                                 isSucceed = false
                             };
                         }
-                        else
+                        else if (!CheckEmail.isValidAccount && User.Password == CheckEmail.Password)
                         {
                             msg = Request.lang == "en"
                                 ? "This account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
@@ -100,16 +111,6 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                             };
                         }
                     }
-
-                    Domain.Entities.IdentityModels.User User = _mapper.Map<Domain.Entities.IdentityModels.User>(Request);
-                    byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
-
-                    User.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                        password: User.Password,
-                        salt: salt,
-                        prf: KeyDerivationPrf.HMACSHA256,
-                        iterationCount: 100000,
-                        numBytesRequested: 256 / 8));
 
                     User.isValidAccount = false;
 

@@ -70,6 +70,16 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task<AuthenticationResponse> LogInAsync(User user, string? lang, bool intoAdminDashboard)
         {
             User? userToLogin = await GetByEmailAsync(user.Email, intoAdminDashboard);
+
+            byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
+
+            string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: user.Password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+
             if (userToLogin == null)
             {
                 return new AuthenticationResponse()
@@ -81,35 +91,38 @@ namespace SharijhaAward.Persistence.Repositories
             }
             else if (!userToLogin.isValidAccount)
             {
-                EmailRequest EmailRequest2 = new EmailRequest()
+                if (CheckPassword == userToLogin.Password)
                 {
-                    ToEmail = userToLogin.Email,
-                    Subject = lang == "ar"
+                    EmailRequest EmailRequest2 = new EmailRequest()
+                    {
+                        ToEmail = userToLogin.Email,
+                        Subject = lang == "ar"
                             ? $"رمز تفعيل"
                             : "Confirmation Code",
-                    Body = lang == "ar"
+                        Body = lang == "ar"
                             ? $"رمز التفعيل الخاص بحسابك: {userToLogin.ConfirmationCodeForSignUp}"
                             : $"This is your account's confirmation code: {userToLogin.ConfirmationCodeForSignUp}"
-                };
+                    };
 
-                await _EmailSender.SendEmailForConfirmationCode(EmailRequest2);
-                return new AuthenticationResponse()
+                    await _EmailSender.SendEmailForConfirmationCode(EmailRequest2);
+                    return new AuthenticationResponse()
+                    {
+                        message = lang == "en"
+                            ? "This account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
+                            : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك"
+                    };
+                }
+                else
                 {
-                    message = lang == "en"
-                        ? "This account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
-                        : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك"
-                };
+                    return new AuthenticationResponse()
+                    {
+                        message = lang == "en"
+                            ? "Invalid email or password"
+                            : "خطأ في الإيميل أو كلمة المرور"
+                    };
+                }
             }
-
-            byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
-
-            string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: user.Password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
-                numBytesRequested: 256 / 8));
-
+            
             if (CheckPassword == userToLogin.Password)
             {
                 var token = _jwtProvider.Generate(userToLogin);
