@@ -21,7 +21,7 @@ namespace SharijhaAward.Persistence.Repositories
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _Mapper;
         private readonly IEmailSender _EmailSender;
-        public UserRepository(SharijhaAwardDbContext dbContext , IJwtProvider jwtProvider,
+        public UserRepository(SharijhaAwardDbContext dbContext, IJwtProvider jwtProvider,
             IMapper Mapper,
             IEmailSender EmailSender) : base(dbContext)
         {
@@ -34,7 +34,7 @@ namespace SharijhaAward.Persistence.Repositories
         //{
         //    var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Id == roleId);
         //    var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
-           
+
         //    if (user != null && role != null)
         //    {
         //        user.RoleId = roleId;
@@ -46,8 +46,8 @@ namespace SharijhaAward.Persistence.Repositories
 
         public async Task ChangePassword(int Id, string password)
         {
-            var user =await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
-            user!.Password= password;
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
+            user!.Password = password;
             await _dbContext.SaveChangesAsync();
         }
 
@@ -109,7 +109,8 @@ namespace SharijhaAward.Persistence.Repositories
                     {
                         message = lang == "en"
                             ? "This account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
-                            : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك"
+                            : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك",
+                        NeedVerification = true
                     };
                 }
                 else
@@ -146,14 +147,14 @@ namespace SharijhaAward.Persistence.Repositories
                     ? "Invalid email or password"
                     : "خطأ في الإيميل أو كلمة المرور"
             };
-           
+
         }
 
         public async Task<string> RegisterAsync(User user)
         {
             if (user != null)
             {
-                string token =  _jwtProvider.Generate(user);
+                string token = _jwtProvider.Generate(user);
                 return token;
             }
             throw new Exception("The Account is not created");

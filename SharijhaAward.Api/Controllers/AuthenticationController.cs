@@ -54,7 +54,7 @@ namespace SharijhaAward.Api.Controllers
 
             var response = await _Mediator.Send(
                 new LoginCommand()
-                { 
+                {
                     Email = user.Email,
                     Password = user.Password,
                     lang = HeaderValue,
@@ -70,10 +70,14 @@ namespace SharijhaAward.Api.Controllers
 
             if (response.user == null)
             {
-                return StatusCode(400,
+                return StatusCode(200,
                     new
                     {
-                        message = response.message
+                        message = response.message,
+                        data = new
+                        {
+                            NeedVerification = response.NeedVerification,
+                        }
                     });
             }
             else
@@ -272,8 +276,8 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
-            
-            if(token.IsNullOrEmpty())
+
+            if (token.IsNullOrEmpty())
             {
                 return Unauthorized();
             }
