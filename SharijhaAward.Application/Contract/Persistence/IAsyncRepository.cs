@@ -60,5 +60,6 @@ namespace SharijhaAward.Application.Contract.Persistence
         void SaveChanges();
         Task SaveChangesAsync();
         Task<int> ExecuteUpdateAsync(string sql);
+        IEnumerable<T> AsEnumerable();
     }
 }

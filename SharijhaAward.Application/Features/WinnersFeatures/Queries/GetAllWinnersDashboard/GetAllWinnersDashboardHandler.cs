@@ -109,13 +109,13 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                     CategoryName = Request.lang == "en"
                         ? x.ProvidedForm!.Category!.EnglishName
                         : x.ProvidedForm!.Category!.ArabicName,
-                    InitialArbitrationScore = ArbitrationEntities.Any() 
+                    InitialArbitrationScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
                         ? (ArbitrationEntities
                             .Where(y => y.ProvidedFormId == x.ProvidedFormId)
                             .Select(y => y.FullScore)
                             .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
                         : 0,
-                    ArbitrationAuditScore = ArbitrationEntities.Any() 
+                    ArbitrationAuditScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
                         ? (ArbitrationEntities
                             .Where(y => y.ProvidedFormId == x.ProvidedFormId)
                             .Select(y => y.FullScore)

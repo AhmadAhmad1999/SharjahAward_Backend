@@ -21,7 +21,7 @@ namespace SharijhaAward.Persistence.Repositories
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _Mapper;
         private readonly IEmailSender _EmailSender;
-        public UserRepository(SharijhaAwardDbContext dbContext , IJwtProvider jwtProvider,
+        public UserRepository(SharijhaAwardDbContext dbContext, IJwtProvider jwtProvider,
             IMapper Mapper,
             IEmailSender EmailSender) : base(dbContext)
         {
@@ -34,7 +34,7 @@ namespace SharijhaAward.Persistence.Repositories
         //{
         //    var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Id == roleId);
         //    var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
-           
+
         //    if (user != null && role != null)
         //    {
         //        user.RoleId = roleId;
@@ -46,8 +46,8 @@ namespace SharijhaAward.Persistence.Repositories
 
         public async Task ChangePassword(int Id, string password)
         {
-            var user =await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
-            user!.Password= password;
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
+            user!.Password = password;
             await _dbContext.SaveChangesAsync();
         }
 
@@ -70,6 +70,16 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task<AuthenticationResponse> LogInAsync(User user, string? lang, bool intoAdminDashboard)
         {
             User? userToLogin = await GetByEmailAsync(user.Email, intoAdminDashboard);
+
+            byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
+
+            string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: user.Password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+
             if (userToLogin == null)
             {
                 return new AuthenticationResponse()
@@ -81,36 +91,39 @@ namespace SharijhaAward.Persistence.Repositories
             }
             else if (!userToLogin.isValidAccount)
             {
-                EmailRequest EmailRequest2 = new EmailRequest()
+                if (CheckPassword == userToLogin.Password)
                 {
-                    ToEmail = userToLogin.Email,
-                    Subject = lang == "ar"
+                    EmailRequest EmailRequest2 = new EmailRequest()
+                    {
+                        ToEmail = userToLogin.Email,
+                        Subject = lang == "ar"
                             ? $"رمز تفعيل"
                             : "Confirmation Code",
-                    Body = lang == "ar"
+                        Body = lang == "ar"
                             ? $"رمز التفعيل الخاص بحسابك: {userToLogin.ConfirmationCodeForSignUp}"
                             : $"This is your account's confirmation code: {userToLogin.ConfirmationCodeForSignUp}"
-                };
+                    };
 
-                await _EmailSender.SendEmailForConfirmationCode(EmailRequest2);
-                return new AuthenticationResponse()
+                    await _EmailSender.SendEmailForConfirmationCode(EmailRequest2);
+                    return new AuthenticationResponse()
+                    {
+                        message = lang == "en"
+                            ? "This account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
+                            : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك",
+                        NeedVerification = true
+                    };
+                }
+                else
                 {
-                    message = lang == "en"
-                        ? "This account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
-                        : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك",
-                    NeedVerification = true
-                };
+                    return new AuthenticationResponse()
+                    {
+                        message = lang == "en"
+                            ? "Invalid email or password"
+                            : "خطأ في الإيميل أو كلمة المرور"
+                    };
+                }
             }
-
-            byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
-
-            string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: user.Password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
-                numBytesRequested: 256 / 8));
-
+            
             if (CheckPassword == userToLogin.Password)
             {
                 var token = _jwtProvider.Generate(userToLogin);
@@ -134,14 +147,14 @@ namespace SharijhaAward.Persistence.Repositories
                     ? "Invalid email or password"
                     : "خطأ في الإيميل أو كلمة المرور"
             };
-           
+
         }
 
         public async Task<string> RegisterAsync(User user)
         {
             if (user != null)
             {
-                string token =  _jwtProvider.Generate(user);
+                string token = _jwtProvider.Generate(user);
                 return token;
             }
             throw new Exception("The Account is not created");
