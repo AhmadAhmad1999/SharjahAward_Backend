@@ -87,14 +87,18 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                                     ? x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!.EnglishName
                                     : x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!.EnglishName)
                                 : null,
-                            InitialArbitrationScore = ArbitrationEntities
-                                .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                                .Select(y => y.FullScore)
-                                .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
-                            ArbitrationAuditScore = ArbitrationEntities
-                                .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                                .Select(y => y.FullScore)
-                                .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                            InitialArbitrationScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                                ? (ArbitrationEntities
+                                    .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                                    .Select(y => y.FullScore)
+                                    .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
+                                : 0,
+                            ArbitrationAuditScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                                ? (ArbitrationEntities
+                                    .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                                    .Select(y => y.FullScore)
+                                    .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
+                                : 0,
                             FinalArbitrationScore = x.FinalArbitration! ?.FinalScore ?? 0,
                             CycleNumber = x.ProvidedForm!.CycleNumber,
                             CycleYear = x.ProvidedForm!.CycleYear,

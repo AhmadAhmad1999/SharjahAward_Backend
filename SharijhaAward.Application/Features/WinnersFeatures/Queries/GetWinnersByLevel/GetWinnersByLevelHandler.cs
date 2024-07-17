@@ -52,7 +52,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
             if (Request.MaxLevelOfWinners == 0 && CategoryEntity.ExpectedNumberOfWinners != null)
                 Request.MaxLevelOfWinners = CategoryEntity.ExpectedNumberOfWinners.Value;
 
-            List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = await _ArbitrationResultRepository
+            List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = _ArbitrationResultRepository
                 .Include(x => x.ProvidedForm!)
                 .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId &&
                     x.Winner && x.EligibleToWin)
@@ -64,22 +64,28 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                 .Include(x => x.ProvidedForm!.CategoryEducationalEntity!)
                 .Include(x => x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!)
                 .Include(x => x.ProvidedForm!.User!)
+                .AsEnumerable() 
                 .GroupBy(x => x.FinalArbitration!.FinalScore)
-                .ToListAsync();
+                .ToList();
 
-            var DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
+            var DynamicAttributeValueEntities = _DynamicAttributeValueRepository
                 .Include(x => x.DynamicAttribute!)
-                .Where(x => ArbitrationResultEntities.Any(y => y.Select(z => z.ProvidedFormId).Any(y => y == x.RecordId)) &&
+                .AsEnumerable()
+                .Where(x => ArbitrationResultEntities.SelectMany(y => y.Select(z => z.ProvidedFormId)).Any(y => y == x.RecordId) &&
                     x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
                 .Select(x => new
                 {
                     FormId = x.RecordId,
                     SubscriberName = x.Value
-                }).ToListAsync();
+                })
+                .ToList();
 
-            List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
-                .Where(x => ArbitrationResultEntities.Any(y => y.Select(z => z.ProvidedFormId).Any(y => y == x.ProvidedFormId)))
-                .ToListAsync();
+            List<Arbitration> ArbitrationEntities = _ArbitrationRepository
+                .AsEnumerable()
+                .Where(x => ArbitrationResultEntities
+                    .SelectMany(y => y.Select(z => z.ProvidedFormId))
+                    .Contains(x.ProvidedFormId))
+                .ToList();
 
             List<IGrouping<float, ArbitrationResult>> RequestedWinnersList = ArbitrationResultEntities
                 .Take(Request.MaxLevelOfWinners)
@@ -101,14 +107,18 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                         CategoryName = Request.lang == "en"
                             ? x.ProvidedForm!.Category!.EnglishName
                             : x.ProvidedForm!.Category!.ArabicName,
-                        InitialArbitrationScore = ArbitrationEntities
-                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                            .Select(y => y.FullScore)
-                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
-                        ArbitrationAuditScore = ArbitrationEntities
-                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                            .Select(y => y.FullScore)
-                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                        InitialArbitrationScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                            ? ArbitrationEntities
+                                .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                                .Select(y => y.FullScore)
+                                .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
+                            : 0,
+                        ArbitrationAuditScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                            ? ArbitrationEntities
+                                .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                                .Select(y => y.FullScore)
+                                .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
+                            : 0,
                         CycleNumber = x.ProvidedForm!.CycleNumber,
                         CycleYear = x.ProvidedForm!.CycleYear,
                         EducationalClassName = Request.lang == "en"
@@ -125,9 +135,10 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
 
             int TotalCount = await _ArbitrationResultRepository
                 .GetCountAsync(x => !RequestedWinners.Select(y => y.FormId).Contains(x.ProvidedFormId));
-            
-            List<GetWinnersByLevelListVM> RemainingWinners = await _ArbitrationResultRepository
-                .Where(x => !RequestedWinners.Select(y => y.FormId).Contains(x.ProvidedFormId))
+
+            List<GetWinnersByLevelListVM> RemainingWinners = _ArbitrationResultRepository
+                .Where(x => !RequestedWinners.AsEnumerable().Select(y => y.FormId).Contains(x.ProvidedFormId))
+                .AsEnumerable()
                 .Skip((Request.page != 0 && Request.PerPage != -1)
                     ? (Request.page - 1) * Request.PerPage
                     : 0)
@@ -144,14 +155,20 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     CategoryName = Request.lang == "en"
                             ? x.ProvidedForm!.Category!.EnglishName
                             : x.ProvidedForm!.Category!.ArabicName,
-                    InitialArbitrationScore = ArbitrationEntities
+                    InitialArbitrationScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                        ? (ArbitrationEntities
                             .Where(y => y.ProvidedFormId == x.ProvidedFormId)
                             .Select(y => y.FullScore)
-                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
-                    ArbitrationAuditScore = ArbitrationEntities
+                            .AsEnumerable()
+                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
+                        : 0,
+                    ArbitrationAuditScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                        ? (ArbitrationEntities
                             .Where(y => y.ProvidedFormId == x.ProvidedFormId)
                             .Select(y => y.FullScore)
-                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                            .AsEnumerable()
+                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
+                        : 0,
                     CycleNumber = x.ProvidedForm!.CycleNumber,
                     CycleYear = x.ProvidedForm!.CycleYear,
                     EducationalClassName = x.ProvidedForm!.CategoryEducationalClass != null
@@ -167,24 +184,28 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                     Gender = x.ProvidedForm!.User.Gender,
                     WinningLevel = x.WinningLevel!.Value
-                }).ToListAsync();
+                }).ToList();
 
             GetWinnersByLevelMainResponse Response = new GetWinnersByLevelMainResponse()
             {
-                RequestedWinners = RequestedWinners
-                    .GroupBy(x => x.WinningLevel)
-                    .Select(x => new GetWinnersByLevelGroupByLevelListVM()
-                    {
-                        WinningLevel = x.Key,
-                        GetWinnersByLevelListVM = x.ToList()
-                    }).ToList(),
-                RemainingWinners = RemainingWinners
-                    .GroupBy(x => x.WinningLevel)
-                    .Select(x => new GetWinnersByLevelGroupByLevelListVM()
-                    {
-                        WinningLevel = x.Key,
-                        GetWinnersByLevelListVM = x.ToList()
-                    }).ToList()
+                RequestedWinners = RequestedWinners.Any()
+                    ? RequestedWinners
+                        .GroupBy(x => x.WinningLevel)
+                        .Select(x => new GetWinnersByLevelGroupByLevelListVM()
+                        {
+                            WinningLevel = x.Key,
+                            GetWinnersByLevelListVM = x.ToList()
+                        }).ToList()
+                    : new List<GetWinnersByLevelGroupByLevelListVM>(),
+                RemainingWinners = RemainingWinners.Any()
+                    ? RemainingWinners
+                        .GroupBy(x => x.WinningLevel)
+                        .Select(x => new GetWinnersByLevelGroupByLevelListVM()
+                        {
+                            WinningLevel = x.Key,
+                            GetWinnersByLevelListVM = x.ToList()
+                        }).ToList()
+                    : new List<GetWinnersByLevelGroupByLevelListVM>()
             };
 
             Pagination PaginationParameter = new Pagination(Request.page,

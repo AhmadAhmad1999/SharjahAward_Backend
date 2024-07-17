@@ -53,6 +53,10 @@ namespace SharijhaAward.Persistence.Repositories
         {
             return await _DbSet.AsNoTracking().ToListAsync();
         }
+        public IEnumerable<T> AsEnumerable()
+        {
+            return _DbSet.AsNoTracking().AsEnumerable();
+        }
         public async virtual Task<IReadOnlyList<T>> GetPagedReponseWithPredicateAsync(Expression<Func<T, bool>>? predicate, int page, int size)
         {
             if (size == -1 || page == 0)
