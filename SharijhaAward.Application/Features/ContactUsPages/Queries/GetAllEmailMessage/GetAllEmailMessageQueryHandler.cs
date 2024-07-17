@@ -36,7 +36,9 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
         public async Task<BaseResponse<List<EmailMessageListVM>>> Handle(GetAllEmailMessageQuery request, CancellationToken cancellationToken)
         {
             var UserId = _jwtProvider.GetUserIdFromToken(request.token!);
+            
             var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
+            
             if (User == null)
             {
                 string msg = request.lang == "en"
@@ -46,26 +48,57 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                 return new BaseResponse<List<EmailMessageListVM>>(msg, false, 401);
             }
 
-            var EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.From == User.Email || m.To == User.Email && m.MessageId == m.Id, request.page, request.perPage, m => m.Attachments!)
-                .OrderByDescending(x => x.CreatedAt).ToListAsync();
+            var EmailMessages = new List<EmailMessage>();
+
+            var MainEmails = await _emailMessageRepository
+                .Where(e => e.Id == e.MessageId)
+                .ToListAsync();
+
+            foreach(var email in MainEmails)
+            {
+                var emailMessage = await _emailMessageRepository
+                    .WhereThenInclude(m=> m.MessageId == email.Id && m.Id != email.Id, m => m.Attachments!)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .FirstOrDefaultAsync();
+
+                if(emailMessage == null)
+                {
+                    EmailMessages.Add(email);
+                }
+
+                else
+                {
+                    EmailMessages.Add(emailMessage);
+                }
+            }
 
             if (request.filter == 1)
             {
-                EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.From == User.Email , request.page, request.perPage, m => m.Attachments!)
-                .OrderByDescending(x => x.CreatedAt).ToListAsync();
+                EmailMessages = EmailMessages
+                  .Where(m => m.From == User.Email)
+                  .OrderByDescending(x => x.CreatedAt)
+                  .Skip((request.page - 1) * request.perPage)
+                  .Take(request.perPage)
+                  .ToList();
             }
 
             if (request.filter == 2)
             {
-                EmailMessages = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.To == User.Email, request.page, request.perPage, m => m.Attachments!)
-                .OrderByDescending(x => x.CreatedAt).ToListAsync();
+                EmailMessages = EmailMessages
+                   .Where(m => m.To == User.Email)
+                   .OrderByDescending(x => x.CreatedAt)
+                   .Skip((request.page - 1) * request.perPage)
+                   .Take(request.perPage)
+                   .ToList();
             }
+
             if (request.query != null)
             {
                 EmailMessages = _emailMessageRepository.WhereThenInclude(m => m.Body.Contains(request.query), m => m.Attachments!).OrderByDescending(x => x.CreatedAt).ToList();
             }
           
             var data = _mapper.Map<List<EmailMessageListVM>>(EmailMessages);
+            
             int UnReadingMessages = _emailMessageRepository.GetCount(m => !m.IsRead && m.To == User.Email);
            
             for (int i = 0; i < data.Count(); i++)

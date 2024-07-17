@@ -3,7 +3,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsByPageId;
+using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetAllImageCards;
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsByPageId;
+using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetAllTextCard;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 using SharijhaAward.Domain.Entities.PageStructureModels;
@@ -36,6 +38,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
             var page = await _pageStructureRepository
                 .WhereThenInclude(p => p.Id == request.Id, p => p.DarkCards!)
                 .Include(p => p.ParagraphCards)
+                .Include(p=>p.ImageCards)
+                .Include(p=>p.TextCards)
                 .FirstOrDefaultAsync();
            
             if (page == null)
@@ -54,6 +58,10 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
             var DarkCardsList = _mapper.Map<List<DarkCardListVM>>(page.DarkCards);
 
             var ParagraphCardsList = _mapper.Map<List<ParagraphCardListVM>>(page.ParagraphCards);
+
+            var ImageCardsList = _mapper.Map<List<ImageCardListVM>>(page.ImageCards);
+
+            var TextCardsList = _mapper.Map<List<TextCardListVM>>(page.TextCards);
 
             foreach(var Darkcard in DarkCardsList)
             {
@@ -79,7 +87,31 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 data.Components!.Add(Component);
             }
 
-            data.Components.OrderBy(c => c.orderId);
+            foreach (var Imagecard in ImageCardsList)
+            {
+                var Component = new Component()
+                {
+                    Card = Imagecard,
+                    CardType = "ImageCard",
+                    orderId = Imagecard.orderId
+                };
+
+                data.Components!.Add(Component);
+            }
+
+            foreach (var Textcard in TextCardsList)
+            {
+                var Component = new Component()
+                {
+                    Card = Textcard,
+                    CardType = "TextCard",
+                    orderId = Textcard.orderId
+                };
+
+                data.Components!.Add(Component);
+            }
+
+            data.Components = data.Components.OrderBy(c => c.orderId).ToList();
 
             data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle;
 
