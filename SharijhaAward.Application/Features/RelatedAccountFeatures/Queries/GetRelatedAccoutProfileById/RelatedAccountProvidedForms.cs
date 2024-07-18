@@ -14,6 +14,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
         public int CurrentStep { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
+        public string subCategoryName { get; set; } = string.Empty;
         public float FinalScore { get; set; }
         public DateTime CreatedAt { get; set; }
     }
