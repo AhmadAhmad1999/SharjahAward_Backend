@@ -21,15 +21,13 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
         : IRequestHandler<GetPageByIdQuery, BaseResponse<PageDto>>
     {
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
-        private readonly IAsyncRepository<DarkCard> _darkCardRepository;
-        private readonly IAsyncRepository<ParagraphCard> _paragraphCardRepository;
+        private readonly IAsyncRepository<PageStructureImages> _pageStructureImagesRepository;
         private readonly IMapper _mapper;
 
-        public GetPageByIdQueryHandler(IAsyncRepository<PageStructure> pageStructureRepository, IAsyncRepository<DarkCard> darkCardRepository, IAsyncRepository<ParagraphCard> paragraphCardRepository, IMapper mapper)
+        public GetPageByIdQueryHandler(IAsyncRepository<PageStructure> pageStructureRepository, IAsyncRepository<PageStructureImages> pageStructureImagesRepository, IMapper mapper)
         {
             _pageStructureRepository = pageStructureRepository;
-            _darkCardRepository = darkCardRepository;
-            _paragraphCardRepository = paragraphCardRepository;
+            _pageStructureImagesRepository = pageStructureImagesRepository;
             _mapper = mapper;
         }
 
@@ -46,10 +44,6 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
             {
                 return new BaseResponse<PageDto>("", false, 404);
             }
-
-            //var DarkCards = _darkCardRepository.Where(d => d.PageId == page!.Id).ToList();
-           
-            //var ParagraphCards = _paragraphCardRepository.Where(p => p.PageId == page!.Id).ToList();
 
             var data = _mapper.Map<PageDto>(page);
 
@@ -89,6 +83,10 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
 
             foreach (var Imagecard in ImageCardsList)
             {
+                var Images = _pageStructureImagesRepository.Where(i => i.ImageCardId == Imagecard.Id).ToList();
+                
+                Imagecard.CardImages = _mapper.Map<List<PageImageDto>>(Images);
+                
                 var Component = new Component()
                 {
                     Card = Imagecard,
@@ -118,7 +116,9 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
             data.SubTitle = request.lang == "en" ? data.EnglishSubTitle! : data.ArabicSubTitle!;
 
             data.Content = request.lang == "en" ? data.EnglishContent! : data.ArabicContent!;
-
+           
+            data.numberOfSubPages = _pageStructureRepository.GetCount(p => p.ParentId == page.Id && !p.isDeleted);
+            
             return new BaseResponse<PageDto>("", true, 200, data);
         }
 

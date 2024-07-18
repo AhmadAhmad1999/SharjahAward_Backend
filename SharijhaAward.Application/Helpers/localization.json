@@ -1,0 +1,143 @@
+﻿{
+  "Coordinator": {
+    "Id": "المعرف",
+    "ArabicName": "",
+    "EnglishName": "",
+    "Email": "",
+    "PhoneNumber": ""
+  },
+  "Arbitrator": {
+    "Id": "",
+    "ArabicName": "",
+    "EnglishName": "",
+    "PhoneNumber": "",
+    "Email": "",
+    "isChairman": "رئيس لجنة"
+  },
+  "Cycle": {
+    "Id": "",
+    "CycleNumber": "",
+    "Year": "",
+    "ArabicName": "",
+    "EnglishName": "",
+    "Status": "",
+    "RegistrationPortalOpeningDate": "",
+    "RegistrationPortalClosingDate": "",
+    "SubscriberPortalClosingDate": "",
+    "InitialArbitrationStartDate": "",
+    "InitialArbitrationEndDate": "",
+    "FinalArbitrationStartDate": "",
+    "FinalArbitrationEndDate": "",
+    "IndividualCategoryNumber": "",
+    "TheUpperLimitForObtainingInformation": "",
+    "MarginOfDifferenceBetweenArbitrators": "",
+    "GroupCategoryNumber": ""
+  },
+  "Event": {
+    "Id": "",
+    "UniqueIntegerId": "",
+    "EnglishName": "",
+    "ArabicName": "",
+    "EnglishDescription": "",
+    "ArabicDescription": "",
+    "EnglishLocation": "",
+    "ArabicLocation": "",
+    "EnglishSiteName": "",
+    "ArabicSiteName": "",
+    "StartDate": "",
+    "EndDate": "",
+    "EventDate": ""
+  },
+  "Committee": {
+    "Id": "",
+    "ArabicName": "",
+    "EnglishName": "",
+    "Status": "",
+    "ChairmanId": ""
+  },
+  "Circular": {
+    "Id": "",
+    "Title": "",
+    "CircularText": ""
+  },
+  "News": {
+    "Id": "",
+    "ArabicTitle": "",
+    "EnglishTitle": "",
+    "ArabicDescription": "",
+    "EnglishDescription": "",
+    "Image": "",
+    "NewsDate": "",
+    "IsHidden": ""
+  },
+  "Category": {
+    "Id": "",
+    "ArabicName": "",
+    "EnglishName": "",
+    "ArabicDescription": "",
+    "EnglishDescription": "",
+    "Icon": "",
+    "CategoryClassification": "",
+    "FinalArbitrationQualificationMark": "",
+    "ExpectedNumberOfWinners": "",
+    "MinimumAmountToObtainAStatement": "",
+    "MaximumAmountToObtainAStatement": "",
+    "MinimumRequirementToObtainACertificate": "",
+    "MaximumRequirementToObtainACertificate": "",
+    "MinimumWinningScore": "",
+    "RelatedToClasses": "",
+    "RelatedToEducationalEntities": "",
+    "ParentId": "",
+    "CycleId": ""
+  },
+  "TermAndCondition": {
+    "Id": "",
+    "ArabicTitle": "",
+    "EnglishTitle": "",
+    "ArabicDescription": "",
+    "EnglishDescription": "",
+    "NeedAttachment": "",
+    "RequiredAttachmentNumber": "",
+    "AttachmentType": "",
+    "SizeOfAttachmentInKB": "",
+    "IsAgree": "",
+    "CategoryId": ""
+  },
+  "CycleCondition": {
+    "Id": "",
+    "ArabicTitle": "",
+    "EnglishTitle": "",
+    "ArabicDescription": "",
+    "EnglishDescription": "",
+    "NeedAttachment": "",
+    "RequiredAttachmentNumber": "",
+    "AttachmentType": "",
+    "SizeOfAttachmentInKB": "",
+    "IsAgree": "",
+    "CycleId": ""
+  },
+  "TrainingWorkshop": {
+    "Id": "",
+    "ArabicTitle": "",
+    "EnglishTitle": "",
+    "ArabicDescription": "",
+    "EnglishDescription": "",
+    "Thumbnail": "",
+    "CategoryId": ""
+  },
+  "GeneralWorkshop": {
+    
+    "Id" : "",
+    "ArabicTitle" : "",
+    "EnglishTitle" : "",
+    "EnglishDescription" : "",
+    "ArabicDescription" : "",
+    "Thumbnale" : "",
+    "DateOfWorkShop" : "",
+    "DayName" : "",
+    "Time" : "",
+    "Video" :  "",
+    "RegistrationUrl" : "",
+    "AgendaImage" : ""
+  }
+}
