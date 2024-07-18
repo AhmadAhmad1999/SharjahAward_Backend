@@ -110,7 +110,8 @@ namespace SharijhaAward.Persistence.Repositories
                         message = lang == "en"
                             ? "This account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
                             : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك",
-                        NeedVerification = true
+                        NeedVerification = true,
+                        ActiveCycleId = userToLogin.Id
                     };
                 }
                 else

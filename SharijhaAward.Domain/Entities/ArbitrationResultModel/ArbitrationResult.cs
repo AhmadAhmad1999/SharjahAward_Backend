@@ -20,6 +20,7 @@ namespace SharijhaAward.Domain.Entities.ArbitrationResultModel
         public DateTime? DateOfObtainingTheCertificate { get; set; }
         public DateTime? DateOfObtainingTheStatement { get; set; }
         public DateTime? WinningDate { get; set; }
+        public bool SelectedToWin { get; set; }
         public int? WinningLevel { get; set; }
     }
 }

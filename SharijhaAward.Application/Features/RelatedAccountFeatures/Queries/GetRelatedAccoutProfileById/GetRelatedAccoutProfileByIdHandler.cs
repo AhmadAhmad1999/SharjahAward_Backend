@@ -69,6 +69,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
 
             List<RelatedAccountProvidedForms> ProvidedForms = await _FormRepository
                 .Include(x => x.Category!)
+                .Include(x => x.Category!.Parent!)
                 .Where(x => x.userId == RelatedAccountEntity.User2Id && 
                     (Request.Type != null 
                         ? x.Type == Request.Type
@@ -77,8 +78,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
                 {
                     CategoryId = x.categoryId,
                     CategoryName = Request.lang == "en"
-                        ? x.Category.EnglishName
-                        : x.Category.ArabicName,
+                        ? x.Category!.Parent!.EnglishName
+                        : x.Category!.Parent!.ArabicName,
                     CreatedAt = x.CreatedAt,
                     CurrentStep = x.CurrentStep,
                     CycleNumber = x.CycleNumber,
@@ -88,7 +89,10 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
                     PercentCompletion = x.PercentCompletion,
                     Status = x.Status,
                     SubscriberType = x.SubscriberType,
-                    Type = x.Type
+                    Type = x.Type,
+                    subCategoryName = Request.lang == "en"
+                        ? x.Category.EnglishName
+                        : x.Category.ArabicName,
                 }).ToListAsync();
 
             GetRelatedAccoutProfileByIdResponse Response = new GetRelatedAccoutProfileByIdResponse()

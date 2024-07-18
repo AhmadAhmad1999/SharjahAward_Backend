@@ -68,7 +68,19 @@ namespace SharijhaAward.Api.Controllers
                 ReferenceHandler = ReferenceHandler.Preserve
             };
 
-            if (response.user == null)
+            if (response.user == null && !response.NeedVerification)
+            {
+                return StatusCode(400,
+                    new
+                    {
+                        message = response.message,
+                        data = new
+                        {
+                            NeedVerification = response.NeedVerification,
+                        }
+                    });
+            }
+            else if (response.user == null && response.NeedVerification)
             {
                 return StatusCode(200,
                     new
@@ -77,6 +89,7 @@ namespace SharijhaAward.Api.Controllers
                         data = new
                         {
                             NeedVerification = response.NeedVerification,
+                            Id = response.OutUserId
                         }
                     });
             }

@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSelectedWinningForms;
 using SharijhaAward.Application.Features.WinnersFeatures.Commands.SelectWinningForms;
 using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersDashboard;
 using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersForWebsite;
 using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersByLevel;
+using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersByLevelGroupedByClasses;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -114,6 +116,59 @@ namespace SharijhaAward.Api.Controllers
             GetWinnersByLevelQuery.lang = HeaderValue;
 
             BaseResponse<GetWinnersByLevelMainResponse> Response = await _Mediator.Send(GetWinnersByLevelQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetWinnersByLevelGroupedByClasses")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetWinnersByLevelGroupedByClasses([FromQuery] GetWinnersByLevelGroupedByClassesQuery GetWinnersByLevelGroupedByClassesQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetWinnersByLevelGroupedByClassesQuery.lang = HeaderValue;
+
+            BaseResponse<List<GetWinnersByLevelGroupedByClassesListVM>> Response = await _Mediator.Send(GetWinnersByLevelGroupedByClassesQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("ConfirmSelectedWinningForms")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ConfirmSelectedWinningForms(int CategoryId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            BaseResponse<object>? Response = await _Mediator.Send(new ConfirmSelectedWinningFormsCommand()
+            {
+                lang = !string.IsNullOrEmpty(HeaderValue)
+                    ? HeaderValue
+                    : "en",
+                CategoryId = CategoryId
+            });
 
             return Response.statusCode switch
             {

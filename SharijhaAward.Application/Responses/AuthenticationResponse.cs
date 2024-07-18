@@ -5,6 +5,7 @@ namespace SharijhaAward.Application.Responses
 {
     public class AuthenticationResponse
     {
+        public int? OutUserId { get; set; }
         public string token { get; set; } = string.Empty;
         public UserDataResponse user { get; set; } = null!;
         public List<Permission>? permissions { get; set; } = null!;
