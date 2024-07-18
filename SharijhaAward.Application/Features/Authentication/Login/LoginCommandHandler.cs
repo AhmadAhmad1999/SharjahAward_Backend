@@ -41,6 +41,8 @@ namespace SharijhaAward.Application.Features.Authentication.Login
          
             var response = await _userRepository.LogInAsync(user, request.lang, request.intoAdminDashboard);
 
+            int? ForUseUserId = response.ActiveCycleId;
+
             if (!string.IsNullOrEmpty(response.token) && !string.IsNullOrWhiteSpace(response.token) && 
                 request.Platform != null)
             {
@@ -91,6 +93,9 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                         Subject = x.Permission!.PermissionHeader!.Name
                     }).ToListAsync();
             }
+
+            if (response.user == null && ForUseUserId != null)
+                response.OutUserId = ForUseUserId!.Value;
 
             return response;
         }

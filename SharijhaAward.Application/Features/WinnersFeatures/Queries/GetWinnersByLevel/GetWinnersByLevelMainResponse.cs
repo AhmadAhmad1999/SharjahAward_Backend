@@ -4,5 +4,6 @@
     {
         public List<GetWinnersByLevelGroupByLevelListVM> RequestedWinners { get; set; } = new List<GetWinnersByLevelGroupByLevelListVM>();
         public List<GetWinnersByLevelGroupByLevelListVM> RemainingWinners { get; set; } = new List<GetWinnersByLevelGroupByLevelListVM>();
+        public List<GetWinnersByLevelGroupByLevelListVM> SelectedWinners { get; set; } = new List<GetWinnersByLevelGroupByLevelListVM>();
     }
 }

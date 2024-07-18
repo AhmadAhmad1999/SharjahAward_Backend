@@ -4,6 +4,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
+using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
 namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllArbitrationResults
@@ -13,11 +14,15 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
         private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
+        private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+
         public GetAllArbitrationResultsHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
-            IAsyncRepository<ArbitrationResult> ArbitrationResultRepository)
+            IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _ArbitrationResultRepository = ArbitrationResultRepository;
+            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
         }
         public async Task<BaseResponse<List<GetAllArbitrationResultsListVM>>> 
             Handle(GetAllArbitrationResultsQuery Request, CancellationToken cancellationToken)
@@ -25,6 +30,14 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
             string ResponseMessage = string.Empty;
 
             int TotalCount = 0;
+
+            List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
+                .Include(x => x.DynamicAttribute!)
+                .Where(x => x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)" &&
+                    (!string.IsNullOrEmpty(Request.SubscriberName)
+                        ? x.Value.ToLower().StartsWith(Request.SubscriberName.ToLower())
+                        : true))
+                .ToListAsync();
 
             List<ArbitrationResult> ArbitrationResultEntities = new List<ArbitrationResult>();
 
@@ -39,7 +52,8 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                 {
                     ArbitrationResultEntities = await _ArbitrationResultRepository
                         .Include(x => x.ProvidedForm!)
-                        .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId.Value)
+                        .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId.Value &&
+                            DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId))
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.PerPage)
                         .Take(Request.PerPage)
@@ -52,7 +66,8 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                 {
                     ArbitrationResultEntities = await _ArbitrationResultRepository
                         .Include(x => x.ProvidedForm!)
-                        .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId.Value)
+                        .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId.Value &&
+                            DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId))
                         .OrderByDescending(x => x.CreatedAt)
                         .Include(x => x.ProvidedForm!.Category!)
                         .Include(x => x.ProvidedForm!.Category!.Cycle!)
@@ -67,7 +82,10 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                 if (Request.page != 0 && Request.PerPage != -1)
                 {
                     ArbitrationResultEntities = await _ArbitrationResultRepository
-                        .OrderByDescending(x => x.CreatedAt, Request.page, Request.PerPage)
+                        .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId))
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.PerPage)
+                        .Take(Request.PerPage)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .Include(x => x.ProvidedForm!.Category!.Cycle!)
@@ -77,7 +95,8 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                 else
                 {
                     ArbitrationResultEntities = await _ArbitrationResultRepository
-                        .OrderByDescending(x => x.CreatedAt, 0, -1)
+                        .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId))
+                        .OrderByDescending(x => x.CreatedAt)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .Include(x => x.ProvidedForm!.Category!.Cycle!)
@@ -85,6 +104,13 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                         .ToListAsync();
                 }
             }
+
+            var SubscribersNames = DynamicAttributeValueEntities
+                .Select(x => new
+                {
+                    FormId = x.RecordId,
+                    SubscriberName = x.Value
+                }).ToList();
 
             List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
                 .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
@@ -123,7 +149,12 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                     Winner = x.Winner,
                     DateOfObtainingTheCertificate = x.DateOfObtainingTheCertificate,
                     DateOfObtainingTheStatement = x.DateOfObtainingTheStatement,
-                    WinningDate = x.WinningDate
+                    WinningDate = x.WinningDate,
+                    SubscriberName = SubscribersNames
+                        .FirstOrDefault(y => y.FormId == x.ProvidedFormId)
+                            ?.SubscriberName ?? string.Empty,
+                    CycleNumber = x.ProvidedForm!.CycleNumber,
+                    CycleYear = x.ProvidedForm!.CycleYear
                 }).ToList();
 
             Pagination PaginationParameter = new Pagination(Request.page,
