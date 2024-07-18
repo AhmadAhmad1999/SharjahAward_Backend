@@ -89,7 +89,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                      CoordinatorsResult = await _EduInstitutionCoordinatorRepository
                         .Include(x => x.EducationalInstitution!)
                         .Where(x => x.EducationalInstitution!.EducationalEntityId == request.EducationalEntity)
-                        .Where(x=>x.EducationalInstitution.Emirates == request.Emirates || x.EducationalInstitution.EducationType == request.EducationType)
+                        .Where(x=>x.EducationalInstitution.Emirates == request.Emirates && x.EducationalInstitution.EducationType == request.EducationType)
                         .Include(x => x.Coordinator!)
                         .Select(x => x.Coordinator!)
                         .ToListAsync();
@@ -99,7 +99,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                         CoordinatorsResult = _EduInstitutionCoordinatorRepository
                             .Include(x => x.Coordinator!)
                             .Where(x => x.EducationalInstitutionId == request.School)
-                            .Where(x => x.EducationalInstitution.Emirates == request.Emirates || x.EducationalInstitution.EducationType == request.EducationType)
+                            .Where(x => x.EducationalInstitution.Emirates == request.Emirates && x.EducationalInstitution.EducationType == request.EducationType)
                             .Where(x => x.EducationalInstitution.EducationalEntityId == request.EducationalEntity)
                             .Select(x => x.Coordinator)
                             .ToList()!;
@@ -111,7 +111,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                     CoordinatorsResult = _EduInstitutionCoordinatorRepository
                         .Include(x => x.Coordinator!)
                         .Where(x => x.EducationalInstitutionId == request.School)
-                        .Where(x => x.EducationalInstitution.Emirates == request.Emirates || x.EducationalInstitution.EducationType == request.EducationType)
+                        .Where(x => x.EducationalInstitution.Emirates == request.Emirates && x.EducationalInstitution.EducationType == request.EducationType)
                         .Select(x => x.Coordinator)
                         .ToList()!;
                 }

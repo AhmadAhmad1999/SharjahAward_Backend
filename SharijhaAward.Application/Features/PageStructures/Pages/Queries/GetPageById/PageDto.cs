@@ -23,7 +23,9 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
         public string Content { get; set; } = string.Empty;
         public string? EnglishContent { get; set; }
         public string? ArabicContent { get; set; }
+        public int ParentId { get; set; }
         public string Slug { get; set; } = string.Empty;
+        public int numberOfSubPages { get; set; }
 
         public List<Component>? Components { get; set; } = null!; 
 
