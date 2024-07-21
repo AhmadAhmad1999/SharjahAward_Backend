@@ -6,7 +6,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.SelectWinn
     public class SelectWinningFormsCommand : IRequest<BaseResponse<object>>
     {
         public int CategoryId { get; set; }
-        public List<int> FormsIds { get; set; } = new List<int>();
+        public int? NewFormId { get; set; }
+        public int? DeleteFormId { get; set; }
         public string? lang { get; set; }
     }
 }

@@ -36,17 +36,23 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
 
                     await _ArbitrationResultRepository
                         .Include(x => x.ProvidedForm!)
+                        .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId && x.SelectedToWin)
+                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.NotifiedAsWinner, true));
+
+                    await _ArbitrationResultRepository
+                        .Include(x => x.ProvidedForm!)
                         .Where(x => x.SelectedToWin &&
                             x.ProvidedForm!.categoryId == Request.CategoryId)
                         .ExecuteUpdateAsync(x => x.SetProperty(y => y.WinningDate, DateTime.UtcNow));
 
-                    List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = await _ArbitrationResultRepository
+                    List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = _ArbitrationResultRepository
                         .Include(x => x.ProvidedForm!)
                         .Where(x => x.SelectedToWin &&
                             x.ProvidedForm!.categoryId == Request.CategoryId)
                         .GroupBy(x => x.FinalArbitration!.FinalScore)
+                        .AsEnumerable()
                         .OrderByDescending(x => x.Key)
-                        .ToListAsync();
+                        .ToList();
 
                     int FirstWinningLevel = 1;
 
