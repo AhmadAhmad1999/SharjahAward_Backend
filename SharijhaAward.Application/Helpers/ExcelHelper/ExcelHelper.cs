@@ -4,6 +4,9 @@ using NPOI.SS.Util;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
+using Newtonsoft.Json;
+
 
 namespace SharijhaAward.Application.Helpers.ExcelHelper
 {
@@ -32,11 +35,15 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
             var style = workbook.CreateCellStyle();
             style.SetFont(font);
 
+            string fileName = "wwwroot/localization.json";
+            string jsonString = File.ReadAllText(fileName);
+            var ObjectData = JsonConvert.DeserializeObject<PropertyJson>(jsonString);
+
             var colIndex = 0;
             foreach (var property in properties)
             {
                 var cell = rowHeader.CreateCell(colIndex);
-                cell.SetCellValue(property.Name);
+                cell.SetCellValue(ObjectData!.Properties[property.Name]);
                 cell.CellStyle = style;
                 colIndex++;
             }
