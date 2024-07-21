@@ -8,6 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Remove="wwwroot\localization.json" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="Controllers\0rmvamul.ydj~" />
 	</ItemGroup>
 
@@ -55,6 +59,7 @@
 	<ItemGroup>
 		<None Include="wwwroot\assets\qr\qr.png" />
 		<None Include="wwwroot\assets\qr\QRCodeForstringPersonalInvite.png" />
+		<None Include="wwwroot\localization.json" />
 	</ItemGroup>
 
 </Project>
