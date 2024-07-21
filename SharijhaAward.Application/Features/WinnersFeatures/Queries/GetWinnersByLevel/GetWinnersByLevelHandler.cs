@@ -128,7 +128,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                             : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
                         ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                         Gender = x.ProvidedForm!.User.Gender,
-                        WinningLevel = x.WinningLevel!.Value
+                        WinningLevel = x.WinningLevel!.Value,
+                        NotifiedAsWinner = x.NotifiedAsWinner
                     }).ToList());
             }
 
@@ -175,7 +176,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                             : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
                         ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                         Gender = x.ProvidedForm!.User.Gender,
-                        WinningLevel = x.WinningLevel!.Value
+                        WinningLevel = x.WinningLevel!.Value,
+                        NotifiedAsWinner = x.NotifiedAsWinner
                     }).ToList());
             }
 
@@ -236,7 +238,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                         : null,
                     ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                     Gender = x.ProvidedForm!.User.Gender,
-                    WinningLevel = x.WinningLevel!.Value
+                    WinningLevel = x.WinningLevel!.Value,
+                    NotifiedAsWinner = x.NotifiedAsWinner
                 }).ToList();
 
             GetWinnersByLevelMainResponse Response = new GetWinnersByLevelMainResponse()
@@ -252,6 +255,15 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     : new List<GetWinnersByLevelGroupByLevelListVM>(),
                 RemainingWinners = RemainingWinners.Any()
                     ? RemainingWinners
+                        .GroupBy(x => x.WinningLevel)
+                        .Select(x => new GetWinnersByLevelGroupByLevelListVM()
+                        {
+                            WinningLevel = x.Key,
+                            GetWinnersByLevelListVM = x.ToList()
+                        }).ToList()
+                    : new List<GetWinnersByLevelGroupByLevelListVM>(),
+                SelectedWinners = SelectedWinners.Any()
+                    ? SelectedWinners
                         .GroupBy(x => x.WinningLevel)
                         .Select(x => new GetWinnersByLevelGroupByLevelListVM()
                         {
