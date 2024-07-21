@@ -28,26 +28,43 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 
         public async Task<BaseResponse<List<NewsListVM>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
-            var newsList = await _newsRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
-                .Include(n => n.NewsImages)
-                .ToListAsync();
-           
+            var newsList = request.Descending == false
+                ? await _newsRepository
+                    .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+                    .Include(n => n.NewsImages)
+                    .ToListAsync()
+                : await _newsRepository
+                    .OrderBy(x => x.CreatedAt)
+                    .Skip((request.page - 1) * request.perPage).Take(request.perPage)
+                    .Include(n => n.NewsImages)
+                    .ToListAsync();
+
+
             int count = _newsRepository.GetCount(n => n.isDeleted == false && !n.IsHidden);
             
             Pagination pagination = new Pagination(request.page, request.perPage, count);
             
             if (!request.query.IsNullOrEmpty())
             {
-                newsList = await _newsRepository
-                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
-                    .OrderByDescending(x => x.CreatedAt).ToListAsync();
+                newsList = request.Descending == true
+                    ? await _newsRepository
+                        .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
+                        .OrderByDescending(x => x.CreatedAt).ToListAsync()
+
+                    : await _newsRepository
+                        .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
+                        .OrderBy(x => x.CreatedAt).ToListAsync();
 
                 if (newsList.Count() == 0)
                 {
-                    newsList = await _newsRepository
-                        .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()))
-                        .OrderByDescending(x => x.CreatedAt).ToListAsync();
+                    newsList = request.Descending == true
+                        ? await _newsRepository
+                            .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()))
+                            .OrderByDescending(x => x.CreatedAt).ToListAsync()
+
+                        : await _newsRepository
+                            .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()))
+                            .OrderBy(x => x.CreatedAt).ToListAsync();
                 }
             }
             var data = _mapper.Map<List<NewsListVM>>(newsList);

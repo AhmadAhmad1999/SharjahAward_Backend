@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 
@@ -22,8 +24,22 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGene
         public async Task<BaseResponse<List<GeneralWorkshopsListVM>>> Handle(GetAllGeneralWorkshopsQuery request, CancellationToken cancellationToken)
         {
             var generalWorkshops = await _generalWorkshopRepository
-                .OrderByDescending(x => x.CreatedAt, request.page,request.perPage)
+                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
                 .ToListAsync();
+           
+            if (!request.query.IsNullOrEmpty())
+            {
+                generalWorkshops = await _generalWorkshopRepository
+                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
+                    .OrderByDescending(x => x.CreatedAt).ToListAsync();
+
+                if (generalWorkshops.Count() == 0)
+                {
+                    generalWorkshops = await _generalWorkshopRepository
+                        .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()))
+                        .OrderByDescending(x => x.CreatedAt).ToListAsync();
+                }
+            }
 
             var data = _mapper.Map<List<GeneralWorkshopsListVM>>(generalWorkshops);
             if (generalWorkshops.Count() > 0)

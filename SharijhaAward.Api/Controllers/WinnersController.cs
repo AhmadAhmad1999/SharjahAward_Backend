@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSelectedWinningForms;
 using SharijhaAward.Application.Features.WinnersFeatures.Commands.SelectWinningForms;
+using SharijhaAward.Application.Features.WinnersFeatures.Queries.ExportWinnersToExcel;
 using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersDashboard;
 using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersForWebsite;
 using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersByLevel;
@@ -175,6 +176,19 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("WinnersExportToExcel", Name = "WinnersExportToExcel")]
+        public async Task<IActionResult> AgendasExportToExcel()
+        {
+            var response = await _Mediator.Send(new ExportWinnersToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Winners.xlsx"),
+                _ => BadRequest(response)
             };
         }
     }

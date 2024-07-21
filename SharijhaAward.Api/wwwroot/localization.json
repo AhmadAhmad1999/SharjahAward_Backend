@@ -77,6 +77,18 @@
     "MaxAttachmentNumber": "عدد المرفقات الكلي",
     "EducationType": "نوع التعليم",
     "Emirates": "الإمارة",
-    "EducationalEntityId": "معرف الجهة التعليمية"
+    "EducationalEntityId": "معرف الجهة التعليمية",
+    "FormId": "معرف الإستمارة",
+    "SubscriberName": "إسم المشترك",
+    "CategoryName" : "إسم الفئة",
+    "CycleYear" : "سنة الدورة",
+    "EducationalClassName":"إسم الصف الدراسي",
+    "EducationalEntityName": "إسم الجهة التعليمية",
+    "ProfilePhoto" : "صورة الملف الشخصي",
+    "Gender" :"الجنس",
+    "WinningLevel" :"المركز",
+    "InitialArbitrationScore":"نتيجة التحكيم الأولي",
+    "ArbitrationAuditScore" : "علامة تدقيق التحكيم",
+    "FinalArbitrationScore" : "علامة التحكيم النهائي"
   }
 }

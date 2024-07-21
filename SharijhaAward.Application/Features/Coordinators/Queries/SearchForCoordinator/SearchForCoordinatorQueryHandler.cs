@@ -144,7 +144,10 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                     .Select(x => x.Coordinator)
                     .ToList()!;
             }
-
+            else
+            {
+                CoordinatorsResult.Clear();
+            }
             var data = _mapper.Map<List<CoordinatorSearchListVM>>(CoordinatorsResult);
 
             for (int i = 0; i < data.Count; i++)

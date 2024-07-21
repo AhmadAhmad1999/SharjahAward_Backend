@@ -13,5 +13,6 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGene
         public int page {  get; set; }
         public int perPage { get; set; }
         public string lang { get; set; } = string.Empty;
+        public string query { get; set; } = string.Empty;
     }
 }
