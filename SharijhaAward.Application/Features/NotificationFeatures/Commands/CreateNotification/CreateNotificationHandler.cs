@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Commands.Creat
             else if (Request.RolesIds.Any())
             {
                 Request.UsersIds = await _UserRoleRepository
-                    .Where(x => Request.RolesIds.Contains(x.Id))
+                    .Where(x => Request.RolesIds.Contains(x.RoleId))
                     .Select(x => x.UserId)
                     .Distinct()
                     .ToListAsync();

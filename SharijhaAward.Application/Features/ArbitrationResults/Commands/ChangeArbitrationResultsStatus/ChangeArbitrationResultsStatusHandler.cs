@@ -31,14 +31,16 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            if (Request.isCerticate)
+            if (Request.isCerticate is not null)
             {
                 if (ArbitrationResultEntityToUpdate.EligibleForCertification)
                 {
-                    if (!ArbitrationResultEntityToUpdate.GotCertification)
+                    if (Request.isCerticate.Value)
                     {
                         ArbitrationResultEntityToUpdate.GotCertification = !ArbitrationResultEntityToUpdate.GotCertification;
-                        ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = DateTime.UtcNow;
+                        ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = Request.DateOfObtainingTheCertificate != null
+                            ? Request.DateOfObtainingTheCertificate.Value
+                            : DateTime.UtcNow;
                     }
                     else
                     {
@@ -57,14 +59,17 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                     return new BaseResponse<object>(ResponseMessage, false, 400);
                 }
             }
-            else
+
+            if (Request.isStatment is not null)
             {
                 if (ArbitrationResultEntityToUpdate.EligibleForAStatement)
                 {
-                    if (!ArbitrationResultEntityToUpdate.GotStatement)
+                    if (Request.isStatment.Value)
                     {
-                        ArbitrationResultEntityToUpdate.GotStatement = !ArbitrationResultEntityToUpdate.GotStatement;
-                        ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = DateTime.UtcNow;
+                        ArbitrationResultEntityToUpdate.GotStatement = Request.isStatment.Value;
+                        ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = Request.DateOfObtainingTheStatement != null
+                            ? Request.DateOfObtainingTheStatement.Value
+                            : DateTime.UtcNow;
                     }
                     else
                     {

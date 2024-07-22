@@ -159,7 +159,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> ConfirmSelectedWinningForms(int CategoryId)
+        public async Task<IActionResult> ConfirmSelectedWinningForms(int CategoryId, int? EducationalClassId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -168,7 +168,8 @@ namespace SharijhaAward.Api.Controllers
                 lang = !string.IsNullOrEmpty(HeaderValue)
                     ? HeaderValue
                     : "en",
-                CategoryId = CategoryId
+                CategoryId = CategoryId,
+                EducationalClassId = EducationalClassId
             });
 
             return Response.statusCode switch

@@ -37,15 +37,16 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRole
                 .Distinct()
                 .ToList();
 
-            List<UsersInRoleDto> SubscriberInRoleDtos = await _UserTokenRepository
+            List<UsersInRoleDto> SubscriberInRoleDtos = _UserTokenRepository
                 .Include(x => x.User!)
                 .Where(x => SubscribersIds.Contains(x.UserId) && x.User!.isValidAccount)
+                .AsEnumerable()
                 .DistinctBy(x => x.UserId)
                 .Select(x => new UsersInRoleDto()
                 {
                     Id = x.UserId,
                     Email = x.User!.Email
-                }).ToListAsync();
+                }).ToList();
 
             List<int> NotSubscribersIds = UserRolesIds
                 .Where(x => x.EnglishName == "Arbitrator" ||
@@ -54,16 +55,17 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRole
                 .Distinct()
                 .ToList();
 
-            List<UsersInRoleDto> NotSubscriberInRoleDtos = await _UserTokenRepository
+            List<UsersInRoleDto> NotSubscriberInRoleDtos = _UserTokenRepository
                 .Include(x => x.User!)
                 .Where(x => NotSubscribersIds.Contains(x.UserId) && x.User!.isValidAccount)
+                .AsEnumerable()
                 .DistinctBy(x => x.UserId)
                 .Select(x => new UsersInRoleDto()
                 {
                     Id = x.UserId,
                     Email = x.User!.Email,
                     ArabicName = x.User!.ArabicName
-                }).ToListAsync();
+                }).ToList();
 
             SubscriberInRoleDtos.AddRange(NotSubscriberInRoleDtos);
 

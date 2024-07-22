@@ -24,60 +24,130 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
                 Timeout = TimeSpan.FromMinutes(5)
             };
 
-            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
-                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            if (Request.EducationalClassId is null)
             {
-                try
+                using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                    TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    await _ArbitrationResultRepository
-                        .Include(x => x.ProvidedForm!)
-                        .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId && x.SelectedToWin)
-                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.SelectedToWin, true));
-
-                    await _ArbitrationResultRepository
-                        .Include(x => x.ProvidedForm!)
-                        .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId && x.SelectedToWin)
-                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.NotifiedAsWinner, true));
-
-                    await _ArbitrationResultRepository
-                        .Include(x => x.ProvidedForm!)
-                        .Where(x => x.SelectedToWin &&
-                            x.ProvidedForm!.categoryId == Request.CategoryId)
-                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.WinningDate, DateTime.UtcNow));
-
-                    List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = _ArbitrationResultRepository
-                        .Include(x => x.ProvidedForm!)
-                        .Where(x => x.SelectedToWin &&
-                            x.ProvidedForm!.categoryId == Request.CategoryId)
-                        .GroupBy(x => x.FinalArbitration!.FinalScore)
-                        .AsEnumerable()
-                        .OrderByDescending(x => x.Key)
-                        .ToList();
-
-                    int FirstWinningLevel = 1;
-
-                    foreach (IGrouping<float, ArbitrationResult> ArbitrationResultEntity in ArbitrationResultEntities)
+                    try
                     {
                         await _ArbitrationResultRepository
                             .Include(x => x.ProvidedForm!)
-                            .Where(x => ArbitrationResultEntity.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
-                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.WinningLevel, FirstWinningLevel));
+                            .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId && x.SelectedToWin)
+                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.SelectedToWin, true));
 
-                        FirstWinningLevel++;
+                        await _ArbitrationResultRepository
+                            .Include(x => x.ProvidedForm!)
+                            .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId && x.SelectedToWin)
+                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.NotifiedAsWinner, true));
+
+                        await _ArbitrationResultRepository
+                            .Include(x => x.ProvidedForm!)
+                            .Where(x => x.SelectedToWin &&
+                                x.ProvidedForm!.categoryId == Request.CategoryId)
+                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.WinningDate, DateTime.UtcNow));
+
+                        List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = _ArbitrationResultRepository
+                            .Include(x => x.ProvidedForm!)
+                            .Where(x => x.SelectedToWin &&
+                                x.ProvidedForm!.categoryId == Request.CategoryId)
+                            .GroupBy(x => x.FinalArbitration!.FinalScore)
+                            .AsEnumerable()
+                            .OrderByDescending(x => x.Key)
+                            .ToList();
+
+                        int FirstWinningLevel = 1;
+
+                        foreach (IGrouping<float, ArbitrationResult> ArbitrationResultEntity in ArbitrationResultEntities)
+                        {
+                            await _ArbitrationResultRepository
+                                .Include(x => x.ProvidedForm!)
+                                .Where(x => ArbitrationResultEntity.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
+                                .ExecuteUpdateAsync(x => x.SetProperty(y => y.WinningLevel, FirstWinningLevel));
+
+                            FirstWinningLevel++;
+                        }
+
+                        Transaction.Complete();
+
+                        string ResponseMessage = Request.lang == "en"
+                            ? "Winners in this category were successfully selected"
+                            : "تم اختيار الفائزين في هذه الفئة بنجاح";
+
+                        return new BaseResponse<object>(ResponseMessage, true, 200);
                     }
-
-                    Transaction.Complete();
-
-                    string ResponseMessage = Request.lang == "en"
-                        ? "Winners in this category were successfully selected"
-                        : "تم اختيار الفائزين في هذه الفئة بنجاح";
-
-                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                    catch (Exception)
+                    {
+                        Transaction.Dispose();
+                        throw;
+                    }
                 }
-                catch (Exception)
+            }
+            else
+            {
+                using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                    TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    Transaction.Dispose();
-                    throw;
+                    try
+                    {
+                        await _ArbitrationResultRepository
+                            .Include(x => x.ProvidedForm!)
+                            .Include(x => x.ProvidedForm!.CategoryEducationalClass!)
+                            .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId && x.SelectedToWin &&
+                                x.ProvidedForm!.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
+                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.SelectedToWin, true));
+
+                        await _ArbitrationResultRepository
+                            .Include(x => x.ProvidedForm!)
+                            .Include(x => x.ProvidedForm!.CategoryEducationalClass!)
+                            .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId && x.SelectedToWin &&
+                                x.ProvidedForm!.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
+                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.NotifiedAsWinner, true));
+
+                        await _ArbitrationResultRepository
+                            .Include(x => x.ProvidedForm!)
+                            .Include(x => x.ProvidedForm!.CategoryEducationalClass!)
+                            .Where(x => x.SelectedToWin &&
+                                x.ProvidedForm!.categoryId == Request.CategoryId &&
+                                x.ProvidedForm!.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
+                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.WinningDate, DateTime.UtcNow));
+
+                        List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = _ArbitrationResultRepository
+                            .Include(x => x.ProvidedForm!)
+                            .Include(x => x.ProvidedForm!.CategoryEducationalClass!)
+                            .Where(x => x.SelectedToWin &&
+                                x.ProvidedForm!.categoryId == Request.CategoryId &&
+                                x.ProvidedForm!.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
+                            .GroupBy(x => x.FinalArbitration!.FinalScore)
+                            .AsEnumerable()
+                            .OrderByDescending(x => x.Key)
+                            .ToList();
+
+                        int FirstWinningLevel = 1;
+
+                        foreach (IGrouping<float, ArbitrationResult> ArbitrationResultEntity in ArbitrationResultEntities)
+                        {
+                            await _ArbitrationResultRepository
+                                .Include(x => x.ProvidedForm!)
+                                .Where(x => ArbitrationResultEntity.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
+                                .ExecuteUpdateAsync(x => x.SetProperty(y => y.WinningLevel, FirstWinningLevel));
+
+                            FirstWinningLevel++;
+                        }
+
+                        Transaction.Complete();
+
+                        string ResponseMessage = Request.lang == "en"
+                            ? "Winners in this category were successfully selected"
+                            : "تم اختيار الفائزين في هذه الفئة بنجاح";
+
+                        return new BaseResponse<object>(ResponseMessage, true, 200);
+                    }
+                    catch (Exception)
+                    {
+                        Transaction.Dispose();
+                        throw;
+                    }
                 }
             }
         }

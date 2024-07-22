@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NPOI.SS.Formula.Functions;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System.IdentityModel.Tokens.Jwt;
@@ -31,19 +32,30 @@ namespace SharijhaAward.Infrastructure.Authentication
                     Encoding.UTF8.GetBytes("Security-Key854796olikujyh0213456")),
                 SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken
-                (
-                    _options.Issueer,
-                    _options.Audience,
-                    claims,
-                    DateTime.UtcNow,
-                    DateTime.UtcNow.AddDays(1),
-                    signingCredentials
-                );
+            DateTime Now = DateTime.UtcNow;
+            DateTime Expiration = Now.AddMinutes(1); 
+
+            //var token = new JwtSecurityToken
+            //    (
+            //        _options.Issueer,
+            //        _options.Audience,
+            //        claims,
+            //        DateTime.UtcNow,
+            //        DateTime.UtcNow.AddDays(1),
+            //        signingCredentials
+            //    );
+
+            var token = new JwtSecurityToken(
+                issuer: _options.Issueer,
+                audience: _options.Audience,
+                claims: claims,
+                notBefore: Now,
+                expires: Expiration,
+                signingCredentials: signingCredentials);
+
             string tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
 
             return tokenValue;
-
         }
         public string GetUserIdFromToken(string token)
         {
