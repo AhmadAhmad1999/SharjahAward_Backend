@@ -90,9 +90,11 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                     }
                     else
                     {
+
                         if (message.AsignId == null)
                         {
                             message.UserId = User.Id;
+                            message.Status = Domain.Constants.ContactUsConstants.MessageStatus.InProgress;
                         }
 
                     }

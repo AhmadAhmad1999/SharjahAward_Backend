@@ -48,7 +48,12 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
                 return new BaseResponse<EmailMessageDto>(msg, false, 401);
             }
 
-            var message = await _emailMessageRepository.WhereThenInclude(m => m.Id == request.Id && (m.To == User.Email || m.From == User.Email) , m => m.Attachments!).FirstOrDefaultAsync();
+            var message = await _emailMessageRepository
+                .Where(m => m.Id == request.Id)
+                .Where(m => m.To == User.Email || m.From == User.Email)
+                .Include(m => m.Attachments)
+                .FirstOrDefaultAsync();
+
             if(message == null)
             {
                 msg = request.lang == "en"

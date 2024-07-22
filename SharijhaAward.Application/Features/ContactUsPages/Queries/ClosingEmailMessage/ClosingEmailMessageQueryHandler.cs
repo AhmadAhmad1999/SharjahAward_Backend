@@ -41,7 +41,6 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.ClosingEmail
             }
 
             var Role = _userRoleRepository.Where(r => r.UserId == int.Parse(UserId)).ToList();
-           
             
             var message = await _emailMessageRepository.GetByIdAsync(request.Id); 
             
@@ -50,9 +49,14 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.ClosingEmail
                 return new BaseResponse<object>("", false, 404);
             }
             
-            message.Status = Domain.Constants.ContactUsConstants.MessageStatus.Close;
+            var allMessages = _emailMessageRepository.Where(m => m.MessageId == message.MessageId).ToList();
+           
+            foreach(var msg in allMessages)
+            {
+                msg.Status = Domain.Constants.ContactUsConstants.MessageStatus.Close;
+            }
 
-            await _emailMessageRepository.UpdateAsync(message);
+            await _emailMessageRepository.UpdateListAsync(allMessages);
 
             return new BaseResponse<object>("", true, 200);
         }

@@ -6,6 +6,7 @@ using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using Newtonsoft.Json;
+using SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllArbitrationResults;
 
 
 namespace SharijhaAward.Application.Helpers.ExcelHelper
@@ -88,6 +89,11 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
                         var stringList = (List<string>)value;
                         var combinedString = string.Join(", ", stringList);
                         cellContent.SetCellValue(combinedString);
+                    }
+                    else if(property.PropertyType == typeof(List<InitialArbitrationScoreDto>))
+                    {
+                        //var ObjectList = (List<InitialArbitrationScoreDto>)value;
+                        cellContent.SetCellValue("");
                     }
                     else cellContent.SetCellValue(value.ToString());
                     colContentIndex++;
