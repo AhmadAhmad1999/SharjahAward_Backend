@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeArbitrationResultsStatus;
+using SharijhaAward.Application.Features.ArbitrationResults.Queries.ExportArbitrationResultsToExcel;
 using SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllArbitrationResults;
 using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
+using SharijhaAward.Application.Features.WinnersFeatures.Queries.ExportWinnersToExcel;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -76,6 +78,19 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("ArbitrationResultsExportToExcel", Name = "ArbitrationResultsExportToExcel")]
+        public async Task<IActionResult> ArbitrationResultsExportToExcel()
+        {
+            var response = await _Mediator.Send(new ExportArbitrationResultsToExcelQuery());
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ArbitrationResults.xlsx"),
+                _ => BadRequest(response)
             };
         }
     }
