@@ -26,7 +26,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllArbitrationResults(int? CategoryId, string? SubscriberName, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllArbitrationResults(int? CategoryId, string? SubscriberName,
+            int? CycleNumber, string? CategoryName, bool? EligibleToWin, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -39,7 +40,10 @@ namespace SharijhaAward.Api.Controllers
                 lang = HeaderValue!,
                 page = Page,
                 PerPage = PerPage,
-                SubscriberName = SubscriberName
+                SubscriberName = SubscriberName,
+                CycleNumber = CycleNumber,
+                CategoryName = CategoryName,
+                EligibleToWin = EligibleToWin
             });
 
             return Response.statusCode switch

@@ -7,6 +7,9 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
     {
         public int? CategoryId { get; set; }
         public string? SubscriberName { get; set; }
+        public int? CycleNumber { get; set; }
+        public string? CategoryName { get; set; }
+        public bool? EligibleToWin { get; set; }
         public string? lang { get; set; }
         public int page { get; set; }
         public int PerPage { get; set; }
