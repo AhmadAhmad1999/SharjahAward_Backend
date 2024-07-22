@@ -6,6 +6,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
     public class ConfirmSelectedWinningFormsCommand : IRequest<BaseResponse<object>>
     {
         public int CategoryId { get; set; }
+        public int? EducationalClassId { get; set; }
         public string? lang { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.NotificationFeatures.Commands.CreateNotification;
 using SharijhaAward.Application.Features.NotificationFeatures.Commands.DeleteNotification;
 using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotifications;

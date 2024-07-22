@@ -18,7 +18,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formRepository;
         private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _userRepository;
         private readonly IJwtProvider _jwtProvider;
-        //private readonly IAsyncRepository<Notification> _NotificationRepository;
+        private readonly IAsyncRepository<Notification> _NotificationRepository;
         private readonly IAsyncRepository<UserToken> _UserTokenRepository;
         private readonly IAsyncRepository<UserNotification> _UserNotificationRepository;
         private readonly IEmailSender _EmailSender;
@@ -26,7 +26,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
         public SigningTheFormQueryHandler(IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository,
             IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository, 
             IJwtProvider jwtProvider,
-            //IAsyncRepository<Notification> NotificationRepository,
+            IAsyncRepository<Notification> NotificationRepository,
             IAsyncRepository<UserToken> UserTokenRepository,
             IAsyncRepository<UserNotification> UserNotificationRepository,
             IEmailSender EmailSender)
@@ -34,7 +34,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
             _formRepository = formRepository;
             _userRepository = userRepository;
             _jwtProvider = jwtProvider;
-            //_NotificationRepository = NotificationRepository;
+            _NotificationRepository = NotificationRepository;
             _UserTokenRepository = UserTokenRepository;
             _UserNotificationRepository = UserNotificationRepository;
             _EmailSender = EmailSender;
@@ -93,51 +93,51 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
 
                         await _formRepository.UpdateAsync(form);
 
-                        //Notification NewNotificationEntity = new Notification()
-                        //{
-                        //    ArabicTitle = "إكمال خطوات التسجيل في الجائزة",
-                        //    ArabicBody = "تهانينا\r\nلقد اتممت خطوات التسجيل في الجائزة",
-                        //    EnglishTitle = "Complete the steps to register for the award",
-                        //    EnglishBody = "Congratulations\r\nYou have completed the steps to register for the award"
-                        //};
+                        Notification NewNotificationEntity = new Notification()
+                        {
+                            ArabicTitle = "إكمال خطوات التسجيل في الجائزة",
+                            ArabicBody = "تهانينا\r\nلقد اتممت خطوات التسجيل في الجائزة",
+                            EnglishTitle = "Complete the steps to register for the award",
+                            EnglishBody = "Congratulations\r\nYou have completed the steps to register for the award"
+                        };
 
-                        //await _NotificationRepository.AddAsync(NewNotificationEntity);
+                        await _NotificationRepository.AddAsync(NewNotificationEntity);
 
-                        //FirebaseAdmin.Messaging.Message? NotificationMessages = await _UserTokenRepository
-                        //    .Where(x => User.Id == x.UserId && !string.IsNullOrEmpty(x.DeviceToken))
-                        //    .Include(x => x.User!)
-                        //    .Select(x => x.AppLanguage == "en"
-                        //        ? new FirebaseAdmin.Messaging.Message()
-                        //        {
-                        //            Notification = new FirebaseAdmin.Messaging.Notification
-                        //            {
-                        //                Title = NewNotificationEntity.EnglishTitle,
-                        //                Body = NewNotificationEntity.EnglishBody.Replace("$Email$", x.User!.Email)
-                        //            },
-                        //            Token = x.DeviceToken
-                        //        }
-                        //        : new FirebaseAdmin.Messaging.Message()
-                        //        {
-                        //            Notification = new FirebaseAdmin.Messaging.Notification
-                        //            {
-                        //                Title = NewNotificationEntity.ArabicTitle,
-                        //                Body = NewNotificationEntity.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
-                        //            },
-                        //            Token = x.DeviceToken
-                        //        }).FirstOrDefaultAsync();
-                        
-                        //UserNotification? UserNotificationEntities = await _UserTokenRepository
-                        //    .Where(x => User.Id == x.UserId)
-                        //    .GroupBy(x => x.UserId)
-                        //    .Select(x => new UserNotification()
-                        //    {
-                        //        UserId = x.Key,
-                        //        NotificationId = NewNotificationEntity.Id,
-                        //        isReaded = false
-                        //    }).FirstOrDefaultAsync();
+                        FirebaseAdmin.Messaging.Message? NotificationMessages = await _UserTokenRepository
+                            .Where(x => User.Id == x.UserId && !string.IsNullOrEmpty(x.DeviceToken))
+                            .Include(x => x.User!)
+                            .Select(x => x.AppLanguage == "en"
+                                ? new FirebaseAdmin.Messaging.Message()
+                                {
+                                    Notification = new FirebaseAdmin.Messaging.Notification
+                                    {
+                                        Title = NewNotificationEntity.EnglishTitle,
+                                        Body = NewNotificationEntity.EnglishBody.Replace("$Email$", x.User!.Email)
+                                    },
+                                    Token = x.DeviceToken
+                                }
+                                : new FirebaseAdmin.Messaging.Message()
+                                {
+                                    Notification = new FirebaseAdmin.Messaging.Notification
+                                    {
+                                        Title = NewNotificationEntity.ArabicTitle,
+                                        Body = NewNotificationEntity.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
+                                    },
+                                    Token = x.DeviceToken
+                                }).FirstOrDefaultAsync();
 
-                        //if (UserNotificationEntities is not null)
-                        //    await _UserNotificationRepository.AddAsync(UserNotificationEntities!);
+                        UserNotification? UserNotificationEntities = await _UserTokenRepository
+                            .Where(x => User.Id == x.UserId)
+                            .GroupBy(x => x.UserId)
+                            .Select(x => new UserNotification()
+                            {
+                                UserId = x.Key,
+                                NotificationId = NewNotificationEntity.Id,
+                                isReaded = false
+                            }).FirstOrDefaultAsync();
+
+                        if (UserNotificationEntities is not null)
+                            await _UserNotificationRepository.AddAsync(UserNotificationEntities!);
 
                         string EmailSubject = $"Complete the steps to register for {form.Category.EnglishName} category" + " - " + $"تهانينا\r\nلقد اتممت خطوات التسجيل في فئة ال{form.Category.ArabicName}";
 
@@ -198,8 +198,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                             form.User!.Email
                         }, EmailSubject, FullEmailBody, AlternateView);
 
-                        //if (NotificationMessages is not null)
-                        //    await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendAsync(NotificationMessages);
+                        if (NotificationMessages is not null)
+                            await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendAsync(NotificationMessages);
 
                         Transaction.Complete();
                     }

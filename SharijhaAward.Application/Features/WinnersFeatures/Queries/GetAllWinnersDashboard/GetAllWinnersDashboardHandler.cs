@@ -66,20 +66,16 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
 
             if (Request.GetDataRandomly)
             {
-                // Shuffle the data randomly
-                using (RandomNumberGenerator RandomNumberGenerator = RandomNumberGenerator.Create())
+                Random random = new Random();
+                for (int i = ArbitrationResultEntities.Count - 1; i > 0; i--)
                 {
-                    int TotelRows = ArbitrationResultEntities.Count;
-                    while (TotelRows > 1)
-                    {
-                        byte[] buffer = new byte[4];
-                        RandomNumberGenerator.GetBytes(buffer);
-                        int k = BitConverter.ToInt32(buffer, 0) % TotelRows;
-                        TotelRows--;
-                        ArbitrationResultEntities[TotelRows] = ArbitrationResultEntities[k];
-                        ArbitrationResultEntities[k] = ArbitrationResultEntities[TotelRows];
-                    }
+                    int j = random.Next(i + 1);
+                    var temp = ArbitrationResultEntities[i];
+                    ArbitrationResultEntities[i] = ArbitrationResultEntities[j];
+                    ArbitrationResultEntities[j] = temp;
                 }
+
+                // await Task.Delay(500);
             }
 
             if (Request.page != 0 && Request.PerPage != -1)
