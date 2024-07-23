@@ -82,6 +82,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
                 data[i].IsOutComing = data[i].From == User!.Email ? true : false; 
             }
             
+
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
             
             return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data.OrderByDescending(d=>d.CreatedAt).ToList(), pagination, Count);

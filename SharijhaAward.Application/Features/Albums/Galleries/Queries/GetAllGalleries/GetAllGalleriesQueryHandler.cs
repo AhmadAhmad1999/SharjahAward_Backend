@@ -38,6 +38,12 @@ namespace SharijhaAward.Application.Features.Albums.Galleries.Queries.GetAllGall
           
             var data = _mapper.Map<List<GalleryListVm>>(AllGalleries);
 
+            if (data.Count() > 0)
+            {
+                data[0].AlbumTitle = request.lang == "en" ? album.EnglishTitle : album.ArabicTitle;
+            }
+            
+
             int Count = _galleryRepository.GetCount(g => g.AlbumId == album.Id && !g.isDeleted);
            
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
