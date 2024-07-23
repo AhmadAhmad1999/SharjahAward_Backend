@@ -34,6 +34,8 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Queries.Ge
     
             var data = _mapper.Map<List<TextCardListVM>>(textCards);
 
+            data.ToList().OrderBy(c => c.orderId);
+
             int count = _textCardRepository.GetCount(i => !i.isDeleted);
 
             Pagination pagination = new Pagination(request.page, request.perPage, count);

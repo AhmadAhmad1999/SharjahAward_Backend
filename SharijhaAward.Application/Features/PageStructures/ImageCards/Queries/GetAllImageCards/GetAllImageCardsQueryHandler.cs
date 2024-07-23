@@ -42,6 +42,8 @@ namespace SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.G
                 imageCard.CardImages = _mapper.Map<List<PageImageDto>>(Images);
             }
 
+            data.ToList().OrderBy(c => c.orderId);
+
             int count = _imageCardsRepository.GetCount(i => !i.isDeleted);
 
             Pagination pagination = new Pagination(request.page, request.perPage, count);

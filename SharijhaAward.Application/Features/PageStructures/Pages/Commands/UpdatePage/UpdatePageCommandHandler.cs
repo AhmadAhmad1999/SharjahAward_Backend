@@ -44,6 +44,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Updat
             else
                 page.IconUrl = Icon;
 
+
             await _pageStructureRepository.UpdateAsync(page);
 
             string ResponseMessage = request.lang == "en"

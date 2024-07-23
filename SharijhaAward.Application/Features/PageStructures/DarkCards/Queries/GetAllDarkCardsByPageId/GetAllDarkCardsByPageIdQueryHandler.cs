@@ -38,7 +38,10 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.Ge
                 return new BaseResponse<List<DarkCardListVM>>(msg, false, 404);
             }
 
-            var Cards = _darkCardRepository.Where(c => c.PageId == page.Id).ToList();
+            var Cards = _darkCardRepository
+                .Where(c => c.PageId == page.Id)
+                .ToList()
+                .OrderBy(c=>c.orderId);
 
             var data = _mapper.Map<List<DarkCardListVM>>(Cards);
            
