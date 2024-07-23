@@ -187,8 +187,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     else
                     {
                         List<IGrouping<int, DynamicAttributeTableValue>> DynamicAttributeTableValueEntities = await _DynamicAttributeTableValueRepository
+                            .Include(x => x.DynamicAttribute!)
                             .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Contains(x.DynamicAttributeId) &&
-                                x.RecordId == Request.ProvidedFormId)
+                                x.RecordId == Request.ProvidedFormId && x.DynamicAttribute!.DynamicAttributeSectionId == DynamicAttributeSection.Id)
                             .Include(x => x.DynamicAttribute!)
                             .Include(x => x.DynamicAttribute!.AttributeDataType!)
                             .GroupBy(x => x.RowId)
