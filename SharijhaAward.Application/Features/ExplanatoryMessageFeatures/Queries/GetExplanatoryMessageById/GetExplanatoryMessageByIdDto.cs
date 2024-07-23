@@ -10,6 +10,8 @@ namespace SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.
         public string ArabicText { get; set; } = null!;
         [MaxLength]
         public string EnglishText { get; set; } = null!;
+        [MaxLength]
+        public string Text { get; set; } = null!;
         public TypeOfExplantoryMessage Type { get; set; }
     }
 }
