@@ -49,7 +49,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
                 ? request.EnglishTitle
                 : request.Slug;
             
-            slug.ToLower();
+            slug = slug.ToLower();
             page.Slug = slug.Replace(" ", "_");
 
             var data = await _pageStructureRepository.AddAsync(page);

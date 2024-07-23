@@ -11,6 +11,7 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Queries.Ge
         public int Id { get; set; }
         public string EnglishContent { get; set; } = string.Empty;
         public string ArabicContent { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
         public int orderId { get; set; }
         public int PageStructureId { get; set; }
     }

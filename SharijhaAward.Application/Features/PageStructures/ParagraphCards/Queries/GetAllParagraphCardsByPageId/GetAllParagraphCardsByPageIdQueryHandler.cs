@@ -38,7 +38,10 @@ namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queri
                 return new BaseResponse<List<ParagraphCardListVM>>(msg, false, 404);
             }
 
-            var Cards = _paragraphCardRepository.Where(c => c.PageId == page.Id).ToList();
+            var Cards = _paragraphCardRepository
+                .Where(c => c.PageId == page.Id)
+                .ToList()
+                .OrderBy(c=>c.orderId);
 
             var data = _mapper.Map<List<ParagraphCardListVM>>(Cards);
 
