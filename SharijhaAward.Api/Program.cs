@@ -16,8 +16,11 @@ using SharijhaAward.Api.Logger;
 using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
 using SharijhaAward.Application;
+using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Infrastructure;
 using SharijhaAward.Persistence;
+using SharijhaAward.Persistence.Repositories;
 using System.Net;
 
 try

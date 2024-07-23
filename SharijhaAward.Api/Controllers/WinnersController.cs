@@ -159,18 +159,15 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> ConfirmSelectedWinningForms(int CategoryId, int? EducationalClassId)
+        public async Task<IActionResult> ConfirmSelectedWinningForms([FromBody] ConfirmSelectedWinningFormsCommand ConfirmSelectedWinningFormsCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            BaseResponse<object>? Response = await _Mediator.Send(new ConfirmSelectedWinningFormsCommand()
-            {
-                lang = !string.IsNullOrEmpty(HeaderValue)
-                    ? HeaderValue
-                    : "en",
-                CategoryId = CategoryId,
-                EducationalClassId = EducationalClassId
-            });
+            ConfirmSelectedWinningFormsCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(ConfirmSelectedWinningFormsCommand);
 
             return Response.statusCode switch
             {

@@ -37,14 +37,14 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                 {
                     if (Request.isCerticate.Value)
                     {
-                        ArbitrationResultEntityToUpdate.GotCertification = !ArbitrationResultEntityToUpdate.GotCertification;
+                        ArbitrationResultEntityToUpdate.GotCertification = Request.isCerticate.Value;
                         ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = Request.DateOfObtainingTheCertificate != null
                             ? Request.DateOfObtainingTheCertificate.Value
                             : DateTime.UtcNow;
                     }
                     else
                     {
-                        ArbitrationResultEntityToUpdate.GotCertification = !ArbitrationResultEntityToUpdate.GotCertification;
+                        ArbitrationResultEntityToUpdate.GotCertification = Request.isCerticate.Value;
 
                         if (ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate is not null)
                             ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = null;
@@ -73,7 +73,7 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                     }
                     else
                     {
-                        ArbitrationResultEntityToUpdate.GotStatement = !ArbitrationResultEntityToUpdate.GotStatement;
+                        ArbitrationResultEntityToUpdate.GotStatement = Request.isStatment.Value;
 
                         if (ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement is not null)
                             ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = null;
