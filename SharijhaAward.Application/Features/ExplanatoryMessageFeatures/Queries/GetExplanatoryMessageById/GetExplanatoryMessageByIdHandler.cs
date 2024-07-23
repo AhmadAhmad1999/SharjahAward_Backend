@@ -39,6 +39,10 @@ namespace SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.
 
                 GetExplanatoryMessageByIdDto GetClassByIdDto = _Mapper.Map<GetExplanatoryMessageByIdDto>(ExplanatoryMessageEntity);
 
+                GetClassByIdDto.Text = Request.lang == "en"
+                    ? ExplanatoryMessageEntity.EnglishText
+                    : ExplanatoryMessageEntity.ArabicText;
+
                 return new BaseResponse<GetExplanatoryMessageByIdDto>(ResponseMessage, true, 200, GetClassByIdDto);
             }
             else if (Request.Type is not null)
@@ -56,6 +60,10 @@ namespace SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.
                 }
 
                 GetExplanatoryMessageByIdDto GetClassByIdDto = _Mapper.Map<GetExplanatoryMessageByIdDto>(ExplanatoryMessageEntity);
+
+                GetClassByIdDto.Text = Request.lang == "en"
+                    ? ExplanatoryMessageEntity.EnglishText
+                    : ExplanatoryMessageEntity.ArabicText;
 
                 return new BaseResponse<GetExplanatoryMessageByIdDto>(ResponseMessage, true, 200, GetClassByIdDto);
             }
