@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                     .Select(c => c.Id)
                     .ToListAsync();
 
-                var forms = await _FormRepository.GetPagedReponseWithPredicateAsync(f => f.Category.CycleId == cycle.Id, request.page, request.perPage);
+                var forms =  _FormRepository.IncludeThenWhere(f => f.Category, f => f.Category.CycleId == cycle.Id);
 
                 var Subscribers = await _UserRepository.Where(s => s.SubscriberId != null).ToListAsync();
                 if (forms.Any())

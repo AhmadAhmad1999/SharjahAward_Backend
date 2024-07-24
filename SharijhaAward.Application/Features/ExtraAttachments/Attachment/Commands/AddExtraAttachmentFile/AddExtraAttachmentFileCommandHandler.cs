@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -8,6 +9,7 @@ using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,7 +37,12 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
                        ? "File has been Uploaded"
                        : "تم رفع الملف بنجاح";
 
-            var ExtraAttachment = await _extraAttachmentsRepository.GetByIdAsync(request.ExtraAttachmentId);
+            var ExtraAttachment = await _extraAttachmentsRepository
+                .Where(e => e.Id == request.ExtraAttachmentId)
+                .Include(e => e.ExtraAttachmentFiles)
+                .FirstOrDefaultAsync();
+                
+           
             if(ExtraAttachment == null)
             {
                 msg = request.lang == "en"
@@ -43,6 +50,14 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
                      : "الشرط غير موجود";
 
                 return new BaseResponse<object>(msg, false, 404);
+            }
+            if  (ExtraAttachment.RequiredAttachmentNumber <= ExtraAttachment.ExtraAttachmentFiles!.Count())
+            {
+                msg = request.lang == "en"
+                ? "You Can't Add More Files"
+                : "لا يمكنك رفع المزيد من الملفات";
+
+                return new BaseResponse<object>(msg, false, 400);
             }
             var data = _mapper.Map<ExtraAttachmentFile>(request);
 

@@ -130,7 +130,14 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                     await _attachmentRepository.AddAsync(emailAttachment);
                 }
             }
-            
+            //if (request.ContactUsAttachments != null)
+            //{
+            //    foreach (var dto in request.ContactUsAttachments)
+            //    {
+            //        var Attachment = await _fileService.SaveFileAsync(dto.Attachment, SystemFileType.ContactUsFiles);
+            //    }
+            //}
+
             return new BaseResponse<int>(msg, true, 200, data.Id);
         }
     }

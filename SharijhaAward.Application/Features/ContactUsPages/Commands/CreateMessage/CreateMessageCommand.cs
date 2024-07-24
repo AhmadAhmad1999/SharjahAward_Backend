@@ -23,6 +23,8 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
 
         public string? lang { get; set; } = string.Empty;
         public string? token { get; set; } = string.Empty;
+        //public List<ContactUsAttachmentDto>? ContactUsAttachments { get; set; }
         public List<IFormFile>? EmailAttachments { get; set; } 
+       
     }
 }

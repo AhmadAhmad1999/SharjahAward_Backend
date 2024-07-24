@@ -12,6 +12,8 @@ using SharijhaAward.Application.Features.ExtraAttachments.Commands.DeleteExtraAt
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAttachment;
 using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachment;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCycleConditions;
+using SharijhaAward.Application.Features.ExtraAttachments.Queries.CheckAllExtraAttachment;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -151,6 +153,28 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(response),
                 200 => Ok(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("CheckAllExtraAttachment", Name = "CheckAllExtraAttachment")]
+        public async Task<IActionResult> CheckAllExtraAttachment(int formId)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
+
+            var response = await _mediator.Send(new CheckAllExtraAttachmentQuery()
+            {
+                formId = formId,
+                token = token!,
+                lang = Language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
                 _ => BadRequest(response)
             };
         }
