@@ -7,6 +7,8 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
+using SharijhaAward.Domain.Entities.CriterionItemModel;
+using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
@@ -26,8 +28,12 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         private readonly IAsyncRepository<ConditionsProvidedForms> _conditionsProvidedFormsRepository;
         private readonly IAsyncRepository<ExtraAttachment> _extraAttachmentRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository;
+        private readonly IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository;
         public GetAllProvidedFormsQueryHandler(IAsyncRepository<ExtraAttachment> extraAttachmentRepository,  IAsyncRepository<ConditionsProvidedForms> conditionsProvidedFormsRepository, IAsyncRepository<CycleConditionsProvidedForm> cycleConditionsProvidedFormRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository, IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository, IAsyncRepository<Category> categoryRepository, IJwtProvider jwtProvider, IMapper mapper,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
+            IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository)
         {
             _formRepository = formRepository;
             _userRepository = userRepository;
@@ -38,6 +44,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
             _extraAttachmentRepository = extraAttachmentRepository;
             _conditionsProvidedFormsRepository = conditionsProvidedFormsRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _CriterionAttachmentRepository = CriterionAttachmentRepository;
+            _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
         }
 
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllProvidedFormsQuery request, CancellationToken cancellationToken)
@@ -153,6 +161,20 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
 
                 if (CheckIfThereIsRejectedDynamicFields)
                     data[i].RejectedSteps!.Add(4);
+
+                CriterionAttachment? CriterionAttachment = await _CriterionAttachmentRepository
+                    .FirstOrDefaultAsync(x => x.ProvidedFormId == data[i].Id &&
+                        (x.IsAccepted != null ? !x.IsAccepted.Value : false));
+
+                if (CriterionAttachment is not null)
+                    data[i].RejectedSteps!.Add(5);
+
+                CriterionItemAttachment? CriterionItemAttachment = await _CriterionItemAttachmentRepository
+                    .FirstOrDefaultAsync(x => x.ProvidedFormId == data[i].Id &&
+                        (x.IsAccepted != null ? !x.IsAccepted.Value : false));
+
+                if (CriterionItemAttachment is not null)
+                    data[i].RejectedSteps!.Add(5);
             }
 
             return new BaseResponse<List<FormListVm>> ("", true, 200, data);
