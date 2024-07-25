@@ -47,12 +47,12 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Queries
             var Cycle = await _cycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active);
             if (Cycle == null)
             {
-                return new BaseResponse<List<CycleConditionListVM>>("", false, 404);
+                return new BaseResponse<List<CycleConditionListVM>>("الدورة غير موجودة", false, 404);
             }
             var form = _formRepository.FirstOrDefault(p => p.Id == request.formId);
             if(form == null)
             {
-                return new BaseResponse<List<CycleConditionListVM>>("", false, 400);
+                return new BaseResponse<List<CycleConditionListVM>>("الإستمارة غير موجودة", false, 400);
             }
 
             var Terms = _cycleConditionRepository.WhereThenInclude(t => t.CycleId == Cycle.Id, t => t.ConditionAttachments).ToList();

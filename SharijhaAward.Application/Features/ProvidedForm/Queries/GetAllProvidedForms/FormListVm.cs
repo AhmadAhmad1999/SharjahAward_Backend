@@ -23,6 +23,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public int categoryId { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool? SucceedToFinalArbitration { get; set; }
+        public List<int>? RejectedSteps { get; set; }
 
     }
 }

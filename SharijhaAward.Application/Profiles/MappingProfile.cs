@@ -349,6 +349,11 @@ using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.Upda
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetAllImageCards;
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetImageCardById;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPages;
+using SharijhaAward.Domain.Entities.IndexModel;
+using SharijhaAward.Application.Features.Indexes.Commands.CreateIndex;
+using SharijhaAward.Application.Features.Indexes.Commands.UpdateIndex;
+using SharijhaAward.Application.Features.Indexes.Queries.GetAllIndexes;
+using SharijhaAward.Application.Features.Indexes.Queries.GetIndexById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -619,6 +624,12 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ImageCard, ImageCardListVM>().ReverseMap();
             CreateMap<ImageCard, ImageCardDto>().ReverseMap();
             CreateMap<PageStructureImages, PageImageDto>().ReverseMap();
+
+
+            CreateMap<Domain.Entities.IndexModel.Index, CreateIndexCommand>().ReverseMap();
+            CreateMap<Domain.Entities.IndexModel.Index, UpdateIndexCommand>().ReverseMap();
+            CreateMap<Domain.Entities.IndexModel.Index, IndexesListVM>().ReverseMap();
+            CreateMap<Domain.Entities.IndexModel.Index, IndexDto>().ReverseMap();
 
             //
             // Dynamic Attribute..ParagraphCard

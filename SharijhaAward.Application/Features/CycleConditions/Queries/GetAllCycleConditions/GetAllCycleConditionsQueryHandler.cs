@@ -63,6 +63,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
                 : _cycleConditionRepository.GetCount(c => c.CycleId == request.CycleId);
 
             Pagination pagination = new Pagination(request.page,request.perPage,count);
+            
             return new BaseResponse<List<CycleConditionListVM>>("", true, 200, data, pagination);
         }
     }

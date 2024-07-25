@@ -88,6 +88,7 @@ using SharijhaAward.Domain.Entities.ExplanatoryMessageModel;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
+using SharijhaAward.Domain.Entities.IndexModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -370,6 +371,18 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<ImageCard>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<PageStructureImages>().HasQueryFilter(p => !p.isDeleted);
 
+            modelBuilder.Entity<Domain.Entities.IndexModel.Index>()
+                .HasIndex(p => p.EnglishName)
+                .IsUnique();
+
+            modelBuilder.Entity<Domain.Entities.IndexModel.Index>()
+                .HasIndex(p => p.ArabicName)
+                .IsUnique();
+
+            modelBuilder.Entity<Domain.Entities.IndexModel.Index>()
+                .HasIndex(p => p.Slug)
+                .IsUnique();
+
             modelBuilder.Entity<PageStructure>()
                 .HasIndex(p => p.EnglishTitle)
                 .IsUnique();
@@ -393,6 +406,16 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Coordinator>()
                 .Property(a => a.Id)
                 .ValueGeneratedNever();
+
+            modelBuilder.Entity<Domain.Entities.IndexModel.Index>()
+                .HasData(
+                new Domain.Entities.IndexModel.Index()
+                {
+                    Id = 1,
+                    ArabicName = "نوع الرسالة",
+                    EnglishName = "Message Type",
+                    Slug = "Message_Type"
+                });
 
             modelBuilder.Entity<Permission>()
                 .HasData(
