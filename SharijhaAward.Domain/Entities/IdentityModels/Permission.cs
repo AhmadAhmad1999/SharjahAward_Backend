@@ -6,6 +6,7 @@ namespace SharijhaAward.Domain.Entities.IdentityModels
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+        public string Action { get; set; } = null!;
         public int PermissionHeaderId { get; set; }
         public PermissionHeader? PermissionHeader { get; set; }
     }

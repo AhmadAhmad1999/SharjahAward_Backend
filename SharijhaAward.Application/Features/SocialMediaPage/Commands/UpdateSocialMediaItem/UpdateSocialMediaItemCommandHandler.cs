@@ -44,15 +44,8 @@ namespace SharijhaAward.Application.Features.SocialMediaPage.Commands.UpdateSoci
                 return new BaseResponse<object>(msg, false, 404);
             }
             var logo = item.LogoUrl;
-            var thumbnail = item.ThumbnailUrl;
 
             _mapper.Map(request, item, typeof(UpdateSocialMediaItemCommand), typeof(SocialMedia));
-
-            if (request.UpdateOnThumbnail)
-                item.ThumbnailUrl = await _fileService.SaveFileAsync(request.Thumbnail!, SystemFileType.Images);
-            else
-                item.ThumbnailUrl = thumbnail;
-
 
             if (request.UpdateOnLogo)
                 item.LogoUrl = await _fileService.SaveFileAsync(request.Logo!, SystemFileType.Icons);

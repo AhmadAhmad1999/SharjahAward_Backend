@@ -424,6 +424,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 1,
                     Name = "تعديل حول الجائزة",
+                    Action = "update",
                     PermissionHeaderId = 1,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -437,6 +438,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 2,
                     Name = "إضافة معرض الصور",
+                    Action = "create",
                     PermissionHeaderId = 2,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -448,6 +450,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 3,
                     Name = "عرض معرض الصور",
+                    Action = "read",
                     PermissionHeaderId = 2,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -459,6 +462,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 4,
                     Name = "تعديل معرض الصور",
+                    Action = "update",
                     PermissionHeaderId = 2,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -470,6 +474,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 5,
                     Name = "حذف معرض الصور",
+                    Action = "delete",
                     PermissionHeaderId = 2,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -484,6 +489,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 6,
                     Name = "إضافة نسخة التطبيق",
+                    Action = "create",
                     PermissionHeaderId = 3,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -495,6 +501,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 7,
                     Name = "عرض نسخة التطبيق",
+                    Action = "read",
                     PermissionHeaderId = 3,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -508,6 +515,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 8,
                     Name = "إضافة إصدارات الجائزة",
+                    Action = "create",
                     PermissionHeaderId = 4,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -519,6 +527,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 9,
                     Name = "عرض إصدارات الجائزة",
+                    Action = "read",
                     PermissionHeaderId = 4,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -532,6 +541,7 @@ namespace SharijhaAward.Persistence
                  {
                      Id = 10,
                      Name = "تعديل إصدارات الجائزة",
+                     Action = "update",
                      PermissionHeaderId = 4,
                      isDeleted = false,
                      CreatedAt = DateTime.UtcNow,
@@ -543,6 +553,7 @@ namespace SharijhaAward.Persistence
                  {
                      Id = 11,
                      Name = "حذف إصدارات الجائزة",
+                     Action = "delete",
                      PermissionHeaderId = 4,
                      isDeleted = false,
                      CreatedAt = DateTime.UtcNow,
@@ -557,6 +568,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 12,
                     Name = "تعديل راعي الجائزة",
+                    Action = "update",
                     PermissionHeaderId = 5,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -571,6 +583,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 13,
                     Name = "إضافة التعاميم",
+                    Action = "create",
                     PermissionHeaderId = 6,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -582,6 +595,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 14,
                     Name = "عرض التعاميم",
+                    Action = "read",
                     PermissionHeaderId = 6,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -595,6 +609,7 @@ namespace SharijhaAward.Persistence
                  {
                      Id = 15,
                      Name = "تعديل التعاميم",
+                     Action = "update",
                      PermissionHeaderId = 6,
                      isDeleted = false,
                      CreatedAt = DateTime.UtcNow,
@@ -606,6 +621,7 @@ namespace SharijhaAward.Persistence
                  {
                      Id = 16,
                      Name = "حذف التعاميم",
+                     Action = "delete",
                      PermissionHeaderId = 6,
                      isDeleted = false,
                      CreatedAt = DateTime.UtcNow,
@@ -620,6 +636,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 17,
                     Name = "إضافة الصفوف",
+                    Action = "create",
                     PermissionHeaderId = 7,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -631,6 +648,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 18,
                     Name = "عرض الصفوف",
+                    Action = "read",
                     PermissionHeaderId = 7,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -644,6 +662,7 @@ namespace SharijhaAward.Persistence
                  {
                      Id = 19,
                      Name = "تعديل الصفوف",
+                     Action = "update",
                      PermissionHeaderId = 7,
                      isDeleted = false,
                      CreatedAt = DateTime.UtcNow,
@@ -655,6 +674,7 @@ namespace SharijhaAward.Persistence
                  {
                      Id = 20,
                      Name = "حذف الصفوف",
+                     Action = "delete",
                      PermissionHeaderId = 7,
                      isDeleted = false,
                      CreatedAt = DateTime.UtcNow,
@@ -669,6 +689,7 @@ namespace SharijhaAward.Persistence
                  {
                      Id = 21,
                      Name = "إضافة محكم صف",
+                     Action = "create",
                      PermissionHeaderId = 8,
                      isDeleted = false,
                      CreatedAt = DateTime.UtcNow,
@@ -680,6 +701,7 @@ namespace SharijhaAward.Persistence
                  {
                      Id = 22,
                      Name = "عرض محكم صف",
+                     Action = "read",
                      PermissionHeaderId = 8,
                      isDeleted = false,
                      CreatedAt = DateTime.UtcNow,
@@ -693,6 +715,7 @@ namespace SharijhaAward.Persistence
                  {
                      Id = 23,
                      Name = "حذف محكم صف",
+                     Action = "delete",
                      PermissionHeaderId = 8,
                      isDeleted = false,
                      CreatedAt = DateTime.UtcNow,
@@ -707,6 +730,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 24,
                     Name = "عرض الدورات",
+                    Action = "read",
                     PermissionHeaderId = 9,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -718,6 +742,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 25,
                     Name = "إضافة دورة",
+                    Action = "create",
                     PermissionHeaderId = 9,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -729,6 +754,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 26,
                     Name = "عرض معلومات دورة",
+                    Action = "read",
                     PermissionHeaderId = 9,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -740,6 +766,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 27,
                     Name = "تعديل دورة",
+                    Action = "update",
                     PermissionHeaderId = 9,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -751,6 +778,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 28,
                     Name = "حذف دورة",
+                    Action = "delete",
                     PermissionHeaderId = 9,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -764,6 +792,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 29,
                     Name = "إضافة أجندة",
+                    Action = "create",
                     PermissionHeaderId = 10,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -775,6 +804,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 30,
                     Name = "عرض أجندة",
+                    Action = "read",
                     PermissionHeaderId = 10,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -786,6 +816,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 31,
                     Name = "تعديل أجندة",
+                    Action = "update",
                     PermissionHeaderId = 10,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -797,6 +828,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 32,
                     Name = "حذف أجندة",
+                    Action = "delete",
                     PermissionHeaderId = 10,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -810,6 +842,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 33,
                     Name = "إضافة فئات",
+                    Action = "create",
                     PermissionHeaderId = 11,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -821,6 +854,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 34,
                     Name = "عرض فئات",
+                    Action = "read",
                     PermissionHeaderId = 11,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -832,6 +866,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 35,
                     Name = "تعديل فئات",
+                    Action = "update",
                     PermissionHeaderId = 11,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -843,6 +878,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 36,
                     Name = "حذف فئات",
+                    Action = "delete",
                     PermissionHeaderId = 11,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -856,6 +892,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 37,
                     Name = "إضافة شروط عامة",
+                    Action = "create",
                     PermissionHeaderId = 12,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -867,6 +904,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 38,
                     Name = "عرض شروط عامة",
+                    Action = "read",
                     PermissionHeaderId = 12,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -878,6 +916,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 39,
                     Name = "تعديل شروط عامة",
+                    Action = "update",
                     PermissionHeaderId = 12,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -889,6 +928,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 40,
                     Name = "حذف شروط عامة",
+                    Action = "delete",
                     PermissionHeaderId = 12,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -902,6 +942,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 41,
                     Name = "إضافة جهات تعليمية",
+                    Action = "create",
                     PermissionHeaderId = 13,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -913,6 +954,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 42,
                     Name = "عرض جهات تعليمية",
+                    Action = "read",
                     PermissionHeaderId = 13,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -924,6 +966,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 43,
                     Name = "تعديل جهات تعليمية",
+                    Action = "update",
                     PermissionHeaderId = 13,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -935,6 +978,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 44,
                     Name = "حذف جهات تعليمية",
+                    Action = "delete",
                     PermissionHeaderId = 13,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -948,6 +992,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 45,
                     Name = "عرض ملفات النظام",
+                    Action = "read",
                     PermissionHeaderId = 14,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -961,6 +1006,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 46,
                     Name = "إضافة ورش تدريبية عامة",
+                    Action = "create",
                     PermissionHeaderId = 15,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -972,6 +1018,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 47,
                     Name = "عرض ورش تدريبية عامة",
+                    Action = "read",
                     PermissionHeaderId = 15,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -983,6 +1030,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 48,
                     Name = "تعديل ورش تدريبية عامة",
+                    Action = "update",
                     PermissionHeaderId = 15,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -994,6 +1042,7 @@ namespace SharijhaAward.Persistence
                 {
                     Id = 49,
                     Name = "حذف ورش تدريبية عامة",
+                    Action = "delete",
                     PermissionHeaderId = 15,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,

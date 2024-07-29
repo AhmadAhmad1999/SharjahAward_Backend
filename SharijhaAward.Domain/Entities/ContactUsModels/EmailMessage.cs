@@ -16,6 +16,7 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
         public int Id { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public string? PhoneNumber {  get; set; }
         public string From { get; set; } = string.Empty;
         public string? To { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;

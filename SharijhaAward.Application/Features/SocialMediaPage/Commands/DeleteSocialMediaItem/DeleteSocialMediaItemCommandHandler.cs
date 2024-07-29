@@ -27,6 +27,7 @@ namespace SharijhaAward.Application.Features.SocialMediaPage.Commands.DeleteSoci
                 : "تم حذف عنصر التواصل الإجتماعي";
 
             var ItemToDelete = await _socialMediaRepository.GetByIdAsync(request.Id);
+            
             if (ItemToDelete == null)
             {
                 msg = request.lang == "en"
@@ -34,7 +35,6 @@ namespace SharijhaAward.Application.Features.SocialMediaPage.Commands.DeleteSoci
                     : "عنصرالتواصل الإجتماعي غير موجود";
 
                 return new BaseResponse<object>(msg, false, 404);
-
             }
 
             await _socialMediaRepository.DeleteAsync(ItemToDelete);

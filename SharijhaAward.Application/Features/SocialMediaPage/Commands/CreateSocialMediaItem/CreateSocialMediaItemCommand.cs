@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Features.SocialMediaPage.Commands.CreateSoci
     public class CreateSocialMediaItemCommand : IRequest<BaseResponse<object>>
     {
         public IFormFile? Logo { get; set; }
-        public IFormFile Thumbnail { get; set; } = null!;
+        public string Title { get; set; } = string.Empty;
         public string Url { get; set; } = string.Empty;
         public string? lang { get; set; }
     }
