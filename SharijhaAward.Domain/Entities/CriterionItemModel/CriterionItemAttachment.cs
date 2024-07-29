@@ -13,5 +13,7 @@ namespace SharijhaAward.Domain.Entities.CriterionItemModel
         public CriterionItem? CriterionItem { get; set; }
         public int ProvidedFormId { get; set; }
         public ProvidedForm? ProvidedForm { get; set; }
+        public bool? IsAccepted { get; set; }
+        public string? ReasonForRejecting { get; set; }
     }
 }

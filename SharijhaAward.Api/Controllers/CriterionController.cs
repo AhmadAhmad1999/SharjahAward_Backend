@@ -20,6 +20,8 @@ using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetCriterionI
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCriterionById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.RejectOrAcceptCriterionItemAttachment;
+using SharijhaAward.Application.Features.CriterionFeatures.Commands.RejectOrAcceptCriterionAttachment;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -488,6 +490,56 @@ namespace SharijhaAward.Api.Controllers
                 : "en";
 
             BaseResponse<object>? Response = await _Mediator.Send(ReorderCriterionItemsInsideSubCriterionsCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("RejectOrAcceptCriterionItemAttachment")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            RejectOrAcceptCriterionItemAttachment([FromBody] RejectOrAcceptCriterionItemAttachmentCommand RejectOrAcceptCriterionItemAttachmentCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            RejectOrAcceptCriterionItemAttachmentCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(RejectOrAcceptCriterionItemAttachmentCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("RejectOrAcceptCriterionAttachment")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            RejectOrAcceptCriterionAttachment([FromBody] RejectOrAcceptCriterionAttachmentCommand RejectOrAcceptCriterionAttachmentCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            RejectOrAcceptCriterionAttachmentCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(RejectOrAcceptCriterionAttachmentCommand);
 
             return Response.statusCode switch
             {
