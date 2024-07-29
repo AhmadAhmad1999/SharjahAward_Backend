@@ -37,6 +37,10 @@ namespace SharijhaAward.Application.Features.StrategicPartners.Commands.CreateSt
 
             StrategicPartner.LogoUrl = await _fileService.SaveFileAsync(request.Logo, SystemFileType.Icons);
 
+            if (!request.Url!.Contains("http"))
+                StrategicPartner.Url = "https://" + request.Url;
+
+
             await _strategicPartnerRepository.AddAsync(StrategicPartner);
 
             return new BaseResponse<object>(msg, true, 200);

@@ -50,7 +50,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Command
             if (term == null)
             {
                 msg = request.lang == "en"
-                    ? "The TermAndCondition Not Found"
+                    ? "The Term And Condition Not Found"
                     : "الشرط غير موجود";
 
                 return new BaseResponse<object>(msg, false, 404);

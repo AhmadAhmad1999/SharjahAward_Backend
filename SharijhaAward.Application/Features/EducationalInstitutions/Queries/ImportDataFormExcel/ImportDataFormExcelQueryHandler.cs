@@ -29,7 +29,7 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Imp
         public async Task<BaseResponse<object>> Handle(ImportDataFormExcelQuery request, CancellationToken cancellationToken)
         {
             var filePath = await _fileService.SaveFileAsync(request.ImporterFile, SystemFileType.ExcelFiles);
-            byte[] file = await _fileService.ReadFileAsync(filePath);
+            byte[] file = await _fileService.ReadFileAsync(filePath, SystemFileType.ExcelFiles);
             var EducationalInstitutions = _excelHelper.ImportFromExcel(file);
 
             if(request.Replace)

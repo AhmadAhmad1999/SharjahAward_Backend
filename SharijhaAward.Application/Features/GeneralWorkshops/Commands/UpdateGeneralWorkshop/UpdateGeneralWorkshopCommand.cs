@@ -16,7 +16,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGen
         public string EnglishTitle { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
-        public IFormFile Thumbnale { get; set; } = null!;
+        public IFormFile? Thumbnale { get; set; } = null!;
         public bool UpdateThumbnale {  get; set; }
         public DateTime DateOfWorkShop { get; set; }
         public string Time { get; set; } = string.Empty;

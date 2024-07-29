@@ -97,9 +97,9 @@ namespace SharijhaAward.Infrastructure.FileServices
             return filePath;
         }
 
-        public async Task<byte[]> ReadFileAsync(string filePath)
+        public async Task<byte[]> ReadFileAsync(string filePath, SystemFileType fileType)
         {
-            var path = _SavePath +'/'+ filePath.Split('/').LastOrDefault();
+            var path = _SavePath + '/' + fileType.GetName() + '/' + filePath.Split('/').LastOrDefault();
             return await File.ReadAllBytesAsync(path);
         }
 

@@ -15,6 +15,6 @@ namespace SharijhaAward.Application.Contract.Infrastructure
         Task<string> SaveFileAsync(IFormFile file, SystemFileType fileType);
         Task<string> SaveFileAndGetPath(IFormFile file);
         Task<string> SaveProvidedFormFilesAsync(IFormFile file, int formId);
-        Task<byte[]> ReadFileAsync(string filePath);
+        Task<byte[]> ReadFileAsync(string filePath, SystemFileType fileType);
     }
 }

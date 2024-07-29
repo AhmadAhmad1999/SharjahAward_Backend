@@ -19,6 +19,7 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
         public string? ArabicDescription { get; set; }
         public string? EnglishDescription { get; set; }
         public bool AddNewImages { get; set; }
+        public DateTime NewsDate { get; set; }
         public List<IFormFile>? Images { get; set; }
         public bool IsHidden { get; set; }
         public string lang { get; set; } = string.Empty;

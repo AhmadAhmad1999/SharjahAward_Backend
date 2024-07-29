@@ -4,6 +4,7 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideByCategoryId;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AwardPublicationsModel;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.DownloadA
             }
             byte[] fileContent;
             
-            fileContent = await _fileService.ReadFileAsync(AwardPublication.PublicationUrl);
+            fileContent = await _fileService.ReadFileAsync(AwardPublication.PublicationUrl, SystemFileType.Pdf);
            
             var data = new DownloadPublicationDto()
             {

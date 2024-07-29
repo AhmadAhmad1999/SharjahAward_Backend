@@ -3,6 +3,7 @@ using MimeKit;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using System;
@@ -42,8 +43,8 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
             if (Guide != null)
             {
                  fileContent = request.lang == "en"
-               ? await _fileService.ReadFileAsync(Guide!.EnglishFilePath)
-               : await _fileService.ReadFileAsync(Guide!.ArabicFilePath);
+               ? await _fileService.ReadFileAsync(Guide!.EnglishFilePath, SystemFileType.ExplanatoryGuide)
+               : await _fileService.ReadFileAsync(Guide!.ArabicFilePath, SystemFileType.ExplanatoryGuide);
             }
             else
             {
