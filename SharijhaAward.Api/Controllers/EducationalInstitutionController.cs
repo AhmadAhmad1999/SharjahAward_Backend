@@ -200,6 +200,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(response),
                 200 => Ok(response),
+                403 => StatusCode(response.statusCode, response),
                 _ => BadRequest(response)
             };
         }

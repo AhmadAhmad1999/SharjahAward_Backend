@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.EducationalEntities.Queries.ImportDataFromExcel
 {
-    public class ImportDataFromExcelQuery : IRequest<BaseResponse<object>>
+    public class ImportDataFromExcelQuery : IRequest<BaseResponse<List<int>>>
     {
         public IFormFile ImporterFile { get; set; } = null!;
         public bool Replace { get; set; }

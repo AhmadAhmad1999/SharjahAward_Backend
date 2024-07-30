@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.ImportDataFormExcel
 {
     public class ImportDataFormExcelQueryHandler
-        : IRequestHandler<ImportDataFormExcelQuery, BaseResponse<object>>
+        : IRequestHandler<ImportDataFormExcelQuery, BaseResponse<List<int>>>
     {
         private readonly IAsyncRepository<EducationalInstitution> _educationalInstitutionRepository;
         private readonly IExcelHelper<EducationalInstitution> _excelHelper;
@@ -26,13 +26,26 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Imp
             _fileService = fileService;
         }
 
-        public async Task<BaseResponse<object>> Handle(ImportDataFormExcelQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<int>>> Handle(ImportDataFormExcelQuery request, CancellationToken cancellationToken)
         {
             var filePath = await _fileService.SaveFileAsync(request.ImporterFile, SystemFileType.ExcelFiles);
             byte[] file = await _fileService.ReadFileAsync(filePath, SystemFileType.ExcelFiles);
             var EducationalInstitutions = _excelHelper.ImportFromExcel(file);
 
-            if(request.Replace)
+            List<int> problematicRows = new List<int>();
+
+            for (int i = 0; i < EducationalInstitutions.Count(); i++)
+            {
+                if (string.IsNullOrEmpty(EducationalInstitutions[i].EnglishName) || string.IsNullOrEmpty(EducationalInstitutions[i].ArabicName) || EducationalInstitutions[i].Id == 0)
+                {
+                    problematicRows.Add(i++);
+                }
+            }
+            if (problematicRows.Count() > 0)
+            {
+                return new BaseResponse<List<int>>("", false, 403, problematicRows);
+            }
+            if (request.Replace)
             {
                 var EduInstitutions = await _educationalInstitutionRepository.ListAllAsync();
                 await _educationalInstitutionRepository.DeleteListAsync(EduInstitutions);
@@ -43,7 +56,7 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Imp
                 await _educationalInstitutionRepository.AddRangeAsync(EducationalInstitutions);
             }
 
-            return new BaseResponse<object>("", true, 200);
+            return new BaseResponse<List<int>>("", true, 200, problematicRows);
         }
     }
 }

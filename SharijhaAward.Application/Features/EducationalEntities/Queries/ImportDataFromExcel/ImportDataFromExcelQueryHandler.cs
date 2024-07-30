@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.EducationalEntities.Queries.ImportDataFromExcel
 {
     public class ImportDataFromExcelQueryHandler
-        : IRequestHandler<ImportDataFromExcelQuery, BaseResponse<object>>
+        : IRequestHandler<ImportDataFromExcelQuery, BaseResponse<List<int>>>
     {
         private readonly IAsyncRepository<EducationalEntity> _educationalEntityRepository;
         private readonly IExcelHelper<EducationalEntity> _excelHelper;
@@ -27,24 +27,39 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.ImportD
             _fileService = fileService;
         }
 
-        public async Task<BaseResponse<object>> Handle(ImportDataFromExcelQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<int>>> Handle(ImportDataFromExcelQuery request, CancellationToken cancellationToken)
         {
             var filePath = await _fileService.SaveFileAsync(request.ImporterFile, SystemFileType.ExcelFiles);
             byte[] file = await _fileService.ReadFileAsync(filePath, SystemFileType.ExcelFiles);
-            var EducationalInstitutions = _excelHelper.ImportFromExcel(file);
+            var EducationalEntities = _excelHelper.ImportFromExcel(file);
+            
+            List<int> problematicRows = new List<int>();
+
+            for(int i=0; i<EducationalEntities.Count(); i++)
+            {
+                if (string.IsNullOrEmpty(EducationalEntities[i].EnglishName) || string.IsNullOrEmpty(EducationalEntities[i].ArabicName) || EducationalEntities[i].Id == 0)
+                {
+                    problematicRows.Add(i++);
+                }
+            }
+
+            if (problematicRows.Count() > 0)
+            {
+                return new BaseResponse<List<int>>("", false, 403, problematicRows);
+            }
 
             if (request.Replace)
             {
                 var EduInstitutions = await _educationalEntityRepository.ListAllAsync();
                 await _educationalEntityRepository.DeleteListAsync(EduInstitutions);
-                await _educationalEntityRepository.AddRangeAsync(EducationalInstitutions);
+                await _educationalEntityRepository.AddRangeAsync(EducationalEntities);
             }
             else
             {
-                await _educationalEntityRepository.AddRangeAsync(EducationalInstitutions);
+                await _educationalEntityRepository.AddRangeAsync(EducationalEntities);
             }
 
-            return new BaseResponse<object>("", true, 200);
+            return new BaseResponse<List<int>>("", true, 200, problematicRows);
         }
     }
 }
