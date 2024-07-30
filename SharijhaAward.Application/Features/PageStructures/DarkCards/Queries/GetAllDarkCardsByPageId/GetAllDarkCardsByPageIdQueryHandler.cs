@@ -40,6 +40,7 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.Ge
 
             var Cards = _darkCardRepository
                 .Where(c => c.PageId == page.Id)
+                .Where(c => !c.IsHide)
                 .ToList()
                 .OrderBy(c=>c.orderId);
 

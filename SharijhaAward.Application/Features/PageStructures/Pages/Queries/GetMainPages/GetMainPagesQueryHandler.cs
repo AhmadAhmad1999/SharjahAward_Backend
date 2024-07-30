@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
         public async Task<BaseResponse<List<MainPageListVM>>> Handle(GetMainPagesQuery request, CancellationToken cancellationToken)
         {
             var mainPages = await _pageStructureRepository
-                     .GetWhereThenPagedReponseAsync(p => p.ParentId == null, request.page, request.perPage);
+                     .GetWhereThenPagedReponseAsync(p => p.ParentId == null && !p.IsHide, request.page, request.perPage);
         
             var data = _mapper.Map<List<MainPageListVM>>(mainPages);
             

@@ -20,6 +20,7 @@ namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Comma
         public bool? UpdateonImage { get; set; }
         public IFormFile? Image { get; set; } = null!;
         public bool? ImageInStart { get; set; }
+        public bool IsHide { get; set; }
         public int PageId { get; set; }
         public string? lang { get; set; }
     }

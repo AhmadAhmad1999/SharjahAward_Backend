@@ -29,8 +29,8 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Queries.Ge
         public async Task<BaseResponse<List<TextCardListVM>>> Handle(GetAllTextCardsQuery request, CancellationToken cancellationToken)
         {
             var textCards = request.pageId == null
-                ? await _textCardRepository.GetPagedReponseAsync(request.page, request.perPage)
-                : await _textCardRepository.GetPagedReponseWithPredicateAsync(t => t.PageStructureId == request.pageId, request.page, request.perPage);
+                ? await _textCardRepository.GetWhereThenPagedReponseAsync(t => !t.IsHide, request.page, request.perPage)
+                : await _textCardRepository.GetPagedReponseWithPredicateAsync(t => t.PageStructureId == request.pageId && !t.IsHide, request.page, request.perPage);
     
             var data = _mapper.Map<List<TextCardListVM>>(textCards);
 

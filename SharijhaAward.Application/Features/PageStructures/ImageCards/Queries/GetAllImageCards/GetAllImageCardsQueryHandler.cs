@@ -28,8 +28,8 @@ namespace SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.G
         public async Task<BaseResponse<List<ImageCardListVM>>> Handle(GetAllImageCardsQuery request, CancellationToken cancellationToken)
         {
             var ImageCards = request.pageId == null
-                ? await _imageCardsRepository.GetPagedReponseAsync(request.page, request.perPage)
-                : await _imageCardsRepository.GetWhereThenPagedReponseAsync(i => i.PageId == request.pageId, request.page, request.perPage);
+                ? await _imageCardsRepository.GetWhereThenPagedReponseAsync(c => !c.IsHide, request.page, request.perPage)
+                : await _imageCardsRepository.GetWhereThenPagedReponseAsync(c => c.PageId == request.pageId && !c.IsHide, request.page, request.perPage);
             
             var data = _mapper.Map<List<ImageCardListVM>>(ImageCards);
             
