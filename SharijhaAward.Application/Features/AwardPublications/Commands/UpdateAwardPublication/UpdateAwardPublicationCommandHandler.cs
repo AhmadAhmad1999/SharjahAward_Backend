@@ -36,11 +36,11 @@ namespace SharijhaAward.Application.Features.AwardPublications.Commands.UpdateAw
                 return new BaseResponse<object>("الإصدار غير موجود", false, 404);
             }
             var image = request.updateOnImage
-                ? await _fileService.SaveFileAsync(request.Image, SystemFileType.Images)
+                ? await _fileService.SaveFileAsync(request.Image!, SystemFileType.Images)
                 : publication.ImageUrl;
 
             var publishFile = request.updateOnPublication
-                ? await _fileService.SaveFileAsync(request.Image, SystemFileType.Images)
+                ? await _fileService.SaveFileAsync(request.Publication!, SystemFileType.Images)
                 : publication.PublicationUrl;
 
             _mapper.Map(request, publication, typeof(UpdateAwardPublicationCommand), typeof(AwardPublication));
