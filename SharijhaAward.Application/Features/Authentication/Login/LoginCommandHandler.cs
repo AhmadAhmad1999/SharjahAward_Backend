@@ -90,7 +90,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                     .Select(x => new UserPermissionsDto()
                     {
                         Action = x.Permission!.Action,
-                        Subject = x.Permission!.PermissionHeader!.Name
+                        Subject = x.Permission!.PermissionHeader!.EnglishName
                     }).ToListAsync();
             }
 

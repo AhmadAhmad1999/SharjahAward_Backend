@@ -200,7 +200,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                         .Select(x => new UserPermissionsDto()
                         {
                             Action = x.Permission!.Name,
-                            Subject = x.Permission!.PermissionHeader!.Name
+                            Subject = x.Permission!.PermissionHeader!.EnglishName
                         }).ToListAsync();
 
                     Transaction.Complete();

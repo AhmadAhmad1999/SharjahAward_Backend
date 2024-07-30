@@ -2507,7 +2507,8 @@ namespace SharijhaAward.Persistence
                 new PermissionHeader()
                 {
                     Id = 1,
-                    Name = "AboutAward",
+                    EnglishName = "AboutAward",
+                    ArabicName = "حول الجائزة",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2518,7 +2519,8 @@ namespace SharijhaAward.Persistence
                 new PermissionHeader()
                 {
                     Id = 2,
-                    Name = "Album",
+                    EnglishName = "Album",
+                    ArabicName = "الألبوم",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2529,7 +2531,8 @@ namespace SharijhaAward.Persistence
                 new PermissionHeader()
                 {
                     Id = 3,
-                    Name = "AppVersion",
+                    EnglishName = "AppVersion",
+                    ArabicName = "نسخة التطبيق",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2540,7 +2543,8 @@ namespace SharijhaAward.Persistence
                 new PermissionHeader()
                 {
                     Id = 4,
-                    Name = "AwardPublication",
+                    EnglishName = "AwardPublication",
+                    ArabicName = "إصدارات الجائزة",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2551,7 +2555,8 @@ namespace SharijhaAward.Persistence
                 new PermissionHeader()
                 {
                     Id = 5,
-                    Name = "AwardSponsor",
+                    EnglishName = "AwardSponsor",
+                    ArabicName = "راعي الجائزة",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2562,7 +2567,8 @@ namespace SharijhaAward.Persistence
                 new PermissionHeader()
                 {
                     Id = 6,
-                    Name = "Circular",
+                    EnglishName = "Circular",
+                    ArabicName = "التعاميم",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2573,7 +2579,8 @@ namespace SharijhaAward.Persistence
                 new PermissionHeader()
                 {
                     Id = 7,
-                    Name = "Class",
+                    EnglishName = "Class",
+                    ArabicName = "الصفوف",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2584,7 +2591,8 @@ namespace SharijhaAward.Persistence
                 new PermissionHeader()
                 {
                     Id = 8,
-                    Name = "ClassArbitrator",
+                    EnglishName = "ClassArbitrator",
+                    ArabicName = "صفوف المحكمين",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2595,7 +2603,8 @@ namespace SharijhaAward.Persistence
                 new PermissionHeader()
                 {
                     Id = 9,
-                    Name = "Cycle",
+                    EnglishName = "Cycle",
+                    ArabicName = "الدورات",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2605,7 +2614,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 10,
-                    Name = "Agenda",
+                    EnglishName = "Agenda",
+                    ArabicName = "الاجندة",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2615,7 +2625,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 11,
-                    Name = "Category",
+                    EnglishName = "Category",
+                    ArabicName = "الفئات",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2625,7 +2636,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 12,
-                    Name = "GeneralCondition",
+                    EnglishName = "GeneralCondition",
+                    ArabicName = "حول الجائزة",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2635,7 +2647,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 13,
-                    Name = "EducationalEntity",
+                    EnglishName = "EducationalEntity",
+                    ArabicName = "الجهات التعليمية",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2645,7 +2658,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 14,
-                    Name = "SystemFiles",
+                    EnglishName = "SystemFiles",
+                    ArabicName = "ملفات النظام",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2655,7 +2669,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 15,
-                    Name = "GeneralWorkshop",
+                    EnglishName = "GeneralWorkshop",
+                    ArabicName = "الدورات التدريبية العامة",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2665,7 +2680,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 16,
-                    Name = "Instruction",
+                    EnglishName = "Instruction",
+                    ArabicName = "التعليمات",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2675,7 +2691,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 17,
-                    Name = "Meeting",
+                    EnglishName = "Meeting",
+                    ArabicName = "الإجتماعات",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2685,7 +2702,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 18,
-                    Name = "News",
+                    EnglishName = "News",
+                    ArabicName = "الأخبار",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2695,7 +2713,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 19,
-                    Name = "Notification",
+                    EnglishName = "Notification",
+                    ArabicName = "الإشعارات",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2705,7 +2724,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 20,
-                    Name = "NotificationTemplate",
+                    EnglishName = "NotificationTemplate",
+                    ArabicName = "قالب الإشعارات",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2715,7 +2735,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 21,
-                    Name = "Role",
+                    EnglishName = "Role",
+                    ArabicName = "الدور",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2725,7 +2746,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 22,
-                    Name = "User",
+                    EnglishName = "User",
+                    ArabicName = "المستخدمين",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2735,7 +2757,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 23,
-                    Name = "Coordinator",
+                    EnglishName = "Coordinator",
+                    ArabicName = "المنسقين",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2745,7 +2768,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 24,
-                    Name = "Arbitrator",
+                    EnglishName = "Arbitrator",
+                    ArabicName = "المحكمين",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2755,7 +2779,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 25,
-                    Name = "Committee",
+                    EnglishName = "Committee",
+                    ArabicName = "اللجان",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2765,7 +2790,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 26,
-                    Name = "SubscriberAccount",
+                    EnglishName = "SubscriberAccount",
+                    ArabicName = "حسابات المشتركين",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2775,7 +2801,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 27,
-                    Name = "SubscriberProfile",
+                    EnglishName = "SubscriberProfile",
+                    ArabicName = "الملف الشخصي للمشتركين",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2785,7 +2812,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 28,
-                    Name = "SubscriberForm",
+                    EnglishName = "SubscriberForm",
+                    ArabicName = "نموذج الإشتراك",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2795,7 +2823,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 29,
-                    Name = "Event",
+                    EnglishName = "Event",
+                    ArabicName = "الفعاليات",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2805,7 +2834,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 30,
-                    Name = "ContactUs",
+                    EnglishName = "ContactUs",
+                    ArabicName = "تواصل معنا",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2815,7 +2845,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 31,
-                    Name = "ExplanatoryMessage",
+                    EnglishName = "ExplanatoryMessage",
+                    ArabicName = "الرسائل التوضيحية",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
@@ -2825,7 +2856,8 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 32,
-                    Name = "Responsibility",
+                    EnglishName = "Responsibility",
+                    ArabicName = "المسؤوليات",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,
