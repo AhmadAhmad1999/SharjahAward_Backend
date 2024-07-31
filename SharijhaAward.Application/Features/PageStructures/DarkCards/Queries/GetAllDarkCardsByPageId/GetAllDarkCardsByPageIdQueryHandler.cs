@@ -15,11 +15,11 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.Ge
     public class GetAllDarkCardsByPageIdQueryHandler
         : IRequestHandler<GetAllDarkCardsByPageIdQuery, BaseResponse<List<DarkCardListVM>>>
     {
-        private readonly IAsyncRepository<DarkCard> _darkCardRepository;
+        private readonly IAsyncRepository<PageCard> _darkCardRepository;
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
         private readonly IMapper _mapper;
 
-        public GetAllDarkCardsByPageIdQueryHandler(IAsyncRepository<DarkCard> darkCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
+        public GetAllDarkCardsByPageIdQueryHandler(IAsyncRepository<PageCard> darkCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
         {
             _darkCardRepository = darkCardRepository;
             _pageStructureRepository = pageStructureRepository;

@@ -34,10 +34,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
         public async Task<BaseResponse<PageDto>> Handle(GetPageBySlugQuery request, CancellationToken cancellationToken)
         {
             var page = await _pageStructureRepository
-                .WhereThenInclude(p => p.Slug == request.Slug, p => p.DarkCards!)
-                .Include(p => p.ParagraphCards)
+                .WhereThenInclude(p => p.Slug == request.Slug, p => p.PageCard!)
                 .Include(p=>p.ImageCards)
-                .Include(p=>p.TextCards)
                 .FirstOrDefaultAsync();
 
             if (page == null)
@@ -49,13 +47,13 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
 
             data.Components = new List<Component>();
 
-            var DarkCardsList = _mapper.Map<List<DarkCardListVM>>(page.DarkCards);
+            var DarkCardsList = _mapper.Map<List<DarkCardListVM>>(page.PageCard);
 
-            var ParagraphCardsList = _mapper.Map<List<ParagraphCardListVM>>(page.ParagraphCards);
+            var ParagraphCardsList = _mapper.Map<List<ParagraphCardListVM>>(page.PageCard);
 
             var ImageCardsList = _mapper.Map<List<ImageCardListVM>>(page.ImageCards);
 
-            var TextCardsList = _mapper.Map<List<TextCardListVM>>(page.TextCards);
+            var TextCardsList = _mapper.Map<List<TextCardListVM>>(page.PageCard);
 
             foreach (var Darkcard in DarkCardsList)
             {

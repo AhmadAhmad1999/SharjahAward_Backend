@@ -15,11 +15,11 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Commands.U
     public class UpdateTextCardCommandHandler
         : IRequestHandler<UpdateTextCardCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<TextCard> _textCardRepository;
+        private readonly IAsyncRepository<PageCard> _textCardRepository;
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
         private readonly IMapper _mapper;
 
-        public UpdateTextCardCommandHandler(IAsyncRepository<TextCard> textCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
+        public UpdateTextCardCommandHandler(IAsyncRepository<PageCard> textCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
         {
             _textCardRepository = textCardRepository;
             _pageStructureRepository = pageStructureRepository;
@@ -54,7 +54,7 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Commands.U
                 return new BaseResponse<object>(msg, false, 400);
             }
 
-            _mapper.Map(request, textCard, typeof(UpdateTextCardCommand), typeof(TextCard));
+            _mapper.Map(request, textCard, typeof(UpdateTextCardCommand), typeof(PageCard));
 
             await _textCardRepository.UpdateAsync(textCard);
 

@@ -13,9 +13,9 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.D
     public class DeleteDarkCardCommandHandler
         : IRequestHandler<DeleteDarkCardCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<DarkCard> _darkCardRepository;
+        private readonly IAsyncRepository<PageCard> _darkCardRepository;
 
-        public DeleteDarkCardCommandHandler(IAsyncRepository<DarkCard> darkCardRepository)
+        public DeleteDarkCardCommandHandler(IAsyncRepository<PageCard> darkCardRepository)
         {
             _darkCardRepository = darkCardRepository;
         }

@@ -2,6 +2,7 @@
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsByPageId;
+using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsByPageId;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 using SharijhaAward.Domain.Entities.PageStructureModels;
@@ -11,22 +12,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsDashboard
+namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsDashborad
 {
-    public class GetAllDarkCardsDashboardQueryHandler
-        : IRequestHandler<GetAllDarkCardsDashboardQuery, BaseResponse<List<DarkCardListVM>>>
-    {
-        private readonly IAsyncRepository<PageCard> _darkCardRepository;
+    public class GetAllParagraphCardsDashboradQueryHandler
+        : IRequestHandler<GetAllParagraphCardsDashboradQuery, BaseResponse<List<ParagraphCardListVM>>>
+    { 
+        private readonly IAsyncRepository<PageCard> _paragraphCardRepository;
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
         private readonly IMapper _mapper;
-
-        public GetAllDarkCardsDashboardQueryHandler(IAsyncRepository<PageCard> darkCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
+        public GetAllParagraphCardsDashboradQueryHandler(IAsyncRepository<PageStructure> pageStructureRepository, IAsyncRepository<PageCard> paragraphCardRepository, IMapper mapper)
         {
-            _darkCardRepository = darkCardRepository;
+            _paragraphCardRepository = paragraphCardRepository;
             _pageStructureRepository = pageStructureRepository;
             _mapper = mapper;
         }
-        public async Task<BaseResponse<List<DarkCardListVM>>> Handle(GetAllDarkCardsDashboardQuery request, CancellationToken cancellationToken)
+
+        public async Task<BaseResponse<List<ParagraphCardListVM>>> Handle(GetAllParagraphCardsDashboradQuery request, CancellationToken cancellationToken)
         {
             var page = await _pageStructureRepository.GetByIdAsync(request.PageId);
             if (page == null)
@@ -35,15 +36,16 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.Ge
                              ? "Page Not found"
                              : "الصفحة غير موجودة";
 
-                return new BaseResponse<List<DarkCardListVM>>(msg, false, 404);
+                return new BaseResponse<List<ParagraphCardListVM>>(msg, false, 404);
             }
 
-            var Cards = _darkCardRepository
+            var Cards = _paragraphCardRepository
                 .Where(c => c.PageId == page.Id)
+                .Where(c => !c.IsHide)
                 .ToList()
-                .OrderBy(c => c.orderId);
+                .OrderBy(c=>c.orderId);
 
-            var data = _mapper.Map<List<DarkCardListVM>>(Cards);
+            var data = _mapper.Map<List<ParagraphCardListVM>>(Cards);
 
             foreach (var card in data)
             {
@@ -51,7 +53,7 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.Ge
                 card.Content = request.lang == "en" ? card.EnglishContent : card.ArabicContent;
             }
 
-            return new BaseResponse<List<DarkCardListVM>>("", true, 200, data);
+            return new BaseResponse<List<ParagraphCardListVM>>("", true, 200, data);
         }
     }
 }

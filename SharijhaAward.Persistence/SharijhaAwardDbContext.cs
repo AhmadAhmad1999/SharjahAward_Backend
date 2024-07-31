@@ -217,8 +217,7 @@ namespace SharijhaAward.Persistence
         public DbSet<StrategicPartner> StrategicPartners { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<PageStructure> PageStructures { get; set; }
-        public DbSet<DarkCard> DarkCards { get; set; }
-        public DbSet<ParagraphCard> ParagraphCards { get; set; }
+        public DbSet<PageCard> PageCards { get; set; }
         public DbSet<AwardSponsor> AwardSponsors { get; set; }
         public DbSet<Reward> Rewards { get; set; }
         public DbSet<AwardStatistic> AwardStatistics { get; set; }
@@ -231,7 +230,6 @@ namespace SharijhaAward.Persistence
         public DbSet<CircularCoordinator> CircularCoordinators { get; set; }
         public DbSet<CircularChairman> CircularChairmans { get; set; }
         public DbSet<CircularAttachment> CircularAttachments { get; set; }
-        public DbSet<TextCard> TextCards { get; set; }
         public DbSet<ImageCard> ImageCards { get; set; }
         public DbSet<PageStructureImages> PageStructureImages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -353,8 +351,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<SocialMedia>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<StrategicPartner>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<DarkCard>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<ParagraphCard>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<PageCard>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AwardSponsor>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Reward>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AwardStatistic>().HasQueryFilter(p => !p.isDeleted);
@@ -367,7 +364,6 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CircularCoordinator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CircularArbitrator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<TextCard>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<ImageCard>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<PageStructureImages>().HasQueryFilter(p => !p.isDeleted);
 

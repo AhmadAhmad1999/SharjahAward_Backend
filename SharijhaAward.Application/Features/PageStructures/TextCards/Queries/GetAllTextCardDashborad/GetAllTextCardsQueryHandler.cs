@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetAllTextCard;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 using SharijhaAward.Domain.Entities.PageStructureModels;
@@ -10,23 +11,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetAllTextCard
+namespace SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetAllTextCardDashborad
 {
-    public class GetAllTextCardsQueryHandler
-        : IRequestHandler<GetAllTextCardsQuery, BaseResponse<List<TextCardListVM>>>
+    public class GetAllTextCardDashboradQueryHandler
+        : IRequestHandler<GetAllTextCardDashboradQuery, BaseResponse<List<TextCardListVM>>>
     {
         private readonly IAsyncRepository<PageCard> _textCardRepository;
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
         private readonly IMapper _mapper;
 
-        public GetAllTextCardsQueryHandler(IAsyncRepository<PageCard> textCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
+        public GetAllTextCardDashboradQueryHandler(IAsyncRepository<PageCard> textCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
         {
             _textCardRepository = textCardRepository;
             _pageStructureRepository = pageStructureRepository;
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<List<TextCardListVM>>> Handle(GetAllTextCardsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<TextCardListVM>>> Handle(GetAllTextCardDashboradQuery request, CancellationToken cancellationToken)
         {
             var textCards = request.pageId == null
                 ? await _textCardRepository.GetWhereThenPagedReponseAsync(t => !t.IsHide, request.page, request.perPage)

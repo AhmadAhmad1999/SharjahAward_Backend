@@ -573,15 +573,15 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<SocialMedia, SocialMediaItemDto>().ReverseMap();
             CreateMap<SocialMedia, SocialMediaItemListVM>().ReverseMap();
 
-            CreateMap<DarkCard, CreateDarkCardCommand>().ReverseMap();
-            CreateMap<DarkCard, UpdateDarkCardCommand>().ReverseMap();
-            CreateMap<DarkCard, DarkCardListVM>().ReverseMap();
-            CreateMap<DarkCard, DarkCardDto>().ReverseMap();
+            CreateMap<PageCard, CreateDarkCardCommand>().ReverseMap();
+            CreateMap<PageCard, UpdateDarkCardCommand>().ReverseMap();
+            CreateMap<PageCard, DarkCardListVM>().ReverseMap();
+            CreateMap<PageCard, DarkCardDto>().ReverseMap();
 
-            CreateMap<ParagraphCard, CreateParagraphCardCommand>().ReverseMap();
-            CreateMap<ParagraphCard, UpdateParagraphCardCommand>().ReverseMap();
-            CreateMap<ParagraphCard, ParagraphCardListVM>().ReverseMap();
-            CreateMap<ParagraphCard, ParagraphCardDto>().ReverseMap();
+            CreateMap<PageCard, CreateParagraphCardCommand>().ReverseMap();
+            CreateMap<PageCard, UpdateParagraphCardCommand>().ReverseMap();
+            CreateMap<PageCard, ParagraphCardListVM>().ReverseMap();
+            CreateMap<PageCard, ParagraphCardDto>().ReverseMap();
 
             CreateMap<PageStructure, CreatePageCommand>().ReverseMap();
             CreateMap<PageStructure, UpdatePageCommand>().ReverseMap();
@@ -614,10 +614,10 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ResponsibilityUser, ResponsibilityUserDto>().ReverseMap();
             CreateMap<ResponsibilityUser, UserRepositoryDto>().ReverseMap();
 
-            CreateMap<TextCard, CreateTextCardCommand>().ReverseMap();
-            CreateMap<TextCard, UpdateTextCardCommand>().ReverseMap();
-            CreateMap<TextCard, TextCardListVM>().ReverseMap();
-            CreateMap<TextCard, TextCardDto>().ReverseMap();
+            CreateMap<PageCard, CreateTextCardCommand>().ReverseMap();
+            CreateMap<PageCard, UpdateTextCardCommand>().ReverseMap();
+            CreateMap<PageCard, TextCardListVM>().ReverseMap();
+            CreateMap<PageCard, TextCardDto>().ReverseMap();
 
             CreateMap<ImageCard, CreateImageCardCommand>().ReverseMap();
             CreateMap<ImageCard, UpdateImageCardCommand>().ReverseMap();

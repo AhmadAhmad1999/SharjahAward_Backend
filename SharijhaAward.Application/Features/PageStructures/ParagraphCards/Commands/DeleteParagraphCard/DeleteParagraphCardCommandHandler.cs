@@ -13,9 +13,9 @@ namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Comma
     public class DeleteParagraphCardCommandHandler
         : IRequestHandler<DeleteParagraphCardCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<ParagraphCard> _paragraphCardRepository;
+        private readonly IAsyncRepository<PageCard> _paragraphCardRepository;
 
-        public DeleteParagraphCardCommandHandler(IAsyncRepository<ParagraphCard> paragraphCardRepository)
+        public DeleteParagraphCardCommandHandler(IAsyncRepository<PageCard> paragraphCardRepository)
         {
             _paragraphCardRepository = paragraphCardRepository;
         }

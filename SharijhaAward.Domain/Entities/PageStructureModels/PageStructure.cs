@@ -29,9 +29,7 @@ namespace SharijhaAward.Domain.Entities.PageStructureModel
         [ForeignKey(nameof(pageStructure))]
         public int? ParentId { get; set; }
 
-        public List<DarkCard>? DarkCards { get; set; }
-        public List<ParagraphCard>? ParagraphCards { get; set; }
-        public List<TextCard>? TextCards { get; set; }
+        public List<PageCard>? PageCard { get; set; }
         public List<ImageCard>? ImageCards { get; set; }
     }
 }
