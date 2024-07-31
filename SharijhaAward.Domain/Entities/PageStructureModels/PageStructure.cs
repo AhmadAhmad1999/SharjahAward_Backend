@@ -25,7 +25,6 @@ namespace SharijhaAward.Domain.Entities.PageStructureModel
         public bool Deletable { get; set; }
 
         public PageStructure pageStructure { get; set; } = null!;
-
         [ForeignKey(nameof(pageStructure))]
         public int? ParentId { get; set; }
 

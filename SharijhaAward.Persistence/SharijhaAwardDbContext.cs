@@ -413,6 +413,32 @@ namespace SharijhaAward.Persistence
                     Slug = "Message_Type"
                 });
 
+            modelBuilder.Entity<PageStructure>()
+                .HasData(
+                new PageStructure()
+                {
+                    Id = 1,
+                    hasHelography = true,
+                    EnglishTitle = "Award Sponser",
+                    ArabicTitle = "راعي الجائزة",
+                    EnglishSubTitle = "Sharjah Award for Educational Excellence",
+                    ArabicSubTitle = "جائزة الشارقة للتفوق والتميز التربوي",
+                    IsHide = false,
+                    Slug = "award_sponsor",
+                    Deletable = false
+                }, new PageStructure()
+                {
+                    Id = 2,
+                    hasHelography = true,
+                    EnglishTitle = "About Award",
+                    ArabicTitle = "حول الجائزة",
+                    EnglishSubTitle = "Sharjah Award for Educational Excellence",
+                    ArabicSubTitle = "جائزة الشارقة للتفوق والتميز التربوي",
+                    IsHide = false,
+                    Slug = "about_award",
+                    Deletable = false
+                });
+
             modelBuilder.Entity<Permission>()
                 .HasData(
                 //-------------AboutAward---------
