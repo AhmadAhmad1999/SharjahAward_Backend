@@ -354,6 +354,8 @@ using SharijhaAward.Application.Features.Indexes.Commands.CreateIndex;
 using SharijhaAward.Application.Features.Indexes.Commands.UpdateIndex;
 using SharijhaAward.Application.Features.Indexes.Queries.GetAllIndexes;
 using SharijhaAward.Application.Features.Indexes.Queries.GetIndexById;
+using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetExcelFilePrototype;
+using SharijhaAward.Application.Features.EducationalEntities.Queries.GetExcelFilePrototype;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -489,9 +491,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<TrainingWrokshopeAttachment, UpdateWorkshopAttachmentCommand>().ReverseMap();
          
             CreateMap<EducationalEntity, EducationalEntitiesListVm>().ReverseMap();
+            CreateMap<EducationalEntity, EducationalEntityExcelDto>().ReverseMap();
             CreateMap<EducationalEntity, CreateEducationalEntityCommand>().ReverseMap();
             
             CreateMap<EducationalInstitution, CreateEducationalInstitutionCommand>().ReverseMap();
+            CreateMap<EducationalInstitution, EducationalInstitutionExcelDto>().ReverseMap();
             CreateMap<EducationalInstitution, Features.EducationalInstitutions.Queries.GetAllEducationalInstitutions.EducationalInstitutionListVM>().ReverseMap();
 
             CreateMap<Coordinator, CreateCoordinatorCommand>().ReverseMap();

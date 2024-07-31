@@ -1050,7 +1050,926 @@ namespace SharijhaAward.Persistence
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null
+                },
+                //------------Instruction----------------
+                new Permission()
+                {
+                    Id = 50,
+                    Name = "عرض التعليمات",
+                    Action = "read",
+                    PermissionHeaderId = 16,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 51,
+                    Name = "تعديل التعليمات",
+                    Action = "update",
+                    PermissionHeaderId = 16,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------Meeting----------------
+                new Permission()
+                {
+                    Id = 52,
+                    Name = "إضافة الإجتماعات",
+                    Action = "create",
+                    PermissionHeaderId = 17,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 53,
+                    Name = "عرض الإجتماعات",
+                    Action = "read",
+                    PermissionHeaderId = 17,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 54,
+                    Name = "تعديل الإجتماعات",
+                    Action = "update",
+                    PermissionHeaderId = 17,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 55,
+                    Name = "حذف الإجتماعات",
+                    Action = "delete",
+                    PermissionHeaderId = 17,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------News----------------
+                new Permission()
+                {
+                    Id = 56,
+                    Name = "إضافة الأخبار",
+                    Action = "create",
+                    PermissionHeaderId = 18,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 57,
+                    Name = "عرض الأخبار",
+                    Action = "read",
+                    PermissionHeaderId = 18,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 58,
+                    Name = "تعديل الأخبار",
+                    Action = "update",
+                    PermissionHeaderId = 18,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 59,
+                    Name = "حذف الأخبار",
+                    Action = "delete",
+                    PermissionHeaderId = 18,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------Notification----------------
+                new Permission()
+                {
+                    Id = 60,
+                    Name = "إضافة الإشعارات",
+                    Action = "create",
+                    PermissionHeaderId = 19,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 61,
+                    Name = "عرض الإشعارات",
+                    Action = "read",
+                    PermissionHeaderId = 19,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 62,
+                    Name = "تعديل الإشعارات",
+                    Action = "update",
+                    PermissionHeaderId = 19,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 63,
+                    Name = "حذف الإشعارات",
+                    Action = "delete",
+                    PermissionHeaderId = 19,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------NotificationTemplate----------------
+                new Permission()
+                {
+                    Id = 64,
+                    Name = "إضافة قالب الإشعارات",
+                    Action = "create",
+                    PermissionHeaderId = 20,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 65,
+                    Name = "عرض قالب الإشعارات",
+                    Action = "read",
+                    PermissionHeaderId = 20,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 66,
+                    Name = "تعديل قالب الإشعارات",
+                    Action = "update",
+                    PermissionHeaderId = 20,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 67,
+                    Name = "حذف قالب الإشعارات",
+                    Action = "delete",
+                    PermissionHeaderId = 20,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------Role----------------
+                new Permission()
+                {
+                    Id = 68,
+                    Name = "إضافة دور",
+                    Action = "create",
+                    PermissionHeaderId = 21,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 69,
+                    Name = "عرض دور",
+                    Action = "read",
+                    PermissionHeaderId = 21,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 70,
+                    Name = "تعديل دور",
+                    Action = "update",
+                    PermissionHeaderId = 21,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 71,
+                    Name = "حذف دور",
+                    Action = "delete",
+                    PermissionHeaderId = 21,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------User----------------
+                new Permission()
+                {
+                    Id = 72,
+                    Name = "إضافة مستخدم",
+                    Action = "create",
+                    PermissionHeaderId = 22,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 73,
+                    Name = "عرض مستخدم",
+                    Action = "read",
+                    PermissionHeaderId = 22,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 74,
+                    Name = "تعديل مستخدم",
+                    Action = "update",
+                    PermissionHeaderId = 22,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 75,
+                    Name = "حذف مستخدم",
+                    Action = "delete",
+                    PermissionHeaderId = 22,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------Coordinator----------------
+                new Permission()
+                {
+                    Id = 76,
+                    Name = "إضافة منسق",
+                    Action = "create",
+                    PermissionHeaderId = 23,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 77,
+                    Name = "عرض منسق",
+                    Action = "read",
+                    PermissionHeaderId = 23,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 78,
+                    Name = "تعديل منسق",
+                    Action = "update",
+                    PermissionHeaderId = 23,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 79,
+                    Name = "حذف منسق",
+                    Action = "delete",
+                    PermissionHeaderId = 23,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------Arbitrator----------------
+                new Permission()
+                {
+                    Id = 80,
+                    Name = "إضافة محكم",
+                    Action = "create",
+                    PermissionHeaderId = 24,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 81,
+                    Name = "عرض محكم",
+                    Action = "read",
+                    PermissionHeaderId = 24,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 82,
+                    Name = "تعديل محكم",
+                    Action = "update",
+                    PermissionHeaderId = 24,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 83,
+                    Name = "حذف محكم",
+                    Action = "delete",
+                    PermissionHeaderId = 24,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------Committee----------------
+                new Permission()
+                {
+                    Id = 84,
+                    Name = "إضافة لجنة",
+                    Action = "create",
+                    PermissionHeaderId = 25,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 85,
+                    Name = "عرض لجنة",
+                    Action = "read",
+                    PermissionHeaderId = 25,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 86,
+                    Name = "تعديل لجنة",
+                    Action = "update",
+                    PermissionHeaderId = 25,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 87,
+                    Name = "حذف لجنة",
+                    Action = "delete",
+                    PermissionHeaderId = 25,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------SubscriberAccount----------------
+                new Permission()
+                {
+                    Id = 88,
+                    Name = "إضافة حساب المشترك",
+                    Action = "create",
+                    PermissionHeaderId = 26,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 89,
+                    Name = "عرض حساب المشترك",
+                    Action = "read",
+                    PermissionHeaderId = 26,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 90,
+                    Name = "تعديل حساب المشترك",
+                    Action = "update",
+                    PermissionHeaderId = 26,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 91,
+                    Name = "حذف حساب المشترك",
+                    Action = "delete",
+                    PermissionHeaderId = 26,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------SubscriberProfile----------------
+                new Permission()
+                {
+                    Id = 92,
+                    Name = "عرض ملف المشترك",
+                    Action = "read",
+                    PermissionHeaderId = 27,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------SubscriberForm----------------
+                 new Permission()
+                {
+                    Id = 93,
+                    Name = "عرض إستمارة المشترك",
+                    Action = "read",
+                    PermissionHeaderId = 28,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 94,
+                    Name = "حذف إستمارة المشترك",
+                    Action = "delete",
+                    PermissionHeaderId = 28,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------Event----------------
+                new Permission()
+                {
+                    Id = 95,
+                    Name = "إضافة فعالية",
+                    Action = "create",
+                    PermissionHeaderId = 29,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 96,
+                    Name = "عرض فعالية",
+                    Action = "read",
+                    PermissionHeaderId = 29,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 97,
+                    Name = "تعديل فعالية",
+                    Action = "update",
+                    PermissionHeaderId = 29,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 98,
+                    Name = "حذف فعالية",
+                    Action = "delete",
+                    PermissionHeaderId = 29,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------ContactUs----------------
+                 new Permission()
+                {
+                    Id = 99,
+                    Name = "عرض رسالة تواصل",
+                    Action = "read",
+                    PermissionHeaderId = 30,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 100,
+                    Name = "حذف رسالة تواصل",
+                    Action = "delete",
+                    PermissionHeaderId = 30,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                 //------------ExplanatoryMessage----------------
+                 new Permission()
+                {
+                    Id = 101,
+                    Name = "عرض رسالة توضيحية",
+                    Action = "read",
+                    PermissionHeaderId = 31,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 102,
+                    Name = "تعديل رسالة توضيحية",
+                    Action = "update",
+                    PermissionHeaderId = 31,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------Responsibility----------------
+                new Permission()
+                {
+                    Id = 103,
+                    Name = "إضافة مسؤولية",
+                    Action = "create",
+                    PermissionHeaderId = 32,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 104,
+                    Name = "عرض مسؤولية",
+                    Action = "read",
+                    PermissionHeaderId = 32,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 105,
+                    Name = "تعديل مسؤولية",
+                    Action = "update",
+                    PermissionHeaderId = 32,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 106,
+                    Name = "حذف مسؤولية",
+                    Action = "delete",
+                    PermissionHeaderId = 32,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------GeneralFAQ----------------
+                new Permission()
+                {
+                    Id = 107,
+                    Name = "إضافة الأسئلة الشائعة العامة",
+                    Action = "create",
+                    PermissionHeaderId = 33,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 108,
+                    Name = "عرض الأسئلة الشائعة العامة",
+                    Action = "read",
+                    PermissionHeaderId = 33,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 109,
+                    Name = "تعديل الأسئلة الشائعة العامة",
+                    Action = "update",
+                    PermissionHeaderId = 33,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 110,
+                    Name = "حذف الأسئلة الشائعة العامة",
+                    Action = "delete",
+                    PermissionHeaderId = 33,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------FAQCategory----------------
+                new Permission()
+                {
+                    Id = 111,
+                    Name = "إضافة فئة الأسئلة الشائعة",
+                    Action = "create",
+                    PermissionHeaderId = 34,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 112,
+                    Name = "عرض فئة الأسئلة الشائعة",
+                    Action = "read",
+                    PermissionHeaderId = 34,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 113,
+                    Name = "تعديل فئة الأسئلة الشائعة",
+                    Action = "update",
+                    PermissionHeaderId = 34,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 114,
+                    Name = "حذف فئة الأسئلة الشائعة",
+                    Action = "delete",
+                    PermissionHeaderId = 34,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------AwardStatistic----------------
+                new Permission()
+                {
+                    Id = 115,
+                    Name = "إضافة إحصائيات الجائزة",
+                    Action = "create",
+                    PermissionHeaderId = 35,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 116,
+                    Name = "عرض إحصائيات الجائزة",
+                    Action = "read",
+                    PermissionHeaderId = 35,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 117,
+                    Name = "تعديل إحصائيات الجائزة",
+                    Action = "update",
+                    PermissionHeaderId = 35,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 118,
+                    Name = "حذف إحصائيات الجائزة",
+                    Action = "delete",
+                    PermissionHeaderId = 35,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                },
+                //------------Slider----------------
+                new Permission()
+                {
+                    Id = 119,
+                    Name = "إضافة شرائح",
+                    Action = "create",
+                    PermissionHeaderId = 36,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 120,
+                    Name = "عرض شرائح",
+                    Action = "read",
+                    PermissionHeaderId = 36,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 121,
+                    Name = "تعديل شرائح",
+                    Action = "update",
+                    PermissionHeaderId = 36,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Id = 122,
+                    Name = "حذف شرائح",
+                    Action = "delete",
+                    PermissionHeaderId = 36,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
                 });
+            
 
             modelBuilder.Entity<Event>()
                 .HasData(new Event()
@@ -2858,6 +3777,50 @@ namespace SharijhaAward.Persistence
                     Id = 32,
                     EnglishName = "Responsibility",
                     ArabicName = "المسؤوليات",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    Id = 33,
+                    EnglishName = "GeneralFAQ",
+                    ArabicName = "الأسالة الشائعة العامة",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    Id = 34,
+                    EnglishName = "FAQCategory",
+                    ArabicName = "الأسالة الشائعة الخاصة بالفئة",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    Id = 35,
+                    EnglishName = "AwardStatistic",
+                    ArabicName = "إحصائيات الجائزة",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    Id = 36,
+                    EnglishName = "Slider",
+                    ArabicName = "شرائح",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,

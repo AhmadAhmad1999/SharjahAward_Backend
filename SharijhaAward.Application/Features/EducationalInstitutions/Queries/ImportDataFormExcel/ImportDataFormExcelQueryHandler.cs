@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetExcelFilePrototype;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
@@ -16,14 +18,16 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Imp
         : IRequestHandler<ImportDataFormExcelQuery, BaseResponse<List<int>>>
     {
         private readonly IAsyncRepository<EducationalInstitution> _educationalInstitutionRepository;
-        private readonly IExcelHelper<EducationalInstitution> _excelHelper;
+        private readonly IExcelHelper<EducationalInstitutionExcelDto> _excelHelper;
         private readonly IFileService _fileService;
+        private readonly IMapper _mapper;
 
-        public ImportDataFormExcelQueryHandler(IFileService fileService, IAsyncRepository<EducationalInstitution> educationalInstitutionRepository, IExcelHelper<EducationalInstitution> excelHelper)
+        public ImportDataFormExcelQueryHandler(IMapper mapper, IFileService fileService, IAsyncRepository<EducationalInstitution> educationalInstitutionRepository, IExcelHelper<EducationalInstitutionExcelDto> excelHelper)
         {
             _educationalInstitutionRepository = educationalInstitutionRepository;
             _excelHelper = excelHelper;
             _fileService = fileService;
+            _mapper = mapper;
         }
 
         public async Task<BaseResponse<List<int>>> Handle(ImportDataFormExcelQuery request, CancellationToken cancellationToken)
@@ -32,11 +36,14 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Imp
             byte[] file = await _fileService.ReadFileAsync(filePath, SystemFileType.ExcelFiles);
             var EducationalInstitutions = _excelHelper.ImportFromExcel(file);
 
+            var data = _mapper.Map<List<EducationalInstitution>>(EducationalInstitutions);
+
             List<int> problematicRows = new List<int>();
 
             for (int i = 0; i < EducationalInstitutions.Count(); i++)
             {
-                if (string.IsNullOrEmpty(EducationalInstitutions[i].EnglishName) || string.IsNullOrEmpty(EducationalInstitutions[i].ArabicName) || EducationalInstitutions[i].Id == 0)
+                if (string.IsNullOrEmpty(EducationalInstitutions[i].EnglishName) || string.IsNullOrEmpty(EducationalInstitutions[i].ArabicName))
+
                 {
                     problematicRows.Add(i++);
                 }
@@ -49,11 +56,11 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Imp
             {
                 var EduInstitutions = await _educationalInstitutionRepository.ListAllAsync();
                 await _educationalInstitutionRepository.DeleteListAsync(EduInstitutions);
-                await _educationalInstitutionRepository.AddRangeAsync(EducationalInstitutions);
+                await _educationalInstitutionRepository.AddRangeAsync(data);
             }
             else
             {
-                await _educationalInstitutionRepository.AddRangeAsync(EducationalInstitutions);
+                await _educationalInstitutionRepository.AddRangeAsync(data);
             }
 
             return new BaseResponse<List<int>>("", true, 200, problematicRows);

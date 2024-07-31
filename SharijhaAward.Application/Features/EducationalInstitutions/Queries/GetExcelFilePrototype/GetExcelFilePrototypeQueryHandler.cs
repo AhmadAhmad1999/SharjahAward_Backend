@@ -14,9 +14,9 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Get
     public class GetExcelFilePrototypeQueryHandler
         : IRequestHandler<GetExcelFilePrototypeQuery, BaseResponse<byte[]>>
     {
-        private readonly IExcelHelper<EducationalInstitution> _excelHelper; 
+        private readonly IExcelHelper<EducationalInstitutionExcelDto> _excelHelper; 
 
-        public GetExcelFilePrototypeQueryHandler(IExcelHelper<EducationalInstitution> excelHelper)
+        public GetExcelFilePrototypeQueryHandler(IExcelHelper<EducationalInstitutionExcelDto> excelHelper)
         {
             _excelHelper = excelHelper;
         }
