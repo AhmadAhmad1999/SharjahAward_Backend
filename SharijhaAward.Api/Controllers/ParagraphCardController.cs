@@ -7,6 +7,7 @@ using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.G
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetParagraphCardById;
 
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsDashborad;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -103,6 +104,25 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 Id = Id
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetAllParagraphCardDashboard/{PageId}", Name = "GetAllParagraphCardDashboard")]
+        public async Task<IActionResult> GetAllParagraphCardDashboard(int PageId)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAllParagraphCardsDashboradQuery()
+            {
+                PageId = PageId,
+                lang = language!
             });
 
             return response.statusCode switch
