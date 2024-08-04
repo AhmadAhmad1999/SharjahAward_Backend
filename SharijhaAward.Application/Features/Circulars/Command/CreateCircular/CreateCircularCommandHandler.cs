@@ -27,10 +27,12 @@ namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
         private readonly IAsyncRepository<CircularArbitrator> _circularArbitratorRepository;
         private readonly IAsyncRepository<CircularCoordinator> _circularCoordinatorRepository;
         private readonly IAsyncRepository<CircularChairman> _circularChairmanRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IFileService _fileService;
+        private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
-        public CreateCircularCommandHandler(IAsyncRepository<CircularChairman> circularChairmanRepository, IAsyncRepository<Circular> circularRepository, IAsyncRepository<Coordinator> coordinatorRepository, IAsyncRepository<Arbitrator> arbitratorRepository, IAsyncRepository<CircularAttachment> circularAttachmentRepository, IAsyncRepository<CircularArbitrator> circularArbitratorRepository, IAsyncRepository<CircularCoordinator> circularCoordinatorRepository, IFileService fileService, IMapper mapper)
+        public CreateCircularCommandHandler(IUserRepository userRepository, IJwtProvider jwtProvider, IAsyncRepository<CircularChairman> circularChairmanRepository, IAsyncRepository<Circular> circularRepository, IAsyncRepository<Coordinator> coordinatorRepository, IAsyncRepository<Arbitrator> arbitratorRepository, IAsyncRepository<CircularAttachment> circularAttachmentRepository, IAsyncRepository<CircularArbitrator> circularArbitratorRepository, IAsyncRepository<CircularCoordinator> circularCoordinatorRepository, IFileService fileService, IMapper mapper)
         {
             _circularRepository = circularRepository;
             _coordinatorRepository = coordinatorRepository;
@@ -39,15 +41,24 @@ namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
             _circularArbitratorRepository = circularArbitratorRepository;
             _circularCoordinatorRepository = circularCoordinatorRepository;
             _circularChairmanRepository = circularChairmanRepository;
+            _userRepository = userRepository;
             _fileService = fileService;
+            _jwtProvider = jwtProvider;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<int>> Handle(CreateCircularCommand request, CancellationToken cancellationToken)
         {
+            var userId = _jwtProvider.GetUserIdFromToken(request.token!);
+
+            var user = await _userRepository.GetByIdAsync(int.Parse(userId));
+            if(user == null)
+            {
+                return new BaseResponse<int>("unAuth", false, 401);
+            }
             var Circular = _mapper.Map<Circular>(request);
 
-            var data = await _circularRepository.AddAsync(Circular);
+            var data = await _circularRepository.AddAsync(Circular, user.ArabicName);
 
             var Coordinators = request.AllCoordinators == true
                 ? await _coordinatorRepository.Select(c=>c.Id).ToListAsync()
@@ -63,7 +74,7 @@ namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
                         CircularId = data.Id
                     };
 
-                    await _circularCoordinatorRepository.AddAsync(circularCoordinator);
+                    await _circularCoordinatorRepository.AddAsync(circularCoordinator, user.ArabicName);
                 }
             }
          
@@ -82,7 +93,7 @@ namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
                         CircularId = data.Id
                     };
 
-                    await _circularArbitratorRepository.AddAsync(circularArbitrator);
+                    await _circularArbitratorRepository.AddAsync(circularArbitrator, user.ArabicName);
                 }
             }
             
@@ -101,7 +112,7 @@ namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
                         CircularId = data.Id
                     };
 
-                    await _circularChairmanRepository.AddAsync(circularChairman);
+                    await _circularChairmanRepository.AddAsync(circularChairman, user.ArabicName);
                 }
             }    
            
@@ -116,7 +127,7 @@ namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
                         CircularId = data.Id
                     };
 
-                    await _circularAttachmentRepository.AddAsync(circularAttachment);
+                    await _circularAttachmentRepository.AddAsync(circularAttachment, user.ArabicName);
                 }
             }
 

@@ -20,7 +20,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermA
         public bool NeedAttachment { get; set; } = false;
         public int? RequiredAttachmentNumber { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
-        public AttachmentType? Type { get; set; }
+        public AttachmentType? AttachmentType { get; set; }
         public bool IsAgree { get; set; }
         public int CategoryId { get; set; }
     }
