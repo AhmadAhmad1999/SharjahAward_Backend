@@ -14,6 +14,8 @@ using SharijhaAward.Application.Features.Settings.Queries.GetProfileById;
 using SharijhaAward.Application.Features.Settings.Queries.GetTermsOfUse;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.Settings.Commands.EditAboutApp;
+using SharijhaAward.Application.Features.Settings.Queries.GetAboutApp;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -359,6 +361,61 @@ namespace SharijhaAward.Api.Controllers
                 Token = Token,
                 NewLanguage = NewLanguage,
                 DeviceToken = DeviceToken
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+
+        [HttpPut("EditAboutApplication")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> EditAboutApplication(EditAboutAppCommand command)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            command.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(command);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("GetAboutApp")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAboutApp(string Slug)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            var Response = await _Mediator.Send(new GetAboutAppQuery()
+            {
+                Slug = Slug,
+                lang = HeaderValue!
             });
 
             return Response.statusCode switch

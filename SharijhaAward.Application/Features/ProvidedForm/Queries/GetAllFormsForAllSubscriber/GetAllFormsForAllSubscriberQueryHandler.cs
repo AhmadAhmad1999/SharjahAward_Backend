@@ -46,9 +46,15 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                     .Select(c => c.Id)
                     .ToListAsync();
 
-                var forms =  _FormRepository.IncludeThenWhere(f => f.Category, f => f.Category.CycleId == cycle.Id);
+                var forms = await _FormRepository
+                    .Include(f => f.Category)
+                    .Where(f => f.Category.CycleId == cycle.Id)
+                    .ToListAsync();
 
-                var Subscribers = await _UserRepository.Where(s => s.SubscriberId != null).ToListAsync();
+                var Subscribers = await _UserRepository
+                    .Where(s => s.SubscriberId != null)
+                    .ToListAsync();
+
                 if (forms.Any())
                 {
                     List<FinalArbitration> GetAllFromsInFinalArbitration = await _FinalArbitrationRepository
@@ -61,23 +67,24 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         .Where(x => forms.Select(y => y.Id).Any(y => y == x.RecordId) &&
                             x.DynamicAttribute!.DynamicAttributeSection!.EnglishName == "Main Information" &&
                             x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
-                        .Select(x => new
-                        {
-                            x.RecordId,
-                            x.Value
-                        }).ToListAsync();
+                        .ToListAsync();
 
-                    var Categories = await _CategoryRepository
-                        .Where(x => forms.Select(y => y.categoryId).Contains(x.Id))
-                        .Include(x => x.Parent!).ToListAsync();
+                    var CategoriesIds = forms.Select(y => y.categoryId).AsEnumerable();
 
-                    var data = forms.Select(x => new FormListVm()
+                    var Categories = _CategoryRepository
+                        .Where(x => CategoriesIds.Contains(x.Id))
+                        .Include(x => x.Parent!)
+                        .AsEnumerable();
+
+                    var data = forms.AsEnumerable().Select(x => new FormListVm()
                     {
                         Id = x.Id,
-                        SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
+                        SubscriberName = (SubscribersNames.Select(y => y.RecordId).Contains(x.Id) && SubscribersNames.Any())
                             ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
                             : null,
-                        subscriberCode = Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId,
+                        subscriberCode = (Subscribers.Select(s => s.Id).Contains(x.userId) && Subscribers.Any())
+                            ? Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId
+                            : null,
                         PercentCompletion = x.PercentCompletion,
                         CycleNumber = x.CycleNumber,
                         CycleYear = x.CycleYear,
@@ -98,7 +105,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
                             : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
                         SucceedToFinalArbitration = GetAllFromsInFinalArbitration
-                            .Any(y => y.ProvidedFormId == x.Id)
+                            .AsEnumerable()
+                            .Select(y => y.ProvidedFormId)
+                            .Contains(x.Id)
                     }).ToList();
 
                     int count = _FormRepository.GetCount(f => !f.isDeleted);

@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
         {
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
-            var User = _jwtProvider.GetUserIdFromToken(request.token);
+            var User = _jwtProvider.GetUserIdFromToken(request.token!);
             if(User == null)
             {
                 return new BaseResponse<List<CircularListVm>>("UnAuth", false, 401);

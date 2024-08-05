@@ -119,7 +119,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicOurGoalTitle = "",
                             ArabicOurVisionDescription = "تعلـــيم متــميز",
                             ArabicOurVisionTitle = "رؤيتنا",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9557),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8461),
                             EnglishAboutDescription = "The Sharjah Award for Educational Excellence and Excellence was established in 1994-1995 under the generous patronage of His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of the Emirate of Sharjah, may God protect and preserve him... It is considered the first educational award at the state level.",
                             EnglishAboutTitle = "About the award",
                             EnglishOurGoalTitle = "",
@@ -185,7 +185,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             AboutAwardPageId = 1,
                             ArabicGoal = "1- تطوير القطاع التربوي من خلال بث روح التنافس بينهم؛ لتحقيق أفضل الممارسات التربوية. 2- تطوير أعمال الجائزة ومنهجياتها، ورفع الكفايات المهنية للعاملين بها. 3- دعم الطلاب المتميزين في مختلف المجالات، وإكسابهم مهارات متنوعة ومتكاملة. 4- تبني منهجية مبتكرة لاستقطاب وبناء الشراكات الداعمة للجائزة والتعليم.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9612),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8501),
                             EnglishGoal = "1- Developing the educational sector by spreading the spirit of competition among them; To achieve best educational practices. 2- Developing the Award’s work and methodologies, and raising the professional competencies of its employees. 3- Supporting distinguished students in various fields, and providing them with diverse and integrated skills. 4- Adopting an innovative methodology to attract and build partnerships that support the award and education.",
                             IsHidden = false,
                             isDeleted = false
@@ -790,15 +790,15 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicTitle = "اختبار عنوان جدول أعمال 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6752),
-                            CurrentDate = new DateTime(2024, 8, 10, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6778),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6917),
+                            CurrentDate = new DateTime(2024, 8, 11, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6926),
                             CycleId = 1,
                             DateType = 1,
-                            EndDate = new DateTime(2024, 8, 14, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6772),
+                            EndDate = new DateTime(2024, 8, 15, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6925),
                             EnglishTitle = "Test Agenda Titile 1",
                             Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (1).png",
                             IsPrivate = false,
-                            StartDate = new DateTime(2024, 8, 9, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6764),
+                            StartDate = new DateTime(2024, 8, 10, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6923),
                             Status = 1,
                             isDeleted = false
                         },
@@ -806,15 +806,15 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicTitle = "اختبار عنوان جدول أعمال 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6780),
-                            CurrentDate = new DateTime(2024, 8, 16, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6784),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6927),
+                            CurrentDate = new DateTime(2024, 8, 17, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6930),
                             CycleId = 1,
                             DateType = 0,
-                            EndDate = new DateTime(2024, 8, 20, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6782),
+                            EndDate = new DateTime(2024, 8, 21, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6928),
                             EnglishTitle = "Test Agenda Titile 2",
                             Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1) (2).png",
                             IsPrivate = false,
-                            StartDate = new DateTime(2024, 8, 15, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6783),
+                            StartDate = new DateTime(2024, 8, 16, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6929),
                             Status = 0,
                             isDeleted = false
                         },
@@ -822,15 +822,15 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             ArabicTitle = "اختبار عنوان جدول أعمال 3",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6787),
-                            CurrentDate = new DateTime(2024, 8, 22, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6795),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6931),
+                            CurrentDate = new DateTime(2024, 8, 23, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6934),
                             CycleId = 1,
                             DateType = 2,
-                            EndDate = new DateTime(2024, 8, 26, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6792),
+                            EndDate = new DateTime(2024, 8, 27, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6933),
                             EnglishTitle = "Test Agenda Titile 3",
                             Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png",
                             IsPrivate = false,
-                            StartDate = new DateTime(2024, 8, 21, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6794),
+                            StartDate = new DateTime(2024, 8, 22, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6933),
                             Status = 2,
                             isDeleted = false
                         },
@@ -838,15 +838,15 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             ArabicTitle = "اختبار عنوان جدول أعمال 4",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6797),
-                            CurrentDate = new DateTime(2024, 8, 28, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6802),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6935),
+                            CurrentDate = new DateTime(2024, 8, 29, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6938),
                             CycleId = 1,
                             DateType = 2,
-                            EndDate = new DateTime(2024, 9, 1, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6799),
+                            EndDate = new DateTime(2024, 9, 2, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6937),
                             EnglishTitle = "Test Agenda Titile 4",
                             Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png",
                             IsPrivate = false,
-                            StartDate = new DateTime(2024, 8, 27, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6801),
+                            StartDate = new DateTime(2024, 8, 28, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6937),
                             Status = 2,
                             isDeleted = false
                         },
@@ -854,15 +854,15 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 5,
                             ArabicTitle = "اختبار عنوان جدول أعمال 5",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6805),
-                            CurrentDate = new DateTime(2024, 9, 3, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6809),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6939),
+                            CurrentDate = new DateTime(2024, 9, 4, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6942),
                             CycleId = 1,
                             DateType = 2,
-                            EndDate = new DateTime(2024, 9, 7, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6807),
+                            EndDate = new DateTime(2024, 9, 8, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6941),
                             EnglishTitle = "Test Agenda Titile 5",
                             Icon = "https://backend.stg.award-shj.ae/UploadedFiles/cancel (1).png",
                             IsPrivate = false,
-                            StartDate = new DateTime(2024, 9, 2, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(6808),
+                            StartDate = new DateTime(2024, 9, 3, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(6942),
                             Status = 2,
                             isDeleted = false
                         });
@@ -1334,7 +1334,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicTitle = "النماذج والأدلة",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(321),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8957),
                             DegreeScale = "0 - 100",
                             EnglishTitle = "Forms and evidence",
                             isDeleted = false
@@ -1400,7 +1400,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicDescription = "نماذج للخطط المتعلقة بالمشاريع والمبادرات التي تخطط لها مكتملة العناصر عناصر الخطة لكل مشروع ومبادرة ونشاط يخدم اللغة العربية)، مع مراعاة أن تتضمن خطة المدرسة التشغيلية خطط مشاريع ومبادرات رعاية اللغة العربية.",
                             ArbitrationScaleId = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(370),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8986),
                             CriterionId = 2,
                             CriterionItemId = 1,
                             EnglishDescription = "Models of plans related to the projects and initiatives that you are planning, with complete elements (plan elements for each project, initiative, and activity that serves the Arabic language), taking into account that the school’s operational plan includes plans for projects and initiatives to support the Arabic language.",
@@ -1411,7 +1411,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 2,
                             ArabicDescription = "إرفاق أدلة مختلفة على ما تقوم به من خطط، أو أنشطة، أو برامج ، أو مشروعات مختلفة تمكن الطلاب من مهارات اللغة المختلفة.\r\nمدى تقدم الطلاب في المهارات وتمكنهم منها.\r\n- تحديد أدوات المتابعة والقياس التي تم توظيفها، مع مراعاة أن تشمل جميع فئات الطلاب الموهوبين، الفائقون، أصحاب الهمم،\r\nطلاب متدنو المستوى الطلاب كافة . بجميع المستويات).",
                             ArbitrationScaleId = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(375),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8989),
                             CriterionId = 2,
                             CriterionItemId = 2,
                             EnglishDescription = "Attach various evidence of the different plans, activities, programs, or projects you are undertaking that enable students with different language skills.\r\nThe extent of students’ progress in skills and their mastery of them.\r\n- Determine the monitoring and measurement tools that have been employed, taking into account that they include all categories of gifted students, exceptional students, people of determination,\r\nLow level students All students. at all levels).",
@@ -1422,7 +1422,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 3,
                             ArabicDescription = "- الخطط والبرامج والمشروعات والأنشطة التي نفذتها المدرسة وأثرها في رفع الكفايات اللغوية للمجتمع المدرسي المعلم سواء معلم\r\nاللغة العربية أو المواد المختلفة ، الوظائف المختلفة في المدرسة مثل مصادر التعلم والوظائف الداعمة ، الإداريون بمختلف أدوارهم، ولي\r\nالأمر).\r\n- الإحصائيات والأرقام و\r\nالمقارنات التي تبين التطور في الكفايات اللغوية للمجتمع المدرسي",
                             ArbitrationScaleId = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(377),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8991),
                             CriterionId = 2,
                             CriterionItemId = 3,
                             EnglishDescription = "- The plans, programmes, projects and activities implemented by the school and their impact in raising the linguistic competencies of the school community, whether teachers\r\nThe Arabic language or various subjects, various functions in the school such as learning resources and supporting functions, administrators in their various roles, and...\r\ncommand).\r\n- Statistics, numbers and\r\nComparisons that show the development in the linguistic competencies of the school community",
@@ -1433,7 +1433,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 4,
                             ArabicDescription = ". جودة توظيف الكوادر البشرية والموارد المختلفة في رعاية اللغة العربية وتمكين المجتمع المدرسي منها.\r\nخطط المدرسة والمنفذة مع معلمو اللغة العربية معلمو المواد الأخرى الطلاب ولي الأمر بما يخدم اللغة العربية.\r\n- توظيف الموارد المختلفة مثل مصادر التعلم والمختبرات والنوادي والمرافق المختلفة في خدمة اللغة العربية.",
                             ArbitrationScaleId = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(381),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8994),
                             CriterionId = 2,
                             CriterionItemId = 4,
                             EnglishDescription = ". The quality of employing human cadres and various resources in nurturing the Arabic language and empowering the school community with it.\r\nSchool plans implemented with Arabic language teachers, teachers of other subjects, students, and guardians to serve the Arabic language.\r\n- Employing various resources such as learning resources, laboratories, clubs and various facilities in serving the Arabic language.",
@@ -1444,7 +1444,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 5,
                             ArabicDescription = "المشاركة في عضويات ولجان أدبية، أو مؤسسات وروابط أدبية مثل اتحاد كتاب وأدباء الإمارات أو جمعية حماية اللغة العربية  أو مجمع اللغة العربية والتي تنعكس إيجابيا في رفع مستوى الكفايات اللغوية للطلاب والمعلمين وغيرهم في المجتمع المدرسي",
                             ArbitrationScaleId = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(385),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8996),
                             CriterionId = 2,
                             CriterionItemId = 5,
                             EnglishDescription = "Participation in memberships and literary committees, or literary institutions and associations such as the Emirates Writers and Writers Union, the Society for the Protection of the Arabic Language, or the Arabic Language Academy, which is reflected positively in raising the level of linguistic competencies of students, teachers, and others in the school community.",
@@ -1455,7 +1455,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 6,
                             ArabicDescription = "- نتائج الطلاب في الاختبارات المختلفة (المركزية الوطنية، الدولية).\r\n- تقارير لجان الجودة والرقابة والمتابعة ولجان الدعم الأكاديمي.\r\n- مشاركة المجتمع المدرسي في الفعاليات والمسابقات والمبادرات والأنشطة اللغوية والأدبية المختلفة وعلى جميع المستويات\r\nوحصولهم على مراكز متقدمة.",
                             ArbitrationScaleId = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(389),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9005),
                             CriterionId = 3,
                             CriterionItemId = 6,
                             EnglishDescription = "- Students’ results in various tests (central, national, international).\r\n- Reports of the quality, oversight and follow-up committees and academic support committees.\r\n- Participation of the school community in various events, competitions, initiatives, and linguistic and literary activities at all levels\r\nAnd they achieved advanced positions.",
@@ -1466,7 +1466,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 7,
                             ArabicDescription = "رصد الممارسات والانشطة التي تدل على نشر وتأصيل اعتزاز المجتمع المدرسي بلغته العربية على مستوى المدرسة، والمجتمع المحلي\r\nوالدولي، والعالمي.\r\n- رصد الممارسات والبرامج والفعاليات والأنشطة التي تتبناها لأجل تأصيل حب اللغة العربية في المجتمع المدرسي تواصلاً وإبداعاً.",
                             ArbitrationScaleId = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(392),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9007),
                             CriterionId = 3,
                             CriterionItemId = 7,
                             EnglishDescription = "Monitoring practices and activities that demonstrate the dissemination and consolidation of the school community’s pride in its Arabic language at the school and local community levels\r\nInternational, and global.\r\n- Monitoring the practices, programmes, events and activities it adopts in order to establish the love of the Arabic language in the school community through communication and creativity.",
@@ -1815,7 +1815,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicName = "صاحبِ السموّ الشيخ الدكتور سلطان بن محمد القاسمي، عضوِ المجلس الأعلى، حاكمِ الشارقةِ، إمارةِ الثقافةِ والتميّز",
                             ArabicUpbringingAndAiography = "هو صاحب السمو الشيخ الدكتور سلطان بن محمد بن صقر بن خالد بن سلطان بن صقر بن راشد القاسمي ولد يوم الأحد في الرابع عشر من جمادى الأولى سنة 1358 هـ، الموافق الثاني من يوليو عام 1939 م بمدينة الشارقة.\r\n\r\nوالدته الشيخة مريم بنت الشيخ غانم ابن الشيخ سالم بن عبدالله بن سعيد ابن سبت بن مطر بن سلطان بن فارس بن شهوان الشامسي.\r\n\r\nله من والدته من الأشقاء أربع الشيخ خالد والشيخ صقر والشيخ عبدالعزيز والشيخ عبدالله ومن  الشقيقات اثنتان الشيخة شيخة والشيخة ناعمة .\r\n\r\nولصاحب السمو حاكم الشارقة أخوة غير أشقاء هم الشيخ راشد والشيخ حميد والشيخ علي والشيخة موزة والشيخة علياء والشيخات غاية ونورة وعائشة وعزة.\r\n\r\nتزوج سموه من الشيخة موزة بنت سالم بن محمد ابن مانع الفلاسي (جدتها الشيخة موزة بنت الشيخ غانم ابن الشيخ سالم الشامسي خالة صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي)، وقد انجبت له ابنه المرحوم الشيخ محمد الذي توفي في الثالث من أبريل عام 1999 عن عمر يناهز 24 عاماً، وابنته الشيخة عزة .\r\n\r\nكما تزوج صاحب السمو حاكم الشارقة سمو الشيخة جواهر بنت الشيخ محمد بن سلطان بن صقر القاسمي ، وأنجبت له من الأبناء الشيخ خالد (توفي في 01 يوليو2019 عن عمر ناهز الأربعين عامًا) و الشيخة بدور والشيخة نور و الشيخة حور .. .\r\n\r\nتربى سموه على الوطنية، وترعرع على حب العلم والمعرفة، وكان شغوفا جدا بتاريخ وطنه، تفرغ في بداية عمره للدراسة وانتقل بين الشارقة والكويت ومصر ليتلقى تعليمه، وقد بدأ سموه تعليمه العام في شهر سبتمبر سنة 1948 في مدرسة الإصلاح القاسمية وكان عمره آنذاك تسع سنوات وشهرين، وكان قد درس سموه قبلها القرآن لدى الشيخ فارس ابن عبد الرحمن. وفي العام 1954 انضم صاحب السمو حاكم الشارقة للمدرسة الإنجليزية الخاصة ليدرس اللغة الإنجليزية. وانتقل سموه بين الشارقة والكويت لتلقي تعليمه الإعدادي والثانوي لينتهي به المطاف في نهاية عام 1965 في القاهرة حيث بدأ الدراسة الجامعية في كلية الزراعة بجامعة القاهرة.\r\n\r\nعمل سموه مدة عامين منذ فبراير عام 1961 وإلى سبتمبر 1963 كمدرس لمادتي اللغة الانجليزية والرياضيات بالمدرسة الصناعية بالشارقة.\r\n\r\nثم تسلم رئاسة البلدية في عام 1965 . وبعد عودته إلى الشارقة بعد اتمامه دراسته الجامعية عام 1971 تسلم صاحب السمو حاكم الشارقة إدارة مكتب سمو الحاكم بإمارة الشارقة.\r\n\r\nوبعد أيام من قيام اتحاد دولة الإمارات العربية المتحدة صباح يوم الثاني من ديسمبر عام 1971، وتحديداً في اليوم التاسع من ديسمبر تم تشكيل مجلس الوزراء ونصب صاحب السمو الشيخ الدكتور سلطان القاسمي يومها وزيراً للتربية والتعليم.\r\n\r\nوفي يوم الثلاثاء التاسع من ذي الحجة، يوم عرفة سنة 1391 هـ الموافق الخامس والعشرين من يناير 1972 تسلم صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي مقاليد حكم إمارة الشارقة بعد مقتل حاكم الشارقة آنذاك الشيخ خالد بن محمد القاسمي بعد انقلاب قاده الشيخ صقر بن سلطان القاسمي ، وليكون عضواً في المجلس الأعلى لدولة الامارات العربية المتحدة، وكان عمر سموه آنذاك 32 عاماً.\r\n\r\nويعد سموه الحاكم الثامن عشر لإمارة الشارقة من حكم القواسم الذي يعود للعام 1600 ميلادية.\r\n\r\nوقد قاد سموه التنمية الثقافية والاقتصادية والاجتماعية في إمارة الشارقة، وبذل سموه جهداً اضافياً ووفر مصادر لتشجيع التفاعل والحوار الثقافي محلياً واقليمياً ودولياً بين الشعوب كافة.",
                             ArabicWritings = "صاحب السمو الشيخ الدكتور سلطان القاسمي، له العديد من المؤلفات منها\r\n\r\nمحاكم التفتيش\r\nسيرة مدينة (الجزء الأول)ـ\r\nسيرة مدينة (الجزء الثاني)ـ",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9491),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8421),
                             EnglishDescription = "The biography of His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of Sharjah, is full of many achievements that reveal his early interest in acquiring all kinds of sciences. His Highness was keen to support the society with this knowledge, whether by establishing colleges and universities, or authoring more than 17 books and studies in various types of literature and knowledge, beside his responsibilities of country affairs, and following up on the affairs of the smiling Emirate of Sharjah.\r\n\r\n \r\n\r\nHis Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of Sharjah, has an honorary doctorate from the German University of Tuebingen, which is one of the ancient German universities. This confirms His Highness’s high status among the scientific and academic community. This prestige status culminates the long march of strenuous effort that His Highness made and is making with devotion and sincerity in order to empower the foundations for a real advantage for the country, emanating from the conscious and educated person who takes science, faith and culture as a path and life guide to give his country a high status place among nations.\r\n\r\n \r\n\r\nThat deep vision of His Highness the Ruler of Sharjah for development and advancement has always been the obsession for which His Highness devoted his time and life and began to achieve it through a long journey of effort and hard work.\r\n\r\n \r\n\r\nHis Highness's remarkable efforts were constantly attempt to spread knowledge, support scientific research and take into account its causes, and what his highness presents of valuable books, research, studies and opinions, as well as his great interest in spreading the culture of dialogue between the Arabic and Islamic people and the people of the Western world. His Highness' continuous endeavor to support this trend through cultural activities and extending permanent lines of communication between Sharjah and many European countries, made His Highness an exceptional personality by all standards and one of the most important and prominent personalities in the Arab world that enjoys global appreciation in the academic and scientific circles, which prompted the world's universities to seek to honor His Highness and bestow upon him the highest academic degrees. His Highness received an honorary doctorate from the University of Tuebingen in Germany, is an appreciation and recognition of His Highness, his personality, his efforts, and his appreciable work. In addition to his obtaining a PhD in Philosophy of History with distinction from the University of Exeter in 1985 in the United Kingdom, and a PhD in Philosophy in the Political Geography of the Gulf from Durham University in 1999 in the United Kingdom, His Highness holds nine honorary doctorates from the most prestigious Arab, Islamic, Asian and European universities. Furthermore, his Highness was awarded an honorary doctorate in literature in 1985 from the University of Exeter in the United Kingdom, in law in 1986 from the University of Khartoum in Sudan, in law from Canadian McMaster University, in history from the Oriental Institute of the Russian Academy of Sciences, an honorary doctorate from the University of Faisalabad Punjab in Pakistan, from University of Edinburgh, International Islamic University Malaysia, Honorary Doctorate from British South Bank University and another from the National Academy of Sciences of the Republic of Armenia. This honor which His Highness received from the universities of the world, constitutes an academic consensus on the scientific and human value of His Highness and on the value and importance of what His Highness offers to his country and his people of effort and work, is in fact a medal on the chest of every son of the Emirates. May God bless His Highness's sincere and constructive efforts that urge and testify to the greatness of man who devotes his life, effort and work to the country and people.",
                             EnglishEducationalStages = "1948 Primary Education - Al-Islah Al-Qasimiya School\r\nPreparatory and secondary education - Sharjah and Dubai\r\n  1971 Bachelor of Agriculture - Faculty of Agriculture, Cairo University, Cairo, Egypt\r\nDoctorate in History with distinction - on a thesis that dealt with allegations of piracy and the attempts of the East India Company to control the Gulf between 1797-1820, University of Exeter, Exeter, United Kingdom - May 10, 1985 AD\r\nDoctorate in the Political Geography of the Gulf - for a thesis entitled “Power Conflict and Trade in the Gulf during the Period from 1620 AD to 1820 AD,” Durham University, Durham, United Kingdom, July 2, 1999 AD.",
                             EnglishHonoraryPositions = "Honorary Fellowship from the Royal Institute of British Architects, in recognition of His Highness’s great efforts and contributions to the world of design and architecture and his role in building more sustainable societies, 02 November 2018.\r\nHonorary membership in the Arabic Language Academy in recognition of His Highness’s role in serving the Arabic language and culture, December 24, 2015.\r\nHonorary Fellowship from the Royal Colleges of Physicians in London, Glasgow and Edinburgh in recognition of His Highness’s role in supporting the educational and medical process worldwide, June 16, 2015.\r\nHonorary President of the Arab Federation of Tourist Guides, 2013.\r\nHonorary President of the Emirates Writers and Writers Union, 2012.\r\nHonorary Fellowship from the Royal College of Surgeons, London, Britain November 12, 2009.\r\nHonorary President of the Association of Arab Universities, 2009.\r\nSupreme President of the Arab Theater Authority, 2008.\r\nHonorary President of the Arab Society for Space and Astronomy 2008.\r\nHonorary President of the International Foundation for the History of Science among Arabs and Muslims 2008.\r\nHonorary membership in the Egyptian Writers Union 2008.\r\nHonorary Membership, National Geographic Society, in recognition of His Highness’s support for the National Geographic Society of the United States of America, which was founded in 1888, to care for the science of geography and develop research and exploration, Washington, America, January 2004.\r\nHonorary President of the Egyptian Society for Historical Studies 2001.\r\nHonorary President of the Arab Science and Technology Foundation, 2000.\r\nHonorary President of Global University Services 1998.\r\nHonorary President of Sharjah City for Humanitarian Services 1998.\r\nHonorary membership in the Center for Middle Eastern and Islamic Studies, Durham University, United Kingdom, October 22, 1992.\r\nHonorary Fellowship, Institute of African Studies, University of Khartoum, Sudan, 1977.",
@@ -1880,7 +1880,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicTitle = "المشتركين بالجائزة خلال الدورات 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(457),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9044),
                             CycleId = 1,
                             EnglishTitle = "Award winners during training courses V1",
                             StatisticValue = 1000,
@@ -1890,7 +1890,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicTitle = "المشتركين بالجائزة خلال الدورات 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(462),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9047),
                             CycleId = 1,
                             EnglishTitle = "Award winners during training courses V2",
                             StatisticValue = 2000,
@@ -1900,7 +1900,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             ArabicTitle = "المشتركين بالجائزة خلال الدورات 3",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(474),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9049),
                             CycleId = 1,
                             EnglishTitle = "Award winners during training courses V3",
                             StatisticValue = 3000,
@@ -1910,7 +1910,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             ArabicTitle = "المشتركين بالجائزة خلال الدورات 4",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(477),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9051),
                             CycleId = 1,
                             EnglishTitle = "Award winners during training courses V4",
                             StatisticValue = 4000,
@@ -1920,7 +1920,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 5,
                             ArabicTitle = "المشتركين بالجائزة خلال الدورات 5",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(479),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9053),
                             CycleId = 1,
                             EnglishTitle = "Award winners during training courses V5",
                             StatisticValue = 5000,
@@ -2103,7 +2103,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicFile = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9861),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8654),
                             EnglishFile = "https://award-shj.ae/media/ffgjcmvp/the-gem-of-the-arabic-language-award-30.pdf",
                             isDeleted = false
                         },
@@ -2112,7 +2112,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 2,
                             ArabicFile = "https://award-shj.ae/media/i2flqxw5/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%82%D8%A7%D8%A6%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%88%D9%8A-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2-%D8%A7%D9%84%D9%82%D9%8A%D8%A7%D8%AF%D8%A9-%D8%A7%D9%84%D8%B9%D9%84%D9%8A%D8%A7-30.pdf",
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9865),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8657),
                             EnglishFile = "https://award-shj.ae/media/tlrb5gxb/distinguished-educational-leader-category-senior-leadership-30.pdf",
                             isDeleted = false
                         },
@@ -2121,7 +2121,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 3,
                             ArabicFile = "https://award-shj.ae/media/kovhdfgh/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%85-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2-30.pdf",
                             CategoryId = 5,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9868),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8659),
                             EnglishFile = "https://award-shj.ae/media/1n5b35ld/distinguished-teacher-category-30.pdf",
                             isDeleted = false
                         });
@@ -2224,7 +2224,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "",
                             ArabicName = "جائزة جوهرة اللغة العربية",
                             CategoryClassification = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9345),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8334),
                             CycleId = 1,
                             EnglishDescription = "",
                             EnglishName = "The \"Gem\" of the Arabic Language",
@@ -2237,7 +2237,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "جائزة رائدة استثنائيّة تتسابق فيها المدارس الحكومية والخاصة في رعاية اللغة العربية، وتمكين المجتمع المدرسيّ (طالب، معلم، ولي الأمر...) من امتلاك مهارات اللغة العربية وتوظيفها في العلم والحياة.",
                             ArabicName = "جائزة جوهرة اللغة العربية",
                             CategoryClassification = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9357),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8341),
                             CycleId = 1,
                             EnglishDescription = "It is an exceptional pioneering award where both public and private schools compete to promote the Arabic language, empower the school community students, teachers, and parents and equip them with the Arabic language skills that they can utilize in life and knowledge acquisition.",
                             EnglishName = "The \"Gem\" of the Arabic Language",
@@ -2259,7 +2259,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "",
                             ArabicName = "فئة الأفراد المتميزين",
                             CategoryClassification = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9369),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8348),
                             CycleId = 1,
                             EnglishDescription = "",
                             EnglishName = "Distinguished Individuals Category",
@@ -2273,7 +2273,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "تشمل جميع القيادات التّربويّة في القطاعين الحكوميّ والخاص من فئة القيادات العليا والقيادات الوسطى.\r\n\r\nتشمل القيادة العليا (مدير مدرسة).\r\nتشمل القيادة الوسطى (مساعد مدير أكاديمي، رئيس وحدة الشؤون الأكاديمية، رئيس وحدة شؤون الطلبة، رئيس وحدة الخدمات).",
                             ArabicName = "فئة القائد التربوي المتميز",
                             CategoryClassification = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9375),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8353),
                             CycleId = 1,
                             EnglishDescription = "This category consists of all educational leaders in the public and private sectors including senior leaders and middle leaders.\r\n\r\n- Senior leadership includes school principal.\r\n\r\n- Middle leadership includes Assistant Academic Principal, Head of Academic Affairs Unit, Head of Student Affairs Unit, Head of Services Unit.",
                             EnglishName = "Distinguished Educational Leader Category",
@@ -2295,7 +2295,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "المعلم هو المحرك الأساسي لعملية التعليم والتعلم، فبمقدار جودة عطائه ترتقي العملية التعليمية، وخاصة مع المتغيرات الحديثة التي تقتضي من المعلم مواكبتها، لينتج التعليم ثماره المرجوة، ويمتزج بعصر المعرفة والثورات التكنولوجية، ويصبح جزءاً فاعلًا في الحياة والاقتصاد، وتهتم الجائزة بهذه الفئة وتأهيلها ليثبت المعلم المشارك إنجازه وقيادته الفاعلة، وتطوّره المهنيّ، ويبرهن على إبداعه وابتكاراته الوظيفيّة ومسؤولياته المجتمعيّة، ويحق لجميع المعلمين من مرحلة رياض الأطفال إلى الصف الثاني عشر ومن ذوي التّخصصات المختلفة في التعليم الحكومي والخاص والفنّي والتكنولوجي الترشح لهذه الفئة.",
                             ArabicName = "فئة المعلم المتميز",
                             CategoryClassification = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9384),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8358),
                             CycleId = 1,
                             EnglishDescription = "The teacher is the main guide of the teaching and learning process as the quality of his/her input elevates the educational process, especially with the new changes and the technological revolution that require teachers to keep up with in order to achieve the desired results in life and economy. The Sharjah Award for Educational Excellence acknowledges this category and requires participant teachers to underscore their distinguished performance, effective leadership, professional development, creativity and innovation in the job, and social responsibility. All teachers from kindergarten to the twelfth grade with various specializations in public, private, and applied technology schools are eligible to nominate for this category.",
                             EnglishName = "Distinguished Teacher Category",
@@ -2317,7 +2317,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "",
                             ArabicName = "فئة المؤسسات المتميزة",
                             CategoryClassification = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9391),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8364),
                             CycleId = 1,
                             EnglishDescription = "",
                             EnglishName = "Distinguished Institutions Category",
@@ -2331,7 +2331,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "تحرص الحكومة الرشيدة في دولة الامارات العربية المتحدة على جودة الخدمات المقدمة للطفل باعتباره اللبنة الأولى في بناء المجتمع وتلقينه الدروس الأولى للانطلاق إلى فضاء الحياة مسلحاً بالقيم والسلوكيات الإيجابية ومتمكنا من المهارات الأساسية الأولى لذا فقد أفردت الجائزة لهذه الفئة مجالًا لإبراز تميزها في مجال تطوير الأدوات وبيئة العمل وتقديم الخدمات المتميزة للعاملين فيها، وللطلبة ولأولياء الأمور، وللمجتمع ككل، ويحق لجميع الحضانات الحكومية والخاصة على مستوى دولة الإمارات التّقدّم للجائزة وفق معايير مخصّصة وضمن شروط محدّدة.",
                             ArabicName = "فئة الحضانة المتميزة",
                             CategoryClassification = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9398),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8369),
                             CycleId = 1,
                             EnglishDescription = "The rational government in the United Arab Emirates accentuates the quality of the services provided to the children as they are the first building block of the society and emphasizes on preparing them for life, equipping them with values and positive behavior, and mastering the key basic skills. Therefore, the Sharjah Award has devoted space to this category to highlight its excellence in developing the tools and work environment and providing distinguished services to its staff, students, parents, and the community. All nurseries at the UAE level are eligible to apply for the award according to specific criteria and conditions.",
                             EnglishName = "Distinguished Nursery Category",
@@ -2353,7 +2353,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "تسهم المدرسة الفاعلة في معالجة مشكلات المجتمع ومساعدته على التطوير؛ وتقوم بدور طليعي في خدمته، وتعمل على تعزيز الصلة والتلاحم بين أفراده وتوجيه التربية وجهة عملية تتصل بواقع الحياة ، وتدريب الطلاب على التنظيم والتخطيط والعمل الجماعي لذا حظيت المدرسة المتميزة على جل اهتمام القائمين على الجائزة وخصصوا لها فئة لتحدد المدارس المشاركة من خلالها قدرتها الفائقة على قيادة التعليم والتعلم والأمن والسلامة وتحقيق جودة الحياة لطلابها، ويحق لجميع المدارس الحكومية و الخاصة على مستوى دولة الإمارات التّقدّم للجائزة وفق معايير مخصّصة وضمن شروط محدّدة.",
                             ArabicName = "فئة المدرسة المتميزة",
                             CategoryClassification = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9405),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8374),
                             CycleId = 1,
                             EnglishDescription = "An effective school contributes to developing the community and addressing its problems. It plays a key role in serving the community, strengthening the links and relations between its members, directing education to address real life, as well as training the students on organization, planning and teamwork. The Sharjah Award paid special attention to this category through providing schools with opportunities to demonstrate their abilities in leading teaching and learning, security and safety as well as wellbeing for its students. All public and private schools in the UAE are eligible to apply for the award according to specific criteria and conditions.",
                             EnglishName = "Distinguished School Category",
@@ -2991,7 +2991,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 10,
                             ArabicName = "منسق 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7114),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7053),
                             Email = "Coordinator@Coordinator.com",
                             EnglishName = "Coordinator 1",
                             PhoneNumber = "0993521579",
@@ -3001,7 +3001,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 11,
                             ArabicName = "منسق 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7118),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7056),
                             Email = "Coordinator2@Coordinator2.com",
                             EnglishName = "Coordinator 2",
                             PhoneNumber = "0993521579",
@@ -3011,7 +3011,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 12,
                             ArabicName = "منسق 3",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7121),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7062),
                             Email = "Coordinator3@Coordinator3.com",
                             EnglishName = "Coordinator 3",
                             PhoneNumber = "0993521579",
@@ -3021,7 +3021,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 13,
                             ArabicName = "منسق 4",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7124),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7065),
                             Email = "Coordinator4@Coordinator4.com",
                             EnglishName = "Coordinator 4",
                             PhoneNumber = "0993521579",
@@ -3097,7 +3097,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ActualScore = 40,
                             ArabicName = "التخطيط الاستراتيجي للمشاريع والمبادرات التي تخدم اللغة العربية",
                             AttachmentType = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(227),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8892),
                             CriterionId = 2,
                             EnglishName = "Strategic planning for projects and initiatives that serve the Arabic language",
                             MaxAttachmentNumber = 0,
@@ -3112,7 +3112,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ActualScore = 120,
                             ArabicName = "دعم المهارات اللغوية لدى جميع فئات الطلاب",
                             AttachmentType = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(231),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8896),
                             CriterionId = 2,
                             EnglishName = "Supporting language skills for all categories of students",
                             MaxAttachmentNumber = 0,
@@ -3127,7 +3127,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ActualScore = 60,
                             ArabicName = "قيادة تنمية الكفايات اللغوية للمجتمع المدرسي",
                             AttachmentType = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(235),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8899),
                             CriterionId = 2,
                             EnglishName = "Leading the development of the language competencies of the school community",
                             MaxAttachmentNumber = 0,
@@ -3142,7 +3142,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ActualScore = 60,
                             ArabicName = "إدارة رأس المال البشري والموارد بما يخدم اللغة العربية",
                             AttachmentType = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(238),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8901),
                             CriterionId = 2,
                             EnglishName = "Managing human capital and resources to serve the Arabic language",
                             MaxAttachmentNumber = 0,
@@ -3157,7 +3157,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ActualScore = 40,
                             ArabicName = "قيادة الأداء المؤسسي بما يثري المدرسة بنتاجات أدبية",
                             AttachmentType = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(244),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8904),
                             CriterionId = 2,
                             EnglishName = "Leading institutional performance to enrich the school with literary productions",
                             MaxAttachmentNumber = 0,
@@ -3172,7 +3172,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ActualScore = 150,
                             ArabicName = "إتقان المجتمع المدرسي لمهارات اللغة العربية تواصلاً وقراءةً وإبداعاً",
                             AttachmentType = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(247),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8907),
                             CriterionId = 3,
                             EnglishName = "The school community masters the Arabic language skills in communication, reading, and creativity",
                             MaxAttachmentNumber = 0,
@@ -3187,7 +3187,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ActualScore = 50,
                             ArabicName = "نشر ثقافة الاعتزاز باللغة العربية في المجتمع المدرسي والمحلي",
                             AttachmentType = 0,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(251),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8909),
                             CriterionId = 3,
                             EnglishName = "Spreading a culture of pride in the Arabic language in the school and local community",
                             MaxAttachmentNumber = 0,
@@ -3331,7 +3331,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicTitle = "الأداء والإنجازات المؤثرة",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(166),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8850),
                             EnglishTitle = "Influential performance and achievements",
                             OrderId = 1,
                             Score = 500,
@@ -3343,7 +3343,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 2,
                             ArabicTitle = "جودة الأداء والإنجازات والمبادرات المؤثرة التي تبنتها المدرسة",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(171),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8854),
                             EnglishTitle = "The quality of performance, achievements and influential initiatives adopted by the school",
                             OrderId = 1,
                             ParentId = 1,
@@ -3356,7 +3356,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 3,
                             ArabicTitle = "أثر الإنجازات والمبادرات في المجتمع المدرسي والمحلي، والقيمة المضافة لها",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(174),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8856),
                             EnglishTitle = "The impact of achievements and initiatives in the school and local community, and their added value",
                             OrderId = 2,
                             ParentId = 1,
@@ -3624,7 +3624,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicName = "جائزة الشارقة للتفوق والتميز التربوي",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9124),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8282),
                             CycleNumber = 31,
                             EnglishName = "Sharjah Award for Educational Excellence",
                             GroupCategoryNumber = 1,
@@ -3682,7 +3682,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicName = "نص",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3316),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9670),
                             Name = "Text",
                             isDeleted = false
                         },
@@ -3690,7 +3690,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicName = "بريد إلكتروني",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3322),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9674),
                             Name = "Email",
                             isDeleted = false
                         },
@@ -3698,7 +3698,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             ArabicName = "صورة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3325),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9676),
                             Name = "Image",
                             isDeleted = false
                         },
@@ -3706,7 +3706,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             ArabicName = "ملف",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3327),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9678),
                             Name = "File",
                             isDeleted = false
                         },
@@ -3714,7 +3714,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 5,
                             ArabicName = "رقم هاتف متحرك",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3329),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9681),
                             Name = "Phone Number",
                             isDeleted = false
                         },
@@ -3722,7 +3722,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 6,
                             ArabicName = "رقم",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3331),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9683),
                             Name = "Number",
                             isDeleted = false
                         },
@@ -3730,7 +3730,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 7,
                             ArabicName = "تاريخ",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3333),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9685),
                             Name = "Date",
                             isDeleted = false
                         },
@@ -3738,7 +3738,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 8,
                             ArabicName = "قائمة منسدلة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3336),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9687),
                             Name = "List",
                             isDeleted = false
                         },
@@ -3746,7 +3746,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 9,
                             ArabicName = "موقع",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3338),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9689),
                             Name = "Location",
                             isDeleted = false
                         },
@@ -3754,7 +3754,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 10,
                             ArabicName = "رقم هوية إماراتية",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3342),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9691),
                             Name = "Emirates ID number",
                             isDeleted = false
                         });
@@ -3798,56 +3798,56 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3406),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9737),
                             OperationAsString = ">",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3408),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9739),
                             OperationAsString = ">=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3411),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9741),
                             OperationAsString = "<",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3413),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9743),
                             OperationAsString = "<=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3415),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9745),
                             OperationAsString = "=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3417),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9747),
                             OperationAsString = "!=",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3419),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9749),
                             OperationAsString = "is Empty",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3421),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9751),
                             OperationAsString = "is not Empty",
                             isDeleted = false
                         });
@@ -3891,21 +3891,21 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3266),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9629),
                             Name = "ProvidedForm",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3269),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9631),
                             Name = "Coordinator",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3271),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9633),
                             Name = "Arbitrator",
                             isDeleted = false
                         });
@@ -4137,7 +4137,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicPlaceHolder = "اختبار نص 1",
                             ArabicTitle = "اختبار نص 1",
                             AttributeDataTypeId = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8273),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7770),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Text 1",
                             EnglishPlaceHolder = "Test Text 1",
@@ -4156,7 +4156,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicPlaceHolder = "اختبار ايميل 1",
                             ArabicTitle = "اختبار ايميل 1",
                             AttributeDataTypeId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8282),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7776),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Email 1",
                             EnglishPlaceHolder = "Test Email 1",
@@ -4175,7 +4175,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicPlaceHolder = "اختبار صورة 1",
                             ArabicTitle = "اختبار صورة 1",
                             AttributeDataTypeId = 3,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8286),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7779),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Image 1",
                             EnglishPlaceHolder = "Test Image 1",
@@ -4195,7 +4195,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicPlaceHolder = "اختبار ملف 1",
                             ArabicTitle = "اختبار ملف 1",
                             AttributeDataTypeId = 4,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8291),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7783),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test File 1",
                             EnglishPlaceHolder = "Test File 1",
@@ -4215,7 +4215,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicPlaceHolder = "اختبار رقم متحرك 1",
                             ArabicTitle = "اختبار رقم متحرك 1",
                             AttributeDataTypeId = 5,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8295),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7787),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Phone Number 1",
                             EnglishPlaceHolder = "Test Phone Number 1",
@@ -4234,7 +4234,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicPlaceHolder = "اختبار رقم 1",
                             ArabicTitle = "اختبار رقم 1",
                             AttributeDataTypeId = 6,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8299),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7790),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Number 1",
                             EnglishPlaceHolder = "Test Number 1",
@@ -4253,7 +4253,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicPlaceHolder = "اختبار تاريخ 1",
                             ArabicTitle = "اختبار تاريخ 1",
                             AttributeDataTypeId = 7,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8304),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7793),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test Date 1",
                             EnglishPlaceHolder = "Test Date 1",
@@ -4272,7 +4272,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicPlaceHolder = "اختبار قائمة 1",
                             ArabicTitle = "اختبار قائمة 1",
                             AttributeDataTypeId = 8,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8308),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7796),
                             DynamicAttributeSectionId = 1,
                             EnglishLabel = "Test List 1",
                             EnglishPlaceHolder = "Test List 1",
@@ -4334,7 +4334,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicValue = "Test Value 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8378),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7842),
                             DynamicAttributeId = 8,
                             EnglishValue = "Test Value 1",
                             isDeleted = false
@@ -4343,7 +4343,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicValue = "Test Value 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8382),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7844),
                             DynamicAttributeId = 8,
                             EnglishValue = "Test Value 2",
                             isDeleted = false
@@ -4352,7 +4352,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             ArabicValue = "Test Value 3",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8384),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7846),
                             DynamicAttributeId = 8,
                             EnglishValue = "Test Value 3",
                             isDeleted = false
@@ -4361,7 +4361,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             ArabicValue = "Test Value 4",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8386),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7848),
                             DynamicAttributeId = 8,
                             EnglishValue = "Test Value 4",
                             isDeleted = false
@@ -4370,7 +4370,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 5,
                             ArabicValue = "Test Value 5",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8389),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7850),
                             DynamicAttributeId = 8,
                             EnglishValue = "Test Value 5",
                             isDeleted = false
@@ -4546,7 +4546,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicName = "اختبار اسم 1",
                             AttributeTableNameId = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8202),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7718),
                             EnglishName = "Test Name 1",
                             OrderId = 1,
                             RecordIdOnRelation = 2,
@@ -4847,7 +4847,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             CoordinatorId = 10,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7459),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7261),
                             EducationalInstitutionId = 1,
                             isDeleted = false
                         },
@@ -4855,7 +4855,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             CoordinatorId = 11,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7466),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7263),
                             EducationalInstitutionId = 1,
                             isDeleted = false
                         },
@@ -4863,7 +4863,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             CoordinatorId = 12,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7469),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7265),
                             EducationalInstitutionId = 2,
                             isDeleted = false
                         },
@@ -4871,7 +4871,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             CoordinatorId = 13,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7471),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7267),
                             EducationalInstitutionId = 2,
                             isDeleted = false
                         });
@@ -4920,7 +4920,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicName = "الصف الأول",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7973),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7564),
                             EnglishName = "First class",
                             isDeleted = false
                         },
@@ -4928,7 +4928,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicName = "الصف الثاني",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7977),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7567),
                             EnglishName = "Second class",
                             isDeleted = false
                         },
@@ -4936,7 +4936,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             ArabicName = "الصف الثالث",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7980),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7569),
                             EnglishName = "Third class",
                             isDeleted = false
                         },
@@ -4944,7 +4944,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             ArabicName = "الصف الرابع",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7983),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7572),
                             EnglishName = "Forth class",
                             isDeleted = false
                         },
@@ -4952,7 +4952,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 5,
                             ArabicName = "الصف الخامس",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7985),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7573),
                             EnglishName = "Fifth class",
                             isDeleted = false
                         },
@@ -4960,7 +4960,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 6,
                             ArabicName = "الصف السادس",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7987),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7575),
                             EnglishName = "Sixth class",
                             isDeleted = false
                         },
@@ -4968,7 +4968,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 7,
                             ArabicName = "الصف السابع",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7990),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7577),
                             EnglishName = "Seventh class",
                             isDeleted = false
                         },
@@ -4976,7 +4976,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 8,
                             ArabicName = "الصف الثامن",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7992),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7579),
                             EnglishName = "Eighth class",
                             isDeleted = false
                         },
@@ -4984,7 +4984,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 9,
                             ArabicName = "الصف التاسع",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7995),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7581),
                             EnglishName = "Ninth class",
                             isDeleted = false
                         },
@@ -4992,7 +4992,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 10,
                             ArabicName = "الصف العاشر",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7997),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7583),
                             EnglishName = "Tenth class",
                             isDeleted = false
                         },
@@ -5000,7 +5000,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 11,
                             ArabicName = "الصف الحادي عشر",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7999),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7584),
                             EnglishName = "Eleventh class",
                             isDeleted = false
                         },
@@ -5008,7 +5008,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 12,
                             ArabicName = "الصف الثاني عشر",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8002),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7586),
                             EnglishName = "Twelfth class",
                             isDeleted = false
                         });
@@ -5057,7 +5057,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicName = "جهة تعليمية 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7294),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7160),
                             EnglishName = "Educational Entity 1",
                             isDeleted = false
                         },
@@ -5065,7 +5065,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicName = "جهة تعليمية 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7298),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7163),
                             EnglishName = "Educational Entity 2",
                             isDeleted = false
                         });
@@ -5125,7 +5125,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicName = "مؤسسة تعليمية 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7362),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7206),
                             EducationType = 0,
                             EducationalEntityId = 1,
                             Emirates = 0,
@@ -5136,7 +5136,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicName = "مؤسسة تعليمية 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7366),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7209),
                             EducationType = 0,
                             EducationalEntityId = 2,
                             Emirates = 0,
@@ -5227,14 +5227,14 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLocation = "اختبار موقع الفعالية 1",
                             ArabicName = "اختبار اسم حدث 1",
                             ArabicSiteName = "اختبار اسم مكان الحدث 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(2046),
-                            EndDate = new DateTime(2024, 8, 9, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(2050),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8493),
+                            EndDate = new DateTime(2024, 8, 10, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8496),
                             EnglishDescription = "Test Event Description 1",
                             EnglishLocation = "Test Event Location 1",
                             EnglishName = "Test Event Name 1",
                             EnglishSiteName = "Test Event Site Name 1",
-                            EventDate = new DateTime(2024, 8, 6, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(2064),
-                            StartDate = new DateTime(2024, 8, 7, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(2065),
+                            EventDate = new DateTime(2024, 8, 7, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8503),
+                            StartDate = new DateTime(2024, 8, 8, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8504),
                             UniqueIntegerId = 1,
                             isDeleted = false
                         },
@@ -5245,14 +5245,14 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicLocation = "اختبار موقع الفعالية 2",
                             ArabicName = "اختبار اسم حدث 2",
                             ArabicSiteName = "اختبار اسم مكان الحدث 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(2067),
-                            EndDate = new DateTime(2024, 8, 12, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(2069),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8506),
+                            EndDate = new DateTime(2024, 8, 13, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8508),
                             EnglishDescription = "Test Event Description 2",
                             EnglishLocation = "Test Event Location 2",
                             EnglishName = "Test Event Name 2",
                             EnglishSiteName = "Test Event Site Name 2",
-                            EventDate = new DateTime(2024, 8, 9, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(2071),
-                            StartDate = new DateTime(2024, 8, 10, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(2072),
+                            EventDate = new DateTime(2024, 8, 10, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8509),
+                            StartDate = new DateTime(2024, 8, 11, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8510),
                             UniqueIntegerId = 2,
                             isDeleted = false
                         });
@@ -5316,7 +5316,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicFilePath = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             ArabicTitle = "الدليل التفسيري",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9933),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8699),
                             EnglishFilePath = "https://award-shj.ae/media/ffgjcmvp/the-gem-of-the-arabic-language-award-30.pdf",
                             EnglishTitle = "Explanatory Guide",
                             isDeleted = false
@@ -5327,7 +5327,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicFilePath = "https://award-shj.ae/media/i2flqxw5/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%82%D8%A7%D8%A6%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%88%D9%8A-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2-%D8%A7%D9%84%D9%82%D9%8A%D8%A7%D8%AF%D8%A9-%D8%A7%D9%84%D8%B9%D9%84%D9%8A%D8%A7-30.pdf",
                             ArabicTitle = "الدليل التفسيري",
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9937),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8702),
                             EnglishFilePath = "https://award-shj.ae/media/tlrb5gxb/distinguished-educational-leader-category-senior-leadership-30.pdf",
                             EnglishTitle = "Explanatory Guide",
                             isDeleted = false
@@ -5338,7 +5338,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicFilePath = "https://award-shj.ae/media/kovhdfgh/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%85-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2-30.pdf",
                             ArabicTitle = "الدليل التفسيري",
                             CategoryId = 5,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9940),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8705),
                             EnglishFilePath = "https://award-shj.ae/media/1n5b35ld/distinguished-teacher-category-30.pdf",
                             EnglishTitle = "Explanatory Guide",
                             isDeleted = false
@@ -5391,7 +5391,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicText = "يمكنك البحث عن منسق لإرشادك في عملية المشاركة في الجائزة من خلال نحديد المعلومات الموجودة أدناه لتتمكن من اختيار المنسق الذي تريده.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(615),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9140),
                             EnglishText = "You can search for a coordinator to guide you in the process of participating in the award by specifying the information below so that you can choose the coordinator you want.",
                             Type = 0,
                             isDeleted = false
@@ -5400,7 +5400,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicText = "شاركنا إنجازاتك هنا، نحن نبحث عن الأفراد المميزين في مجالاتهم ليشاركونا مهاراتهم وخبراتهم.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(619),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9143),
                             EnglishText = "Share your achievements with us here. We are looking for distinguished individuals in their fields to share their skills and experiences with us.",
                             Type = 1,
                             isDeleted = false
@@ -5409,7 +5409,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             ArabicText = "يمكنك ربط حسابك مع اشخاص آخرين عن طريق إرسال دعوة لهم عن طريق البريد الالكتروني .",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(622),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9145),
                             EnglishText = "You can link your account with other people by sending them an invitation via email.",
                             Type = 2,
                             isDeleted = false
@@ -5418,7 +5418,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             ArabicText = "20 يوماً باق لانتهاء مرحلة التحكيم النهائية للمشاركين.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(625),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9147),
                             EnglishText = "20 days remain until the end of the final judging phase for the participants.",
                             Type = 3,
                             isDeleted = false
@@ -5427,7 +5427,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 5,
                             ArabicText = "لقد اتممت خطوات التسجيل في الجائزة   -   الرجاء الذهاب إلى المراحل الخاصة بالاستمارة لإرسال الاستمارة .",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(627),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9149),
                             EnglishText = "You have completed the steps to register for the award - please go to the application stages to submit the form.",
                             Type = 4,
                             isDeleted = false
@@ -5436,7 +5436,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 6,
                             ArabicText = "الرجاء إتمام جميع المراحل الخاصة بالاستمارة الجديدة لتتمكن من الاشتراك بنجاح     --  يمكن الاشتراك بفئتين فقط (فئة ذات طابع فردي وفئة ذات طابع جماعي )خلال الدورة الواحدة ورفع الملفات المطلوبة عند تعبئة الاستمارة.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(630),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9151),
                             EnglishText = "Please complete all stages of the new form to be able to participate successfully. You can participate in only two categories (an individual category and a group category) during one session and upload the required files when filling out the form.",
                             Type = 5,
                             isDeleted = false
@@ -5445,7 +5445,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 7,
                             ArabicText = "الرجاء الموافقة على الشروط الخاصة كل شرط على حدا ورفع البيانات المطلوبة  في الحقول الخاصة ليتم قبول استمارة الترشح الخاصة.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(632),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9153),
                             EnglishText = "Please agree to the special conditions one by one and upload the required data in the special fields for the special nomination form to be accepted.",
                             Type = 6,
                             isDeleted = false
@@ -5454,7 +5454,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 8,
                             ArabicText = "عزيزي المشترك الرجاء تأكيد الموافقة على كافة المعلومات الواردة ضمن الإستمارة الخاصة بك كون هذه الخطوة غير قابلة للتراجع.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(634),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9154),
                             EnglishText = "Dear subscriber, please confirm your approval of all the information contained in your form, as this step is irreversible.",
                             Type = 7,
                             isDeleted = false
@@ -5463,7 +5463,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 9,
                             ArabicText = "يمكنك رفع عدد غير محدود من الملفات والتعديل عليها قبل إرسال الاستمارة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(637),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9156),
                             EnglishText = "You can upload an unlimited number of files and modify them before submitting the form",
                             Type = 8,
                             isDeleted = false
@@ -5472,7 +5472,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 10,
                             ArabicText = "الرجاء إتمام جميع المراحل الخاصة بالاستمارة الجديدة لتتمكن من الاشتراك بنجاح     --  يمكن الاشتراك بفئتين فقط (فئة ذات طابع فردي وفئة ذات طابع جماعي )خلال الدورة الواحدة ورفع الملفات المطلوبة عند تعبئة الاستمارة.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(639),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9158),
                             EnglishText = "Please complete all stages of the new form to be able to participate successfully. You can participate in only two categories (an individual category and a group category) during one session and upload the required files when filling out the form.",
                             Type = 9,
                             isDeleted = false
@@ -5652,7 +5652,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicAnswer = "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\n\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة.",
                             ArabicQuestion = "كيف يمكنني المشاركة في جائزة الشارقة للتفوق والتميز التربوي؟",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(7),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8746),
                             EnglishAnswer = "You can participate in the award by following the following steps:\r\n\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria.",
                             EnglishQuestion = "How can I participate in the Sharjah Award for Educational Excellence and Excellence?",
                             isDeleted = false
@@ -5663,7 +5663,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicAnswer = "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\n\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة.",
                             ArabicQuestion = "كيف يمكنني المشاركة في جائزة الشارقة للتفوق والتميز التربوي؟",
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(12),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8749),
                             EnglishAnswer = "You can participate in the award by following the following steps:\r\n\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria.",
                             EnglishQuestion = "How can I participate in the Sharjah Award for Educational Excellence and Excellence?",
                             isDeleted = false
@@ -5674,7 +5674,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicAnswer = "يمكنك المشاركة في الجائزة من خلال اتباع الخطوات التالية:\r\n\r\nالنقر على \"بوابة المشتركين\" في القائمة الرئيسية للموقع.\r\nإذا لم يكن لديك حساب في البوابة، يرجى إنشاء حساب مستخدم جديد بالنقر على خيار \"سجل الآن\"، وقم بتعبئة البيانات المطلوبة.\r\nإذا كان لديك حساب مسبق في البوابة، يرجى النقر على خيار \"لقد قمت بالتسجيل مسبقاً\"، وقم بتسجيل الدخول بإدخال اسم المستخدم وكلمة المرور.\r\nبعد الدخول إلى البوابة، يمكنك التسجيل في الفئة التي ترغب بها ورفع المستندات المطلوبة.\r\nيمكنك رفع الأدلة بجانب كل معيار من معايير الفئة.",
                             ArabicQuestion = "كيف يمكنني المشاركة في جائزة الشارقة للتفوق والتميز التربوي؟",
                             CategoryId = 5,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(15),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8751),
                             EnglishAnswer = "You can participate in the award by following the following steps:\r\n\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria.",
                             EnglishQuestion = "How can I participate in the Sharjah Award for Educational Excellence and Excellence?",
                             isDeleted = false
@@ -5685,7 +5685,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicAnswer = "تنقسم شروط المشاركة في جائزة الشارقة للتفوق والتميز التربوي إلى قسمين:\r\n\r\nالشروط العامة: وهي شروط تنطبق على جميع فئات الجائزة.\r\nالشروط الخاصة: وهي شروط محددة لفئة معينة من فئات الجائزة.\r\n\r\nللاطلاع على الشروط العامة والخاصة لفئات الجائزة، الرجاء اتباع الخطوات التالية:\r\n\r\nالدخول إلى صفحة فئات الجائزة من القائمة الرئيسية للموقع.\r\nالنقر على \"تحميل الدليل التفسيري للفئة\" وذلك للفئة التي ترغب بالاطلاع عليها.\r\nمن خلال الدليل التفسيري يمكنك الاطلاع على الشروط العامة والخاصة للفئة.",
                             ArabicQuestion = "ما هي شروط المشاركة في جائزة الشارقة للتفوق والتميز التربوي؟",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(19),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8754),
                             EnglishAnswer = "The conditions for participation in the Sharjah Award for Excellence and Educational Excellence are divided into two parts:\r\n\r\nGeneral conditions: These are conditions that apply to all categories of the award.\r\nSpecial Conditions: These are specific conditions for a specific award category.\r\n\r\nTo view the general and specific conditions for the award categories, please follow the following steps:\r\n\r\nAccess the award categories page from the main menu of the website.\r\nClick on “Download the category interpretive guide” for the category you wish to view.\r\nThrough the interpretive guide you can view the general and special conditions of the category.",
                             EnglishQuestion = "What are the conditions for participation in the Sharjah Award for Excellence and Educational Excellence?",
                             isDeleted = false
@@ -5696,7 +5696,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicAnswer = "تنقسم شروط المشاركة في جائزة الشارقة للتفوق والتميز التربوي إلى قسمين:\r\n\r\nالشروط العامة: وهي شروط تنطبق على جميع فئات الجائزة.\r\nالشروط الخاصة: وهي شروط محددة لفئة معينة من فئات الجائزة.\r\n\r\nللاطلاع على الشروط العامة والخاصة لفئات الجائزة، الرجاء اتباع الخطوات التالية:\r\n\r\nالدخول إلى صفحة فئات الجائزة من القائمة الرئيسية للموقع.\r\nالنقر على \"تحميل الدليل التفسيري للفئة\" وذلك للفئة التي ترغب بالاطلاع عليها.\r\nمن خلال الدليل التفسيري يمكنك الاطلاع على الشروط العامة والخاصة للفئة.",
                             ArabicQuestion = "ما هي شروط المشاركة في جائزة الشارقة للتفوق والتميز التربوي؟",
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(22),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8756),
                             EnglishAnswer = "The conditions for participation in the Sharjah Award for Excellence and Educational Excellence are divided into two parts:\r\n\r\nGeneral conditions: These are conditions that apply to all categories of the award.\r\nSpecial Conditions: These are specific conditions for a specific award category.\r\n\r\nTo view the general and specific conditions for the award categories, please follow the following steps:\r\n\r\nAccess the award categories page from the main menu of the website.\r\nClick on “Download the category interpretive guide” for the category you wish to view.\r\nThrough the interpretive guide you can view the general and special conditions of the category.",
                             EnglishQuestion = "What are the conditions for participation in the Sharjah Award for Excellence and Educational Excellence?",
                             isDeleted = false
@@ -5707,7 +5707,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicAnswer = "تنقسم شروط المشاركة في جائزة الشارقة للتفوق والتميز التربوي إلى قسمين:\r\n\r\nالشروط العامة: وهي شروط تنطبق على جميع فئات الجائزة.\r\nالشروط الخاصة: وهي شروط محددة لفئة معينة من فئات الجائزة.\r\n\r\nللاطلاع على الشروط العامة والخاصة لفئات الجائزة، الرجاء اتباع الخطوات التالية:\r\n\r\nالدخول إلى صفحة فئات الجائزة من القائمة الرئيسية للموقع.\r\nالنقر على \"تحميل الدليل التفسيري للفئة\" وذلك للفئة التي ترغب بالاطلاع عليها.\r\nمن خلال الدليل التفسيري يمكنك الاطلاع على الشروط العامة والخاصة للفئة.",
                             ArabicQuestion = "ما هي شروط المشاركة في جائزة الشارقة للتفوق والتميز التربوي؟",
                             CategoryId = 5,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(25),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8758),
                             EnglishAnswer = "The conditions for participation in the Sharjah Award for Excellence and Educational Excellence are divided into two parts:\r\n\r\nGeneral conditions: These are conditions that apply to all categories of the award.\r\nSpecial Conditions: These are specific conditions for a specific award category.\r\n\r\nTo view the general and specific conditions for the award categories, please follow the following steps:\r\n\r\nAccess the award categories page from the main menu of the website.\r\nClick on “Download the category interpretive guide” for the category you wish to view.\r\nThrough the interpretive guide you can view the general and special conditions of the category.",
                             EnglishQuestion = "What are the conditions for participation in the Sharjah Award for Excellence and Educational Excellence?",
                             isDeleted = false
@@ -5928,7 +5928,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicAnswer = "اختبار جواب 1",
                             ArabicQuestion = "اختبار سؤال 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3185),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9579),
                             EnglishAnswer = "Test Answer 1",
                             EnglishQuestion = "Test Question 1",
                             GeneralFrequentlyAskedQuestionCategoryId = 1,
@@ -5939,7 +5939,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 2,
                             ArabicAnswer = "اختبار جواب 2",
                             ArabicQuestion = "اختبار سؤال 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3188),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9582),
                             EnglishAnswer = "Test Answer 2",
                             EnglishQuestion = "Test Question 2",
                             GeneralFrequentlyAskedQuestionCategoryId = 1,
@@ -5950,7 +5950,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 3,
                             ArabicAnswer = "اختبار جواب 3",
                             ArabicQuestion = "اختبار سؤال 3",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3191),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9585),
                             EnglishAnswer = "Test Answer 3",
                             EnglishQuestion = "Test Question 3",
                             GeneralFrequentlyAskedQuestionCategoryId = 2,
@@ -5961,7 +5961,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 4,
                             ArabicAnswer = "اختبار جواب 4",
                             ArabicQuestion = "اختبار سؤال 4",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3194),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9588),
                             EnglishAnswer = "Test Answer 4",
                             EnglishQuestion = "Test Question 4",
                             GeneralFrequentlyAskedQuestionCategoryId = 2,
@@ -6012,7 +6012,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicName = "اختبار فئة أسئلة شائعة عامة 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3127),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9534),
                             EnglishName = "Test General FAQ Category 1",
                             isDeleted = false
                         },
@@ -6020,7 +6020,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicName = "اختبار فئة أسئلة شائعة عامة 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3130),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9537),
                             EnglishName = "Test General FAQ Category 2",
                             isDeleted = false
                         });
@@ -6102,9 +6102,9 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicDescription = "اختبار وصف الورش العامة 1",
                             ArabicTitle = "اختبار عنوان الورش العامة 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(2815),
-                            DateOfWorkShop = new DateTime(2024, 8, 14, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(2819),
-                            DayName = "Wednesday",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9332),
+                            DateOfWorkShop = new DateTime(2024, 8, 15, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9336),
+                            DayName = "Thursday",
                             EnglishDescription = "Test General Workshop Description 1",
                             EnglishTitle = "Test General Workshop Title 1",
                             Thumbnale = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg",
@@ -6116,9 +6116,9 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 2,
                             ArabicDescription = "اختبار وصف الورش العامة 2",
                             ArabicTitle = "اختبار عنوان الورش العامة 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3045),
-                            DateOfWorkShop = new DateTime(2024, 8, 24, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(3048),
-                            DayName = "Saturday",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9477),
+                            DateOfWorkShop = new DateTime(2024, 8, 25, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(9479),
+                            DayName = "Sunday",
                             EnglishDescription = "Test General Workshop Description 2",
                             EnglishTitle = "Test General Workshop Title 2",
                             Thumbnale = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg",
@@ -6226,7 +6226,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1201),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7734),
                             Name = "تعديل حول الجائزة",
                             PermissionHeaderId = 1,
                             isDeleted = false
@@ -6235,7 +6235,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1207),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7742),
                             Name = "إضافة معرض الصور",
                             PermissionHeaderId = 2,
                             isDeleted = false
@@ -6244,7 +6244,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1210),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7744),
                             Name = "عرض معرض الصور",
                             PermissionHeaderId = 2,
                             isDeleted = false
@@ -6253,7 +6253,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1214),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7747),
                             Name = "تعديل معرض الصور",
                             PermissionHeaderId = 2,
                             isDeleted = false
@@ -6262,7 +6262,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 5,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1216),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7750),
                             Name = "حذف معرض الصور",
                             PermissionHeaderId = 2,
                             isDeleted = false
@@ -6271,7 +6271,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 6,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1219),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7752),
                             Name = "تصدير معرض الصور",
                             PermissionHeaderId = 2,
                             isDeleted = false
@@ -6280,7 +6280,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 7,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1222),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7754),
                             Name = "إضافة نسخة التطبيق",
                             PermissionHeaderId = 3,
                             isDeleted = false
@@ -6289,7 +6289,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 8,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1225),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7756),
                             Name = "عرض نسخة التطبيق",
                             PermissionHeaderId = 3,
                             isDeleted = false
@@ -6298,7 +6298,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 9,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1228),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7758),
                             Name = "تصدير نسخة التطبيق",
                             PermissionHeaderId = 3,
                             isDeleted = false
@@ -6307,7 +6307,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 10,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1231),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7760),
                             Name = "إضافة إصدارات الجائزة",
                             PermissionHeaderId = 4,
                             isDeleted = false
@@ -6316,7 +6316,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 11,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1234),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7762),
                             Name = "عرض إصدارات الجائزة",
                             PermissionHeaderId = 4,
                             isDeleted = false
@@ -6325,7 +6325,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 12,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1250),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7764),
                             Name = "تعديل إصدارات الجائزة",
                             PermissionHeaderId = 4,
                             isDeleted = false
@@ -6334,7 +6334,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 13,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1253),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7767),
                             Name = "حذف إصدارات الجائزة",
                             PermissionHeaderId = 4,
                             isDeleted = false
@@ -6343,7 +6343,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 14,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1256),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7769),
                             Name = "تصدير إصدارات الجائزة",
                             PermissionHeaderId = 4,
                             isDeleted = false
@@ -6352,7 +6352,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 15,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1259),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7771),
                             Name = "تعديل راعي الجائزة",
                             PermissionHeaderId = 5,
                             isDeleted = false
@@ -6361,7 +6361,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 16,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1262),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7773),
                             Name = "إضافة التعاميم",
                             PermissionHeaderId = 6,
                             isDeleted = false
@@ -6370,7 +6370,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 17,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1265),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7775),
                             Name = "عرض التعاميم",
                             PermissionHeaderId = 6,
                             isDeleted = false
@@ -6379,7 +6379,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 18,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1267),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7777),
                             Name = "تعديل التعاميم",
                             PermissionHeaderId = 6,
                             isDeleted = false
@@ -6388,7 +6388,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 19,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1270),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7779),
                             Name = "حذف التعاميم",
                             PermissionHeaderId = 6,
                             isDeleted = false
@@ -6397,7 +6397,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 20,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1273),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7781),
                             Name = "تصدير التعاميم",
                             PermissionHeaderId = 6,
                             isDeleted = false
@@ -6406,7 +6406,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 21,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1276),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7784),
                             Name = "إضافة الصفوف",
                             PermissionHeaderId = 7,
                             isDeleted = false
@@ -6415,7 +6415,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 22,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1279),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7786),
                             Name = "عرض الصفوف",
                             PermissionHeaderId = 7,
                             isDeleted = false
@@ -6424,7 +6424,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 23,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1282),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7788),
                             Name = "تعديل الصفوف",
                             PermissionHeaderId = 7,
                             isDeleted = false
@@ -6433,7 +6433,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 24,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1285),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7790),
                             Name = "حذف الصفوف",
                             PermissionHeaderId = 7,
                             isDeleted = false
@@ -6442,7 +6442,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 25,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1288),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7793),
                             Name = "تصدير الصفوف",
                             PermissionHeaderId = 7,
                             isDeleted = false
@@ -6451,7 +6451,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 26,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1290),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7795),
                             Name = "إضافة محكم صف",
                             PermissionHeaderId = 8,
                             isDeleted = false
@@ -6460,7 +6460,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 27,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1294),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7797),
                             Name = "عرض محكم صف",
                             PermissionHeaderId = 8,
                             isDeleted = false
@@ -6469,7 +6469,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 28,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1297),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7799),
                             Name = "حذف محكم صف",
                             PermissionHeaderId = 8,
                             isDeleted = false
@@ -6478,7 +6478,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 29,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1299),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7801),
                             Name = "تصدير محكم صف",
                             PermissionHeaderId = 8,
                             isDeleted = false
@@ -6487,7 +6487,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 30,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1302),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7803),
                             Name = "عرض الدورات",
                             PermissionHeaderId = 9,
                             isDeleted = false
@@ -6496,7 +6496,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 31,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1305),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7806),
                             Name = "إضافة دورة",
                             PermissionHeaderId = 9,
                             isDeleted = false
@@ -6505,7 +6505,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 32,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1308),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7808),
                             Name = "عرض معلومات دورة",
                             PermissionHeaderId = 9,
                             isDeleted = false
@@ -6514,7 +6514,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 33,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1311),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7810),
                             Name = "تعديل دورة",
                             PermissionHeaderId = 9,
                             isDeleted = false
@@ -6523,7 +6523,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 34,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1314),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7862),
                             Name = "حذف دورة",
                             PermissionHeaderId = 9,
                             isDeleted = false
@@ -6532,7 +6532,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 35,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1317),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7865),
                             Name = "تصدير دورة",
                             PermissionHeaderId = 9,
                             isDeleted = false
@@ -6541,7 +6541,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 36,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1319),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7867),
                             Name = "إضافة أجندة",
                             PermissionHeaderId = 10,
                             isDeleted = false
@@ -6550,7 +6550,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 37,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1323),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7869),
                             Name = "عرض أجندة",
                             PermissionHeaderId = 10,
                             isDeleted = false
@@ -6559,7 +6559,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 38,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1325),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7872),
                             Name = "تعديل أجندة",
                             PermissionHeaderId = 10,
                             isDeleted = false
@@ -6568,7 +6568,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 39,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1328),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7874),
                             Name = "حذف أجندة",
                             PermissionHeaderId = 10,
                             isDeleted = false
@@ -6577,7 +6577,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 40,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1331),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7876),
                             Name = "تصدير أجندة",
                             PermissionHeaderId = 2,
                             isDeleted = false
@@ -6586,7 +6586,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 41,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1334),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7878),
                             Name = "إضافة فئات",
                             PermissionHeaderId = 11,
                             isDeleted = false
@@ -6595,7 +6595,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 42,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1337),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7880),
                             Name = "عرض فئات",
                             PermissionHeaderId = 11,
                             isDeleted = false
@@ -6604,7 +6604,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 43,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1340),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7882),
                             Name = "تعديل فئات",
                             PermissionHeaderId = 11,
                             isDeleted = false
@@ -6613,7 +6613,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 44,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1342),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7885),
                             Name = "حذف فئات",
                             PermissionHeaderId = 11,
                             isDeleted = false
@@ -6622,7 +6622,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 45,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1345),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7887),
                             Name = "تصدير فئات",
                             PermissionHeaderId = 11,
                             isDeleted = false
@@ -6631,7 +6631,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 46,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1348),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7889),
                             Name = "إضافة شروط عامة",
                             PermissionHeaderId = 12,
                             isDeleted = false
@@ -6640,7 +6640,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 47,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1352),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7891),
                             Name = "عرض شروط عامة",
                             PermissionHeaderId = 12,
                             isDeleted = false
@@ -6649,7 +6649,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 48,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1354),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7893),
                             Name = "تعديل شروط عامة",
                             PermissionHeaderId = 12,
                             isDeleted = false
@@ -6658,7 +6658,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 49,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1357),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7895),
                             Name = "حذف شروط عامة",
                             PermissionHeaderId = 12,
                             isDeleted = false
@@ -6667,7 +6667,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 50,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1360),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7897),
                             Name = "تصدير شروط عامة",
                             PermissionHeaderId = 12,
                             isDeleted = false
@@ -6676,7 +6676,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 51,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1363),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7899),
                             Name = "إضافة جهات تعليمية",
                             PermissionHeaderId = 13,
                             isDeleted = false
@@ -6685,7 +6685,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 52,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1366),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7902),
                             Name = "عرض جهات تعليمية",
                             PermissionHeaderId = 13,
                             isDeleted = false
@@ -6694,7 +6694,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 53,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1368),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7904),
                             Name = "تعديل جهات تعليمية",
                             PermissionHeaderId = 13,
                             isDeleted = false
@@ -6703,7 +6703,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 54,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1371),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7906),
                             Name = "حذف جهات تعليمية",
                             PermissionHeaderId = 13,
                             isDeleted = false
@@ -6712,7 +6712,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 55,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1374),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7908),
                             Name = "تصدير معرض الصور",
                             PermissionHeaderId = 13,
                             isDeleted = false
@@ -6721,7 +6721,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 56,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1377),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7910),
                             Name = "عرض ملفات النظام",
                             PermissionHeaderId = 14,
                             isDeleted = false
@@ -6730,7 +6730,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 57,
                             Action = "download",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1379),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7913),
                             Name = "تحميل ملفات النظام",
                             PermissionHeaderId = 14,
                             isDeleted = false
@@ -6739,7 +6739,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 58,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1382),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7915),
                             Name = "إضافة ورش تدريبية عامة",
                             PermissionHeaderId = 15,
                             isDeleted = false
@@ -6748,7 +6748,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 59,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1385),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7918),
                             Name = "عرض ورش تدريبية عامة",
                             PermissionHeaderId = 15,
                             isDeleted = false
@@ -6757,7 +6757,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 60,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1389),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7920),
                             Name = "تعديل ورش تدريبية عامة",
                             PermissionHeaderId = 15,
                             isDeleted = false
@@ -6766,7 +6766,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 61,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1392),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7922),
                             Name = "حذف ورش تدريبية عامة",
                             PermissionHeaderId = 15,
                             isDeleted = false
@@ -6775,7 +6775,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 62,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1395),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7924),
                             Name = "تصدير معرض الصور",
                             PermissionHeaderId = 15,
                             isDeleted = false
@@ -6784,7 +6784,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 63,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1397),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7927),
                             Name = "عرض التعليمات",
                             PermissionHeaderId = 16,
                             isDeleted = false
@@ -6793,7 +6793,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 64,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1400),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7929),
                             Name = "تعديل التعليمات",
                             PermissionHeaderId = 16,
                             isDeleted = false
@@ -6802,7 +6802,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 65,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1403),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7931),
                             Name = "تصدير التعليمات",
                             PermissionHeaderId = 16,
                             isDeleted = false
@@ -6811,7 +6811,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 66,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1406),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7933),
                             Name = "إضافة الإجتماعات",
                             PermissionHeaderId = 17,
                             isDeleted = false
@@ -6820,7 +6820,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 67,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1409),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7935),
                             Name = "عرض الإجتماعات",
                             PermissionHeaderId = 17,
                             isDeleted = false
@@ -6829,7 +6829,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 68,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1412),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7938),
                             Name = "تعديل الإجتماعات",
                             PermissionHeaderId = 17,
                             isDeleted = false
@@ -6838,7 +6838,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 69,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1415),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7940),
                             Name = "حذف الإجتماعات",
                             PermissionHeaderId = 17,
                             isDeleted = false
@@ -6847,7 +6847,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 70,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1418),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7942),
                             Name = "تصدير الإجتماعات",
                             PermissionHeaderId = 17,
                             isDeleted = false
@@ -6856,7 +6856,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 71,
                             Action = "send_emails",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1421),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7945),
                             Name = "إرسال بريد إلكتروني للإجتماعات",
                             PermissionHeaderId = 17,
                             isDeleted = false
@@ -6865,7 +6865,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 72,
                             Action = "cancel",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1423),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7947),
                             Name = "إلغاء الإجتماعات",
                             PermissionHeaderId = 17,
                             isDeleted = false
@@ -6874,7 +6874,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 73,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1426),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7949),
                             Name = "إضافة الأخبار",
                             PermissionHeaderId = 18,
                             isDeleted = false
@@ -6883,7 +6883,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 74,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1429),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7951),
                             Name = "عرض الأخبار",
                             PermissionHeaderId = 18,
                             isDeleted = false
@@ -6892,7 +6892,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 75,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1432),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7953),
                             Name = "تعديل الأخبار",
                             PermissionHeaderId = 18,
                             isDeleted = false
@@ -6901,7 +6901,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 76,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1435),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7955),
                             Name = "حذف الأخبار",
                             PermissionHeaderId = 18,
                             isDeleted = false
@@ -6910,7 +6910,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 77,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1438),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7958),
                             Name = "تصدير الأخبار",
                             PermissionHeaderId = 18,
                             isDeleted = false
@@ -6919,7 +6919,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 78,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1441),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7960),
                             Name = "إضافة الإشعارات",
                             PermissionHeaderId = 19,
                             isDeleted = false
@@ -6928,7 +6928,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 79,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1444),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7962),
                             Name = "عرض الإشعارات",
                             PermissionHeaderId = 19,
                             isDeleted = false
@@ -6937,7 +6937,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 80,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1446),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7964),
                             Name = "تعديل الإشعارات",
                             PermissionHeaderId = 19,
                             isDeleted = false
@@ -6946,7 +6946,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 81,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1450),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7967),
                             Name = "حذف الإشعارات",
                             PermissionHeaderId = 19,
                             isDeleted = false
@@ -6955,7 +6955,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 82,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1453),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7969),
                             Name = "تصدير الإشعارات",
                             PermissionHeaderId = 19,
                             isDeleted = false
@@ -6964,7 +6964,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 83,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1455),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7971),
                             Name = "إضافة قالب الإشعارات",
                             PermissionHeaderId = 20,
                             isDeleted = false
@@ -6973,7 +6973,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 84,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1458),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7973),
                             Name = "عرض قالب الإشعارات",
                             PermissionHeaderId = 20,
                             isDeleted = false
@@ -6982,7 +6982,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 85,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1470),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7975),
                             Name = "تعديل قالب الإشعارات",
                             PermissionHeaderId = 20,
                             isDeleted = false
@@ -6991,7 +6991,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 86,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1473),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7977),
                             Name = "حذف قالب الإشعارات",
                             PermissionHeaderId = 20,
                             isDeleted = false
@@ -7000,7 +7000,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 87,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1476),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7979),
                             Name = "تصدير قالب الإشعارات",
                             PermissionHeaderId = 20,
                             isDeleted = false
@@ -7009,7 +7009,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 88,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1479),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7981),
                             Name = "إضافة دور",
                             PermissionHeaderId = 21,
                             isDeleted = false
@@ -7018,7 +7018,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 89,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1482),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7983),
                             Name = "عرض دور",
                             PermissionHeaderId = 21,
                             isDeleted = false
@@ -7027,7 +7027,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 90,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1484),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7985),
                             Name = "تعديل دور",
                             PermissionHeaderId = 21,
                             isDeleted = false
@@ -7036,7 +7036,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 91,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1487),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7988),
                             Name = "حذف دور",
                             PermissionHeaderId = 21,
                             isDeleted = false
@@ -7045,7 +7045,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 92,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1490),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7990),
                             Name = "تصدير دور",
                             PermissionHeaderId = 21,
                             isDeleted = false
@@ -7054,7 +7054,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 93,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1493),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7992),
                             Name = "إضافة مستخدم",
                             PermissionHeaderId = 22,
                             isDeleted = false
@@ -7063,7 +7063,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 94,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1496),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7994),
                             Name = "عرض مستخدم",
                             PermissionHeaderId = 22,
                             isDeleted = false
@@ -7072,7 +7072,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 95,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1499),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7996),
                             Name = "تعديل مستخدم",
                             PermissionHeaderId = 22,
                             isDeleted = false
@@ -7081,7 +7081,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 96,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1502),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(7998),
                             Name = "حذف مستخدم",
                             PermissionHeaderId = 22,
                             isDeleted = false
@@ -7090,7 +7090,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 97,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1504),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8000),
                             Name = "تصدير مستخدم",
                             PermissionHeaderId = 22,
                             isDeleted = false
@@ -7099,7 +7099,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 98,
                             Action = "user_change_password",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1507),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8002),
                             Name = "تغيير كلمة سر المستخدم",
                             PermissionHeaderId = 22,
                             isDeleted = false
@@ -7108,7 +7108,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 99,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1510),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8004),
                             Name = "إضافة منسق",
                             PermissionHeaderId = 23,
                             isDeleted = false
@@ -7117,7 +7117,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 100,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1512),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8006),
                             Name = "عرض منسق",
                             PermissionHeaderId = 23,
                             isDeleted = false
@@ -7126,7 +7126,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 101,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1516),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8008),
                             Name = "تعديل منسق",
                             PermissionHeaderId = 23,
                             isDeleted = false
@@ -7135,7 +7135,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 102,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1519),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8011),
                             Name = "حذف منسق",
                             PermissionHeaderId = 23,
                             isDeleted = false
@@ -7144,7 +7144,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 103,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1522),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8013),
                             Name = "تصدير منسق",
                             PermissionHeaderId = 23,
                             isDeleted = false
@@ -7153,7 +7153,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 104,
                             Action = "coordinator_dynamic_fields",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1525),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8015),
                             Name = "حقول ديناميكية للمنسقين",
                             PermissionHeaderId = 23,
                             isDeleted = false
@@ -7162,7 +7162,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 105,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1528),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8017),
                             Name = "إضافة محكم",
                             PermissionHeaderId = 24,
                             isDeleted = false
@@ -7171,7 +7171,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 106,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1531),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8020),
                             Name = "عرض محكم",
                             PermissionHeaderId = 24,
                             isDeleted = false
@@ -7180,7 +7180,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 107,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1533),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8062),
                             Name = "تعديل محكم",
                             PermissionHeaderId = 24,
                             isDeleted = false
@@ -7189,7 +7189,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 108,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1537),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8064),
                             Name = "حذف محكم",
                             PermissionHeaderId = 24,
                             isDeleted = false
@@ -7198,7 +7198,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 109,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1539),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8067),
                             Name = "تصدير محكم",
                             PermissionHeaderId = 24,
                             isDeleted = false
@@ -7207,7 +7207,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 110,
                             Action = "arbitrator_dynamic_fields",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1543),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8069),
                             Name = "حقول ديناميكية للمحكمين",
                             PermissionHeaderId = 24,
                             isDeleted = false
@@ -7216,7 +7216,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 111,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1545),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8071),
                             Name = "إضافة لجنة",
                             PermissionHeaderId = 25,
                             isDeleted = false
@@ -7225,7 +7225,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 112,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1548),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8073),
                             Name = "عرض لجنة",
                             PermissionHeaderId = 25,
                             isDeleted = false
@@ -7234,7 +7234,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 113,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1551),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8075),
                             Name = "تعديل لجنة",
                             PermissionHeaderId = 25,
                             isDeleted = false
@@ -7243,7 +7243,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 114,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1554),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8078),
                             Name = "حذف لجنة",
                             PermissionHeaderId = 25,
                             isDeleted = false
@@ -7252,7 +7252,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 115,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1558),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8080),
                             Name = "تصدير لجنة",
                             PermissionHeaderId = 25,
                             isDeleted = false
@@ -7261,7 +7261,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 116,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1560),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8082),
                             Name = "إضافة حساب المشترك",
                             PermissionHeaderId = 26,
                             isDeleted = false
@@ -7270,7 +7270,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 117,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1563),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8084),
                             Name = "عرض حساب المشترك",
                             PermissionHeaderId = 26,
                             isDeleted = false
@@ -7279,7 +7279,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 118,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1566),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8086),
                             Name = "تعديل حساب المشترك",
                             PermissionHeaderId = 26,
                             isDeleted = false
@@ -7288,7 +7288,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 119,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1569),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8088),
                             Name = "حذف حساب المشترك",
                             PermissionHeaderId = 26,
                             isDeleted = false
@@ -7297,7 +7297,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 120,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1572),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8090),
                             Name = "تصدير حساب المشترك",
                             PermissionHeaderId = 26,
                             isDeleted = false
@@ -7306,7 +7306,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 121,
                             Action = "subscriber_change_password",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1575),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8092),
                             Name = "تغيير كلمة سر المشترك",
                             PermissionHeaderId = 26,
                             isDeleted = false
@@ -7315,7 +7315,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 122,
                             Action = "verify_account",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1578),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8094),
                             Name = "تأكيد الحساب",
                             PermissionHeaderId = 26,
                             isDeleted = false
@@ -7324,7 +7324,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 123,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1580),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8096),
                             Name = "عرض ملف المشترك",
                             PermissionHeaderId = 27,
                             isDeleted = false
@@ -7333,7 +7333,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 124,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1583),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8099),
                             Name = "تصدير ملف المشترك",
                             PermissionHeaderId = 27,
                             isDeleted = false
@@ -7342,7 +7342,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 125,
                             Action = "read_as_subscriber",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1586),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8101),
                             Name = "قراءة كمشترك",
                             PermissionHeaderId = 27,
                             isDeleted = false
@@ -7351,7 +7351,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 126,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1589),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8103),
                             Name = "عرض إستمارة المشترك",
                             PermissionHeaderId = 28,
                             isDeleted = false
@@ -7360,7 +7360,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 127,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1592),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8105),
                             Name = "حذف إستمارة المشترك",
                             PermissionHeaderId = 28,
                             isDeleted = false
@@ -7369,7 +7369,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 128,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1595),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8108),
                             Name = "تصدير إستمارة المشترك",
                             PermissionHeaderId = 28,
                             isDeleted = false
@@ -7378,7 +7378,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 129,
                             Action = "reject",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1598),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8110),
                             Name = "رفض إستمارة",
                             PermissionHeaderId = 28,
                             isDeleted = false
@@ -7387,7 +7387,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 130,
                             Action = "accept",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1601),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8112),
                             Name = "قبول إستمارة",
                             PermissionHeaderId = 28,
                             isDeleted = false
@@ -7396,7 +7396,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 131,
                             Action = "information",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1604),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8114),
                             Name = "معلومات الإستمارة",
                             PermissionHeaderId = 28,
                             isDeleted = false
@@ -7405,7 +7405,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 132,
                             Action = "conditions",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1607),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8116),
                             Name = "شروط الإستمارة",
                             PermissionHeaderId = 28,
                             isDeleted = false
@@ -7414,7 +7414,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 133,
                             Action = "attachments",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1610),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8119),
                             Name = "شروط الإستمارة",
                             PermissionHeaderId = 28,
                             isDeleted = false
@@ -7423,7 +7423,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 134,
                             Action = "criteria",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1612),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8121),
                             Name = "معايير الإستمارة",
                             PermissionHeaderId = 28,
                             isDeleted = false
@@ -7432,7 +7432,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 135,
                             Action = "award_team",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1615),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8123),
                             Name = "فريق الجائزة الإستمارة",
                             PermissionHeaderId = 28,
                             isDeleted = false
@@ -7441,7 +7441,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 136,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1618),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8125),
                             Name = "إضافة فعالية",
                             PermissionHeaderId = 29,
                             isDeleted = false
@@ -7450,7 +7450,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 137,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1621),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8127),
                             Name = "عرض فعالية",
                             PermissionHeaderId = 29,
                             isDeleted = false
@@ -7459,7 +7459,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 138,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1624),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8129),
                             Name = "تعديل فعالية",
                             PermissionHeaderId = 29,
                             isDeleted = false
@@ -7468,7 +7468,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 139,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1626),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8131),
                             Name = "حذف فعالية",
                             PermissionHeaderId = 29,
                             isDeleted = false
@@ -7477,7 +7477,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 140,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1629),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8134),
                             Name = "تصدير فعالية",
                             PermissionHeaderId = 29,
                             isDeleted = false
@@ -7486,7 +7486,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 141,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1632),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8136),
                             Name = "عرض رسالة تواصل",
                             PermissionHeaderId = 30,
                             isDeleted = false
@@ -7495,7 +7495,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 142,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1634),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8138),
                             Name = "حذف رسالة تواصل",
                             PermissionHeaderId = 30,
                             isDeleted = false
@@ -7504,7 +7504,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 143,
                             Action = "xlsx-exportable",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1637),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8140),
                             Name = "تصدير رسالة تواصل",
                             PermissionHeaderId = 30,
                             isDeleted = false
@@ -7513,7 +7513,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 144,
                             Action = "forward_message",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1640),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8142),
                             Name = "تحويل الرسالة",
                             PermissionHeaderId = 30,
                             isDeleted = false
@@ -7522,7 +7522,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 145,
                             Action = "close_message",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1643),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8145),
                             Name = "إغلاق الرسالة",
                             PermissionHeaderId = 30,
                             isDeleted = false
@@ -7531,7 +7531,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 146,
                             Action = "replay",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1645),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8147),
                             Name = "الرد على الرسالة",
                             PermissionHeaderId = 30,
                             isDeleted = false
@@ -7540,7 +7540,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 147,
                             Action = "read_replies",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1648),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8149),
                             Name = "قراءة الرد",
                             PermissionHeaderId = 30,
                             isDeleted = false
@@ -7549,7 +7549,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 148,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1651),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8151),
                             Name = "عرض رسالة توضيحية",
                             PermissionHeaderId = 31,
                             isDeleted = false
@@ -7558,7 +7558,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 149,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1653),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8153),
                             Name = "تعديل رسالة توضيحية",
                             PermissionHeaderId = 31,
                             isDeleted = false
@@ -7567,7 +7567,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 150,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1656),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8156),
                             Name = "إضافة مسؤولية",
                             PermissionHeaderId = 32,
                             isDeleted = false
@@ -7576,7 +7576,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 151,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1659),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8159),
                             Name = "عرض مسؤولية",
                             PermissionHeaderId = 32,
                             isDeleted = false
@@ -7585,7 +7585,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 152,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1661),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8161),
                             Name = "تعديل مسؤولية",
                             PermissionHeaderId = 32,
                             isDeleted = false
@@ -7594,7 +7594,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 153,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1664),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8163),
                             Name = "حذف مسؤولية",
                             PermissionHeaderId = 32,
                             isDeleted = false
@@ -7603,7 +7603,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 154,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1667),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8165),
                             Name = "إضافة الأسئلة الشائعة العامة",
                             PermissionHeaderId = 33,
                             isDeleted = false
@@ -7612,7 +7612,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 155,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1669),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8168),
                             Name = "عرض الأسئلة الشائعة العامة",
                             PermissionHeaderId = 33,
                             isDeleted = false
@@ -7621,7 +7621,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 156,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1672),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8170),
                             Name = "تعديل الأسئلة الشائعة العامة",
                             PermissionHeaderId = 33,
                             isDeleted = false
@@ -7630,7 +7630,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 157,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1675),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8172),
                             Name = "حذف الأسئلة الشائعة العامة",
                             PermissionHeaderId = 33,
                             isDeleted = false
@@ -7639,7 +7639,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 158,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1677),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8174),
                             Name = "إضافة فئة الأسئلة الشائعة",
                             PermissionHeaderId = 34,
                             isDeleted = false
@@ -7648,7 +7648,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 159,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1690),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8176),
                             Name = "عرض فئة الأسئلة الشائعة",
                             PermissionHeaderId = 34,
                             isDeleted = false
@@ -7657,7 +7657,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 160,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1693),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8178),
                             Name = "تعديل فئة الأسئلة الشائعة",
                             PermissionHeaderId = 34,
                             isDeleted = false
@@ -7666,7 +7666,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 161,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1696),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8180),
                             Name = "حذف فئة الأسئلة الشائعة",
                             PermissionHeaderId = 34,
                             isDeleted = false
@@ -7675,7 +7675,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 162,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1699),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8183),
                             Name = "إضافة إحصائيات الجائزة",
                             PermissionHeaderId = 35,
                             isDeleted = false
@@ -7684,7 +7684,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 163,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1701),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8185),
                             Name = "عرض إحصائيات الجائزة",
                             PermissionHeaderId = 35,
                             isDeleted = false
@@ -7693,7 +7693,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 164,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1704),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8187),
                             Name = "تعديل إحصائيات الجائزة",
                             PermissionHeaderId = 35,
                             isDeleted = false
@@ -7702,7 +7702,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 165,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1707),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8189),
                             Name = "حذف إحصائيات الجائزة",
                             PermissionHeaderId = 35,
                             isDeleted = false
@@ -7711,7 +7711,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 166,
                             Action = "create",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1709),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8191),
                             Name = "إضافة شرائح",
                             PermissionHeaderId = 36,
                             isDeleted = false
@@ -7720,7 +7720,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 167,
                             Action = "read",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1712),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8193),
                             Name = "عرض شرائح",
                             PermissionHeaderId = 36,
                             isDeleted = false
@@ -7729,7 +7729,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 168,
                             Action = "update",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1715),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8195),
                             Name = "تعديل شرائح",
                             PermissionHeaderId = 36,
                             isDeleted = false
@@ -7738,9 +7738,198 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 169,
                             Action = "delete",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 327, DateTimeKind.Utc).AddTicks(1717),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8197),
                             Name = "حذف شرائح",
                             PermissionHeaderId = 36,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 170,
+                            Action = "update",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8199),
+                            Name = "تعديل شريك إستراتيجي",
+                            PermissionHeaderId = 37,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 171,
+                            Action = "create",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8202),
+                            Name = "إضافة صفحة",
+                            PermissionHeaderId = 38,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 172,
+                            Action = "read",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8204),
+                            Name = "عرض صفحة",
+                            PermissionHeaderId = 38,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 173,
+                            Action = "update",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8206),
+                            Name = "تعديل صفحة",
+                            PermissionHeaderId = 38,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 174,
+                            Action = "delete",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8208),
+                            Name = "حذف صفحة",
+                            PermissionHeaderId = 38,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 175,
+                            Action = "read",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8210),
+                            Name = "عرض فرز التحكيم",
+                            PermissionHeaderId = 39,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 176,
+                            Action = "update",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8212),
+                            Name = "تعديل فرز التحكيم",
+                            PermissionHeaderId = 39,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 177,
+                            Action = "read",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8214),
+                            Name = "عرض إسناد التحكيم",
+                            PermissionHeaderId = 40,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 178,
+                            Action = "update",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8216),
+                            Name = "تعديل إسناد التحكيم",
+                            PermissionHeaderId = 40,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 179,
+                            Action = "read",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8218),
+                            Name = "عرض التحكيم الأولي",
+                            PermissionHeaderId = 41,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 180,
+                            Action = "update",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8245),
+                            Name = "تعديل التحكيم الأولي",
+                            PermissionHeaderId = 41,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 181,
+                            Action = "read",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8248),
+                            Name = "عرض تدقيق التحكيم",
+                            PermissionHeaderId = 42,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 182,
+                            Action = "update",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8250),
+                            Name = "تعديل تدقيق التحكيم",
+                            PermissionHeaderId = 42,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 183,
+                            Action = "read",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8252),
+                            Name = "عرض مقابلات التحكيم",
+                            PermissionHeaderId = 43,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 184,
+                            Action = "update",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8255),
+                            Name = "تعديل تدقيق التحكيم",
+                            PermissionHeaderId = 43,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 185,
+                            Action = "read",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8257),
+                            Name = "عرض التحكيم النهائي",
+                            PermissionHeaderId = 44,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 186,
+                            Action = "update",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8260),
+                            Name = "تعديل التحكيم النهائي",
+                            PermissionHeaderId = 44,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 187,
+                            Action = "read",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8262),
+                            Name = "عرض نتائج التحكيم",
+                            PermissionHeaderId = 45,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 188,
+                            Action = "update",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8264),
+                            Name = "تعديل نتائج التحكيم",
+                            PermissionHeaderId = 45,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 189,
+                            Action = "read",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8266),
+                            Name = "عرض تحكيم الفائزين",
+                            PermissionHeaderId = 46,
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 190,
+                            Action = "update",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 419, DateTimeKind.Utc).AddTicks(8268),
+                            Name = "تعديل تحكيم الفائزين",
+                            PermissionHeaderId = 46,
                             isDeleted = false
                         });
                 });
@@ -7788,7 +7977,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicName = "حول الجائزة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8460),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7893),
                             EnglishName = "AboutAward",
                             isDeleted = false
                         },
@@ -7796,7 +7985,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicName = "الألبوم",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8462),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7896),
                             EnglishName = "Album",
                             isDeleted = false
                         },
@@ -7804,7 +7993,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             ArabicName = "نسخة التطبيق",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8465),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7898),
                             EnglishName = "AppVersion",
                             isDeleted = false
                         },
@@ -7812,7 +8001,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             ArabicName = "إصدارات الجائزة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8467),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7900),
                             EnglishName = "AwardPublication",
                             isDeleted = false
                         },
@@ -7820,7 +8009,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 5,
                             ArabicName = "راعي الجائزة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8470),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7902),
                             EnglishName = "AwardSponsor",
                             isDeleted = false
                         },
@@ -7828,7 +8017,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 6,
                             ArabicName = "التعاميم",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8472),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7904),
                             EnglishName = "Circular",
                             isDeleted = false
                         },
@@ -7836,7 +8025,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 7,
                             ArabicName = "الصفوف",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8478),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7905),
                             EnglishName = "Class",
                             isDeleted = false
                         },
@@ -7844,7 +8033,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 8,
                             ArabicName = "صفوف المحكمين",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8480),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7907),
                             EnglishName = "ClassArbitrator",
                             isDeleted = false
                         },
@@ -7852,7 +8041,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 9,
                             ArabicName = "الدورات",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8483),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7909),
                             EnglishName = "Cycle",
                             isDeleted = false
                         },
@@ -7860,7 +8049,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 10,
                             ArabicName = "الاجندة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8485),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7911),
                             EnglishName = "Agenda",
                             isDeleted = false
                         },
@@ -7868,7 +8057,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 11,
                             ArabicName = "الفئات",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8488),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7912),
                             EnglishName = "Category",
                             isDeleted = false
                         },
@@ -7876,7 +8065,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 12,
                             ArabicName = "حول الجائزة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8490),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7914),
                             EnglishName = "GeneralCondition",
                             isDeleted = false
                         },
@@ -7884,7 +8073,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 13,
                             ArabicName = "الجهات التعليمية",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8492),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7916),
                             EnglishName = "EducationalEntity",
                             isDeleted = false
                         },
@@ -7892,7 +8081,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 14,
                             ArabicName = "ملفات النظام",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8495),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7917),
                             EnglishName = "SystemFiles",
                             isDeleted = false
                         },
@@ -7900,7 +8089,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 15,
                             ArabicName = "الدورات التدريبية العامة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8497),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7919),
                             EnglishName = "GeneralWorkshop",
                             isDeleted = false
                         },
@@ -7908,7 +8097,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 16,
                             ArabicName = "التعليمات",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8499),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7921),
                             EnglishName = "Instruction",
                             isDeleted = false
                         },
@@ -7916,7 +8105,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 17,
                             ArabicName = "الإجتماعات",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8502),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7923),
                             EnglishName = "Meeting",
                             isDeleted = false
                         },
@@ -7924,7 +8113,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 18,
                             ArabicName = "الأخبار",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8504),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7925),
                             EnglishName = "News",
                             isDeleted = false
                         },
@@ -7932,7 +8121,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 19,
                             ArabicName = "الإشعارات",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8507),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7927),
                             EnglishName = "Notification",
                             isDeleted = false
                         },
@@ -7940,7 +8129,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 20,
                             ArabicName = "قالب الإشعارات",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8509),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7928),
                             EnglishName = "NotificationTemplate",
                             isDeleted = false
                         },
@@ -7948,7 +8137,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 21,
                             ArabicName = "الدور",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8512),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7930),
                             EnglishName = "Role",
                             isDeleted = false
                         },
@@ -7956,7 +8145,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 22,
                             ArabicName = "المستخدمين",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8514),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7932),
                             EnglishName = "User",
                             isDeleted = false
                         },
@@ -7964,7 +8153,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 23,
                             ArabicName = "المنسقين",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8516),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7934),
                             EnglishName = "Coordinator",
                             isDeleted = false
                         },
@@ -7972,7 +8161,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 24,
                             ArabicName = "المحكمين",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8519),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7936),
                             EnglishName = "Arbitrator",
                             isDeleted = false
                         },
@@ -7980,7 +8169,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 25,
                             ArabicName = "اللجان",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8521),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7938),
                             EnglishName = "Committee",
                             isDeleted = false
                         },
@@ -7988,7 +8177,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 26,
                             ArabicName = "حسابات المشتركين",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8523),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7939),
                             EnglishName = "SubscriberAccount",
                             isDeleted = false
                         },
@@ -7996,7 +8185,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 27,
                             ArabicName = "الملف الشخصي للمشتركين",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8526),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7941),
                             EnglishName = "SubscriberProfile",
                             isDeleted = false
                         },
@@ -8004,7 +8193,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 28,
                             ArabicName = "نموذج الإشتراك",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8528),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7943),
                             EnglishName = "SubscriberForm",
                             isDeleted = false
                         },
@@ -8012,7 +8201,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 29,
                             ArabicName = "الفعاليات",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8530),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7945),
                             EnglishName = "Event",
                             isDeleted = false
                         },
@@ -8020,7 +8209,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 30,
                             ArabicName = "تواصل معنا",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8532),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7947),
                             EnglishName = "ContactUs",
                             isDeleted = false
                         },
@@ -8028,7 +8217,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 31,
                             ArabicName = "الرسائل التوضيحية",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8535),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7948),
                             EnglishName = "ExplanatoryMessage",
                             isDeleted = false
                         },
@@ -8036,7 +8225,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 32,
                             ArabicName = "المسؤوليات",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8537),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7950),
                             EnglishName = "Responsibility",
                             isDeleted = false
                         },
@@ -8044,7 +8233,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 33,
                             ArabicName = "الأسالة الشائعة العامة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8539),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7952),
                             EnglishName = "GeneralFAQ",
                             isDeleted = false
                         },
@@ -8052,7 +8241,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 34,
                             ArabicName = "الأسالة الشائعة الخاصة بالفئة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8542),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7954),
                             EnglishName = "FAQCategory",
                             isDeleted = false
                         },
@@ -8060,7 +8249,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 35,
                             ArabicName = "إحصائيات الجائزة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8544),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7955),
                             EnglishName = "AwardStatistic",
                             isDeleted = false
                         },
@@ -8068,8 +8257,96 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 36,
                             ArabicName = "شرائح",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8546),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7957),
                             EnglishName = "Slider",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 37,
+                            ArabicName = "شريك استراتيجي",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7959),
+                            EnglishName = "StrategicPartner",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 38,
+                            ArabicName = "الصفحات المخصصة",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7961),
+                            EnglishName = "CustomPages",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 39,
+                            ArabicName = "فرز التحكيم",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7962),
+                            EnglishName = "ArbitrationSorting",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 40,
+                            ArabicName = "إسناد التحكيم",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7964),
+                            EnglishName = "ArbitrationAssign",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 41,
+                            ArabicName = "التحكيم الأولي",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7966),
+                            EnglishName = "ArbitrationFirst",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 42,
+                            ArabicName = "تدقيق التحكيم",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7968),
+                            EnglishName = "ArbitrationAudit",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 43,
+                            ArabicName = "مقابلات التحكيم",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7969),
+                            EnglishName = "ArbitrationInterviews",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 44,
+                            ArabicName = "التحكيم النهائي",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7971),
+                            EnglishName = "ArbitrationFinal",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 45,
+                            ArabicName = "التحكيم النهائي",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7973),
+                            EnglishName = "ArbitrationFinal",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 46,
+                            ArabicName = "نتائج التحكيم",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7975),
+                            EnglishName = "ResultsArbitration",
+                            isDeleted = false
+                        },
+                        new
+                        {
+                            Id = 47,
+                            ArabicName = "الفائزين",
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7976),
+                            EnglishName = "ArbitrationWinners",
                             isDeleted = false
                         });
                 });
@@ -8304,7 +8581,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 10,
                             ArabicName = "منسق 1",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7202),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7102),
                             Email = "Coordinator@Coordinator.com",
                             EnglishName = "Coordinator 1",
                             Gender = 0,
@@ -8319,7 +8596,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 11,
                             ArabicName = "منسق 2",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7209),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7107),
                             Email = "Coordinator2@Coordinator2.com",
                             EnglishName = "Coordinator 2",
                             Gender = 0,
@@ -8334,7 +8611,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 12,
                             ArabicName = "منسق 3",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7214),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7110),
                             Email = "Coordinator3@Coordinator3.com",
                             EnglishName = "Coordinator 3",
                             Gender = 0,
@@ -8349,7 +8626,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 13,
                             ArabicName = "منسق 4",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7218),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7113),
                             Email = "Coordinator4@Coordinator4.com",
                             EnglishName = "Coordinator 4",
                             Gender = 0,
@@ -8364,7 +8641,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicName = "ادمن 123",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7780),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7442),
                             Email = "admin@gmail.com",
                             EnglishName = "Admin 123",
                             Gender = 0,
@@ -8379,7 +8656,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicName = "ادمن 123 #",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7784),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7445),
                             Email = "Ahmad@Ahmad.com",
                             EnglishName = "Admin 123 #",
                             Gender = 0,
@@ -8394,7 +8671,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             ArabicName = "ادمن 123 ##",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7787),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7448),
                             Email = "Ahmad2@Ahmad2.com",
                             EnglishName = "Admin 123 ##",
                             Gender = 0,
@@ -8409,7 +8686,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             ArabicName = "ادمن 123 ##@",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7793),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7451),
                             Email = "Ahmad3@Ahmad3.com",
                             EnglishName = "Admin 123 ##@",
                             Gender = 0,
@@ -8424,7 +8701,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 5,
                             ArabicName = "ادمن 123 ##@@",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7798),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7454),
                             Email = "Ahmad4@Ahmad4.com",
                             EnglishName = "Admin 123 ##@@",
                             Gender = 0,
@@ -8439,7 +8716,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 6,
                             ArabicName = "تامر",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7801),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7456),
                             Email = "tamer@gmail.com",
                             EnglishName = "Tamer",
                             Gender = 0,
@@ -8737,7 +9014,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8793),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8080),
                             Slug = "events_index",
                             Title = "جدول الفعاليات",
                             isDeleted = false
@@ -8745,7 +9022,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8797),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8083),
                             Slug = "event_attendees_index",
                             Title = "جدول حضور الفعاليات",
                             isDeleted = false
@@ -8753,7 +9030,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8799),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8085),
                             Slug = "arbitrators_index",
                             Title = "جدول المًحكّمين",
                             isDeleted = false
@@ -8761,7 +9038,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8802),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8087),
                             Slug = "coordinators_index",
                             Title = "جدول المًنسقين",
                             isDeleted = false
@@ -8769,7 +9046,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8804),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8089),
                             Slug = "arbitrator_form",
                             Title = "إضافة أو تعديل معلومات مًحكّم",
                             isDeleted = false
@@ -8777,7 +9054,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8806),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8091),
                             Slug = "coordinator_form",
                             Title = "إضافة أو تعديل معلومات مًنسق",
                             isDeleted = false
@@ -8785,7 +9062,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8809),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8093),
                             Slug = "class_arbitrators_index",
                             Title = "جدول مًحكّمين الصف",
                             isDeleted = false
@@ -8793,7 +9070,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8811),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8094),
                             Slug = "class_form",
                             Title = "إضافة أو تعديل معلومات صف",
                             isDeleted = false
@@ -8801,7 +9078,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8814),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8096),
                             Slug = "classes_index",
                             Title = "جدول الصفوف",
                             isDeleted = false
@@ -8809,7 +9086,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8817),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8098),
                             Slug = "cycle_form",
                             Title = "إضافة أو تعديل معلومات دورة",
                             isDeleted = false
@@ -8817,7 +9094,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 11,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8819),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8100),
                             Slug = "cycles_index",
                             Title = "جدول الدورات",
                             isDeleted = false
@@ -8825,7 +9102,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 12,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8822),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8102),
                             Slug = "Agendas_index",
                             Title = "جدول الأجندة",
                             isDeleted = false
@@ -8833,7 +9110,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 13,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8825),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8104),
                             Slug = "categories_index",
                             Title = "جدول الفئات الرئيسية مع الفئات الفرعية التابعة له",
                             isDeleted = false
@@ -8841,7 +9118,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 14,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8827),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8106),
                             Slug = "subcategory_form",
                             Title = "إضافة أو تعديل معلومات فئة فرعية",
                             isDeleted = false
@@ -8849,7 +9126,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 15,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8830),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8108),
                             Slug = "cycle_specifications_form",
                             Title = "إضافة أو تعديل محددات الدورة",
                             isDeleted = false
@@ -8857,7 +9134,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 16,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8834),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8110),
                             Slug = "explanatory_guide",
                             Title = "عرض الدليل التفسيري مع الإجراءات الممكنة",
                             isDeleted = false
@@ -8865,7 +9142,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 17,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8836),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8112),
                             Slug = "faq_index",
                             Title = "جدول الأسئلة الشائعة",
                             isDeleted = false
@@ -8873,7 +9150,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 18,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8839),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8114),
                             Slug = "cycle_conditions_index",
                             Title = "جدول الشروط العامة للدورة",
                             isDeleted = false
@@ -8881,7 +9158,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 19,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8841),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8116),
                             Slug = "data_import",
                             Title = "صفحة استيراد المعلومات",
                             isDeleted = false
@@ -8889,7 +9166,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 20,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8843),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8119),
                             Slug = "subcategory_conditions_index",
                             Title = "جدول شروط الفئة الفرعية",
                             isDeleted = false
@@ -8897,7 +9174,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 21,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8846),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8121),
                             Slug = "subcategory_fields_index",
                             Title = "جدول حقول الفئة الفرعية",
                             isDeleted = false
@@ -8905,7 +9182,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 22,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8848),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8123),
                             Slug = "subcategory_workshops_index",
                             Title = "جدول الورشات التدريبية للفئة الفرعية",
                             isDeleted = false
@@ -8913,7 +9190,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 23,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8851),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8125),
                             Slug = "educational_entities_index",
                             Title = "جدول الجهات التعليمية",
                             isDeleted = false
@@ -8921,7 +9198,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 24,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8853),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8127),
                             Slug = "educational_entities_form",
                             Title = "إضافة أو تعديل جهة تعليمية مع عرض المؤسسات التابعة في حال التعديل",
                             isDeleted = false
@@ -8929,7 +9206,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 25,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8855),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8129),
                             Slug = "educational_institution_form",
                             Title = "إضافة أو تعديل مؤسسة تعليمية",
                             isDeleted = false
@@ -8937,7 +9214,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 26,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8858),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8131),
                             Slug = "home",
                             Title = "الصفحة الرئيسية",
                             isDeleted = false
@@ -8945,7 +9222,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 27,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8861),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8133),
                             Slug = "instructions_index",
                             Title = "جدول الإرشادات",
                             isDeleted = false
@@ -8953,7 +9230,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 28,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8863),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8135),
                             Slug = "instruction_form",
                             Title = "صفحة تعديل إرشاد",
                             isDeleted = false
@@ -8961,7 +9238,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 29,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8866),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8137),
                             Slug = "notifications_index",
                             Title = "جدول الإشعارات",
                             isDeleted = false
@@ -8969,7 +9246,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 30,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8869),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8139),
                             Slug = "notifications_form",
                             Title = "إضافة إشعار",
                             isDeleted = false
@@ -8977,7 +9254,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 31,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8871),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8141),
                             Slug = "roles_index",
                             Title = "جدول الأدوار",
                             isDeleted = false
@@ -8985,7 +9262,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 32,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8874),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8144),
                             Slug = "role_form",
                             Title = "إضافة أو تعديل دور",
                             isDeleted = false
@@ -8993,7 +9270,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 33,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8876),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8146),
                             Slug = "subscribers_accounts_index",
                             Title = "جدول حسابات المشتركين",
                             isDeleted = false
@@ -9001,7 +9278,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 34,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8879),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8149),
                             Slug = "users_index",
                             Title = "جدول المستخدمين",
                             isDeleted = false
@@ -9009,7 +9286,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 35,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8882),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8151),
                             Slug = "user_form",
                             Title = "إضافة أو تعديل معلومات مستخدم",
                             isDeleted = false
@@ -9017,7 +9294,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 36,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8885),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8153),
                             Slug = "notifications_templates_index",
                             Title = "جدول نماذج الإشعارات",
                             isDeleted = false
@@ -9025,7 +9302,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 37,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8888),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8155),
                             Slug = "notification_template_form",
                             Title = "إضافة أو تعديل نموذج إشعارات",
                             isDeleted = false
@@ -9033,7 +9310,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 38,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8890),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8156),
                             Slug = "contact_us_index",
                             Title = "جدول طلبات التواصل",
                             isDeleted = false
@@ -9041,7 +9318,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 39,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8893),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8158),
                             Slug = "contact_us_details",
                             Title = "تفاصيل طلب تواصل",
                             isDeleted = false
@@ -9049,7 +9326,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 40,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8896),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8160),
                             Slug = "committees_index",
                             Title = "جدول اللجان",
                             isDeleted = false
@@ -9057,7 +9334,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 41,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8898),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8162),
                             Slug = "committee_form",
                             Title = "إضافة أو تعديل لجنة",
                             isDeleted = false
@@ -9065,7 +9342,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 42,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8901),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8164),
                             Slug = "meetings_index",
                             Title = "جدول الاجتماعات",
                             isDeleted = false
@@ -9073,7 +9350,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 43,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8903),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8166),
                             Slug = "meeting_form",
                             Title = "إضافة اجتماع",
                             isDeleted = false
@@ -9081,7 +9358,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 44,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8906),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8168),
                             Slug = "circulars_index",
                             Title = "جدول التعاميم",
                             isDeleted = false
@@ -9089,7 +9366,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 45,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8909),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8171),
                             Slug = "circular_form",
                             Title = "إضافة أو تعديل تعميم",
                             isDeleted = false
@@ -9097,7 +9374,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 46,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8911),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8173),
                             Slug = "general_workshops_index",
                             Title = "جدول الورشات التدريبية العامة",
                             isDeleted = false
@@ -9105,7 +9382,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 47,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8914),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8175),
                             Slug = "general_workshops_form",
                             Title = "إضافة أو تعديل ورشة تدريبية عامة",
                             isDeleted = false
@@ -9113,7 +9390,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 48,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8917),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8177),
                             Slug = "app_versions_index",
                             Title = "جدول نسخ التطبيق",
                             isDeleted = false
@@ -9121,7 +9398,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 49,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8919),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8179),
                             Slug = "app_version_form",
                             Title = "إضافة نسخة تطبيق",
                             isDeleted = false
@@ -9129,7 +9406,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 50,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8922),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8181),
                             Slug = "subscribers_profiles_index",
                             Title = "جدول برفايلات المستخدمين",
                             isDeleted = false
@@ -9137,7 +9414,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 51,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8924),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8183),
                             Slug = "subscriber_profile",
                             Title = "بروفايل مستخدم",
                             isDeleted = false
@@ -9905,7 +10182,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicDescription = "كرّم سموّ الشيخ سلطان بن أحمد بن سلطان القاسمي، نائب حاكم إمارة الشارقة، صباح الثلاثاء، الفائزين بجائزة الشارقة للتفوق والتميز التربوي في دورتها التاسعة والعشرين، في مركز الجواهر للمناسبات والمؤتمرات.\r\n\r\n\r\nاستهل الحفل بالسلام الوطني لدولة الإمارات، أعقبه تلاوة آيات بيّنات من الذكر الحكيم، ألقت بعدها الدكتورة محدّثة الهاشمي، رئيسة هيئة الشارقة للتعليم الخاص، كلمة قدمت فيها الشكر والامتنان إلى صاحب السموّ الشيخ الدكتور سلطان بن محمد القاسمي، عضو المجلس الأعلى، حاكم الشارقة، على دعمه المطلق، لكل ما يعزّز الواقع التعليمي والثقافي في الإمارة.\r\n\r\n\r\nكما قدمت الشكر والعرفان إلى سموّ الشيخ سلطان بن أحمد القاسمي، على تشريفه للحفل وتكريم الفائزين والفائزات.\r\n\r\n \r\n\r\nوأشارت إلى أن الجائزة، وهي الأولى تاريخياً التي تحتفي بالطلبة، لا تعدّ رمزاً للتفوق والإلهام فحسب، بل منصة تنطلق بها جسور الإبداع والبناء في مستقبل المنظومة التربوية.\r\n\r\n\r\nمشيدةً بمستوى مشاركات الطلبة في هذه الدورة التي بلغت 64%، ما يعكس نجاح الجائزة في تحقيق أهم أهدافها في تشجيع الطلبة وتحفيزهم على التطور والإبداع والابتكار.\r\n\r\n\r\nواختتمت محدّثة الهاشمي، كلمتها بتهنئة الفائزين الذين بذلوا جهوداً كبيرة، وعملوا بتفانٍ لتحقيق التميز، وأصبحوا يمثلون نماذج طيبة لروح العطاء الملهم في التعليم. لافتةً إلى أهمية الجائزة في تحفيز العقول، ونشر ثقافة التميّز، ومساندة المتميزين في الميدان التربوي بكل شرائحه وفئاته، والمجتمع المحلي. كما قدمت الشكر إلى لجنة التحكيم.\r\n\r\n\r\nوشاهد الحضور عرضاً عن مسيرة الجائزة، خلال السنوات الماضية وتطورها، وأدوارها في تعزيز التفوق التربوي والتعليمي في إمارة الشارقة.\r\n\r\n\r\nوتفضل سموّ نائب حاكم الشارقة، في نهاية الحفل بتكريم الفائزين، حيث فازت «مؤسسة الإمارات للتعليم المدرسي»، بجائزة أفضل جهة تعليمية.\r\n\r\n\r\nوفاز في الفئة الأولى للأفراد المتميزين، القائد التربوي المتميز: أميرة آل محمد، بالمركز الأول، ومريم اللوغاني، بالمركز الثاني. وفي فئة المعلم المتميز، فازت سها شعشاعة، بالمركز الأول، ومؤمن يونس، بالمركز الثاني، وعنود الحمادي، بالمركز الثالث، وخفية حمودة الكتبي، بالمركز الرابع.\r\n\r\n\r\nوفي فئة الوظائف الداعمة المتميزة، فازت خولة البلوشي، بالمركز الأول، وإكرامي سيد، بالمركز الثاني. وفي فئة ولي الأمر المتميّز، فاز أحمد مصبح النيادي.\r\n\r\n\r\nوفي فئة الطالب المتميّز في الصفوف من الثالث إلى الثاني عشر، فاز: ناكشاترا انطوني، وكانشيكا مانيكاندان، وشريماد سريراج، من الصف الثالث. وسليمان السيد، وهند النقبي، ومريم البدري، من الرابع. ونيلينا جونيش، وبريانكا جوبينات، وشمّا المرزوقي، من الخامس. وعلي حميد آل علي، وشهد السويدان، وسيلينا حامد، وسانفي راو، من السادس. وأنانيا أماني، ومير أظهار، وشهد المزروعي، من السابع. ومحمد النقبي، وهيام الحساني، من الثامن، وديتي غاندي، وسامفورد توماس، وجاش سانديب، من التاسع. وموزة الشامسي، ومريم الشحّي، وأنوباما بادينشاريتيل، من العاشر. وأديتيا غاندي، من الحادي عشر.\r\n\r\n\r\nوفاز في فئة الطالب المتميز من الفئات الخاصة: مريم المرزوقي، وشوق الشامسي، ومحمد العبدولي، وخميس العبدولي.\r\n\r\n\r\nوفي فئة المؤسسات المتميزة، فازت «مدرسة جيمس ميلينيوم»، الخاصة بفئة المؤسسات التعليمية المتميزة. وفي فرق العمل المتميزة، فاز مجلس طلبة المدرسة الثانوية النموذجية للبنين في فئة المجلس المتميّز.\r\n\r\n\r\nحضر الحفل بجانب سموّ نائب حاكم الشارقة: الشيخ المهندس محمد بن عبدالله بن ماجد القاسمي، مدير دائرة شؤون البلديات، والشيخ عبدالله بن محمد القاسمي، مدير هيئة الشؤون الإسلامية والأوقاف، وحميد محمد القطامي، رئيس مجلس أمناء مؤسسة حمدان بن راشد آل مكتوم للعلوم الطبية والتربوية، وجمال الطريفي، رئيس الجامعة القاسمية، والدكتورة محدّثة الهاشمي رئيسة هيئة الشارقة للتعليم الخاص، وعيسى الحزامي، رئيس مجلس الشارقة الرياضي، وعدد من المسؤولين والمديرين العامين، ومديري الدوائر المحلية، والتربويين ومديري المدارس والمعلمين.\r\n\r\n \r\n\r\nالمصدر: الخليج",
                             ArabicTitle = "سلطان بن أحمد يكرّم فائزي «جائزة الشارقة للتفوق التربوي»",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9771),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8603),
                             EnglishDescription = "His Highness Sheikh Sultan bin Ahmed bin Sultan Al Qasimi, Deputy Ruler of the Emirate of Sharjah, on Tuesday morning, honored the winners of the Sharjah Award for Educational Excellence and Excellence in its twenty-ninth session, at Al Jawaher Center for Events and Conferences.\r\n\r\n\r\nThe ceremony began with the national anthem of the UAE, followed by the recitation of clear verses from the Holy Quran, after which Dr. Muhadditha Al Hashemi, President of the Sharjah Private Education Authority, delivered a speech in which she extended thanks and gratitude to His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council, Ruler of Sharjah, for His absolute support for everything that enhances the educational and cultural reality in the emirate.\r\n\r\n\r\nShe also extended thanks and gratitude to His Highness Sheikh Sultan bin Ahmed Al Qasimi, for honoring the ceremony and honoring the winners.\r\n\r\n \r\n\r\nShe pointed out that the award, which is the first in history to celebrate students, is not only a symbol of excellence and inspiration, but also a platform from which bridges of creativity and building in the future of the educational system will be launched.\r\n\r\n\r\nShe praised the level of student participation in this course, which reached 64%, which reflects the success of the award in achieving its most important goals of encouraging students and motivating them to develop, create and innovate.\r\n\r\n\r\nAl-Hashemi concluded her speech by congratulating the winners who made great efforts, worked with dedication to achieve excellence, and became good examples of the spirit of inspiring giving in education. Pointing to the importance of the award in stimulating minds, spreading the culture of excellence, and supporting distinguished people in the educational field in all its segments and categories, and the local community. She also thanked the jury.\r\n\r\n\r\nThe audience watched a presentation about the award’s progress over the past years, its development, and its roles in promoting educational excellence in the Emirate of Sharjah.\r\n\r\n\r\nAt the end of the ceremony, His Highness the Deputy Ruler of Sharjah honored the winners, as the Emirates School Education Foundation won the Best Educational Institution award.\r\n\r\n\r\nIn the first category of distinguished individuals, the distinguished educational leader: Amira Al Muhammad, won first place, and Maryam Al-Loughani, won second place. In the Distinguished Teacher category, Suha Shasha’a won first place, Moamen Younis won second place, Anoud Al Hammadi won third place, and Khafiya Hamouda Al Ketbi won fourth place.\r\n\r\n\r\nIn the Outstanding Support Jobs category, Khawla Al Balushi won first place, and Ekrami Sayed won second place. In the Distinguished Parent category, Ahmed Musabih Al Neyadi won.\r\n\r\n\r\nIn the Outstanding Student category in grades three to twelve, Nakshatra Anthony, Kanshika Manikandan, and Shrimad Sriraj, from third grade, won. Suleiman Al-Sayyed, Hind Al-Naqbi, and Maryam Al-Badri, from the fourth. And Nelina Gunesh, Priyanka Gobinath, and Shamma Al Marzouqi, from the fifth. Ali Hamid Al Ali, Shahad Al-Suwaidan, Selina Hamed, and Saanvi Rao, from the sixth. Ananya Amani, Mir Azhar, and Shahad Al Mazrouei, from the seventh. Muhammad Al-Naqbi and Hiyam Al-Hassani, from the eighth, and Diti Gandhi, Samford Thomas, and Jash Sandeep, from the ninth. Moza Al Shamsi, Maryam Al Shehhi, and Anupama Badincharitil, from the 10th. and Aditya Gandhi, from the 11th.\r\n\r\n\r\nThe winners in the Outstanding Student category from the special categories were: Mariam Al Marzouqi, Shouq Al Shamsi, Muhammad Al Abdouli, and Khamis Al Abdouli.\r\n\r\n\r\nIn the Distinguished Institutions category, GEMS Millennium Private School won the Distinguished Educational Institutions category. In the distinguished work teams, the Student Council of the Model Secondary School for Boys won in the Distinguished Council category.\r\n\r\n\r\nThe ceremony was attended, alongside His Highness the Deputy Ruler of Sharjah: Sheikh Engineer Mohammed bin Abdullah bin Majid Al Qasimi, Director of the Department of Municipalities Affairs, Sheikh Abdullah bin Mohammed Al Qasimi, Director of the Islamic Affairs and Endowments Authority, and Humaid Mohammed Al Qatami, Chairman of the Board of Trustees of the Hamdan Bin Rashid Al Maktoum Foundation for Medical and Educational Sciences. Jamal Al-Tarifi, President of Al Qasimia University, Dr. Muhaddith Al-Hashimi, President of the Sharjah Private Education Authority, Issa Al-Hazami, Chairman of the Sharjah Sports Council, and a number of officials, general directors, directors of local departments, educators, school principals, and teachers.\r\n\r\n \r\n\r\nSource: Al Khaleej",
                             EnglishTitle = "Sultan bin Ahmed honors the winners of the “Sharjah Award for Educational Excellence”",
                             Image = "https://award-shj.ae/media/n1lb4exq/screenshot-2024-03-07-121511.png?anchor=center&mode=crop&width=593&height=338&rnd=133542874516370000",
@@ -9918,7 +10195,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 2,
                             ArabicDescription = "الشارقة: أمير السني\r\n\r\nأعلنت لجنة «جائزة الشارقة للتفوق والتميز التربوي» و«مجالس أولياء أمور الطلبة والطالبات»، إطلاق الدورة 29 للجائزة، خلال مؤتمر صحفي عقدته في «بيت الحكمة».\r\n\r\nحضر المؤتمر محمد الملّا، الأمين العام للجنة، وعلياء الحوسني، رئيسة لجنة الجائزة، وعدد من الشخصيات من المؤسسات ذات الصلة، والشركاء، ومنسقو الجائزة، وأعضاء اللجان التطويرية، وعدد من الإعلاميين.\r\n\r\nوقال الملّا إن إطلاق الدورة 29 هذا العام، جاء استمراراً لمسيرة الجائزة التربوية المتميزة، منذ إنشائها عام 1994 برعاية صاحب السموّ الشيخ الدكتور سلطان بن محمد القاسمي، عضو المجلس الأعلى حاكم الشارقة، ولدورها الكبير في إبراز الكفايات التعليمية المعطاءة التي قدمت مساهمات كبيرة في حقل التعليم، ولها بصمات واضحة، في النهوض به.\r\n\r\nوأضاف أن الجائزة، تستهدف رسالتها مهمّة الارتقاء بالعمل التربوي، في مراحله كافة، بتكريم المتميزين والمبدعين من المجالات التعليمية والتربوية المختلفة، إلى جانب نشر ثقافة التّميّز والابتكار، وتهيئة مناخ فكريّ نموذجيّ للميدان التّربوي بكلّ فئاته المبدعة المتميزة بطرحها لرؤية طموحة جديدة، تتكامل مع إستراتيجيتها وأهدافها المستقبلية الرائدة.\r\n\r\nوأوضح أن الفئات المستهدفة في الجائزة ثلاث: الأفراد المتميزون وضمت «المعلم المتميز»، و«القائد التربوي المتميز» (بفرعيه القيادة العليا والقيادة الوسطى)، و«الطالب المتميز» و«الطالب المتميز من الفئات الخاصة»، و«الوظائف الداعمة المتميزة» و«ولي الأمرالمتميز».\r\n\r\nوتضم الثانية المؤسسات المتميزة «المدرسة المتميزة»، و«الحضانات المتميزة»، و«المؤسسات والشراكات الداعمة للتعليم». وتضمّ الثالثة فرق العمل وشمل «فرق العمل المؤسسية المتميزة»، و«مجلس الطلبة المتميز»، و«فرق العمل المشتركة»، و«مجلس أولياء الأمور المتميز».\r\n\r\nوكشف الأمين العام، جائزة جديدة لهذا العام وهي «جوهرة اللغة العربية»، لأهمية اللغة العربية، وضرورة تربية النشء على إتقانها والمحافظة عليها، وتجسيداً للاهتمام الكبير الذي يوليه صاحب السموّ حاكم الشارقة باللغة العربية، بدعمه وتسخير كل الإمكانات للحفاظ عليها.\r\n\r\nوقالت علياء الحوسني: إن الجائزة تواصل أهدافها الطموحة لاستشراف المستقبل، والمساهمة في تطوير الميدان التربوي دورة إثر دورة، وبناء كوادر تربوية متميزة متخذة من الإبداع والابتكار والتّميّز والمنهج العلمي نهجاً، لتنمية هذا الميدان، وإعداده الإعداد المتميز الذي يؤهله للمساهمة في إنجازات الدولة.\r\n\r\nوأضافت أن لجنة الجائزة، تسعى إلى تطويرها وفق خطّة ممنهجة وأهداف ورؤى واضحة، تستقطب الخبرات المتميزة لتطوّر معاييرها ومنهجياتها وأنظمتها التي تصنع الفرق في عوالم التميز و الإبداع.\r\n\r\n \r\n\r\nالمصدر: الخليج",
                             ArabicTitle = "إطلاق «جائزة الشارقة للتفوق والتميز التربوي» الدورة 29",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9776),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8606),
                             EnglishDescription = "Sharjah: Amir Al Sunni\r\n\r\nThe Sharjah Award for Educational Excellence and Distinction Committee and the Parents’ Councils of male and female students announced the launch of the 29th session of the award, during a press conference held at the House of Wisdom.\r\n\r\nThe conference was attended by Mohammed Al Mulla, Secretary General of the Committee, Alia Al Hosani, Chair of the Award Committee, and a number of personalities from relevant institutions, partners, award coordinators, members of development committees, and a number of media professionals.\r\n\r\nAl Mulla said that the launch of the 29th session this year was a continuation of the distinguished educational award’s journey, since its establishment in 1994 under the patronage of His Highness Sheikh Dr. Sultan bin Muhammad Al Qasimi, Member of the Supreme Council and Ruler of Sharjah, and its great role in highlighting the generous educational competencies that have made great contributions in the field of education. And it has clear fingerprints in its advancement.\r\n\r\nHe added that the award’s mission aims to advance educational work, in all its stages, by honoring distinguished and creative people from various educational and pedagogical fields, in addition to spreading the culture of excellence and innovation, and creating an exemplary intellectual climate for the educational field with all its distinguished creative categories by presenting a new ambitious vision, integrated with its strategy and goals. Leading future.\r\n\r\nHe explained that the target categories for the award are three: distinguished individuals, which include the “distinguished teacher,” the “distinguished educational leader” (in both the senior leadership and middle leadership branches), the “distinguished student,” the “distinguished student from special categories,” and the “distinguished supporting jobs.” And “the distinguished guardian.”\r\n\r\nThe second includes the distinguished institutions “Distinguished School,” “Distinguished Nurseries,” and “Institutions and Partnerships that Support Education.” The third includes work teams and includes “Distinguished Institutional Work Teams,” “Distinguished Student Council,” “Joint Work Teams,” and “Distinguished Parents Council.”\r\n\r\nThe Secretary-General revealed a new award for this year, which is “The Jewel of the Arabic Language,” in recognition of the importance of the Arabic language and the necessity of educating young people to master and preserve it, and as an embodiment of the great interest that His Highness the Ruler of Sharjah attaches to the Arabic language, with his support and harnessing all capabilities to preserve it.\r\n\r\nAlia Al Hosani said: The award continues its ambitious goals of anticipating the future, contributing to the development of the educational field, cycle after cycle, and building distinguished educational cadres that adopt creativity, innovation, excellence, and the scientific method as an approach, to develop this field, and prepare it with distinguished preparation that qualifies it to contribute to the state’s achievements.\r\n\r\nShe added that the award committee seeks to develop it according to a systematic plan with clear goals and visions, attracting distinguished expertise to develop its standards, methodologies and systems that make the difference in the worlds of excellence and creativity.\r\n\r\n \r\n\r\nSource: Al Khaleej",
                             EnglishTitle = "Launching of the “Sharjah Award for Excellence and Educational Excellence”, the 29th session",
                             Image = "https://award-shj.ae/media/bx4famcb/5106559.jpeg?anchor=center&mode=crop&width=593&height=338&rnd=133280978690230000",
@@ -9931,7 +10208,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 3,
                             ArabicDescription = "كرم سمو الشيخ عبدالله بن سالم بن سلطان القاسمي نائب حاكم الشارقة، صباح اليوم الأربعاء، في مركز الجواهر للمناسبات والمؤتمرات، الفائزين بجائزة الشارقة للتميز التربوي في دورتها الـ 28، والتي ينظمها مجلس الشارقة للتعليم.\r\n\r\nاستهل حفل التكريم بالسلام الوطني لدولة الإمارات العربية المتحدة، عقبه تلاوة آيات بينات من الذكر الحكيم، ألقى بعدها الدكتور سعيد مصبح الكعبي رئيس مجلس الشارقة للتعليم كلمة قال فيها: \"عُدت إلى أرشيف الجائزة، ذلك الأرشيف الجميل، واستوقفتني بعض الصور والمشاهد الحّية، وأكثر ما شد انتباهي لقاء متلفز لصاحب السمو حاكم الشارقة وهو يتحدث عن أهمية الجائزة ودورها في تعزيز التميز والتفوق، ومشهد للطلبة المتفوقين وهم يستلمون شهاداتهم من سموه فرحين بما أتاهم الله من فضله، تعرفت على بعض من هذه الشخصيات وهم الآن يتقلدون مناصب عدة يقودون نهضة التطور والعمران لهذا البلد الجميل\".\r\n\r\nوأضاف الدكتور سعيد مصبح الكعبي: \"تمر السنوات ويأتي جيل بعد جيل، تتطور المعايير والخطط، سعياً لتحقيق الرؤية السامية التي وضعها صاحب السمو حاكم الشارقة، فالجائزة تاريخ عميق، بمفاهيم راسخة في الأذهان وميادين مليئة بالأمثلة المشرفة، ونحن على يقين أن هذا الجيل سيكون له شأن كبير في المستقبل وسيكملون مسيرة النهضة، فالذي يسير على طريق التميز لا يتوقف، والحقيقة أن هذه هي الاستدامة التي رسمها سلطان مبكراً، نقطف اليوم ثمرةً بتكريم كوكبة جديدة من المتميزين\".\r\n\r\nوعن الجائزة في دورتها الحالية، أشار رئيس مجلس التعليم إلى أنها شهدت إطلاق فئة جديدة وهي \"جائزة الجوهرة\"، قائلاً: \"شهدت الجائزة في هذه الدورة اطلاق جائزة الجوهرة ضمن فئاتها، وهو تكريم استثنائي لشخصية متميزة لها انجازات ومبادرات فرديّة ذات أثر فعّال في المجال التربوي، وساهمت في الارتقاء بالتعليم وتطويره لتحقيق الأهداف المرجوة، وهي قدوة لغيرها في التميز والبذل والعطاء، كما شهدت إقبالاً ملحوظاً، فقد بلغ عدد المشاركين في الدورة الحالية 1328 مشاركاً بنسبة ارتفاع 40% عن العام الماضي، فاز منهم 38 مشاركاً، ومن جانب آخر، تم تدشين مبادرات التحول الرقمي، حيث أطلقت الجائزة تطبيق الهاتف الذكي، واستحدثت آليات جديدة لبوابة المشترك الإلكتروني ابتداء من استلام الطلبات مروراً بعمليات التقييم والتحكيم، بالإضافة إلى الدورات الافتراضية وتسجيل جميع الأدلة التفسيريّة للفئات صوتياً\".\r\n\r\nوفي ختام حديثه، وجه الدكتور سعيد مصبح الكعبي، رسالة للفائزين بالجوائز جاء فيها: \"حبانا الله بوطن وقادة يعشقون التميز والابداع والعطاء، ويدعون للعلم والمعرفة، ويسعون دائماً للقاء وتقدير المتميزين في كل المحافل، وما الجائزة إلا خير دليل على ذلك، وأدعوكم لحفظ الأمانة وحمل راية العطاء معاً لخدمة هذا الوطن الغالي، وأشكر سمو الشيخ عبد الله بن سالم القاسمي نائب حاكم الشارقة، على حضوره وتشريفه الحفل، كما أوجه الشكر لجميع الحضور متمنياً لهم التوفيق والنجاح\".\r\n\r\nبعدها شاهد الحضور مادة فلمية بعنوان \"جائزة الشارقة للتميز التربوي مسيرة تميز، تطور، إبداع\"، تناولت خلالها مسيرة الجائزة منذ نشأتها والخطط التي تبنتها وساهمت في تطور مراحلها على مر الأعوام، بالإضافة إلى تعدد فئات الجائزة وتوظيف التكنولوجيا من خلال أتمتة التقديم والمشاركة، وذلك لضمان سهولة الوصول لجميع شرائح المجتمع المشاركين في الجائزة.\r\n\r\nكما شاهد الحضور عرضاً ثلاثي الأبعاد ومادة مرئية حملت عنوان \"صنّاع التميز\"، تطرقت فيها للجهود المبذولة من قبل المرشحين المشاركين في الجائزة ودعم أولياء الأمور لأبنائهم الطلبة.\r\n\r\nوتفضل سمو نائب حاكم الشارقة بتكريم الفائز بالجائزة الاستثنائية \"جائزة الجوهرة\" والتي فاز بها عبد الله عوض الهمامي اختصاصي إعاقة بصرية في وزارة التربية والتعليم، ومدرب معتمد من البورد الأميركي الكندي، كما يحمل الهمامي الإجازة بسند متصل إلى \"النبي صل الله عليه وسلم\" في ترتيل وتجويد القرآن الكريم برواية حفص عن عاصم، كما أسس الهمامي نادي لذوي الإعاقة في جامعة العين ويعتبر أحد الرواد المؤثرين على مستوى الوطن العربي وحاز على العديد من الجوائز على المستوى المحلي والخارجي.\r\n\r\nكما كرم سموه هيئة الشارقة للتعليم الخاص الحاصلة على المركز الأول كأفضل جهة تعليمية، فيما حلت مؤسسة الإمارات للتعليم المدرسي في المركز الثاني، ونالت القيادة العامة لشرطة الشارقة جائزة المركز الأول لفئة المؤسسات والشراكات الداعمة للتعليم المتميز.\r\n\r\nوفي فئة الطالب المتميز كرم سمو نائب حاكم الشارقة عن الصف الثالث كل من نوال علي جواس وفايش فيك، فيما نال جائزة الصف الرابع كل من كريستينا راكان ونصر عبد المجيد، وحازتا نورة المشتغل النقبي ومريم الناعور النقبي على جائزة الصف الخامس، فيما نال عائشة حميد الخيال وغاية سعيد الأحبابي وموزة محمد الهوتي جائزة الصف السادس، وفاز فيشناف سانتوش وريقاف كريشنا بجائزة الصف السابع، وعن الصف الثامن حصد كل من ساشني مانيكاندان ويوفام تاكار الجائزة، ونال سيف حسن كرم وبيسان محمد فراس جائزة الصف التاسع، وحصد راشد عمر الهارش ومريم حمد الغفلي جائزة الصف العاشر، فيما ذهبت جائزة الصف الحادي عشر لعبد الله محمد رمضان وميشال فراز الهاشمي، كما نالت جائزة الصف الثاني عشر مريم حسن الشامسي، وفي فئة الطالب المتميز – الفئات الخاصة تم تكريم كل من ميثه محمد الحمودي، ونورة محمد الحمادي، وتاله أحمد الأعمر، وحمدان حميد الزحمي، ورضا إسماعيل ثابت.\r\n\r\nوكرم سموه فضيلة عبد الله الخوري بجائزة المركز الأول عن فئة ولي الأمر المتميز، فيما حلت في المركز الثاني أمل عبد الله المهيري، وفازت سمر خالد الشبلي بجائزة القائد التربوي المتميز، فيما توّجت نورة مبارك الحمادي بالمركز الأول، وهدى محمد ربيع بالمركز الثاني، وإيمان مصطفى محمد في المركز الثالث وعائشة خليفة الغفلي بالمركز الرابع لفئة المعلم المتميز.\r\n\r\nكما كرم سمو نائب حاكم الشارقة كل من مروة خميس اليماحي الفائزة بالمركز الأول، ومحمد محمد مخلوف في المركز الثاني، عن فئة الوظائف الداعمة المتميزة.\r\n\r\nوحصدت روضة ومدرسة أسماء للتعليم الأساسي جائزة المركز الأول لفئة المؤسسات التعليمية المتميزة، وذهبت جائزة المركز الأول عن فئة فرق العمل المؤسسية المتميزة لفريق عيادة ابتسامة الضاد اللغوية.\r\n\r\nومع نهاية الحفل، كرّم سمو الشيخ عبد الله بن سالم القاسمي قادة ومؤسسي الجائزة التي انطلقت في عام 1994، مثمناً جهودهم التي أرست القواعد للجائزة وساهمت في استمرارها حتى يومنا هذا، ملتقطين مع سموه والمكرمين الصورة التذكارية، كما التقط سموه صورة جماعية مع لجنة التحكيم وفرق العمل القائمة على الجائزة الذين ساهموا في دعم الطلبة والعاملين في القطاع التعليمي.\r\n\r\nشهد حفل التكريم بجانب سمو نائب حاكم الشارقة كل من الشيخ سالم بن عبد الرحمن القاسمي رئيس مكتب سمو الحاكم، وسيف الزري الشامسي قائد عام شرطة الشارقة، وسليمان بن سرحان الزعابي رئيس دائرة شؤون البلديات، وخالد بطي الهاجري مدير عام المدينة الجامعية، وعدد من كبار المسؤولين في القطاع التعليمي ورؤساء مجالس أولياء الأمور والمعلمين وطلبة المدارس.\r\n\r\nالمصدر: الشارقة 24 - محمد الحمادي",
                             ArabicTitle = "عبدالله بن سالم يكرم الفائزين بجائزة الشارقة للتميز التربوي",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9781),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8608),
                             EnglishDescription = "His Highness Sheikh Abdullah bin Salem bin Sultan Al Qasimi, Deputy Ruler of Sharjah, this Wednesday morning, at Al Jawaher Center for Events and Conferences, honored the winners of the Sharjah Award for Educational Excellence in its 28th session, which is organized by the Sharjah Education Council.\r\n\r\nThe honoring ceremony began with the national anthem of the United Arab Emirates, followed by the recitation of clear verses from the Holy Quran, after which Dr. Saeed Musabah Al Kaabi, Chairman of the Sharjah Education Council, gave a speech in which he said: “I returned to the award archive, that beautiful archive, and I was struck by some pictures and live scenes, and most of all.” My attention was caught by a televised interview of His Highness the Ruler of Sharjah, as he spoke about the importance of the award and its role in promoting distinction and superiority, and a scene of outstanding students receiving their diplomas from His Highness, rejoicing in what God has given them of His bounty. I got to know some of these figures and they now hold several positions leading the renaissance of development and urbanization for this reason. The beautiful country\".\r\n\r\nDr. Saeed Musabah Al Kaabi added: “Years pass and generation after generation comes, standards and plans develop, in an effort to achieve the lofty vision set by His Highness the Ruler of Sharjah. The award has a deep history, with concepts firmly established in the minds and fields full of honorable examples, and we are certain that this generation will have It is a great matter in the future and they will continue the path of renaissance, for those who walk on the path of excellence do not stop, and the truth is that this is the sustainability that Sultan envisioned early on. Today we are reaping the fruit by honoring a new group of distinguished people.”\r\n\r\nRegarding the award in its current session, the Chairman of the Education Council indicated that it witnessed the launch of a new category, which is the “Jawhara Award,” saying: “The award in this session witnessed the launch of the Al-Jawhara Award within its categories, which is an exceptional honor for a distinguished personality with individual achievements and initiatives that have an effective impact in the field.” Educational, and contributed to the advancement and development of education to achieve the desired goals, and it is a role model for others in excellence, effort, and giving. It also witnessed a remarkable turnout, as the number of participants in the current session reached 1,328 participants, an increase of 40% over last year, of whom 38 participants won. On the other hand, Digital transformation initiatives were launched, as the award launched the smartphone application, and created new mechanisms for the electronic participant portal, starting from receiving applications through evaluation and arbitration processes, in addition to virtual courses and audio recording of all interpretive evidence for the categories.”\r\n\r\nAt the conclusion of his speech, Dr. Saeed Musabah Al Kaabi sent a message to the award winners in which he said: “May God grant us a nation and leaders who love excellence, creativity, and giving, who call for science and knowledge, and who always strive to meet and appreciate the distinguished in all forums, and the award is nothing but the best evidence of that, and I invite you to preserve the trust.” Carrying the banner of giving together to serve this dear country, I thank His Highness Sheikh Abdullah bin Salem Al Qasimi, Deputy Ruler of Sharjah, for his presence and honoring the ceremony. I also thank all attendees, wishing them good luck and success.”\r\n\r\nThe audience then watched a film titled “Sharjah Award for Educational Excellence: A Journey of Excellence, Development, and Creativity,” during which it discussed the award’s journey since its inception and the plans it adopted and contributed to the development of its stages over the years, in addition to the multiple categories of the award and the use of technology through the automation of submission and participation. To ensure easy access to all segments of society participating in the award.\r\n\r\nThe audience also watched a 3D presentation and a visual material titled “Makers of Excellence,” in which it touched on the efforts made by the candidates participating in the award and the support parents have for their students.\r\n\r\nHis Highness the Deputy Ruler of Sharjah kindly honored the winner of the exceptional award, “The Jewel Award,” which was won by Abdullah Awad Al Hamami, a visual impairment specialist at the Ministry of Education, and a certified trainer from the American Canadian Board. Al Hamami also holds a license with a chain of transmission connected to “the Prophet, may God bless him and grant him peace.” Reciting and reciting the Holy Qur’an with the narration of Hafs on the authority of Asim. Al-Hammami also founded a club for people with disabilities at Al Ain University and is considered one of the influential pioneers in the Arab world and has won many awards at the local and international levels.\r\n\r\nHis Highness also honored the Sharjah Private Education Authority, which won first place as the best educational body, while the Emirates Foundation for School Education came in second place, and the Sharjah Police General Command won the first place award for the category of institutions and partnerships that support distinguished education.\r\n\r\nIn the Outstanding Student category, His Highness the Deputy Ruler of Sharjah honored Nawal Ali Jawas and Vaish Feek for the third grade, while Christina Rakan and Nasr Abdul Majeed won the fourth grade award, and Noura Al Mushtagal Al Naqbi and Mariam Al Naour Al Naqbi won the fifth grade award, while Aisha Hamid Al Khayal won. Ghaya Saeed Al-Ahbabi and Moza Muhammad Al-Hooti won the sixth grade award, Vaishnav Santosh and Rikaf Krishna won the seventh grade award, Sashni Manikandan and Yuvam Thakkar won the eighth grade award, Saif Hassan Karam and Bisan Muhammad Firas won the ninth grade award, and Rashid Omar Al-Harsh and Maryam Hamad Al-Ghafli won the award. The tenth grade award, while the eleventh grade award went to Abdullah Muhammad Ramadan and Michel Faraz Al Hashemi, and the twelfth grade award went to Maryam Hassan Al Shamsi, and in the Outstanding Student category - Special Categories, Maitha Muhammad Al Hamoudi, Noura Muhammad Al Hammadi, and Talah Ahmed Al Ammar were honored. Hamdan Hamid Al-Zahmi, and Reda Ismail Thabet.\r\n\r\nHis Highness honored His Eminence Abdullah Al Khouri with the first place award for the Distinguished Parent category, while Amal Abdullah Al Muhairi came in second place, and Samar Khaled Al Shibli won the Distinguished Educational Leader Award, while Noura Mubarak Al Hammadi was crowned in first place, Hoda Muhammad Rabie in second place, and Iman Mustafa. Muhammad is in third place and Aisha Khalifa Al-Ghafli is in fourth place for the Distinguished Teacher category.\r\n\r\nHis Highness the Deputy Ruler of Sharjah also honored Marwa Khamis Al Yamahi, winner of first place, and Mohammed Mohammed Makhlouf in second place, in the Outstanding Support Jobs category.\r\n\r\nAsmaa Kindergarten and Basic Education School won the first place award for the Distinguished Educational Institutions category, and the first place award for the Distinguished Institutional Work Teams category went to the Smile Al-Dhad Language Clinic team.\r\n\r\nAt the end of the ceremony, His Highness Sheikh Abdullah bin Salem Al Qasimi honored the leaders and founders of the award that was launched in 1994, praising their efforts that laid the foundations for the award and contributed to its continuation to this day, taking a memorial photo with His Highness and the honorees. His Highness also took a group photo with the jury and teams. Award-based work who have contributed to supporting students and workers in the educational sector.\r\n\r\nThe honoring ceremony was witnessed alongside His Highness the Deputy Ruler of Sharjah, Sheikh Salem bin Abdul Rahman Al Qasimi, Head of the Office of His Highness the Ruler, Saif Al Zari Al Shamsi, Commander-in-Chief of Sharjah Police, Sulaiman bin Sarhan Al Zaabi, Head of the Municipalities Affairs Department, Khalid Butti Al Hajri, Director General of the University City, and a number of senior officials. In the educational sector and heads of parents’, teachers’ and school students’ councils.\r\n\r\nSource: Sharjah 24 - Muhammad Al Hammadi",
                             EnglishTitle = "Abdullah bin Salem honors the winners of the Sharjah Award for Educational Excellence",
                             Image = "https://award-shj.ae/media/n1lb4exq/screenshot-2024-03-07-121511.png?anchor=center&mode=crop&width=593&height=338&rnd=133542874516370000",
@@ -10198,7 +10475,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 1,
                             ArabicText = "إن هذا الموقع تابع لجائزة الشارقة للتفوق والتميز التربوي وكغيره من المواقع التابعة للجائزة، ملتزمٌ بحماية حقوق جميع زوار هذا الموقع، أي إننا نلتزم بالحفاظ على سرية المعلومات الحساسة، وقد أعددنا هذا الإعلان الخاص بسياسة الخصوصية للإفصاح عن النهج الذي نتبعه في جمع ونشر المعلومات على هذا الموقع الإلكتروني.\r\n\r\nتعتبر سياسة الخصوصية الموضحة في هذه الصفحة، جزءاً من شروط استخدام الموقع الإلكتروني وأحكامه.\r\n\r\n\r\nجمع واستخدام المعلومات الإلكترونية\r\n\r\nتعمل الخوادم الخاصة بنا تلقائياً على التقاط وجمع عنوان بروتوكول الإنترنت الخاص بك عند زيارتك للموقع، إن عنوان بروتوكول الإنترنت الخاص بك هو الرقم الخاص بجهاز الكمبيوتر أو الجهاز اللوحي أو الهاتف الذكي الذي تستخدمه، والذي يسمح للأجهزة الأخرى الموصولة بشبكة الإنترنت بتحديد وجهة البيانات الصادرة عنها، لكن من دون التعرف عليك شخصياً.\r\nإن استخدامنا لبروتوكول الإنترنت الخاص بك يساعدنا على تشخيص المشكلات التي قد تحدث في الخادم الخاص بنا، وعلى إجراء الإحصاء اللازم لقياس استخدام الموقع، ونحن لا نسمح لأي جهة خارج إطار الفريق الفني المكلف من الجائزة بالاطلاع على بروتوكول الإنترنت الخاص بك.\r\nمن أجل تقديم خدمة أفضل، وموقع إلكتروني أكثر فاعلية، يمكن لبعض أقسام هذا الموقع استخدام برامج تعريف الارتباط (cookies) كجزء من التفاعل مع متصفحك، وهذا البرنامج هو عبارة عن ملف نصي صغير يرسل إلى القرص الصلب الخاص بك ليتمكن خادمنا من التعرف على الجهاز والمتصفح الذي تستخدمه لتحسين تعاملك مع موقعنا.\r\nلن يقوم برنامج تعريف الارتباط المرسل من قبلنا بمحاولة قراءة أي من المعلومات الخاصة الموجودة على قرصك الصلب، ونحن لا نقوم بتجميع هذه المعلومات من خلال هذا البرامج لمعرفة بيانات أو معلومات شخصية أخرى من أجل تحديد هويتك أو عنوان بريدك الإلكتروني.\r\nفي حال كانت زيارتك للموقع للحصول على خدمة أو معلومات محددة، فقد يطلب منك عند زيارتك لبعض أجزاء هذا الموقع، تقديم معلومات شخصية للتعريف بهويتك (مثل الاسم، رقم الهاتف، والعنوان،...)، وهي كلها معلومات ضرورية لإتمام معاملتك غير أن هذه المعلومات لن يتم مشاركتها أو إساءة استخدامها تحت أي ظرف، وفي حال رفضك تقديم تلك المعلومات، فللجائزة الحق في رفض تقديم تلك الخدمة، وفي كل الأحوال، فإننا لانزل ندعوك لزيارة موقعنا والاستفادة من المعلومات القيمة التي يوفرها.\r\n \r\n\r\nحماية المعلومات الشخصية\r\n\r\nباستخدامك لهذا الموقع فإنك توافق على شروط سياسة الخصوصية هذه، حيث تلتزم الجائزة من خلال إدارته لموقعه الإلكتروني، عند جمع معلومات شخصية عنك عندما تقوم بزيارة الموقع بأن يكون استخدام تلك المعلومات التي قدمتها، فقط من أجل إنجاز طلبك للحصول على معلومات أو خدمات عبر الموقع.\r\nيحتفظ جائزة الشارقة للتفوق والتميز التربوي بالحق في إجراء أي تعديل طفيف أو جذري لشروط سياسة الخصوصية من وقت لآخر دون الحاجة إلى تقديم إخطار، حيث يتم تعديل هذه السياسة ونشر هذه التعديلات بمجرد اعتمادها، لذا ننصحك بالاطلاع على هذه الصفحة من وقت لأخر لمعرفة التحديثات التي طرأت على سياسة الخصوصية، ولذلك فإن زيارتك واستخدامك لموقعنا بعد إدخال التعديلات على سياسة الخصوصية هذه، يعني قبولك لهذه التغييرات.\r\nلن تكون معلوماتك الشخصية متاحة إلا لموظفي الجائزة الذين يحتاجون للاطلاع على تلك المعلومات، ولن تكون تلك المعلومات متاحة لاطلاع الجمهور عليها بدون موافقتك على ذلك، وعلاوة على ذلك، لن يتم تبادل، أو تداول أي من تلك المعلومات أو بيعها لأي طرف آخر من دون موافقتك المسبقة، ولن يتم السماح بالوصول إلى المعلومات إلا لأولئك المؤهلين والمحترفين الذين يتولون تقديم خدمات الجائزة المتسقة مع تعاملاتك مع موقعنا.\r\n \r\n\r\nانتقال آمن للمعلومات\r\nهذا الموقع يمتلك إجراءات أمن لحماية المعلومات التي تقدمها لنا، فإننا نعمل على تشفير المعلومات التي تعتبر حساسة (مثل بياناتك الشخصية) أو البيانات التي يتعين الحفاظ على سريتها تماشياً مع المتطلبات القانونية.\r\n\r\n\r\nالمرجعية القانونية للجائزة\r\n\r\nيحق لجائزة الشارقة للتفوق والتميز التربوي اتخاذ التدابير التي يراها ملائمة لحماية أي فقدان أو إساءة استخدام أو تغيير للمعلومات الموجودة على الموقع الإلكتروني، وذلك دون أن تضمن الجائزة في هذه الحالة الاحتفاظ بسرية محتويات هذا الموقع الإلكتروني، ولا يعتبر مسؤولاً قانوناً عن أي ضرر قد تتعرض له أنت أو أي شخص نتيجة لانتهاك السرية بشأن المعلومات التي تكون قد نقلتها إلى الموقع.\r\nتكون قوانين دولة الإمارات العربية المتحدة وحدها هي القوانين واجبة التطبيق في كل ما يتعلق بالنزاعات التي قد تنشأ من جراء استخدام هذا الموقع الإلكتروني، أو أياً من أجزائه وأقسامه، كما تختص محاكم إمارة الشارقة حصرياً بالنظر في تلك النزاعات والبت فيها.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9686),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8536),
                             EnglishText = "This site is affiliated with the Sharjah Award for Excellence and Educational Excellence, and like other sites affiliated with the award, it is committed to protecting the rights of all visitors to this site. That is, we are committed to maintaining the confidentiality of sensitive information. We have prepared this announcement of the privacy policy to disclose the approach we follow in collecting and publishing information on this site. website.\r\n\r\nThe privacy policy shown on this page is considered part of the terms and conditions of use of the website.\r\n\r\n\r\nCollection and use of electronic information\r\n\r\nOur servers automatically capture and collect your Internet Protocol address when you visit the site. Your Internet Protocol address is the number for the computer, tablet, or smartphone that you use, which allows other devices connected to the Internet to determine the destination of the data issued by it. But without getting to know you personally.\r\nOur use of your Internet Protocol helps us diagnose problems that may occur in our server, and to conduct the necessary statistics to measure the use of the site, and we do not allow any party outside the framework of the technical team assigned by the award to view your Internet Protocol.\r\nIn order to provide better service and a more effective website, some sections of this site may use cookies as part of the interaction with your browser. This program is a small text file sent to your hard disk so that our server can recognize your device and browser. which you use to improve your interaction with our site.\r\nThe cookie software sent by us will not attempt to read any of the private information on your hard drive, and we do not collect this information through this software to find out other personal data or information in order to determine your identity or email address.\r\nIf your visit to the site is to obtain a specific service or information, when you visit some parts of this site, you may be asked to provide personal information to identify yourself (such as name, phone number, address,...), which are all necessary information to complete your transaction, but this The information will not be shared or misused under any circumstances, and if you refuse to provide that information, the award has the right to refuse to provide that service. In any case, we still invite you to visit our website and benefit from the valuable information it provides.\r\n \r\n\r\nProtection of personal information\r\n\r\nBy using this website, you agree to the terms of this privacy policy, as the award, through its management of its website, is committed to collecting personal information about you when you visit the site, to use that information that you provided, only in order to fulfill your request for information or services through the site.\r\nThe Sharjah Award for Excellence and Educational Excellence reserves the right to make any minor or radical amendment to the terms of the privacy policy from time to time without the need to provide notification. This policy is amended and these amendments are published as soon as they are approved. Therefore, we advise you to check this page from time to time to find out the updates that have occurred. On the Privacy Policy, therefore, your visit and use of our site after making amendments to this Privacy Policy means that you accept these changes.\r\nYour personal information will only be available to award employees who need to see that information, and that information will not be available for public access without your consent. Furthermore, none of that information will be exchanged, traded, or sold to any other party without your consent. Access to the information will only be granted to those qualified and professional people who provide award services consistent with your dealings with our website.\r\n \r\n\r\nSecure transmission of information\r\nThis site has security measures in place to protect the information you provide to us. We encrypt information that is considered sensitive (such as your personal data) or data that must be kept confidential in line with legal requirements.\r\n\r\n\r\nLegal reference for the award\r\n\r\nThe Sharjah Award for Educational Excellence and Excellence has the right to take the measures it deems appropriate to protect any loss, misuse, or change of information on the website, without the award in this case guaranteeing the confidentiality of the contents of this website, and it is not considered legally responsible for any damage you may be exposed to. You or any person as a result of a breach of confidentiality regarding information you have transmitted to the Site.\r\nThe laws of the United Arab Emirates alone are the applicable laws in all matters related to disputes that may arise as a result of the use of this website, or any of its parts and sections, and the courts of the Emirate of Sharjah have exclusive jurisdiction to consider and decide on these disputes.",
                             Slug = "Privacy_Policy_Website",
                             Type = 0,
@@ -10208,7 +10485,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 2,
                             ArabicText = "إن هذا الموقع تابع لجائزة الشارقة للتفوق والتميز التربوي وكغيره من المواقع التابعة للجائزة، ملتزمٌ بحماية حقوق جميع زوار هذا الموقع، أي إننا نلتزم بالحفاظ على سرية المعلومات الحساسة، وقد أعددنا هذا الإعلان الخاص بسياسة الخصوصية للإفصاح عن النهج الذي نتبعه في جمع ونشر المعلومات على هذا الموقع الإلكتروني.\r\n\r\nتعتبر سياسة الخصوصية الموضحة في هذه الصفحة، جزءاً من شروط استخدام الموقع الإلكتروني وأحكامه.\r\n\r\n\r\nجمع واستخدام المعلومات الإلكترونية\r\n\r\nتعمل الخوادم الخاصة بنا تلقائياً على التقاط وجمع عنوان بروتوكول الإنترنت الخاص بك عند زيارتك للموقع، إن عنوان بروتوكول الإنترنت الخاص بك هو الرقم الخاص بجهاز الكمبيوتر أو الجهاز اللوحي أو الهاتف الذكي الذي تستخدمه، والذي يسمح للأجهزة الأخرى الموصولة بشبكة الإنترنت بتحديد وجهة البيانات الصادرة عنها، لكن من دون التعرف عليك شخصياً.\r\nإن استخدامنا لبروتوكول الإنترنت الخاص بك يساعدنا على تشخيص المشكلات التي قد تحدث في الخادم الخاص بنا، وعلى إجراء الإحصاء اللازم لقياس استخدام الموقع، ونحن لا نسمح لأي جهة خارج إطار الفريق الفني المكلف من الجائزة بالاطلاع على بروتوكول الإنترنت الخاص بك.\r\nمن أجل تقديم خدمة أفضل، وموقع إلكتروني أكثر فاعلية، يمكن لبعض أقسام هذا الموقع استخدام برامج تعريف الارتباط (cookies) كجزء من التفاعل مع متصفحك، وهذا البرنامج هو عبارة عن ملف نصي صغير يرسل إلى القرص الصلب الخاص بك ليتمكن خادمنا من التعرف على الجهاز والمتصفح الذي تستخدمه لتحسين تعاملك مع موقعنا.\r\nلن يقوم برنامج تعريف الارتباط المرسل من قبلنا بمحاولة قراءة أي من المعلومات الخاصة الموجودة على قرصك الصلب، ونحن لا نقوم بتجميع هذه المعلومات من خلال هذا البرامج لمعرفة بيانات أو معلومات شخصية أخرى من أجل تحديد هويتك أو عنوان بريدك الإلكتروني.\r\nفي حال كانت زيارتك للموقع للحصول على خدمة أو معلومات محددة، فقد يطلب منك عند زيارتك لبعض أجزاء هذا الموقع، تقديم معلومات شخصية للتعريف بهويتك (مثل الاسم، رقم الهاتف، والعنوان،...)، وهي كلها معلومات ضرورية لإتمام معاملتك غير أن هذه المعلومات لن يتم مشاركتها أو إساءة استخدامها تحت أي ظرف، وفي حال رفضك تقديم تلك المعلومات، فللجائزة الحق في رفض تقديم تلك الخدمة، وفي كل الأحوال، فإننا لانزل ندعوك لزيارة موقعنا والاستفادة من المعلومات القيمة التي يوفرها.\r\n \r\n\r\nحماية المعلومات الشخصية\r\n\r\nباستخدامك لهذا الموقع فإنك توافق على شروط سياسة الخصوصية هذه، حيث تلتزم الجائزة من خلال إدارته لموقعه الإلكتروني، عند جمع معلومات شخصية عنك عندما تقوم بزيارة الموقع بأن يكون استخدام تلك المعلومات التي قدمتها، فقط من أجل إنجاز طلبك للحصول على معلومات أو خدمات عبر الموقع.\r\nيحتفظ جائزة الشارقة للتفوق والتميز التربوي بالحق في إجراء أي تعديل طفيف أو جذري لشروط سياسة الخصوصية من وقت لآخر دون الحاجة إلى تقديم إخطار، حيث يتم تعديل هذه السياسة ونشر هذه التعديلات بمجرد اعتمادها، لذا ننصحك بالاطلاع على هذه الصفحة من وقت لأخر لمعرفة التحديثات التي طرأت على سياسة الخصوصية، ولذلك فإن زيارتك واستخدامك لموقعنا بعد إدخال التعديلات على سياسة الخصوصية هذه، يعني قبولك لهذه التغييرات.\r\nلن تكون معلوماتك الشخصية متاحة إلا لموظفي الجائزة الذين يحتاجون للاطلاع على تلك المعلومات، ولن تكون تلك المعلومات متاحة لاطلاع الجمهور عليها بدون موافقتك على ذلك، وعلاوة على ذلك، لن يتم تبادل، أو تداول أي من تلك المعلومات أو بيعها لأي طرف آخر من دون موافقتك المسبقة، ولن يتم السماح بالوصول إلى المعلومات إلا لأولئك المؤهلين والمحترفين الذين يتولون تقديم خدمات الجائزة المتسقة مع تعاملاتك مع موقعنا.\r\n \r\n\r\nانتقال آمن للمعلومات\r\nهذا الموقع يمتلك إجراءات أمن لحماية المعلومات التي تقدمها لنا، فإننا نعمل على تشفير المعلومات التي تعتبر حساسة (مثل بياناتك الشخصية) أو البيانات التي يتعين الحفاظ على سريتها تماشياً مع المتطلبات القانونية.\r\n\r\n\r\nالمرجعية القانونية للجائزة\r\n\r\nيحق لجائزة الشارقة للتفوق والتميز التربوي اتخاذ التدابير التي يراها ملائمة لحماية أي فقدان أو إساءة استخدام أو تغيير للمعلومات الموجودة على الموقع الإلكتروني، وذلك دون أن تضمن الجائزة في هذه الحالة الاحتفاظ بسرية محتويات هذا الموقع الإلكتروني، ولا يعتبر مسؤولاً قانوناً عن أي ضرر قد تتعرض له أنت أو أي شخص نتيجة لانتهاك السرية بشأن المعلومات التي تكون قد نقلتها إلى الموقع.\r\nتكون قوانين دولة الإمارات العربية المتحدة وحدها هي القوانين واجبة التطبيق في كل ما يتعلق بالنزاعات التي قد تنشأ من جراء استخدام هذا الموقع الإلكتروني، أو أياً من أجزائه وأقسامه، كما تختص محاكم إمارة الشارقة حصرياً بالنظر في تلك النزاعات والبت فيها.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9689),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8540),
                             EnglishText = "This site is affiliated with the Sharjah Award for Excellence and Educational Excellence, and like other sites affiliated with the award, it is committed to protecting the rights of all visitors to this site. That is, we are committed to maintaining the confidentiality of sensitive information. We have prepared this announcement of the privacy policy to disclose the approach we follow in collecting and publishing information on this site. website.\r\n\r\nThe privacy policy shown on this page is considered part of the terms and conditions of use of the website.\r\n\r\n\r\nCollection and use of electronic information\r\n\r\nOur servers automatically capture and collect your Internet Protocol address when you visit the site. Your Internet Protocol address is the number for the computer, tablet, or smartphone that you use, which allows other devices connected to the Internet to determine the destination of the data issued by it. But without getting to know you personally.\r\nOur use of your Internet Protocol helps us diagnose problems that may occur in our server, and to conduct the necessary statistics to measure the use of the site, and we do not allow any party outside the framework of the technical team assigned by the award to view your Internet Protocol.\r\nIn order to provide better service and a more effective website, some sections of this site may use cookies as part of the interaction with your browser. This program is a small text file sent to your hard disk so that our server can recognize your device and browser. which you use to improve your interaction with our site.\r\nThe cookie software sent by us will not attempt to read any of the private information on your hard drive, and we do not collect this information through this software to find out other personal data or information in order to determine your identity or email address.\r\nIf your visit to the site is to obtain a specific service or information, when you visit some parts of this site, you may be asked to provide personal information to identify yourself (such as name, phone number, address,...), which are all necessary information to complete your transaction, but this The information will not be shared or misused under any circumstances, and if you refuse to provide that information, the award has the right to refuse to provide that service. In any case, we still invite you to visit our website and benefit from the valuable information it provides.\r\n \r\n\r\nProtection of personal information\r\n\r\nBy using this website, you agree to the terms of this privacy policy, as the award, through its management of its website, is committed to collecting personal information about you when you visit the site, to use that information that you provided, only in order to fulfill your request for information or services through the site.\r\nThe Sharjah Award for Excellence and Educational Excellence reserves the right to make any minor or radical amendment to the terms of the privacy policy from time to time without the need to provide notification. This policy is amended and these amendments are published as soon as they are approved. Therefore, we advise you to check this page from time to time to find out the updates that have occurred. On the Privacy Policy, therefore, your visit and use of our site after making amendments to this Privacy Policy means that you accept these changes.\r\nYour personal information will only be available to award employees who need to see that information, and that information will not be available for public access without your consent. Furthermore, none of that information will be exchanged, traded, or sold to any other party without your consent. Access to the information will only be granted to those qualified and professional people who provide award services consistent with your dealings with our website.\r\n \r\n\r\nSecure transmission of information\r\nThis site has security measures in place to protect the information you provide to us. We encrypt information that is considered sensitive (such as your personal data) or data that must be kept confidential in line with legal requirements.\r\n\r\n\r\nLegal reference for the award\r\n\r\nThe Sharjah Award for Educational Excellence and Excellence has the right to take the measures it deems appropriate to protect any loss, misuse, or change of information on the website, without the award in this case guaranteeing the confidentiality of the contents of this website, and it is not considered legally responsible for any damage you may be exposed to. You or any person as a result of a breach of confidentiality regarding information you have transmitted to the Site.\r\nThe laws of the United Arab Emirates alone are the applicable laws in all matters related to disputes that may arise as a result of the use of this website, or any of its parts and sections, and the courts of the Emirate of Sharjah have exclusive jurisdiction to consider and decide on these disputes.",
                             Slug = "Privacy_Policy_Subscriber",
                             Type = 0,
@@ -10218,7 +10495,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 3,
                             ArabicText = "إن دخولك واستخدامك الموقع الإلكتروني لجائزة الشارقة للتفوق والتميز التربوي يخضع للشروط والأحكام الآتية، إضافة إلى قوانين دولة الإمارات العربية المتحدة المتعلقة بالتعامل مع المواقع والمنصات الإلكترونية.\r\nدخولك إلى الموقع يعني موافقتك على هذه الشروط والأحكام، سواءً كنت مستخدماً مسجلاً أو غيرمسجل. وبدخولك وتصفحك واستخدامك الموقع تكون قد قبلت دون قيد أو شرط، أحكام وشروط الاستخدام الواردة في هذه الوثيقة.\r\n\r\n \r\n\r\nتعريفات:\r\n\r\nالدولة: دولة الامارات العربية المتحدة.\r\nالجائزة: جائزة الشارقة للتفوق والتميز التربوي.\r\nالموقع: موقع جائزة الشارقة للتفوق والتميز التربوي على الشبكة العنكبوتية (الانترنت).\r\nالقانون: هي أي أو كل قانون تصدره وتقره دولة الامارات العربية المتحدة التي يتعلق بالتعامل مع تقنية المعلومات، والجرائم المتعلقة بها.\r\n \r\n\r\nتعديل الاتفاقية\r\nللجائزة الحق في تعديل هذه الشروط والأحكام على أن يتم وضع إشعار بحدوث تعديلات على هذه الصفحة، وتدخل التعديلات حيز النفاذ بمجرد إعلانها ما لم ينَصّ على خلاف ذلك.\r\nإن استخدامك المتكرر للموقع بعد إحداث تلك التعديلات يعني موافقتك على التعديلات، ويتعين عليك القيام بزيارات دورية لهذه الصفحة لمراجعة الشروط والأحكام المستحدثة أو المعدلة.\r\n\r\n \r\n\r\nالتصرف\r\nإن دخولك واستخدامك للموقع يعتبر موافقة وإقرار منك على دخول واستخدام الموقع لأغراض مشروعة فقط، وأنت مسؤول مسؤولية كاملة عن العلم والعمل بأي من وكل القوانين والأنظمة والقواعد والأحكام المتعلقة باستخدامك له، وبمجرد دخولك إلى الموقع فإنك توافق على الامتناع عن ما يلي:\r\n\r\nإدخال أو نشر أي محتويات غير قانونية تتضمن تمييزاً أو تشهيراً أو إساءة أو قذفاً أو مواد غير لائقة.\r\nاستخدام الموقع من أجل انتحال شخصيات أو أطراف أخرى.\r\nاستخدام الموقع من أجل ارتكاب جرم أو تشجيع الآخرين على التورط في أي تصرف قد يعد جريمة أو ينطوي على مسؤولية مدنية.\r\nالإساءة للآخرين أفراداً أو مؤسسات بأي شكل من الإساءة.\r\nالتحزب أو العنصرية ضد الآخرين أو الإساءة إلى أي عرق أو دين أو لون أو جنسية أو وضع اجتماعي.\r\nاستخدام الموقع لتحميل أي مادة فيها برامج تحتوي على فيروسات، أو برامج خبيثة، أو أي شفرات حاسوبية أو ملفات أو برامج قد تعمل على تغيير أو إتلاف أو إعاقة عمل الموقع أو أي جهاز أو برنامج عائد إلى أي شخص يدخل إلى الموقع.\r\nإدخال أو إرسال أو تحميل أو بث أي مواد لا يحق لك بثها أو نشرها بموجب أي قانون أو علاقة تعاقدية.\r\nتغيير أو إتلاف أو شطب أو تعطيل أي محتوى على الموقع.\r\nإتلاف أو تعطيل أي من خطوط أو قنوات أو وسائل الاتصال أو التواصل الاعتيادية أو الإلكترونية بأي شكل كان.\r\nالادعاء بتمثيل أي شركة أو جمعية أو هيئة أو مؤسسة عامة أو خاصة أو الادعاء بأنك مرتبط بها، وذلك دون أن تكون مخولاً بادعاء تلك العلاقة أو ذلك التمثيل.\r\nنشر أو بث أي إعلان أو مادة دعائية أو تسويقية لأي منتج أو خدمة بأي شكل من أشكال الترويج أو التسويق.\r\nنشر أي مادة تتنافى أو تتعارض مع حقوق الملكية الفكرية للآخرين، أو جمع أو تخزين المعلومات الشخصية عن الآخرين.\r\n \r\n\r\nالتسجيل\r\nبعض أجزاء وخدمات الموقع لا تعمل ولا يمكن الوصول اليها إلا للأعضاء المسجلين و/ أو تتيح للمستخدم طلب الدعم أو الخدمات إلكترونياً عبر إدخال بعض المعلومات الشخصية، لذا ، فأنت توافق على أن أي معلومات تقدم لنا عبر تلك الأجزاء هي معلومات صحيحة وكاملة ودقيقة، وأنك لن تقوم بالتسجيل، أو تحاول دخول الموقع مستخدماً أو منتحلا اسم أو صفة شخص آخر، وأنك لم تدعي بامتلاكك اسم مستخدم أو بيانات مستخدم ليست لك، أو قد ترى الجائزة أنه (وفق حقه في حرية التصرف)، بأنه غير مناسب.\r\n\r\n \r\n\r\nإنهاء الاستخدام\r\nللجائزة كل الحق، وفق ما يراه مناسباً، منع أو إنهاء أو تعليق دخولك إلى واستخدامك لهذا الموقع من دون إشعار ولأي سبب كان، بما في ذلك انتهاك هذه الشروط والأحكام أو بسبب أي تصرف قد يرى للجائزة أنه مخالف للقانون أو مضر بالآخرين، وفي هذه الحالات لن يعود بإمكانك الدخول إلى الموقع، وللجائزة الحق في استخدام كل وسيلة متاحة لتطبيق هذا الأمر.\r\n\r\n\r\nوصلات المواقع الأخرى\r\nبعض الوصلات على الموقع تقود إلى مواقع إلكترونية أخرى لا يتم تشغيلها من قبل الجائزة، وليس له السيطرة عليها. كما أن الجائزة لا يقوم بمراجعة المحتوى الخاص بتلك المواقع أو التحكم بها، حيث إن الجائزة يوفر تلك الوصلات من باب التسهيل على مستخدمي وزوار موقعه، كما أن تلك المواقع الأخرى ليست لها أي مضامين ترويجية أو تسويقية خاصة بالسلع أو خدمات خاصة، إنما هي وصلات لمواقع ذات صلة بعمل الجائزة و / أو تقدم خدمات تتعلق بعمل الجائزة لخدمة زوار ومستخدمي الموقع، وعند الضغط على واختيارك وصلة خاصة بموقع خارجي، فإنك تكون خاضعاً للشروط والأحكام الخاصة بذلك الموقع الخارجي.\r\n\r\n \r\n\r\nالمحتوى\r\nتحتفظ الجائزة بالحق في مراقبة أي محتوى يتم إدخاله من قبلك، غير أنه ليس ملزماً بذلك، ومع أن الجائزة قد لا يستطيع مراقبة كل ما يتم إدخاله على الموقع، فإننا نحتفظ بالحق (من دون التزام) في شطب أو إزالة أو تحرير أي مواد مدخلة من شأنها انتهاك هذه الشروط والأحكام، إن قوانين حقوق النشر والتأليف الإماراتية والأجنبية والمعاهدات الدولية تحمي محتويات هذا الموقع، وأنت توافق على الالتزام بإشعارات حقوق النشر التي تظهر على هذا الموقع.\r\n\r\n \r\n\r\nالتعويض\r\nأنت توافق على الدفاع عن، وتأمين، والحفاظ على سلامة موقع الجائزة، وكل موظفيه ووكلائه تجاه أي وكل مسؤولية قد تترتب على أي مطالبة ناجمة عن أي خرق من قبلك لهذه الشروط والأحكام، بما في ذلك التكاليف والرسوم المقررة لهيئة الدفاع أو المحامين، كما أنك توافق على التعاون الكامل في الدفاع ضد تلك المطالبات، وللجائزة الحق في أن يتولى على حسابه الخاص، الدفاع الحصري والتحكم في أي مسألة خاضعة، بخلاف ذلك، للتعويض من قبلك، وأنت توافق على عدم تسوية أي قضية إلا بموافقة خطية من قبل الجائزة.\r\n\r\nتعتبر سياسة الخصوصية الموضحة في هذه الصفحة، جزءاً من شروط استخدام الموقع الإلكتروني وأحكامه.\r\n\r\n\r\nجمع واستخدام المعلومات الإلكترونية\r\n\r\nتعمل الخوادم الخاصة بنا تلقائياً على التقاط وجمع عنوان بروتوكول الإنترنت الخاص بك عند زيارتك للموقع، إن عنوان بروتوكول الإنترنت الخاص بك هو الرقم الخاص بجهاز الكمبيوتر أو الجهاز اللوحي أو الهاتف الذكي الذي تستخدمه، والذي يسمح للأجهزة الأخرى الموصولة بشبكة الإنترنت بتحديد وجهة البيانات الصادرة عنها، لكن من دون التعرف عليك شخصياً.\r\nإن استخدامنا لبروتوكول الإنترنت الخاص بك يساعدنا على تشخيص المشكلات التي قد تحدث في الخادم الخاص بنا، وعلى إجراء الإحصاء اللازم لقياس استخدام الموقع، ونحن لا نسمح لأي جهة خارج إطار الفريق الفني المكلف من الجائزة بالاطلاع على بروتوكول الإنترنت الخاص بك.\r\nمن أجل تقديم خدمة أفضل، وموقع إلكتروني أكثر فاعلية، يمكن لبعض أقسام هذا الموقع استخدام برامج تعريف الارتباط (cookies) كجزء من التفاعل مع متصفحك، وهذا البرنامج هو عبارة عن ملف نصي صغير يرسل إلى القرص الصلب الخاص بك ليتمكن خادمنا من التعرف على الجهاز والمتصفح الذي تستخدمه لتحسين تعاملك مع موقعنا.\r\nلن يقوم برنامج تعريف الارتباط المرسل من قبلنا بمحاولة قراءة أي من المعلومات الخاصة الموجودة على قرصك الصلب، ونحن لا نقوم بتجميع هذه المعلومات من خلال هذا البرامج لمعرفة بيانات أو معلومات شخصية أخرى من أجل تحديد هويتك أو عنوان بريدك الإلكتروني.\r\nفي حال كانت زيارتك للموقع للحصول على خدمة أو معلومات محددة، فقد يطلب منك عند زيارتك لبعض أجزاء هذا الموقع، تقديم معلومات شخصية للتعريف بهويتك (مثل الاسم، رقم الهاتف، والعنوان،...)، وهي كلها معلومات ضرورية لإتمام معاملتك غير أن هذه المعلومات لن يتم مشاركتها أو إساءة استخدامها تحت أي ظرف، وفي حال رفضك تقديم تلك المعلومات، فللجائزة الحق في رفض تقديم تلك الخدمة، وفي كل الأحوال، فإننا لانزل ندعوك لزيارة موقعنا والاستفادة من المعلومات القيمة التي يوفرها.\r\n \r\n\r\nحماية المعلومات الشخصية\r\n\r\nباستخدامك لهذا الموقع فإنك توافق على شروط سياسة الخصوصية هذه، حيث تلتزم الجائزة من خلال إدارته لموقعه الإلكتروني، عند جمع معلومات شخصية عنك عندما تقوم بزيارة الموقع بأن يكون استخدام تلك المعلومات التي قدمتها، فقط من أجل إنجاز طلبك للحصول على معلومات أو خدمات عبر الموقع.\r\nتحتفظ جائزة الشارقة للتفوق والتميز التربوي بالحق في إجراء أي تعديل طفيف أو جذري لشروط سياسة الخصوصية من وقت لآخر دون الحاجة إلى تقديم إخطار، حيث يتم تعديل هذه السياسة ونشر هذه التعديلات بمجرد اعتمادها، لذا ننصحك بالاطلاع على هذه الصفحة من وقت لأخر لمعرفة التحديثات التي طرأت على سياسة الخصوصية، ولذلك فإن زيارتك واستخدامك لموقعنا بعد إدخال التعديلات على سياسة الخصوصية هذه، يعني قبولك لهذه التغييرات.\r\nلن تكون معلوماتك الشخصية متاحة إلا لموظفي الجائزة الذين يحتاجون للاطلاع على تلك المعلومات، ولن تكون تلك المعلومات متاحة لاطلاع الجمهور عليها بدون موافقتك على ذلك، وعلاوة على ذلك، لن يتم تبادل، أو تداول أي من تلك المعلومات أو بيعها لأي طرف آخر من دون موافقتك المسبقة، ولن يتم السماح بالوصول إلى المعلومات إلا لأولئك المؤهلين والمحترفين الذين يتولون تقديم خدمات الجائزة المتسقة مع تعاملاتك مع موقعنا.\r\n \r\n\r\nانتقال آمن للمعلومات\r\nهذا الموقع يمتلك إجراءات أمن لحماية المعلومات التي تقدمها لنا، فإننا نعمل على تشفير المعلومات التي تعتبر حساسة (مثل بياناتك الشخصية) أو البيانات التي يتعين الحفاظ على سريتها تماشياً مع المتطلبات القانونية.\r\n\r\n\r\nالمرجعية القانونية للجائزة\r\n\r\nيحق لجائزة الشارقة للتفوق والتميز التربوي اتخاذ التدابير التي يراها ملائمة لحماية أي فقدان أو إساءة استخدام أو تغيير للمعلومات الموجودة على الموقع الإلكتروني، وذلك دون أن تضمن الجائزة في هذه الحالة الاحتفاظ بسرية محتويات هذا الموقع الإلكتروني، ولا يعتبر مسؤولاً قانوناً عن أي ضرر قد تتعرض له أنت أو أي شخص نتيجة لانتهاك السرية بشأن المعلومات التي تكون قد نقلتها إلى الموقع.\r\nتكون قوانين دولة الإمارات العربية المتحدة وحدها هي القوانين واجبة التطبيق في كل ما يتعلق بالنزاعات التي قد تنشأ من جراء استخدام هذا الموقع الإلكتروني، أو أياً من أجزائه وأقسامه، كما تختص محاكم إمارة الشارقة حصرياً بالنظر في تلك النزاعات والبت فيها.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9692),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8542),
                             EnglishText = "Your entry and use of the Sharjah Award for Excellence and Educational Excellence website is subject to the following terms and conditions, in addition to the laws of the United Arab Emirates related to dealing with websites and electronic platforms.\r\nYour access to the site means your acceptance of these terms and conditions, whether you are a registered user or not. By entering, browsing, and using the site, you have accepted, without restriction or condition, the terms and conditions of use contained in this document.\r\n\r\n \r\n\r\nDefinitions:\r\n\r\nCountry: United Arab Emirates.\r\nAward: Sharjah Award for Excellence and Educational Excellence.\r\nWebsite: The Sharjah Award for Excellence and Educational Excellence website on the Internet.\r\nLaw: Any or all laws issued and approved by the United Arab Emirates that relate to dealing with information technology and crimes related to it.\r\n \r\n\r\nAmending the agreement\r\nThe Award has the right to amend these terms and conditions, provided that notice of amendments is placed on this page. Amendments will enter into force as soon as they are announced, unless otherwise stated.\r\nYour repeated use of the site after these modifications are made means that you agree to the modifications, and you must make periodic visits to this page to review the updated or amended terms and conditions.\r\n\r\n \r\n\r\nAct\r\nYour entry and use of the site constitutes your agreement and acknowledgment to enter and use the site for lawful purposes only, and you are fully responsible for knowing and acting on any and all laws, regulations, rules and provisions related to your use of it. Once you enter the site, you agree to refrain from the following:\r\n\r\nEnter or publish any illegal content that includes discrimination, defamation, abuse, slander, or inappropriate material.\r\nUse the Site to impersonate other individuals or parties.\r\nUse the Site in order to commit an offense or encourage others to engage in any conduct that may constitute a criminal offense or give rise to civil liability.\r\nInsulting others, individuals or institutions, in any way.\r\nPartisanship or racism against others or insulting any race, religion, color, nationality or social status.\r\nUse the site to upload any material that contains programs that contain viruses, malicious programs, or any computer codes, files or programs that may alter, damage or impede the operation of the site or any device or program belonging to any person who accesses the site.\r\nInput, send, upload or broadcast any material that you do not have the right to broadcast or publish under any law or contractual relationship.\r\nAlter, damage, delete or disable any content on the Site.\r\nDamaging or disrupting any regular or electronic lines, channels, or means of communication or communication in any way.\r\nClaiming to represent any company, association, body, or public or private institution, or claiming to be connected to it, without being authorized to claim that relationship or that representation.\r\nPublish or broadcast any advertisement, promotional or marketing material for any product or service in any form of promotion or marketing.\r\nPost any material that infringes or conflicts with the intellectual property rights of others, or collect or store personal information about others.\r\n \r\n\r\nRegister\r\nSome parts and services of the site do not work and can only be accessed by registered members and/or allow the user to request support or services electronically by entering some personal information. Therefore, you agree that any information provided to us through those parts is true, complete and accurate information, and that you will not You register, or attempt to enter the site using or impersonating the name or capacity of another person, and that you do not claim to have a user name or user data that is not yours, or that the Award may find (according to its right to discretion) to be inappropriate.\r\n\r\n \r\n\r\nTermination of use\r\nThe Award has every right, as it deems appropriate, to prevent, terminate or suspend your access to and use of this site without notice and for any reason whatsoever, including violation of these terms and conditions or due to any behavior that the Award may deem to be contrary to the law or harmful to others, and in these cases You will no longer be able to access the site, and the award has the right to use every means available to implement this matter.\r\n\r\nLinks to other websites\r\nSome links on the site lead to other websites that are not operated by the Award, and it has no control over them. The Award also does not review or control the content of those sites, as the Award provides these links as a matter of convenience for the users and visitors of its site, and those other sites do not have any promotional or marketing content for goods or special services, but rather they are links to sites Related to the work of the award and/or providing services related to the work of the award to serve visitors and users of the site, and when you click on and choose a link to an external site, you are subject to the terms and conditions of that external site.\r\n\r\n \r\n\r\nContent\r\nThe Award reserves the right to monitor any content entered by you, but is not obligated to do so. Although the Award may not be able to monitor everything that is entered on the site, we reserve the right (but not the obligation) to delete, remove or edit any materials entered from the site. If you violate these terms and conditions, UAE and foreign copyright laws and international treaties protect the contents of this site, and you agree to abide by the copyright notices that appear on this site.\r\n\r\n \r\n\r\nCompensation\r\nYou agree to defend, insure, and maintain the integrity of the award website, and all its employees and agents against any and all liability that may arise from any claim resulting from any breach by you of these terms and conditions, including the costs and fees determined for the defense or lawyers, and you also agree You will cooperate fully in defending against such claims, and the Award has the right to assume, at its own expense, the exclusive defense and control of any matter otherwise subject to indemnification by you, and you agree not to settle any matter except with the written approval of the Award.\r\n\r\nThe privacy policy shown on this page is considered part of the terms and conditions of use of the website.\r\n\r\n\r\nCollection and use of electronic information\r\n\r\nOur servers automatically capture and collect your Internet Protocol address when you visit the site. Your Internet Protocol address is the number for the computer, tablet, or smartphone that you use, which allows other devices connected to the Internet to determine the destination of the data issued by it. But without getting to know you personally.\r\nOur use of your Internet Protocol helps us diagnose problems that may occur in our server, and to conduct the necessary statistics to measure the use of the site, and we do not allow any party outside the framework of the technical team assigned by the award to view your Internet Protocol.\r\nIn order to provide better service and a more effective website, some sections of this site may use cookies as part of the interaction with your browser. This program is a small text file sent to your hard disk so that our server can recognize your device and browser. which you use to improve your interaction with our site.\r\nThe cookie software sent by us will not attempt to read any of the private information on your hard drive, and we do not collect this information through this software to find out other personal data or information in order to determine your identity or email address.\r\nIf your visit to the site is to obtain a specific service or information, when you visit some parts of this site, you may be asked to provide personal information to identify yourself (such as name, phone number, address,...), which are all necessary information to complete your transaction, but this The information will not be shared or misused under any circumstances, and if you refuse to provide that information, the award has the right to refuse to provide that service. In any case, we still invite you to visit our website and benefit from the valuable information it provides.\r\n\r\n\r\nProtection of personal information\r\n\r\nBy using this website, you agree to the terms of this privacy policy, as the award, through its management of its website, is committed to collecting personal information about you when you visit the site, to use that information that you provided, only in order to fulfill your request for information or services through the site.\r\nThe Sharjah Award for Excellence and Educational Excellence reserves the right to make any minor or radical amendment to the terms of the privacy policy from time to time without the need to provide notification. This policy is amended and these amendments are published as soon as they are approved. Therefore, we advise you to check this page from time to time to find out the updates that have occurred. on the Privacy Policy. Therefore, your visit and use of our site after making changes to this Privacy Policy means that you accept these changes.\r\nYour personal information will only be available to award employees who need to see that information, and that information will not be available for public access without your consent. Moreover, none of that information will be exchanged, traded, or sold to any other party without your consent. Access to the information will only be granted to those qualified and professional people who provide award services consistent with your dealings with our website.\r\n \r\n\r\nSecure transmission of information\r\nThis site has security measures in place to protect the information you provide to us. We encrypt information that is considered sensitive (such as your personal data) or data that must be kept confidential in line with legal requirements.\r\n\r\n\r\nLegal reference for the award\r\n\r\nThe Sharjah Award for Educational Excellence and Excellence has the right to take the measures it deems appropriate to protect any loss, misuse, or change of information on the website, without the award in this case guaranteeing the confidentiality of the contents of this website, and it is not considered legally responsible for any damage you may be exposed to. You or any person as a result of a breach of confidentiality regarding information you have transmitted to the Site.\r\nThe laws of the United Arab Emirates alone are the applicable laws in all matters related to disputes that may arise as a result of the use of this website, or any of its parts and sections, and the courts of the Emirate of Sharjah have exclusive jurisdiction to consider and decide on these disputes.",
                             Slug = "Terms_Of_Use_Website",
                             Type = 1,
@@ -10228,7 +10505,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 4,
                             ArabicText = "إن دخولك واستخدامك الموقع الإلكتروني لجائزة الشارقة للتفوق والتميز التربوي يخضع للشروط والأحكام الآتية، إضافة إلى قوانين دولة الإمارات العربية المتحدة المتعلقة بالتعامل مع المواقع والمنصات الإلكترونية.\r\nدخولك إلى الموقع يعني موافقتك على هذه الشروط والأحكام، سواءً كنت مستخدماً مسجلاً أو غيرمسجل. وبدخولك وتصفحك واستخدامك الموقع تكون قد قبلت دون قيد أو شرط، أحكام وشروط الاستخدام الواردة في هذه الوثيقة.\r\n\r\n \r\n\r\nتعريفات:\r\n\r\nالدولة: دولة الامارات العربية المتحدة.\r\nالجائزة: جائزة الشارقة للتفوق والتميز التربوي.\r\nالموقع: موقع جائزة الشارقة للتفوق والتميز التربوي على الشبكة العنكبوتية (الانترنت).\r\nالقانون: هي أي أو كل قانون تصدره وتقره دولة الامارات العربية المتحدة التي يتعلق بالتعامل مع تقنية المعلومات، والجرائم المتعلقة بها.\r\n \r\n\r\nتعديل الاتفاقية\r\nللجائزة الحق في تعديل هذه الشروط والأحكام على أن يتم وضع إشعار بحدوث تعديلات على هذه الصفحة، وتدخل التعديلات حيز النفاذ بمجرد إعلانها ما لم ينَصّ على خلاف ذلك.\r\nإن استخدامك المتكرر للموقع بعد إحداث تلك التعديلات يعني موافقتك على التعديلات، ويتعين عليك القيام بزيارات دورية لهذه الصفحة لمراجعة الشروط والأحكام المستحدثة أو المعدلة.\r\n\r\n \r\n\r\nالتصرف\r\nإن دخولك واستخدامك للموقع يعتبر موافقة وإقرار منك على دخول واستخدام الموقع لأغراض مشروعة فقط، وأنت مسؤول مسؤولية كاملة عن العلم والعمل بأي من وكل القوانين والأنظمة والقواعد والأحكام المتعلقة باستخدامك له، وبمجرد دخولك إلى الموقع فإنك توافق على الامتناع عن ما يلي:\r\n\r\nإدخال أو نشر أي محتويات غير قانونية تتضمن تمييزاً أو تشهيراً أو إساءة أو قذفاً أو مواد غير لائقة.\r\nاستخدام الموقع من أجل انتحال شخصيات أو أطراف أخرى.\r\nاستخدام الموقع من أجل ارتكاب جرم أو تشجيع الآخرين على التورط في أي تصرف قد يعد جريمة أو ينطوي على مسؤولية مدنية.\r\nالإساءة للآخرين أفراداً أو مؤسسات بأي شكل من الإساءة.\r\nالتحزب أو العنصرية ضد الآخرين أو الإساءة إلى أي عرق أو دين أو لون أو جنسية أو وضع اجتماعي.\r\nاستخدام الموقع لتحميل أي مادة فيها برامج تحتوي على فيروسات، أو برامج خبيثة، أو أي شفرات حاسوبية أو ملفات أو برامج قد تعمل على تغيير أو إتلاف أو إعاقة عمل الموقع أو أي جهاز أو برنامج عائد إلى أي شخص يدخل إلى الموقع.\r\nإدخال أو إرسال أو تحميل أو بث أي مواد لا يحق لك بثها أو نشرها بموجب أي قانون أو علاقة تعاقدية.\r\nتغيير أو إتلاف أو شطب أو تعطيل أي محتوى على الموقع.\r\nإتلاف أو تعطيل أي من خطوط أو قنوات أو وسائل الاتصال أو التواصل الاعتيادية أو الإلكترونية بأي شكل كان.\r\nالادعاء بتمثيل أي شركة أو جمعية أو هيئة أو مؤسسة عامة أو خاصة أو الادعاء بأنك مرتبط بها، وذلك دون أن تكون مخولاً بادعاء تلك العلاقة أو ذلك التمثيل.\r\nنشر أو بث أي إعلان أو مادة دعائية أو تسويقية لأي منتج أو خدمة بأي شكل من أشكال الترويج أو التسويق.\r\nنشر أي مادة تتنافى أو تتعارض مع حقوق الملكية الفكرية للآخرين، أو جمع أو تخزين المعلومات الشخصية عن الآخرين.\r\n \r\n\r\nالتسجيل\r\nبعض أجزاء وخدمات الموقع لا تعمل ولا يمكن الوصول اليها إلا للأعضاء المسجلين و/ أو تتيح للمستخدم طلب الدعم أو الخدمات إلكترونياً عبر إدخال بعض المعلومات الشخصية، لذا ، فأنت توافق على أن أي معلومات تقدم لنا عبر تلك الأجزاء هي معلومات صحيحة وكاملة ودقيقة، وأنك لن تقوم بالتسجيل، أو تحاول دخول الموقع مستخدماً أو منتحلا اسم أو صفة شخص آخر، وأنك لم تدعي بامتلاكك اسم مستخدم أو بيانات مستخدم ليست لك، أو قد ترى الجائزة أنه (وفق حقه في حرية التصرف)، بأنه غير مناسب.\r\n\r\n \r\n\r\nإنهاء الاستخدام\r\nللجائزة كل الحق، وفق ما يراه مناسباً، منع أو إنهاء أو تعليق دخولك إلى واستخدامك لهذا الموقع من دون إشعار ولأي سبب كان، بما في ذلك انتهاك هذه الشروط والأحكام أو بسبب أي تصرف قد يرى للجائزة أنه مخالف للقانون أو مضر بالآخرين، وفي هذه الحالات لن يعود بإمكانك الدخول إلى الموقع، وللجائزة الحق في استخدام كل وسيلة متاحة لتطبيق هذا الأمر.\r\n\r\n\r\nوصلات المواقع الأخرى\r\nبعض الوصلات على الموقع تقود إلى مواقع إلكترونية أخرى لا يتم تشغيلها من قبل الجائزة، وليس له السيطرة عليها. كما أن الجائزة لا يقوم بمراجعة المحتوى الخاص بتلك المواقع أو التحكم بها، حيث إن الجائزة يوفر تلك الوصلات من باب التسهيل على مستخدمي وزوار موقعه، كما أن تلك المواقع الأخرى ليست لها أي مضامين ترويجية أو تسويقية خاصة بالسلع أو خدمات خاصة، إنما هي وصلات لمواقع ذات صلة بعمل الجائزة و / أو تقدم خدمات تتعلق بعمل الجائزة لخدمة زوار ومستخدمي الموقع، وعند الضغط على واختيارك وصلة خاصة بموقع خارجي، فإنك تكون خاضعاً للشروط والأحكام الخاصة بذلك الموقع الخارجي.\r\n\r\n \r\n\r\nالمحتوى\r\nتحتفظ الجائزة بالحق في مراقبة أي محتوى يتم إدخاله من قبلك، غير أنه ليس ملزماً بذلك، ومع أن الجائزة قد لا يستطيع مراقبة كل ما يتم إدخاله على الموقع، فإننا نحتفظ بالحق (من دون التزام) في شطب أو إزالة أو تحرير أي مواد مدخلة من شأنها انتهاك هذه الشروط والأحكام، إن قوانين حقوق النشر والتأليف الإماراتية والأجنبية والمعاهدات الدولية تحمي محتويات هذا الموقع، وأنت توافق على الالتزام بإشعارات حقوق النشر التي تظهر على هذا الموقع.\r\n\r\n \r\n\r\nالتعويض\r\nأنت توافق على الدفاع عن، وتأمين، والحفاظ على سلامة موقع الجائزة، وكل موظفيه ووكلائه تجاه أي وكل مسؤولية قد تترتب على أي مطالبة ناجمة عن أي خرق من قبلك لهذه الشروط والأحكام، بما في ذلك التكاليف والرسوم المقررة لهيئة الدفاع أو المحامين، كما أنك توافق على التعاون الكامل في الدفاع ضد تلك المطالبات، وللجائزة الحق في أن يتولى على حسابه الخاص، الدفاع الحصري والتحكم في أي مسألة خاضعة، بخلاف ذلك، للتعويض من قبلك، وأنت توافق على عدم تسوية أي قضية إلا بموافقة خطية من قبل الجائزة.\r\n\r\nتعتبر سياسة الخصوصية الموضحة في هذه الصفحة، جزءاً من شروط استخدام الموقع الإلكتروني وأحكامه.\r\n\r\n\r\nجمع واستخدام المعلومات الإلكترونية\r\n\r\nتعمل الخوادم الخاصة بنا تلقائياً على التقاط وجمع عنوان بروتوكول الإنترنت الخاص بك عند زيارتك للموقع، إن عنوان بروتوكول الإنترنت الخاص بك هو الرقم الخاص بجهاز الكمبيوتر أو الجهاز اللوحي أو الهاتف الذكي الذي تستخدمه، والذي يسمح للأجهزة الأخرى الموصولة بشبكة الإنترنت بتحديد وجهة البيانات الصادرة عنها، لكن من دون التعرف عليك شخصياً.\r\nإن استخدامنا لبروتوكول الإنترنت الخاص بك يساعدنا على تشخيص المشكلات التي قد تحدث في الخادم الخاص بنا، وعلى إجراء الإحصاء اللازم لقياس استخدام الموقع، ونحن لا نسمح لأي جهة خارج إطار الفريق الفني المكلف من الجائزة بالاطلاع على بروتوكول الإنترنت الخاص بك.\r\nمن أجل تقديم خدمة أفضل، وموقع إلكتروني أكثر فاعلية، يمكن لبعض أقسام هذا الموقع استخدام برامج تعريف الارتباط (cookies) كجزء من التفاعل مع متصفحك، وهذا البرنامج هو عبارة عن ملف نصي صغير يرسل إلى القرص الصلب الخاص بك ليتمكن خادمنا من التعرف على الجهاز والمتصفح الذي تستخدمه لتحسين تعاملك مع موقعنا.\r\nلن يقوم برنامج تعريف الارتباط المرسل من قبلنا بمحاولة قراءة أي من المعلومات الخاصة الموجودة على قرصك الصلب، ونحن لا نقوم بتجميع هذه المعلومات من خلال هذا البرامج لمعرفة بيانات أو معلومات شخصية أخرى من أجل تحديد هويتك أو عنوان بريدك الإلكتروني.\r\nفي حال كانت زيارتك للموقع للحصول على خدمة أو معلومات محددة، فقد يطلب منك عند زيارتك لبعض أجزاء هذا الموقع، تقديم معلومات شخصية للتعريف بهويتك (مثل الاسم، رقم الهاتف، والعنوان،...)، وهي كلها معلومات ضرورية لإتمام معاملتك غير أن هذه المعلومات لن يتم مشاركتها أو إساءة استخدامها تحت أي ظرف، وفي حال رفضك تقديم تلك المعلومات، فللجائزة الحق في رفض تقديم تلك الخدمة، وفي كل الأحوال، فإننا لانزل ندعوك لزيارة موقعنا والاستفادة من المعلومات القيمة التي يوفرها.\r\n \r\n\r\nحماية المعلومات الشخصية\r\n\r\nباستخدامك لهذا الموقع فإنك توافق على شروط سياسة الخصوصية هذه، حيث تلتزم الجائزة من خلال إدارته لموقعه الإلكتروني، عند جمع معلومات شخصية عنك عندما تقوم بزيارة الموقع بأن يكون استخدام تلك المعلومات التي قدمتها، فقط من أجل إنجاز طلبك للحصول على معلومات أو خدمات عبر الموقع.\r\nتحتفظ جائزة الشارقة للتفوق والتميز التربوي بالحق في إجراء أي تعديل طفيف أو جذري لشروط سياسة الخصوصية من وقت لآخر دون الحاجة إلى تقديم إخطار، حيث يتم تعديل هذه السياسة ونشر هذه التعديلات بمجرد اعتمادها، لذا ننصحك بالاطلاع على هذه الصفحة من وقت لأخر لمعرفة التحديثات التي طرأت على سياسة الخصوصية، ولذلك فإن زيارتك واستخدامك لموقعنا بعد إدخال التعديلات على سياسة الخصوصية هذه، يعني قبولك لهذه التغييرات.\r\nلن تكون معلوماتك الشخصية متاحة إلا لموظفي الجائزة الذين يحتاجون للاطلاع على تلك المعلومات، ولن تكون تلك المعلومات متاحة لاطلاع الجمهور عليها بدون موافقتك على ذلك، وعلاوة على ذلك، لن يتم تبادل، أو تداول أي من تلك المعلومات أو بيعها لأي طرف آخر من دون موافقتك المسبقة، ولن يتم السماح بالوصول إلى المعلومات إلا لأولئك المؤهلين والمحترفين الذين يتولون تقديم خدمات الجائزة المتسقة مع تعاملاتك مع موقعنا.\r\n \r\n\r\nانتقال آمن للمعلومات\r\nهذا الموقع يمتلك إجراءات أمن لحماية المعلومات التي تقدمها لنا، فإننا نعمل على تشفير المعلومات التي تعتبر حساسة (مثل بياناتك الشخصية) أو البيانات التي يتعين الحفاظ على سريتها تماشياً مع المتطلبات القانونية.\r\n\r\n\r\nالمرجعية القانونية للجائزة\r\n\r\nيحق لجائزة الشارقة للتفوق والتميز التربوي اتخاذ التدابير التي يراها ملائمة لحماية أي فقدان أو إساءة استخدام أو تغيير للمعلومات الموجودة على الموقع الإلكتروني، وذلك دون أن تضمن الجائزة في هذه الحالة الاحتفاظ بسرية محتويات هذا الموقع الإلكتروني، ولا يعتبر مسؤولاً قانوناً عن أي ضرر قد تتعرض له أنت أو أي شخص نتيجة لانتهاك السرية بشأن المعلومات التي تكون قد نقلتها إلى الموقع.\r\nتكون قوانين دولة الإمارات العربية المتحدة وحدها هي القوانين واجبة التطبيق في كل ما يتعلق بالنزاعات التي قد تنشأ من جراء استخدام هذا الموقع الإلكتروني، أو أياً من أجزائه وأقسامه، كما تختص محاكم إمارة الشارقة حصرياً بالنظر في تلك النزاعات والبت فيها.",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9695),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8544),
                             EnglishText = "Your entry and use of the Sharjah Award for Excellence and Educational Excellence website is subject to the following terms and conditions, in addition to the laws of the United Arab Emirates related to dealing with websites and electronic platforms.\r\nYour access to the site means your acceptance of these terms and conditions, whether you are a registered user or not. By entering, browsing, and using the site, you have accepted, without restriction or condition, the terms and conditions of use contained in this document.\r\n\r\n \r\n\r\nDefinitions:\r\n\r\nCountry: United Arab Emirates.\r\nAward: Sharjah Award for Excellence and Educational Excellence.\r\nWebsite: The Sharjah Award for Excellence and Educational Excellence website on the Internet.\r\nLaw: Any or all laws issued and approved by the United Arab Emirates that relate to dealing with information technology and crimes related to it.\r\n \r\n\r\nAmending the agreement\r\nThe Award has the right to amend these terms and conditions, provided that notice of amendments is placed on this page. Amendments will enter into force as soon as they are announced, unless otherwise stated.\r\nYour repeated use of the site after these modifications are made means that you agree to the modifications, and you must make periodic visits to this page to review the updated or amended terms and conditions.\r\n\r\n \r\n\r\nAct\r\nYour entry and use of the site constitutes your agreement and acknowledgment to enter and use the site for lawful purposes only, and you are fully responsible for knowing and acting on any and all laws, regulations, rules and provisions related to your use of it. Once you enter the site, you agree to refrain from the following:\r\n\r\nEnter or publish any illegal content that includes discrimination, defamation, abuse, slander, or inappropriate material.\r\nUse the Site to impersonate other individuals or parties.\r\nUse the Site in order to commit an offense or encourage others to engage in any conduct that may constitute a criminal offense or give rise to civil liability.\r\nInsulting others, individuals or institutions, in any way.\r\nPartisanship or racism against others or insulting any race, religion, color, nationality or social status.\r\nUse the site to upload any material that contains programs that contain viruses, malicious programs, or any computer codes, files or programs that may alter, damage or impede the operation of the site or any device or program belonging to any person who accesses the site.\r\nInput, send, upload or broadcast any material that you do not have the right to broadcast or publish under any law or contractual relationship.\r\nAlter, damage, delete or disable any content on the Site.\r\nDamaging or disrupting any regular or electronic lines, channels, or means of communication or communication in any way.\r\nClaiming to represent any company, association, body, or public or private institution, or claiming to be connected to it, without being authorized to claim that relationship or that representation.\r\nPublish or broadcast any advertisement, promotional or marketing material for any product or service in any form of promotion or marketing.\r\nPost any material that infringes or conflicts with the intellectual property rights of others, or collect or store personal information about others.\r\n \r\n\r\nRegister\r\nSome parts and services of the site do not work and can only be accessed by registered members and/or allow the user to request support or services electronically by entering some personal information. Therefore, you agree that any information provided to us through those parts is true, complete and accurate information, and that you will not You register, or attempt to enter the site using or impersonating the name or capacity of another person, and that you do not claim to have a user name or user data that is not yours, or that the Award may find (according to its right to discretion) to be inappropriate.\r\n\r\n \r\n\r\nTermination of use\r\nThe Award has every right, as it deems appropriate, to prevent, terminate or suspend your access to and use of this site without notice and for any reason whatsoever, including violation of these terms and conditions or due to any behavior that the Award may deem to be contrary to the law or harmful to others, and in these cases You will no longer be able to access the site, and the award has the right to use every means available to implement this matter.\r\n\r\nLinks to other websites\r\nSome links on the site lead to other websites that are not operated by the Award, and it has no control over them. The Award also does not review or control the content of those sites, as the Award provides these links as a matter of convenience for the users and visitors of its site, and those other sites do not have any promotional or marketing content for goods or special services, but rather they are links to sites Related to the work of the award and/or providing services related to the work of the award to serve visitors and users of the site, and when you click on and choose a link to an external site, you are subject to the terms and conditions of that external site.\r\n\r\n \r\n\r\nContent\r\nThe Award reserves the right to monitor any content entered by you, but is not obligated to do so. Although the Award may not be able to monitor everything that is entered on the site, we reserve the right (but not the obligation) to delete, remove or edit any materials entered from the site. If you violate these terms and conditions, UAE and foreign copyright laws and international treaties protect the contents of this site, and you agree to abide by the copyright notices that appear on this site.\r\n\r\n \r\n\r\nCompensation\r\nYou agree to defend, insure, and maintain the integrity of the award website, and all its employees and agents against any and all liability that may arise from any claim resulting from any breach by you of these terms and conditions, including the costs and fees determined for the defense or lawyers, and you also agree You will cooperate fully in defending against such claims, and the Award has the right to assume, at its own expense, the exclusive defense and control of any matter otherwise subject to indemnification by you, and you agree not to settle any matter except with the written approval of the Award.\r\n\r\nThe privacy policy shown on this page is considered part of the terms and conditions of use of the website.\r\n\r\n\r\nCollection and use of electronic information\r\n\r\nOur servers automatically capture and collect your Internet Protocol address when you visit the site. Your Internet Protocol address is the number for the computer, tablet, or smartphone that you use, which allows other devices connected to the Internet to determine the destination of the data issued by it. But without getting to know you personally.\r\nOur use of your Internet Protocol helps us diagnose problems that may occur in our server, and to conduct the necessary statistics to measure the use of the site, and we do not allow any party outside the framework of the technical team assigned by the award to view your Internet Protocol.\r\nIn order to provide better service and a more effective website, some sections of this site may use cookies as part of the interaction with your browser. This program is a small text file sent to your hard disk so that our server can recognize your device and browser. which you use to improve your interaction with our site.\r\nThe cookie software sent by us will not attempt to read any of the private information on your hard drive, and we do not collect this information through this software to find out other personal data or information in order to determine your identity or email address.\r\nIf your visit to the site is to obtain a specific service or information, when you visit some parts of this site, you may be asked to provide personal information to identify yourself (such as name, phone number, address,...), which are all necessary information to complete your transaction, but this The information will not be shared or misused under any circumstances, and if you refuse to provide that information, the award has the right to refuse to provide that service. In any case, we still invite you to visit our website and benefit from the valuable information it provides.\r\n\r\n\r\nProtection of personal information\r\n\r\nBy using this website, you agree to the terms of this privacy policy, as the award, through its management of its website, is committed to collecting personal information about you when you visit the site, to use that information that you provided, only in order to fulfill your request for information or services through the site.\r\nThe Sharjah Award for Excellence and Educational Excellence reserves the right to make any minor or radical amendment to the terms of the privacy policy from time to time without the need to provide notification. This policy is amended and these amendments are published as soon as they are approved. Therefore, we advise you to check this page from time to time to find out the updates that have occurred. on the Privacy Policy. Therefore, your visit and use of our site after making changes to this Privacy Policy means that you accept these changes.\r\nYour personal information will only be available to award employees who need to see that information, and that information will not be available for public access without your consent. Moreover, none of that information will be exchanged, traded, or sold to any other party without your consent. Access to the information will only be granted to those qualified and professional people who provide award services consistent with your dealings with our website.\r\n \r\n\r\nSecure transmission of information\r\nThis site has security measures in place to protect the information you provide to us. We encrypt information that is considered sensitive (such as your personal data) or data that must be kept confidential in line with legal requirements.\r\n\r\n\r\nLegal reference for the award\r\n\r\nThe Sharjah Award for Educational Excellence and Excellence has the right to take the measures it deems appropriate to protect any loss, misuse, or change of information on the website, without the award in this case guaranteeing the confidentiality of the contents of this website, and it is not considered legally responsible for any damage you may be exposed to. You or any person as a result of a breach of confidentiality regarding information you have transmitted to the Site.\r\nThe laws of the United Arab Emirates alone are the applicable laws in all matters related to disputes that may arise as a result of the use of this website, or any of its parts and sections, and the courts of the Emirate of Sharjah have exclusive jurisdiction to consider and decide on these disputes.",
                             Slug = "Terms_Of_Use_Subscriber",
                             Type = 1,
@@ -10238,7 +10515,7 @@ namespace SharijhaAward.Persistence.Migrations
                         {
                             Id = 5,
                             ArabicText = "",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(9698),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8554),
                             EnglishText = "",
                             Slug = "About_Application",
                             Type = 2,
@@ -10703,7 +10980,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 1,
                             ArabicSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             ArabicTitle = "الدليل التفسيري لجائزة جوهرة اللغة العربية",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(542),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9096),
                             EnglishSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             EnglishTitle = "Interpretive guide for the Jewel of the Arabic Language Award",
                             ImageUrl = "https://award-shj.ae/media/hk2fyzfv/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B3%D9%84%D8%B7%D8%A7%D9%86.jpg?anchor=center&mode=crop&width=420&height=232&rnd=133099679521200000",
@@ -10714,7 +10991,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 2,
                             ArabicSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             ArabicTitle = "الأدلة التفسيرية لفئة الأفراد المتميزين",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(547),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9099),
                             EnglishSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             EnglishTitle = "",
                             ImageUrl = "https://award-shj.ae/media/hk2fyzfv/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B3%D9%84%D8%B7%D8%A7%D9%86.jpg?anchor=center&mode=crop&width=420&height=232&rnd=133099679521200000",
@@ -10725,7 +11002,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 3,
                             ArabicSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             ArabicTitle = "الأدلة التفسيرية لفئة المؤسسات المتميزة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(549),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9101),
                             EnglishSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             EnglishTitle = "",
                             ImageUrl = "https://award-shj.ae/media/hk2fyzfv/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B3%D9%84%D8%B7%D8%A7%D9%86.jpg?anchor=center&mode=crop&width=420&height=232&rnd=133099679521200000",
@@ -10736,7 +11013,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 4,
                             ArabicSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             ArabicTitle = "الأدلة التفسيرية لفئة فرق العمل  المتميزة",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(552),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9103),
                             EnglishSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             EnglishTitle = "",
                             ImageUrl = "https://award-shj.ae/media/hk2fyzfv/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B3%D9%84%D8%B7%D8%A7%D9%86.jpg?anchor=center&mode=crop&width=420&height=232&rnd=133099679521200000",
@@ -10747,7 +11024,7 @@ namespace SharijhaAward.Persistence.Migrations
                             Id = 5,
                             ArabicSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             ArabicTitle = "المصادر التوضيحية لجميع الفئات",
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(555),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(9105),
                             EnglishSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                             EnglishTitle = "",
                             ImageUrl = "https://award-shj.ae/media/hk2fyzfv/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B3%D9%84%D8%B7%D8%A7%D9%86.jpg?anchor=center&mode=crop&width=420&height=232&rnd=133099679521200000",
@@ -10799,7 +11076,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8139),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7672),
                             User1Id = 1,
                             User2Id = 4,
                             isDeleted = false
@@ -10807,7 +11084,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8142),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7675),
                             User1Id = 1,
                             User2Id = 5,
                             isDeleted = false
@@ -10858,7 +11135,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8074),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7632),
                             ReceiverId = 1,
                             SenderId = 2,
                             isDeleted = false
@@ -10866,7 +11143,7 @@ namespace SharijhaAward.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(8078),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7634),
                             ReceiverId = 1,
                             SenderId = 3,
                             isDeleted = false
@@ -11256,7 +11533,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "يحق لجميع المدارس الحكومية والخاصة في الميدان التربوي في دولة الإمارات العربية المتحدة التقدم للمشاركة في الجائزة.\r\n- إرفاق أدلة توضح جهود المدرسة في رعاية اللغة العربية لثلاثة أعوام سابقة لعام الترشح, ويلغى طلب الترشح أو الفوز في حال ثبوت عدم صحة أحد الأدلة أو الوثائق المقدمة.\r\n- المشاركات جماعية وباسم المدرسة ولا تقبل المشاركات الفردية.\r\n- تقدم المدرسة رسالة مصدقة من الجهة المختصة بعدم وجود مخالفات إدارية ومالية عن اخر 3 سنوات سابقة لعام الترشح.\r\n- ترفق نسخة الهيكل التنظيمي للمدرسة و التوصيف الوظيفي لجميع الوظائف فيها.",
                             ArabicTitle = "الشروط العامة للمشاركة",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(89),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8803),
                             EnglishDescription = "All public and private schools in the educational field in the United Arab Emirates are eligible to apply to participate in the award.\r\n- Attach evidence explaining the school’s efforts in sponsoring the Arabic language for three years prior to the year of candidacy. The application for candidacy or winning will be canceled if any of the evidence or documents submitted is proven incorrect.\r\n- Participations are group and in the name of the school. Individual entries are not accepted.\r\n- The school submits a certified letter from the competent authority stating that there are no administrative and financial violations for the last 3 years preceding the year of candidacy.\r\nA copy of the school’s organizational structure and job descriptions for all positions are attached.",
                             EnglishTitle = "General conditions for participation",
                             IsAgree = false,
@@ -11269,7 +11546,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "يحق لجميع المدارس الحكومية والخاصة في الميدان التربوي في دولة الإمارات العربية المتحدة التقدم للمشاركة في الجائزة.\r\n- إرفاق أدلة توضح جهود المدرسة في رعاية اللغة العربية لثلاثة أعوام سابقة لعام الترشح, ويلغى طلب الترشح أو الفوز في حال ثبوت عدم صحة أحد الأدلة أو الوثائق المقدمة.\r\n- المشاركات جماعية وباسم المدرسة ولا تقبل المشاركات الفردية.\r\n- تقدم المدرسة رسالة مصدقة من الجهة المختصة بعدم وجود مخالفات إدارية ومالية عن اخر 3 سنوات سابقة لعام الترشح.\r\n- ترفق نسخة الهيكل التنظيمي للمدرسة و التوصيف الوظيفي لجميع الوظائف فيها.",
                             ArabicTitle = "الشروط العامة للمشاركة",
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(98),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8807),
                             EnglishDescription = "All public and private schools in the educational field in the United Arab Emirates are eligible to apply to participate in the award.\r\n- Attach evidence explaining the school’s efforts in sponsoring the Arabic language for three years prior to the year of candidacy. The application for candidacy or winning will be canceled if any of the evidence or documents submitted is proven incorrect.\r\n- Participations are group and in the name of the school. Individual entries are not accepted.\r\n- The school submits a certified letter from the competent authority stating that there are no administrative and financial violations for the last 3 years preceding the year of candidacy.\r\nA copy of the school’s organizational structure and job descriptions for all positions are attached.",
                             EnglishTitle = "General conditions for participation",
                             IsAgree = false,
@@ -11282,7 +11559,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "يحق لجميع المدارس الحكومية والخاصة في الميدان التربوي في دولة الإمارات العربية المتحدة التقدم للمشاركة في الجائزة.\r\n- إرفاق أدلة توضح جهود المدرسة في رعاية اللغة العربية لثلاثة أعوام سابقة لعام الترشح, ويلغى طلب الترشح أو الفوز في حال ثبوت عدم صحة أحد الأدلة أو الوثائق المقدمة.\r\n- المشاركات جماعية وباسم المدرسة ولا تقبل المشاركات الفردية.\r\n- تقدم المدرسة رسالة مصدقة من الجهة المختصة بعدم وجود مخالفات إدارية ومالية عن اخر 3 سنوات سابقة لعام الترشح.\r\n- ترفق نسخة الهيكل التنظيمي للمدرسة و التوصيف الوظيفي لجميع الوظائف فيها.",
                             ArabicTitle = "الشروط العامة للمشاركة",
                             CategoryId = 5,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 329, DateTimeKind.Utc).AddTicks(102),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(8810),
                             EnglishDescription = "All public and private schools in the educational field in the United Arab Emirates are eligible to apply to participate in the award.\r\n- Attach evidence explaining the school’s efforts in sponsoring the Arabic language for three years prior to the year of candidacy. The application for candidacy or winning will be canceled if any of the evidence or documents submitted is proven incorrect.\r\n- Participations are group and in the name of the school. Individual entries are not accepted.\r\n- The school submits a certified letter from the competent authority stating that there are no administrative and financial violations for the last 3 years preceding the year of candidacy.\r\nA copy of the school’s organizational structure and job descriptions for all positions are attached.",
                             EnglishTitle = "General conditions for participation",
                             IsAgree = false,
@@ -11353,7 +11630,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "اختبار وصف ورشة تدريبية 1",
                             ArabicTitle = "اختبار عنوان ورشة تدريبية 1",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7039),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7016),
                             EnglishDescription = "Test Training Workshop Description 1",
                             EnglishTitle = "Test Training Workshop Title 1",
                             Thumbnail = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg",
@@ -11365,7 +11642,7 @@ namespace SharijhaAward.Persistence.Migrations
                             ArabicDescription = "اختبار وصف ورشة تدريبية 2",
                             ArabicTitle = "اختبار عنوان ورشة تدريبية 2",
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2024, 8, 4, 13, 7, 31, 328, DateTimeKind.Utc).AddTicks(7046),
+                            CreatedAt = new DateTime(2024, 8, 5, 13, 58, 26, 420, DateTimeKind.Utc).AddTicks(7021),
                             EnglishDescription = "Test Training Workshop Description 2",
                             EnglishTitle = "Test Training Workshop Title 2",
                             Thumbnail = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg",

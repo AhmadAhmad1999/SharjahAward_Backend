@@ -12,9 +12,9 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
     public class GetAllCircularsQuery : IRequest<BaseResponse<List<CircularListVm>>>
     {
         public List<Filter>? filters { get; set; }
-        public string token { get; set; } = string.Empty;
+        public string? token { get; set; } 
         public string? lang { get; set; }
-        public int page { get; set; }
-        public int perPage { get; set; }
+        public int page { get; set; } = 1;
+        public int perPage { get; set; } = 10;
     }
 }

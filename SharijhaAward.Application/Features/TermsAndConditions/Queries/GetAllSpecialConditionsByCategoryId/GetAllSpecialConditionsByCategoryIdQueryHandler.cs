@@ -104,11 +104,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
 
                 if (data[i].NeedAttachment)
                 {
-
                     data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<AttachmentListVM>>(conditionsProvideds[i].Attachments);
-
                 }
-
 
                 data[i].Title = request.lang == "en"
                     ? data[i].EnglishTitle
