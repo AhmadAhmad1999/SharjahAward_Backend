@@ -13,7 +13,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
         public EducationType EducationType { get; set; }
         public Emirates Emirates { get; set; }
         public string PersonalPhoto { get; set; } = string.Empty;
-        public List<EduInstitutionCoordinatorDto>? InstitutionEntities { get; set; }
+        public List<EduEntityCoordinatorDto>? EntityCoordinator { get; set; }
        
     }
 }

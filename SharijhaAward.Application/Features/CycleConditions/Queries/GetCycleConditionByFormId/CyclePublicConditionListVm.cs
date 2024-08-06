@@ -21,6 +21,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
         public int? RequiredAttachmentNumber { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public AttachmentType? AttachmentType { get; set; }
+        public bool? Rejected { get; set; } = false;
         public int CycleId { get; set; }
         public CycleConditionProvidedFormListVm? ConditionsAttachments { get; set; }
     }

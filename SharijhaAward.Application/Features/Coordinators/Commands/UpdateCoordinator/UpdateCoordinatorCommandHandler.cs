@@ -73,16 +73,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
                 .Select(x => x.EducationalInstitutionId)
                 .ToListAsync();
 
-            List<int> IntersectEduInstitutionIds = AlreadyExistEduInstitutionIds
-                .Intersect(Request.EducationalInstitutionsIds).ToList();
-
-            List<int> NewEduInstitutionIds = Request.EducationalInstitutionsIds
-                .Where(x => !IntersectEduInstitutionIds.Contains(x))
-                .ToList();
-
-            List<int> DeleteEduInstitutionIds = AlreadyExistEduInstitutionIds
-                .Where(x => !IntersectEduInstitutionIds.Contains(x))
-                .ToList();
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {
@@ -97,29 +87,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
                 {
                     await _coordinatorRepository.UpdateAsync(CoordinatorToUpdate);
                     await _userRepository.UpdateAsync(UserEntity);
-
-                    IQueryable<EduInstitutionCoordinator> DeleteEduInstitutionCoordinatorEntites = _EduInstitutionCoordinatorRepository
-                        .Where(x => x.CoordinatorId == Request.Id &&
-                            DeleteEduInstitutionIds.Contains(x.EducationalInstitutionId));
-
-                    if (DeleteEduInstitutionCoordinatorEntites.Count() > 0)
-                        await _EduInstitutionCoordinatorRepository.DeleteListAsync(DeleteEduInstitutionCoordinatorEntites);
-
-                    IEnumerable<EduInstitutionCoordinator> NewEduInstitutionCoordinatorEntites = NewEduInstitutionIds.
-                        Select(x => new EduInstitutionCoordinator()
-                        {
-                            CoordinatorId = Request.Id,
-                            EducationalInstitutionId = x,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            DeletedAt = null,
-                            isDeleted = false,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null
-                        });
-
-                    if (NewEduInstitutionCoordinatorEntites.Count() > 0)
-                        await _EduInstitutionCoordinatorRepository.AddRangeAsync(NewEduInstitutionCoordinatorEntites);
 
                     Transaction.Complete();
 

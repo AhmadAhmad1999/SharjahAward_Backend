@@ -105,6 +105,9 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                 if (data[i].NeedAttachment)
                 {
                     data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<AttachmentListVM>>(conditionsProvideds[i].Attachments);
+
+                    if (data[i].ConditionsAttachments!.Attachments.Any(a => a.IsAccept == false))
+                        data[i].Rejected = true;
                 }
 
                 data[i].Title = request.lang == "en"

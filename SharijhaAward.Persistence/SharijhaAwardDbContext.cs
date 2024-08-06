@@ -191,7 +191,7 @@ namespace SharijhaAward.Persistence
         public DbSet<Coordinator> Coordinators { get; set; }
         public DbSet<EducationalEntity> EducationalEntities { get; set; }
         public DbSet<EducationalInstitution> EducationalInstitutions { get; set; }
-        public DbSet<EduInstitutionCoordinator> InstitutionCoordinators { get; set; }
+        public DbSet<EduEntitiesCoordinator> EntitiesCoordinators { get; set; }
         public DbSet<CriterionAttachment> CriterionAttachments { get; set; }
         public DbSet<Criterion> Criterions { get; set; }
         public DbSet<CriterionItem> CriterionItems { get; set; }
@@ -331,7 +331,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Coordinator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<EducationalEntity>().HasQueryFilter(p => !p.isDeleted);
-            modelBuilder.Entity<EduInstitutionCoordinator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EduEntitiesCoordinator>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<AboutAwardPage>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<GeneralWorkshop>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);

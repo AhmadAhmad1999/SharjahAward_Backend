@@ -175,6 +175,11 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
 
                 if (CriterionItemAttachment is not null)
                     data[i].RejectedSteps!.Add(5);
+
+                if (data[i].RejectedSteps!.Count() > 0)
+                {
+                    data[i].needSing = true;
+                }
             }
 
             return new BaseResponse<List<FormListVm>> ("", true, 200, data);

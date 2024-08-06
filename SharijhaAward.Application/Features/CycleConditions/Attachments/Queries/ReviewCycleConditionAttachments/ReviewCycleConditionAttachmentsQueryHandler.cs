@@ -55,7 +55,8 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Queries
                 return new BaseResponse<List<CycleConditionListVM>>("الإستمارة غير موجودة", false, 400);
             }
 
-            var Terms = _cycleConditionRepository.WhereThenInclude(t => t.CycleId == Cycle.Id, t => t.ConditionAttachments).ToList();
+            var Terms = _cycleConditionRepository
+                .WhereThenInclude(t => t.CycleId == Cycle.Id, t => t.ConditionAttachments).ToList();
 
             List<CycleConditionsProvidedForm> conditionsProvideds = new List<CycleConditionsProvidedForm>();
 

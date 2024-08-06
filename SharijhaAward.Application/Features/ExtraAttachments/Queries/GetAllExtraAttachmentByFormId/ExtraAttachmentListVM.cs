@@ -19,6 +19,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
         public string EnglishDescription { get; set; } = string.Empty;
         public int RequiredAttachmentNumber { get; set; }
         public AttachmentType AttachmentType { get; set; }
+        public bool? Rejected { get; set; } = false;
         public int SizeOfAttachmentInKB { get; set; }
         public List<AttachmentDto>? AttachmentList { get; set; }
     }

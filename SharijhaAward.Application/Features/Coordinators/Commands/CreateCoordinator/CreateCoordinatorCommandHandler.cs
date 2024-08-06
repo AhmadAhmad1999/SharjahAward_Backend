@@ -122,21 +122,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                         await _UserRoleRepository.AddAsync(NewUserRoleEntity);
                     }
 
-                    IEnumerable<EduInstitutionCoordinator> NewEducationalInstitutions = Request.EducationalInstitutionsIds
-                        .Select(x => new EduInstitutionCoordinator()
-                        {
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            DeletedAt = null,
-                            isDeleted = false,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null,
-                            CoordinatorId = User.Id,
-                            EducationalInstitutionId = x
-                        });
-
-                    await _EduInstitutionCoordinatorRepository.AddRangeAsync(NewEducationalInstitutions);
-
                     Transaction.Complete();
 
                     ResponseMessage = Request.lang == "en"

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinator;
-using SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinatorInstitution;
+using SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinatorEntity;
 using SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinator;
-using SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinatorInstitution;
+using SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinatorEntity;
 using SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator;
 using SharijhaAward.Application.Features.Coordinators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators;
@@ -165,7 +165,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpPost("CreateCoordinatorInstitution")]
+        [HttpPost("CreateCoordinatorEntity")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -173,15 +173,15 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> CreateCoordinatorInstitution(CreateCoordinatorInstitutionCommand CreateCoordinatorInstitutionCommand)
+        public async Task<IActionResult> CreateCoordinatorEntity(CreateCoordinatorEntityCommand command)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
-            CreateCoordinatorInstitutionCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+            command.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
 
-            BaseResponse<object>? Response = await _mediator.Send(CreateCoordinatorInstitutionCommand);
+            BaseResponse<object>? Response = await _mediator.Send(command);
 
             return Response.statusCode switch
             {
@@ -191,7 +191,7 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        [HttpDelete("DeleteCoordinatorInstitution/{Id}")]
+        [HttpDelete("DeleteCoordinatorEntity/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -199,14 +199,14 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCoordinatorInstitution(int Id)
+        public async Task<IActionResult> DeleteCoordinatorEntity(int Id)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<object>? Response = await _mediator.Send(new DeleteCoordinatorInstitutionCommand()
+            BaseResponse<object>? Response = await _mediator.Send(new DeleteCoordinatorEntityCommand()
             {
                 Id = Id,
                 lang = HeaderValue!

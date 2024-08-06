@@ -44,8 +44,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queri
            
             string msg;
       
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var user = await _userRepository.GetByIdAsync(int.Parse(UserId));
+            //var UserId = _jwtProvider.GetUserIdFromToken(request.token);
+            //var user = await _userRepository.GetByIdAsync(int.Parse(UserId));
             var form = await _providedFormRepository.FirstOrDefaultAsync(p => p.Id == request.formId);
             if(form == null)
             {

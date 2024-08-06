@@ -65,6 +65,14 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
             {
                 return new BaseResponse<object>("", false, 404);
             }
+            else if (form.needSing == false)
+            {
+                msg = request.lang == "en"
+                    ? "No need to send"
+                    : "لا تحتاج للارسال";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
 
             byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
             string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(

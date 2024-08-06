@@ -26,7 +26,7 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public float FinalScore {  get; set; }
         public bool? IsAccepted { get; set; }
         public string? ReasonOfRejection { get; set; }
-
+        public bool? needSing { get; set; }
         public User User { get; set; } = null!;
 
         [ForeignKey(nameof(User))]
