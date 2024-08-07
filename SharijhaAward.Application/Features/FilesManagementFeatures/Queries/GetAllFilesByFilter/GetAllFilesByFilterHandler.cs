@@ -204,7 +204,24 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 int TotalCount = TotalCount1 + TotalCount2;
 
-                List<GetAllFilesByFilterListVM> FilesValues = await _DynamicAttributeValueRepository
+                List<GetAllFilesByFilterListVM> FirstFilesValues = await _DynamicAttributeTableValueRepository
+                    .Include(x => x.DynamicAttribute!)
+                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                    .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                        x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
+                    .Select(x => new GetAllFilesByFilterListVM()
+                    {
+                        Id = x.Id,
+                        RowId = x.RowId,
+                        Description = null,
+                        FileName = new FileInfo(x.Value).Name,
+                        FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
+                        UploadedAt = x.CreatedAt,
+                        FileType = Path.GetExtension(x.Value)
+                    }).ToListAsync();
+
+                List<GetAllFilesByFilterListVM> SecondFilesValues = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
@@ -217,29 +234,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
                         UploadedAt = x.CreatedAt,
                         FileType = Path.GetExtension(x.Value)
-                    })
-                    .Union(await _DynamicAttributeTableValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                        .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
-                            x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
-                            ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
-                        .Select(x => new GetAllFilesByFilterListVM()
-                        {
-                            Id = x.Id,
-                            RowId = x.RowId,
-                            Description = null,
-                            FileName = new FileInfo(x.Value).Name,
-                            FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
-                            UploadedAt = x.CreatedAt,
-                            FileType = Path.GetExtension(x.Value)
-                        }).ToListAsync())
+                    }).ToListAsync();
+
+                List<GetAllFilesByFilterListVM> FilesValues = FirstFilesValues
+                    .Union(SecondFilesValues)
                     .OrderByDescending(x => x.Id)
                     .Skip((Request.page != 0 || Request.perPage != -1)
                         ? (Request.page - 1) * Request.perPage : 0)
                     .Take((Request.page != 0 || Request.perPage != -1)
                         ? (Request.page - 1) * Request.perPage : TotalCount)
-                    .ToListAsync();
+                    .ToList();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
@@ -262,7 +266,24 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 int TotalCount = TotalCount1 + TotalCount2;
 
-                List<GetAllFilesByFilterListVM> FilesValues = await _DynamicAttributeValueRepository
+                List<GetAllFilesByFilterListVM> FirstFilesValues = await _DynamicAttributeTableValueRepository
+                    .Include(x => x.DynamicAttribute!)
+                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                    .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                        x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
+                    .Select(x => new GetAllFilesByFilterListVM()
+                    {
+                        Id = x.Id,
+                        RowId = x.RowId,
+                        Description = null,
+                        FileName = new FileInfo(x.Value).Name,
+                        FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
+                        UploadedAt = x.CreatedAt,
+                        FileType = Path.GetExtension(x.Value)
+                    }).ToListAsync();
+
+                List<GetAllFilesByFilterListVM> SecondFilesValues = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
@@ -275,29 +296,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
                         UploadedAt = x.CreatedAt,
                         FileType = Path.GetExtension(x.Value)
-                    })
-                    .Union(await _DynamicAttributeTableValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                        .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
-                            x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
-                            ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
-                        .Select(x => new GetAllFilesByFilterListVM()
-                        {
-                            Id = x.Id,
-                            RowId = x.RowId,
-                            Description = null,
-                            FileName = new FileInfo(x.Value).Name,
-                            FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
-                            UploadedAt = x.CreatedAt,
-                            FileType = Path.GetExtension(x.Value)
-                        }).ToListAsync())
+                    }).ToListAsync();
+
+                List<GetAllFilesByFilterListVM> FilesValues = FirstFilesValues
+                    .Union(SecondFilesValues)
                     .OrderByDescending(x => x.Id)
                     .Skip((Request.page != 0 || Request.perPage != -1)
                         ? (Request.page - 1) * Request.perPage : 0)
                     .Take((Request.page != 0 || Request.perPage != -1)
                         ? (Request.page - 1) * Request.perPage : TotalCount)
-                    .ToListAsync();
+                    .ToList();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
