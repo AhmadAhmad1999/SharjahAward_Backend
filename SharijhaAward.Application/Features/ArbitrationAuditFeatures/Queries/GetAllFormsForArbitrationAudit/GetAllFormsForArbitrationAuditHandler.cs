@@ -41,6 +41,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 .FirstOrDefaultAsync(x => x.Id == UserId);
 
             List<IGrouping<int, Arbitration>> GroupOfArbitrationEntities = new List<IGrouping<int, Arbitration>>();
+
             if (CheckIfUserIsNormalArbitrator is not null
                 ? !CheckIfUserIsNormalArbitrator.isChairman
                 : false)

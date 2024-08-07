@@ -96,12 +96,12 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         ArbitratorName = null
                     }).ToList();
 
-                var FullTotalCount = _ArbitrationRepository
+                var FullTotalCount = await _ArbitrationRepository
                     .Where(x => x.isAccepted == FormStatus.Accepted)
                     .Select(x => x.Type)
                     .GroupBy(x => x)
                     .Select(g => new { Type = g.Key, Count = g.Count() })
-                    .ToList();
+                    .ToListAsync();
 
                 GetAllFromsForInitialArbitrationFullResponse FullResponse = new GetAllFromsForInitialArbitrationFullResponse()
                 {
@@ -207,12 +207,12 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                 : ArbitratorEntity.ArabicName
                         }).ToList();
 
-                    var FullTotalCount = _ArbitrationRepository
+                    var FullTotalCount = await _ArbitrationRepository
                         .Where(x => x.isAccepted == FormStatus.Accepted)
                         .Select(x => x.Type)
                         .GroupBy(x => x)
                         .Select(g => new { Type = g.Key, Count = g.Count() })
-                        .ToList();
+                        .ToListAsync();
 
                     GetAllFromsForInitialArbitrationFullResponse FullResponse = new GetAllFromsForInitialArbitrationFullResponse()
                     {
@@ -286,12 +286,12 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                 : ArbitratorEntity.ArabicName
                         }).ToList();
 
-                    var FullTotalCount = _ArbitrationRepository
+                    var FullTotalCount = await _ArbitrationRepository
                         .Where(x => x.isAccepted == FormStatus.Accepted)
                         .Select(x => x.Type)
                         .GroupBy(x => x)
                         .Select(g => new { Type = g.Key, Count = g.Count() })
-                        .ToList();
+                        .ToListAsync();
 
                     GetAllFromsForInitialArbitrationFullResponse FullResponse = new GetAllFromsForInitialArbitrationFullResponse()
                     {
