@@ -16,7 +16,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
          : IRequestHandler<CreateCoordinatorCommand, BaseResponse<int>>
     {
         private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
-        private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
+        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRepository _userRepository;
         private readonly IFileService _fileService;
@@ -24,7 +24,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
 
         public CreateCoordinatorCommandHandler(IRoleRepository roleRepository,
-            IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
+            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
             IAsyncRepository<Coordinator> coordinatorRepository, 
             IFileService fileService, 
             IUserRepository userRepository, 
@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
             IAsyncRepository<UserRole> UserRoleRepository)
         {
             _roleRepository = roleRepository;
-            _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
+            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
             _coordinatorRepository = coordinatorRepository;
             _userRepository = userRepository;
             _fileService = fileService;
@@ -108,7 +108,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                     Coordinator.Id = UserId;
                     
 
-                    await _coordinatorRepository.AddAsync(Coordinator);
+                    var data =  await _coordinatorRepository.AddAsync(Coordinator);
 
                     var role = await _roleRepository.GetByName("Coordinator");
                     if (role != null)
@@ -120,6 +120,20 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                         };
 
                         await _UserRoleRepository.AddAsync(NewUserRoleEntity);
+                    }
+
+                    if (Request.EducationalEntitiesIds != null)
+                    {
+                        foreach (var EntityId in Request.EducationalEntitiesIds)
+                        {
+                            var EduEntitiesCoordinator = new EduEntitiesCoordinator()
+                            {
+                                EducationalEntityId = EntityId,
+                                CoordinatorId = data.Id
+                            };
+
+                            await _EduEntitiesCoordinatorRepository.AddAsync(EduEntitiesCoordinator);
+                        }
                     }
 
                     Transaction.Complete();

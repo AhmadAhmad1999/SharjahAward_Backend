@@ -222,6 +222,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                     ? "You Passed all Steps Succssfully"
                     : "تم التسجيل بنجاح";
 
+                form.needSing = false;
+
+                await _formRepository.UpdateAsync(form);
+
                 return new BaseResponse<object>("", true, 200);
             }
             msg = request.lang == "en"

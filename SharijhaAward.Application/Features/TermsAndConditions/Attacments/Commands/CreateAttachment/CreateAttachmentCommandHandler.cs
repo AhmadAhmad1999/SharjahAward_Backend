@@ -70,7 +70,18 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
                 && c.ProvidedFormId == form!.Id ,
                 c=>c.Attachments).FirstOrDefault();
 
-            if(conditionsProvided == null)
+            if (conditionsProvided != null && conditionsProvided!.Attachments.Any(a => a.IsAccept == false))
+            {
+                var Attachment = conditionsProvided
+                    .Attachments.Where(a => a.IsAccept == false).FirstOrDefault();
+
+                await _attachmentsRepository.DeleteAsync(Attachment!);
+
+                conditionsProvided.Attachments.Remove(Attachment!);
+            }
+
+
+            if (conditionsProvided == null)
             {
                 conditionsProvided = new ConditionsProvidedForms()
                 {

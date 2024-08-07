@@ -18,19 +18,19 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
         private readonly IUserRepository _userRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
-        private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
+        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
 
         public UpdateCoordinatorCommandHandler(IUserRepository userRepository,
             IAsyncRepository<Coordinator> coordinatorRepository, 
             IFileService fileService, 
             IMapper mapper,
-            IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository)
+            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinator)
         {
             _coordinatorRepository = coordinatorRepository;
             _userRepository = userRepository;
             _fileService = fileService;
             _mapper = mapper;
-            _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
+            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinator;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateCoordinatorCommand Request, CancellationToken cancellationToken)
@@ -68,11 +68,25 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
             UserEntity.EnglishName = Request.englishName;
             UserEntity.PhoneNumber = Request.phoneNumber;
 
-            List<int> AlreadyExistEduInstitutionIds = await _EduInstitutionCoordinatorRepository
-                .Where(x => x.CoordinatorId == Request.Id)
-                .Select(x => x.EducationalInstitutionId)
-                .ToListAsync();
+            if(Request.EducationalEntitiesIds != null)
+            {
+                var EntityCoordinator = await _EduEntitiesCoordinatorRepository
+                    .Where(c => c.CoordinatorId == CoordinatorToUpdate.Id)
+                    .ToListAsync();
 
+                await _EduEntitiesCoordinatorRepository.RemoveListAsync(EntityCoordinator);
+
+                foreach(var EntityId in Request.EducationalEntitiesIds)
+                {
+                    var EduEntitiesCoordinator = new EduEntitiesCoordinator()
+                    {
+                        EducationalEntityId = EntityId,
+                        CoordinatorId = CoordinatorToUpdate.Id
+                    };
+
+                    await _EduEntitiesCoordinatorRepository.AddAsync(EduEntitiesCoordinator);
+                }
+            }
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {

@@ -105,17 +105,11 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
                     .Where(c => c.ProvidedFormId == form[i].Id && c.CycleCondition.NeedAttachment == true)
                     .ToListAsync();
 
-                if(cycleConditions.Count() > 0)
+                if(cycleConditions.Any(c=>c.Attachments.Any()))
                 {
-                    foreach( var c in cycleConditions)
-                    {
-                        if(c.Attachments.Count() > 0)
-                        {
-                            data[i].RejectedSteps!.Add(1);
-                        }
-                        break;
-                    }
+                    data[i].RejectedSteps!.Add(1);
                 }
+                
 
                 var TermAndConditions = await _conditionsProvidedFormsRepository
                     .Include(c=>c.TermAndCondition)
@@ -123,34 +117,24 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
                     .Where(c => c.ProvidedFormId == form[i].Id && c.TermAndCondition.NeedAttachment == true)
                     .ToListAsync();
 
-                if (TermAndConditions.Count() > 0)
+
+                if (TermAndConditions.Any(c => c.Attachments.Any()))
                 {
-                    foreach (var t in TermAndConditions)
-                    {
-                        if (t.Attachments.Count() > 0)
-                        {
-                            data[i].RejectedSteps!.Add(3);
-                        }
-                        break;
-                    }
+                    data[i].RejectedSteps!.Add(3);
                 }
+
 
                 var ExtraAttachments = await _extraAttachmentRepository
                     .Where(e => e.ProvidedFormId == form[i].Id)
                     .Include(e => e.ExtraAttachmentFiles!.Where(a=>a.IsAccept == false))
                     .ToListAsync();
 
-                if (ExtraAttachments.Count() > 0)
+                if (ExtraAttachments.Any(c => c.ExtraAttachmentFiles!.Any()))
                 {
-                    foreach (var e in ExtraAttachments)
-                    {
-                        if (e.ExtraAttachmentFiles!.Count() > 0)
-                        {
-                            data[i].RejectedSteps!.Add(6);
-                        }
-                        break;
-                    }
+                    data[i].RejectedSteps!.Add(6);
                 }
+
+
 
                 bool CheckIfThereIsRejectedDynamicFields = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
@@ -178,7 +162,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
 
                 if (data[i].RejectedSteps!.Count() > 0)
                 {
-                    data[i].needSing = true;
+                    form[i].needSing = true;
+
+                    await _formRepository.UpdateAsync(form[i]);
                 }
             }
 
