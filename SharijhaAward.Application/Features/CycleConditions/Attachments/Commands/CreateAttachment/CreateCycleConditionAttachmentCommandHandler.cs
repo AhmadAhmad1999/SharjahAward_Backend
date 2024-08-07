@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -61,7 +62,17 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Command
                 && c.ProvidedFormId == form!.Id,
                 c => c.Attachments).FirstOrDefault();
 
-            if(conditionsProvided == null)
+            if (conditionsProvided != null && conditionsProvided!.Attachments.Any(a => a.IsAccept == false))
+            {
+                var Attachment = conditionsProvided
+                    .Attachments.Where(a => a.IsAccept == false).FirstOrDefault();
+
+                await _attachmentsRepository.DeleteAsync(Attachment!);
+
+                conditionsProvided.Attachments.Remove(Attachment!);
+            }
+
+            if (conditionsProvided == null)
             {
                 conditionsProvided = new CycleConditionsProvidedForm()
                 {

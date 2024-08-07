@@ -16,7 +16,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         public Emirates Emirates { get; set; }
         public string Password { get; set; } = null!;
         public string lang { get; set; } = string.Empty;
-        public List<int> EducationalEntitiesIds { get; set; } = new List<int>();
+        public List<int>? EducationalEntitiesIds { get; set; }
         public string? WWWRootFilePath { get; set; }
     }
 }

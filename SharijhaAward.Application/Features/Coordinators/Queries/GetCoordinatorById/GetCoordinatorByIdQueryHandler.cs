@@ -76,6 +76,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                 : data.ArabicName;
 
             data.EntityCoordinator = _EduEntitiesCoordinatorRepository
+                .Where(x=>x.CoordinatorId == CoordinatorEntity.Id)
                 .Include(x => x.EducationalEntity!)
                 .Include(x => x.EducationalEntity!.Institutions!)
                 .AsEnumerable()

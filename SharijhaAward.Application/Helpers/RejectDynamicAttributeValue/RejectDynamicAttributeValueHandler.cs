@@ -111,11 +111,6 @@ namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
                     await _DynamicAttributeTableValueRepository.UpdateListAsync(DynamicAttributeTableValueEntities);
 
 
-                    int PercentFormula = ((ProvidedFormEntity.CurrentStep - 1) * 100) / ProvidedFormEntity.TotalStep;
-                    ProvidedFormEntity.PercentCompletion = PercentFormula < 0 ? 0 : PercentFormula;
-
-                    await _ProvidedFormRepository.UpdateAsync(ProvidedFormEntity);
-
                     Transaction.Complete();
 
                     ResponseMessage = Request.lang == "en"

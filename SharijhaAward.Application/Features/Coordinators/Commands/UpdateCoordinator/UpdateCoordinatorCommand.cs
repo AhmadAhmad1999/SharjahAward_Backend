@@ -20,7 +20,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
         public IFormFile? personalPhoto { get; set; } = null!;
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }
-        public List<int> EducationalEntitiesIds { get; set; } = new List<int>();
+        public List<int>? EducationalEntitiesIds { get; set; }
       
     }
 }

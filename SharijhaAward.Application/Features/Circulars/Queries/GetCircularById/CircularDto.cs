@@ -14,5 +14,8 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
         public string? CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<CircularAttachmentDto>? CircularAttachments { get; set; }
+        public List<int>? Coordinators { get; set; }
+        public List<int>? Arbitrators { get; set; }
+        public List<int>? Chairmans { get; set; }
     }
 }
