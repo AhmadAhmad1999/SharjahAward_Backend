@@ -21,6 +21,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
         public int? RequiredAttachmentNumber { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public AttachmentType? AttachmentType { get; set; }
+        public bool? Rejected { get; set; } = false;
         public bool? IsSpecial { get; set; } = false;
         public int CategoryId { get; set; }
         public DateTime CreateAt {  get; set; }

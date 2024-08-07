@@ -53,6 +53,9 @@ namespace SharijhaAward.Application.Features.StrategicPartners.Commands.UpdateSt
             else
                 StrategicPartner.LogoUrl = logoUrl;
 
+            if (!request.Url!.Contains("http"))
+                StrategicPartner.Url = "https://" + request.Url;
+
             await _strategicPartnerRepository.UpdateAsync(StrategicPartner);
 
             return new BaseResponse<object>(msg, true, 200);

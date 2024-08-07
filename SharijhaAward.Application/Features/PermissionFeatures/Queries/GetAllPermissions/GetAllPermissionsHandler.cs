@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.PermissionFeatures.Queries.GetAllPe
             {
                 Response.Add(new GetAllPermissionsListVM()
                 {
-                    Name = GroupOfPermissionsHeaderAndPermissions.Key!.Name,
+                    Name = GroupOfPermissionsHeaderAndPermissions.Key!.ArabicName,
                     Permissions = _Mapper.Map<List<PermissionListVM>>(GroupOfPermissionsHeaderAndPermissions
                         .Where(y => y.PermissionHeaderId == GroupOfPermissionsHeaderAndPermissions.Key!.Id).ToList())
                 });

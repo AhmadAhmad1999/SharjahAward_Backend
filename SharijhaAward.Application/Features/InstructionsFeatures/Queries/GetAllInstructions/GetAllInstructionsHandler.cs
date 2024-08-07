@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.InstructionModel;
 
 namespace SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAllInstructions
@@ -21,10 +22,13 @@ namespace SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAll
         public async Task<BaseResponse<List<GetAllInstructionsListVM>>> Handle(GetAllInstructionsQuery Request, 
             CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             string ResponseMessage = string.Empty;
 
             List<GetAllInstructionsListVM> Instructions = _Mapper.Map<List<GetAllInstructionsListVM>>(await _InstructionRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
+                .OrderByDescending(filterObject ,x => x.CreatedAt, Request.page, Request.perPage)
+                .ToListAsync());
 
             int TotalCount = await _InstructionRepository.GetCountAsync(null);
 

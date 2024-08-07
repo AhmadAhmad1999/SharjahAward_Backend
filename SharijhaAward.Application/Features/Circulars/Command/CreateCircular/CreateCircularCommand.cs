@@ -21,6 +21,7 @@ namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
         public bool AllArbitrators {  get; set; }
         public bool AllChairmans {  get; set; }
         public string? lang {  get; set; }
+        public string? token { get; set; }
 
     }
 }

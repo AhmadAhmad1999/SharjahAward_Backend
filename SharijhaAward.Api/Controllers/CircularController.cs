@@ -9,6 +9,8 @@ using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
 using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Application.Features.Circulars.Command.Attachments.DeleteAttachment;
+using SharijhaAward.Application.Features.Circulars.Command.Attachments.AddAttachment;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -28,8 +30,10 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> CreateCircular([FromForm] CreateCircularCommand command)
         {
             var language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
 
             command.lang = language!;
+            command.token = token!;
 
             var response = await _mediator.Send(command);
 
@@ -80,23 +84,21 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllCircular")]
-        public async Task<IActionResult> GetAllCircular(int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetAllCircular([FromQuery] GetAllCircularsQuery query)
         {
             var language = HttpContext.Request.Headers["lang"];
            
             var token = HttpContext.Request.Headers.Authorization;
+            
             if(token.IsNullOrEmpty())
             {
                 return Unauthorized();
             }
 
-            var response = await _mediator.Send(new GetAllCircularsQuery()
-            {
-                page = page,
-                perPage = perPage,
-                lang = language,
-                token = token!
-            });
+            query.lang = language!;
+            query.token = token!;
+
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -134,6 +136,44 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(response),
                 200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Circulars.xlsx"),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpPost("AddCircularFile", Name = "AddCircularFile")]
+        public async Task<IActionResult> AddCircularFile([FromForm] AddAttachmentCommand command)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            command.lang = language!;
+
+            var response = await _mediator.Send(command);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpDelete("DeleteCircularFile/{CircularFileId}", Name = "DeleteCircularFile")]
+        public async Task<IActionResult> DeleteCircularFile(int CircularFileId)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+
+
+            var response = await _mediator.Send(new DeleteAttachmentCommand()
+            {
+                CircularFileId = CircularFileId,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
                 _ => BadRequest(response)
             };
         }

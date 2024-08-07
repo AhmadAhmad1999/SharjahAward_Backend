@@ -3,6 +3,7 @@
     public enum OnePageTextType
     {
         PrivacyPolicy = 0,
-        TermsOfUse = 1
+        TermsOfUse = 1,
+        AboutApp = 2
     }
 }

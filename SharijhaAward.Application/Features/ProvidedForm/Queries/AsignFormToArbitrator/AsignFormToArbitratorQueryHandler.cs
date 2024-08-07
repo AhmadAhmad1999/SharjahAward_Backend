@@ -60,6 +60,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.AsignFormToArb
             {
                 return new BaseResponse<object>("Form not Found", false, 404);
             }
+            
             var Arbitrator = await _arbitratorRepository.GetByIdAsync(request.arbitratorId);
             if (Arbitrator == null)
             {

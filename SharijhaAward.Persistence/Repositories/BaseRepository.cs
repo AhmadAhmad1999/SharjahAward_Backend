@@ -1,6 +1,7 @@
 ﻿using AutoMapper.Internal;
 using Microsoft.EntityFrameworkCore;
 using PdfSharpCore.Pdf;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Common;
 using System;
@@ -77,6 +78,15 @@ namespace SharijhaAward.Persistence.Repositories
         {
             await _DbSet.AddAsync(entity);
             typeof(T).GetProperty("CreatedAt")!.SetValue(entity, DateTime.UtcNow);
+            await _dbContext.SaveChangesAsync();
+
+            return entity;
+        }
+        public async Task<T> AddAsync(T entity, string UserName)
+        {
+            await _DbSet.AddAsync(entity);
+            typeof(T).GetProperty("CreatedAt")!.SetValue(entity, DateTime.UtcNow);
+            typeof(T).GetProperty("CreatedBy")!.SetValue(entity, UserName);
             await _dbContext.SaveChangesAsync();
 
             return entity;

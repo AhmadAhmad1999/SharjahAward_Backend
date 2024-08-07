@@ -89,6 +89,9 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
                 if (data[i].NeedAttachment)
                 {
                     data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<CycleConditionAttachmentListVm>>(conditionsProvideds[i].Attachments);
+                   
+                    if (data[i].ConditionsAttachments!.Attachments.Any(a => a.IsAccept == false))
+                        data[i].Rejected = true;
                 }
 
                 data[i].Title = request.lang == "en"

@@ -11,6 +11,7 @@ using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
+using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllEducationalInstitutions;
 
 namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById
 {
@@ -19,6 +20,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
     {
         private readonly IAsyncRepository<ResponsibilityUser> _userRepository;
         private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
+        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
@@ -28,6 +30,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
         private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
 
         public GetCoordinatorByIdQueryHandler(
+            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
             IAsyncRepository<ResponsibilityUser> userRepository,
             IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
             IMapper Mapper,
@@ -47,6 +50,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _CoordinatorRepository = CoordinatorRepository;
+            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
         }
 
         public async Task<BaseResponse<GetCoordinatorByIdResponse>> Handle(GetCoordinatorByIdQuery Request, CancellationToken cancellationToken)
@@ -71,20 +75,20 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                 ? data.EnglishName
                 : data.ArabicName;
 
-            data.InstitutionEntities = _EduInstitutionCoordinatorRepository
-                .Include(x => x.EducationalInstitution!)
-                .Include(x => x.EducationalInstitution!.EducationalEntity!)
+            data.EntityCoordinator = _EduEntitiesCoordinatorRepository
+                .Include(x => x.EducationalEntity!)
+                .Include(x => x.EducationalEntity!.Institutions!)
                 .AsEnumerable()
-                .DistinctBy(x => x.EducationalInstitutionId)
-                .Select(x => new EduInstitutionCoordinatorDto()
+                .DistinctBy(x => x.EducationalEntityId)
+                .Select(x => new EduEntityCoordinatorDto()
                 {
-                    Id = x.EducationalInstitution!.Id,
-                    ArabicName = x.EducationalInstitution!.ArabicName,
-                    EnglishName = x.EducationalInstitution!.EnglishName,
+                    Id = x.EducationalEntity!.Id,
+                    ArabicName = x.EducationalEntity!.ArabicName,
+                    EnglishName = x.EducationalEntity!.EnglishName,
                     Name = Request.lang == "en"
-                        ? x.EducationalInstitution!.EnglishName
-                        : x.EducationalInstitution!.ArabicName,
-                    EducationalEntityId = x.EducationalInstitution!.EducationalEntityId
+                        ? x.EducationalEntity!.EnglishName
+                        : x.EducationalEntity!.ArabicName,
+                    EducationalInstitutions = _Mapper.Map<List<EducationalInstitutionListVM>>(x.EducationalEntity.Institutions)
                 }).ToList();
 
 

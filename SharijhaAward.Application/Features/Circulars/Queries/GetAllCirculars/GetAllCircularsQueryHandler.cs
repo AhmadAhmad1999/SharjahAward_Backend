@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CircularModel;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
@@ -44,7 +45,9 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
 
         public async Task<BaseResponse<List<CircularListVm>>> Handle(GetAllCircularsQuery request, CancellationToken cancellationToken)
         {
-            var User = _jwtProvider.GetUserIdFromToken(request.token);
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
+            var User = _jwtProvider.GetUserIdFromToken(request.token!);
             if(User == null)
             {
                 return new BaseResponse<List<CircularListVm>>("UnAuth", false, 401);
@@ -75,14 +78,14 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
                     var Arbitrator = await _arbitratorRepository.GetByIdAsync(int.Parse(User));
                     
                     var Circulars = _circularArbitratorRepository
-                        .Where(c => c.ArbitratorId == int.Parse(User))
+                        .WhereThenFilter(c => c.ArbitratorId == int.Parse(User), filterObject)
                         .Select(c => c.Circular)
                         .ToList();
 
                     if (Arbitrator!.isChairman)
                     {
                         var ChairmanCirculars = _circularChairmanRepository
-                        .Where(c => c.ChairmanId == int.Parse(User))
+                        .WhereThenFilter(c => c.ChairmanId == int.Parse(User), filterObject)
                         .Select(c => c.Circular)
                         .ToList();
 
@@ -93,7 +96,7 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
                 else if(Role!.EnglishName == "Admin")
                 {
                     allCircular = await _circularRepository
-                        .OrderByDescending(x => x.Id, request.page, request.perPage)
+                        .OrderByDescending(filterObject, x => x.Id, request.page, request.perPage)
                         .ToListAsync();
                 }
             }

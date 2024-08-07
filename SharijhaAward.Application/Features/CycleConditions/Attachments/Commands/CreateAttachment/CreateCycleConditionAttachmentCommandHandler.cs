@@ -50,7 +50,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Command
             if (term == null)
             {
                 msg = request.lang == "en"
-                    ? "The TermAndCondition Not Found"
+                    ? "The Term And Condition Not Found"
                     : "الشرط غير موجود";
 
                 return new BaseResponse<object>(msg, false, 404);
@@ -81,6 +81,9 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Command
                 if (term.RequiredAttachmentNumber > conditionsProvided.Attachments.Count || term.RequiredAttachmentNumber == 0)
                 {
                     data.AttachementPath = await _attachmentFileService.SaveProvidedFormFilesAsync(request.attachment, form!.Id);
+                    data.IsAccept = null;
+                    data.ReasonOfReject = null;
+
                     await _attachmentsRepository.AddAsync(data);
                 }
                 else

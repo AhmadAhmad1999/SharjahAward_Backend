@@ -20,6 +20,7 @@ namespace SharijhaAward.Application.Contract.Persistence
         Task<IReadOnlyList<T>> GetPagedReponseAsync(int page, int size);
         Task<IReadOnlyList<T>> GetPagedReponseWithPredicateAsync(Expression<Func<T, bool>>? predicate, int page, int size);
         Task<T> AddAsync(T entity);
+        Task<T> AddAsync(T entity, string token);
         Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
         Task UpdateAsync(T entity);
         Task UpdateListAsync(IEnumerable<T> entities);

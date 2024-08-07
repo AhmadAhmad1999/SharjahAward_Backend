@@ -45,6 +45,9 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
                 data[i].Description = request.lang == "en" ? data[i].EnglishDescription : data[i].ArabicDescription;
 
                 data[i].AttachmentList = _mapper.Map<List<AttachmentDto>>(ExtraAttachments[i].ExtraAttachmentFiles);
+
+                if (data[i].AttachmentList!.Any(a => a.IsAccept == false))
+                    data[i].Rejected = true;
             }
             return new BaseResponse<List<ExtraAttachmentListVM>>("", true, 200, data);
         }
