@@ -7,6 +7,7 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.CreateRole
     {
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
+        public bool HaveFullAccess { get; set; }
         public List<int> PermissionsIds { get; set; } = new List<int>();
         public string? lang { get; set; }
     }

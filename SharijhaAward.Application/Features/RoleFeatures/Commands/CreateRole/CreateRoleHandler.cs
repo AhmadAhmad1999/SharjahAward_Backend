@@ -22,7 +22,6 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.CreateRole
         {
             string ResponseMessage = string.Empty;
 
-
             Role? CheckRoleNameIfUnique = await _RoleRepository
                 .FirstOrDefaultAsync(x => (x.ArabicName.ToLower() == Request.ArabicName.ToLower() ||
                     x.EnglishName.ToLower() == Request.EnglishName.ToLower()));
@@ -61,7 +60,8 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.CreateRole
                     Role NewRoleEntity = new Role()
                     {
                         ArabicName = Request.ArabicName,
-                        EnglishName = Request.EnglishName
+                        EnglishName = Request.EnglishName,
+                        HaveFullAccess = Request.HaveFullAccess
                     };
 
                     await _RoleRepository.AddAsync(NewRoleEntity);
