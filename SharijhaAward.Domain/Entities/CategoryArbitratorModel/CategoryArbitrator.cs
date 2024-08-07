@@ -11,7 +11,7 @@ namespace SharijhaAward.Domain.Entities.CategoryArbitratorModel
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
         public int ArbitratorId { get; set; }
-        public Arbitrator? Arbitrator { get; set; 
+        public Arbitrator? Arbitrator { get; set; }
 
     }
 }
