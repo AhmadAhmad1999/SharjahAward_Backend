@@ -106,18 +106,16 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
                                 : new List<GetAllCategoryClassesByCategoryIdDto>()
                             : new List<GetAllCategoryClassesByCategoryIdDto>()),
                         RelatedToEducationalEntities = x.RelatedToEducationalEntities,
-                        SubCategoryEducationalEntities = (x.RelatedToEducationalEntities != null
-                            ? x.RelatedToEducationalEntities.Value
-                                ? AllCategoryEducationalEntities
-                                    .Where(y => y.CategoryId == x.Id)
-                                    .Select(y => new GetAllCategoryEducationalEntitiesByCategoryIdDto()
-                                    {
-                                        Id = y.Id,
-                                        Name = Request.lang == "en"
-                                            ? y.EducationalEntity!.EnglishName
-                                            : y.EducationalEntity!.ArabicName
-                                    }).ToList()
-                                : new List<GetAllCategoryEducationalEntitiesByCategoryIdDto>()
+                        SubCategoryEducationalEntities = (x.RelatedToEducationalEntities
+                            ? AllCategoryEducationalEntities
+                                .Where(y => y.CategoryId == x.Id)
+                                .Select(y => new GetAllCategoryEducationalEntitiesByCategoryIdDto()
+                                {
+                                    Id = y.Id,
+                                    Name = Request.lang == "en"
+                                        ? y.EducationalEntity!.EnglishName
+                                        : y.EducationalEntity!.ArabicName
+                                }).ToList()
                             : new List<GetAllCategoryEducationalEntitiesByCategoryIdDto>())
                     }).ToList();
             }

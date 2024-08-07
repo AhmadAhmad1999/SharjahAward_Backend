@@ -132,9 +132,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                     int? EducationalEntityDynamicAttributeId = null;
 
                     if (request.RelatedToEducationalEntities != null
-                            ? (categoryToUpdate.RelatedToEducationalEntities != null
-                                ? (request.RelatedToEducationalEntities.Value && !categoryToUpdate.RelatedToEducationalEntities.Value)
-                                : (request.RelatedToEducationalEntities.Value))
+                            ? !categoryToUpdate.RelatedToEducationalEntities
                             : false)
                     {
                         var LastOrderId = await _DynamicAttributeRepository
@@ -172,8 +170,8 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
 
                         EducationalEntityDynamicAttributeId = DynamicAttribute.Id;
                     }
-                    else if ((request.RelatedToEducationalEntities != null && categoryToUpdate.RelatedToEducationalEntities != null)
-                        ? (!request.RelatedToEducationalEntities.Value && categoryToUpdate.RelatedToEducationalEntities.Value)
+                    else if ((request.RelatedToEducationalEntities != null)
+                        ? (!request.RelatedToEducationalEntities.Value && categoryToUpdate.RelatedToEducationalEntities)
                         : false)
                     {
                         if (EducationalEntityDynamicAttribute is not null)

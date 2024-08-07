@@ -264,9 +264,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         });
                     }
 
-                    if(CategoryEntity.RelatedToEducationalEntities != null
-                        ? CategoryEntity.RelatedToEducationalEntities.Value
-                        : false)
+                    if(CategoryEntity.RelatedToEducationalEntities)
                     {
                         MainInformationDynamicAttribute.Add(new DynamicAttribute()
                         {

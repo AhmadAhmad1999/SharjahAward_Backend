@@ -74,9 +74,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
                         NumberOfExpectedWinners = x.NumberOfExpectedWinners
                     }).ToListAsync();
             }
-            if (data.RelatedToEducationalEntities != null
-                ? data.RelatedToEducationalEntities.Value
-                : false)
+            if (data.RelatedToEducationalEntities)
             {
                 data.EducationalEntityIds = await _CategoryEducationalEntityRepository
                     .Where(x => x.CategoryId == request.Id)

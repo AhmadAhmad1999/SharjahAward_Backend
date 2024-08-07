@@ -12,6 +12,7 @@ using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategories;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Categories.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategoriesWithClasses;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -205,6 +206,35 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(response),
                 200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Categories.xlsx"),
                 _ => BadRequest(response)
+            };
+        }
+        [HttpGet("GetAllSubCategoriesWithClasses")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllSubCategoriesWithClasses(string? CategoryName)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllSubCategoriesWithClassesListVM>> Response = 
+                await _mediator.Send(new GetAllSubCategoriesWithClassesQuery()
+            {
+                lang = HeaderValue!,
+                CategoryName = CategoryName
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
             };
         }
     }

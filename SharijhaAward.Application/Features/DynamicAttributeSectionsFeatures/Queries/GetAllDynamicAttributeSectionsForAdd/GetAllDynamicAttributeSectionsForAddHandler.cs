@@ -380,6 +380,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                             }
                         }
                     }
+
+                    DynamicAttributeSection.rejected = DynamicAttributeSection
+                        .DynamicAttributes.Any(x => x.isAccepted != null ? !x.isAccepted.Value : false);
                 }
 
                 GetAllDynamicAttributeSectionsForAddListVM? MainInformationDynamicSection = DynamicAttributeSections
