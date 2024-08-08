@@ -47,6 +47,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                 string ResponseMessage = string.Empty;
 
                 Category? CategoryEntity = await _CategoryRepository
+                    .Include(x => x.Cycle!)
+                    .Include(x => x.Parent!)
                     .FirstOrDefaultAsync(x => x.Id == Request.CategoryId);
 
                 if (CategoryEntity == null)

@@ -88,6 +88,21 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                     return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 404);
                 }
 
+                if (DynamicAttributeEntity.AttributeDataType!.Name == "Phone Number")
+                {
+                    if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString)
+                        ? (!InputDynamicAttributeWithValues.ValueAsString.StartsWith("0097105") ||
+                            InputDynamicAttributeWithValues.ValueAsString.Replace("0097105", string.Empty).Count() != 8)
+                        : false)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? $"The field {DynamicAttributeEntity.EnglishTitle} can't has this value"
+                            : $"الحقل {DynamicAttributeEntity.ArabicTitle} لا يمكن أن يحتوي على هذه القيمة";
+
+                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                    }
+                }
+
                 if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString))
                 {
                     // Unique Constraint..
@@ -1497,6 +1512,21 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                             : "الحقل غير موجود";
 
                         return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 404);
+                    }
+
+                    if (DynamicAttributeEntity.AttributeDataType!.Name == "Phone Number")
+                    {
+                        if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString)
+                            ? (!InputDynamicAttributeWithValues.ValueAsString.StartsWith("0097105") ||
+                                InputDynamicAttributeWithValues.ValueAsString.Replace("0097105", string.Empty).Count() != 8)
+                            : false)
+                        {
+                            ResponseMessage = Request.lang == "en"
+                                ? $"The field {DynamicAttributeEntity.EnglishTitle} can't has this value"
+                                : $"الحقل {DynamicAttributeEntity.ArabicTitle} لا يمكن أن يحتوي على هذه القيمة";
+
+                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString))

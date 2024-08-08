@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -69,6 +70,53 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
 
             //    return new BaseResponse<AddDynamicAttributeValueForSaveResponse>(ResponseMessage, false, 404);
             //}
+
+            List<DynamicAttribute> PhoneNumberDynamicAttributeEntities = DynamicAttributeEntities
+                .Where(x => x.AttributeDataType!.Name == "Phone Number" &&
+                    (Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId).Contains(x.Id) ||
+                    Request.DynamicAttributesWithTableValues.Select(y => y.DynamicAttributeId).Contains(x.Id)))
+                .ToList();
+
+            foreach (DynamicAttribute PhoneNumberDynamicAttributeEntity in PhoneNumberDynamicAttributeEntities)
+            {
+                AddDynamicAttributeValueForSaveMainCommand? InputDynamicAttributeWithValues = Request.DynamicAttributesWithValues
+                    .FirstOrDefault(x => x.DynamicAttributeId == PhoneNumberDynamicAttributeEntity.Id);
+
+                if (InputDynamicAttributeWithValues is not null)
+                {
+                    if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues!.ValueAsString)
+                        ? (!InputDynamicAttributeWithValues.ValueAsString.StartsWith("0097105") ||
+                            InputDynamicAttributeWithValues.ValueAsString.Replace("0097105", string.Empty).Count() != 8)
+                        : false)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? $"The field {PhoneNumberDynamicAttributeEntity.EnglishTitle} can't has this value"
+                            : $"الحقل {PhoneNumberDynamicAttributeEntity.ArabicTitle} لا يمكن أن يحتوي على هذه القيمة";
+
+                        return new BaseResponse<AddDynamicAttributeValueForSaveResponse>(ResponseMessage, false, 400);
+                    }
+                }
+                else
+                {
+                    AddDynamicAttributeTableValueForSaveMainCommand? InputDynamicAttributeWithTableValues = Request.DynamicAttributesWithTableValues
+                        .FirstOrDefault(x => x.DynamicAttributeId == PhoneNumberDynamicAttributeEntity.Id);
+
+                    if (InputDynamicAttributeWithTableValues is not null)
+                    {
+                        if (!string.IsNullOrEmpty(InputDynamicAttributeWithTableValues!.ValueAsString)
+                            ? (!InputDynamicAttributeWithTableValues.ValueAsString.StartsWith("0097105") ||
+                                InputDynamicAttributeWithTableValues.ValueAsString.Replace("0097105", string.Empty).Count() != 8)
+                            : false)
+                        {
+                            ResponseMessage = Request.lang == "en"
+                                ? $"The field {PhoneNumberDynamicAttributeEntity.EnglishTitle} can't has this value"
+                                : $"الحقل {PhoneNumberDynamicAttributeEntity.ArabicTitle} لا يمكن أن يحتوي على هذه القيمة";
+
+                            return new BaseResponse<AddDynamicAttributeValueForSaveResponse>(ResponseMessage, false, 400);
+                        }
+                    }
+                }
+            }
 
             List<DynamicAttributeSection> AllDynamicAttributeSections = DynamicAttributeEntities
                 .Select(x => x.DynamicAttributeSection!)

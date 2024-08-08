@@ -169,6 +169,18 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                         DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                     }
                                 }
+                                else if (DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "Phone Number".ToLower())
+                                {
+                                    DynamicAttributeValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeValues
+                                        .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id);
+
+                                    if (CheckIfValueIsAlreadyInserted != null)
+                                    {
+                                        DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value.Replace("0097105", string.Empty);
+                                        DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                        DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
+                                    }
+                                }
                                 else
                                 {
                                     DynamicAttributeValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeValues
@@ -360,6 +372,18 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                                 DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                             }
                                         }
+                                        else if (DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "Phone Number".ToLower())
+                                        {
+                                            DynamicAttributeValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeValues
+                                                .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id);
+
+                                            if (CheckIfValueIsAlreadyInserted != null)
+                                            {
+                                                DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value.Replace("0097105", string.Empty);
+                                                DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                                DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
+                                            }
+                                        }
                                         else
                                         {
                                             DynamicAttributeTableValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeTableValues
@@ -526,6 +550,18 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 if (CheckIfValueIsAlreadyInserted != null)
                                 {
                                     DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                    DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
+                                    DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
+                                }
+                            }
+                            else if (DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "Phone Number".ToLower())
+                            {
+                                DynamicAttributeValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeValues
+                                    .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id);
+
+                                if (CheckIfValueIsAlreadyInserted != null)
+                                {
+                                    DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value.Replace("0097105", string.Empty);
                                     DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                                     DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                 }

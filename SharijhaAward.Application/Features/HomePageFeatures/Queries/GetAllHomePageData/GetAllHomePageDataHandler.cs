@@ -85,171 +85,262 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
             int FormsNumber = AllProvidedFormsEntities
                 .Count();
 
-            int ContactUsNumber = await _EmailMessageRepository
+            RoleType RoleType = RoleType.Arbitrator;
+
+            if (FormsNumber > 0)
+            {
+                int ContactUsNumber = await _EmailMessageRepository
                 .Where(x => AllProvidedFormsEntities.Select(y => y.userId).Any(y => y == x.UserId) &&
                     x.Id == x.MessageId)
                 .CountAsync();
 
-            int AllCompletedFormsAsNumber = AllProvidedFormsEntities
-                .Where(x => x.PercentCompletion == 100)
-                .Count();
-
-            float AllCompletedFormsAsPercentage = (100 * AllCompletedFormsAsNumber) / FormsNumber;
-
-            int AllUnCompletedFormsAsNumber = AllProvidedFormsEntities
-                .Where(x => x.PercentCompletion != 100)
-                .Count();
-
-            float AllUnCompletedFormsAsPercentage = 100 - AllCompletedFormsAsPercentage;
-
-            int AllAcceptedFormsAsNumber = AllProvidedFormsEntities
-                .Where(x => x.IsAccepted != null ? x.IsAccepted.Value : false)
-                .Count();
-
-            float AllAcceptedFormsAsPercentage = (100 * AllAcceptedFormsAsNumber) / FormsNumber;
-
-            int AllUnAcceptedFormsAsNumber = AllProvidedFormsEntities
-                .Where(x => x.IsAccepted != null ? !x.IsAccepted.Value : false)
-                .Count();
-
-            float AllUnAcceptedFormsAsPercentage = 100 - AllAcceptedFormsAsPercentage;
-
-            Arbitrator? CheckArbitratorEntity = await _ArbitratorRepository
-                .FirstOrDefaultAsync(x => x.Id == UserId);
-
-            if (CheckArbitratorEntity is not null)
-            {
-                List<Arbitration> ArbitratorEntities = await _ArbitrationRepository
-                    .Include(x => x.ProvidedForm!)
-                    .Where(x => x.ArbitratorId == UserId &&
-                        AllProvidedFormsEntities.Select(y => y.userId).Contains(x.ProvidedForm!.userId))
-                    .DistinctBy(x => x.ProvidedFormId)
-                    .ToListAsync();
-
-                int AssigedFormsNumber = ArbitratorEntities.Count();
-
-                int FormsInInitialArbitrationAsNumber = ArbitratorEntities
-                    .Where(x => x.isAccepted == FormStatus.Accepted &&
-                        x.isAcceptedFromChairman != FormStatus.Accepted)
+                int AllCompletedFormsAsNumber = AllProvidedFormsEntities
+                    .Where(x => x.PercentCompletion == 100)
                     .Count();
 
-                float FormsInInitialArbitrationAsPercentage = (100 * FormsInInitialArbitrationAsNumber) / AssigedFormsNumber;
+                float AllCompletedFormsAsPercentage = (100 * AllCompletedFormsAsNumber) / FormsNumber;
 
-                int FormsInArbitrationAuditAsNumber = ArbitratorEntities
-                    .Where(x => x.isAcceptedFromChairman == FormStatus.Accepted &&
-                        x.isAccepted == FormStatus.Accepted)
+                int AllUnCompletedFormsAsNumber = AllProvidedFormsEntities
+                    .Where(x => x.PercentCompletion != 100)
                     .Count();
 
-                float FormsInArbitrationAuditAsPercentage = (100 * FormsInArbitrationAuditAsNumber) / AssigedFormsNumber;
+                float AllUnCompletedFormsAsPercentage = 100 - AllCompletedFormsAsPercentage;
 
-                int FormsInFinalArbitrationAsNumber = await _FinalArbitrationRepository
-                    .Where(x => ArbitratorEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
-                    .CountAsync();
+                int AllAcceptedFormsAsNumber = AllProvidedFormsEntities
+                    .Where(x => x.IsAccepted != null ? x.IsAccepted.Value : false)
+                    .Count();
 
-                float FormsInFinalArbitrationAsPercentage = (100 * FormsInFinalArbitrationAsNumber) / AssigedFormsNumber;
+                float AllAcceptedFormsAsPercentage = (100 * AllAcceptedFormsAsNumber) / FormsNumber;
 
-                List<IGrouping<Category, Domain.Entities.ProvidedFormModel.ProvidedForm>> AllProvidedFormsEntitiesGroupedByCategoryId = 
-                    AllProvidedFormsEntities.GroupBy(x => x.Category!).ToList();
+                int AllUnAcceptedFormsAsNumber = AllProvidedFormsEntities
+                    .Where(x => x.IsAccepted != null ? !x.IsAccepted.Value : false)
+                    .Count();
 
-                List<FormsInCategories> FormsInCategories = AllProvidedFormsEntitiesGroupedByCategoryId
-                    .Select(FormsInCategory => new FormsInCategories()
-                    {
-                        CategoryId = FormsInCategory.Key.Id,
-                        CategoryName = Request.lang == "em"
-                            ? FormsInCategory.Key.EnglishName
-                            : FormsInCategory.Key.ArabicName,
-                        FormsNumberInCategory = FormsInCategory.Count(),
-                        FormsNumberInCategoryAsPercentage = (100 * FormsInCategory.Count()) / AssigedFormsNumber
-                    }).ToList();
+                float AllUnAcceptedFormsAsPercentage = 100 - AllAcceptedFormsAsPercentage;
 
-                GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
-                {
-                    SubscribersNumber = SubscribersNumber,
-                    FormsNumber = FormsNumber,
-                    ContactUsNumber = ContactUsNumber,
-                    AllCompletedFormsAsNumber = AllCompletedFormsAsNumber,
-                    AllCompletedFormsAsPercentage = AllCompletedFormsAsPercentage,
-                    AllUnCompletedFormsAsNumber = AllUnCompletedFormsAsNumber,
-                    AllUnCompletedFormsAsPercentage = AllUnCompletedFormsAsPercentage,
-                    AllAcceptedFormsAsNumber = AllAcceptedFormsAsNumber,
-                    AllAcceptedFormsAsPercentage = AllAcceptedFormsAsPercentage,
-                    AllUnAcceptedFormsAsNumber = AllUnAcceptedFormsAsNumber,
-                    AllUnAcceptedFormsAsPercentage = AllUnAcceptedFormsAsPercentage,
-                    AssigedFormsNumber = AssigedFormsNumber,
-                    FormsInInitialArbitrationAsNumber = FormsInInitialArbitrationAsNumber,
-                    FormsInInitialArbitrationAsPercentage = FormsInInitialArbitrationAsPercentage,
-                    FormsInArbitrationAuditAsNumber = FormsInArbitrationAuditAsNumber,
-                    FormsInArbitrationAuditAsPercentage = FormsInArbitrationAuditAsPercentage,
-                    FormsInFinalArbitrationAsNumber = FormsInFinalArbitrationAsNumber,
-                    FormsInFinalArbitrationAsPercentage = FormsInFinalArbitrationAsPercentage,
-                    FormsInCategories = FormsInCategories
-                };
-
-                return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
-            }
-            else
-            {
-                Coordinator? CheckCoordinator = await _CoordinatorRepository
+                Arbitrator? CheckArbitratorEntity = await _ArbitratorRepository
                     .FirstOrDefaultAsync(x => x.Id == UserId);
 
-                if (CheckCoordinator is not null)
+                if (CheckArbitratorEntity is not null)
                 {
-                    int AssigedFormsNumber = await _CoordinatorFormRepository
-                        .Where(x => x.CoordinatorId == UserId)
-                        .CountAsync();
+                    RoleType = RoleType.Arbitrator;
 
-                    GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
+                    List<Arbitration> ArbitratorEntities = await _ArbitrationRepository
+                        .Include(x => x.ProvidedForm!)
+                        .Where(x => x.ArbitratorId == UserId &&
+                            AllProvidedFormsEntities.Select(y => y.userId).Contains(x.ProvidedForm!.userId))
+                        .DistinctBy(x => x.ProvidedFormId)
+                        .ToListAsync();
+
+                    int AssigedFormsNumber = ArbitratorEntities.Count();
+
+                    int FormsInInitialArbitrationAsNumber = ArbitratorEntities
+                        .Where(x => x.isAccepted == FormStatus.Accepted &&
+                            x.isAcceptedFromChairman != FormStatus.Accepted)
+                        .Count();
+
+                    if (AssigedFormsNumber > 0)
                     {
-                        SubscribersNumber = SubscribersNumber,
-                        FormsNumber = FormsNumber,
-                        ContactUsNumber = ContactUsNumber,
-                        AllCompletedFormsAsNumber = AllCompletedFormsAsNumber,
-                        AllCompletedFormsAsPercentage = AllCompletedFormsAsPercentage,
-                        AllUnCompletedFormsAsNumber = AllUnCompletedFormsAsNumber,
-                        AllUnCompletedFormsAsPercentage = AllUnCompletedFormsAsPercentage,
-                        AllAcceptedFormsAsNumber = AllAcceptedFormsAsNumber,
-                        AllAcceptedFormsAsPercentage = AllAcceptedFormsAsPercentage,
-                        AllUnAcceptedFormsAsNumber = AllUnAcceptedFormsAsNumber,
-                        AllUnAcceptedFormsAsPercentage = AllUnAcceptedFormsAsPercentage,
-                        AssigedFormsNumber = AssigedFormsNumber,
-                        FormsInInitialArbitrationAsNumber = 0,
-                        FormsInInitialArbitrationAsPercentage = 0,
-                        FormsInArbitrationAuditAsNumber = 0,
-                        FormsInArbitrationAuditAsPercentage = 0,
-                        FormsInFinalArbitrationAsNumber = 0,
-                        FormsInFinalArbitrationAsPercentage = 0,
-                        FormsInCategories = null
-                    };
+                        float FormsInInitialArbitrationAsPercentage = (100 * FormsInInitialArbitrationAsNumber) / AssigedFormsNumber;
 
-                    return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
+                        int FormsInArbitrationAuditAsNumber = ArbitratorEntities
+                            .Where(x => x.isAcceptedFromChairman == FormStatus.Accepted &&
+                                x.isAccepted == FormStatus.Accepted)
+                            .Count();
+
+                        float FormsInArbitrationAuditAsPercentage = (100 * FormsInArbitrationAuditAsNumber) / AssigedFormsNumber;
+
+                        int FormsInFinalArbitrationAsNumber = await _FinalArbitrationRepository
+                            .Where(x => ArbitratorEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
+                            .CountAsync();
+
+                        float FormsInFinalArbitrationAsPercentage = (100 * FormsInFinalArbitrationAsNumber) / AssigedFormsNumber;
+
+                        List<IGrouping<Category, Domain.Entities.ProvidedFormModel.ProvidedForm>> AllProvidedFormsEntitiesGroupedByCategoryId =
+                            AllProvidedFormsEntities.GroupBy(x => x.Category!).ToList();
+
+                        List<FormsInCategories> FormsInCategories = AllProvidedFormsEntitiesGroupedByCategoryId
+                            .Select(FormsInCategory => new FormsInCategories()
+                            {
+                                CategoryId = FormsInCategory.Key.Id,
+                                CategoryName = Request.lang == "em"
+                                    ? FormsInCategory.Key.EnglishName
+                                    : FormsInCategory.Key.ArabicName,
+                                FormsNumberInCategory = FormsInCategory.Count(),
+                                FormsNumberInCategoryAsPercentage = (100 * FormsInCategory.Count()) / AssigedFormsNumber
+                            }).ToList();
+
+                        GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
+                        {
+                            Role = RoleType,
+                            SubscribersNumber = SubscribersNumber,
+                            FormsNumber = FormsNumber,
+                            ContactUsNumber = ContactUsNumber,
+                            AllCompletedFormsAsNumber = AllCompletedFormsAsNumber,
+                            AllCompletedFormsAsPercentage = AllCompletedFormsAsPercentage,
+                            AllUnCompletedFormsAsNumber = AllUnCompletedFormsAsNumber,
+                            AllUnCompletedFormsAsPercentage = AllUnCompletedFormsAsPercentage,
+                            AllAcceptedFormsAsNumber = AllAcceptedFormsAsNumber,
+                            AllAcceptedFormsAsPercentage = AllAcceptedFormsAsPercentage,
+                            AllUnAcceptedFormsAsNumber = AllUnAcceptedFormsAsNumber,
+                            AllUnAcceptedFormsAsPercentage = AllUnAcceptedFormsAsPercentage,
+                            AssigedFormsNumber = AssigedFormsNumber,
+                            FormsInInitialArbitrationAsNumber = FormsInInitialArbitrationAsNumber,
+                            FormsInInitialArbitrationAsPercentage = FormsInInitialArbitrationAsPercentage,
+                            FormsInArbitrationAuditAsNumber = FormsInArbitrationAuditAsNumber,
+                            FormsInArbitrationAuditAsPercentage = FormsInArbitrationAuditAsPercentage,
+                            FormsInFinalArbitrationAsNumber = FormsInFinalArbitrationAsNumber,
+                            FormsInFinalArbitrationAsPercentage = FormsInFinalArbitrationAsPercentage,
+                            FormsInCategories = FormsInCategories
+                        };
+
+                        return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
+                    }
+                    else
+                    {
+                        GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
+                        {
+                            Role = RoleType,
+                            SubscribersNumber = SubscribersNumber,
+                            FormsNumber = FormsNumber,
+                            ContactUsNumber = ContactUsNumber,
+                            AllCompletedFormsAsNumber = AllCompletedFormsAsNumber,
+                            AllCompletedFormsAsPercentage = AllCompletedFormsAsPercentage,
+                            AllUnCompletedFormsAsNumber = AllUnCompletedFormsAsNumber,
+                            AllUnCompletedFormsAsPercentage = AllUnCompletedFormsAsPercentage,
+                            AllAcceptedFormsAsNumber = AllAcceptedFormsAsNumber,
+                            AllAcceptedFormsAsPercentage = AllAcceptedFormsAsPercentage,
+                            AllUnAcceptedFormsAsNumber = AllUnAcceptedFormsAsNumber,
+                            AllUnAcceptedFormsAsPercentage = AllUnAcceptedFormsAsPercentage,
+                            AssigedFormsNumber = AssigedFormsNumber,
+                            FormsInInitialArbitrationAsNumber = FormsInInitialArbitrationAsNumber,
+                            FormsInInitialArbitrationAsPercentage = 0,
+                            FormsInArbitrationAuditAsNumber = 0,
+                            FormsInArbitrationAuditAsPercentage = 0,
+                            FormsInFinalArbitrationAsNumber = 0,
+                            FormsInFinalArbitrationAsPercentage = 0,
+                            FormsInCategories = null
+                        };
+
+                        return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
+                    }
                 }
                 else
                 {
-                    GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
-                    {
-                        SubscribersNumber = SubscribersNumber,
-                        FormsNumber = FormsNumber,
-                        ContactUsNumber = ContactUsNumber,
-                        AllCompletedFormsAsNumber = AllCompletedFormsAsNumber,
-                        AllCompletedFormsAsPercentage = AllCompletedFormsAsPercentage,
-                        AllUnCompletedFormsAsNumber = AllUnCompletedFormsAsNumber,
-                        AllUnCompletedFormsAsPercentage = AllUnCompletedFormsAsPercentage,
-                        AllAcceptedFormsAsNumber = AllAcceptedFormsAsNumber,
-                        AllAcceptedFormsAsPercentage = AllAcceptedFormsAsPercentage,
-                        AllUnAcceptedFormsAsNumber = AllUnAcceptedFormsAsNumber,
-                        AllUnAcceptedFormsAsPercentage = AllUnAcceptedFormsAsPercentage,
-                        AssigedFormsNumber = 0,
-                        FormsInInitialArbitrationAsNumber = 0,
-                        FormsInInitialArbitrationAsPercentage = 0,
-                        FormsInArbitrationAuditAsNumber = 0,
-                        FormsInArbitrationAuditAsPercentage = 0,
-                        FormsInFinalArbitrationAsNumber = 0,
-                        FormsInFinalArbitrationAsPercentage = 0,
-                        FormsInCategories = null
-                    };
+                    Coordinator? CheckCoordinator = await _CoordinatorRepository
+                        .FirstOrDefaultAsync(x => x.Id == UserId);
 
-                    return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
+                    if (CheckCoordinator is not null)
+                    {
+                        RoleType = RoleType.Coordinator;
+
+                        int AssigedFormsNumber = await _CoordinatorFormRepository
+                            .Where(x => x.CoordinatorId == UserId)
+                            .CountAsync();
+
+                        GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
+                        {
+                            Role = RoleType,
+                            SubscribersNumber = SubscribersNumber,
+                            FormsNumber = FormsNumber,
+                            ContactUsNumber = ContactUsNumber,
+                            AllCompletedFormsAsNumber = AllCompletedFormsAsNumber,
+                            AllCompletedFormsAsPercentage = AllCompletedFormsAsPercentage,
+                            AllUnCompletedFormsAsNumber = AllUnCompletedFormsAsNumber,
+                            AllUnCompletedFormsAsPercentage = AllUnCompletedFormsAsPercentage,
+                            AllAcceptedFormsAsNumber = AllAcceptedFormsAsNumber,
+                            AllAcceptedFormsAsPercentage = AllAcceptedFormsAsPercentage,
+                            AllUnAcceptedFormsAsNumber = AllUnAcceptedFormsAsNumber,
+                            AllUnAcceptedFormsAsPercentage = AllUnAcceptedFormsAsPercentage,
+                            AssigedFormsNumber = AssigedFormsNumber,
+                            FormsInInitialArbitrationAsNumber = 0,
+                            FormsInInitialArbitrationAsPercentage = 0,
+                            FormsInArbitrationAuditAsNumber = 0,
+                            FormsInArbitrationAuditAsPercentage = 0,
+                            FormsInFinalArbitrationAsNumber = 0,
+                            FormsInFinalArbitrationAsPercentage = 0,
+                            FormsInCategories = null
+                        };
+
+                        return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
+                    }
+                    else
+                    {
+                        RoleType = RoleType.Other;
+
+                        GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
+                        {
+                            Role = RoleType,
+                            SubscribersNumber = SubscribersNumber,
+                            FormsNumber = FormsNumber,
+                            ContactUsNumber = ContactUsNumber,
+                            AllCompletedFormsAsNumber = AllCompletedFormsAsNumber,
+                            AllCompletedFormsAsPercentage = AllCompletedFormsAsPercentage,
+                            AllUnCompletedFormsAsNumber = AllUnCompletedFormsAsNumber,
+                            AllUnCompletedFormsAsPercentage = AllUnCompletedFormsAsPercentage,
+                            AllAcceptedFormsAsNumber = AllAcceptedFormsAsNumber,
+                            AllAcceptedFormsAsPercentage = AllAcceptedFormsAsPercentage,
+                            AllUnAcceptedFormsAsNumber = AllUnAcceptedFormsAsNumber,
+                            AllUnAcceptedFormsAsPercentage = AllUnAcceptedFormsAsPercentage,
+                            AssigedFormsNumber = 0,
+                            FormsInInitialArbitrationAsNumber = 0,
+                            FormsInInitialArbitrationAsPercentage = 0,
+                            FormsInArbitrationAuditAsNumber = 0,
+                            FormsInArbitrationAuditAsPercentage = 0,
+                            FormsInFinalArbitrationAsNumber = 0,
+                            FormsInFinalArbitrationAsPercentage = 0,
+                            FormsInCategories = null
+                        };
+
+                        return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
+                    }
                 }
+            }
+            else
+            {
+                Arbitrator? CheckArbitratorEntity = await _ArbitratorRepository
+                    .FirstOrDefaultAsync(x => x.Id == UserId);
+
+                if (CheckArbitratorEntity is not null)
+                    RoleType = RoleType.Arbitrator;
+
+                else
+                {
+                    Coordinator? CheckCoordinator = await _CoordinatorRepository
+                        .FirstOrDefaultAsync(x => x.Id == UserId);
+
+                    if (CheckCoordinator is not null)
+                        RoleType = RoleType.Coordinator;
+
+                    else
+                        RoleType = RoleType.Other;
+                }
+
+                GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
+                {
+                    Role = RoleType,
+                    SubscribersNumber = SubscribersNumber,
+                    FormsNumber = FormsNumber,
+                    ContactUsNumber = 0,
+                    AllCompletedFormsAsNumber = 0,
+                    AllCompletedFormsAsPercentage = 0,
+                    AllUnCompletedFormsAsNumber = 0,
+                    AllUnCompletedFormsAsPercentage = 0,
+                    AllAcceptedFormsAsNumber = 0,
+                    AllAcceptedFormsAsPercentage = 0,
+                    AllUnAcceptedFormsAsNumber = 0,
+                    AllUnAcceptedFormsAsPercentage = 0,
+                    AssigedFormsNumber = 0,
+                    FormsInInitialArbitrationAsNumber = 0,
+                    FormsInInitialArbitrationAsPercentage = 0,
+                    FormsInArbitrationAuditAsNumber = 0,
+                    FormsInArbitrationAuditAsPercentage = 0,
+                    FormsInFinalArbitrationAsNumber = 0,
+                    FormsInFinalArbitrationAsPercentage = 0,
+                    FormsInCategories = null
+                };
+
+                return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
             }
         }
     }

@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using System;
@@ -12,7 +14,9 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
 {
     public class CreateWorkshopeAttachmentCommand : IRequest<BaseResponse<object>>
     {
+        [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
         public string EnglishName { get; set; } = string.Empty;
+        [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
         public string ArabicName { get; set; } = string.Empty;
         public IFormFile attachment { get; set; } = null!;
         public AttachmentType AttachmentType { get; set; }

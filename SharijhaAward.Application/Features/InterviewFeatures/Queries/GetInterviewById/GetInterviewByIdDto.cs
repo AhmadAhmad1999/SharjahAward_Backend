@@ -1,10 +1,14 @@
-﻿using SharijhaAward.Domain.Constants;
+﻿using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
+using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetInterviewById
 {
     public class GetInterviewByIdDto
     {
+        [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
         public string ArabicName { get; set; } = null!;
+        [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
         public string EnglishName { get; set; } = null!;
         public string ArabicDescription { get; set; } = null!;
         public string EnglishDescription { get; set; } = null!;

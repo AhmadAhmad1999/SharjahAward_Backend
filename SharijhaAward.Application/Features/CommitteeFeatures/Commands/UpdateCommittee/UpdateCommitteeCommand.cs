@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.CommitteeConstants;
 
@@ -7,7 +9,9 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Commands.UpdateCo
     public class UpdateCommitteeCommand : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
+        [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
         public string ArabicName { get; set; } = string.Empty;
+        [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
         public string EnglishName { get; set; } = string.Empty;
         public CommitteeStatus Status { get; set; } = CommitteeStatus.InActive;
         public int ChairmanId { get; set; }
