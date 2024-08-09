@@ -9,9 +9,9 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateIn
 {
     public class CreateInterviewCommand : IRequest<BaseResponse<object>>
     {
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = null!;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
         public string ArabicDescription { get; set; } = null!;
         public string EnglishDescription { get; set; } = null!;

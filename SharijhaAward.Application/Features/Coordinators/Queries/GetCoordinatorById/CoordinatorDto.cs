@@ -1,4 +1,5 @@
 ﻿using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Domain.Constants;
@@ -10,11 +11,11 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailValidation]
         public string Email { get; set; } = string.Empty;
         [PhoneNumberValidation]
         public string PhoneNumber { get; set; } = string.Empty;

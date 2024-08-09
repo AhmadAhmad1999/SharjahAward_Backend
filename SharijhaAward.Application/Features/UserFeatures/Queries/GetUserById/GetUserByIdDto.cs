@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
+﻿using SharijhaAward.Application.Helpers.EmailValidationHelper;
+using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Domain.Constants;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +8,7 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetUserById
     public class GetUserByIdDto
     {
         public int Id { get; set; }
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailValidation]
         public string Email { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         [PhoneNumberValidation]

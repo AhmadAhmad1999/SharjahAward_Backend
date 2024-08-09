@@ -6,9 +6,9 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
 {
     public class CreateCriterionItemDto
     {
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         public int Score { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }

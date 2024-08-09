@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Domain.Constants;
+﻿using SharijhaAward.Application.Helpers.EmailValidationHelper;
+using SharijhaAward.Domain.Constants;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
     public class GetAllRelatedAccountsListVM
     {
         public int Id { get; set; }
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailValidation]
         public string Email { get; set; } = null!;
         public string Name { get; set; } = null!;
         public Gender Gender { get; set; }

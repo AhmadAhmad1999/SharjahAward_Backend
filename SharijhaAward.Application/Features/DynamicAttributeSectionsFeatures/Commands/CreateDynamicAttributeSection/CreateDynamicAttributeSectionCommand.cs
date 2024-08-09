@@ -7,9 +7,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
 {
     public class CreateDynamicAttributeSectionCommand : IRequest<BaseResponse<CreateDynamicAttributeSectionResponse>>
     {
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = null!;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
         public int AttributeTableNameId { get; set; }
         public int? RecordIdOnRelation { get; set; }

@@ -1,4 +1,7 @@
-﻿using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
+﻿using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EmailValidationHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Domain.Constants;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,10 +10,12 @@ namespace SharijhaAward.Application.Features.Authentication.Login
     public class UserDataResponse
     {
         public int Id { get; set; }
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
         public string? SubscriberId { get; set; }
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailValidation]
         public string Email { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         [PhoneNumberValidation]

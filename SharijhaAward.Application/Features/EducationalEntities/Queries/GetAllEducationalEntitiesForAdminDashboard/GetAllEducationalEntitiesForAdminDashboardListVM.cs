@@ -6,9 +6,9 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
     public class GetAllEducationalEntitiesForAdminDashboardListVM
     {
         public int Id { get; set; }
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         public List<EducationalInstitutionListVM> EducationalInstitutions { get; set; } = new List<EducationalInstitutionListVM>();
       

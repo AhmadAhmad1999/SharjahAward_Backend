@@ -8,9 +8,9 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.UpdateE
     public class UpdateEducationalEntityCommand : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = null!;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
         public string? lang { get; set; }
     }

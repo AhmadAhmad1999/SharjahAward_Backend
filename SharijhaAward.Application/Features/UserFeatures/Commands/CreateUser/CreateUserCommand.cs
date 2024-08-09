@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.PasswordValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
@@ -9,9 +10,9 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.CreateUser
 {
     public class CreateUserCommand : IRequest<BaseResponse<object>>
     {
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailValidation]
         public string Email { get; set; } = string.Empty;
-        [PasswordValidation(ErrorMessage = "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 special character, 1 number, and be at least 8 characters long.")]
+        [PasswordValidation]
         public string Password { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         [PhoneNumberValidation]

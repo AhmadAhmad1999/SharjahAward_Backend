@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
@@ -9,7 +10,7 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser
     public class UpdateUserCommand2 : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailValidation]
         public string Email { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         [PhoneNumberValidation]

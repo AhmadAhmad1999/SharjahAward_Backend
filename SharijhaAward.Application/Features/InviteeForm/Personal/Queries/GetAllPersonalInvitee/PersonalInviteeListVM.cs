@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
+﻿using SharijhaAward.Application.Helpers.EmailValidationHelper;
+using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,7 +16,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAll
         public string Name { get; set; } = string.Empty;
         [PhoneNumberValidation]
         public string PhoneNumber { get; set; } = string.Empty;
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailValidation]
         public string Email { get; set; } = string.Empty;
         public string Employer { get; set; } = string.Empty;
         public string JobTitle { get; set; } = string.Empty;

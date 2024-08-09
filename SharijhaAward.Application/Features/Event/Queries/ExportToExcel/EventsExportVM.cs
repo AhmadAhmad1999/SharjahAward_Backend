@@ -11,11 +11,11 @@ namespace SharijhaAward.Application.Features.Event.Queries.ExportToExcel
     public class EventsExportVM
     {
         public int Id { get; set; }
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public string ArabicSiteName { get; set; } = string.Empty;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
         public string EnglishSiteName { get; set; } = string.Empty;

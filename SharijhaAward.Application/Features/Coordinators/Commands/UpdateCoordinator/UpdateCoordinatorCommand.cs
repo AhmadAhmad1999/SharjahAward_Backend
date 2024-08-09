@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue;
@@ -14,11 +15,11 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
     public class UpdateCoordinatorCommand : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string arabicName { get; set; } = string.Empty;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string englishName { get; set; } = string.Empty;
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailValidation]
         public string email { get; set; } = string.Empty;
         [PhoneNumberValidation]
         public string phoneNumber { get; set; } = string.Empty;

@@ -8,9 +8,9 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Get
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         public EducationType EducationType { get; set; }
         public Emirates Emirates { get; set; }

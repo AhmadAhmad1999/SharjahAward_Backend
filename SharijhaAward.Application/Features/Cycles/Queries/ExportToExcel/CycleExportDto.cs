@@ -16,9 +16,9 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.ExportToExcel
         public int Id { get; set; }
         public int CycleNumber { get; set; }
         public string Year { get; set; } = string.Empty;
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         public string StatusName { get; set; } = string.Empty;
         public Status Status { get; set; } = Status.Close;

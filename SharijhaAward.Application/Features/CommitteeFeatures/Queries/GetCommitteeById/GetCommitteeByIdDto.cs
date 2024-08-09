@@ -9,9 +9,9 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommit
     public class GetCommitteeByIdDto
     {
         public int Id { get; set; }
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = null!;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
         public CommitteeStatus Status { get; set; } = CommitteeStatus.InActive;
         public int ChairmanId { get; set; }

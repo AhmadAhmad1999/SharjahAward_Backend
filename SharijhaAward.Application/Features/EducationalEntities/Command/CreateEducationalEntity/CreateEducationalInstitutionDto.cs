@@ -5,9 +5,9 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateE
 {
     public class CreateEducationalInstitutionDto
     {
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = null!;
     }
 }

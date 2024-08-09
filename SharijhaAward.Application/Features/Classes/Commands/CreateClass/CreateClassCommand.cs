@@ -7,9 +7,9 @@ namespace SharijhaAward.Application.Features.Classes.Commands.CreateClass
 {
     public class CreateClassCommand : IRequest<BaseResponse<object>>
     {
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = null!;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
         public string? lang { get; set; }
     }

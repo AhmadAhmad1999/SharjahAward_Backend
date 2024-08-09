@@ -7,9 +7,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
     public class GetDynamicAttributeSectionByIdDto
     {
         public int Id { get; set; }
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = null!;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
         public bool TableTypeSection { get; set; }
         public List<DynamicAttributeListVM> DynamicAttributes { get; set; } = new List<DynamicAttributeListVM>();

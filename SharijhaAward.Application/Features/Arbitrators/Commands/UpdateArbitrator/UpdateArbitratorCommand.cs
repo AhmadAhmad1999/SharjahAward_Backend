@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
@@ -11,13 +12,13 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
     public class UpdateArbitratorCommand : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         [PhoneNumberValidation]
         public string PhoneNumber { get; set; } = string.Empty;
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailValidation]
         public string Email { get; set; } = string.Empty;
         public bool isChairman { get; set; } = false;
         public string? lang { get; set; }

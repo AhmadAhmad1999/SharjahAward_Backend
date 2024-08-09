@@ -1,24 +1,32 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper
 {
     public class ArabicNameValidationAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        private readonly IHttpContextAccessor _HttpContextAccessor;
+        public ArabicNameValidationAttribute()
         {
-            if (value != null)
+            _HttpContextAccessor = new HttpContextAccessor();
+        }
+
+        protected override ValidationResult IsValid(object InsertedValue, ValidationContext validationContext)
+        {
+            HttpContext Context = _HttpContextAccessor.HttpContext;
+
+            if (InsertedValue != null)
             {
-                string arabicName = value.ToString();
-                foreach (char c in arabicName)
+                string? AnglishName = InsertedValue.ToString();
+
+                if (AnglishName.All(c => c < 0x600 || c > 0x6FF))
                 {
-                    if (c < 0x600 || c > 0x6FF)
-                    {
-                        return new ValidationResult("Arabic name must only contain Arabic characters.");
-                    }
+                    throw new ValidationException("Arabic name must only contain Arabic characters. / الاسم العربي يجب أن يحتوي على الأحرف العربية فقط.");
                 }
             }
 
-            return ValidationResult.Success;
+            return ValidationResult.Success!;
         }
     }
 

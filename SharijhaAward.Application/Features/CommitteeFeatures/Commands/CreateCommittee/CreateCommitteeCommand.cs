@@ -8,9 +8,9 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Commands.CreateCo
 {
     public class CreateCommitteeCommand : IRequest<BaseResponse<object>>
     {
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         public CommitteeStatus Status { get; set; } = CommitteeStatus.InActive;
         public int ChairmanId { get; set; }

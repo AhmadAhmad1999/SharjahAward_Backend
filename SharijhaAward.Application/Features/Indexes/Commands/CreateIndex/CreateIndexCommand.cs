@@ -12,9 +12,9 @@ namespace SharijhaAward.Application.Features.Indexes.Commands.CreateIndex
 {
     public class CreateIndexCommand : IRequest<BaseResponse<object>>
     {
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
         public string? Slug { get; set; } = string.Empty;
         public string? lang {  get; set; } = string.Empty;

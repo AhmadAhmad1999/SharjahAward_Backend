@@ -14,9 +14,9 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
 {
     public class CreateWorkshopeAttachmentCommand : IRequest<BaseResponse<object>>
     {
-        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
-        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
         public IFormFile attachment { get; set; } = null!;
         public AttachmentType AttachmentType { get; set; }

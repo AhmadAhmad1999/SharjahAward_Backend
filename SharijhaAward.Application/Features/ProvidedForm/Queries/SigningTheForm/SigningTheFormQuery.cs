@@ -13,7 +13,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
     {
         public string lang { get; set; } = string.Empty;
         public string token { get; set; } = string.Empty;
-        [PasswordValidation(ErrorMessage = "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 special character, 1 number, and be at least 8 characters long.")]
+        [PasswordValidation]
         public string password { get; set; } = string.Empty;
         public int providedFormId {  get; set; }
     }

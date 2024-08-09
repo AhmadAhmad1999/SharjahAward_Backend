@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
+﻿using SharijhaAward.Application.Helpers.EmailValidationHelper;
+using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Domain.Constants;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetUserById
     {
         public int Id { get; set; }
         public string? SubscriberId { get; set; }
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailValidation]
         public string Email { get; set; } = string.Empty;
         public List<string> UserRoles {  get; set; } = new List<string>();
         [PhoneNumberValidation]
