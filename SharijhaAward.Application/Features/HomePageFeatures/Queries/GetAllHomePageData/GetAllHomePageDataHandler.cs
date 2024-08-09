@@ -10,6 +10,10 @@ using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ContactUsModels;
 using SharijhaAward.Domain.Entities.CoordinatorFormModel;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
+using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
 namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHomePageData
@@ -25,6 +29,11 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
         private readonly IAsyncRepository<EmailMessage> _EmailMessageRepository;
         private readonly IAsyncRepository<CoordinatorForm> _CoordinatorFormRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
+        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
+        private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
+        private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IMapper _Mapper;
         private readonly IJwtProvider _JwtProvider;
         public GetAllHomePageDataHandler(IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository,
@@ -36,6 +45,11 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
             IAsyncRepository<EmailMessage> EmailMessageRepository,
             IAsyncRepository<CoordinatorForm> CoordinatorFormRepository,
+            IAsyncRepository<Cycle> CycleRepository,
+            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository,
+            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IMapper Mapper,
             IJwtProvider JwtProvider)
         {
@@ -48,6 +62,11 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
             _FinalArbitrationRepository = FinalArbitrationRepository;
             _EmailMessageRepository = EmailMessageRepository;
             _CoordinatorFormRepository = CoordinatorFormRepository;
+            _CycleRepository = CycleRepository;
+            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
+            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _EducationalEntityRepository = EducationalEntityRepository;
+            _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _Mapper = Mapper;
             _JwtProvider = JwtProvider;
         }
@@ -70,13 +89,51 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                 return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, false, 401);
             }
 
-            List<Domain.Entities.ProvidedFormModel.ProvidedForm> AllProvidedFormsEntities = await _ProvidedFormRepository
-                .Include(x => x.User!)
-                .Include(x => x.Category!)
-                .Include(x => x.Category!.Cycle)
-                .Where(x => x.User.isValidAccount &&
-                    x.Category.Cycle.Status == Domain.Constants.Common.Status.Active)
-                .ToListAsync();
+            List<Domain.Entities.ProvidedFormModel.ProvidedForm> AllProvidedFormsEntities = new List<Domain.Entities.ProvidedFormModel.ProvidedForm>();
+
+            if (Request.CycleId is not null)
+            {
+                AllProvidedFormsEntities = await _ProvidedFormRepository
+                    .Include(x => x.User!)
+                    .Include(x => x.Category!)
+                    .Include(x => x.Category!.Cycle)
+                    .Include(x => x.CategoryEducationalEntity!)
+                    .Include(x => x.CategoryEducationalEntity!.EducationalEntity!)
+                    .Where(x => x.User.isValidAccount &&
+                        x.Category.CycleId == Request.CycleId.Value)
+                    .ToListAsync();
+            }
+            else
+            {
+                int ActiveCycleId = 0;
+
+                Cycle? CheckIfThereIsActiveCycle = await _CycleRepository
+                    .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
+
+                if (CheckIfThereIsActiveCycle is null)
+                {
+                    Cycle? LastActiveCycleEntity = await _CycleRepository
+                        .OrderByDescending(x => x.CycleNumber, 0, -1)
+                        .FirstOrDefaultAsync();
+
+                    if (LastActiveCycleEntity is not null)
+                    {
+                        ActiveCycleId = LastActiveCycleEntity.Id;
+                    }
+                }
+                else
+                    ActiveCycleId = CheckIfThereIsActiveCycle.Id;
+
+                AllProvidedFormsEntities = await _ProvidedFormRepository
+                    .Include(x => x.User!)
+                    .Include(x => x.Category!)
+                    .Include(x => x.Category!.Cycle)
+                    .Include(x => x.CategoryEducationalEntity!)
+                    .Include(x => x.CategoryEducationalEntity!.EducationalEntity!)
+                    .Where(x => x.User.isValidAccount &&
+                        x.Category!.CycleId == ActiveCycleId)
+                    .ToListAsync();
+            }
 
             int SubscribersNumber = AllProvidedFormsEntities
                 .DistinctBy(x => x.userId)
@@ -90,9 +147,9 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
             if (FormsNumber > 0)
             {
                 int ContactUsNumber = await _EmailMessageRepository
-                .Where(x => AllProvidedFormsEntities.Select(y => y.userId).Any(y => y == x.UserId) &&
-                    x.Id == x.MessageId)
-                .CountAsync();
+                    .Where(x => AllProvidedFormsEntities.Select(y => y.userId).Any(y => y == x.UserId) &&
+                        x.Id == x.MessageId)
+                    .CountAsync();
 
                 int AllCompletedFormsAsNumber = AllProvidedFormsEntities
                     .Where(x => x.PercentCompletion == 100)
@@ -125,12 +182,14 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                 {
                     RoleType = RoleType.Arbitrator;
 
-                    List<Arbitration> ArbitratorEntities = await _ArbitrationRepository
+                    List<Arbitration> ArbitratorEntities = _ArbitrationRepository
                         .Include(x => x.ProvidedForm!)
                         .Where(x => x.ArbitratorId == UserId &&
-                            AllProvidedFormsEntities.Select(y => y.userId).Contains(x.ProvidedForm!.userId))
+                            AllProvidedFormsEntities.AsEnumerable()
+                                .Select(y => y.userId).Contains(x.ProvidedForm!.userId))
+                        .AsEnumerable()
                         .DistinctBy(x => x.ProvidedFormId)
-                        .ToListAsync();
+                        .ToList();
 
                     int AssigedFormsNumber = ArbitratorEntities.Count();
 
@@ -157,13 +216,16 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                         float FormsInFinalArbitrationAsPercentage = (100 * FormsInFinalArbitrationAsNumber) / AssigedFormsNumber;
 
                         List<IGrouping<Category, Domain.Entities.ProvidedFormModel.ProvidedForm>> AllProvidedFormsEntitiesGroupedByCategoryId =
-                            AllProvidedFormsEntities.GroupBy(x => x.Category!).ToList();
+                            AllProvidedFormsEntities
+                                .Where(x => ArbitratorEntities.Select(y => y.ProvidedFormId).Contains(x.Id))
+                                .GroupBy(x => x.Category!)
+                                .ToList();
 
                         List<FormsInCategories> FormsInCategories = AllProvidedFormsEntitiesGroupedByCategoryId
                             .Select(FormsInCategory => new FormsInCategories()
                             {
                                 CategoryId = FormsInCategory.Key.Id,
-                                CategoryName = Request.lang == "em"
+                                CategoryName = Request.lang == "en"
                                     ? FormsInCategory.Key.EnglishName
                                     : FormsInCategory.Key.ArabicName,
                                 FormsNumberInCategory = FormsInCategory.Count(),
@@ -234,35 +296,179 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                     {
                         RoleType = RoleType.Coordinator;
 
-                        int AssigedFormsNumber = await _CoordinatorFormRepository
+                        List<int> EduEntitiesIds = await _EduEntitiesCoordinatorRepository
                             .Where(x => x.CoordinatorId == UserId)
-                            .CountAsync();
+                            .Include(x => x.EducationalEntity!)
+                            .Select(x => x.EducationalEntityId)
+                            .ToListAsync();
 
-                        GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
+                        List<DynamicAttributeValue> DynamicAttributeValueEtities = await _DynamicAttributeValueRepository
+                            .Include(x => x.DynamicAttribute!)
+                            .Where(x => AllProvidedFormsEntities.Select(y => y.Id).Any(y => y == x.RecordId) &&
+                                x.DynamicAttribute!.EnglishTitle.ToLower() == "Educational Entity".ToLower())
+                            .ToListAsync();
+
+                        List<DynamicAttributeListValue> DynamicAttributeListValueEntities = await _DynamicAttributeListValueRepository
+                            .Where(x => DynamicAttributeValueEtities.Select(y => int.Parse(y.Value))
+                                .Contains(x.Id))
+                            .ToListAsync();
+
+                        var EducationalEntities = _EducationalEntityRepository
+                            .AsEnumerable() // Switch to client-side evaluation
+                            .Where(x => DynamicAttributeListValueEntities
+                                .Any(y => y.EnglishValue.ToLower() == x.EnglishName.ToLower() &&
+                                          y.ArabicValue.ToLower() == x.ArabicName.ToLower()))
+                            .Select(x => new
+                            {
+                                DynamicAttributeListValueEntities
+                                    .FirstOrDefault(y => y.EnglishValue.ToLower() == x.EnglishName.ToLower() &&
+                                        y.ArabicValue.ToLower() == x.ArabicName.ToLower())!.Id,
+                                EducationalEntityObject = x
+                            }).ToList();
+
+                        AllProvidedFormsEntities = AllProvidedFormsEntities
+                            .Where(x => DynamicAttributeValueEtities.Select(y => y.RecordId).Contains(x.Id))
+                            .ToList();
+                        
+                        var AllProvidedFormsEntitiesGrouped2 = (from DynamicAttributeValueEtity in DynamicAttributeValueEtities
+                            join ProvidedFormsEntity in AllProvidedFormsEntities
+                            on DynamicAttributeValueEtity.RecordId equals ProvidedFormsEntity.Id
+                            join EducationalEntity in EducationalEntities
+                            on int.Parse(DynamicAttributeValueEtity.Value) equals EducationalEntity.Id
+                            select new
+                            {
+                                EducationalEntity,
+                                ProvidedFormId = ProvidedFormsEntity.Id,
+                                ProvidedFormsEntity.IsAccepted
+                            }).ToList();
+
+                        int AssigedFormsNumber = AllProvidedFormsEntitiesGrouped2
+                            .Count(x => EduEntitiesIds.Contains(x.EducationalEntity!.EducationalEntityObject!.Id));
+
+                        if (AssigedFormsNumber > 0)
                         {
-                            Role = RoleType,
-                            SubscribersNumber = SubscribersNumber,
-                            FormsNumber = FormsNumber,
-                            ContactUsNumber = ContactUsNumber,
-                            AllCompletedFormsAsNumber = AllCompletedFormsAsNumber,
-                            AllCompletedFormsAsPercentage = AllCompletedFormsAsPercentage,
-                            AllUnCompletedFormsAsNumber = AllUnCompletedFormsAsNumber,
-                            AllUnCompletedFormsAsPercentage = AllUnCompletedFormsAsPercentage,
-                            AllAcceptedFormsAsNumber = AllAcceptedFormsAsNumber,
-                            AllAcceptedFormsAsPercentage = AllAcceptedFormsAsPercentage,
-                            AllUnAcceptedFormsAsNumber = AllUnAcceptedFormsAsNumber,
-                            AllUnAcceptedFormsAsPercentage = AllUnAcceptedFormsAsPercentage,
-                            AssigedFormsNumber = AssigedFormsNumber,
-                            FormsInInitialArbitrationAsNumber = 0,
-                            FormsInInitialArbitrationAsPercentage = 0,
-                            FormsInArbitrationAuditAsNumber = 0,
-                            FormsInArbitrationAuditAsPercentage = 0,
-                            FormsInFinalArbitrationAsNumber = 0,
-                            FormsInFinalArbitrationAsPercentage = 0,
-                            FormsInCategories = null
-                        };
+                            var AllProvidedFormsEntitiesGrouped = AllProvidedFormsEntitiesGrouped2
+                                .GroupBy(x => x.EducationalEntity!);
 
-                        return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
+                            List<FormsInEducationalEntities> FormsInEducationalEntities = new List<FormsInEducationalEntities>();
+
+                            foreach (var AllProvidedFormsEntityGrouped in AllProvidedFormsEntitiesGrouped)
+                            {
+                                int EducationalEntityId = AllProvidedFormsEntityGrouped.Key!.Id;
+
+                                string EducationalEntityName = Request.lang == "en"
+                                    ? AllProvidedFormsEntityGrouped.Key!.EducationalEntityObject!.EnglishName
+                                    : AllProvidedFormsEntityGrouped.Key!.EducationalEntityObject!.ArabicName;
+
+                                int FormsNumberInEducationalEntity = AllProvidedFormsEntityGrouped.Count();
+
+                                if (FormsNumberInEducationalEntity > 0)
+                                {
+                                    float FormsNumberInEducationalEntityAsPercentage = (100 * FormsNumberInEducationalEntity) / AssigedFormsNumber;
+
+                                    int AcceptedFormsNumberInEducationalEntityAsNumber = AllProvidedFormsEntityGrouped
+                                        .Count(x => x.IsAccepted != null ? x.IsAccepted.Value : false);
+
+                                    float AcceptedFormsNumberInEducationalEntityAsPercentage = (100 * AcceptedFormsNumberInEducationalEntityAsNumber) / FormsNumberInEducationalEntity;
+
+                                    int RejectedFormsNumberInEducationalEntityAsNumber = AllProvidedFormsEntityGrouped
+                                        .Count(x => x.IsAccepted != null ? !x.IsAccepted.Value : false);
+
+                                    float RejectedFormsNumberInEducationalEntityAsPercentage = (100 * RejectedFormsNumberInEducationalEntityAsNumber) / FormsNumberInEducationalEntity;
+
+                                    int NotAcceptedNorRejectedFormsNumberInEducationalEntityAsNumber = AllProvidedFormsEntityGrouped
+                                        .Count(x => x.IsAccepted == null);
+
+                                    float NotAcceptedNorRejectedFormsNumberInEducationalEntityAsPercentage = (100 * NotAcceptedNorRejectedFormsNumberInEducationalEntityAsNumber) / FormsNumberInEducationalEntity;
+
+                                    FormsInEducationalEntities.Add(new FormsInEducationalEntities()
+                                    {
+                                        EducationalEntityId = EducationalEntityId,
+                                        EducationalEntityName = EducationalEntityName,
+                                        FormsNumberInEducationalEntity = FormsNumberInEducationalEntity,
+                                        FormsNumberInEducationalEntityAsPercentage = FormsNumberInEducationalEntityAsPercentage,
+                                        AcceptedFormsNumberInEducationalEntityAsNumber = AcceptedFormsNumberInEducationalEntityAsNumber,
+                                        AcceptedFormsNumberInEducationalEntityAsPercentage = AcceptedFormsNumberInEducationalEntityAsPercentage,
+                                        RejectedFormsNumberInEducationalEntityAsNumber = RejectedFormsNumberInEducationalEntityAsNumber,
+                                        RejectedFormsNumberInEducationalEntityAsPercentage = RejectedFormsNumberInEducationalEntityAsPercentage,
+                                        NotAcceptedNorRejectedFormsNumberInEducationalEntityAsNumber = NotAcceptedNorRejectedFormsNumberInEducationalEntityAsNumber,
+                                        NotAcceptedNorRejectedFormsNumberInEducationalEntityAsPercentage = NotAcceptedNorRejectedFormsNumberInEducationalEntityAsPercentage
+                                    });
+                                }
+                                else
+                                {
+                                    FormsInEducationalEntities.Add(new FormsInEducationalEntities()
+                                    {
+                                        EducationalEntityId = EducationalEntityId,
+                                        EducationalEntityName = EducationalEntityName,
+                                        FormsNumberInEducationalEntity = FormsNumberInEducationalEntity,
+                                        FormsNumberInEducationalEntityAsPercentage = 0,
+                                        AcceptedFormsNumberInEducationalEntityAsNumber = 0,
+                                        AcceptedFormsNumberInEducationalEntityAsPercentage = 0,
+                                        RejectedFormsNumberInEducationalEntityAsNumber = 0,
+                                        RejectedFormsNumberInEducationalEntityAsPercentage = 0,
+                                        NotAcceptedNorRejectedFormsNumberInEducationalEntityAsNumber = 0,
+                                        NotAcceptedNorRejectedFormsNumberInEducationalEntityAsPercentage = 0
+                                    });
+                                }
+                            }
+
+                            GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
+                            {
+                                Role = RoleType,
+                                SubscribersNumber = SubscribersNumber,
+                                FormsNumber = FormsNumber,
+                                ContactUsNumber = ContactUsNumber,
+                                AllCompletedFormsAsNumber = AllCompletedFormsAsNumber,
+                                AllCompletedFormsAsPercentage = AllCompletedFormsAsPercentage,
+                                AllUnCompletedFormsAsNumber = AllUnCompletedFormsAsNumber,
+                                AllUnCompletedFormsAsPercentage = AllUnCompletedFormsAsPercentage,
+                                AllAcceptedFormsAsNumber = AllAcceptedFormsAsNumber,
+                                AllAcceptedFormsAsPercentage = AllAcceptedFormsAsPercentage,
+                                AllUnAcceptedFormsAsNumber = AllUnAcceptedFormsAsNumber,
+                                AllUnAcceptedFormsAsPercentage = AllUnAcceptedFormsAsPercentage,
+                                AssigedFormsNumber = AssigedFormsNumber,
+                                FormsInInitialArbitrationAsNumber = 0,
+                                FormsInInitialArbitrationAsPercentage = 0,
+                                FormsInArbitrationAuditAsNumber = 0,
+                                FormsInArbitrationAuditAsPercentage = 0,
+                                FormsInFinalArbitrationAsNumber = 0,
+                                FormsInFinalArbitrationAsPercentage = 0,
+                                FormsInCategories = null,
+                                FormsInEducationalEntities = FormsInEducationalEntities
+                            };
+
+                            return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
+                        }
+                        else
+                        {
+                            GetAllHomePageDataDto Response = new GetAllHomePageDataDto()
+                            {
+                                Role = RoleType,
+                                SubscribersNumber = SubscribersNumber,
+                                FormsNumber = FormsNumber,
+                                ContactUsNumber = ContactUsNumber,
+                                AllCompletedFormsAsNumber = AllCompletedFormsAsNumber,
+                                AllCompletedFormsAsPercentage = AllCompletedFormsAsPercentage,
+                                AllUnCompletedFormsAsNumber = AllUnCompletedFormsAsNumber,
+                                AllUnCompletedFormsAsPercentage = AllUnCompletedFormsAsPercentage,
+                                AllAcceptedFormsAsNumber = AllAcceptedFormsAsNumber,
+                                AllAcceptedFormsAsPercentage = AllAcceptedFormsAsPercentage,
+                                AllUnAcceptedFormsAsNumber = AllUnAcceptedFormsAsNumber,
+                                AllUnAcceptedFormsAsPercentage = AllUnAcceptedFormsAsPercentage,
+                                AssigedFormsNumber = AssigedFormsNumber,
+                                FormsInInitialArbitrationAsNumber = 0,
+                                FormsInInitialArbitrationAsPercentage = 0,
+                                FormsInArbitrationAuditAsNumber = 0,
+                                FormsInArbitrationAuditAsPercentage = 0,
+                                FormsInFinalArbitrationAsNumber = 0,
+                                FormsInFinalArbitrationAsPercentage = 0,
+                                FormsInCategories = null,
+                                FormsInEducationalEntities = null
+                            };
+
+                            return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);
+                        }
                     }
                     else
                     {
@@ -289,7 +495,8 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                             FormsInArbitrationAuditAsPercentage = 0,
                             FormsInFinalArbitrationAsNumber = 0,
                             FormsInFinalArbitrationAsPercentage = 0,
-                            FormsInCategories = null
+                            FormsInCategories = null,
+                            FormsInEducationalEntities = null
                         };
 
                         return new BaseResponse<GetAllHomePageDataDto>(ResponseMessage, true, 200, Response);

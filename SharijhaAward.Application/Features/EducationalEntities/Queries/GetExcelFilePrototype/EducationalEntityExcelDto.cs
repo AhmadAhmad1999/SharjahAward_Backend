@@ -10,9 +10,9 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetExce
 {
     public class EducationalEntityExcelDto
     {
-        [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
         public string ArabicName { get; set; } = string.Empty;
-        [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
         public string EnglishName { get; set; } = string.Empty;
     }
 }

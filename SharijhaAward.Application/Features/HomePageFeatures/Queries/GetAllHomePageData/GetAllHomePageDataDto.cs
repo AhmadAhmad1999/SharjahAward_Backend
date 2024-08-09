@@ -34,5 +34,6 @@
         public float FormsInFinalArbitrationAsPercentage { get; set; } //
 
         public List<FormsInCategories>? FormsInCategories { get; set; } //
+        public List<FormsInEducationalEntities>? FormsInEducationalEntities { get; set; }
     }
 }

@@ -25,7 +25,14 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetActiveCycle
                 .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
 
             if (CycleEntity is not null)
-                return new BaseResponse<bool>(ResponseMessage, true, 200, true);
+            {
+                if (CycleEntity.RegistrationPortalOpeningDate <= DateTime.UtcNow &&
+                    CycleEntity.RegistrationPortalClosingDate > DateTime.UtcNow)
+                    return new BaseResponse<bool>(ResponseMessage, true, 200, true);
+
+                else
+                    return new BaseResponse<bool>(ResponseMessage, true, 200, false);
+            }
 
             else
                 return new BaseResponse<bool>(ResponseMessage, true, 200, false);

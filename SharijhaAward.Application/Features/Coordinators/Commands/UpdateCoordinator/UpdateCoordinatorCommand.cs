@@ -14,9 +14,9 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
     public class UpdateCoordinatorCommand : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
-        [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
         public string arabicName { get; set; } = string.Empty;
-        [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
         public string englishName { get; set; } = string.Empty;
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string email { get; set; } = string.Empty;

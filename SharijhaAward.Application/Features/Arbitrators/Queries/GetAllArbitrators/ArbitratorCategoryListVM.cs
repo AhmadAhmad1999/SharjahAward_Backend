@@ -6,9 +6,9 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
     public class ArbitratorCategoryListVM
     {
         public int Id { get; set; }
-        [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
         public string ArabicName { get; set; } = null!;
-        [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
         public string EnglishName { get; set; } = null!;
     }
 }

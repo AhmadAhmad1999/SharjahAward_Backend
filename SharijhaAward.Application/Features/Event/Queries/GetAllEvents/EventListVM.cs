@@ -15,12 +15,12 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
         public string Description { get; set; } = string.Empty;
         public string SiteName { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;
-        [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
+        // [ArabicNameValidation(ErrorMessage = "Arabic name must only contain Arabic characters.")]
         public string ArabicName { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public string ArabicSiteName { get; set; } = string.Empty;
         public string ArabicLocation { get; set; } = string.Empty;
-        [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
+        // [EnglishNameValidation(ErrorMessage = "English name must only contain English characters.")]
         public string EnglishName { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
         public string EnglishSiteName { get; set; } = string.Empty;

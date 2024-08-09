@@ -2896,9 +2896,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                     List<DynamicAttributeValue> DynamicValuesToDelete = await _DynamicAttributeValueRepository
                         .Where(x => x.RecordId == Request.RecordId).ToListAsync();
                     
-                    if (DynamicValuesToDelete.Count() > 0)
-                        await _DynamicAttributeValueRepository.RemoveListAsync(DynamicValuesToDelete);
-
                     List<AddDynamicAttributeValueMainCommand> DynamicAttributesAsFile = Request.DynamicAttributesWithValues
                         .Where(x => x.ValueAsBinaryFile != null).ToList();
 
@@ -2932,6 +2929,10 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                         DynamicAttributeAsFile.ValueAsString = FilePathToSaveIntoDataBase;
                     }
 
+                    var RejectedDynamicValuesToDelete = DynamicValuesToDelete
+                        .Where(x => x.isAccepted != null ? !x.isAccepted.Value : false)
+                        .Select(x => x.DynamicAttributeId);
+
                     List<DynamicAttributeValue> DynamicAttributeValuesEntities = Request.DynamicAttributesWithValues
                         .Where(x => !string.IsNullOrEmpty(x.ValueAsString))
                         .Select(x => new DynamicAttributeValue()
@@ -2945,14 +2946,18 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                             LastModifiedAt = null,
                             LastModifiedBy = null,
                             Value = x.ValueAsString!,
-                            isAccepted = DynamicValuesToDelete.FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)
-                                ?.isAccepted ?? null,
+                            isAccepted = (RejectedDynamicValuesToDelete.FirstOrDefault(y => y == x.DynamicAttributeId) != 0
+                                ? null : DynamicValuesToDelete.FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)
+                                    ?.isAccepted ?? null),
                             ReasonForRejecting = DynamicValuesToDelete.FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)
                                 ?.ReasonForRejecting ?? null
                         }).ToList();
 
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
 
+                    if (DynamicValuesToDelete.Count() > 0)
+                        await _DynamicAttributeValueRepository.RemoveListAsync(DynamicValuesToDelete);
+                    
                     List<DynamicAttributeTableValue> DynamicAttributeTableValueEnititiesToDelete = await _DynamicAttributeTableValueRepository
                         .Where(x => x.RecordId == Request.RecordId)
                         .ToListAsync();
@@ -2993,6 +2998,10 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                         DynamicAttributeAsFile.ValueAsString = FilePathToSaveIntoDataBase;
                     }
 
+                    var RejectDynamicAttributeTableValueEnititiesToDelete = DynamicAttributeTableValueEnititiesToDelete
+                        .Where(x => x.isAccepted != null ? !x.isAccepted.Value : false)
+                        .Select(x => x.DynamicAttributeId);
+
                     List<DynamicAttributeTableValue> DynamicAttributeTableValueEntitiesToAdd = Request.DynamicAttributesWithTableValues
                         .Where(x => !string.IsNullOrEmpty(x.ValueAsString) && x.RowId != 0)
                         .Select(x => new DynamicAttributeTableValue()
@@ -3007,8 +3016,10 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                             LastModifiedBy = null,
                             Value = x.ValueAsString!,
                             RowId = x.RowId,
-                            isAccepted = DynamicAttributeTableValueEnititiesToDelete
-                                .FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)?.isAccepted ?? null,
+                            isAccepted = RejectDynamicAttributeTableValueEnititiesToDelete.FirstOrDefault(y => y == x.DynamicAttributeId) != 0
+                                ? null 
+                                : DynamicAttributeTableValueEnititiesToDelete
+                                    .FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)?.isAccepted ?? null,
                             ReasonForRejecting = DynamicAttributeTableValueEnititiesToDelete
                                 .FirstOrDefault(y => y.DynamicAttributeId == x.DynamicAttributeId)?.ReasonForRejecting ?? null
                         }).ToList();
