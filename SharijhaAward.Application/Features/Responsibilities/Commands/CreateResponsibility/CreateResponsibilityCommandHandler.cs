@@ -2,6 +2,7 @@
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using System;
@@ -20,7 +21,7 @@ namespace SharijhaAward.Application.Features.Responsibilities.Commands.CreateRes
         private readonly IAsyncRepository<Role> _roleRepository;
         private readonly IMapper _mapper;
 
-        public CreateResponsibilityCommandHandler(IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<Role> roleRepository, IMapper mapper)
+        public CreateResponsibilityCommandHandler( IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<Role> roleRepository, IMapper mapper)
         {
             _responsibilityRepository = responsibilityRepository;
             _roleRepository = roleRepository;
@@ -55,7 +56,8 @@ namespace SharijhaAward.Application.Features.Responsibilities.Commands.CreateRes
 
             var Responsibility = _mapper.Map<Responsibility>(request);
 
-            await _responsibilityRepository.AddAsync(Responsibility);
+            var data = await _responsibilityRepository.AddAsync(Responsibility);
+
 
             return new BaseResponse<object>(msg, true, 200);
 

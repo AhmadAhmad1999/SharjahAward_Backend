@@ -22,5 +22,6 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         public string PhoneNumber { get; set; } = null!;
         public int? RoleId { get; set; }
         public string? ImageURL { get; set; }
+        public bool AcceptOnResponsibilities { get; set; }
     }
 }

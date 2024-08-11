@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,7 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
 {
     public class CircularListVm
     {
-        public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string CircularText { get; set; } = string.Empty;
-        public string? CreatedBy { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public List<CircularDto>? Circulars { get; set; }
+        public int? NumberOfUnRead { get; set; }
     }
 }

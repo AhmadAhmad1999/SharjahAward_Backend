@@ -52,11 +52,15 @@ namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
             var userId = _jwtProvider.GetUserIdFromToken(request.token!);
 
             var user = await _userRepository.GetByIdAsync(int.Parse(userId));
+            
             if(user == null)
             {
                 return new BaseResponse<int>("unAuth", false, 401);
             }
+           
             var Circular = _mapper.Map<Circular>(request);
+
+            Circular.IsRead = false;
 
             var data = await _circularRepository.AddAsync(Circular, user.ArabicName);
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
 {
-    public class GetAllCircularsQuery : IRequest<BaseResponse<List<CircularListVm>>>
+    public class GetAllCircularsQuery : IRequest<BaseResponse<CircularListVm>>
     {
         public List<Filter>? filters { get; set; }
         public string? token { get; set; } 

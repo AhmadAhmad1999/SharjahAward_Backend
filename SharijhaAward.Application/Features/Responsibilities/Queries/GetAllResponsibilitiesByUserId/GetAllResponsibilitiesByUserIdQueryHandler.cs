@@ -19,7 +19,7 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
     public class GetAllResponsibilitiesByUserIdQueryHandler
         : IRequestHandler<GetAllResponsibilitiesByUserIdQuery, BaseResponse<List<ResponsibilityListVM>>>
     {
-        private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;
+        
         private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
         private readonly IAsyncRepository<Role> _roleRepository;
         private readonly IAsyncRepository<UserRole> _userRoleRepository;
@@ -27,9 +27,8 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
-        public GetAllResponsibilitiesByUserIdQueryHandler(IAsyncRepository<UserRole> userRoleRepository, IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<Role> roleRepository, IAsyncRepository<ResponsibilityUser> responsibilityUserRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetAllResponsibilitiesByUserIdQueryHandler(IAsyncRepository<UserRole> userRoleRepository, IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<Role> roleRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
         {
-            _responsibilityUserRepository = responsibilityUserRepository;
             _responsibilityRepository = responsibilityRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;

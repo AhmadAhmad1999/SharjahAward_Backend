@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
 {
     public class GetAllCircularsQueryHandler
-        : IRequestHandler<GetAllCircularsQuery, BaseResponse<List<CircularListVm>>>
+        : IRequestHandler<GetAllCircularsQuery, BaseResponse<CircularListVm>>
     {
         private readonly IAsyncRepository<Circular> _circularRepository;
         private readonly IAsyncRepository<Role> _roleRepository;
@@ -43,14 +44,14 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<List<CircularListVm>>> Handle(GetAllCircularsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<CircularListVm>> Handle(GetAllCircularsQuery request, CancellationToken cancellationToken)
         {
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
             var User = _jwtProvider.GetUserIdFromToken(request.token!);
-            if(User == null)
+            if (User == null)
             {
-                return new BaseResponse<List<CircularListVm>>("UnAuth", false, 401);
+                return new BaseResponse<CircularListVm>("UnAuth", false, 401);
             }
 
             var Roles = _userRoleRepository
@@ -63,20 +64,20 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
             foreach (var role in Roles)
             {
                 var Role = await _roleRepository.GetByIdAsync(role);
-                
-                if(Role!.EnglishName == "Coordinator")
+
+                if (Role!.EnglishName == "Coordinator")
                 {
                     var Circulars = _circularCoordinatorRepository
                         .Where(c => c.CoordinatorId == int.Parse(User))
                         .Select(c => c.Circular)
                         .ToList();
-                    
+
                     allCircular.AddRange(Circulars);
                 }
-                else if(Role!.EnglishName == "Arbitrator")
+                else if (Role!.EnglishName == "Arbitrator")
                 {
                     var Arbitrator = await _arbitratorRepository.GetByIdAsync(int.Parse(User));
-                    
+
                     var Circulars = _circularArbitratorRepository
                         .WhereThenFilter(c => c.ArbitratorId == int.Parse(User), filterObject)
                         .Select(c => c.Circular)
@@ -93,21 +94,24 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
                     }
                     allCircular.AddRange(Circulars);
                 }
-                else if(Role!.EnglishName == "Admin")
+                else if (Role!.EnglishName == "Admin")
                 {
                     allCircular = await _circularRepository
                         .OrderByDescending(filterObject, x => x.Id, request.page, request.perPage)
                         .ToListAsync();
                 }
             }
-            
-            var data = _mapper.Map<List<CircularListVm>>(allCircular);
+            var CircularsList = new CircularListVm()
+            {
+                Circulars = _mapper.Map<List<CircularDto>>(allCircular),
+                NumberOfUnRead = allCircular.Where(c=>c.IsRead).Count()
+            };
 
             int Count = _circularRepository.GetCount(c => !c.isDeleted);
            
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
           
-            return new BaseResponse<List<CircularListVm>>("", true, 200, data, pagination);
+            return new BaseResponse<CircularListVm>("", true, 200, CircularsList, pagination);
         }
     }
 }

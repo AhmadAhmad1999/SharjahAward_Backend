@@ -14,6 +14,7 @@ namespace SharijhaAward.Application.Responses
         public int? ActiveCycleId { get; set; }
         public string? CycleName { get; set; }
         public int? CycleNumber { get; set; } 
+        public bool AcceptOnResponsibilities { get; set; }
         public List<UserPermissionsDto>? UserPermissions { get; set; }
         public bool NeedVerification { get; set; }
     }
