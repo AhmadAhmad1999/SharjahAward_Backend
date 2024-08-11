@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,9 @@ namespace SharijhaAward.Application.Features.AwardSponsorsPage.Commands.CreateAw
 {
     public class CreateAwardSponsorCommand : IRequest<BaseResponse<object>>
     {
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;

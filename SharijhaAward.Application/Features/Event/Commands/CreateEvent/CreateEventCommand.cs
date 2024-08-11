@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,9 @@ namespace SharijhaAward.Application.Features.Event.Commands.CreateEvent
 {
     public class CreateEventCommand : IRequest<CreateEventCommandResponse>
     {
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;

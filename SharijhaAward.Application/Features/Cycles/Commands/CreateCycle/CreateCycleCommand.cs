@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.Common;
 using System;
@@ -14,7 +16,9 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
     {
         public int CycleNumber { get; set; }
         public string Year { get; set; } = string.Empty;
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         public Status Status { get; set; } 
         public DateTime RegistrationPortalOpeningDate { get; set; }

@@ -35,76 +35,91 @@ namespace SharijhaAward.Api.MiddleWares
                 if (string.IsNullOrEmpty(Language))
                     Language = "en";
 
-                if (Language.ToLower() == "en")
+                if (Ex is not System.ComponentModel.DataAnnotations.ValidationException)
                 {
-                    _Logger.LogError(Ex, "An error occurred");
-
-                    Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    Context.Response.ContentType = "application/json";
-
-                    //string ResponseMessage = Ex.InnerException != null
-                    //    ? $"Exception = {Ex.Message}, Inner Exeption = {Ex.InnerException}"
-                    //    : $"Exception = {Ex.Message}";
-
-                    if (Ex is BadRequestException)
+                    if (Language.ToLower() == "en")
                     {
-                        Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        _Logger.LogError(Ex, "An error occurred");
 
-                        BaseResponse<string> Response = new BaseResponse<string>
-                            ("Bad request. Please check your input. " /*+*/
-                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest, 
-                            $"Exception = {Ex.Message}" + 
-                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
-
-                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
-                    }
-                    else if (Ex is SqlException)
-                    {
                         Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        Context.Response.ContentType = "application/json";
 
-                        BaseResponse<string> Response = new BaseResponse<string>
-                            ("Database connection error. " /*+*/
-                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
-                            $"Exception = {Ex.Message}" +
-                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+                        //string ResponseMessage = Ex.InnerException != null
+                        //    ? $"Exception = {Ex.Message}, Inner Exeption = {Ex.InnerException}"
+                        //    : $"Exception = {Ex.Message}";
 
-                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
-                    }
-                    else if (Ex is DbUpdateException) 
-                    {
-                        if (Ex.InnerException != null)
+                        if (Ex is BadRequestException)
                         {
-                            if (Ex.InnerException is SqlException)
+                            Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                            BaseResponse<string> Response = new BaseResponse<string>
+                                ("Bad request. Please check your input. " /*+*/
+                                /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest,
+                                $"Exception = {Ex.Message}" +
+                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                        }
+                        else if (Ex is SqlException)
+                        {
+                            Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                            BaseResponse<string> Response = new BaseResponse<string>
+                                ("Database connection error. " /*+*/
+                                /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
+                                $"Exception = {Ex.Message}" +
+                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                        }
+                        else if (Ex is DbUpdateException)
+                        {
+                            if (Ex.InnerException != null)
                             {
-                                SqlException SqlEx = Ex.InnerException as SqlException;
-
-                                foreach (SqlError error in SqlEx.Errors)
+                                if (Ex.InnerException is SqlException)
                                 {
-                                    if (error.Number == 2601 || error.Number == 2627)
+                                    SqlException SqlEx = Ex.InnerException as SqlException;
+
+                                    foreach (SqlError error in SqlEx.Errors)
                                     {
-                                        if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase) ||
-                                            error.Message.Contains("IX_PersonaLnvitees_Email", StringComparison.OrdinalIgnoreCase))
+                                        if (error.Number == 2601 || error.Number == 2627)
                                         {
-                                            Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                                            if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase) ||
+                                                error.Message.Contains("IX_PersonaLnvitees_Email", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-                                            BaseResponse<string> Response = new BaseResponse<string>
-                                                ("This email is already in use.", false, (int)HttpStatusCode.BadRequest,
-                                                $"Exception = {Ex.Message}" +
-                                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+                                                BaseResponse<string> Response = new BaseResponse<string>
+                                                    ("This email is already in use.", false, (int)HttpStatusCode.BadRequest,
+                                                    $"Exception = {Ex.Message}" +
+                                                        (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
 
-                                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
-                                        }
-                                        else if(error.Message.Contains("Cannot insert duplicate key row in object"))
-                                        {
-                                            Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                                            
-                                            BaseResponse<string> Response = new BaseResponse<string>
-                                                ("An error occurred. Cannot insert duplicate key row in object. " /*+*/
-                                                /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest,
-                                                $"Exception = {Ex.Message}" +
-                                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+                                                await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                            }
+                                            else if (error.Message.Contains("Cannot insert duplicate key row in object"))
+                                            {
+                                                Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-                                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                                BaseResponse<string> Response = new BaseResponse<string>
+                                                    ("An error occurred. Cannot insert duplicate key row in object. " /*+*/
+                                                    /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest,
+                                                    $"Exception = {Ex.Message}" +
+                                                        (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                                                await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                            }
+                                            else
+                                            {
+                                                Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                                                BaseResponse<string> Response = new BaseResponse<string>
+                                                    ("An error occurred. Please try again later. " /*+*/
+                                                    /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
+                                                    $"Exception = {Ex.Message}" +
+                                                        (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                                                await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                            }
                                         }
                                         else
                                         {
@@ -119,18 +134,18 @@ namespace SharijhaAward.Api.MiddleWares
                                             await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                                         }
                                     }
-                                    else
-                                    {
-                                        Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                                }
+                                else
+                                {
+                                    Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                                        BaseResponse<string> Response = new BaseResponse<string>
-                                            ("An error occurred. Please try again later. " /*+*/
-                                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
-                                            $"Exception = {Ex.Message}" +
-                                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+                                    BaseResponse<string> Response = new BaseResponse<string>
+                                        ("An error occurred. Please try again later. " /*+*/
+                                        /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
+                                        $"Exception = {Ex.Message}" +
+                                            (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
 
-                                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
-                                    }
+                                    await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                                 }
                             }
                             else
@@ -146,6 +161,20 @@ namespace SharijhaAward.Api.MiddleWares
                                 await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                             }
                         }
+                        else if (Ex is WebException ||
+                            Ex is System.Net.Mail.SmtpException ||
+                            Ex is AggregateException)
+                        {
+                            Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                            BaseResponse<string> Response = new BaseResponse<string>
+                                ("Internet connection error, please check your internet connection and try again later. " /*+*/
+                                /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
+                                $"Exception = {Ex.Message}" +
+                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                        }
                         else
                         {
                             Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -159,101 +188,87 @@ namespace SharijhaAward.Api.MiddleWares
                             await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                         }
                     }
-                    else if (Ex is WebException || 
-                        Ex is System.Net.Mail.SmtpException ||
-                        Ex is AggregateException)
+                    else if (Language.ToLower() == "ar")
                     {
+                        _Logger.LogError(Ex, "حدث خطأ");
+
                         Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        Context.Response.ContentType = "application/json";
 
-                        BaseResponse<string> Response = new BaseResponse<string>
-                            ("Internet connection error, please check your internet connection and try again later. " /*+*/
-                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
-                            $"Exception = {Ex.Message}" +
-                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+                        //string ResponseMessage = Ex.InnerException != null
+                        //    ? $"استثناء = {Ex.Message}، الاستثناء الداخلي = {Ex.InnerException}"
+                        //    : $"استثناء = {Ex.Message}";
 
-                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
-                    }
-                    else
-                    {
-                        Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-                        BaseResponse<string> Response = new BaseResponse<string>
-                            ("An error occurred. Please try again later. " /*+*/
-                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
-                            $"Exception = {Ex.Message}" +
-                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
-
-                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
-                    }
-                }
-                else if (Language.ToLower() == "ar")
-                {
-                    _Logger.LogError(Ex, "حدث خطأ");
-
-                    Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    Context.Response.ContentType = "application/json";
-
-                    //string ResponseMessage = Ex.InnerException != null
-                    //    ? $"استثناء = {Ex.Message}، الاستثناء الداخلي = {Ex.InnerException}"
-                    //    : $"استثناء = {Ex.Message}";
-
-                    if (Ex is BadRequestException)
-                    {
-                        Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-                        BaseResponse<string> Response = new BaseResponse<string>
-                            ("إدخال خاطئ. الرجاء التحقق من المعلومات المدخلة. " /*+ */
-                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest,
-                            $"Exception = {Ex.Message}" +
-                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
-
-                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
-                    }
-                    else if (Ex is SqlException)
-                    {
-                        Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-                        BaseResponse<string> Response = new BaseResponse<string>
-                            ("حدث خطأ بالاتصال بقاعدة المعطيات. " /*+*/
-                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
-                            $"Exception = {Ex.Message}" +
-                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
-
-                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
-                    }
-                    else if (Ex is DbUpdateException)
-                    {
-                        if (Ex.InnerException != null)
+                        if (Ex is BadRequestException)
                         {
-                            SqlException SqlEx = Ex.InnerException as SqlException;
+                            Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-                            foreach (SqlError error in SqlEx.Errors)
+                            BaseResponse<string> Response = new BaseResponse<string>
+                                ("إدخال خاطئ. الرجاء التحقق من المعلومات المدخلة. " /*+ */
+                                /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest,
+                                $"Exception = {Ex.Message}" +
+                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                        }
+                        else if (Ex is SqlException)
+                        {
+                            Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                            BaseResponse<string> Response = new BaseResponse<string>
+                                ("حدث خطأ بالاتصال بقاعدة المعطيات. " /*+*/
+                                /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
+                                $"Exception = {Ex.Message}" +
+                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                        }
+                        else if (Ex is DbUpdateException)
+                        {
+                            if (Ex.InnerException != null)
                             {
-                                if (error.Number == 2601 || error.Number == 2627)
+                                SqlException SqlEx = Ex.InnerException as SqlException;
+
+                                foreach (SqlError error in SqlEx.Errors)
                                 {
-                                    if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase) ||
-                                        error.Message.Contains("IX_PersonaLnvitees_Email", StringComparison.OrdinalIgnoreCase))
+                                    if (error.Number == 2601 || error.Number == 2627)
                                     {
-                                        Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                                        if (error.Message.Contains("IX_GroupInvitees_Email", StringComparison.OrdinalIgnoreCase) ||
+                                            error.Message.Contains("IX_PersonaLnvitees_Email", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-                                        BaseResponse<string> Response = new BaseResponse<string>
-                                            ("هذا الإيميل مستخدم مسبقاً.", false, (int)HttpStatusCode.BadRequest,
-                                            $"Exception = {Ex.Message}" +
-                                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+                                            BaseResponse<string> Response = new BaseResponse<string>
+                                                ("هذا الإيميل مستخدم مسبقاً.", false, (int)HttpStatusCode.BadRequest,
+                                                $"Exception = {Ex.Message}" +
+                                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
 
-                                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
-                                    }
-                                    else if(error.Message.Contains("Cannot insert duplicate key row in object"))
-                                    {
-                                        Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                        }
+                                        else if (error.Message.Contains("Cannot insert duplicate key row in object"))
+                                        {
+                                            Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-                                        BaseResponse<string> Response = new BaseResponse<string>
-                                            ("حدث خطأ. لا يمكن إضافة قيمة متشابهة . " /*+*/
-                                           /* $"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest,
-                                            $"Exception = {Ex.Message}" +
-                                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+                                            BaseResponse<string> Response = new BaseResponse<string>
+                                                ("حدث خطأ. لا يمكن إضافة قيمة متشابهة . " /*+*/
+                                               /* $"{ResponseMessage}"*/, false, (int)HttpStatusCode.BadRequest,
+                                                $"Exception = {Ex.Message}" +
+                                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
 
-                                        await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                        }
+                                        else
+                                        {
+                                            Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                                            BaseResponse<string> Response = new BaseResponse<string>
+                                                ("حدث خطأ. الرجاء المحاولة لاحقأ. " /*+*/
+                                               /* $"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
+                                                $"Exception = {Ex.Message}" +
+                                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                                        }
                                     }
                                     else
                                     {
@@ -268,55 +283,63 @@ namespace SharijhaAward.Api.MiddleWares
                                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                                     }
                                 }
-                                else
-                                {
-                                    Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-                                    BaseResponse<string> Response = new BaseResponse<string>
-                                        ("حدث خطأ. الرجاء المحاولة لاحقأ. " /*+*/
-                                       /* $"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
-                                        $"Exception = {Ex.Message}" +
-                                            (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
-
-                                    await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
-                                }
                             }
+                            else
+                            {
+                                Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                                BaseResponse<string> Response = new BaseResponse<string>
+                                    ("حدث خطأ. الرجاء المحاولة لاحقأ. " /*+*/
+                                   /* $"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
+                                    $"Exception = {Ex.Message}" +
+                                        (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                                await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                            }
+                        }
+                        else if (Ex is WebException ||
+                            Ex is System.Net.Mail.SmtpException)
+                        {
+                            Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                            BaseResponse<string> Response = new BaseResponse<string>
+                                ("خطأ في الاتصال بالإنترنت، يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى لاحقًا. "/* +*/
+                                /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
+                                $"Exception = {Ex.Message}" +
+                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                         }
                         else
                         {
                             Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                             BaseResponse<string> Response = new BaseResponse<string>
-                                ("حدث خطأ. الرجاء المحاولة لاحقأ. " /*+*/
-                               /* $"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
+                                ("حدث خطأ. الرجاء المحاولة لاحقاً. " /*+ */
+                                /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
                                 $"Exception = {Ex.Message}" +
                                     (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
 
                             await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                         }
                     }
-                    else if (Ex is WebException ||
-                        Ex is System.Net.Mail.SmtpException)
-                    {
-                        Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                }
+                else
+                {
+                    Context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    Context.Response.ContentType = "application/json";
 
+                    if (Language == "en")
+                    {
                         BaseResponse<string> Response = new BaseResponse<string>
-                            ("خطأ في الاتصال بالإنترنت، يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى لاحقًا. "/* +*/
-                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
-                            $"Exception = {Ex.Message}" +
-                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+                            (Ex.Message.Split(" / ")[0], false, Context.Response.StatusCode);
 
                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                     }
                     else
                     {
-                        Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
                         BaseResponse<string> Response = new BaseResponse<string>
-                            ("حدث خطأ. الرجاء المحاولة لاحقاً. " /*+ */
-                            /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
-                            $"Exception = {Ex.Message}" +
-                                (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+                            (Ex.Message.Split(" / ")[1], false, Context.Response.StatusCode);
 
                         await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                     }

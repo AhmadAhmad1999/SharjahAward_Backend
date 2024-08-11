@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateInterview;
+using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
 
@@ -8,7 +10,9 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
     public class UpdateInterviewCommand : IRequest<BaseResponse<object>>
     {
         public int Id { get; set; }
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = null!;
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
         public string ArabicDescription { get; set; } = null!;
         public string EnglishDescription { get; set; } = null!;

@@ -30,7 +30,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllHomePageData()
+        public async Task<IActionResult> GetAllHomePageData(int? CycleId)
         {
             string Token = HttpContext.Request.Headers.Authorization!;
 
@@ -45,7 +45,8 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<GetAllHomePageDataDto> Response = await _Mediator.Send(new GetAllHomePageDataQuery()
             {
                 lang = HeaderValue!,
-                Token = Token
+                Token = Token,
+                CycleId = CycleId
             });
 
             return Response.statusCode switch

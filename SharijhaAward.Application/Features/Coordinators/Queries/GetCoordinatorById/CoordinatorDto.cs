@@ -1,4 +1,9 @@
-﻿using SharijhaAward.Domain.Constants;
+﻿using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EmailValidationHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
+using SharijhaAward.Domain.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById
 {
@@ -6,9 +11,13 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
+        [EmailValidation]
         public string Email { get; set; } = string.Empty;
+        [PhoneNumberValidation]
         public string PhoneNumber { get; set; } = string.Empty;
         public EducationType EducationType { get; set; }
         public Emirates Emirates { get; set; }

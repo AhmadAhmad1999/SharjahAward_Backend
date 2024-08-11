@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Helpers.PasswordValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
     {
         public string lang { get; set; } = string.Empty;
         public string token { get; set; } = string.Empty;
+        [PasswordValidation]
         public string password { get; set; } = string.Empty;
         public int providedFormId {  get; set; }
     }

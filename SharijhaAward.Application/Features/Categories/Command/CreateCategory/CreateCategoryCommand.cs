@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.CategoryConstants;
 
@@ -7,7 +9,9 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
 {
     public class CreateCategoryCommand : IRequest<BaseResponse<object>>
     {
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;

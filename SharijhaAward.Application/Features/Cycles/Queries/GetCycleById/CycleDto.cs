@@ -1,4 +1,6 @@
-﻿using SharijhaAward.Domain.Constants.Common;
+﻿using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
+using SharijhaAward.Domain.Constants.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +15,9 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetCycleById
         public int CycleNumber { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Year { get; set; } = string.Empty;
+        [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
+        [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         public Status Status { get; set; } = Status.InActive;
         public DateTime RegistrationPortalOpeningDate { get; set; }

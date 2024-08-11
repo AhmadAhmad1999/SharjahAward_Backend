@@ -2,6 +2,8 @@
 {
     public class GetAllHomePageDataDto
     {
+        public RoleType Role { get; set; }
+
         public int SubscribersNumber { get; set; } // 
 
         public int FormsNumber { get; set; } // 
@@ -32,5 +34,6 @@
         public float FormsInFinalArbitrationAsPercentage { get; set; } //
 
         public List<FormsInCategories>? FormsInCategories { get; set; } //
+        public List<FormsInEducationalEntities>? FormsInEducationalEntities { get; set; }
     }
 }

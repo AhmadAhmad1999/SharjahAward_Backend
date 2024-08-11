@@ -1,4 +1,6 @@
 ﻿using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories;
+using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Domain.Constants.CategoryConstants;
 using SharijhaAward.Domain.Constants.Common;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -15,7 +17,9 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        [ArabicNameValidation]
         public string ArabicName {  get; set; } = string.Empty;
+        [EnglishNameValidation]
         public string EnglishName {  get; set; } = string.Empty;
         public string ArabicDescription { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
