@@ -456,6 +456,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 List<DynamicAttribute> AllDynamicAttributeEntitiesInSections = await _DynamicAttributeRepository
                     .Where(x => DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
+                    .Include(x => x.AttributeDataType!)
                     .ToListAsync();
 
                 List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
