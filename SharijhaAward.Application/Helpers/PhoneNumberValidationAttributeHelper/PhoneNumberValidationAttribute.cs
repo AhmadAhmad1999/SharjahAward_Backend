@@ -18,7 +18,7 @@ namespace SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper
             {
                 string? PhoneNumber = InsertedValue.ToString();
 
-                if (!string.IsNullOrEmpty(PhoneNumber) && PhoneNumber.StartsWith("0097105") && PhoneNumber.Length == 15)
+                if (!string.IsNullOrEmpty(PhoneNumber) && PhoneNumber.StartsWith("0097105") && PhoneNumber.Length != 15)
                 {
                     throw new ValidationException("Phone number must start with '0097105' and have 8 digits after. / يجب أن يبدأ رقم الهاتف بـ \"0097105\" وأن يتكون من 8 أرقام بعده.");
                 }
