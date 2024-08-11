@@ -18,9 +18,9 @@ namespace SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper
 
             if (InsertedValue != null)
             {
-                string? AnglishName = InsertedValue.ToString();
+                string? ArabicName = InsertedValue.ToString();
 
-                if (AnglishName.All(c => c < 0x600 || c > 0x6FF))
+                if (ArabicName.All(c => c < 0x600 || c > 0x6FF))
                 {
                     throw new ValidationException("Arabic name must only contain Arabic characters. / الاسم العربي يجب أن يحتوي على الأحرف العربية فقط.");
                 }
