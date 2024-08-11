@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle
         : IRequestHandler<UpdateCycleCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Cycle> _cycleRepository;
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
         private readonly IMapper _mapper;
 
-        public UpdateCycleCommandHandler(IAsyncRepository<Cycle> cycleRepository, IMapper mapper)
+        public UpdateCycleCommandHandler(IAsyncRepository<UserToken> UserTokenRepository,IAsyncRepository<Cycle> cycleRepository, IMapper mapper)
         {
             _cycleRepository = cycleRepository;
+            _UserTokenRepository = UserTokenRepository;
             _mapper = mapper;
         }
 
@@ -40,9 +43,10 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle
 
                 return new BaseResponse<object>(msg, false, 404);
             }
+            var ActiveCycle = await _cycleRepository.Where(c => c.Status == 0 && c.Id != cycleToUpdate.Id).FirstOrDefaultAsync();
+           
             if (request.Status == 0)
             {
-                var ActiveCycle = await _cycleRepository.Where(c => c.Status == 0 && c.Id != cycleToUpdate.Id).FirstOrDefaultAsync();
                 if (ActiveCycle != null)
                 {
                     msg = request.lang == "en"
@@ -56,8 +60,16 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle
             _mapper.Map(request, cycleToUpdate, typeof(UpdateCycleCommand), typeof(Cycle));
             
             await _cycleRepository.UpdateAsync(cycleToUpdate);
+
+            ActiveCycle = await _cycleRepository.Where(c => c.Status == Domain.Constants.Common.Status.Active).FirstOrDefaultAsync();
             
-            
+            if(ActiveCycle == null)
+            {
+                var UserTokenEntitiesToDelete = await _UserTokenRepository
+                .ListAllAsync();
+
+                await _UserTokenRepository.DeleteListAsync(UserTokenEntitiesToDelete);
+            }
 
             return new BaseResponse<object>(msg,true,200);
         }
