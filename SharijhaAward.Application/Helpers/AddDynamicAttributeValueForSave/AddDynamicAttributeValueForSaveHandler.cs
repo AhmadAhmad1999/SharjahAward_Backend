@@ -51,6 +51,33 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
         public async Task<BaseResponse<AddDynamicAttributeValueForSaveResponse>> Handle(AddDynamicAttributeValueForSaveCommand Request,
             CancellationToken cancellationToken)
         {
+            if ((Request.DynamicAttributesWithValuesMobile != null && Request.ValueAsBinaryFiles != null)
+                ? (Request.DynamicAttributesWithValuesMobile.Any() && Request.ValueAsBinaryFiles.Any()) : false)
+            {
+                for (int i = 0; i < Request.DynamicAttributesWithValuesMobile.Count(); i++)
+                {
+                    Request.DynamicAttributesWithValues.Add(new AddDynamicAttributeValueForSaveMainCommand()
+                    {
+                        DynamicAttributeId = Request.DynamicAttributesWithValuesMobile[i].DynamicAttributeId,
+                        ValueAsBinaryFile = Request.ValueAsBinaryFiles[i]
+                    });
+                }
+            }
+
+            if ((Request.DynamicAttributesWithTableValuesMobile != null && Request.ValueAsBinaryFiles != null)
+                ? (Request.DynamicAttributesWithTableValuesMobile.Any() && Request.ValueAsBinaryFiles.Any()) : false)
+            {
+                for (int i = 0; i < Request.DynamicAttributesWithTableValuesMobile.Count(); i++)
+                {
+                    Request.DynamicAttributesWithTableValues.Add(new AddDynamicAttributeTableValueForSaveMainCommand()
+                    {
+                        DynamicAttributeId = Request.DynamicAttributesWithTableValuesMobile[i].DynamicAttributeId,
+                        ValueAsBinaryFile = Request.ValueAsBinaryFiles[i],
+                        RowId = Request.DynamicAttributesWithTableValuesMobile[i].RowId
+                    });
+                }
+            }
+
             string ResponseMessage = string.Empty;
 
             List<DynamicAttribute> DynamicAttributeEntities = await _DynamicAttributeRepository

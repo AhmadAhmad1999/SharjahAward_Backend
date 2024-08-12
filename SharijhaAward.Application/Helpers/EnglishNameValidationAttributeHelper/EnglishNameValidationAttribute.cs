@@ -20,7 +20,7 @@ namespace SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper
             {
                 string? EnglishName = InsertedValue.ToString();
 
-                if (!Regex.IsMatch(EnglishName!, "^[a-zA-Z]*$"))
+                if (!Regex.IsMatch(EnglishName, "^[a-zA-Z\\s\\p{P}\\p{S}\\p{N}]*$"))
                 {
                     throw new ValidationException("English name must only contain english characters. / يجب أن يحتوي الاسم الإنجليزي على أحرف إنجليزية فقط.");
                 }

@@ -9,5 +9,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
         public string? lang { get; set; }
         public int page { get; set; }
         public int perPage { get; set; }
+        public string? wwwRootFilePath { get; set; }
     }
 }
