@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Exceptions;
 using SharijhaAward.Application.Responses;
@@ -14,12 +15,15 @@ namespace SharijhaAward.Api.MiddleWares
     {
         private readonly RequestDelegate _Next;
         private readonly ILogger<ExceptionMiddleware> _Logger;
+        private readonly ServiceProvider _serviceProvider;
 
         public ExceptionMiddleware(RequestDelegate Next,
-            ILogger<ExceptionMiddleware> Logger)
+            ILogger<ExceptionMiddleware> Logger,
+            ServiceProvider serviceProvider)
         {
             _Next = Next;
             _Logger = Logger;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task InvokeAsync(HttpContext Context)
@@ -28,7 +32,9 @@ namespace SharijhaAward.Api.MiddleWares
 
             try
             {
+                
                 await _Next(Context);
+
             }
             catch (Exception Ex)
             {

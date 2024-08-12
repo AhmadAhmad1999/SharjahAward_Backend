@@ -1065,7 +1065,7 @@ namespace SharijhaAward.Persistence
                     Id = 40,
                     Name = "تصدير أجندة",
                     Action = "xlsx-exportable",
-                    PermissionHeaderId = 2,
+                    PermissionHeaderId = 10,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -4958,17 +4958,6 @@ namespace SharijhaAward.Persistence
                 }, new PermissionHeader()
                 {
                     Id = 45,
-                    EnglishName = "ArbitrationFinal",
-                    ArabicName = "التحكيم النهائي",
-                    isDeleted = false,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                }, new PermissionHeader()
-                {
-                    Id = 46,
                     EnglishName = "ResultsArbitration",
                     ArabicName = "نتائج التحكيم",
                     isDeleted = false,
@@ -4979,7 +4968,7 @@ namespace SharijhaAward.Persistence
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 47,
+                    Id = 46,
                     EnglishName = "ArbitrationWinners",
                     ArabicName = "الفائزين",
                     isDeleted = false,
