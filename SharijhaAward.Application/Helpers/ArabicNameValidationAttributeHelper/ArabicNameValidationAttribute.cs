@@ -20,7 +20,12 @@ namespace SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper
             {
                 string? ArabicName = InsertedValue.ToString();
 
-                if (ArabicName.All(c => c < 0x600 || c > 0x6FF))
+                if (!ArabicName.All(c =>
+                    (c >= 0x600 && c <= 0x6FF) || // Arabic characters
+                    char.IsWhiteSpace(c) || // Allow spaces
+                    char.IsPunctuation(c) || // Allow punctuation marks
+                    char.IsSymbol(c) || // Allow symbols
+                    char.IsNumber(c))) // Allow numbers
                 {
                     throw new ValidationException("Arabic name must only contain Arabic characters. / الاسم العربي يجب أن يحتوي على الأحرف العربية فقط.");
                 }

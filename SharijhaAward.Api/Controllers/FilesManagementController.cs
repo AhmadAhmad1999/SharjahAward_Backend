@@ -6,6 +6,8 @@ using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.GetAllF
 using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.GetFilePathById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using Microsoft.AspNetCore.Hosting;
+using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -15,10 +17,13 @@ namespace SharijhaAward.Api.Controllers
     public class FilesManagementController : ControllerBase
     {
         private readonly IMediator _Mediator;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public FilesManagementController(IMediator Mediator)
+        public FilesManagementController(IMediator Mediator,
+            IWebHostEnvironment WebHostEnvironment)
         {
             _Mediator = Mediator;
+            _WebHostEnvironment = WebHostEnvironment;
         }
 
         [HttpGet("GetAllFilesByFilter")]
@@ -41,7 +46,8 @@ namespace SharijhaAward.Api.Controllers
                 FilterId = FilterId,
                 page = Page,
                 perPage = PerPage,
-                lang = HeaderValue
+                lang = HeaderValue,
+                wwwRootFilePath = _WebHostEnvironment.WebRootPath
             });
 
             return Response.statusCode switch

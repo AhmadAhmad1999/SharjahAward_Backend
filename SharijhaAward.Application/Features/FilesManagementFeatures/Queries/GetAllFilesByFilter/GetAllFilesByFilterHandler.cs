@@ -19,6 +19,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
+
         public GetAllFilesByFilterHandler(IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
             IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository,
             IAsyncRepository<ConditionAttachment> ConditionAttachmentRepository,
@@ -44,8 +45,23 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
             {
                 int TotalCount = await _CriterionAttachmentRepository.GetCountAsync(null);
 
-                List<GetAllFilesByFilterListVM> FilesFromCriterionAttachmentes = await _CriterionAttachmentRepository
+                List<CriterionAttachment> CriterionAttachmentEntities = await _CriterionAttachmentRepository
                     .OrderByDescending(x => x.Id, Request.page, Request.perPage)
+                    .ToListAsync();
+
+                foreach (CriterionAttachment CriterionAttachmentEntity in CriterionAttachmentEntities)
+                {
+                    List<string> FilePath = CriterionAttachmentEntity.AttachementPath.Split('/').ToList();
+
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+
+                    CriterionAttachmentEntity.AttachementPath = Request.wwwRootFilePath!.Replace("\\", "/") +
+                        "/" + string.Join("/", FilePath);
+                }
+
+                List<GetAllFilesByFilterListVM> FilesFromCriterionAttachmentes = CriterionAttachmentEntities
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -54,7 +70,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         UploadedAt = x.CreatedAt,
                         FileSizeInKB = (int)(new FileInfo(x.AttachementPath).Length / 1024),
                         FileType = Path.GetExtension(x.AttachementPath)
-                    }).ToListAsync();
+                    }).ToList();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
@@ -66,8 +82,23 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
             {
                 int TotalCount = await _CriterionItemAttachmentRepository.GetCountAsync(null);
 
-                List<GetAllFilesByFilterListVM> FilesFromCriterionItemAttachmentes = await _CriterionItemAttachmentRepository
+                List<CriterionItemAttachment> CriterionItemAttachmentEntities = await _CriterionItemAttachmentRepository
                     .OrderByDescending(x => x.Id, Request.page, Request.perPage)
+                    .ToListAsync();
+
+                foreach (CriterionItemAttachment CriterionItemAttachmentEntity in CriterionItemAttachmentEntities)
+                {
+                    List<string> FilePath = CriterionItemAttachmentEntity.AttachementPath.Split('/').ToList();
+
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+
+                    CriterionItemAttachmentEntity.AttachementPath = Request.wwwRootFilePath!.Replace("\\", "/") +
+                        "/" + string.Join("/", FilePath);
+                }
+
+                List<GetAllFilesByFilterListVM> FilesFromCriterionItemAttachmentes = CriterionItemAttachmentEntities
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -76,7 +107,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         UploadedAt = x.CreatedAt,
                         FileSizeInKB = (int)(new FileInfo(x.AttachementPath).Length / 1024),
                         FileType = Path.GetExtension(x.AttachementPath)
-                    }).ToListAsync();
+                    }).ToList();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
@@ -88,8 +119,23 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
             {
                 int TotalCount = await _ConditionAttachmentRepository.GetCountAsync(null);
 
-                List<GetAllFilesByFilterListVM> FilesFromSpecialConditions = await _ConditionAttachmentRepository
+                List<ConditionAttachment> ConditionAttachmentEntities = await _ConditionAttachmentRepository
                     .OrderByDescending(x => x.Id, Request.page, Request.perPage)
+                    .ToListAsync();
+
+                foreach (ConditionAttachment ConditionAttachmentEntity in ConditionAttachmentEntities)
+                {
+                    List<string> FilePath = ConditionAttachmentEntity.AttachementPath.Split('/').ToList();
+
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+
+                    ConditionAttachmentEntity.AttachementPath = Request.wwwRootFilePath!.Replace("\\", "/") + 
+                        "/" + string.Join("/", FilePath);
+                }
+
+                List<GetAllFilesByFilterListVM> FilesFromSpecialConditions = ConditionAttachmentEntities
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -98,7 +144,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         UploadedAt = x.CreatedAt,
                         FileSizeInKB = (int)(new FileInfo(x.AttachementPath).Length / 1024),
                         FileType = Path.GetExtension(x.AttachementPath)
-                    }).ToListAsync();
+                    }).ToList();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
@@ -110,8 +156,23 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
             {
                 int TotalCount = await _CycleConditionAttachmentRepository.GetCountAsync(null);
 
-                List<GetAllFilesByFilterListVM> FilesFromGeneralConditions = await _CycleConditionAttachmentRepository
+                List<CycleConditionAttachment> CycleConditionAttachmentEntities = await _CycleConditionAttachmentRepository
                     .OrderByDescending(x => x.Id, Request.page, Request.perPage)
+                    .ToListAsync();
+
+                foreach (CycleConditionAttachment CycleConditionAttachmentEntity in CycleConditionAttachmentEntities)
+                {
+                    List<string> FilePath = CycleConditionAttachmentEntity.AttachementPath.Split('/').ToList();
+
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+
+                    CycleConditionAttachmentEntity.AttachementPath = Request.wwwRootFilePath!.Replace("\\", "/") +
+                        "/" + string.Join("/", FilePath);
+                }
+
+                List<GetAllFilesByFilterListVM> FilesFromGeneralConditions = CycleConditionAttachmentEntities
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -120,7 +181,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         UploadedAt = x.CreatedAt,
                         FileSizeInKB = (int)(new FileInfo(x.AttachementPath).Length / 1024),
                         FileType = Path.GetExtension(x.AttachementPath)
-                    }).ToListAsync();
+                    }).ToList();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
@@ -144,12 +205,59 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 int TotalCount = TotalCount1 + TotalCount2;
 
-                List<GetAllFilesByFilterListVM> FilesValues = await _DynamicAttributeValueRepository
+                List<DynamicAttributeTableValue> DynamicAttributeTableValueList1 = await _DynamicAttributeTableValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
+                    .ToListAsync();
+
+                foreach (DynamicAttributeTableValue DynamicAttributeTableValue1 in DynamicAttributeTableValueList1)
+                {
+                    List<string> FilePath = DynamicAttributeTableValue1.Value.Split('/').ToList();
+
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+
+                    DynamicAttributeTableValue1.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
+                        "/" + string.Join("/", FilePath);
+                }
+
+                List<GetAllFilesByFilterListVM> FilesValues1 = DynamicAttributeTableValueList1
+                    .Select(x => new GetAllFilesByFilterListVM()
+                    {
+                        Id = x.Id,
+                        RowId = x.RowId,
+                        Description = null,
+                        FileName = new FileInfo(x.Value).Name,
+                        FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
+                        UploadedAt = x.CreatedAt,
+                        FileType = Path.GetExtension(x.Value)
+                    }).ToList();
+
+                List<DynamicAttributeValue> DynamicAttributeValueList2 = await _DynamicAttributeValueRepository
+                    .Include(x => x.DynamicAttribute!)
+                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                    .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                        x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
+                    .ToListAsync();
+
+                foreach (DynamicAttributeValue DynamicAttributeValue2 in DynamicAttributeValueList2)
+                {
+                    List<string> FilePath = DynamicAttributeValue2.Value.Split('/').ToList();
+
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+
+                    DynamicAttributeValue2.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
+                        "/" + string.Join("/", FilePath);
+                }
+
+                List<GetAllFilesByFilterListVM> FilesValues2 = DynamicAttributeValueList2
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -159,29 +267,15 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
                         UploadedAt = x.CreatedAt,
                         FileType = Path.GetExtension(x.Value)
-                    })
-                    .Union(await _DynamicAttributeTableValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                        .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
-                            x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
-                            ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
-                        .Select(x => new GetAllFilesByFilterListVM()
-                        {
-                            Id = x.Id,
-                            RowId = x.RowId,
-                            Description = null,
-                            FileName = new FileInfo(x.Value).Name,
-                            FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
-                            UploadedAt = x.CreatedAt,
-                            FileType = Path.GetExtension(x.Value)
-                        }).ToListAsync())
+                    }).ToList();
+
+                List<GetAllFilesByFilterListVM> FilesValues = FilesValues1.Union(FilesValues2)
                     .OrderByDescending(x => x.Id)
                     .Skip((Request.page != 0 || Request.perPage != -1)
                         ? (Request.page - 1) * Request.perPage : 0)
                     .Take((Request.page != 0 || Request.perPage != -1)
                         ? (Request.page - 1) * Request.perPage : TotalCount)
-                    .ToListAsync();
+                    .ToList();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
@@ -204,12 +298,27 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 int TotalCount = TotalCount1 + TotalCount2;
 
-                List<GetAllFilesByFilterListVM> FirstFilesValues = await _DynamicAttributeTableValueRepository
+                List<DynamicAttributeTableValue> DynamicAttributeTableValueList1 = await _DynamicAttributeTableValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
+                    .ToListAsync();
+
+                foreach (DynamicAttributeTableValue DynamicAttributeTableValue1 in DynamicAttributeTableValueList1)
+                {
+                    List<string> FilePath = DynamicAttributeTableValue1.Value.Split('/').ToList();
+
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+
+                    DynamicAttributeTableValue1.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
+                        "/" + string.Join("/", FilePath);
+                }
+
+                List<GetAllFilesByFilterListVM> FirstFilesValues = DynamicAttributeTableValueList1
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -219,13 +328,28 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
                         UploadedAt = x.CreatedAt,
                         FileType = Path.GetExtension(x.Value)
-                    }).ToListAsync();
+                    }).ToList();
 
-                List<GetAllFilesByFilterListVM> SecondFilesValues = await _DynamicAttributeValueRepository
+                List<DynamicAttributeValue> DynamicAttributeValueList2 = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
+                    .ToListAsync();
+
+                foreach (DynamicAttributeValue DynamicAttributeValue2 in DynamicAttributeValueList2)
+                {
+                    List<string> FilePath = DynamicAttributeValue2.Value.Split('/').ToList();
+
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+
+                    DynamicAttributeValue2.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
+                        "/" + string.Join("/", FilePath);
+                }
+
+                List<GetAllFilesByFilterListVM> SecondFilesValues = DynamicAttributeValueList2
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -234,7 +358,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
                         UploadedAt = x.CreatedAt,
                         FileType = Path.GetExtension(x.Value)
-                    }).ToListAsync();
+                    }).ToList();
 
                 List<GetAllFilesByFilterListVM> FilesValues = FirstFilesValues
                     .Union(SecondFilesValues)
@@ -266,12 +390,27 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 int TotalCount = TotalCount1 + TotalCount2;
 
-                List<GetAllFilesByFilterListVM> FirstFilesValues = await _DynamicAttributeTableValueRepository
+                List<DynamicAttributeTableValue> DynamicAttributeTableValueList1 = await _DynamicAttributeTableValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
+                    .ToListAsync();
+
+                foreach (DynamicAttributeTableValue DynamicAttributeTableValue1 in DynamicAttributeTableValueList1)
+                {
+                    List<string> FilePath = DynamicAttributeTableValue1.Value.Split('/').ToList();
+
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+
+                    DynamicAttributeTableValue1.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
+                        "/" + string.Join("/", FilePath);
+                }
+
+                List<GetAllFilesByFilterListVM> FirstFilesValues = DynamicAttributeTableValueList1
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -281,13 +420,28 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
                         UploadedAt = x.CreatedAt,
                         FileType = Path.GetExtension(x.Value)
-                    }).ToListAsync();
+                    }).ToList();
 
-                List<GetAllFilesByFilterListVM> SecondFilesValues = await _DynamicAttributeValueRepository
+                List<DynamicAttributeValue> DynamicAttributeValueList2 = await _DynamicAttributeValueRepository
                     .Include(x => x.DynamicAttribute!)
                     .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
+                    .ToListAsync();
+
+                foreach (DynamicAttributeValue DynamicAttributeValue2 in DynamicAttributeValueList2)
+                {
+                    List<string> FilePath = DynamicAttributeValue2.Value.Split('/').ToList();
+
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+                    FilePath.RemoveAt(0);
+
+                    DynamicAttributeValue2.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
+                        "/" + string.Join("/", FilePath);
+                }
+
+                List<GetAllFilesByFilterListVM> SecondFilesValues = DynamicAttributeValueList2
                     .Select(x => new GetAllFilesByFilterListVM()
                     {
                         Id = x.Id,
@@ -296,7 +450,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                         FileSizeInKB = (int)(new FileInfo(x.Value).Length / 1024),
                         UploadedAt = x.CreatedAt,
                         FileType = Path.GetExtension(x.Value)
-                    }).ToListAsync();
+                    }).ToList();
 
                 List<GetAllFilesByFilterListVM> FilesValues = FirstFilesValues
                     .Union(SecondFilesValues)
