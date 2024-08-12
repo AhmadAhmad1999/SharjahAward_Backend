@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
@@ -10,6 +11,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
 {
     public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationResponse>
     {
+        private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;
         private readonly IAsyncRepository<Role> _roleRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
@@ -18,11 +20,15 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         private readonly IAsyncRepository<RolePermission> _RolePermissionRepository;
         private readonly IAsyncRepository<UserToken> _UserTokenRepository;
 
-        public LoginCommandHandler(IUserRepository userRepository , IMapper mapper, IAsyncRepository<Role> roleRepository,
+        public LoginCommandHandler(
+            IUserRepository userRepository , 
+            IMapper mapper,
+            IAsyncRepository<Role> roleRepository,
             IAsyncRepository<Cycle> CycleRepository,
             IAsyncRepository<UserRole> UserRoleRepository,
             IAsyncRepository<RolePermission> RolePermissionRepository,
-            IAsyncRepository<UserToken> UserTokenRepository)
+            IAsyncRepository<UserToken> UserTokenRepository,
+            IAsyncRepository<ResponsibilityUser> responsibilityUserRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -31,6 +37,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             _UserRoleRepository = UserRoleRepository;
             _RolePermissionRepository = RolePermissionRepository;
             _UserTokenRepository = UserTokenRepository;
+            _responsibilityUserRepository = responsibilityUserRepository;
         }
         public async Task<AuthenticationResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -78,6 +85,18 @@ namespace SharijhaAward.Application.Features.Authentication.Login
 
             if (response.user is not null)
             {
+                var responsibilities = await _responsibilityUserRepository.Where(r => r.UserId == response.user.Id)
+                    .ToListAsync();
+
+                if (responsibilities.Any(r => !r.IsAccept))
+                {
+                    response.user.AcceptOnResponsibilities = false;
+                }
+                else
+                {
+                    response.user.AcceptOnResponsibilities = true;
+                }
+
                 List<int> UserRolesIds = await _UserRoleRepository
                     .Where(x => x.UserId == response.user.Id)
                     .Select(x => x.RoleId)

@@ -2,6 +2,7 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CircularModel;
@@ -20,19 +21,28 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
         private readonly IAsyncRepository<CircularCoordinator> _circularCoordinatorRepository;
         private readonly IAsyncRepository<CircularArbitrator> _circularArbitratorRepository;
         private readonly IAsyncRepository<CircularChairman> _circularChairman;
+        private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
-        public GetCircularByIdQueryHandler(IAsyncRepository<Circular> circularRepository, IMapper mapper, IAsyncRepository<CircularCoordinator> circularCoordinatorRepository, IAsyncRepository<CircularArbitrator> circularArbitratorRepository, IAsyncRepository<CircularChairman> circularChairman)
+        public GetCircularByIdQueryHandler(IJwtProvider jwtProvider, IAsyncRepository<Circular> circularRepository, IMapper mapper, IAsyncRepository<CircularCoordinator> circularCoordinatorRepository, IAsyncRepository<CircularArbitrator> circularArbitratorRepository, IAsyncRepository<CircularChairman> circularChairman)
         {
             _circularRepository = circularRepository;
             _mapper = mapper;
             _circularCoordinatorRepository = circularCoordinatorRepository;
             _circularArbitratorRepository = circularArbitratorRepository;
             _circularChairman = circularChairman;
+            _jwtProvider = jwtProvider;
         }
 
         public async Task<BaseResponse<CircularDto>> Handle(GetCircularByIdQuery request, CancellationToken cancellationToken)
         {
+            var UserId = _jwtProvider.GetUserIdFromToken(request.token!);
+           
+            if (UserId == null)
+            {
+                return new BaseResponse<CircularDto>("UnAuth", false, 401);
+            }
+
             var Circular = await _circularRepository
                 .Where(c => c.Id == request.Id)
                 .Include(c => c.CircularAttachments)
@@ -59,6 +69,17 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
                 .Where(c=>c.CircularId == Circular.Id)
                 .Select(c=>c.ChairmanId)
                 .ToListAsync();
+
+            if (data.Coordinators.Contains(int.Parse(UserId))
+                || data.Arbitrators.Contains(int.Parse(UserId))
+                || data.Chairmans.Contains(int.Parse(UserId)))
+            {
+                Circular.IsRead = true;
+
+                await _circularRepository.UpdateAsync(Circular);
+
+                data.IsRead = true;
+            }
 
             data.CircularAttachments = _mapper.Map<List<CircularAttachmentDto>>(Circular.CircularAttachments);
 

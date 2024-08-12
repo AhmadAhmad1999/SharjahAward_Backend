@@ -11,6 +11,7 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string CircularText { get; set; } = string.Empty;
+        public bool IsRead { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<CircularAttachmentDto>? CircularAttachments { get; set; }

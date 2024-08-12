@@ -99,6 +99,8 @@
     "Winner": "فائز",
     "DateOfObtainingTheCertificate": "تاريخ الحصول على شهادة",
     "DateOfObtainingTheStatement": "تاريخ الحصول على إفادة",
-    "WinningDate": "تاريخ الفوز"
+    "WinningDate": "تاريخ الفوز",
+    "ChairmanArabicName" : "إسم رئيس اللجنة بالعربية",
+    "ChairmanEnglishName" : "إسم رئيس اللجنة بالإنجليزي"
   }
 }
