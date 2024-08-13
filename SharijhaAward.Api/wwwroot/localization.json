@@ -100,7 +100,13 @@
     "DateOfObtainingTheCertificate": "تاريخ الحصول على شهادة",
     "DateOfObtainingTheStatement": "تاريخ الحصول على إفادة",
     "WinningDate": "تاريخ الفوز",
-    "ChairmanArabicName" : "إسم رئيس اللجنة بالعربية",
-    "ChairmanEnglishName" : "إسم رئيس اللجنة بالإنجليزي"
+    "ChairmanArabicName": "إسم رئيس اللجنة بالعربية",
+    "ChairmanEnglishName": "إسم رئيس اللجنة بالإنجليزي",
+    "RowId": "رقم السطر",
+    "FileName": "إسم الملف",
+    "FileSizeInKB": "حجم الملف بالكيلو بايت",
+    "UploadedAt": "تاريخ رفع الملف",
+    "Description": "التفاصيل",
+    "FileType" : "نوع الملف"
   }
 }

@@ -16,6 +16,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
         public string Email { get; set; } = null!;
         [PhoneNumberValidation]
         public string PhoneNumber { get; set; } = null!;
-       
+        public List<CoordinatorEducationalEntitiesDto> EducationalEntities { get; set; } = new List<CoordinatorEducationalEntitiesDto>();
     }
 }
