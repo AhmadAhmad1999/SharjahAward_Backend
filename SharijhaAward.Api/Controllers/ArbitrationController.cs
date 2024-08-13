@@ -10,7 +10,6 @@ using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllForms
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbitratrionDataByArbitratorId;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetRemainingFormsWithFilters;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.ArbitrationModel;
 
 namespace SharijhaAward.Api.Controllers
 {

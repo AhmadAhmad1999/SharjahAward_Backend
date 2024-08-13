@@ -80,6 +80,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category)
                         .Where(x => ArbitratorsIds.Contains(x.ArbitratorId) &&
+                            x.isAccepted == FormStatus.Accepted &&
                             (!string.IsNullOrEmpty(Request.Filter.ArbitratorName)
                                 ? Request.lang == "en"
                                     ? x.Arbitrator!.EnglishName.ToLower().StartsWith(Request.Filter.ArbitratorName.ToLower())
@@ -99,7 +100,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                 else
                 {
                     ArbitrationsEntities = await _ArbitrationRepository
-                        .Where(x => ArbitratorsIds.Contains(x.ArbitratorId))
+                        .Where(x => ArbitratorsIds.Contains(x.ArbitratorId) &&
+                            x.isAccepted == FormStatus.Accepted)
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
@@ -155,6 +157,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                             : x.ProvidedForm.Category.ArabicName,
                         isAccepted = x.isAccepted,
                         Reason = x.ReasonForRejecting,
+                        isAcceptedFromChairman = x.isAcceptedFromChairman,
                         Categories = ArbitrationsEntities
                             .Select(y => new GetAllFormsForSortingProcessListVMCategories()
                             {
@@ -288,6 +291,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                             : x.ProvidedForm.Category.ArabicName,
                         isAccepted = x.isAccepted,
                         Reason = x.ReasonForRejecting,
+                        isAcceptedFromChairman = x.isAcceptedFromChairman,
                         Categories = ArbitrationsEntities
                             .Select(y => new GetAllFormsForSortingProcessListVMCategories()
                             {

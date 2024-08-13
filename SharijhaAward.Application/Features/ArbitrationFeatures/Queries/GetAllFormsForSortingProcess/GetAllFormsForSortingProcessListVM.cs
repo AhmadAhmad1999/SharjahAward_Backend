@@ -12,6 +12,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
         public FormStatus isAccepted { get; set; }
+        public FormStatus isAcceptedFromChairman { get; set; }
         public string? Reason { get; set; }
         public List<GetAllFormsForSortingProcessListVMCategories> Categories { get; set; } = new List<GetAllFormsForSortingProcessListVMCategories>();
     }
