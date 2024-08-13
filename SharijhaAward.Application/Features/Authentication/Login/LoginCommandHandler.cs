@@ -85,7 +85,8 @@ namespace SharijhaAward.Application.Features.Authentication.Login
 
             if (response.user is not null)
             {
-                var responsibilities = await _responsibilityUserRepository.Where(r => r.UserId == response.user.Id)
+                var responsibilities = await _responsibilityUserRepository
+                    .Where(r => r.UserId == response.user.Id)
                     .ToListAsync();
 
                 if (responsibilities.Any(r => !r.IsAccept))

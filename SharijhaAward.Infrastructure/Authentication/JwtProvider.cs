@@ -33,7 +33,7 @@ namespace SharijhaAward.Infrastructure.Authentication
                 SecurityAlgorithms.HmacSha256);
 
             DateTime Now = DateTime.UtcNow;
-            DateTime Expiration = Now.AddMinutes(1); 
+            DateTime Expiration = Now.AddMinutes(30); 
 
             //var token = new JwtSecurityToken
             //    (

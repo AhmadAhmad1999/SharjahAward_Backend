@@ -78,7 +78,6 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
                 {
                     Responsibilities.AddRange(Responsibility);
                 }
-                    
             }
 
             var data = _mapper.Map<List<ResponsibilityListVM>>(Responsibilities);

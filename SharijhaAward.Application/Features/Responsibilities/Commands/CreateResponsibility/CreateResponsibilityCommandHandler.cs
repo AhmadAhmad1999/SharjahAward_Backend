@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities;
@@ -19,12 +20,16 @@ namespace SharijhaAward.Application.Features.Responsibilities.Commands.CreateRes
     {
         private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
         private readonly IAsyncRepository<Role> _roleRepository;
+        private readonly IAsyncRepository<UserRole> _userRoleRepository;
+        private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUser;
         private readonly IMapper _mapper;
 
-        public CreateResponsibilityCommandHandler( IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<Role> roleRepository, IMapper mapper)
+        public CreateResponsibilityCommandHandler(IAsyncRepository<ResponsibilityUser> responsibilityUser, IAsyncRepository<UserRole> userRoleRepository, IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<Role> roleRepository, IMapper mapper)
         {
             _responsibilityRepository = responsibilityRepository;
             _roleRepository = roleRepository;
+            _responsibilityUser = responsibilityUser;
+            _userRoleRepository = userRoleRepository;
             _mapper = mapper;
         }
 
@@ -58,6 +63,20 @@ namespace SharijhaAward.Application.Features.Responsibilities.Commands.CreateRes
 
             var data = await _responsibilityRepository.AddAsync(Responsibility);
 
+            var UserIds = await _userRoleRepository
+                .Where(u => u.RoleId == role.Id)
+                .Select(u => u.UserId)
+                .ToListAsync();
+
+            foreach(var userId in UserIds)
+            {
+                await _responsibilityUser.AddAsync(new ResponsibilityUser()
+                {
+                    UserId = userId,
+                    ResponsibilityId = data.Id,
+                    IsAccept = false
+                });
+            }
 
             return new BaseResponse<object>(msg, true, 200);
 

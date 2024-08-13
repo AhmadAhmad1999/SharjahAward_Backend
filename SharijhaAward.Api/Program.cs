@@ -16,9 +16,11 @@ using SharijhaAward.Api.Logger;
 using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
 using SharijhaAward.Application;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Infrastructure;
+using SharijhaAward.Infrastructure.Authentication;
 using SharijhaAward.Persistence;
 using SharijhaAward.Persistence.Repositories;
 using System.Net;
@@ -44,7 +46,6 @@ try
         .RegisterDefinition("Custom-Layout", typeof(CustomlayoutRenderer));
 
     builder.Services.AddScoped<LogFilterAttribute>();
-
     builder.Services.AddSingleton<ILoggerFactory, NLogLoggerFactory>();
     var serviceProvider = builder.Services.BuildServiceProvider();
     builder.Services.AddSingleton(builder.Services);
@@ -164,6 +165,7 @@ try
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseHttpsRedirection();
+    //app.UseMiddleware<AuthenticationMiddleware>();
     app.UseMiddleware<ExceptionMiddleware>();
     app.UseAuthorization();
     app.UseStaticFiles();
