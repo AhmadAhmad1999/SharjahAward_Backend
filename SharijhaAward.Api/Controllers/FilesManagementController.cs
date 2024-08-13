@@ -8,6 +8,8 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 using Microsoft.AspNetCore.Hosting;
 using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
+using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -95,7 +97,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DownloadFilesByIds([FromQuery] List<int> Ids, List<int> TableAttributeIds, int FilterId, bool DownloadAllFiles)
+        public async Task<IActionResult> DownloadFilesByIds([FromQuery] List<int> Ids, [FromQuery] List<int> TableAttributeIds, [FromQuery] int FilterId, [FromQuery]bool DownloadAllFiles)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -116,6 +118,28 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(Response),
                 200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("FilesExportToExcel")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> FilesExportToExcel(int FilterId)
+        {
+            BaseResponse<byte[]> Response = await _Mediator.Send(new FilesExportToExcelQuery()
+            {
+                FilterId = FilterId
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => File(Response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Files.xlsx"),
                 _ => BadRequest(Response)
             };
         }
