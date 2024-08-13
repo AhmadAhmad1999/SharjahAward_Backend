@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+﻿using SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById;
+using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 
 namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEducationalEntitiesForAdminDashboard
@@ -10,5 +11,6 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
         public string EnglishName { get; set; } = null!;
         [ArabicNameValidation]
         public string ArabicName { get; set; } = null!;
+        public List<CoordinatorDto>? Coordinators { get; set; }
     }
 }
