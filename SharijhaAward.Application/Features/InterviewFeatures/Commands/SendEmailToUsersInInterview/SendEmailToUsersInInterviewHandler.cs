@@ -58,9 +58,9 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.SendEmai
                 string ForthArabicLine = string.Empty;
 
                 if (InterviewEntity.Type == Domain.Constants.MeetingTypes.Virtual)
-                    ForthArabicLine = "نوع المقابلة: افتراضي";
-                else
                     ForthArabicLine = "نوع المقابلة: أونلاين";
+                else
+                    ForthArabicLine = $"نوع المقابلة: في الموقع, موقع المقابلة: {InterviewEntity.Address}";
 
                 string FifthArabicLine = $"نص المقابلة: {InterviewEntity.ArabicText}";
 
@@ -70,7 +70,14 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.SendEmai
                 string SecondEnglishLine = $"Interview Date: {InterviewEntity.Date.ToString("dddd", EnglishCulture)}" +
                     $"{InterviewEntity.Date.ToString("d/M/yyyy", EnglishCulture)}";
                 string ThirdEnglishLine = $"Interview Time: {InterviewEntity.Date.ToString("hh:mm tt", EnglishCulture)}";
-                string ForthEnglishLine = $"Interview Type: {InterviewEntity.Type}";
+
+                string ForthEnglishLine = string.Empty;
+
+                if (InterviewEntity.Type == Domain.Constants.MeetingTypes.Virtual)
+                    ForthEnglishLine = $"Interview Type: {InterviewEntity.Type}";
+                else
+                    ForthEnglishLine = $"Interview Type: {InterviewEntity.Type}, Interview Address: {InterviewEntity.Address}";
+
                 string FifthEnglishLine = $"Interview Text: {InterviewEntity.EnglishText}";
 
                 string HtmlBody = "wwwroot/Send_Email_Template.html";

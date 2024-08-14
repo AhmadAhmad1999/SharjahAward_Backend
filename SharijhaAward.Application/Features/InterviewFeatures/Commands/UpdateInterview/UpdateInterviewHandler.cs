@@ -36,6 +36,31 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
         {
             string ResponseMessage = string.Empty;
 
+            Interview? InterviewEntity = await _InterviewRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+
+            if (InterviewEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Interview is not Found"
+                    : "المقابلة غير موجودة";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
+
+            if (Request.Type == Domain.Constants.MeetingTypes.OnSite &&
+                string.IsNullOrEmpty(Request.Address) ||
+                (InterviewEntity.Type == Domain.Constants.MeetingTypes.OnSite &&
+                string.IsNullOrEmpty(Request.Address) &&
+                Request.Type == Domain.Constants.MeetingTypes.OnSite))
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "If the interview type is onsite then you have to insert the address"
+                    : "إذا كان نوع المقابلة في الموقع، فيجب عليك إدخال العنوان";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             List<string> CheckForDuplicatedEmails = Request.UsersInfo
                 .GroupBy(m => m.Email.ToLower())
                 .Where(g => g.Count() > 1)
@@ -70,18 +95,6 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
             {
                 try
                 {
-                    Interview? InterviewEntity = await _InterviewRepository
-                        .FirstOrDefaultAsync(x => x.Id == Request.Id);
-
-                    if (InterviewEntity is null)
-                    {
-                        ResponseMessage = Request.lang == "en"
-                            ? "Interview is not Found"
-                            : "المقابلة غير موجودة";
-
-                        return new BaseResponse<object>(ResponseMessage, false, 404);
-                    }
-
                     _Mapper.Map(Request, InterviewEntity, typeof(UpdateInterviewCommand), typeof(Interview));
                     
                     await _InterviewRepository.UpdateAsync(InterviewEntity);

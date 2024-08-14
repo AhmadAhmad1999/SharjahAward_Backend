@@ -98,7 +98,8 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetInterv
                         Id = x.Id,
                         ArabicQuestion = x.ArabicQuestion,
                         EnglishQuestion = x.EnglishQuestion
-                    }).ToList()
+                    }).ToList(),
+                Address = InterviewEntity.Address
             };
 
             return new BaseResponse<GetInterviewByIdDto>(ResponseMessage, true, 200, Response);

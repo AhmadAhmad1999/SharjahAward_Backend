@@ -19,6 +19,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateIn
         public string? EnglishText { get; set; }
         public DateTime Date { get; set; }
         public MeetingTypes Type { get; set; }
+        public string? Address { get; set; }
         public List<CreateInterviewUserDto> UsersInfo { get; set; } = new List<CreateInterviewUserDto>();
         public List<int> CategoriesIds { get; set; } = new List<int>();
         public List<InterviewNoteDto> InterviewNoteDtos { get; set; } = new List<InterviewNoteDto>();

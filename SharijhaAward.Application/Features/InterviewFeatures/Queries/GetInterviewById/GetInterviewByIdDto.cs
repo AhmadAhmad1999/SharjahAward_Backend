@@ -16,6 +16,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetInterv
         public string? EnglishText { get; set; }
         public DateTime? Date { get; set; }
         public MeetingTypes Type { get; set; }
+        public string? Address { get; set; }
         public bool isImplemented { get; set; }
         public bool isCanceled { get; set; }
         public string? EnglishReasonOfCanceling { get; set; }

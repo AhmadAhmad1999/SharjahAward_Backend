@@ -356,6 +356,7 @@ using SharijhaAward.Application.Features.Indexes.Queries.GetAllIndexes;
 using SharijhaAward.Application.Features.Indexes.Queries.GetIndexById;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetExcelFilePrototype;
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetExcelFilePrototype;
+using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.UpdateChairmanNotesOnArbitrationAudit;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -708,6 +709,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AdvancedFormBuilderSection, UpdateAdvancedFormBuilderSectionCommand>().ReverseMap();
             CreateMap<ExplanatoryMessage, UpdateExplanatoryMessageCommand>().ReverseMap();
             CreateMap<GeneralFAQ, UpdateGeneralFAQCommand>().ReverseMap();
+            CreateMap<ChairmanNotesOnArbitrationAudit, UpdateChairmanNotesOnArbitrationAuditCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();

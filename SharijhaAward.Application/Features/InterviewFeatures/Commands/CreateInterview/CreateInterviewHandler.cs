@@ -35,6 +35,16 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateIn
         {
             string ResponseMessage = string.Empty;
 
+            if (Request.Type == Domain.Constants.MeetingTypes.OnSite &&
+                string.IsNullOrEmpty(Request.Address))
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "If the interview type is onsite then you have to insert the address"
+                    : "إذا كان نوع المقابلة في الموقع، فيجب عليك إدخال العنوان";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             List<string> CheckForDuplicatedEmails = Request.UsersInfo
                 .GroupBy(m => m.Email.ToLower())
                 .Where(g => g.Count() > 1)

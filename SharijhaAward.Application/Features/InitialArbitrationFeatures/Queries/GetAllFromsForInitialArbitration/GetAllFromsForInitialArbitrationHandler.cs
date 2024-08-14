@@ -176,6 +176,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
+                        .Include(x => x.Arbitrator!)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .ToListAsync();
@@ -260,6 +261,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
+                        .Include(x => x.Arbitrator!)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .ToListAsync();
