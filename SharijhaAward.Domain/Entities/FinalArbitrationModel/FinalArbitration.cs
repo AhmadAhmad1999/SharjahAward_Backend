@@ -8,9 +8,9 @@ namespace SharijhaAward.Domain.Entities.FinalArbitrationModel
     public class FinalArbitration : AuditableEntity
     {
         public int Id { get; set; }
-        public bool isAccepted { get; set; }
+        public FormStatus isAccepted { get; set; }
         public string? ReasonForRejecting { get; set; }
-        public bool isAcceptedFromChairman { get; set; }
+        public FormStatus isAcceptedFromChairman { get; set; }
         public int ArbitratorId { get; set; }
         public Arbitrator? Arbitrator { get; set; }
         public int ProvidedFormId { get; set; }

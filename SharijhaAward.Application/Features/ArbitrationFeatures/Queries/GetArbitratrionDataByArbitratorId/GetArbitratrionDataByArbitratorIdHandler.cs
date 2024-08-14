@@ -41,7 +41,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                 .ToListAsync();
 
             List<Arbitration> AllArbitratorAssingedForms = await _ArbitrationRepository
-                .Where(x => x.ArbitratorId == Request.Id)
+                .Include(x => x.ProvidedForm!)
+                .Where(x => x.ArbitratorId == Request.Id &&
+                    x.ProvidedForm!.PercentCompletion == 100)
                 .OrderByDescending(x => x.CreatedAt)
                 .Include(x => x.ProvidedForm!)
                 .Include(x => x.ProvidedForm!.Category!)
@@ -55,8 +57,6 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                 .Include(x => x.DynamicAttribute!.DynamicAttributeSection)
                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
-                    AllArbitratorAssingedForms.Select(y => y.ProvidedFormId)
-                        .Any(y => y == x.RecordId) &&
                     x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
                 .ToListAsync();
 
@@ -105,9 +105,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                 {
                                     Id = x.Id,
                                     CategoryName = x.Category!.EnglishName,
-                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
-                                        ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
-                                        : null,
+                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)?.Value,
                                     EducationalClassName = x.CategoryEducationalClass != null
                                         ? x.CategoryEducationalClass!.EducationalClass!.EnglishName
                                         : null,
@@ -117,8 +115,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                 {
                                     Id = x.Id,
                                     CategoryName = x.Category!.ArabicName,
-                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
-                                        ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value : null,
+                                    SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)?.Value,
                                     EducationalClassName = x.CategoryEducationalClass != null
                                         ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null,
                                     IsAccepted = x.IsAccepted!.Value

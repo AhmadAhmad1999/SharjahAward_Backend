@@ -52,7 +52,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Update
                     DeletedAt = null,
                     isDeleted = false,
                     LastModifiedAt = null,
-                    LastModifiedBy = null
+                    LastModifiedBy = null,
+                    isAccepted = FormStatus.NotArbitratedYet,
+                    isAcceptedFromChairman = FormStatus.NotArbitratedYet
                 });
 
             TransactionOptions TransactionOptions = new TransactionOptions

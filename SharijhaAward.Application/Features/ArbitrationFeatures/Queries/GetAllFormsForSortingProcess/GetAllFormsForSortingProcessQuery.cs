@@ -6,6 +6,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
     public class GetAllFormsForSortingProcessQuery : IRequest<BaseResponse<List<GetAllFormsForSortingProcessListVM>>>
     {
         public string? token { get; set; }
+        public bool? AsChairman { get; set; }
         public GetAllFormsForSortingProcessFilter? Filter { get; set; }
         public string? lang { get; set; }
         public int page { get; set; }
