@@ -5,6 +5,8 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
+using SharijhaAward.Domain.Entities.CriterionItemModel;
+using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 using System.Transactions;
 
@@ -15,22 +17,40 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
         private readonly IAsyncRepository<FinalArbitrationScore> _FinalArbitrationScoreRepository;
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
         private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
+        private readonly IAsyncRepository<Criterion> _CriterionRepository;
+        private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
         private readonly IMapper _Mapper;
 
         public CreateFinalArbitrationScoreHandler(IAsyncRepository<FinalArbitrationScore> FinalArbitrationScoreRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
             IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
+            IAsyncRepository<Criterion> CriterionRepository,
+            IAsyncRepository<CriterionItem> CriterionItemRepository,
             IMapper Mapper)
         {
             _FinalArbitrationScoreRepository = FinalArbitrationScoreRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
             _ArbitrationResultRepository = ArbitrationResultRepository;
+            _CriterionRepository = CriterionRepository;
+            _CriterionItemRepository = CriterionItemRepository;
             _Mapper = Mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateFinalArbitrationScoreCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            List<Criterion> CriterionEntities = await _CriterionRepository
+                .Where(x => Request.CreateFinalArbitrationScoreMainCommand
+                    .Where(y => y.CriterionId != null).Select(y => y.CriterionId)
+                    .Any(y => y == x.Id))
+                .ToListAsync();
+
+            List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
+                .Where(x => Request.CreateFinalArbitrationScoreMainCommand
+                    .Where(y => y.CriterionItemId != null).Select(y => y.CriterionItemId)
+                    .Any(y => y == x.Id))
+                .ToListAsync();
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {
@@ -57,8 +77,44 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                         return new BaseResponse<object>(ResponseMessage, false, 404);
                     }
 
-                    foreach (CreateFinalArbitrationScoreMainCommand CreateFinalArbitrationScoreMainCommand in Request.CreateFinalArbitrationScoreMainCommand)
+                    foreach (CreateFinalArbitrationScoreMainCommand CreateFinalArbitrationScoreMainCommand in 
+                        Request.CreateFinalArbitrationScoreMainCommand)
                     {
+                        if (CreateFinalArbitrationScoreMainCommand.CriterionId is not null)
+                        {
+                            bool CheckInsertedScore = CriterionEntities
+                                .FirstOrDefault(x => x.Id == CreateFinalArbitrationScoreMainCommand.CriterionId)!
+                                .Score < CreateFinalArbitrationScoreMainCommand.ArbitrationScore;
+
+                            if (CheckInsertedScore)
+                            {
+                                ResponseMessage = Request.lang == "en"
+                                    ? "Final arbitration score can't be bigger than the criterion max score"
+                                    : "لا يمكن أن تكون النتيجة النهائية للتحكيم أكبر من الحد الأقصى لنتيجة المعيار";
+
+                                Transaction.Dispose();
+
+                                return new BaseResponse<object>(ResponseMessage, false, 404);
+                            }
+                        }
+                        else if (CreateFinalArbitrationScoreMainCommand.CriterionItemId is not null)
+                        {
+                            bool CheckInsertedScore = CriterionItemEntities
+                                .FirstOrDefault(x => x.Id == CreateFinalArbitrationScoreMainCommand.CriterionItemId)!
+                                .Score < CreateFinalArbitrationScoreMainCommand.ArbitrationScore;
+
+                            if (CheckInsertedScore)
+                            {
+                                ResponseMessage = Request.lang == "en"
+                                    ? "Final arbitration score can't be bigger than the criterion item max score"
+                                    : "لا يمكن أن تكون النتيجة النهائية للتحكيم أكبر من الحد الأقصى لنتيجة عنصر المعيار ";
+
+                                Transaction.Dispose();
+
+                                return new BaseResponse<object>(ResponseMessage, false, 404);
+                            }
+                        }
+
                         if (CreateFinalArbitrationScoreMainCommand.FinalArbitrationScoreId == 0)
                         {
                             FinalArbitrationScore NewFinalArbitrationScoreEntity = _Mapper.Map<FinalArbitrationScore>(CreateFinalArbitrationScoreMainCommand);

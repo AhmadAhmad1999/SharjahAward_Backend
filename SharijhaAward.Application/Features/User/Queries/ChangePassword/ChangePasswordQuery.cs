@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Helpers.PasswordValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
         public string Token { get; set; } = string.Empty;
         public int? Id { get; set; }
         public string? OldPassword { get; set; } = string.Empty;
+        [PasswordValidation]
         public string NewPassword { get; set; } = string.Empty;
     }
 }

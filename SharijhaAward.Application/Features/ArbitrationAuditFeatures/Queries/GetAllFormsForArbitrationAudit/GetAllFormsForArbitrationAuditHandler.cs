@@ -6,6 +6,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using System.Linq;
 
 namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetAllFormsForArbitrationAudit
 {
@@ -155,7 +156,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                         if (!BreakOuterLoop)
                         {
                             List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
-                                .Where(x => ArbitrationIds.Contains(x.ArbitrationId))
+                                .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
                                 .ToList();
 
                             GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
@@ -228,7 +229,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     if (!BreakOuterLoop)
                     {
                         List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
-                            .Where(x => ArbitrationIds.Contains(x.ArbitrationId))
+                            .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
                             .ToList();
 
                         GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations

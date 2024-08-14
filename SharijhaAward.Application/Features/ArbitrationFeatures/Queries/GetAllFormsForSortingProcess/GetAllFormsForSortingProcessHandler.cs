@@ -63,7 +63,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                     return new BaseResponse<List<GetAllFormsForSortingProcessListVM>>(ResponseMessage, false, 404);
                 }
             }
-            else if (ArbitratorEntity.isChairman)
+            else if (ArbitratorEntity.isChairman && (Request.AsChairman != null
+                ? Request.AsChairman.Value : false))
             {
                 List<int> ArbitratorsIds = await _ComitteeArbitratorRepository
                     .Include(x => x.Committee!)

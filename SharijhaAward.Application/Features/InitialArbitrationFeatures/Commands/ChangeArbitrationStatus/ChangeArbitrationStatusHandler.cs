@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                 {
                     ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
 
-                    if (Request.isAccepted == FormStatus.Accepted)
+                    if (Request.isAccepted == FormStatus.Rejected)
                     {
                         ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
 

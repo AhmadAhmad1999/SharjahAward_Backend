@@ -65,9 +65,9 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
 
                         FinalArbitration NewFinalArbitrationEntity = new FinalArbitration()
                         {
-                            isAccepted = false,
+                            isAccepted = FormStatus.NotArbitratedYet,
                             ReasonForRejecting = null,
-                            isAcceptedFromChairman = false,
+                            isAcceptedFromChairman = FormStatus.NotArbitratedYet,
                             ArbitratorId = ArbitratorId,
                             ProvidedFormId = Request.FormId,
                             Type = ArbitrationType.NotBeenArbitrated,

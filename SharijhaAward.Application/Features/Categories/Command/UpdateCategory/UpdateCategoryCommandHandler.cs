@@ -132,8 +132,8 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                     int? EducationalEntityDynamicAttributeId = null;
 
                     if (request.RelatedToEducationalEntities != null
-                            ? !categoryToUpdate.RelatedToEducationalEntities
-                            : false)
+                        ? (request.RelatedToEducationalEntities.Value && !categoryToUpdate.RelatedToEducationalEntities)
+                        : false)
                     {
                         var LastOrderId = await _DynamicAttributeRepository
                             .Include(x => x.DynamicAttributeSection!)
