@@ -325,3 +325,5 @@ paket-files/
 /SharijhaAward.Persistence/obj/Debug/net8.0/SharijhaAward.Persistence.sourcelink.json
 /SharijhaAward.Persistence/obj/Debug/net8.0/ref/SharijhaAward.Persistence.dll
 /SharijhaAward.Api/wwwroot/UploadedFiles
+/SharijhaAward.Api/wwwroot/ProvidedForm/2
+/SharijhaAward.Api/appsettings.json

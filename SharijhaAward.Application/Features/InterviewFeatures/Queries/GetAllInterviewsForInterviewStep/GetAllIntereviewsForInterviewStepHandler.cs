@@ -31,7 +31,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new GetAllInterviewsForInterviewStepListVM()
                     {
-                        Date = x.Date,
+                        Date = x.StartDate,
                         Description = Request.lang == "en"
                             ? x.EnglishDescription
                             : x.ArabicDescription,
@@ -58,7 +58,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new GetAllInterviewsForInterviewStepListVM()
                     {
-                        Date = x.Date,
+                        Date = x.StartDate,
                         Description = Request.lang == "en"
                             ? x.EnglishDescription
                             : x.ArabicDescription,
@@ -84,7 +84,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
                     .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                     .Select(x => new GetAllInterviewsForInterviewStepListVM()
                     {
-                        Date = x.Date,
+                        Date = x.StartDate,
                         Description = Request.lang == "en"
                             ? x.EnglishDescription
                             : x.ArabicDescription,

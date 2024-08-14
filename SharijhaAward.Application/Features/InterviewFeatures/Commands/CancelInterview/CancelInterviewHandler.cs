@@ -52,9 +52,9 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.CancelIn
                 CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
                 string FirstArabicLine = $"عنوان المقابلة: {InterviewEntity.ArabicName}";
-                string SecondArabicLine = $"تاريخ المقابلة: {InterviewEntity.Date.ToString("dddd", ArabicCulture)}" +
-                    $"{InterviewEntity.Date.ToString("d/M/yyyy", ArabicCulture)}";
-                string ThirdArabicLine = $"وقت المقابلة: {InterviewEntity.Date.ToString("hh:mm tt", ArabicCulture)}";
+                string SecondArabicLine = $"تاريخ المقابلة: {InterviewEntity.StartDate.ToString("dddd", ArabicCulture)}" +
+                    $"{InterviewEntity.StartDate.ToString("d/M/yyyy", ArabicCulture)}";
+                string ThirdArabicLine = $"وقت المقابلة: {InterviewEntity.StartDate.ToString("hh:mm tt", ArabicCulture)}";
 
                 string ForthArabicLine = string.Empty;
 
@@ -69,9 +69,9 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.CancelIn
                 CultureInfo EnglishCulture = new CultureInfo("en-US");
 
                 string FirstEnglishLine = $"Interview Title: {InterviewEntity.EnglishName}";
-                string SecondEnglishLine = $"Interview Date: {InterviewEntity.Date.ToString("dddd", EnglishCulture)}" +
-                    $"{InterviewEntity.Date.ToString("d/M/yyyy", EnglishCulture)}";
-                string ThirdEnglishLine = $"Interview Time: {InterviewEntity.Date.ToString("hh:mm tt", EnglishCulture)}";
+                string SecondEnglishLine = $"Interview Date: {InterviewEntity.StartDate.ToString("dddd", EnglishCulture)}" +
+                    $"{InterviewEntity.StartDate.ToString("d/M/yyyy", EnglishCulture)}";
+                string ThirdEnglishLine = $"Interview Time: {InterviewEntity.StartDate.ToString("hh:mm tt", EnglishCulture)}";
                 string ForthEnglishLine = $"Interview Type: {InterviewEntity.Type}";
                 string FifthEnglishLine = $"Interview Text: {InterviewEntity.EnglishText}";
                 string SixthEnglisLine = $"Reason Of Cancelation: {Request.EnglishReasonOfCanceling}";

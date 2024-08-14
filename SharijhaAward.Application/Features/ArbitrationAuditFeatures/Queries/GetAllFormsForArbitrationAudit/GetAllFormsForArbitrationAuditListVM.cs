@@ -9,5 +9,6 @@
         public bool ItExceededTheMarginOfDifferenceInArbitrationScores { get; set; }
         public float Average { get; set; }
         public float FullScore { get; set; }
+        public bool DoneArbitrationAudit { get; set; }
     }
 }

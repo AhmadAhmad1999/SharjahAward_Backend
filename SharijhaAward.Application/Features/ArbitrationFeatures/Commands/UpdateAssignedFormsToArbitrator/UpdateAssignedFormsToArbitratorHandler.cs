@@ -39,7 +39,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Update
             }
 
             List<Arbitration> ArbitrationEntitiesToDelete = await _ArbitrationRepository
-                .Where(x => Request.DeleteFormsIds.Contains(x.ProvidedFormId))
+                .Where(x => Request.DeleteFormsIds.Contains(x.ProvidedFormId) &&
+                    x.ArbitratorId == Request.ArbitratorId)
                 .ToListAsync();
 
             IEnumerable<Arbitration> NewArbitrationEntites = Request.NewFormsIds

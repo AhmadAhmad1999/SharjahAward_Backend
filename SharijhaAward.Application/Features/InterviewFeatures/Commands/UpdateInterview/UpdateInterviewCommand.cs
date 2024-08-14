@@ -18,7 +18,8 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
         public string EnglishDescription { get; set; } = null!;
         public string? ArabicText { get; set; }
         public string? EnglishText { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public MeetingTypes Type { get; set; }
         public string? Address { get; set; }
         public List<CreateInterviewUserDto> UsersInfo { get; set; } = new List<CreateInterviewUserDto>();

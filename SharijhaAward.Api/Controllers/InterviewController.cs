@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Api.Logger;
-using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
-using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CancelInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteInterview;

@@ -173,19 +173,34 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                                 : false)
                             EligibleToWin = true;
 
-                        ArbitrationResult NewArbitrationResultEntity = new ArbitrationResult()
-                        {
-                            ProvidedFormId = FinalArbitrationEntity.ProvidedFormId,
-                            EligibleForCertification = EligibleForCertification,
-                            EligibleForAStatement = EligibleForAStatement,
-                            EligibleToWin = EligibleToWin,
-                            GotCertification = false,
-                            GotStatement = false,
-                            Winner = false,
-                            FinalArbitrationId = FinalArbitrationEntity.Id
-                        };
+                        ArbitrationResult? ArbitrationResultEntity = await _ArbitrationResultRepository
+                            .FirstOrDefaultAsync(x => x.ProvidedFormId == FinalArbitrationEntity.ProvidedFormId &&
+                                x.FinalArbitrationId == FinalArbitrationEntity.Id);
 
-                        await _ArbitrationResultRepository.AddAsync(NewArbitrationResultEntity);
+                        if (ArbitrationResultEntity is not null)
+                        {
+                            ArbitrationResultEntity.EligibleForCertification = EligibleForCertification;
+                            ArbitrationResultEntity.EligibleForAStatement = EligibleForAStatement;
+                            ArbitrationResultEntity.EligibleToWin = EligibleToWin;
+
+                            await _ArbitrationResultRepository.UpdateAsync(ArbitrationResultEntity);
+                        }
+                        else
+                        {
+                            ArbitrationResult NewArbitrationResultEntity = new ArbitrationResult()
+                            {
+                                ProvidedFormId = FinalArbitrationEntity.ProvidedFormId,
+                                EligibleForCertification = EligibleForCertification,
+                                EligibleForAStatement = EligibleForAStatement,
+                                EligibleToWin = EligibleToWin,
+                                GotCertification = false,
+                                GotStatement = false,
+                                Winner = false,
+                                FinalArbitrationId = FinalArbitrationEntity.Id
+                            };
+
+                            await _ArbitrationResultRepository.AddAsync(NewArbitrationResultEntity);
+                        }
                     }
 
                     else

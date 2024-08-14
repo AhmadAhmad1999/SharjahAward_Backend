@@ -68,7 +68,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetInterv
                 EnglishName = InterviewEntity.EnglishName,
                 ArabicDescription = InterviewEntity.ArabicDescription,
                 EnglishDescription = InterviewEntity.EnglishDescription,
-                Date = InterviewEntity.Date,
+                StartDate = InterviewEntity.StartDate,
                 Type = InterviewEntity.Type,
                 UsersInfo = InterviewUsersEntities
                     .Select(x => new InterviewUserDto()
@@ -99,7 +99,8 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetInterv
                         ArabicQuestion = x.ArabicQuestion,
                         EnglishQuestion = x.EnglishQuestion
                     }).ToList(),
-                Address = InterviewEntity.Address
+                Address = InterviewEntity.Address,
+                EndDate = InterviewEntity.EndDate
             };
 
             return new BaseResponse<GetInterviewByIdDto>(ResponseMessage, true, 200, Response);
