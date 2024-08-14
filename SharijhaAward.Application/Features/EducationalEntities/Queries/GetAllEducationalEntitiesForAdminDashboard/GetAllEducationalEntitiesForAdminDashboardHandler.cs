@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
@@ -41,8 +42,8 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
 
             List<EduInstitutionCoordinator> CoordinatorFromEducationalInstitution = await _EduInstitutionCoordinatorRepository
                 .Include(x => x.EducationalInstitution!)
-                .Where(x => EducationalEntities.Select(y => y.Id).Contains(x.EducationalInstitution!.EducationalEntityId))
                 .Include(x => x.Coordinator!)
+                .Where(x => EducationalEntities.Select(y => y.Id).Contains(x.EducationalInstitution!.EducationalEntityId))
                 .ToListAsync();
 
             EducationalEntities = EducationalEntities.Select(x => new GetAllEducationalEntitiesForAdminDashboardListVM()
@@ -55,7 +56,8 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
                     {
                         Id = y.Id,
                         ArabicName = y.ArabicName,
-                        EnglishName = y.EnglishName
+                        EnglishName = y.EnglishName,
+                        Coordinators = _Mapper.Map<List<CoordinatorDto>>(CoordinatorFromEducationalInstitution.Select(c=>c.Coordinator))
                     }).ToList()
             }).ToList();
 

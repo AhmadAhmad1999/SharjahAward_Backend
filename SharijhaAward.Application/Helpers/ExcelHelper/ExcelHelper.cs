@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using Newtonsoft.Json;
 using SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllArbitrationResults;
+using SharijhaAward.Domain.Constants;
+using QRCoder.Extensions;
 
 
 namespace SharijhaAward.Application.Helpers.ExcelHelper
@@ -134,10 +136,28 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
                     if (cell != null)
                     {
                         var cellValue = cell.ToString();
+                        if (property.Name == "EducationType")
+                        {
+                            var value = (int)Enum.Parse(typeof(EducationType), $"{cellValue}");
 
-                        if (property.PropertyType == typeof(string))
+                            property.SetValue(item, value);
+                        }
+                        else if (property.Name == "Emirates")
+                        {
+                            var value = (int)Enum.Parse(typeof(Emirates), $"{cellValue}");
+
+                            property.SetValue(item, value);
+                        }
+                        else if (property.PropertyType == typeof(string))
                         {
                             property.SetValue(item, cellValue);
+                        }
+                        else if (property.Name.EndsWith("Id") && property.PropertyType == typeof(int))
+                        {
+                            IAsyncRepository<EducationalEntity> _educationalEntityRepository = _ServiceProvider.GetService<IAsyncRepository<EducationalEntity>>();
+                            int EducationalEntityId = _educationalEntityRepository.FirstOrDefault(e => e.ArabicName == cellValue).Id;
+                            
+                            property.SetValue(item, EducationalEntityId);
                         }
                         else if (property.PropertyType == typeof(int) || property.PropertyType == typeof(int?))
                         {
@@ -210,7 +230,58 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
             colIndex = 0;
             foreach (var property in properties)
             {
-                
+                if (property.Name == "EducationType")
+                {
+                    var fkValues = GetForeignKeyValues(property.Name);
+                    if (fkValues != null && fkValues.Any())
+                    {
+                        // Create a sheet to hold the list of foreign key values
+                        var listSheet = workbook.CreateSheet(property.Name + "_List");
+                        for (int i = 0; i < fkValues.Count; i++)
+                        {
+                            var listRow = listSheet.CreateRow(i);
+                            listRow.CreateCell(0).SetCellValue(fkValues[i]);
+                        }
+
+                        // Create a named range for the list
+                        var rangeName = property.Name + "_List";
+                        var name = workbook.CreateName();
+                        name.NameName = rangeName;
+                        name.RefersToFormula = $"{property.Name}_List!$A$1:$A${fkValues.Count}";
+
+                        // Create a dropdown list for the foreign key column
+                        var constraint = sheet.GetDataValidationHelper().CreateExplicitListConstraint(fkValues.ToArray());
+                        var addressList = new CellRangeAddressList(1, 65535, colIndex, colIndex);
+                        var validation = sheet.GetDataValidationHelper().CreateValidation(constraint, addressList);
+                        sheet.AddValidationData(validation);
+                    }
+                }
+                if (property.Name == "Emirates")
+                {
+                    var fkValues = GetForeignKeyValues(property.Name);
+                    if (fkValues != null && fkValues.Any())
+                    {
+                        // Create a sheet to hold the list of foreign key values
+                        var listSheet = workbook.CreateSheet(property.Name + "_List");
+                        for (int i = 0; i < fkValues.Count; i++)
+                        {
+                            var listRow = listSheet.CreateRow(i);
+                            listRow.CreateCell(0).SetCellValue(fkValues[i]);
+                        }
+
+                        // Create a named range for the list
+                        var rangeName = property.Name + "_List";
+                        var name = workbook.CreateName();
+                        name.NameName = rangeName;
+                        name.RefersToFormula = $"{property.Name}_List!$A$1:$A${fkValues.Count}";
+
+                        // Create a dropdown list for the foreign key column
+                        var constraint = sheet.GetDataValidationHelper().CreateExplicitListConstraint(fkValues.ToArray());
+                        var addressList = new CellRangeAddressList(1, 65535, colIndex, colIndex);
+                        var validation = sheet.GetDataValidationHelper().CreateValidation(constraint, addressList);
+                        sheet.AddValidationData(validation);
+                    }
+                }
                 if (property.Name.EndsWith("Id") && property.PropertyType == typeof(int))
                 {
                     var fkValues = GetForeignKeyValues(property.Name);
@@ -237,6 +308,8 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
                         sheet.AddValidationData(validation);
                     }
                 }
+
+                
                 colIndex++;
             }
 
@@ -249,20 +322,38 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
 
         private List<string> GetForeignKeyValues(string foreignKeyName)
         {
-            //string TableName = foreignKeyName.Split("Id")[0];
-
-           // using (var context = new )
-                switch (foreignKeyName)
+            if(foreignKeyName == "EducationalEntityId")
+            {
+                IAsyncRepository<EducationalEntity> _educationalEntityRepository = _ServiceProvider.GetService<IAsyncRepository<EducationalEntity>>();
+                var Edu = _educationalEntityRepository.Select(e => e.ArabicName).ToList();
+                return Edu;
+            }
+            else if(foreignKeyName == "Emirates")
+            {
+                var EmiratesListItem = new List<string>();
+                
+                foreach(var Emirat in Enum.GetValues<Emirates>())
                 {
-                    case "EducationalEntityId":
-                        {
-                            IAsyncRepository<EducationalEntity> _educationalEntityRepository = _ServiceProvider.GetService<IAsyncRepository<EducationalEntity>>();
-                            var Edu = _educationalEntityRepository.Select(e => e.ArabicName).ToList();
-                            return Edu;
-                        }
-                    default:
-                        return null;
+                    EmiratesListItem.Add(Emirat.ToString());
                 }
+
+                return EmiratesListItem;
+            }
+            else if (foreignKeyName == "EducationType")
+            { 
+                var EducationTypesListItem = new List<string>();
+
+                foreach (var type in Enum.GetValues<EducationType>())
+                {
+                    EducationTypesListItem.Add(type.ToString());
+                }
+
+                return EducationTypesListItem;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

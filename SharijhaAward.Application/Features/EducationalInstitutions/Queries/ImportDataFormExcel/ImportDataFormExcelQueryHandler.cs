@@ -43,7 +43,6 @@ namespace SharijhaAward.Application.Features.EducationalInstitutions.Queries.Imp
             for (int i = 0; i < EducationalInstitutions.Count(); i++)
             {
                 if (string.IsNullOrEmpty(EducationalInstitutions[i].EnglishName) || string.IsNullOrEmpty(EducationalInstitutions[i].ArabicName))
-
                 {
                     problematicRows.Add(i++);
                 }

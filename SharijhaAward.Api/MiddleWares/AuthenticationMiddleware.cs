@@ -15,7 +15,7 @@ namespace SharijhaAward.Api.MiddleWares
         private readonly RequestDelegate _next;
         private readonly ServiceProvider _serviceProvider;
 
-        public AuthenticationMiddleware( RequestDelegate next, ServiceProvider serviceProvider)
+        public AuthenticationMiddleware(RequestDelegate next, ServiceProvider serviceProvider)
         {
             _next = next;
             _serviceProvider = serviceProvider;
