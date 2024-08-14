@@ -6,11 +6,16 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForm
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedFormsForAllSubscriber;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
+using SharijhaAward.Domain.Entities.CriterionItemModel;
+using SharijhaAward.Domain.Entities.CriterionModel;
+using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
+using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
 namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsForAllSubscriber
@@ -28,6 +33,11 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
         private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
+        private readonly IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository;
+        private readonly IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository;
+        private readonly IAsyncRepository<CycleConditionsProvidedForm> _cycleConditionsProvidedFormRepository;
+        private readonly IAsyncRepository<ConditionsProvidedForms> _conditionsProvidedFormsRepository;
+        private readonly IAsyncRepository<ExtraAttachment> _extraAttachmentRepository;
         private readonly IJwtProvider _JwtProvider;
 
         public GetAllFormsForAllSubscriberQueryHandler(IAsyncRepository<Cycle> CycleRepository, IUserRepository UserRepository,
@@ -39,7 +49,12 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
             IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<EducationalEntity> EducationalEntityRepository,
-            IJwtProvider JwtProvider)
+            IAsyncRepository<ExtraAttachment> extraAttachmentRepository,
+            IJwtProvider JwtProvider,
+            IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
+            IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository,
+            IAsyncRepository<ConditionsProvidedForms> conditionsProvidedFormsRepository,
+            IAsyncRepository<CycleConditionsProvidedForm> cycleConditionsProvidedFormRepository)
         {
             _UserRepository = UserRepository;
             _CategoryRepository = CategoryRepository;
@@ -52,6 +67,11 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _EducationalEntityRepository = EducationalEntityRepository;
             _JwtProvider = JwtProvider;
+            _CriterionAttachmentRepository = CriterionAttachmentRepository;
+            _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
+            _cycleConditionsProvidedFormRepository = cycleConditionsProvidedFormRepository;
+            _conditionsProvidedFormsRepository = conditionsProvidedFormsRepository;
+            _extraAttachmentRepository = extraAttachmentRepository;
         }
 
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery request, CancellationToken cancellationToken)
@@ -135,6 +155,79 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                 .Select(y => y.ProvidedFormId)
                                 .Contains(x.Id)
                         }).ToList();
+
+                        for (int i = 0; i < data.Count(); i++)
+                        {
+                            data[i].RejectedSteps = new List<int>();
+
+                            var cycleConditions = await _cycleConditionsProvidedFormRepository
+                                .Include(c => c.CycleCondition)
+                                .Include(c => c.Attachments.Where(a => a.IsAccept == false))
+                                .Where(c => c.ProvidedFormId == forms[i].Id && c.CycleCondition.NeedAttachment == true)
+                                .ToListAsync();
+
+                            if (cycleConditions.Any(c => c.Attachments.Any()))
+                            {
+                                data[i].RejectedSteps!.Add(1);
+                            }
+
+
+                            var TermAndConditions = await _conditionsProvidedFormsRepository
+                                .Include(c => c.TermAndCondition)
+                                .Include(c => c.Attachments.Where(a => a.IsAccept == false))
+                                .Where(c => c.ProvidedFormId == forms[i].Id && c.TermAndCondition.NeedAttachment == true)
+                                .ToListAsync();
+
+
+                            if (TermAndConditions.Any(c => c.Attachments.Any()))
+                            {
+                                data[i].RejectedSteps!.Add(3);
+                            }
+
+
+                            var ExtraAttachments = await _extraAttachmentRepository
+                                .Where(e => e.ProvidedFormId == forms[i].Id)
+                                .Include(e => e.ExtraAttachmentFiles!.Where(a => a.IsAccept == false))
+                                .ToListAsync();
+
+                            if (ExtraAttachments.Any(c => c.ExtraAttachmentFiles!.Any()))
+                            {
+                                data[i].RejectedSteps!.Add(6);
+                            }
+
+
+
+                            bool CheckIfThereIsRejectedDynamicFields = await _DynamicAttributeValueRepository
+                                .Include(x => x.DynamicAttribute!)
+                                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                                .AnyAsync(x => (x.isAccepted != null ? !x.isAccepted.Value : false) &&
+                                    x.RecordId == data[i].Id &&
+                                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1);
+
+                            if (CheckIfThereIsRejectedDynamicFields)
+                                data[i].RejectedSteps!.Add(4);
+
+                            CriterionAttachment? CriterionAttachment = await _CriterionAttachmentRepository
+                                .FirstOrDefaultAsync(x => x.ProvidedFormId == data[i].Id &&
+                                    (x.IsAccepted != null ? !x.IsAccepted.Value : false));
+
+                            if (CriterionAttachment is not null)
+                                data[i].RejectedSteps!.Add(5);
+
+                            CriterionItemAttachment? CriterionItemAttachment = await _CriterionItemAttachmentRepository
+                                .FirstOrDefaultAsync(x => x.ProvidedFormId == data[i].Id &&
+                                    (x.IsAccepted != null ? !x.IsAccepted.Value : false));
+
+                            if (CriterionItemAttachment is not null)
+                                data[i].RejectedSteps!.Add(5);
+
+                            if (data[i].RejectedSteps!.Count() > 0)
+                            {
+                                forms[i].needSing = true;
+
+                                await _FormRepository.UpdateAsync(forms[i]);
+                            }
+                        }
 
                         int count = _FormRepository.GetCount(f => !f.isDeleted);
 
@@ -251,6 +344,78 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                 .Select(y => y.ProvidedFormId)
                                 .Contains(x.Id)
                         }).ToList();
+
+                        for (int i = 0; i < data.Count(); i++)
+                        {
+                            data[i].RejectedSteps = new List<int>();
+
+                            var cycleConditions = await _cycleConditionsProvidedFormRepository
+                                .Include(c => c.CycleCondition)
+                                .Include(c => c.Attachments.Where(a => a.IsAccept == false))
+                                .Where(c => c.ProvidedFormId == forms[i].Id && c.CycleCondition.NeedAttachment == true)
+                                .ToListAsync();
+
+                            if (cycleConditions.Any(c => c.Attachments.Any()))
+                            {
+                                data[i].RejectedSteps!.Add(1);
+                            }
+
+
+                            var TermAndConditions = await _conditionsProvidedFormsRepository
+                                .Include(c => c.TermAndCondition)
+                                .Include(c => c.Attachments.Where(a => a.IsAccept == false))
+                                .Where(c => c.ProvidedFormId == forms[i].Id && c.TermAndCondition.NeedAttachment == true)
+                                .ToListAsync();
+
+
+                            if (TermAndConditions.Any(c => c.Attachments.Any()))
+                            {
+                                data[i].RejectedSteps!.Add(3);
+                            }
+
+
+                            var ExtraAttachments = await _extraAttachmentRepository
+                                .Where(e => e.ProvidedFormId == forms[i].Id)
+                                .Include(e => e.ExtraAttachmentFiles!.Where(a => a.IsAccept == false))
+                                .ToListAsync();
+
+                            if (ExtraAttachments.Any(c => c.ExtraAttachmentFiles!.Any()))
+                            {
+                                data[i].RejectedSteps!.Add(6);
+                            }
+
+
+                            bool CheckIfThereIsRejectedDynamicFields = await _DynamicAttributeValueRepository
+                                .Include(x => x.DynamicAttribute!)
+                                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                                .AnyAsync(x => (x.isAccepted != null ? !x.isAccepted.Value : false) &&
+                                    x.RecordId == data[i].Id &&
+                                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1);
+
+                            if (CheckIfThereIsRejectedDynamicFields)
+                                data[i].RejectedSteps!.Add(4);
+
+                            CriterionAttachment? CriterionAttachment = await _CriterionAttachmentRepository
+                                .FirstOrDefaultAsync(x => x.ProvidedFormId == data[i].Id &&
+                                    (x.IsAccepted != null ? !x.IsAccepted.Value : false));
+
+                            if (CriterionAttachment is not null)
+                                data[i].RejectedSteps!.Add(5);
+
+                            CriterionItemAttachment? CriterionItemAttachment = await _CriterionItemAttachmentRepository
+                                .FirstOrDefaultAsync(x => x.ProvidedFormId == data[i].Id &&
+                                    (x.IsAccepted != null ? !x.IsAccepted.Value : false));
+
+                            if (CriterionItemAttachment is not null)
+                                data[i].RejectedSteps!.Add(5);
+
+                            if (data[i].RejectedSteps!.Count() > 0)
+                            {
+                                forms[i].needSing = true;
+
+                                await _FormRepository.UpdateAsync(forms[i]);
+                            }
+                        }
 
                         int count = _FormRepository.GetCount(f => !f.isDeleted);
 

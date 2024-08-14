@@ -2897,7 +2897,7 @@ namespace SharijhaAward.Persistence
                      LastModifiedBy = null
 
                  },
-                 //------------ ArbitrationInterviews----------------
+                 //------------Interview----------------
                  new Permission()
                  {
                      Id = 183,
@@ -2924,11 +2924,50 @@ namespace SharijhaAward.Persistence
                      LastModifiedAt = null,
                      LastModifiedBy = null
 
+                 }, new Permission()
+                 {
+                     Id = 185,
+                     Name = "تعديل مقابلات التحكيم",
+                     Action = "update",
+                     PermissionHeaderId = 43,
+                     isDeleted = false,
+                     CreatedAt = DateTime.UtcNow,
+                     CreatedBy = null,
+                     DeletedAt = null,
+                     LastModifiedAt = null,
+                     LastModifiedBy = null
+
+                 },new Permission()
+                 {
+                     Id = 186,
+                     Name = "إلغاء مقابلات التحكيم",
+                     Action = "cancel",
+                     PermissionHeaderId = 43,
+                     isDeleted = false,
+                     CreatedAt = DateTime.UtcNow,
+                     CreatedBy = null,
+                     DeletedAt = null,
+                     LastModifiedAt = null,
+                     LastModifiedBy = null
+
+                 },new Permission()
+                 {
+                     Id = 187,
+                     Name = "إرسال البريد الإلكتروني",
+                     Action = "send_emails",
+                     PermissionHeaderId = 43,
+                     isDeleted = false,
+                     CreatedAt = DateTime.UtcNow,
+                     CreatedBy = null,
+                     DeletedAt = null,
+                     LastModifiedAt = null,
+                     LastModifiedBy = null
+
                  },
                  //------------ArbitrationFinal----------------
                  new Permission()
                  {
-                     Id = 185,
+                     Id = 188,
                      Name = "عرض التحكيم النهائي",
                      Action = "read",
                      PermissionHeaderId = 44,
@@ -2941,7 +2980,7 @@ namespace SharijhaAward.Persistence
 
                  }, new Permission()
                  {
-                     Id = 186,
+                     Id = 189,
                      Name = "تعديل التحكيم النهائي",
                      Action = "update",
                      PermissionHeaderId = 44,
@@ -2956,7 +2995,7 @@ namespace SharijhaAward.Persistence
                  //------------ResultsArbitration----------------
                  new Permission()
                  {
-                     Id = 187,
+                     Id = 190,
                      Name = "عرض نتائج التحكيم",
                      Action = "read",
                      PermissionHeaderId = 45,
@@ -2969,7 +3008,7 @@ namespace SharijhaAward.Persistence
 
                  }, new Permission()
                  {
-                     Id = 188,
+                     Id = 191,
                      Name = "تعديل نتائج التحكيم",
                      Action = "update",
                      PermissionHeaderId = 45,
@@ -2984,7 +3023,7 @@ namespace SharijhaAward.Persistence
                  //------------ArbitrationWinners----------------
                  new Permission()
                  {
-                     Id = 189,
+                     Id = 192,
                      Name = "عرض تحكيم الفائزين",
                      Action = "read",
                      PermissionHeaderId = 46,
@@ -2997,7 +3036,7 @@ namespace SharijhaAward.Persistence
 
                  }, new Permission()
                  {
-                     Id = 190,
+                     Id = 193,
                      Name = "تعديل تحكيم الفائزين",
                      Action = "update",
                      PermissionHeaderId = 46,
@@ -4933,10 +4972,11 @@ namespace SharijhaAward.Persistence
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
+
                 }, new PermissionHeader()
                 {
                     Id = 43,
-                    EnglishName = "ArbitrationInterviews",
+                    EnglishName = "Interview",
                     ArabicName = "مقابلات التحكيم",
                     isDeleted = false,
                     DeletedAt = null,
@@ -4971,6 +5011,17 @@ namespace SharijhaAward.Persistence
                     Id = 46,
                     EnglishName = "ArbitrationWinners",
                     ArabicName = "الفائزين",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    Id = 47,
+                    EnglishName = "Interview",
+                    ArabicName = "المقابلات",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,

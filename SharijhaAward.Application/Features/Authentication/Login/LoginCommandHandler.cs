@@ -21,7 +21,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         private readonly IAsyncRepository<UserToken> _UserTokenRepository;
 
         public LoginCommandHandler(
-            IUserRepository userRepository , 
+            IUserRepository userRepository, 
             IMapper mapper,
             IAsyncRepository<Role> roleRepository,
             IAsyncRepository<Cycle> CycleRepository,
@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                 .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
 
             var user =  _mapper.Map<Domain.Entities.IdentityModels.User>(request);
-         
+            
             var response = await _userRepository.LogInAsync(user, request.lang, request.intoAdminDashboard);
 
             int? ForUseUserId = response.ActiveCycleId;
