@@ -146,26 +146,22 @@ namespace SharijhaAward.Api.Controllers
             };
         } 
         [HttpGet("GetAgendasForAwardTeam", Name = "GetAgendasForAwardTeam")]
-        public async Task<IActionResult> GetAgendasForAwardTeam(int? CycleId ,int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetAgendasForAwardTeam([FromQuery] GetAgendasForAwardTeamQuery query)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
             //get token from header
             var token = HttpContext.Request.Headers.Authorization;
 
+            query.token = token!;
+            query.lang = Language!;
+
             if(token.IsNullOrEmpty())
             {
                 return Unauthorized();
             }
 
-            var response = await _mediator.Send(new GetAgendasForAwardTeamQuery()
-            {
-                page = page,
-                perPage = perPage,
-                CycleId = CycleId,
-                token = token!,
-                lang = Language!
-            });
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

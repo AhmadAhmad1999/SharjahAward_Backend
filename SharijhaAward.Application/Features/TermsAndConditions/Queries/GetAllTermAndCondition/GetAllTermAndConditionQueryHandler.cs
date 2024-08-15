@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,10 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
 
         public async Task<BaseResponse<List<TermAndConditionListVM>>> Handle(GetAllTermAndConditionQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var termsAndConditions = await _termAndConditionRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+                .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
                 .Where(x => request.CategoryId != null 
                     ? x.CategoryId == request.CategoryId
                     : true)

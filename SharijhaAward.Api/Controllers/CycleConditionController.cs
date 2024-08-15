@@ -106,19 +106,14 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllCycleCondition")]
-        public async Task<ActionResult> GetAllCycleCondition(int? CycleId, int page = 1, int perPage = 10)
+        public async Task<ActionResult> GetAllCycleCondition([FromQuery] GetAllCycleConditionsQuery query)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllCycleConditionsQuery()
-            {
-                lang = language!,
-                page = page,
-                perPage = perPage,
-                CycleId = CycleId
+            query.lang = language!;
 
-            });
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

@@ -6,6 +6,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 using SharijhaAward.Application.Features.News.Queries.ExportToExcel;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.AgendaModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using System;
@@ -48,7 +49,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendasForAwardT
             }
 
             var Cycle = request.CycleId == null
-               ? await _cycleRepository.FirstOrDefaultAsync(a => a.Status == Domain.Constants.Common.Status.Active)
+               ? await _cycleRepository.FirstOrDefaultAsync( a => a.Status == Domain.Constants.Common.Status.Active)
                : await _cycleRepository.FirstOrDefaultAsync(a => a.Id == request.CycleId);
 
 
@@ -60,8 +61,9 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendasForAwardT
 
                 return new BaseResponse<List<AgendaListVm>>(msg, false, 400);
             }
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
-            var Agendas = await _agendaRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id , request.page, request.perPage);
+            var Agendas = await _agendaRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id , filterObject, request.page, request.perPage);
             
             foreach (var agenda in Agendas)
             {

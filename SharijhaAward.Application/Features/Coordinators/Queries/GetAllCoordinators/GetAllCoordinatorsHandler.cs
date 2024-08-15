@@ -6,6 +6,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
+using System.Collections.Generic;
 
 namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators
 {
@@ -38,6 +39,14 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
                 .Where(x => Coordinators.Select(y => y.Id).Contains(x.CoordinatorId))
                 .Include(x => x.EducationalEntity!)
                 .ToListAsync();
+
+            if(Request.EducationalEntityId != null)
+            {
+                Coordinators = _Mapper.Map <List<CoordinatorsListVM>>(await _EduEntitiesCoordinatorRepository
+                    .WhereThenFilter(e => e.EducationalEntityId == Request.EducationalEntityId, filterObject)
+                    .Select(e => e.Coordinator)
+                    .ToListAsync());
+            }
 
             Coordinators = Coordinators.Select(x => new CoordinatorsListVM()
             {

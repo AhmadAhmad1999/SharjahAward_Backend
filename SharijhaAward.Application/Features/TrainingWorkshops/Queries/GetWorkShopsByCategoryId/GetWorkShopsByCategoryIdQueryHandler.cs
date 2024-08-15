@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTrainingWorkshops;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 using System;
@@ -37,13 +38,16 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
 
         public async Task<BaseResponse<List<TrainingWorkshopListVm>>> Handle(GetWorkShopsByCategoryIdQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             if (category != null)
             {
-                var WorkShops = _workShopRepository.WhereThenIncludeThenPagination(
-                    w => w.CategoryId == request.CategoryId,
-                    request.page, request.perPage,
-                    w => w.Attachments).ToList();
+                var WorkShops = _workShopRepository.WhereThenInclude(
+                    w => w.CategoryId == request.CategoryId, filterObject, w => w.Attachments)
+                    .Skip((request.page - 1) * request.perPage)
+                    .Take(request.perPage)
+                    .ToList();
 
                 var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops);
                 
@@ -63,6 +67,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
                 data = data.OrderByDescending(t => t.CreatedAt).ToList();
 
                 var count = await _workShopRepository.GetCountAsync(w => w.CategoryId == category.Id);
+                
                 Pagination pagination = new Pagination(request.page, request.perPage, count);
                
                 return new BaseResponse<List<TrainingWorkshopListVm>>("", true, 200, data,pagination);

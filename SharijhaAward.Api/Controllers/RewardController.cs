@@ -78,18 +78,14 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllRewards")]
-        public async Task<IActionResult> GetAllRewards(int CategoryId, int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetAllRewards([FromQuery] GetAllRewardsQuery query)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllRewardsQuery
-            {
-                lang = Language!,
-                CategoryId = CategoryId,
-                page = page,
-                perPage = perPage
-            });
+            query.lang = Language!;
+
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

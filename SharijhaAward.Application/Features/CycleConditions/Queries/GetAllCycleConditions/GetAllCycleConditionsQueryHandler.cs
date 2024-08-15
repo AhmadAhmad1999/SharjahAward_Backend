@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using System;
@@ -27,15 +28,17 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
 
         public async Task<BaseResponse<List<CycleConditionListVM>>> Handle(GetAllCycleConditionsQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var allCycleCondition = await _cycleConditionRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+                .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
                 .ToListAsync();
 
             if (request.CycleId != null)
             {
                 if (request.page != 0 && request.perPage != -1)
                     allCycleCondition = await _cycleConditionRepository
-                        .Where(c => c.CycleId == request.CycleId)
+                        .WhereThenFilter(c => c.CycleId == request.CycleId, filterObject)
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((request.page - 1) * request.perPage)
                         .Take(request.perPage)
@@ -43,7 +46,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
 
                 else
                     allCycleCondition = await _cycleConditionRepository
-                        .Where(c => c.CycleId == request.CycleId)
+                        .WhereThenFilter(c => c.CycleId == request.CycleId, filterObject)
                         .OrderByDescending(x => x.CreatedAt)
                         .ToListAsync();
             }
