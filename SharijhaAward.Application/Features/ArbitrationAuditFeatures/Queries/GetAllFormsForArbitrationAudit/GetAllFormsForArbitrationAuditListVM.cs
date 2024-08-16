@@ -1,4 +1,6 @@
-﻿namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetAllFormsForArbitrationAudit
+﻿using SharijhaAward.Domain.Entities.ArbitrationModel;
+
+namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetAllFormsForArbitrationAudit
 {
     public class GetAllFormsForArbitrationAuditListVM
     {
@@ -10,5 +12,8 @@
         public float Average { get; set; }
         public float FullScore { get; set; }
         public bool DoneArbitrationAudit { get; set; }
+        public ArbitrationType ArbitrationAuditType { get; set; } = 0;
+        public DateTime? DateOfArbitrationAuditing { get; set; }
+        public FormStatus isAcceptedFromChairmanFromArbitrationAudit { get; set; }
     }
 }

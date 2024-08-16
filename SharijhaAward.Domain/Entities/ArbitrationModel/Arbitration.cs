@@ -17,5 +17,9 @@ namespace SharijhaAward.Domain.Entities.ArbitrationModel
         public ArbitrationType Type { get; set; } = 0;
         public DateTime? DateOfArbitration { get; set; }
         public float FullScore { get; set; }
+        public ArbitrationType ArbitrationAuditType { get; set; }
+        public DateTime? DateOfArbitrationAuditing { get; set; }
+        public string? ReasonForRejectingFromArbitrationAudit { get; set; }
+        public FormStatus isAcceptedFromChairmanFromArbitrationAudit { get; set; }
     }
 }

@@ -138,8 +138,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
                         Transaction.Complete();
 
                         string ResponseMessage = Request.lang == "en"
-                            ? "Winners in this category were successfully selected"
-                            : "تم اختيار الفائزين في هذه الفئة بنجاح";
+                            ? "Winners in this category's class were successfully selected"
+                            : "تم اختيار الفائزين في صف هذه الفئة بنجاح";
 
                         return new BaseResponse<object>(ResponseMessage, true, 200);
                     }

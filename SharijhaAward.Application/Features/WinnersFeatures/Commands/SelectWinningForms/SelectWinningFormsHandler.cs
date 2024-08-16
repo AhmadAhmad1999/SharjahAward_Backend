@@ -26,8 +26,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.SelectWinn
                     .ExecuteUpdateAsync(x => x.SetProperty(y => y.SelectedToWin, true));
 
                 string ResponseMessage = Request.lang == "en"
-                    ? "Winner in this category were selected successfully"
-                    : "تم اختيار الفائز في هذه الفئة بنجاح";
+                    ? "Winners in this category were selected successfully"
+                    : "تم اختيار الفائزين في هذه الفئة بنجاح";
 
                 return new BaseResponse<object>(ResponseMessage, true, 200);
             }
@@ -40,8 +40,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.SelectWinn
                     .ExecuteUpdateAsync(x => x.SetProperty(y => y.SelectedToWin, false));
 
                 string ResponseMessage = Request.lang == "en"
-                    ? "Winner in this category were unselected successfully"
-                    : "تم إزالة الفائز في هذه الفئة بنجاح";
+                    ? "Winners in this category were unselected successfully"
+                    : "تم إزالة الفائزين في هذه الفئة بنجاح";
 
                 return new BaseResponse<object>(ResponseMessage, true, 200);
             }

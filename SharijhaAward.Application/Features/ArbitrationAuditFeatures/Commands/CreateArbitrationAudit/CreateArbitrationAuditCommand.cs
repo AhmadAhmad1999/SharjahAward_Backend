@@ -8,6 +8,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
         public List<ArbitrationAuditMainCommand> ArbitrationAuditMainCommand { get; set; } = new List<ArbitrationAuditMainCommand>();
         public string? lang { get; set; }
         public bool isDoneArbitration { get; set; }
-        public int ArbitrationId { get; set; }
+        public int FormId { get; set; }
     }
 }

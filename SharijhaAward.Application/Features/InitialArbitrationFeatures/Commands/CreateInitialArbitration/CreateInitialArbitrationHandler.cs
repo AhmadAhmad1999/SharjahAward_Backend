@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.CriterionItemModel;
+using SharijhaAward.Domain.Entities.CriterionModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateInitialArbitration
@@ -11,20 +14,50 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
     {
         private readonly IAsyncRepository<InitialArbitration> _InitialArbitrationRepository;
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
+        private readonly IAsyncRepository<Criterion> _CriterionRepository;
+        private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
         private readonly IMapper _Mapper;
 
         public CreateInitialArbitrationHandler(IAsyncRepository<InitialArbitration> InitialArbitrationRepository,
             IAsyncRepository<Arbitration> ArbitrationRepository,
+            IAsyncRepository<Criterion> CriterionRepository,
+            IAsyncRepository<CriterionItem> CriterionItemRepository,
             IMapper Mapper)
         {
             _InitialArbitrationRepository = InitialArbitrationRepository;
             _ArbitrationRepository = ArbitrationRepository;
+            _CriterionRepository = CriterionRepository;
+            _CriterionItemRepository = CriterionItemRepository;
             _Mapper = Mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateInitialArbitrationCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            Arbitration? ArbitrationEntity = await _ArbitrationRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.ArbitrationId);
+
+            if (ArbitrationEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Arbitration is not Found"
+                    : "التحكيم غير موجود";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
+
+            List<Criterion> CriterionEntities = await _CriterionRepository
+                .Where(x => Request.InitialArbitrationMainCommand
+                    .Where(y => y.CriterionId != null).Select(y => y.CriterionId)
+                    .Any(y => y == x.Id))
+                .ToListAsync();
+
+            List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
+                .Where(x => Request.InitialArbitrationMainCommand
+                    .Where(y => y.CriterionItemId != null).Select(y => y.CriterionItemId)
+                    .Any(y => y == x.Id))
+                .ToListAsync();
 
             IEnumerable<InitialArbitrationMainCommand> InitialArbitrationMainCommands = Request.InitialArbitrationMainCommand
                 .Where(x => x.ArbitrationScore != null);
@@ -42,6 +75,42 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                 {
                     foreach (InitialArbitrationMainCommand InitialArbitrationMainCommand in InitialArbitrationMainCommands)
                     {
+                        if (InitialArbitrationMainCommand.CriterionId is not null &&
+                            InitialArbitrationMainCommand.CriterionItemId is null)
+                        {
+                            bool CheckInsertedScore = CriterionEntities
+                                .FirstOrDefault(x => x.Id == InitialArbitrationMainCommand.CriterionId)!
+                                .Score < InitialArbitrationMainCommand.ArbitrationScore;
+
+                            if (CheckInsertedScore)
+                            {
+                                ResponseMessage = Request.lang == "en"
+                                    ? "Arbitration score can't be bigger than the criterion max score"
+                                    : "لا يمكن أن تكون نتيجة التحكيم أكبر من الحد الأقصى لنتيجة المعيار";
+
+                                Transaction.Dispose();
+
+                                return new BaseResponse<object>(ResponseMessage, false, 400);
+                            }
+                        }
+                        else if (InitialArbitrationMainCommand.CriterionItemId is not null)
+                        {
+                            bool CheckInsertedScore = CriterionItemEntities
+                                .FirstOrDefault(x => x.Id == InitialArbitrationMainCommand.CriterionItemId)!
+                                .Score < InitialArbitrationMainCommand.ArbitrationScore;
+
+                            if (CheckInsertedScore)
+                            {
+                                ResponseMessage = Request.lang == "en"
+                                    ? "Arbitration score can't be bigger than the criterion item max score"
+                                    : "لا يمكن أن تكون نتيجة التحكيم أكبر من الحد الأقصى لنتيجة عنصر المعيار ";
+
+                                Transaction.Dispose();
+
+                                return new BaseResponse<object>(ResponseMessage, false, 400);
+                            }
+                        }
+
                         if (InitialArbitrationMainCommand.InitialArbitrationId == 0)
                         {
                             InitialArbitration NewInitialArbitrationEntity = _Mapper.Map<InitialArbitration>(InitialArbitrationMainCommand);
@@ -70,18 +139,6 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
 
                             await _InitialArbitrationRepository.UpdateAsync(InitialArbitrationEntity);
                         }
-                    }
-
-                    Arbitration? ArbitrationEntity = await _ArbitrationRepository
-                        .FirstOrDefaultAsync(x => x.Id == Request.ArbitrationId);
-
-                    if (ArbitrationEntity is null)
-                    {
-                        ResponseMessage = Request.lang == "en"
-                            ? "Arbitration is not Found"
-                            : "التحكيم غير موجود";
-
-                        return new BaseResponse<object>(ResponseMessage, false, 404);
                     }
 
                     if (Request.isDoneArbitration)

@@ -162,7 +162,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetArbitrationAuditByArbitrationId(int ArbitrationId)
+        public async Task<IActionResult> GetArbitrationAuditByArbitrationId(int FormId)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
@@ -177,7 +177,7 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<GetArbitrationAuditByArbitrationIdResponse> Response = await _Mediator.Send(new GetArbitrationAuditByArbitrationIdQuery()
             {
                 lang = HeaderValue!,
-                ArbitrationId = ArbitrationId,
+                FormId = FormId,
                 Token = Token
             });
 

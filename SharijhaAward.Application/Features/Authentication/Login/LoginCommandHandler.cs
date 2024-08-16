@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities;
+using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
@@ -19,6 +20,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IAsyncRepository<RolePermission> _RolePermissionRepository;
         private readonly IAsyncRepository<UserToken> _UserTokenRepository;
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
 
         public LoginCommandHandler(
             IUserRepository userRepository, 
@@ -28,7 +30,8 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             IAsyncRepository<UserRole> UserRoleRepository,
             IAsyncRepository<RolePermission> RolePermissionRepository,
             IAsyncRepository<UserToken> UserTokenRepository,
-            IAsyncRepository<ResponsibilityUser> responsibilityUserRepository)
+            IAsyncRepository<ResponsibilityUser> responsibilityUserRepository,
+            IAsyncRepository<Arbitrator> ArbitratorRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -38,6 +41,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             _RolePermissionRepository = RolePermissionRepository;
             _UserTokenRepository = UserTokenRepository;
             _responsibilityUserRepository = responsibilityUserRepository;
+            _ArbitratorRepository = ArbitratorRepository;
         }
         public async Task<AuthenticationResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -116,6 +120,12 @@ namespace SharijhaAward.Application.Features.Authentication.Login
 
             if (response.user == null && ForUseUserId != null)
                 response.OutUserId = ForUseUserId!.Value;
+
+            Arbitrator? CheckIfLogInUserIsArbitrator = await _ArbitratorRepository
+                .FirstOrDefaultAsync(x => x.Id == response.OutUserId);
+
+            if (CheckIfLogInUserIsArbitrator is not null)
+                response.isChairman = CheckIfLogInUserIsArbitrator.isChairman;
 
             return response;
         }

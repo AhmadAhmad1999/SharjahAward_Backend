@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.ArbitratorModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.ChangeArbitrationStatus
@@ -10,11 +12,17 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
         private readonly IAsyncRepository<ChairmanNotesOnInitialArbitration> _ChairmanNotesOnInitialArbitrationRepository;
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IJwtProvider _JwtProvider;
         public ChangeArbitrationStatusHandler(IAsyncRepository<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrationRepository, 
-            IAsyncRepository<Arbitration> ArbitrationRepository)
+            IAsyncRepository<Arbitration> ArbitrationRepository,
+            IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IJwtProvider JwtProvider)
         {
             _ChairmanNotesOnInitialArbitrationRepository = ChairmanNotesOnInitialArbitrationRepository;
             _ArbitrationRepository = ArbitrationRepository;
+            _ArbitratorRepository = ArbitratorRepository;
+            _JwtProvider = JwtProvider;
         }
 
         public async Task<BaseResponse<object>> Handle(ChangeArbitrationStatusMainCommand Request, CancellationToken cancellationToken)
@@ -33,6 +41,20 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
+            Arbitrator? ArbitratorEntity = await _ArbitratorRepository
+                .FirstOrDefaultAsync(x => x.Id == UserId);
+
+            if (ArbitratorEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Arbitrator is not found"
+                    : "المحكم غير موجود";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -44,9 +66,13 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
             {
                 try
                 {
-                    ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
+                    if (!(!ArbitratorEntity.isChairman ||
+                        (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
+                        ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
 
-                    if (Request.isAccepted == FormStatus.Rejected)
+                    if (Request.isAccepted == FormStatus.Rejected &&
+                        !(!ArbitratorEntity.isChairman ||
+                        (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
                     {
                         ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
 
@@ -58,6 +84,18 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                             });
 
                         await _ChairmanNotesOnInitialArbitrationRepository.AddRangeAsync(NewChairmanNotesOnInitialArbitrationEntities);
+                    }
+                    else if (Request.isAccepted == FormStatus.Rejected)
+                    {
+                        ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+                    }
+                    else if (Request.isAccepted == FormStatus.NotArbitratedYet)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? "You can't change the acceptance status of an arbitration into Not Arbitrated Yet"
+                            : "لا يمكنك تغيير حالة قبول التحكيم إلى \"لم يتم التحكيم بعد\"";
+
+                        return new BaseResponse<object>(ResponseMessage, false, 400);
                     }
 
                     await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);

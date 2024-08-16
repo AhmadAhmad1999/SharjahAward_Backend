@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.ChangeArbitrationStatus;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateChairmanNotesOnInitialArbitration;
@@ -208,6 +209,13 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> ChangeArbitrationStatus([FromBody] ChangeArbitrationStatusMainCommand ChangeArbitrationStatusMainCommand)
         {
+            string Token = HttpContext.Request.Headers.Authorization!;
+
+            if (Token.IsNullOrEmpty())
+                return Unauthorized();
+
+            ChangeArbitrationStatusMainCommand.Token = Token;
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             ChangeArbitrationStatusMainCommand.lang = !string.IsNullOrEmpty(HeaderValue)
