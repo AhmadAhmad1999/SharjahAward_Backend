@@ -8,6 +8,7 @@ using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
+using System.Linq;
 
 namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetAllFormsForArbitrationAudit
 {
@@ -55,11 +56,25 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
             if (CheckIfThisUserHasFullAccessOrArbitratorRole is null)
             {
-                List<IGrouping<int, Arbitration>> GroupOfArbitrationEntities = await _ArbitrationRepository
-                    .Include(x => x.ProvidedForm!)
-                    .Include(x => x.ProvidedForm!.Category!)
-                    .GroupBy(x => x.ProvidedFormId)
-                    .ToListAsync();
+                List<IGrouping<int, Arbitration>> GroupOfArbitrationEntities = new List<IGrouping<int, Arbitration>>();
+
+                if (Request.ArbitrationType is not null)
+                {
+                    GroupOfArbitrationEntities = await _ArbitrationRepository
+                        .Where(x => x.Type == Request.ArbitrationType)
+                        .Include(x => x.ProvidedForm!)
+                        .Include(x => x.ProvidedForm!.Category!)
+                        .GroupBy(x => x.ProvidedFormId)
+                        .ToListAsync();
+                }
+                else
+                {
+                    GroupOfArbitrationEntities = await _ArbitrationRepository
+                        .Include(x => x.ProvidedForm!)
+                        .Include(x => x.ProvidedForm!.Category!)
+                        .GroupBy(x => x.ProvidedFormId)
+                        .ToListAsync();
+                }
 
                 List<int> ArbitrationIds = GroupOfArbitrationEntities
                     .SelectMany(group => group.Select(arbitration => arbitration.Id))
@@ -69,8 +84,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     .Where(x => ArbitrationIds.Contains(x.ArbitrationId))
                     .ToListAsync();
 
+                List<int> FormsIds = GroupOfArbitrationEntities
+                    .SelectMany(group => group.Select(arbitration => arbitration.ProvidedFormId))
+                    .Distinct()
+                    .ToList();
+
                 List<ArbitrationAudit> ArbitrationAuditEntities = await _ArbitrationAuditRepository
-                    .Where(x => ArbitrationIds.Contains(x.ArbitrationId))
+                    .Where(x => FormsIds.Contains(x.ProvidedFormId))
                     .ToListAsync();
 
                 int MarginOfDifferenceBetweenArbitrators = await _ArbitrationRepository
@@ -93,40 +113,94 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
                 foreach (IGrouping<int, Arbitration> GroupOfArbitrationEntity in GroupOfArbitrationEntities)
                 {
-                    if (Request.ItExceededTheMarginOfDifferenceInArbitrationScores != null)
+                    if (GroupOfArbitrationEntity.All(x => x.Type == ArbitrationType.DoneArbitratod))
                     {
-                        if (Request.ItExceededTheMarginOfDifferenceInArbitrationScores.Value)
+                        if (Request.ItExceededTheMarginOfDifferenceInArbitrationScores != null)
                         {
-                            foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                            if (Request.ItExceededTheMarginOfDifferenceInArbitrationScores.Value)
+                            {
+                                foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                                {
+                                    bool BreakOuterLoop = false;
+
+                                    foreach (Arbitration ArbitrationEntity2 in GroupOfArbitrationEntity)
+                                    {
+                                        if (Math.Abs(ArbitrationEntity.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
+                                        {
+                                            GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
+                                            {
+                                                FormId = ArbitrationEntity.ProvidedFormId,
+                                                Name = Names.FirstOrDefault(x => x.RecordId == ArbitrationEntity.ProvidedFormId)!.Value,
+                                                CategoryId = ArbitrationEntity.ProvidedForm!.categoryId,
+                                                CategoryName = Request.lang == "en"
+                                                    ? ArbitrationEntity.ProvidedForm!.Category.EnglishName
+                                                    : ArbitrationEntity.ProvidedForm!.Category.ArabicName,
+                                                ItExceededTheMarginOfDifferenceInArbitrationScores = true,
+                                                FullScore = 0,
+                                                DoneArbitrationAudit = false
+                                            };
+
+                                            Response.Add(GetAllFormsForArbitrationAuditListVM);
+
+                                            BreakOuterLoop = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (BreakOuterLoop)
+                                        break;
+                                }
+                            }
+                            else
                             {
                                 bool BreakOuterLoop = false;
 
-                                foreach (Arbitration ArbitrationEntity2 in GroupOfArbitrationEntity)
+                                GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
                                 {
-                                    if (Math.Abs(ArbitrationEntity.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
+                                    FormId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId,
+                                    Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId)!.Value,
+                                    CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
+                                    CategoryName = Request.lang == "en"
+                                        ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
+                                        : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName,
+                                    ItExceededTheMarginOfDifferenceInArbitrationScores = false
+                                };
+
+                                foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                                {
+                                    foreach (Arbitration ArbitrationEntity2 in GroupOfArbitrationEntity)
                                     {
-                                        GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
+                                        if (Math.Abs(ArbitrationEntity.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
                                         {
-                                            FormId = ArbitrationEntity.ProvidedFormId,
-                                            Name = Names.FirstOrDefault(x => x.RecordId == ArbitrationEntity.ProvidedFormId)!.Value,
-                                            CategoryId = ArbitrationEntity.ProvidedForm!.categoryId,
-                                            CategoryName = Request.lang == "en"
-                                                ? ArbitrationEntity.ProvidedForm!.Category.EnglishName
-                                                : ArbitrationEntity.ProvidedForm!.Category.ArabicName,
-                                            ItExceededTheMarginOfDifferenceInArbitrationScores = true,
-                                            FullScore = 0,
-                                            DoneArbitrationAudit = false
-                                        };
-
-                                        Response.Add(GetAllFormsForArbitrationAuditListVM);
-
-                                        BreakOuterLoop = true;
-                                        break;
+                                            BreakOuterLoop = true;
+                                            break;
+                                        }
                                     }
                                 }
 
-                                if (BreakOuterLoop)
-                                    break;
+                                if (!BreakOuterLoop)
+                                {
+                                    List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
+                                        .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
+                                        .ToList();
+
+                                    GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
+                                        .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
+
+                                    List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
+                                        .Where(x => GroupOfArbitrationEntity.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
+                                        .ToList();
+
+                                    if (ArbitrationAuditEntitiesForThisArbitrations.Any())
+                                    {
+                                        GetAllFormsForArbitrationAuditListVM.FullScore = ArbitrationAuditEntitiesForThisArbitrations
+                                            .Sum(x => x.ArbitrationScore);
+
+                                        GetAllFormsForArbitrationAuditListVM.DoneArbitrationAudit = true;
+                                    }
+
+                                    Response.Add(GetAllFormsForArbitrationAuditListVM);
+                                }
                             }
                         }
                         else
@@ -140,8 +214,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                 CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
                                 CategoryName = Request.lang == "en"
                                     ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
-                                    : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName,
-                                ItExceededTheMarginOfDifferenceInArbitrationScores = false
+                                    : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName
                             };
 
                             foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
@@ -150,10 +223,17 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                 {
                                     if (Math.Abs(ArbitrationEntity.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
                                     {
+                                        GetAllFormsForArbitrationAuditListVM.ItExceededTheMarginOfDifferenceInArbitrationScores = true;
+
+                                        Response.Add(GetAllFormsForArbitrationAuditListVM);
+
                                         BreakOuterLoop = true;
                                         break;
                                     }
                                 }
+
+                                if (BreakOuterLoop)
+                                    break;
                             }
 
                             if (!BreakOuterLoop)
@@ -166,7 +246,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                     .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
 
                                 List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
-                                    .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
+                                    .Where(x => GroupOfArbitrationEntity.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
                                     .ToList();
 
                                 if (ArbitrationAuditEntitiesForThisArbitrations.Any())
@@ -177,66 +257,9 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                     GetAllFormsForArbitrationAuditListVM.DoneArbitrationAudit = true;
                                 }
 
+
                                 Response.Add(GetAllFormsForArbitrationAuditListVM);
                             }
-                        }
-                    }
-                    else
-                    {
-                        bool BreakOuterLoop = false;
-
-                        GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
-                        {
-                            FormId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId,
-                            Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId)!.Value,
-                            CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
-                            CategoryName = Request.lang == "en"
-                                ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
-                                : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName
-                        };
-
-                        foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
-                        {
-                            foreach (Arbitration ArbitrationEntity2 in GroupOfArbitrationEntity)
-                            {
-                                if (Math.Abs(ArbitrationEntity.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
-                                {
-                                    GetAllFormsForArbitrationAuditListVM.ItExceededTheMarginOfDifferenceInArbitrationScores = true;
-
-                                    Response.Add(GetAllFormsForArbitrationAuditListVM);
-
-                                    BreakOuterLoop = true;
-                                    break;
-                                }
-                            }
-
-                            if (BreakOuterLoop)
-                                break;
-                        }
-
-                        if (!BreakOuterLoop)
-                        {
-                            List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
-                                .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
-                                .ToList();
-
-                            GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                                .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
-
-                            List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
-                                .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
-                                .ToList();
-
-                            if (ArbitrationAuditEntitiesForThisArbitrations.Any())
-                            {
-                                GetAllFormsForArbitrationAuditListVM.FullScore = ArbitrationAuditEntitiesForThisArbitrations
-                                    .Sum(x => x.ArbitrationScore);
-
-                                GetAllFormsForArbitrationAuditListVM.DoneArbitrationAudit = true;
-                            }
-
-
-                            Response.Add(GetAllFormsForArbitrationAuditListVM);
                         }
                     }
                 }
@@ -273,11 +296,12 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
                 if (CheckIfUserIsNormalArbitrator is not null
                     ? (!CheckIfUserIsNormalArbitrator.isChairman ||
-                        (Request.AsChairman != null ? Request.AsChairman.Value : false))
+                        (Request.AsChairman != null ? !Request.AsChairman.Value : false))
                     : false)
                 {
                     GroupOfArbitrationEntities = await _ArbitrationRepository
-                        .Where(x => x.ArbitratorId == UserId)
+                        .Where(x => x.ArbitratorId == UserId &&
+                            x.isAccepted == FormStatus.Accepted && x.isAcceptedFromChairman == FormStatus.Accepted)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .GroupBy(x => x.ProvidedFormId)
@@ -293,7 +317,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                         .ToListAsync();
 
                     GroupOfArbitrationEntities = await _ArbitrationRepository
-                        .Where(x => ComitteeArbitratorIds.Contains(x.ArbitratorId))
+                        .Where(x => ComitteeArbitratorIds.Contains(x.ArbitratorId) &&
+                            x.isAccepted == FormStatus.Accepted && x.isAcceptedFromChairman == FormStatus.Accepted)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .GroupBy(x => x.ProvidedFormId)
@@ -308,8 +333,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     .Where(x => ArbitrationIds.Contains(x.ArbitrationId))
                     .ToListAsync();
 
+                List<int> FormsIds = GroupOfArbitrationEntities
+                    .SelectMany(group => group.Select(arbitration => arbitration.ProvidedFormId))
+                    .Distinct()
+                    .ToList();
+
                 List<ArbitrationAudit> ArbitrationAuditEntities = await _ArbitrationAuditRepository
-                    .Where(x => ArbitrationIds.Contains(x.ArbitrationId))
+                    .Where(x => ArbitrationIds.Contains(x.ProvidedFormId))
                     .ToListAsync();
 
                 int MarginOfDifferenceBetweenArbitrators = await _ArbitrationRepository
@@ -332,40 +362,105 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
                 foreach (IGrouping<int, Arbitration> GroupOfArbitrationEntity in GroupOfArbitrationEntities)
                 {
-                    if (Request.ItExceededTheMarginOfDifferenceInArbitrationScores != null)
+                    if (GroupOfArbitrationEntity.All(x => x.Type == ArbitrationType.DoneArbitratod))
                     {
-                        if (Request.ItExceededTheMarginOfDifferenceInArbitrationScores.Value)
+                        if (Request.ItExceededTheMarginOfDifferenceInArbitrationScores != null)
                         {
-                            foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                            if (Request.ItExceededTheMarginOfDifferenceInArbitrationScores.Value)
+                            {
+                                List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntity
+                                    .Where(x => x.Type == ArbitrationType.DoneArbitratod)
+                                    .ToList();
+
+                                foreach (Arbitration ArbitrationEntity in DoneArbitratodGroupOfArbitrationEntity)
+                                {
+                                    bool BreakOuterLoop = false;
+
+                                    foreach (Arbitration ArbitrationEntity2 in DoneArbitratodGroupOfArbitrationEntity)
+                                    {
+                                        if (Math.Abs(ArbitrationEntity.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
+                                        {
+                                            GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
+                                            {
+                                                FormId = ArbitrationEntity.ProvidedFormId,
+                                                Name = Names.FirstOrDefault(x => x.RecordId == ArbitrationEntity.ProvidedFormId)!.Value,
+                                                CategoryId = ArbitrationEntity.ProvidedForm!.categoryId,
+                                                CategoryName = Request.lang == "en"
+                                                    ? ArbitrationEntity.ProvidedForm!.Category.EnglishName
+                                                    : ArbitrationEntity.ProvidedForm!.Category.ArabicName,
+                                                ItExceededTheMarginOfDifferenceInArbitrationScores = true,
+                                                FullScore = 0,
+                                                DoneArbitrationAudit = false
+                                            };
+
+                                            Response.Add(GetAllFormsForArbitrationAuditListVM);
+
+                                            BreakOuterLoop = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (BreakOuterLoop)
+                                        break;
+                                }
+                            }
+                            else
                             {
                                 bool BreakOuterLoop = false;
 
-                                foreach (Arbitration ArbitrationEntity2 in GroupOfArbitrationEntity)
+                                GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
                                 {
-                                    if (Math.Abs(ArbitrationEntity.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
+                                    FormId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId,
+                                    Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId)!.Value,
+                                    CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
+                                    CategoryName = Request.lang == "en"
+                                        ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
+                                        : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName,
+                                    ItExceededTheMarginOfDifferenceInArbitrationScores = false
+                                };
+
+                                List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntity
+                                    .Where(x => x.Type == ArbitrationType.DoneArbitratod)
+                                    .ToList();
+
+                                foreach (Arbitration ArbitrationEntity in DoneArbitratodGroupOfArbitrationEntity)
+                                {
+                                    foreach (Arbitration ArbitrationEntity2 in DoneArbitratodGroupOfArbitrationEntity)
                                     {
-                                        GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
+                                        if (Math.Abs(ArbitrationEntity.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
                                         {
-                                            FormId = ArbitrationEntity.ProvidedFormId,
-                                            Name = Names.FirstOrDefault(x => x.RecordId == ArbitrationEntity.ProvidedFormId)!.Value,
-                                            CategoryId = ArbitrationEntity.ProvidedForm!.categoryId,
-                                            CategoryName = Request.lang == "en"
-                                                ? ArbitrationEntity.ProvidedForm!.Category.EnglishName
-                                                : ArbitrationEntity.ProvidedForm!.Category.ArabicName,
-                                            ItExceededTheMarginOfDifferenceInArbitrationScores = true,
-                                            FullScore = 0,
-                                            DoneArbitrationAudit = false
-                                        };
-
-                                        Response.Add(GetAllFormsForArbitrationAuditListVM);
-
-                                        BreakOuterLoop = true;
-                                        break;
+                                            BreakOuterLoop = true;
+                                            break;
+                                        }
                                     }
                                 }
 
-                                if (BreakOuterLoop)
-                                    break;
+                                if (!BreakOuterLoop)
+                                {
+                                    List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
+                                        .Where(x => GroupOfArbitrationEntity.Select(y => new
+                                        {
+                                            y.Id,
+                                            y.Type
+                                        }).Any(y => y.Id == x.ArbitrationId && y.Type == ArbitrationType.DoneArbitratod)).ToList();
+
+                                    GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
+                                        .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
+
+                                    List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
+                                        .Where(x => GroupOfArbitrationEntity.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
+                                        .ToList();
+
+                                    if (ArbitrationAuditEntitiesForThisArbitrations.Any())
+                                    {
+                                        GetAllFormsForArbitrationAuditListVM.FullScore = ArbitrationAuditEntitiesForThisArbitrations
+                                            .Sum(x => x.ArbitrationScore);
+
+                                        GetAllFormsForArbitrationAuditListVM.DoneArbitrationAudit = true;
+                                    }
+
+                                    Response.Add(GetAllFormsForArbitrationAuditListVM);
+                                }
                             }
                         }
                         else
@@ -379,33 +474,46 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                 CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
                                 CategoryName = Request.lang == "en"
                                     ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
-                                    : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName,
-                                ItExceededTheMarginOfDifferenceInArbitrationScores = false
+                                    : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName
                             };
 
-                            foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
+                            List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntity
+                                .Where(x => x.Type == ArbitrationType.DoneArbitratod)
+                                .ToList();
+
+                            foreach (Arbitration ArbitrationEntity in DoneArbitratodGroupOfArbitrationEntity)
                             {
-                                foreach (Arbitration ArbitrationEntity2 in GroupOfArbitrationEntity)
+                                foreach (Arbitration ArbitrationEntity2 in DoneArbitratodGroupOfArbitrationEntity)
                                 {
                                     if (Math.Abs(ArbitrationEntity.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
                                     {
+                                        GetAllFormsForArbitrationAuditListVM.ItExceededTheMarginOfDifferenceInArbitrationScores = true;
+
+                                        Response.Add(GetAllFormsForArbitrationAuditListVM);
+
                                         BreakOuterLoop = true;
                                         break;
                                     }
                                 }
+
+                                if (BreakOuterLoop)
+                                    break;
                             }
 
                             if (!BreakOuterLoop)
                             {
                                 List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
-                                    .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
-                                    .ToList();
+                                    .Where(x => GroupOfArbitrationEntity.Select(y => new
+                                    {
+                                        y.Id,
+                                        y.Type
+                                    }).Any(y => y.Id == x.ArbitrationId && y.Type == ArbitrationType.DoneArbitratod)).ToList();
 
                                 GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
                                     .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
 
                                 List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
-                                    .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
+                                    .Where(x => GroupOfArbitrationEntity.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
                                     .ToList();
 
                                 if (ArbitrationAuditEntitiesForThisArbitrations.Any())
@@ -418,64 +526,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
                                 Response.Add(GetAllFormsForArbitrationAuditListVM);
                             }
-                        }
-                    }
-                    else
-                    {
-                        bool BreakOuterLoop = false;
-
-                        GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
-                        {
-                            FormId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId,
-                            Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId)!.Value,
-                            CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
-                            CategoryName = Request.lang == "en"
-                                ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
-                                : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName
-                        };
-
-                        foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
-                        {
-                            foreach (Arbitration ArbitrationEntity2 in GroupOfArbitrationEntity)
-                            {
-                                if (Math.Abs(ArbitrationEntity.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
-                                {
-                                    GetAllFormsForArbitrationAuditListVM.ItExceededTheMarginOfDifferenceInArbitrationScores = true;
-
-                                    Response.Add(GetAllFormsForArbitrationAuditListVM);
-
-                                    BreakOuterLoop = true;
-                                    break;
-                                }
-                            }
-
-                            if (BreakOuterLoop)
-                                break;
-                        }
-
-                        if (!BreakOuterLoop)
-                        {
-                            List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
-                                .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
-                                .ToList();
-
-                            GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                                .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
-
-                            List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
-                                .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
-                                .ToList();
-
-                            if (ArbitrationAuditEntitiesForThisArbitrations.Any())
-                            {
-                                GetAllFormsForArbitrationAuditListVM.FullScore = ArbitrationAuditEntitiesForThisArbitrations
-                                    .Sum(x => x.ArbitrationScore);
-
-                                GetAllFormsForArbitrationAuditListVM.DoneArbitrationAudit = true;
-                            }
-
-
-                            Response.Add(GetAllFormsForArbitrationAuditListVM);
                         }
                     }
                 }

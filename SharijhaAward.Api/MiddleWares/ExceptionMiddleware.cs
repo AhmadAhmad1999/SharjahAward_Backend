@@ -32,9 +32,7 @@ namespace SharijhaAward.Api.MiddleWares
 
             try
             {
-                
                 await _Next(Context);
-
             }
             catch (Exception Ex)
             {
@@ -181,6 +179,17 @@ namespace SharijhaAward.Api.MiddleWares
 
                             await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
                         }
+                        else if (Ex is UnauthorizedAccessException)
+                        {
+                            Context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                            BaseResponse<string> Response = new BaseResponse<string>
+                                ("You're not authorized", false, (int)HttpStatusCode.Unauthorized,
+                                $"Exception = {Ex.Message}" +
+                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                        }
                         else
                         {
                             Context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -311,6 +320,17 @@ namespace SharijhaAward.Api.MiddleWares
                             BaseResponse<string> Response = new BaseResponse<string>
                                 ("خطأ في الاتصال بالإنترنت، يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى لاحقًا. "/* +*/
                                 /*$"{ResponseMessage}"*/, false, (int)HttpStatusCode.InternalServerError,
+                                $"Exception = {Ex.Message}" +
+                                    (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
+
+                            await Context.Response.WriteAsync(JsonConvert.SerializeObject(Response));
+                        }
+                        else if (Ex is UnauthorizedAccessException)
+                        {
+                            Context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                            BaseResponse<string> Response = new BaseResponse<string>
+                                ("أنت لست مخول للقيام بهذه العملية", false, (int)HttpStatusCode.Unauthorized,
                                 $"Exception = {Ex.Message}" +
                                     (Ex.InnerException != null ? $"Inner Exeption = {Ex.InnerException.Message}" : null));
 

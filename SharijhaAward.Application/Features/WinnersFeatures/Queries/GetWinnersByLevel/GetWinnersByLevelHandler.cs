@@ -18,18 +18,21 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
         private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IAsyncRepository<ArbitrationAudit> _ArbitrationAuditRepository;
 
         public GetWinnersByLevelHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
             IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<Category> CategoryRepository)
+            IAsyncRepository<Category> CategoryRepository,
+            IAsyncRepository<ArbitrationAudit> ArbitrationAuditRepository)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
             _ArbitrationResultRepository = ArbitrationResultRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _CategoryRepository = CategoryRepository;
+            _ArbitrationAuditRepository = ArbitrationAuditRepository;
         }
 
         public async Task<BaseResponse<GetWinnersByLevelMainResponse>> 
@@ -86,6 +89,13 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     .Contains(x.ProvidedFormId))
                 .ToList();
 
+            List<ArbitrationAudit> ArbitrationAuditEntities = _ArbitrationAuditRepository
+                .AsEnumerable()
+                .Where(x => ArbitrationResultEntities
+                    .SelectMany(y => y.Select(z => z.ProvidedFormId))
+                    .Contains(x.ProvidedFormId))
+                .ToList();
+
             List<IGrouping<float, ArbitrationResult>> AlreadySelectedToWinList = ArbitrationResultEntities
                 .Where(x => x.Any(y => y.SelectedToWin))
                 .ToList();
@@ -112,11 +122,11 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                                 .Select(y => y.FullScore)
                                 .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
                             : 0,
-                        ArbitrationAuditScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
-                            ? ArbitrationEntities
+                        ArbitrationAuditScore = (ArbitrationAuditEntities.Any() && ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                            ? ArbitrationAuditEntities
                                 .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                                .Select(y => y.FullScore)
-                                .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
+                                .Select(y => y.ArbitrationScore)
+                                .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
                             : 0,
                         CycleNumber = x.ProvidedForm!.CycleNumber,
                         CycleYear = x.ProvidedForm!.CycleYear,
@@ -160,11 +170,11 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                                 .Select(y => y.FullScore)
                                 .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
                             : 0,
-                        ArbitrationAuditScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
-                            ? ArbitrationEntities
+                        ArbitrationAuditScore = (ArbitrationAuditEntities.Any() && ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                            ? ArbitrationAuditEntities
                                 .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                                .Select(y => y.FullScore)
-                                .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
+                                .Select(y => y.ArbitrationScore)
+                                .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
                             : 0,
                         CycleNumber = x.ProvidedForm!.CycleNumber,
                         CycleYear = x.ProvidedForm!.CycleYear,
@@ -218,11 +228,11 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                             .Select(y => y.FullScore)
                             .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
                         : 0,
-                    ArbitrationAuditScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
-                        ? (ArbitrationEntities
+                    ArbitrationAuditScore = (ArbitrationAuditEntities.Any() && ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                        ? (ArbitrationAuditEntities
                             .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                            .Select(y => y.FullScore)
-                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
+                            .Select(y => y.ArbitrationScore)
+                            .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
                         : 0,
                     CycleNumber = x.ProvidedForm!.CycleNumber,
                     CycleYear = x.ProvidedForm!.CycleYear,

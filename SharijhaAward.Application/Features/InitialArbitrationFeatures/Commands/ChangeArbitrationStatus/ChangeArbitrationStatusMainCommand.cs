@@ -9,6 +9,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
         public int ArbitrationId { get; set; }
         public FormStatus isAccepted { get; set; }
         public string? lang { get; set; }
+        public string? Token { get; set; }
+        public bool? AsChairman { get; set; }
         public List<ChairmanNotes> ChairmanNotes { get; set; } = new List<ChairmanNotes>();
     }
 }

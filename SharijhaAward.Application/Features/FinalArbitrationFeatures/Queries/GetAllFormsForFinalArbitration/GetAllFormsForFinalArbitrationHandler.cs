@@ -60,6 +60,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
 
                 int TotalCount = 0;
 
+                Dictionary<ArbitrationType, int> TypeCounts = new Dictionary<ArbitrationType, int>();
+
+                
                 if (Request.ArbitrationType is not null)
                 {
                     FinalArbitrationEntities = await _FinalArbitrationRepository
@@ -73,6 +76,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
 
                     TotalCount = await _FinalArbitrationRepository
                         .GetCountAsync(x => x.Type == Request.ArbitrationType);
+
+                    TypeCounts = FinalArbitrationEntities
+                        .Where(x => x.Type == Request.ArbitrationType)
+                        .GroupBy(x => x.Type)
+                        .Select(x => new { Type = x.Key, Count = x.Count() })
+                        .ToDictionary(x => x.Type, x => x.Count);
                 }
                 else
                 {
@@ -84,6 +93,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
 
                     TotalCount = await _FinalArbitrationRepository
                         .GetCountAsync(null);
+
+                    TypeCounts = FinalArbitrationEntities
+                        .Where(x => true)
+                        .GroupBy(x => x.Type)
+                        .Select(x => new { Type = x.Key, Count = x.Count() })
+                        .ToDictionary(x => x.Type, x => x.Count);
                 }
 
                 var Names = await _DynamicAttributeValueRepository
@@ -109,12 +124,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             : x.ProvidedForm!.Category!.ArabicName,
                         FinalScore = x.FinalScore
                     }).ToList();
-
-                Dictionary<ArbitrationType, int> TypeCounts = await _FinalArbitrationRepository
-                    .Where(x => true)
-                    .GroupBy(x => x.Type)
-                    .Select(x => new { Type = x.Key, Count = x.Count() })
-                    .ToDictionaryAsync(x => x.Type, x => x.Count);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
@@ -145,7 +154,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 }
 
                 if (!ArbitratorEntity.isChairman ||
-                    (Request.AsChairman != null ? Request.AsChairman.Value : false))
+                    (Request.AsChairman != null ? !Request.AsChairman.Value : false))
                 {
                     List<int> ArbitratorFormsIds = await _ArbitrationRepository
                         .Where(x => x.ArbitratorId == ArbitratorEntity.Id)

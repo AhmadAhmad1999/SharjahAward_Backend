@@ -6,6 +6,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrator
@@ -16,18 +17,21 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
         private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
         private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IMapper _Mapper;
 
         public UpdateArbitratorCommandHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
             IAsyncRepository<ArbitratorClass> ArbitratorClassRepository,
+            IAsyncRepository<UserToken> UserTokenRepository,
             IUserRepository UserRepository,
             IMapper Mapper)
         {
             _ArbitratorRepository = ArbitratorRepository;
             _CategoryArbitratorRepository = CategoryArbitratorRepository;
             _ArbitratorClassRepository = ArbitratorClassRepository;
+            _UserTokenRepository = UserTokenRepository;
             _UserRepository = UserRepository;
             _Mapper = Mapper;
         }
@@ -111,6 +115,11 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
             {
                 try
                 {
+                    if (Request.isChairman != ArbitratorToUpdate.isChairman)
+                        _UserTokenRepository
+                            .Where(x => x.UserId == Request.Id)
+                            .ExecuteUpdate(x => x.SetProperty(y => y.isDeleted, true));
+
                     await _ArbitratorRepository.UpdateAsync(ArbitratorToUpdate);
                     await _UserRepository.UpdateAsync(UserEntity);
 

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.LoggerModel;
 using System.Diagnostics;
 
@@ -29,7 +31,7 @@ namespace SharijhaAward.Api.Logger
             _Logger = logger;
             _JwtProvider = JwtProvider;
         }
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        public override async void OnActionExecuting(ActionExecutingContext filterContext)
         {
             Guid GuidId = Guid.NewGuid();
             Trace.CorrelationManager.ActivityId = GuidId;
@@ -40,9 +42,48 @@ namespace SharijhaAward.Api.Logger
                 GuidId = GuidId,
                 Parameters = Parameters
             });
+
             string token = filterContext.HttpContext.Request.Headers["Authorization"].ToString();
 
-            if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" && 
+            //try
+            //{
+            //    List<object> Controller_Function_Name = filterContext.RouteData.Values.Values.ToList();
+
+            //    if (Controller_Function_Name[1].ToString() != "Authentication" &&
+            //        (Controller_Function_Name[0].ToString() != "Login" ||
+            //        Controller_Function_Name[0].ToString() != "SignUp"))
+            //    {
+            //        if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
+            //            token.ToLower() != "bearer" && token.ToLower() != "bearer ")
+            //        {
+            //            IAsyncRepository<UserToken>? _UserTokenRepository = _ServiceProvider.GetService<IAsyncRepository<UserToken>>();
+
+            //            UserToken? CheckUserId = await _UserTokenRepository!
+            //                .FirstOrDefaultAsync(x => x.Id == int.Parse(_JwtProvider.GetUserIdFromToken(token)) &&
+            //                    x.Token == token);
+
+            //            if (CheckUserId is not null)
+            //                UserId = int.Parse(_JwtProvider.GetUserIdFromToken(token));
+
+            //            else
+            //            {
+            //                string StartException1 = null;
+            //                StartException1.ToLower();
+            //            }
+            //        }
+            //        else
+            //        {
+            //            string StartException1 = null;
+            //            StartException1.ToLower();
+            //        }
+            //    }
+            //}
+            //catch (Exception)
+            //{
+            //    throw new UnauthorizedAccessException();
+            //}
+
+            if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
                 token.ToLower() != "bearer" && token.ToLower() != "bearer ")
                 UserId = int.Parse(_JwtProvider.GetUserIdFromToken(token));
         }

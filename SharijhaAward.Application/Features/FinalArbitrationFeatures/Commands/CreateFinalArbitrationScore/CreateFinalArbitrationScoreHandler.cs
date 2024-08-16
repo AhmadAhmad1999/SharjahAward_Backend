@@ -80,7 +80,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                     foreach (CreateFinalArbitrationScoreMainCommand CreateFinalArbitrationScoreMainCommand in 
                         Request.CreateFinalArbitrationScoreMainCommand)
                     {
-                        if (CreateFinalArbitrationScoreMainCommand.CriterionId is not null)
+                        if (CreateFinalArbitrationScoreMainCommand.CriterionId is not null &&
+                            CreateFinalArbitrationScoreMainCommand.CriterionItemId is null)
                         {
                             bool CheckInsertedScore = CriterionEntities
                                 .FirstOrDefault(x => x.Id == CreateFinalArbitrationScoreMainCommand.CriterionId)!
@@ -89,12 +90,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                             if (CheckInsertedScore)
                             {
                                 ResponseMessage = Request.lang == "en"
-                                    ? "Final arbitration score can't be bigger than the criterion max score"
-                                    : "لا يمكن أن تكون النتيجة النهائية للتحكيم أكبر من الحد الأقصى لنتيجة المعيار";
+                                    ? "Arbitration score can't be bigger than the criterion max score"
+                                    : "لا يمكن أن تكون نتيجة التحكيم أكبر من الحد الأقصى لنتيجة المعيار";
 
                                 Transaction.Dispose();
 
-                                return new BaseResponse<object>(ResponseMessage, false, 404);
+                                return new BaseResponse<object>(ResponseMessage, false, 400);
                             }
                         }
                         else if (CreateFinalArbitrationScoreMainCommand.CriterionItemId is not null)
@@ -106,12 +107,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                             if (CheckInsertedScore)
                             {
                                 ResponseMessage = Request.lang == "en"
-                                    ? "Final arbitration score can't be bigger than the criterion item max score"
-                                    : "لا يمكن أن تكون النتيجة النهائية للتحكيم أكبر من الحد الأقصى لنتيجة عنصر المعيار ";
+                                    ? "Arbitration score can't be bigger than the criterion item max score"
+                                    : "لا يمكن أن تكون نتيجة التحكيم أكبر من الحد الأقصى لنتيجة عنصر المعيار ";
 
                                 Transaction.Dispose();
 
-                                return new BaseResponse<object>(ResponseMessage, false, 404);
+                                return new BaseResponse<object>(ResponseMessage, false, 400);
                             }
                         }
 
@@ -150,57 +151,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                         FinalArbitrationEntity.DateOfArbitration = DateTime.UtcNow;
                         FinalArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
                         FinalArbitrationEntity.FinalScore = Request.CreateFinalArbitrationScoreMainCommand.Sum(x => x.ArbitrationScore);
-
-                        bool EligibleForCertification = false;
-                        if ((FinalArbitrationEntity.ProvidedForm!.Category!.MinimumRequirementToObtainACertificate != null &&
-                            FinalArbitrationEntity.ProvidedForm!.Category!.MaximumRequirementToObtainACertificate != null)
-                                ? (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumRequirementToObtainACertificate <= FinalArbitrationEntity.FinalScore &&
-                                   FinalArbitrationEntity.ProvidedForm!.Category!.MaximumRequirementToObtainACertificate >= FinalArbitrationEntity.FinalScore)
-                                : false)
-                            EligibleForCertification = true;
-
-                        bool EligibleForAStatement = false;
-                        if ((FinalArbitrationEntity.ProvidedForm!.Category!.MinimumAmountToObtainAStatement != null &&
-                            FinalArbitrationEntity.ProvidedForm!.Category!.MaximumAmountToObtainAStatement != null)
-                                ? (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumAmountToObtainAStatement <= FinalArbitrationEntity.FinalScore &&
-                                   FinalArbitrationEntity.ProvidedForm!.Category!.MaximumAmountToObtainAStatement >= FinalArbitrationEntity.FinalScore)
-                                : false)
-                            EligibleForAStatement = true;
-
-                        bool EligibleToWin = true;
-                        if (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumWinningScore != null
-                                ? FinalArbitrationEntity.ProvidedForm!.Category!.MinimumWinningScore <= FinalArbitrationEntity.FinalScore
-                                : false)
-                            EligibleToWin = true;
-
-                        ArbitrationResult? ArbitrationResultEntity = await _ArbitrationResultRepository
-                            .FirstOrDefaultAsync(x => x.ProvidedFormId == FinalArbitrationEntity.ProvidedFormId &&
-                                x.FinalArbitrationId == FinalArbitrationEntity.Id);
-
-                        if (ArbitrationResultEntity is not null)
-                        {
-                            ArbitrationResultEntity.EligibleForCertification = EligibleForCertification;
-                            ArbitrationResultEntity.EligibleForAStatement = EligibleForAStatement;
-                            ArbitrationResultEntity.EligibleToWin = EligibleToWin;
-
-                            await _ArbitrationResultRepository.UpdateAsync(ArbitrationResultEntity);
-                        }
-                        else
-                        {
-                            ArbitrationResult NewArbitrationResultEntity = new ArbitrationResult()
-                            {
-                                ProvidedFormId = FinalArbitrationEntity.ProvidedFormId,
-                                EligibleForCertification = EligibleForCertification,
-                                EligibleForAStatement = EligibleForAStatement,
-                                EligibleToWin = EligibleToWin,
-                                GotCertification = false,
-                                GotStatement = false,
-                                Winner = false,
-                                FinalArbitrationId = FinalArbitrationEntity.Id
-                            };
-
-                            await _ArbitrationResultRepository.AddAsync(NewArbitrationResultEntity);
-                        }
                     }
 
                     else

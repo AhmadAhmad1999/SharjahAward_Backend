@@ -20,18 +20,21 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
         private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IAsyncRepository<ArbitrationAudit> _ArbitrationAuditRepository;
 
         public GetWinnersByLevelGroupedByClassesHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
             IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<Category> CategoryRepository)
+            IAsyncRepository<Category> CategoryRepository,
+            IAsyncRepository<ArbitrationAudit> ArbitrationAuditRepository)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
             _ArbitrationResultRepository = ArbitrationResultRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _CategoryRepository = CategoryRepository;
+            _ArbitrationAuditRepository = ArbitrationAuditRepository;
         }
 
         public async Task<BaseResponse<List<GetWinnersByLevelGroupedByClassesListVM>>> 
@@ -85,6 +88,13 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     .Contains(x.ProvidedFormId))
                 .ToList();
 
+            List<ArbitrationAudit> ArbitrationAuditEntitiesForAllClasses = _ArbitrationAuditRepository
+                .AsEnumerable()
+                .Where(x => ArbitrationResultEntitiesForAllClasses
+                    .SelectMany(y => y.Select(z => z.ProvidedFormId))
+                    .Contains(x.ProvidedFormId))
+                .ToList();
+
             List<GetWinnersByLevelGroupedByClassesListVM> Response = new List<GetWinnersByLevelGroupedByClassesListVM>();
 
             foreach (IGrouping<EducationalClass, ArbitrationResult> ArbitrationResultEntitiesForEachClass in ArbitrationResultEntitiesForAllClasses)
@@ -110,6 +120,12 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     }).ToList();
 
                 List<Arbitration> ArbitrationEntities = ArbitrationEntitiesForAllClasses
+                    .Where(x => ArbitrationResultEntities
+                    .SelectMany(y => y.Select(z => z.ProvidedFormId))
+                    .Contains(x.ProvidedFormId))
+                    .ToList();
+
+                List<ArbitrationAudit> ArbitrationAuditEntities = ArbitrationAuditEntitiesForAllClasses
                     .Where(x => ArbitrationResultEntities
                     .SelectMany(y => y.Select(z => z.ProvidedFormId))
                     .Contains(x.ProvidedFormId))
@@ -141,11 +157,11 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                                     .Select(y => y.FullScore)
                                     .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
                                 : 0,
-                            ArbitrationAuditScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
-                                ? ArbitrationEntities
+                            ArbitrationAuditScore = (ArbitrationAuditEntities.Any() && ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                                ? ArbitrationAuditEntities
                                     .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                                    .Select(y => y.FullScore)
-                                    .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
+                                    .Select(y => y.ArbitrationScore)
+                                    .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
                                 : 0,
                             CycleNumber = x.ProvidedForm!.CycleNumber,
                             CycleYear = x.ProvidedForm!.CycleYear,
@@ -189,11 +205,11 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                                     .Select(y => y.FullScore)
                                     .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
                                 : 0,
-                            ArbitrationAuditScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
-                                ? ArbitrationEntities
+                            ArbitrationAuditScore = (ArbitrationAuditEntities.Any() && ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                                ? ArbitrationAuditEntities
                                     .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                                    .Select(y => y.FullScore)
-                                    .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
+                                    .Select(y => y.ArbitrationScore)
+                                    .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
                                 : 0,
                             CycleNumber = x.ProvidedForm!.CycleNumber,
                             CycleYear = x.ProvidedForm!.CycleYear,
@@ -247,11 +263,11 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                                 .Select(y => y.FullScore)
                                 .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
                             : 0,
-                        ArbitrationAuditScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
-                            ? (ArbitrationEntities
+                        ArbitrationAuditScore = (ArbitrationAuditEntities.Any() && ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
+                            ? (ArbitrationAuditEntities
                                 .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                                .Select(y => y.FullScore)
-                                .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
+                                .Select(y => y.ArbitrationScore)
+                                .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
                             : 0,
                         CycleNumber = x.ProvidedForm!.CycleNumber,
                         CycleYear = x.ProvidedForm!.CycleYear,

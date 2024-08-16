@@ -44,7 +44,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
             _ArbitratorRepository = ArbitratorRepository;
             _JwtProvider = JwtProvider;
         }
-        public async Task<BaseResponse<GetArbitrationAuditByArbitrationIdResponse>> Handle(GetArbitrationAuditByArbitrationIdQuery Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<GetArbitrationAuditByArbitrationIdResponse>> 
+            Handle(GetArbitrationAuditByArbitrationIdQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
@@ -64,7 +65,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
             Arbitration? ArbitrationEntity = await _ArbitrationRepository
                 .Include(x => x.ProvidedForm!)
-                .FirstOrDefaultAsync(x => x.Id == Request.ArbitrationId);
+                .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
 
             if (ArbitrationEntity is null)
             {
@@ -107,7 +108,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 .ToListAsync();
 
             List<ArbitrationAudit> ArbitrationAuditEntities = await _ArbitrationAuditRepository
-                .Where(x => x.ArbitrationId == ArbitrationEntity.Id)
+                .Where(x => x.ProvidedFormId == ArbitrationEntity.ProvidedFormId)
                 .ToListAsync();
 
             List<ChairmanNotesOnArbitrationAudit> ChairmanNotesOnArbitrationAuditEntities = await _ChairmanNotesOnArbitrationAuditRepository

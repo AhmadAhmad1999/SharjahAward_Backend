@@ -4,6 +4,7 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 using System.Transactions;
 
@@ -14,20 +15,41 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
         private readonly IJwtProvider _JwtProvider;
 
         public RejectInitialArbiitrationFromArbitrationAuditHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
+            IAsyncRepository<Arbitrator> ArbitratorRepository,
             IJwtProvider JwtProvider)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
+            _ArbitratorRepository = ArbitratorRepository;
             _JwtProvider = JwtProvider;
         }
 
         public async Task<BaseResponse<object>> Handle(RejectInitialArbiitrationFromArbitrationAuditCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
+                .Where(x => x.ProvidedFormId == Request.FormId)
+                .ToListAsync();
+
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
+            Arbitrator? ArbitratorEntity = await _ArbitratorRepository
+                .FirstOrDefaultAsync(x => x.Id == UserId);
+
+            if (ArbitratorEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Arbitrator is not found"
+                    : "المحكم غير موجود";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {
@@ -40,7 +62,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
             {
                 try
                 {
-                    if (!Request.IsAccepted)
+                    if (Request.IsAccepted == FormStatus.Rejected)
                     {
                         FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
                             .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
@@ -48,31 +70,31 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                         if (FinalArbitrationEntity is not null)
                             await _FinalArbitrationRepository.DeleteAsync(FinalArbitrationEntity);
 
+                        foreach (Arbitration? ArbitrationEntity in ArbitrationEntities)
+                        {
+                            ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = FormStatus.Rejected;
+                            ArbitrationEntity.ReasonForRejectingFromArbitrationAudit = Request.ReasonForRejecting;
+                        }
+
+                        await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
+
                         ResponseMessage = Request.lang == "en"
                             ? "Initial arbitration has been rejected successfully"
                             : "تم رفض التحكيم الأولي على الاستمارة بنجاح";
                     }
-                    else
+                    else if (Request.IsAccepted == FormStatus.Accepted)
                     {
                         int ArbitratorId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
-                        List<float> FullScores = await _ArbitrationRepository
-                            .Where(x => x.ProvidedFormId == Request.FormId)
-                            .Select(x => x.FullScore)
-                            .ToListAsync();
-
-                        float FullScore = FullScores.Sum() / FullScores.Count();
-
                         FinalArbitration NewFinalArbitrationEntity = new FinalArbitration()
                         {
-                            isAccepted = FormStatus.NotArbitratedYet,
                             ReasonForRejecting = null,
                             isAcceptedFromChairman = FormStatus.NotArbitratedYet,
                             ArbitratorId = ArbitratorId,
                             ProvidedFormId = Request.FormId,
                             Type = ArbitrationType.NotBeenArbitrated,
                             DateOfArbitration = null,
-                            FullScore = FullScore,
+                            FullScore = 0,
                             FinalScore = 0
                         };
 
@@ -81,6 +103,14 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                         ResponseMessage = Request.lang == "en"
                             ? "Initial arbitration has been accepted successfully"
                             : "تم قبول التحكيم الأولي على الاستمارة بنجاح";
+                    }
+                    else if (Request.IsAccepted == FormStatus.NotArbitratedYet)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? "You can't change the acceptance status of an arbitration into Not Arbitrated Yet"
+                            : "لا يمكنك تغيير حالة قبول التحكيم إلى \"لم يتم التحكيم بعد\"";
+
+                        return new BaseResponse<object>(ResponseMessage, true, 400);
                     }
 
                     Transaction.Complete();
