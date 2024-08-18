@@ -83,20 +83,16 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllAppVersions(AppType? AppType, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllAppVersions([FromQuery] GetAllAppVersionsQuery query)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<GetAllAppVersionsListVM>> Response = await _Mediator.Send(new GetAllAppVersionsQuery()
-            {
-                lang = HeaderValue!,
-                page = Page,
-                perPage = PerPage,
-                AppType = AppType
-            });
+            query.lang = HeaderValue!;
+
+            BaseResponse<List<GetAllAppVersionsListVM>> Response = await _Mediator.Send(query);
 
             return Response.statusCode switch
             {

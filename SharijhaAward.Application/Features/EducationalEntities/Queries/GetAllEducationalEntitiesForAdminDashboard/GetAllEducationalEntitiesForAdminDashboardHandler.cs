@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
@@ -31,9 +32,11 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
         public async Task<BaseResponse<List<GetAllEducationalEntitiesForAdminDashboardListVM>>> 
             Handle(GetAllEducationalEntitiesForAdminDashboardQuery Request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             List<GetAllEducationalEntitiesForAdminDashboardListVM> EducationalEntities = _Mapper.Map<List<GetAllEducationalEntitiesForAdminDashboardListVM>>
                 (await _EducationalEntityRepository
-                    .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
+                    .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                     .ToListAsync());
 
             List<EducationalInstitution> EducationalInstitutionEntities = await _EducationalInstitutionRepository

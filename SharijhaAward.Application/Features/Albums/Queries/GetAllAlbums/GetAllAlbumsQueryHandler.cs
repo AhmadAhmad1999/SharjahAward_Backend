@@ -2,6 +2,7 @@
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.AlbumModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using System;
@@ -26,7 +27,9 @@ namespace SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums
 
         public async Task<BaseResponse<List<AlbumListVm>>> Handle(GetAllAlbumsQuery request, CancellationToken cancellationToken)
         {
-            var AllAlbums = await _albumRepository.GetPagedReponseAsync(request.page, request.perPage);
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            
+            var AllAlbums = await _albumRepository.GetFilterThenPagedReponseAsync(filterObject, request.page, request.perPage);
             
             var data = _mapper.Map<List<AlbumListVm>>(AllAlbums);
 

@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.News.Queries.GetNewsById;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,15 +29,17 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 
         public async Task<BaseResponse<List<NewsListVM>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var newsList = request.Descending == false
                 ? await _newsRepository
-                    .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+                    .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
                     .Include(n => n.NewsImages)
                     .ToListAsync()
                 : await _newsRepository
+                    .Include(n => n.NewsImages!, filterObject)
                     .OrderBy(x => x.CreatedAt)
                     .Skip((request.page - 1) * request.perPage).Take(request.perPage)
-                    .Include(n => n.NewsImages)
                     .ToListAsync();
 
 

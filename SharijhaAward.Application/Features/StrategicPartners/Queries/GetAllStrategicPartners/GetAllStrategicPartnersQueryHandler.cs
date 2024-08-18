@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.StrategicPartnerModel;
 using System;
 using System.Collections.Generic;
@@ -25,7 +27,9 @@ namespace SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStr
 
         public async Task<BaseResponse<List<StrategicPartnerListVM>>> Handle(GetAllStrategicPartnersQuery request, CancellationToken cancellationToken)
         {
-            var AllStrategicPartners = await _strategicPartnerRepository.GetPagedReponseAsync(request.page, request.perPage);
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
+            var AllStrategicPartners = await _strategicPartnerRepository.OrderByDescending(filterObject, s=>s.CreatedAt, request.page, request.perPage).ToListAsync();
 
             var data = _mapper.Map<List<StrategicPartnerListVM>>(AllStrategicPartners);
 

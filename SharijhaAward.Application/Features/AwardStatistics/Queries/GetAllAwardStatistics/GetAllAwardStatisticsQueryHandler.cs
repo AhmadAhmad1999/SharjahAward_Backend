@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.AwardStatisticModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using System;
@@ -29,6 +30,8 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
 
         public async Task<BaseResponse<List<AwardStatisticListVM>>> Handle(GetAllAwardStatisticsQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             if (request.CycleId is not null)
             {
                 var cycle = request.CycleId != null
@@ -40,7 +43,7 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
                     return new BaseResponse<List<AwardStatisticListVM>>("There is no Active Cycle", false, 404);
                 }
 
-                var AllStatistics = await _awardStatisticRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == cycle.Id, request.page, request.perPage);
+                var AllStatistics = await _awardStatisticRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == cycle.Id, filterObject, request.page, request.perPage);
 
                 var data = _mapper.Map<List<AwardStatisticListVM>>(AllStatistics);
 

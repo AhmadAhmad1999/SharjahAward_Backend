@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using System;
 using System.Collections.Generic;
@@ -25,9 +27,11 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
 
         public async Task<BaseResponse<List<ResponsibilityListVM>>> Handle(GetAllResponsibilitiesQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var responsibilities = request.RoleId == null
-                ? await _responsibilityRepository.GetPagedReponseAsync(request.page, request.perPage)
-                : await _responsibilityRepository.GetWhereThenPagedReponseAsync(r => r.RoleId == request.RoleId, request.page, request.perPage);
+                ? await _responsibilityRepository.OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage).ToListAsync()
+                : await _responsibilityRepository.GetWhereThenPagedReponseAsync(r => r.RoleId == request.RoleId, filterObject, request.page, request.perPage);
 
             var data = _mapper.Map<List<ResponsibilityListVM>>(responsibilities);
 

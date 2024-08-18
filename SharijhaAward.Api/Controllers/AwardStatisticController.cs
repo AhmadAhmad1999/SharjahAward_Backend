@@ -77,19 +77,15 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllAwardStatistics")]
-        public async Task<IActionResult> GetAllAwardStatistics(int? CycleId, int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetAllAwardStatistics([FromQuery] GetAllAwardStatisticsQuery query)
         {
 
             var token = HttpContext.Request.Headers.Authorization;
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllAwardStatisticsQuery()
-            {
-                CycleId = CycleId,
-                page = page,
-                perPage = perPage,
-                lang = language!
-            });
+            query.lang = language!;
+            
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

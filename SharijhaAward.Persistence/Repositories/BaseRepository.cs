@@ -169,7 +169,7 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async virtual Task<IReadOnlyList<T>> GetFilterThenPagedReponseAsync(FilterObject filterObject, int page, int size)
         {
-            var query = new List<T>();
+            var query = await _DbSet.AsNoTracking().ToListAsync();
 
             if (size == -1 || page == 0)
             {
@@ -451,6 +451,12 @@ namespace SharijhaAward.Persistence.Repositories
                     else if (propertyType == typeof(Domain.Constants.CommitteeConstants.CommitteeStatus) && filter.Value is string CommitteeStatusValue)
                     {
                         int Value = int.Parse(CommitteeStatusValue);
+
+                        query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
+                    }
+                    else if (propertyType == typeof(Domain.Entities.ExplanatoryMessageModel.TypeOfExplantoryMessage) && filter.Value is string TypeOfExplantoryMessageValue)
+                    {
+                        int Value = int.Parse(TypeOfExplantoryMessageValue);
 
                         query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
                     }

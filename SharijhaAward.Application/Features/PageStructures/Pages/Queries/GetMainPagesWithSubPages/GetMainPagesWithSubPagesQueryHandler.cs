@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 
 namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPagesWithSubPages
@@ -21,8 +22,10 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
 
         public async Task<BaseResponse<List<MainPageWithSubPageListVM>>> Handle(GetMainPagesWithSubPagesQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var mainPages = await _pageStructureRepository
-                    .GetWhereThenPagedReponseAsync(p => p.ParentId == null, request.page, request.perPage);
+                    .GetWhereThenPagedReponseAsync(p => p.ParentId == null, filterObject, request.page, request.perPage);
 
             var subPages = await _pageStructureRepository.Where(p => p.ParentId != null).ToListAsync();
             

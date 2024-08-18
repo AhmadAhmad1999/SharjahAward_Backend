@@ -2,6 +2,7 @@
 using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.HomePageSliderModel;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,9 @@ namespace SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllH
         }
         public async Task<BaseResponse<List<SliderItemsListVM>>> Handle(GetAllHomePageSliderItemsQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
             var AllSliderItem = await _homePageSliderRepository
-                .GetPagedReponseAsync(request.page, request.perPage);
+                .GetFilterThenPagedReponseAsync(filterObject, request.page, request.perPage);
 
             var data  = _mapper.Map<List<SliderItemsListVM>>(AllSliderItem);
 

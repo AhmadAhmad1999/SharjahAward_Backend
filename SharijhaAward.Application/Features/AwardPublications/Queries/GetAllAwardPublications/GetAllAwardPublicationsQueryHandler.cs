@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.AwardPublicationsModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using System;
@@ -29,8 +31,9 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwa
 
         public async Task<BaseResponse<List<AwardPublicationListVM>>> Handle(GetAllAwardPublicationsQuery request, CancellationToken cancellationToken)
         {
-            
-            var AwardPublications = await _awardPublicationRepository.GetPagedReponseAsync(request.page,request.perPage);
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
+            var AwardPublications = await _awardPublicationRepository.OrderByDescending(filterObject, r => r.CreatedAt, request.page, request.perPage).ToListAsync();
 
             var data = _mapper.Map<List<AwardPublicationListVM>>(AwardPublications);
 

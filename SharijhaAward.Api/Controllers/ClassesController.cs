@@ -120,19 +120,16 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllClasses(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllClasses([FromQuery] GetAllClassesQuery query)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<GetAllClassesListVM>> Response = await _Mediator.Send(new GetAllClassesQuery()
-            {
-                lang = HeaderValue!,
-                page = Page,
-                perPage = PerPage
-            });
+            query.lang = HeaderValue!;
+
+            BaseResponse<List<GetAllClassesListVM>> Response = await _Mediator.Send(query);
 
             return Response.statusCode switch
             {
@@ -205,20 +202,16 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllArbitratorsByClassId(int EducationalClassId, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllArbitratorsByClassId([FromQuery] GetAllArbitratorsByClassIdQuery query)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<ArbitratorsListVM>> Response = await _Mediator.Send(new GetAllArbitratorsByClassIdQuery()
-            {
-                EducationalClassId = EducationalClassId,
-                lang = HeaderValue,
-                page = Page,
-                perPage = PerPage
-            });
+            query.lang = HeaderValue!;
+
+            BaseResponse<List<ArbitratorsListVM>> Response = await _Mediator.Send(query);
 
             return Response.statusCode switch
             {

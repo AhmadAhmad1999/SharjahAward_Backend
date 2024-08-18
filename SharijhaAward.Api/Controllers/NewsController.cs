@@ -117,19 +117,14 @@ namespace SharijhaAward.Api.Controllers
             };
         }
         [HttpGet(Name ="GetAllNews")]
-        public async Task<IActionResult> GetAllNews(string? query, bool Descending = true, int page = 1 , int perPage = 10)
+        public async Task<IActionResult> GetAllNews([FromQuery] GetAllNewsQuery query)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllNewsQuery()
-            {
-                page = page,
-                perPage = perPage,
-                lang = language!,
-                query = query,
-                Descending = Descending
-            });
+            query.lang = language!;
+
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

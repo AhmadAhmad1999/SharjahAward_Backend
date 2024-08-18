@@ -79,16 +79,13 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetMainPagesWithSubPages", Name = "GetMainPagesWithSubPages")]
-        public async Task<IActionResult> GetMainPagesWithSubPages(int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetMainPagesWithSubPages([FromQuery] GetMainPagesWithSubPagesQuery query)
         {
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetMainPagesWithSubPagesQuery()
-            {
-                page = page,
-                perPage = perPage,
-                lang = language!
-            });
+            query.lang = language!;
+
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

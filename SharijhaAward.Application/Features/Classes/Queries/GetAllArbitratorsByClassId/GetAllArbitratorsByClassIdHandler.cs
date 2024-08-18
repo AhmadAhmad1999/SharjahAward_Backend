@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
@@ -31,6 +32,8 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
         public async Task<BaseResponse<List<ArbitratorsListVM>>> Handle(GetAllArbitratorsByClassIdQuery Request, 
             CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             List<Arbitrator> ArbitratorClassesEntities = new List<Arbitrator>();
             
             if (Request.page != 0 && Request.perPage != -1)
@@ -44,7 +47,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
                     .ToListAsync();
             else
                 ArbitratorClassesEntities = await _ArbitratorClassRepository
-                    .Where(x => x.EducationalClassId == Request.EducationalClassId)
+                    .WhereThenFilter(x => x.EducationalClassId == Request.EducationalClassId, filterObject)
                     .OrderByDescending(x => x.CreatedAt)
                     .Include(x => x.Arbitrator!)
                     .Select(x => x.Arbitrator!)

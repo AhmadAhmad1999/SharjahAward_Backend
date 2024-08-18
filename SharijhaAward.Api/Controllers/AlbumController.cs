@@ -85,17 +85,14 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllAlbums")]
-        public async Task<IActionResult> GetAllAlbums(int? CycleId, int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetAllAlbums([FromQuery] GetAllAlbumsQuery query)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllAlbumsQuery
-            {
-                lang = Language!,
-                page = page,
-                perPage = perPage
-            });
+            query.lang = Language!;
+
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {
