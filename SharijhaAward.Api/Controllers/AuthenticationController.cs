@@ -60,7 +60,8 @@ namespace SharijhaAward.Api.Controllers
                     lang = HeaderValue,
                     intoAdminDashboard = user.intoAdminDashboard,
                     DeviceToken = user.DeviceToken,
-                    Platform = user.Platform
+                    Platform = user.Platform,
+                    isChairman = user.isChairman
                 });
 
             var options = new JsonSerializerOptions
@@ -89,7 +90,8 @@ namespace SharijhaAward.Api.Controllers
                         data = new
                         {
                             NeedVerification = response.NeedVerification,
-                            Id = response.OutUserId
+                            Id = response.OutUserId,
+                            response.isChairman
                         }
                     });
             }
@@ -100,7 +102,8 @@ namespace SharijhaAward.Api.Controllers
                         data = response.user,
                         key = response.token,
                         permission = response.UserPermissions,
-                        message = response.message
+                        message = response.message,
+                        response.isChairman
                     }
                 );
         }
