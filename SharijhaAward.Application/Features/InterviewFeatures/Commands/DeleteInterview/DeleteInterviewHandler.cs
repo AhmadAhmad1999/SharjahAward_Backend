@@ -13,15 +13,18 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteIn
         private readonly IAsyncRepository<InterviewUser> _InterviewUserRepository;
         private readonly IAsyncRepository<InterviewNote> _InterviewNoteRepository;
         private readonly IAsyncRepository<InterviewQuestion> _InterviewQuestionRepository;
+        private readonly IAsyncRepository<InterviewAttachment> _InterviewAttachmentRepository;
         public DeleteInterviewHandler(IAsyncRepository<Interview> InterviewRepository,
             IAsyncRepository<InterviewUser> InterviewUserRepository,
             IAsyncRepository<InterviewNote> InterviewNoteRepository,
-            IAsyncRepository<InterviewQuestion> InterviewQuestionRepository)
+            IAsyncRepository<InterviewQuestion> InterviewQuestionRepository,
+            IAsyncRepository<InterviewAttachment> InterviewAttachmentRepository)
         {
             _InterviewRepository = InterviewRepository;
             _InterviewUserRepository = InterviewUserRepository;
             _InterviewNoteRepository = InterviewNoteRepository;
             _InterviewQuestionRepository = InterviewQuestionRepository;
+            _InterviewAttachmentRepository = InterviewAttachmentRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(DeleteInterviewCommand Request, CancellationToken cancellationToken)
@@ -52,6 +55,10 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteIn
                 .Where(x => x.InterviewId == Request.Id)
                 .ToListAsync();
 
+            List<InterviewAttachment> InterviewAttachmentEntitiesToDelete = await _InterviewAttachmentRepository
+                .Where(x => x.InterviewId == Request.Id)
+                .ToListAsync();
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -67,6 +74,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteIn
                     await _InterviewUserRepository.DeleteListAsync(InterviewUserEntitiesToDelete);
                     await _InterviewNoteRepository.DeleteListAsync(InterviewNoteEntitiesToDelete);
                     await _InterviewQuestionRepository.DeleteListAsync(InterviewQuestionEntitiesToDelete);
+                    await _InterviewAttachmentRepository.DeleteListAsync(InterviewAttachmentEntitiesToDelete);
 
                     ResponseMessage = Request.lang == "en"
                         ? "Interview has been deleted successfully"

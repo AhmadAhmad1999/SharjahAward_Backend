@@ -9,6 +9,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
         public ArbitrationType? ArbitrationType { get; set; }
         public string? lang { get; set; }
         public string? Token { get; set; }
+        public bool? asChairman { get; set; }
         public int page { get; set; }
         public int perPage { get; set; }
     }

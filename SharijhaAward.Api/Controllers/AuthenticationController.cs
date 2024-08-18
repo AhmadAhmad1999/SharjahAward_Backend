@@ -102,8 +102,7 @@ namespace SharijhaAward.Api.Controllers
                         data = response.user,
                         key = response.token,
                         permission = response.UserPermissions,
-                        message = response.message,
-                        response.isChairman
+                        message = response.message
                     }
                 );
         }

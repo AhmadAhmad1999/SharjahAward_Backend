@@ -6,6 +6,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.LoggerModel;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace SharijhaAward.Api.Logger
 {
@@ -97,7 +98,7 @@ namespace SharijhaAward.Api.Logger
 
             string httpMethod = filterContext.HttpContext.Request.Method;
 
-            if (Exceptions != null)
+            if (Exceptions is not null)
             {
                 try
                 {
@@ -139,6 +140,7 @@ namespace SharijhaAward.Api.Logger
 
                     _Logger.LogError(Exceptions.Message);
                     _LogUserActionRepository.AddAsync(NewLog);
+                    Thread.Sleep(200);
                 }
                 catch (Exception err)
                 {
@@ -185,14 +187,36 @@ namespace SharijhaAward.Api.Logger
                         // 7. Response Status..
                         NewLog.ResponseStatus = "Succeed";
 
-
                         // 8. Result...
                         NewLog.Result = Newtonsoft.Json.JsonConvert.SerializeObject(DynamicObject);
 
                         // 9. Activity Id...
                         NewLog.ActivityId = Trace.CorrelationManager.ActivityId;
 
+                        // 10. Record Id...
+                        var CheckIfIdInRequest = Parameters.FirstOrDefault(x => x.Key.ToLower() == "id");
+
+                        if (Controller_Function_Name.Count() == 3 && (httpMethod.ToLower() == "delete" || httpMethod.ToLower() == "put"))
+                        {
+                            NewLog.RecordId = int.Parse(Controller_Function_Name[2].ToString()!);
+                        }
+                        else if (CheckIfIdInRequest.Value != null)
+                        {
+                            NewLog.RecordId = int.Parse(CheckIfIdInRequest.Value.ToString()!);
+                        }
+                        else if (CheckIfIdInRequest.Value == null && Parameters.FirstOrDefault().Value != null)
+                        {
+                            PropertyInfo? CheckIdInCommand = Parameters.FirstOrDefault().Value.GetType().GetProperty("Id");
+
+                            if (CheckIdInCommand != null)
+                            {
+                                NewLog.RecordId = int.Parse(Parameters.FirstOrDefault().Value.GetType()
+                                    .GetProperty("Id")!.GetValue(Parameters.FirstOrDefault().Value)!.ToString()!);
+                            }
+                        }
+
                         _LogUserActionRepository.AddAsync(NewLog);
+                        Thread.Sleep(200);
                     }
                 }
             }
