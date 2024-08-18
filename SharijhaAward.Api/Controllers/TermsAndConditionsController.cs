@@ -109,19 +109,14 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name="GetAllTermsAndConditions")]
-        public async Task<IActionResult> GetAllTermsAndConditions([FromQuery] int? CategoryId, int page = 1 , int perPage = 10)
+        public async Task<IActionResult> GetAllTermsAndConditions([FromQuery] GetAllTermAndConditionQuery query)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
-         
 
-            var response = await _mediator.Send(new GetAllTermAndConditionQuery()
-            {
-                page = page,
-                perPage =  perPage ,
-                lang = Language!,
-                CategoryId = CategoryId
-            });
+            query.lang = Language!;
+            
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

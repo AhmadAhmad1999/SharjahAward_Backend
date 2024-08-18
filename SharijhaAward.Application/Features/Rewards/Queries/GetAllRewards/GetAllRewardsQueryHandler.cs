@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.RewardModel;
 using System;
@@ -27,7 +28,9 @@ namespace SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards
 
         public async Task<BaseResponse<List<RewardListVm>>> Handle(GetAllRewardsQuery request, CancellationToken cancellationToken)
         {
-            var Rewards = await _rewardRepository.GetWhereThenPagedReponseAsync(r => r.CategoryId == request.CategoryId, request.page, request.perPage);
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
+            var Rewards = await _rewardRepository.GetWhereThenPagedReponseAsync(r => r.CategoryId == request.CategoryId, filterObject, request.page, request.perPage);
             
             var data = _mapper.Map<List<RewardListVm>>(Rewards);
 

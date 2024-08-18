@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.FAQModel;
 using System;
@@ -30,6 +31,8 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId
 
         public async Task<BaseResponse<List<FAQListVm>>> Handle(GetAllFAQsByCategoryIdQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             string msg;
             if (category == null)
@@ -44,12 +47,13 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetFAQsByCategoryId
             List<FrequentlyAskedQuestion> FAQs = new List<FrequentlyAskedQuestion>();
 
             if (request.page != 0 && request.perPage != -1)
-                FAQs = await _faqRepository.Where(f => f.CategoryId == category.Id)
+                FAQs = await _faqRepository.WhereThenFilter(f => f.CategoryId == category.Id, filterObject)
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((request.page - 1) * request.perPage)
                     .Take(request.perPage).ToListAsync();
+
             else
-                FAQs = await _faqRepository.Where(f => f.CategoryId == category.Id)
+                FAQs = await _faqRepository.WhereThenFilter(f => f.CategoryId == category.Id, filterObject)
                     .OrderByDescending(x => x.CreatedAt).ToListAsync();
 
             var data = _mapper.Map<List<FAQListVm>>(FAQs);

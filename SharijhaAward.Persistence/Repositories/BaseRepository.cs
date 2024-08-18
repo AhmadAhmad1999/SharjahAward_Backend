@@ -4,6 +4,7 @@ using PdfSharpCore.Pdf;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.CommitteeModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -397,9 +398,8 @@ namespace SharijhaAward.Persistence.Repositories
             return await _dbContext.Database.ExecuteSqlRawAsync(sql);
         }
 
-
         public IQueryable<T> Filtration(FilterObject filterObject)
-        {
+            {
             IQueryable<T> query = _DbSet.AsNoTracking();
 
             foreach (var filter in filterObject.Filters!)
@@ -408,7 +408,7 @@ namespace SharijhaAward.Persistence.Repositories
                 
                 if (propertyType != null)
                 {
-                    if (filter.Value == null)
+                    if (filter.Value == null && filter.DateRange == null)
                     {
                         // Process null value
                         query = query.Where(entity => EF.Property<object>(entity, filter.Key!) == null);
@@ -436,7 +436,32 @@ namespace SharijhaAward.Persistence.Repositories
 
                         query = query.Where(entity => EF.Property<bool>(entity, filter.Key!) == Value);
                     }
+                    else if(propertyType == typeof(Domain.Constants.Common.Status) && filter.Value is string CycleStatusValue)
+                    {
+                        int Value = int.Parse(CycleStatusValue);
 
+                        query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
+                    }
+                    else if(propertyType == typeof(Domain.Constants.AgendaConstants.AgendaStatus) && filter.Value is string AgendaStatusValue)
+                    {
+                        int Value = int.Parse(AgendaStatusValue);
+
+                        query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
+                    }
+                    else if (propertyType == typeof(Domain.Constants.CommitteeConstants.CommitteeStatus) && filter.Value is string CommitteeStatusValue)
+                    {
+                        int Value = int.Parse(CommitteeStatusValue);
+
+                        query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
+                    }
+                    //else if (typeof(T) == typeof(Committee) && propertyType == typeof(string) && filter.Key == "ChairmanName" && filter.Value is string CommitteeStringValue)
+                    //{
+                    //    if (!string.IsNullOrEmpty(CommitteeStringValue))
+                    //    {
+                    //        var committee = 
+                    //        query = query.Where(entity => EF.Property<string>(entity, filter.Key!).Contains(CommitteeStringValue));
+                    //    }
+                    //}
                     else if (propertyType == typeof(DateTime) && filter.DateRange is DateTimeRange dateRange)
                     {
                         // Process date range

@@ -37,6 +37,14 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
                 .Include(x => x.Category!)
                 .ToListAsync();
 
+            if(Request.CategoryId != null)
+            {
+                Arbitrators = _Mapper.Map<List<ArbitratorsListVM>>(await _CategoryArbitratorRepository
+                  .WhereThenFilter(c => c.CategoryId == Request.CategoryId, filterObject)
+                  .Select(c => c.Arbitrator)
+                  .ToListAsync());
+            }
+
             Arbitrators = Arbitrators.Select(x => new ArbitratorsListVM()
             {
                 Id = x.Id,

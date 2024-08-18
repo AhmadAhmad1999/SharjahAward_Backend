@@ -10,6 +10,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
         public string? lang { get; set; }
         public int page { get; set; } = 1;
         public int perPage { get; set; } = 10;
+        public int? EducationalEntityId { get; set; }
         public List<Filter>? filters { get; set; }
     }
 }
