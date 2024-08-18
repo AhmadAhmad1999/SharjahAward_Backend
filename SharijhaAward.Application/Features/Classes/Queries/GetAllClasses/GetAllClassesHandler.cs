@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.EducationalClassModel;
 
 namespace SharijhaAward.Application.Features.Classes.Queries.GetAllClasses
@@ -22,8 +23,10 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllClasses
         {
             string ResponseMessage = string.Empty;
 
+            var filterObject = new FilterObject() { Filters = Request.filters };
+
             List<GetAllClassesListVM> Classes = _Mapper.Map<List<GetAllClassesListVM>>(await _EducationalClassRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
 
             int TotalCount = await _EducationalClassRepository.GetCountAsync(null);
 

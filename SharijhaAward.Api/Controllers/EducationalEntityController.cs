@@ -142,20 +142,17 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllEducationEntitiesForAdminDashboard(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllEducationEntitiesForAdminDashboard([FromQuery] GetAllEducationalEntitiesForAdminDashboardQuery query)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
+            query.lang = HeaderValue!;
+
             BaseResponse<List<GetAllEducationalEntitiesForAdminDashboardListVM>> Response = 
-                await _Mediator.Send(new GetAllEducationalEntitiesForAdminDashboardQuery()
-                {
-                    lang = HeaderValue!,
-                    page = Page,
-                    perPage = PerPage
-                });
+                await _Mediator.Send(query);
 
             return Response.statusCode switch
             {

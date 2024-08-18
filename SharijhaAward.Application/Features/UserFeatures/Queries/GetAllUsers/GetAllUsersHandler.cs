@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers
@@ -25,6 +26,8 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers
 
         public async Task<BaseResponse<List<GetAllUsersListVM>>> Handle(GetAllUsersQuery Request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             string ResponseMessage = string.Empty;
 
             List<UserRole> UserRoleEntities = await _UserRoleRepository
@@ -34,7 +37,7 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers
                 .ToListAsync();
 
             List<GetAllUsersListVM> Users = await _UserRepository
-                .Where(x => x.isValidAccount)
+                .WhereThenFilter(x => x.isValidAccount, filterObject)
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((Request.page - 1) * Request.perPage)
                 .Take(Request.perPage)

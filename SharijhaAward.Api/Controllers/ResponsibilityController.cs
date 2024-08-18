@@ -81,16 +81,11 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllResponsibilities")]
-        public async Task<IActionResult> GetAllResponsibilities(int? RoleId, int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetAllResponsibilities([FromQuery] GetAllResponsibilitiesQuery query)
         {
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllResponsibilitiesQuery()
-            {
-                page = page,
-                perPage = perPage,
-                RoleId = RoleId
-            });
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

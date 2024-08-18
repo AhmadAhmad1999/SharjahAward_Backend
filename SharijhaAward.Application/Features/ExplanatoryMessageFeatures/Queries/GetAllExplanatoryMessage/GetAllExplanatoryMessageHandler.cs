@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ExplanatoryMessageModel;
 
 namespace SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetAllExplanatoryMessage
@@ -18,10 +19,12 @@ namespace SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.
         public async Task<BaseResponse<List<GetAllExplanatoryMessageListVM>>> 
             Handle(GetAllExplanatoryMessageQuery Request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             string ResponseMessage = string.Empty;
 
             List<GetAllExplanatoryMessageListVM> ExplanatoryMessages = await _ExplanatoryMessageRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                 .Select(x => new GetAllExplanatoryMessageListVM()
                 {
                     Id = x.Id,

@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.AppVersioningModel;
 
 namespace SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllAppVersions
@@ -21,11 +22,13 @@ namespace SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllA
         public async Task<BaseResponse<List<GetAllAppVersionsListVM>>> 
             Handle(GetAllAppVersionsQuery Request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             string ResponseMessage = string.Empty;
 
             var AllAppVersions = Request.AppType == null
-                ? await _AppVersionRepository.OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage).ToListAsync()
-                : await _AppVersionRepository.OrderByDescending(x => x.CreatedAt, Request.page,Request.perPage).Where(x=>x.AppType == Request.AppType).ToListAsync();
+                ? await _AppVersionRepository.OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage).ToListAsync()
+                : await _AppVersionRepository.OrderByDescending(filterObject, x => x.CreatedAt, Request.page,Request.perPage).Where(x=>x.AppType == Request.AppType).ToListAsync();
                 
             var data = _Mapper.Map<List<GetAllAppVersionsListVM>>(AllAppVersions);
 
