@@ -17,5 +17,6 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         public string? lang { get; set; }
         public string? DeviceToken { get; set; }
         public PlatformType? Platform { get; set; }
+        public bool? isChairman { get; set; }
     }
 }
