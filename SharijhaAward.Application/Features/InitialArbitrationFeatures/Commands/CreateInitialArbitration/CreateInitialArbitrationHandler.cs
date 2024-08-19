@@ -47,16 +47,20 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            var InitialArbitrationMainCommandCriterion = Request.InitialArbitrationMainCommand
+                .Where(y => y.CriterionId != null)
+                .Select(y => y.CriterionId);
+
             List<Criterion> CriterionEntities = await _CriterionRepository
-                .Where(x => Request.InitialArbitrationMainCommand
-                    .Where(y => y.CriterionId != null).Select(y => y.CriterionId)
-                    .Any(y => y == x.Id))
+                .Where(x => InitialArbitrationMainCommandCriterion.Contains(x.Id))
                 .ToListAsync();
 
+            var InitialArbitrationMainCommandCriterionItem = Request.InitialArbitrationMainCommand
+                .Where(y => y.CriterionItemId != null)
+                .Select(y => y.CriterionItemId);
+
             List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
-                .Where(x => Request.InitialArbitrationMainCommand
-                    .Where(y => y.CriterionItemId != null).Select(y => y.CriterionItemId)
-                    .Any(y => y == x.Id))
+                .Where(x => InitialArbitrationMainCommandCriterionItem.Contains(x.Id))
                 .ToListAsync();
 
             IEnumerable<InitialArbitrationMainCommand> InitialArbitrationMainCommands = Request.InitialArbitrationMainCommand

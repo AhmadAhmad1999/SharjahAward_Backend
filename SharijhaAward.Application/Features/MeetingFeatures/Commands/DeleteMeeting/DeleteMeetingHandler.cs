@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.MeetingCategoryModel;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using System.Transactions;
@@ -12,11 +13,14 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.DeleteMeet
     {
         private readonly IAsyncRepository<Meeting> _MeetingRepository;
         private readonly IAsyncRepository<MeetingUser> _MeetingUserRepository;
+        private readonly IAsyncRepository<MeetingCategory> _MeetingCategoryRepository;
         public DeleteMeetingHandler(IAsyncRepository<Meeting> MeetingRepository,
-            IAsyncRepository<MeetingUser> MeetingUserRepository)
+            IAsyncRepository<MeetingUser> MeetingUserRepository,
+            IAsyncRepository<MeetingCategory> MeetingCategoryRepository)
         {
             _MeetingRepository = MeetingRepository;
             _MeetingUserRepository = MeetingUserRepository;
+            _MeetingCategoryRepository = MeetingCategoryRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(DeleteMeetingCommand Request, CancellationToken cancellationToken)
@@ -39,6 +43,10 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.DeleteMeet
                 .Where(x => x.MeetingId == Request.Id)
                 .ToListAsync();
 
+            List<MeetingCategory> MeetingCategoryEntitiesToDelete = await _MeetingCategoryRepository
+                .Where(x => x.MeetingId == Request.Id)
+                .ToListAsync();
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -51,7 +59,12 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.DeleteMeet
                 try
                 {
                     await _MeetingRepository.DeleteAsync(MeetingEntityToDelete);
-                    await _MeetingUserRepository.DeleteListAsync(MeetingUserEntitiesToDelete);
+
+                    if (MeetingUserEntitiesToDelete.Any())
+                        await _MeetingUserRepository.DeleteListAsync(MeetingUserEntitiesToDelete);
+
+                    if (MeetingCategoryEntitiesToDelete.Any())
+                        await _MeetingCategoryRepository.DeleteListAsync(MeetingCategoryEntitiesToDelete);
 
                     ResponseMessage = Request.lang == "en"
                         ? "Meeting has been deleted successfully"

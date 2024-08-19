@@ -157,7 +157,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     return new BaseResponse<GetAllFromsForInitialArbitrationFullResponse>(ResponseMessage, false, 404);
                 }
 
-                if (ArbitratorEntity.isChairman)
+                if (ArbitratorEntity.isChairman &&
+                    (Request.asChairman != null ? Request.asChairman.Value : false))
                 {
                     List<int> ArbitratorsIdsInCommittee = await _ComitteeArbitratorRepository
                         .Include(x => x.Committee!)

@@ -121,11 +121,17 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             if (response.user == null && ForUseUserId != null)
                 response.OutUserId = ForUseUserId!.Value;
 
-            Arbitrator? CheckIfLogInUserIsArbitrator = await _ArbitratorRepository
-                .FirstOrDefaultAsync(x => x.Id == response.OutUserId);
+            if (response.user != null)
+            {
+                Arbitrator? CheckIfLogInUserIsArbitrator = await _ArbitratorRepository
+                    .FirstOrDefaultAsync(x => x.Id == response.user.Id);
 
-            if (CheckIfLogInUserIsArbitrator is not null)
-                response.isChairman = CheckIfLogInUserIsArbitrator.isChairman;
+                if (CheckIfLogInUserIsArbitrator is not null)
+                {
+                    response.isChairman = CheckIfLogInUserIsArbitrator.isChairman;
+                    response.user.isChairman = CheckIfLogInUserIsArbitrator.isChairman;
+                }
+            }
 
             return response;
         }
