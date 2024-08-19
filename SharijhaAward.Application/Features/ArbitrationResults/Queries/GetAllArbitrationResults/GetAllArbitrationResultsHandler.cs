@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
@@ -27,6 +28,8 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
         public async Task<BaseResponse<List<GetAllArbitrationResultsListVM>>> 
             Handle(GetAllArbitrationResultsQuery Request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             string ResponseMessage = string.Empty;
 
             List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository

@@ -40,19 +40,16 @@ namespace SharijhaAward.Api.Controllers
             };
 
         }
+
         [HttpGet(Name = "GetAllGeneralWorkshope")]
-        public async Task<IActionResult> GetAllGeneralWorkshope(string? query , int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetAllGeneralWorkshope([FromQuery] GetAllGeneralWorkshopsQuery query)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllGeneralWorkshopsQuery()
-            {
-                lang = language!,
-                page = page,
-                perPage = perPage,
-                query = query!
-            });
+            query.lang = language!;
+
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -61,6 +58,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+
         [HttpGet("{Id}",Name= "GetGeneralWorkshopById")]
         public async Task<IActionResult> GetGeneralWorkshopById(int Id)
         {

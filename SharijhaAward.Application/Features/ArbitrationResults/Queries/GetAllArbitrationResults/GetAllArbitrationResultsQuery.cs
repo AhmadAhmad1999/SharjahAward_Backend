@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 
 namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllArbitrationResults
 {
@@ -11,7 +12,8 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
         public string? CategoryName { get; set; }
         public bool? EligibleToWin { get; set; }
         public string? lang { get; set; }
-        public int page { get; set; }
-        public int PerPage { get; set; }
+        public int page { get; set; } = 1;
+        public int PerPage { get; set; } = 10;
+        public List<Filter>? filters { get; set; }
     }
 }

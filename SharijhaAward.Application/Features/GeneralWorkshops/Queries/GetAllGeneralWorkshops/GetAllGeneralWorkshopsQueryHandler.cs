@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
 
 namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGeneralWorkshops
@@ -23,8 +24,10 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGene
 
         public async Task<BaseResponse<List<GeneralWorkshopsListVM>>> Handle(GetAllGeneralWorkshopsQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var generalWorkshops = await _generalWorkshopRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+                .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
                 .ToListAsync();
            
             if (!request.query.IsNullOrEmpty())

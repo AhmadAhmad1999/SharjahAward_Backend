@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
 
 namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFAQs
@@ -21,6 +22,8 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
 
         public async Task<BaseResponse<List<GetAllGeneralFAQListVM>>> Handle(GetAllGeneralFAQQuery Request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+            
             string ResponseMessage = string.Empty;
 
             List<GetAllGeneralFAQListVM> GeneralFAQs = new List<GetAllGeneralFAQListVM>();
@@ -30,7 +33,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
                 if (Request.page != 0 && Request.perPage != -1)
                 {
                     GeneralFAQs = await _GeneralFAQRepository
-                        .Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId)
+                        .WhereThenFilter(x => x.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId, filterObject)
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
@@ -53,7 +56,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
                 else
                 {
                     GeneralFAQs = await _GeneralFAQRepository
-                        .Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId)
+                        .WhereThenFilter(x => x.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId, filterObject)
                         .Include(x => x.GeneralFrequentlyAskedQuestionCategory!)
                         .OrderByDescending(x => x.CreatedAt)
                         .Select(x => new GetAllGeneralFAQListVM()
@@ -75,7 +78,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
             else
             {
                 GeneralFAQs = await _GeneralFAQRepository
-                    .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
+                    .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                     .Include(x => x.GeneralFrequentlyAskedQuestionCategory!)
                     .Select(x => new GetAllGeneralFAQListVM()
                     {

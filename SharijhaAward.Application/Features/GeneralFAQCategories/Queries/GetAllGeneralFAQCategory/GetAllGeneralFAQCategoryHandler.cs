@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
 using System.Linq;
 
@@ -25,10 +26,12 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
         public async Task<BaseResponse<List<GetAllGeneralFAQCategoryListVM>>> Handle(GetAllGeneralFAQCategoryQuery Request,
             CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             string ResponseMessage = string.Empty;
 
             List<GetAllGeneralFAQCategoryListVM> GeneralFAQCategories = await _GeneralFAQCategoryRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                 .Select(x => new GetAllGeneralFAQCategoryListVM()
                 {
                     Id = x.Id,

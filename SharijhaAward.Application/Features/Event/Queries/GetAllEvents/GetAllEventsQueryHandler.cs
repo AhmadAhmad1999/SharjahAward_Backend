@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +25,11 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
 
         public async Task<BaseResponse<List<EventListVM>>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var allEvents = request.perPage == -1 || request.page==0
-                ? await _eventRepository.OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync()
-                : await _eventRepository.OrderByDescending(x => x.CreatedAt, request.page,request.perPage).ToListAsync();
+                ? await _eventRepository.OrderByDescending(filterObject, x => x.CreatedAt, 0, -1).ToListAsync()
+                : await _eventRepository.OrderByDescending(filterObject, x => x.CreatedAt, request.page,request.perPage).ToListAsync();
            
             List<EventListVM> allEventsVM = new List<EventListVM>();
          
@@ -54,8 +57,12 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
             }
             
             var data = _mapper.Map<List<EventListVM>>(allEventsVM);
+
             var count =  _eventRepository.ListAllAsync().Result.Count();
-            return new BaseResponse<List<EventListVM>>("تم إسترجاع الفعاليات بنجاح", true, 200, data, count);
+
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
+
+            return new BaseResponse<List<EventListVM>>("تم إسترجاع الفعاليات بنجاح", true, 200, data, pagination);
         }
     }
 }

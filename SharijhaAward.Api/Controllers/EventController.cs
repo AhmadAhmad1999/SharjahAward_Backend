@@ -83,37 +83,24 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> GetAllEvents(int page = 1, int perPage = 10)
+        public async Task<ActionResult> GetAllEvents([FromQuery] GetAllEventsQuery query)
         {
             //get Language from header
             var headerValue = HttpContext.Request.Headers["lang"];
             if (headerValue.IsNullOrEmpty())
                 headerValue = "";
-            int pageSize = perPage == 0 ? 10 : perPage;
-            //get data from mediator
-            var response = await _Mediator.Send(new GetAllEventsQuery()
-            {
-                lang = headerValue,
-                page = page,
-                perPage = pageSize
-            });
 
-            var totalCount = response.totalItem;
-            var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
-            return Ok(
-                new
-                {
-                    response.data,
-                    response.statusCode,
-                    pagination =
-                    new
-                    {
-                        current_page = page,
-                        last_page = totalPage,
-                        total_row = totalCount,
-                        per_page = perPage
-                    }
-                });
+            query.lang = headerValue!;
+
+            //get data from mediator
+            var response = await _Mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
         }
 
         [HttpDelete("{id}", Name = "DeleteEvent")]
