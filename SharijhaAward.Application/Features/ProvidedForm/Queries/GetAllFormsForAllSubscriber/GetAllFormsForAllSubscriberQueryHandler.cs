@@ -5,6 +5,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForms;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedFormsForAllSubscriber;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
@@ -76,6 +77,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+
             var cycle = await _CycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active);
 
             if (cycle != null)
@@ -93,7 +96,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         .ToListAsync();
 
                     var forms = await _FormRepository
-                        .Include(f => f.Category)
+                        .Include(f => f.Category, filterObject)
                         .Where(f => f.Category.CycleId == cycle.Id)
                         .ToListAsync();
 
@@ -194,8 +197,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             {
                                 data[i].RejectedSteps!.Add(6);
                             }
-
-
 
                             bool CheckIfThereIsRejectedDynamicFields = await _DynamicAttributeValueRepository
                                 .Include(x => x.DynamicAttribute!)

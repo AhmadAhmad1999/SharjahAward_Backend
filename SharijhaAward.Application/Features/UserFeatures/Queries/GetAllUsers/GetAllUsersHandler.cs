@@ -37,7 +37,7 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers
                 .ToListAsync();
 
             List<GetAllUsersListVM> Users = await _UserRepository
-                .WhereThenFilter(x => x.isValidAccount, filterObject)
+                .WhereThenFilter(x => x.isValidAccount && x.SubscriberId == null, filterObject)
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((Request.page - 1) * Request.perPage)
                 .Take(Request.perPage)

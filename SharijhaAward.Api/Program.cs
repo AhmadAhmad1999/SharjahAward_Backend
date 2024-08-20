@@ -165,21 +165,28 @@ try
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseHttpsRedirection();
+    app.UseRouting();
     //app.UseMiddleware<AuthenticationMiddleware>();
     app.UseMiddleware<ExceptionMiddleware>();
-    app.UseAuthorization();
-    app.UseStaticFiles();
     app.UseAuthentication();
+    app.UseAuthorization();
+
+
+    app.UseStaticFiles();
+
 
     app.UseCors("Open");
-    
+
     //hangfire
 
     //app.UseHangfireDashboard();
 
     //RecurringJob.AddOrUpdate<IBackGroundJobService>("Change Agenda State", service => service.ChangeAgendaStateAsync(), Cron.Minutely);
 
-    app.MapControllers();
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
 
     app.Run();
     

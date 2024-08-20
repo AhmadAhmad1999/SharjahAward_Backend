@@ -61,7 +61,7 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
             else
             {
                 var AllStatistics = await _awardStatisticRepository
-                    .OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+                    .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
                     .ToListAsync();
 
                 var data = _mapper.Map<List<AwardStatisticListVM>>(AllStatistics);

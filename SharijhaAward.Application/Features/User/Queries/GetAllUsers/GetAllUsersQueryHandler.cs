@@ -31,7 +31,9 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
         {
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
-            var Users = await _userRepository.OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
+            var Users = await _userRepository
+                .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
+                .Where(u=>u.SubscriberId == null)
                 .ToListAsync();
 
             var data = _mapper.Map<List<UserListVm>>(Users );

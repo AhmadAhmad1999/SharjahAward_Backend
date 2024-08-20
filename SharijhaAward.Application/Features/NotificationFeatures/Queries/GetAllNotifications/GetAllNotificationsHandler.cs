@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.NotificationModel;
 
 namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotifications
@@ -21,10 +22,12 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
         public async Task<BaseResponse<List<GetAllNotificationsListVM>>> 
             Handle(GetAllNotificationsQuery Request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             string ResponseMessage = string.Empty;
 
             List<GetAllNotificationsListVM> Classes = _Mapper.Map<List<GetAllNotificationsListVM>>(await _NotificationRepository
-                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
 
             int TotalCount = await _NotificationRepository.GetCountAsync(null);
 

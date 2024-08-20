@@ -88,36 +88,39 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
                     x.ProvidedFormId == Request.ProvidedFormId)
                 .ToListAsync();
 
-            List<CriterionItem> CriterionItemEntitiesWithNoAttachments = CriterionItemEntities
-                .Where(x => !InsertedCriterionItemAttachment.Select(y => y.CriterionItemId).Contains(x.Id)).ToList();
-
-            if (CriterionItemEntitiesWithNoAttachments.Count() > 0)
+            if (InsertedCriterionItemAttachment.Any())
             {
-                ResponseMessage = Request.lang == "en"
-                    ? $"You have to attach one file at least to this criterion item: {CriterionItemEntitiesWithNoAttachments[0].EnglishName}"
-                    : $"يجب أن يتم إدخال ملحق واحد على الأقل لعنصر المعيار: {CriterionItemEntitiesWithNoAttachments[0].ArabicName}";
+                List<CriterionItem> CriterionItemEntitiesWithNoAttachments = CriterionItemEntities
+                    .Where(x => !InsertedCriterionItemAttachment.Select(y => y.CriterionItemId).Contains(x.Id)).ToList();
 
-                return new BaseResponse<object>(ResponseMessage, false, 400);
-            }
-
-            if (InsertedCriterionItemAttachment.Any()
-                ? InsertedCriterionItemAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber > 0
-                : false)
-            {
-                IGrouping<int, CriterionItemAttachment>? CheckMaxAttachment = InsertedCriterionItemAttachment
-                    .GroupBy(x => x.CriterionItemId)
-                    .FirstOrDefault(x => x.ToList().FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber < x.Count());
-
-                if (CheckMaxAttachment is not null
-                    ? CheckMaxAttachment.Any()
-                    : false)
+                if (CriterionItemEntitiesWithNoAttachments.Count() > 0)
                 {
                     ResponseMessage = Request.lang == "en"
-                        ? $"You can't attach more than {CheckMaxAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber}" +
-                            $" files to this criterion item: {CriterionItemEntitiesWithNoAttachments[0].EnglishName}"
-                        : $"لا يمكن أن يتم إدخال أكثر من {CheckMaxAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber}ملحق لعنصر المعيار: {CriterionItemEntitiesWithNoAttachments[0].ArabicName}";
+                        ? $"You have to attach one file at least to this criterion item: {CriterionItemEntitiesWithNoAttachments[0].EnglishName}"
+                        : $"يجب أن يتم إدخال ملحق واحد على الأقل لعنصر المعيار: {CriterionItemEntitiesWithNoAttachments[0].ArabicName}";
 
                     return new BaseResponse<object>(ResponseMessage, false, 400);
+                }
+
+                if (InsertedCriterionItemAttachment.Any()
+                    ? InsertedCriterionItemAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber > 0
+                    : false)
+                {
+                    IGrouping<int, CriterionItemAttachment>? CheckMaxAttachment = InsertedCriterionItemAttachment
+                        .GroupBy(x => x.CriterionItemId)
+                        .FirstOrDefault(x => x.ToList().FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber < x.Count());
+
+                    if (CheckMaxAttachment is not null
+                        ? CheckMaxAttachment.Any()
+                        : false)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? $"You can't attach more than {CheckMaxAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber}" +
+                                $" files to this criterion item: {CriterionItemEntitiesWithNoAttachments[0].EnglishName}"
+                            : $"لا يمكن أن يتم إدخال أكثر من {CheckMaxAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber}ملحق لعنصر المعيار: {CriterionItemEntitiesWithNoAttachments[0].ArabicName}";
+
+                        return new BaseResponse<object>(ResponseMessage, false, 400);
+                    }
                 }
             }
 

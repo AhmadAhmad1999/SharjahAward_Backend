@@ -99,7 +99,7 @@ namespace SharijhaAward.Api.Controllers
         }
         [HttpGet(Name = "GetAllUsers")]
 
-        public async Task<ActionResult> GetAllUsers(GetAllUsersQuery query)
+        public async Task<ActionResult> GetAllUsers([FromQuery] GetAllUsersQuery query)
         {
             var response = await _mediator.Send(query);
 

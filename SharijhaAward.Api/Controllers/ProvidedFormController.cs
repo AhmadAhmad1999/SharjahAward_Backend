@@ -111,23 +111,19 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllFormsForAllSubscriber", Name = "GetAllFormsForAllSubscriber")]
-        public async Task<IActionResult> GetAllFormsForAllSubscriber(int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetAllFormsForAllSubscriber([FromQuery] GetAllFormsForAllSubscriberQuery query)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
 
+            query.lang = Language!;
+            query.Token = token!;
             //if (token.IsNullOrEmpty())
             //{
             //    return Unauthorized();
             //}
-            var response = await _mediator.Send(new GetAllFormsForAllSubscriberQuery()
-            {
-                page=page,
-                perPage = perPage,
-                lang = Language!,
-                Token = token
-            });
+            var response = await _mediator.Send(query);
 
             return response.statusCode switch
             {

@@ -2920,8 +2920,8 @@ namespace SharijhaAward.Persistence
                  }, new Permission()
                  {
                      Id = 184,
-                     Name = "تعديل تدقيق التحكيم",
-                     Action = "update",
+                     Name = "إضافة مقابلة",
+                     Action = "create",
                      PermissionHeaderId = 43,
                      isDeleted = false,
                      CreatedAt = DateTime.UtcNow,

@@ -413,6 +413,16 @@ namespace SharijhaAward.Persistence.Repositories
                         // Process null value
                         query = query.Where(entity => EF.Property<object>(entity, filter.Key!) == null);
                     }
+                    else if (propertyType == typeof(string) && filter.Key =="Time" && filter.Value is string TimeValue)
+                    {
+                        // Process string value
+                        if (!string.IsNullOrEmpty(TimeValue))
+                        {
+                            var query1 = query.Where(entity => EF.Property<string>(entity, filter.Key!).StartsWith(TimeValue));
+                            var query2 = query.Where(entity => EF.Property<string>(entity, filter.Key!).EndsWith(TimeValue));
+                            query = query1.Union(query2);
+                        }
+                    }
                     else if (propertyType == typeof(string) && filter.Value is string stringValue)
                     {
                         // Process string value
