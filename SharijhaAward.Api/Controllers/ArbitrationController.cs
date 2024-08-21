@@ -183,7 +183,7 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<List<GetAllFormsForSortingProcessListVM>> Response = await _Mediator.Send(new GetAllFormsForSortingProcessQuery()
             {
                 token = Token,
-                Filter = filter,
+                filter = filter,
                 lang = HeaderValue!,
                 page = Page,
                 perPage = PerPage

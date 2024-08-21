@@ -398,14 +398,28 @@ namespace SharijhaAward.Persistence.Repositories
             return await _dbContext.Database.ExecuteSqlRawAsync(sql);
         }
 
-        public IQueryable<T> Filtration(FilterObject filterObject)
+        public  IQueryable<T> Filtration(FilterObject filterObject)
             {
             IQueryable<T> query = _DbSet.AsNoTracking();
 
             foreach (var filter in filterObject.Filters!)
             {
                 var propertyType = typeof(T).GetProperty(filter.Key!)?.PropertyType;
-                
+
+                if (filter.Key == "SubscriberId" && filter.Value is string SubscriberIdValue)
+                {
+                    // Process string value
+                    if (!string.IsNullOrEmpty(SubscriberIdValue))
+                    {
+                        
+                        var providedForm = _dbContext.ProvidedForms
+                            .Include(p => p.User)
+                            .AsQueryable();
+
+                        query = (IQueryable<T>)providedForm.Where(p => p.User.SubscriberId.Contains(SubscriberIdValue)).AsQueryable();
+                        //query = query.Where(entity => EF.Property<string>(entity, filter.Key!).Contains(SubscriberIdValue));
+                    }
+                }
                 if (propertyType != null)
                 {
                     if (filter.Value == null && filter.DateRange == null)
@@ -413,16 +427,18 @@ namespace SharijhaAward.Persistence.Repositories
                         // Process null value
                         query = query.Where(entity => EF.Property<object>(entity, filter.Key!) == null);
                     }
-                    else if (propertyType == typeof(string) && filter.Key =="Time" && filter.Value is string TimeValue)
+                    else if (propertyType == typeof(string) && filter.Key == "Time" && filter.Value is string TimeValue)
                     {
                         // Process string value
                         if (!string.IsNullOrEmpty(TimeValue))
                         {
+
                             var query1 = query.Where(entity => EF.Property<string>(entity, filter.Key!).StartsWith(TimeValue));
                             var query2 = query.Where(entity => EF.Property<string>(entity, filter.Key!).EndsWith(TimeValue));
                             query = query1.Union(query2);
                         }
                     }
+                    
                     else if (propertyType == typeof(string) && filter.Value is string stringValue)
                     {
                         // Process string value
@@ -444,6 +460,15 @@ namespace SharijhaAward.Persistence.Repositories
                     {
                         bool Value = bool.Parse(boolValue);
 
+                        query = query.Where(entity => EF.Property<bool>(entity, filter.Key!) == Value);
+                    }
+                    else if(propertyType == typeof(Nullable<bool>) && filter.Value is null)
+                    {
+                        query = query.Where(entity => EF.Property<bool>(entity, filter.Key!) == null);
+                    }
+                    else if(propertyType == typeof(Nullable<bool>) && filter.Value is string NullableValue)
+                    {
+                        bool Value = bool.Parse(NullableValue);
                         query = query.Where(entity => EF.Property<bool>(entity, filter.Key!) == Value);
                     }
                     else if(propertyType == typeof(Domain.Constants.Common.Status) && filter.Value is string CycleStatusValue)
@@ -470,14 +495,13 @@ namespace SharijhaAward.Persistence.Repositories
 
                         query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
                     }
-                    //else if (typeof(T) == typeof(Committee) && propertyType == typeof(string) && filter.Key == "ChairmanName" && filter.Value is string CommitteeStringValue)
-                    //{
-                    //    if (!string.IsNullOrEmpty(CommitteeStringValue))
-                    //    {
-                    //        var committee = 
-                    //        query = query.Where(entity => EF.Property<string>(entity, filter.Key!).Contains(CommitteeStringValue));
-                    //    }
-                    //}
+                    else if (propertyType == typeof(Domain.Constants.EducationType) && filter.Value is string EducationTypeValue)
+                    {
+                        int Value = int.Parse(EducationTypeValue);
+
+                        query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
+                    }
+
                     else if (propertyType == typeof(DateTime) && filter.DateRange is DateTimeRange dateRange)
                     {
                         // Process date range

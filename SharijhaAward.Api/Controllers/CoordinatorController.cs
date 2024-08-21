@@ -221,7 +221,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllCoordinatorsByFormId/{formId}", Name = "GetAllCoordinatorsByFormId")]
-        public async Task<IActionResult> GetAllCoordinatorsByFormId(int formId)
+        public async Task<IActionResult> GetAllCoordinatorsByFormId(int formId, int page = 1, int perPage = 10)
         {
             string token = HttpContext.Request.Headers.Authorization!;
 
@@ -240,7 +240,9 @@ namespace SharijhaAward.Api.Controllers
             {
                 formId = formId,
                 lang = HeaderValue!,
-                token = token
+                token = token,
+                page = page,
+                perPage = perPage
             });
 
             return Response.statusCode switch

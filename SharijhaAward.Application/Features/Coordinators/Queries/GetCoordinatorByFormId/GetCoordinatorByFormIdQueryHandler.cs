@@ -55,11 +55,17 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                 .Where(x => x.ProvidedFormId == request.formId)
                 .Include(x => x.Coordinator!)
                 .Select(x => x.Coordinator!)
+                .Skip((request.page - 1) * request.perPage)
+                .Take(request.perPage)
                 .ToListAsync();
 
             var data = _mapper.Map<List<CoordinatorsListVM>>(Coordinators);
 
-            return new BaseResponse<List<CoordinatorsListVM>>("", true, 200, data);
+            var count = _coordinatorFormRepository.Where(a => a.ProvidedFormId == form.Id).Count();
+
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
+
+            return new BaseResponse<List<CoordinatorsListVM>>("", true, 200, data, pagination);
 
 
         }

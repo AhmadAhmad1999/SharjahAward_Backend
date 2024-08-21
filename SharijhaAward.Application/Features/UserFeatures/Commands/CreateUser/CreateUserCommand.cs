@@ -19,5 +19,6 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.CreateUser
         public string PhoneNumber { get; set; } = null!;
         public List<int> RolesIds { get; set; } = new List<int>();
         public string? lang { get; set; }
+        public string? AppLanguage { get; set; }
     }
 }

@@ -125,7 +125,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             .Include(x => x.Parent!)
                             .AsEnumerable();
 
-                        var data = forms.AsEnumerable().Select(x => new FormListVm()
+                        
+                        var data = request.SubscriberName == null
+                            ? forms.AsEnumerable().Select(x => new FormListVm()
                         {
                             Id = x.Id,
                             SubscriberName = (SubscribersNames.Select(y => y.RecordId).Contains(x.Id) && SubscribersNames.Any())
@@ -157,7 +159,42 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                 .AsEnumerable()
                                 .Select(y => y.ProvidedFormId)
                                 .Contains(x.Id)
-                        }).ToList();
+                            }).ToList()
+                          : forms.AsEnumerable().Select(x => new FormListVm()
+                          {
+                              Id = x.Id,
+                              SubscriberName = (SubscribersNames.Select(y => y.RecordId).Contains(x.Id) && SubscribersNames.Any())
+                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
+                                : null,
+                              subscriberCode = (Subscribers.Select(s => s.Id).Contains(x.userId) && Subscribers.Any())
+                                ? Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId
+                                : null,
+                              PercentCompletion = x.PercentCompletion,
+                              CycleNumber = x.CycleNumber,
+                              CycleYear = x.CycleYear,
+                              Type = x.Type,
+                              Status = x.Status,
+                              SubscriberType = x.SubscriberType,
+                              CurrentStep = x.CurrentStep,
+                              TotalStep = x.TotalStep,
+                              FinalScore = x.FinalScore,
+                              IsAccepted = x.IsAccepted,
+                              ReasonOfRejection = x.ReasonOfRejection!,
+                              categoryId = x.categoryId,
+                              CreatedAt = x.CreatedAt,
+                              CategoryName = request.lang == "en"
+                                ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.EnglishName
+                                : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
+                              SubCategoryName = request.lang == "en"
+                                ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
+                                : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
+                              SucceedToFinalArbitration = GetAllFromsInFinalArbitration
+                                .AsEnumerable()
+                                .Select(y => y.ProvidedFormId)
+                                .Contains(x.Id)
+                          })
+                          .Where(x => x.SubscriberName!.Contains(request.SubscriberName))
+                          .ToList();
 
                         for (int i = 0; i < data.Count(); i++)
                         {
