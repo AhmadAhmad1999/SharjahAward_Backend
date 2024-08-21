@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
@@ -41,6 +42,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
         public async Task<BaseResponse<GetAllFromsForInitialArbitrationFullResponse>> 
             Handle(GetAllFromsForInitialArbitrationQuery Request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             string ResponseMessage = string.Empty;
 
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.Token!));

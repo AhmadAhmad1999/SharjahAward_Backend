@@ -87,7 +87,8 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.CreateUser
                     UserToken NewUserTokenEntity = new UserToken()
                     {
                         UserId = NewUserEntity.Id,
-                        Token = Token
+                        Token = Token,
+                        AppLanguage = Request.AppLanguage == null ? Request.lang! : Request.AppLanguage!
                     };
 
                     await _UserTokenRepository.AddAsync(NewUserTokenEntity);

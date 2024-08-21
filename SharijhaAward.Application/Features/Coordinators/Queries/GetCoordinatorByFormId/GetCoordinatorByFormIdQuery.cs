@@ -14,6 +14,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
         public int formId { get; set; }
         public string token { get; set; } = string.Empty;
         public string? lang { get; set; }
+        public int page { get; set; } = 1;
+        public int perPage { get; set; } = 10;
 
     }
 }

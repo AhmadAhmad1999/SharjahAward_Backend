@@ -283,7 +283,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllArbitratorsByFormId/{formId}", Name = "GetAllArbitratorsByFormId")]
-        public async Task<IActionResult> GetAllArbitratorsByFormId(int formId)
+        public async Task<IActionResult> GetAllArbitratorsByFormId(int formId, int page = 1, int perPage = 10)
         {
             string token = HttpContext.Request.Headers.Authorization!;
 
@@ -302,7 +302,9 @@ namespace SharijhaAward.Api.Controllers
             {
                 formId = formId,
                 lang = HeaderValue!,
-                token = token
+                token = token,
+                page = page,
+                perPage = perPage
             });
 
             return Response.statusCode switch

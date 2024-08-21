@@ -54,11 +54,17 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorsB
                 .Where(a => a.ProvidedFormId == form.Id)
                 .Include(f => f.Arbitrator!)
                 .Select(f => f.Arbitrator)
+                .Skip((request.page - 1) * request.perPage)
+                .Take(request.perPage)
                 .ToListAsync();
                 
             var data = _mapper.Map<List<ArbitratorsListVM>>(Arbitrators);
 
-            return new BaseResponse<List<ArbitratorsListVM>>("", true, 200, data);
+            var count = _arbitratorFormRepository.Where(a => a.ProvidedFormId == form.Id).Count();
+
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
+
+            return new BaseResponse<List<ArbitratorsListVM>>("", true, 200, data, pagination);
         }
     }
 }

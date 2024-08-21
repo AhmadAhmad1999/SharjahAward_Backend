@@ -22,7 +22,9 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
 
             FilterObject filterObject = new FilterObject() { Filters = Request.filters };
 
-            List<GetAllCommitteesListVM> Committees = await _CommitteeRepository
+            
+            List<GetAllCommitteesListVM> Committees = Request.ChairmanName == null
+                ? await _CommitteeRepository
                 .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                 .Include(x => x.Chairman!)
                 .Select(x => new GetAllCommitteesListVM()
@@ -36,7 +38,25 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
                     ChairmanName = Request.lang == "en"
                         ? x.Chairman!.EnglishName
                         : x.Chairman!.ArabicName
-                }).ToListAsync();
+                }).ToListAsync()
+
+                : await _CommitteeRepository
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
+                .Include(x => x.Chairman!)
+                .Select(x => new GetAllCommitteesListVM()
+                {
+                    Id = x.Id,
+                    ArabicName = x.ArabicName,
+                    EnglishName = x.EnglishName,
+                    ChairmanId = x.ChairmanId,
+                    Status = x.Status,
+                    CreatedAt = x.CreatedAt,
+                    ChairmanName = Request.lang == "en"
+                        ? x.Chairman!.EnglishName
+                        : x.Chairman!.ArabicName
+                })
+                .Where(x => x.ChairmanName.Contains(Request.ChairmanName!))
+                .ToListAsync();
 
             int TotalCount = await _CommitteeRepository.GetCountAsync(null);
 

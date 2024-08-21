@@ -11,6 +11,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public int page { get; set; } = 1;
         public int perPage { get; set; } = 10;
         public List<Filter>? filters { get; set; }
+        public string? SubscriberName { get; set; }
         public string? lang { get; set; }
         public string? Token { get; set; }
     }
