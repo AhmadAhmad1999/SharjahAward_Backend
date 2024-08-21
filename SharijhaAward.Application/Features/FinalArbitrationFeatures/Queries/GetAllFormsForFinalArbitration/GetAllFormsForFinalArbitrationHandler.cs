@@ -122,7 +122,10 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         CategoryName = Request.lang == "en"
                             ? x.ProvidedForm!.Category!.EnglishName
                             : x.ProvidedForm!.Category!.ArabicName,
-                        FinalScore = x.FinalScore
+                        FinalScore = x.FinalScore,
+                        DateOfArbitration = x.DateOfArbitration,
+                        isAcceptedFromChairman = x.isAcceptedFromChairman,
+                        Type = x.Type
                     }).ToList();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
@@ -217,7 +220,10 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             CategoryName = Request.lang == "en"
                                 ? x.ProvidedForm!.Category!.EnglishName
                                 : x.ProvidedForm!.Category!.ArabicName,
-                            FinalScore = x.FinalScore
+                            FinalScore = x.FinalScore,
+                            DateOfArbitration = x.DateOfArbitration,
+                            isAcceptedFromChairman = x.isAcceptedFromChairman,
+                            Type = x.Type
                         }).ToList();
 
                     Dictionary<ArbitrationType, int> TypeCounts = await _FinalArbitrationRepository
@@ -311,7 +317,10 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             CategoryName = Request.lang == "en"
                                 ? x.ProvidedForm!.Category!.EnglishName
                                 : x.ProvidedForm!.Category!.ArabicName,
-                            FinalScore = x.FinalScore
+                            FinalScore = x.FinalScore,
+                            DateOfArbitration = x.DateOfArbitration,
+                            isAcceptedFromChairman = x.isAcceptedFromChairman,
+                            Type = x.Type
                         }).ToList();
 
                     Dictionary<ArbitrationType, int> TypeCounts = await _FinalArbitrationRepository

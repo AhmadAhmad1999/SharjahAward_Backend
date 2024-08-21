@@ -1,4 +1,6 @@
-﻿namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.GetAllFormsForFinalArbitration
+﻿using SharijhaAward.Domain.Entities.ArbitrationModel;
+
+namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.GetAllFormsForFinalArbitration
 {
     public class GetAllFormsForFinalArbitrationListVM
     {
@@ -7,5 +9,8 @@
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
         public float FinalScore { get; set; }
+        public DateTime? DateOfArbitration { get; set; }
+        public ArbitrationType Type { get; set; } = 0;
+        public FormStatus isAcceptedFromChairman { get; set; }
     }
 }

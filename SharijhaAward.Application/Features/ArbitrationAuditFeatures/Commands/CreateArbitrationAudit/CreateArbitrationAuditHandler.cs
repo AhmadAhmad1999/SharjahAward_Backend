@@ -38,16 +38,22 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
             IEnumerable<ArbitrationAuditMainCommand> ArbitrationAuditMainCommands = Request.ArbitrationAuditMainCommand
                 .Where(x => x.ArbitrationScore != null);
 
+            var ArbitrationAuditMainCommandCriterion = Request.ArbitrationAuditMainCommand
+                .Where(y => y.CriterionId != null).Select(y => y.CriterionId);
+
             List<Criterion> CriterionEntities = await _CriterionRepository
-                .Where(x => Request.ArbitrationAuditMainCommand
-                    .Where(y => y.CriterionId != null).Select(y => y.CriterionId)
-                    .Any(y => y == x.Id))
+                .Where(x => ArbitrationAuditMainCommandCriterion.Contains(x.Id))
                 .ToListAsync();
 
+            var ArbitrationAuditMainCommandCriterionItem = Request.ArbitrationAuditMainCommand
+                .Where(y => y.CriterionItemId != null).Select(y => y.CriterionItemId);
+
             List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
-                .Where(x => Request.ArbitrationAuditMainCommand
-                    .Where(y => y.CriterionItemId != null).Select(y => y.CriterionItemId)
-                    .Any(y => y == x.Id))
+                .Where(x => ArbitrationAuditMainCommandCriterionItem.Contains(x.Id))
+                .ToListAsync();
+
+            List<ArbitrationAudit> ArbitrationAuditEntities = await _ArbitrationAuditRepository
+                .Where(x => x.ProvidedFormId == Request.FormId)
                 .ToListAsync();
 
             TransactionOptions TransactionOptions = new TransactionOptions
@@ -109,8 +115,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
                         }
                         else
                         {
-                            ArbitrationAudit? ArbitrationAuditEntity = await _ArbitrationAuditRepository
-                                .FirstOrDefaultAsync(x => x.Id == ArbitrationAuditMainCommand.ArbitrationAuditId);
+                            ArbitrationAudit? ArbitrationAuditEntity = ArbitrationAuditEntities
+                                .FirstOrDefault(x => x.Id == ArbitrationAuditMainCommand.ArbitrationAuditId);
 
                             if (ArbitrationAuditEntity is null)
                             {
@@ -148,6 +154,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
                         {
                             ArbitrationEntity.DateOfArbitrationAuditing = DateTime.UtcNow;
                             ArbitrationEntity.ArbitrationAuditType = ArbitrationType.DoneArbitratod;
+
+                            ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = FormStatus.NotArbitratedYet;
                         }
                     }
 

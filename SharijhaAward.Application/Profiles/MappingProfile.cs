@@ -357,6 +357,7 @@ using SharijhaAward.Application.Features.Indexes.Queries.GetIndexById;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetExcelFilePrototype;
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetExcelFilePrototype;
 using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.UpdateChairmanNotesOnArbitrationAudit;
+using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.CreateArbitrationAudit;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -680,6 +681,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AdvancedFormBuilderListValue, CreateAdvancedFormBuilderListValueCommand>().ReverseMap();
             CreateMap<AdvancedFormBuilder, AdvancedFormBuilderPattern>().ReverseMap();
             CreateMap<AdvancedFormBuilderSection, CreateAdvancedFormBuilderSectionCommand>().ReverseMap();
+            CreateMap<ArbitrationAudit, ArbitrationAuditMainCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();

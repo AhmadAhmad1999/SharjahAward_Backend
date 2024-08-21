@@ -54,15 +54,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
             Arbitrator? ArbitraorEntity = await _ArbitratorRepository
                 .FirstOrDefaultAsync(x => x.Id == UserId);
 
-            if (ArbitraorEntity is null)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "Arbitrator is not Found"
-                    : "المحكم غير موجود";
-
-                return new BaseResponse<GetArbitrationAuditByArbitrationIdResponse>(ResponseMessage, false, 404);
-            }
-
             Arbitration? ArbitrationEntity = await _ArbitrationRepository
                 .Include(x => x.ProvidedForm!)
                 .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
@@ -281,11 +272,12 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
             GetArbitrationAuditByArbitrationIdResponse FinalResponse = new GetArbitrationAuditByArbitrationIdResponse()
             {
-                isChairman = ArbitraorEntity.isChairman,
+                isChairman = ArbitraorEntity ? .isChairman ?? false,
                 MainCriterionDtos = FullResponse,
                 isItHisForm = isItHisForm,
-                isAcceptedFromChairman = ArbitrationEntity.isAcceptedFromChairman,
-                ReasonForRejecting = ArbitrationEntity.ReasonForRejecting
+                ReasonForRejectingFromArbitrationAudit = ArbitrationEntity.ReasonForRejectingFromArbitrationAudit,
+                isAcceptedFromChairmanFromArbitrationAudit = ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit,
+                isDoneArbitration = (ArbitrationEntity.ArbitrationAuditType == ArbitrationType.DoneArbitratod ? true : false)
             };
 
             return new BaseResponse<GetArbitrationAuditByArbitrationIdResponse>(ResponseMessage, true, 200, FinalResponse);

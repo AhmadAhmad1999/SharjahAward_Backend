@@ -295,28 +295,31 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     {
                         RequestedWinners = RequestedWinners.Any()
                             ? RequestedWinners
+                                .Where(x => x.WinningLevel != null)
                                 .GroupBy(x => x.WinningLevel)
                                 .Select(x => new GetWinnersByLevelGroupByLevelListVM()
                                 {
-                                    WinningLevel = x.Key,
+                                    WinningLevel = x.Key!.Value,
                                     GetWinnersByLevelListVM = x.ToList()
                                 }).ToList()
                             : new List<GetWinnersByLevelGroupByLevelListVM>(),
                         RemainingWinners = RemainingWinners.Any()
                             ? RemainingWinners
+                                .Where(x => x.WinningLevel != null)
                                 .GroupBy(x => x.WinningLevel)
                                 .Select(x => new GetWinnersByLevelGroupByLevelListVM()
                                 {
-                                    WinningLevel = x.Key,
+                                    WinningLevel = x.Key!.Value,
                                     GetWinnersByLevelListVM = x.ToList()
                                 }).ToList()
                             : new List<GetWinnersByLevelGroupByLevelListVM>(),
                         SelectedWinners = SelectedWinners.Any()
                             ? SelectedWinners
+                                .Where(x => x.WinningLevel != null)
                                 .GroupBy(x => x.WinningLevel)
                                 .Select(x => new GetWinnersByLevelGroupByLevelListVM()
                                 {
-                                    WinningLevel = x.Key,
+                                    WinningLevel = x.Key!.Value,
                                     GetWinnersByLevelListVM = x.ToList()
                                 }).ToList()
                             : new List<GetWinnersByLevelGroupByLevelListVM>()

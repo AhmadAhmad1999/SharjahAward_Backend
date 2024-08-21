@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
 
             List<ArbitrationResult> ArbitrationResultEntities = await _ArbitrationResultRepository
                 .Include(x => x.ProvidedForm!)
-                .Where(x => x.Winner && x.EligibleToWin &&
+                .Where(x => x.EligibleToWin &&
                     (Request.CategoryId != null
                         ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
                         : true) &&
@@ -124,21 +124,21 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                             .Select(y => y.ArbitrationScore)
                             .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
                         : 0,
-                    FinalArbitrationScore = x.FinalArbitration! ?.FinalScore ?? 0,
+                    FinalArbitrationScore = x.FinalArbitration!?.FinalScore ?? 0,
                     SubscriberName = SubscribersNames
                         .FirstOrDefault(y => y.FormId == x.ProvidedFormId)
                             ?.SubscriberName ?? string.Empty,
                     CycleNumber = x.ProvidedForm!.CycleNumber,
                     CycleYear = x.ProvidedForm!.CycleYear,
                     EducationalClassName = Request.lang == "en"
-                        ? x.ProvidedForm!.CategoryEducationalClass? .EducationalClass!.EnglishName ?? null
-                        : x.ProvidedForm!.CategoryEducationalClass? .EducationalClass!.ArabicName ?? null,
+                        ? x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName ?? null
+                        : x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName ?? null,
                     EducationalEntityName = Request.lang == "en"
-                        ? x.ProvidedForm!.CategoryEducationalEntity? .EducationalEntity!.EnglishName ?? null
-                        : x.ProvidedForm!.CategoryEducationalEntity? .EducationalEntity!.ArabicName ?? null,
+                        ? x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.EnglishName ?? null
+                        : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
                     ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                     Gender = x.ProvidedForm!.User.Gender,
-                    WinningLevel = x.WinningLevel!.Value
+                    WinningLevel = x.WinningLevel
                 }).ToList();
 
             Pagination PaginationParameter = new Pagination(Request.page,

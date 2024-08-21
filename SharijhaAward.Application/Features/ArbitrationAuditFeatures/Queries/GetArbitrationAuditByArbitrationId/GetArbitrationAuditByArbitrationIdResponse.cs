@@ -7,7 +7,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
         public List<ArbitrationAuditMainCriterionDto> MainCriterionDtos { get; set; } = new List<ArbitrationAuditMainCriterionDto>();
         public bool isChairman { get; set; }
         public bool isItHisForm { get; set; }
-        public string? ReasonForRejecting { get; set; }
-        public FormStatus isAcceptedFromChairman { get; set; }
+        public bool isDoneArbitration { get; set; }
+        public string? ReasonForRejectingFromArbitrationAudit { get; set; }
+        public FormStatus isAcceptedFromChairmanFromArbitrationAudit { get; set; }
     }
 }

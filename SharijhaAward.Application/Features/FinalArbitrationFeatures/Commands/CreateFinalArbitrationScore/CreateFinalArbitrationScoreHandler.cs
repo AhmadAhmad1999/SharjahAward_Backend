@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateInitialArbitration;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
@@ -40,16 +41,22 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
         {
             string ResponseMessage = string.Empty;
 
+            var FinalArbitrationMainCommandCriterion = Request.CreateFinalArbitrationScoreMainCommand
+                .Where(y => y.CriterionId != null).Select(y => y.CriterionId);
+
             List<Criterion> CriterionEntities = await _CriterionRepository
-                .Where(x => Request.CreateFinalArbitrationScoreMainCommand
-                    .Where(y => y.CriterionId != null).Select(y => y.CriterionId)
-                    .Any(y => y == x.Id))
+                .Where(x => FinalArbitrationMainCommandCriterion.Contains(x.Id))
                 .ToListAsync();
 
+            var FinalArbitrationMainCommandCriterionItem = Request.CreateFinalArbitrationScoreMainCommand
+                .Where(y => y.CriterionItemId != null).Select(y => y.CriterionItemId);
+
             List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
-                .Where(x => Request.CreateFinalArbitrationScoreMainCommand
-                    .Where(y => y.CriterionItemId != null).Select(y => y.CriterionItemId)
-                    .Any(y => y == x.Id))
+                .Where(x => FinalArbitrationMainCommandCriterionItem.Contains(x.Id))
+                .ToListAsync();
+
+            List<FinalArbitrationScore> FinalArbitrationScoreEntities = await _FinalArbitrationScoreRepository
+                .Where(x => x.FinalArbitrationId == Request.FinalArbitrationId)
                 .ToListAsync();
 
             TransactionOptions TransactionOptions = new TransactionOptions
@@ -151,6 +158,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                         FinalArbitrationEntity.DateOfArbitration = DateTime.UtcNow;
                         FinalArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
                         FinalArbitrationEntity.FinalScore = Request.CreateFinalArbitrationScoreMainCommand.Sum(x => x.ArbitrationScore);
+                        
+                        FinalArbitrationEntity.isAcceptedFromChairman = FormStatus.NotArbitratedYet;
                     }
 
                     else

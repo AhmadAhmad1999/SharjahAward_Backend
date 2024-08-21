@@ -62,7 +62,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPatch("ChangeInitialArbitrationStatusFromArbitrationAuditStep/{FormId}")]
+        [HttpPatch("ChangeInitialArbitrationStatusFromArbitrationAuditStep")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -154,7 +154,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("GetArbitrationAuditByArbitrationId/{ArbitrationId}")]
+        [HttpGet("GetArbitrationAuditByArbitrationId")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

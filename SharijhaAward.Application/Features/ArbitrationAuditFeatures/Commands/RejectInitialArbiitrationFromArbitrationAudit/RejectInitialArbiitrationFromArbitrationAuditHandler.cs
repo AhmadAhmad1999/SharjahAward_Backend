@@ -74,6 +74,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                         {
                             ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = FormStatus.Rejected;
                             ArbitrationEntity.ReasonForRejectingFromArbitrationAudit = Request.ReasonForRejecting;
+
+                            ArbitrationEntity.ArbitrationAuditType = ArbitrationType.BeingReviewed;
                         }
 
                         await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
@@ -86,19 +88,25 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                     {
                         int ArbitratorId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
-                        FinalArbitration NewFinalArbitrationEntity = new FinalArbitration()
-                        {
-                            ReasonForRejecting = null,
-                            isAcceptedFromChairman = FormStatus.NotArbitratedYet,
-                            ArbitratorId = ArbitratorId,
-                            ProvidedFormId = Request.FormId,
-                            Type = ArbitrationType.NotBeenArbitrated,
-                            DateOfArbitration = null,
-                            FullScore = 0,
-                            FinalScore = 0
-                        };
+                        FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
+                            .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
 
-                        await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);
+                        if (FinalArbitrationEntity is null)
+                        {
+                            FinalArbitration NewFinalArbitrationEntity = new FinalArbitration()
+                            {
+                                ReasonForRejecting = null,
+                                isAcceptedFromChairman = FormStatus.NotArbitratedYet,
+                                ArbitratorId = ArbitratorId,
+                                ProvidedFormId = Request.FormId,
+                                Type = ArbitrationType.NotBeenArbitrated,
+                                DateOfArbitration = null,
+                                FullScore = 0,
+                                FinalScore = 0
+                            };
+
+                            await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);
+                        }
 
                         ResponseMessage = Request.lang == "en"
                             ? "Initial arbitration has been accepted successfully"
@@ -113,6 +121,26 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                         return new BaseResponse<object>(ResponseMessage, true, 400);
                     }
 
+                    if (Request.ReasonForRejecting != null)
+                    {
+                        foreach (Arbitration ArbitrationEntity in ArbitrationEntities)
+                        {
+                            ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = Request.IsAccepted;
+                            ArbitrationEntity.ReasonForRejectingFromArbitrationAudit = Request.ReasonForRejecting;
+                        }
+
+                        await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
+                    }
+                    else
+                    {
+                        foreach (Arbitration ArbitrationEntity in ArbitrationEntities)
+                        {
+                            ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = Request.IsAccepted;
+                        }
+
+                        await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
+                    }
+                    
                     Transaction.Complete();
 
                     return new BaseResponse<object>(ResponseMessage, true, 200);

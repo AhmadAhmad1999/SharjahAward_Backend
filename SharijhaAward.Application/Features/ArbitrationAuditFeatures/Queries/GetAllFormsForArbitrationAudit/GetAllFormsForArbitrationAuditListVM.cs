@@ -15,5 +15,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
         public ArbitrationType ArbitrationAuditType { get; set; } = 0;
         public DateTime? DateOfArbitrationAuditing { get; set; }
         public FormStatus isAcceptedFromChairmanFromArbitrationAudit { get; set; }
+        public string? ReasonForRejectingFromArbitrationAudit { get; set; }
     }
 }
