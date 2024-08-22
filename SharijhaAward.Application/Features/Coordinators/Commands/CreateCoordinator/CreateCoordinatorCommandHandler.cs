@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinator
@@ -22,6 +25,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;
+        private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
 
         public CreateCoordinatorCommandHandler(IRoleRepository roleRepository,
             IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
@@ -29,6 +34,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
             IFileService fileService, 
             IUserRepository userRepository, 
             IMapper Mapper,
+            IAsyncRepository<ResponsibilityUser> responsibilityUserRepository,
+            IAsyncRepository<Responsibility> responsibilityRepository,
             IAsyncRepository<UserRole> UserRoleRepository)
         {
             _roleRepository = roleRepository;
@@ -38,6 +45,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
             _fileService = fileService;
             _mapper = Mapper;
             _UserRoleRepository = UserRoleRepository;
+            _responsibilityRepository = responsibilityRepository;
+            _responsibilityUserRepository = responsibilityUserRepository;
         }
 
         public async Task<BaseResponse<int>> Handle(CreateCoordinatorCommand Request, CancellationToken cancellationToken)
@@ -120,6 +129,31 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                         };
 
                         await _UserRoleRepository.AddAsync(NewUserRoleEntity);
+                    }
+
+                    var Responsibilities = await _responsibilityRepository
+                         .Where(r => r.RoleId == role!.Id)
+                         .ToListAsync();
+
+
+                    var userResponsibilities = await _responsibilityUserRepository
+                        .Where(r => r.UserId == User.Id)
+                        .Select(r => r.ResponsibilityId)
+                        .ToListAsync();
+
+                    foreach (var Responsibility in Responsibilities)
+                    {
+                        if (!userResponsibilities.Contains(Responsibility.Id))
+                        {
+                            var ResponsibilityUser = new ResponsibilityUser()
+                            {
+                                IsAccept = false,
+                                UserId = User.Id,
+                                ResponsibilityId = Responsibility.Id
+                            };
+
+                            await _responsibilityUserRepository.AddAsync(ResponsibilityUser);
+                        }
                     }
 
                     if (Request.EducationalEntitiesIds != null)

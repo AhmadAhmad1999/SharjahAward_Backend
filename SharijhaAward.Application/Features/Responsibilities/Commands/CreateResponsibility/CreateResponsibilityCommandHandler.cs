@@ -59,6 +59,16 @@ namespace SharijhaAward.Application.Features.Responsibilities.Commands.CreateRes
                 return new BaseResponse<object>(msg, false, 400);
             }
 
+            var Responsibilities = await _responsibilityRepository.ListAllAsync();
+           
+            if(Responsibilities.Any(r => r.RoleId == request.RoleId))
+            {
+                msg = request.lang == "en"
+                    ? "You can't Add more than one Responsibility for this Role"
+                    : "لا يمكنك إضافة اكثر من مسؤولية لهذا الدور";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
             var Responsibility = _mapper.Map<Responsibility>(request);
 
             var data = await _responsibilityRepository.AddAsync(Responsibility);

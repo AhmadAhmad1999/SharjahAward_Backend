@@ -93,7 +93,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                     .Where(r => r.UserId == response.user.Id)
                     .ToListAsync();
 
-                if (responsibilities.Any(r => !r.IsAccept))
+                if (responsibilities.Any(r => r.IsAccept == false))
                 {
                     response.user.AcceptOnResponsibilities = false;
                 }
@@ -106,6 +106,15 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                     .Where(x => x.UserId == response.user.Id)
                     .Select(x => x.RoleId)
                     .ToListAsync();
+                
+                List<string> UserRolesNames = await _UserRoleRepository
+                    .Where(x => x.UserId == response.user.Id)
+                    .Include(x=>x.Role)
+                    .Select(x => x.Role!.EnglishName)
+                    .ToListAsync();
+
+                response.user.RoleId = UserRolesIds;
+                response.user.RoleName = UserRolesNames;
 
                 response.UserPermissions = await _RolePermissionRepository
                     .Where(x => UserRolesIds.Contains(x.RoleId))

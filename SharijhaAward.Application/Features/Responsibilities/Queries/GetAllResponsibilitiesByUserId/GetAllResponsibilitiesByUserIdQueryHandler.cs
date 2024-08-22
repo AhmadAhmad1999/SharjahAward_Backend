@@ -22,16 +22,18 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
         
         private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
         private readonly IAsyncRepository<Role> _roleRepository;
+        private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;
         private readonly IAsyncRepository<UserRole> _userRoleRepository;
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
 
-        public GetAllResponsibilitiesByUserIdQueryHandler(IAsyncRepository<UserRole> userRoleRepository, IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<Role> roleRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetAllResponsibilitiesByUserIdQueryHandler(IAsyncRepository<ResponsibilityUser> responsibilityUserRepository, IAsyncRepository<UserRole> userRoleRepository, IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<Role> roleRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
         {
             _responsibilityRepository = responsibilityRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
+            _responsibilityUserRepository = responsibilityUserRepository;
             _userRepository = userRepository;
             _jwtProvider = jwtProvider;
             _mapper = mapper;
@@ -59,25 +61,22 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
                 return new BaseResponse<List<ResponsibilityListVM>>("", false, 404);
             }
 
-            var RoleIds = _userRoleRepository
-                .Where(u => u.UserId == User.Id)
-                .Select(u => u.RoleId)
-                .ToList();
-
             var Responsibilities = new List<Responsibility>();
-            
-            foreach(var role in RoleIds)
-            {
-                var Responsibility = _responsibilityRepository
-                    .Where(r => r.RoleId == role)
-                    .Include(r => r.ResponsibilityUsers)
-                    .Include(r=>r.Role)
-                    .ToList();
+           
+            var UserResponsibility = await _responsibilityUserRepository
+            .Where(r => r.UserId == UserId)
+            .Include(r => r.Responsibility)
+            .Include(r => r.Responsibility.Role)
+            .ToListAsync();
 
-                if(Responsibility != null)
-                {
-                    Responsibilities.AddRange(Responsibility);
-                }
+            var RoleIds = _userRoleRepository
+                 .Where(u => u.UserId == User.Id)
+                 .Select(u => u.RoleId)
+                 .ToList();
+
+            foreach (var responsibility in UserResponsibility)
+            {
+                Responsibilities.Add(responsibility.Responsibility);
             }
 
             var data = _mapper.Map<List<ResponsibilityListVM>>(Responsibilities);
@@ -92,5 +91,5 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
             return new BaseResponse<List<ResponsibilityListVM>>("", true, 200, data);
 
         }
-    }
+    } 
 }
