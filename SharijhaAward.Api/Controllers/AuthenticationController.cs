@@ -363,6 +363,7 @@ namespace SharijhaAward.Api.Controllers
 
             return Response.statusCode switch
             {
+                401 => Unauthorized(Response),
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)

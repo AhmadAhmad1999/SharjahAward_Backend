@@ -283,7 +283,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                 MainCriterionDtos = FullResponse,
                 isItHisForm = isItHisForm,
                 isAcceptedFromChairman = ArbitrationEntity.isAcceptedFromChairman,
-                ReasonForRejecting = ArbitrationEntity.ReasonForRejecting
+                ReasonForRejecting = ArbitrationEntity.ReasonForRejecting,
+                isDoneArbitration = (ArbitrationEntity.Type == ArbitrationType.DoneArbitratod ? true : false)
             };
 
             return new BaseResponse<GetInitialArbitrationByArbitrationIdResponse>(ResponseMessage, true, 200, FinalResponse);

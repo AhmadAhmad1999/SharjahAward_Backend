@@ -12,7 +12,7 @@ using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
 namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersByLevelGroupedByClasses
 {
-    public class GetWinnersByLevelGroupedByClassesHandler 
+    public class GetWinnersByLevelGroupedByClassesHandler
         : IRequestHandler<GetWinnersByLevelGroupedByClassesQuery, BaseResponse<List<GetWinnersByLevelGroupedByClassesListVM>>>
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
@@ -37,7 +37,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
             _ArbitrationAuditRepository = ArbitrationAuditRepository;
         }
 
-        public async Task<BaseResponse<List<GetWinnersByLevelGroupedByClassesListVM>>> 
+        public async Task<BaseResponse<List<GetWinnersByLevelGroupedByClassesListVM>>>
             Handle(GetWinnersByLevelGroupedByClassesQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
@@ -295,31 +295,28 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     {
                         RequestedWinners = RequestedWinners.Any()
                             ? RequestedWinners
-                                .Where(x => x.WinningLevel != null)
                                 .GroupBy(x => x.WinningLevel)
                                 .Select(x => new GetWinnersByLevelGroupByLevelListVM()
                                 {
-                                    WinningLevel = x.Key!.Value,
+                                    WinningLevel = x.Key,
                                     GetWinnersByLevelListVM = x.ToList()
                                 }).ToList()
                             : new List<GetWinnersByLevelGroupByLevelListVM>(),
                         RemainingWinners = RemainingWinners.Any()
                             ? RemainingWinners
-                                .Where(x => x.WinningLevel != null)
                                 .GroupBy(x => x.WinningLevel)
                                 .Select(x => new GetWinnersByLevelGroupByLevelListVM()
                                 {
-                                    WinningLevel = x.Key!.Value,
+                                    WinningLevel = x.Key,
                                     GetWinnersByLevelListVM = x.ToList()
                                 }).ToList()
                             : new List<GetWinnersByLevelGroupByLevelListVM>(),
                         SelectedWinners = SelectedWinners.Any()
                             ? SelectedWinners
-                                .Where(x => x.WinningLevel != null)
                                 .GroupBy(x => x.WinningLevel)
                                 .Select(x => new GetWinnersByLevelGroupByLevelListVM()
                                 {
-                                    WinningLevel = x.Key!.Value,
+                                    WinningLevel = x.Key,
                                     GetWinnersByLevelListVM = x.ToList()
                                 }).ToList()
                             : new List<GetWinnersByLevelGroupByLevelListVM>()

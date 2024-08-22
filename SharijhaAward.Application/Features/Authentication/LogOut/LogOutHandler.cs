@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.Authentication.LogOut
                     ? "User's token is not Found"
                     : "المستخدم غير موجود";
 
-                return new BaseResponse<object>(ResponseMessage, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 401);
             }
 
             await _UserTokenRepository.DeleteAsync(UserToken);

@@ -331,7 +331,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             {
                 MainCriterions = FullResponse,
                 FinalArbitrationId = FinalArbitrationEntity.Id,
-                isChairman = ArbitratorEntity.isChairman
+                isChairman = ArbitratorEntity.isChairman,
+                isDoneArbitration = (FinalArbitrationEntity.Type == ArbitrationType.DoneArbitratod ? true : false)
             };
 
             return new BaseResponse<GetFinalArbitrationByIdMainDto>(ResponseMessage, true, 200, FinalResponse);

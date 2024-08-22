@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 
 namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersDashboard
 {
-    public class GetAllWinnersDashboardHandler 
+    public class GetAllWinnersDashboardHandler
         : IRequestHandler<GetAllWinnersDashboardQuery, BaseResponse<List<GetAllWinnersDashboardListVM>>>
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
@@ -31,7 +31,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
             _ArbitrationAuditRepository = ArbitrationAuditRepository;
         }
 
-        public async Task<BaseResponse<List<GetAllWinnersDashboardListVM>>> 
+        public async Task<BaseResponse<List<GetAllWinnersDashboardListVM>>>
             Handle(GetAllWinnersDashboardQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
 
             List<ArbitrationResult> ArbitrationResultEntities = await _ArbitrationResultRepository
                 .Include(x => x.ProvidedForm!)
-                .Where(x => x.EligibleToWin &&
+                .Where(x => x.Winner && x.EligibleToWin &&
                     (Request.CategoryId != null
                         ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
                         : true) &&
@@ -138,7 +138,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                         : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
                     ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                     Gender = x.ProvidedForm!.User.Gender,
-                    WinningLevel = x.WinningLevel
+                    WinningLevel = x.WinningLevel!.Value
                 }).ToList();
 
             Pagination PaginationParameter = new Pagination(Request.page,

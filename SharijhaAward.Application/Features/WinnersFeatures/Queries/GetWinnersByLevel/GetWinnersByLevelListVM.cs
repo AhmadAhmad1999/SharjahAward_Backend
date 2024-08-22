@@ -15,7 +15,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
         public string? ProfilePhoto { get; set; }
         public bool NotifiedAsWinner { get; set; }
         public Gender Gender { get; set; }
-        public int? WinningLevel { get; set; }
+        public int WinningLevel { get; set; }
         public float InitialArbitrationScore { get; set; }
         public float ArbitrationAuditScore { get; set; }
         public float FinalArbitrationScore { get; set; }
