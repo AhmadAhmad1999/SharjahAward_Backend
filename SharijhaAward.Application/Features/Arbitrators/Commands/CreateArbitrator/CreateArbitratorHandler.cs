@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator
@@ -21,6 +24,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;    
+        private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
 
         public CreateArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
@@ -28,7 +33,9 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             IUserRepository UserRepository, 
             IMapper Mapper, 
             IAsyncRepository<ArbitratorClass> ArbitratorClassRepository,
-            IAsyncRepository<UserRole> UserRoleRepository)
+            IAsyncRepository<UserRole> UserRoleRepository,
+            IAsyncRepository<ResponsibilityUser> responsibilityUserRepository,
+            IAsyncRepository<Responsibility> responsibilityRepository)
         {
             _ArbitratorRepository = ArbitratorRepository;
             _CategoryArbitratorRepository = CategoryArbitratorRepository;
@@ -37,6 +44,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             _Mapper = Mapper;
             _ArbitratorClassRepository = ArbitratorClassRepository;
             _UserRoleRepository = UserRoleRepository;
+            _responsibilityUserRepository = responsibilityUserRepository;
+            _responsibilityRepository = responsibilityRepository;
         }
 
         public async Task<BaseResponse<int>> Handle(CreateArbitratorCommand Request, CancellationToken cancellationToken)
@@ -132,6 +141,31 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                     NewArbitratorEntity.Id = NewUserEntity.Id;
 
                     await _ArbitratorRepository.AddAsync(NewArbitratorEntity);
+
+                    var Responsibilities = await _responsibilityRepository
+                         .Where(r => r.RoleId == Role.Id)
+                         .ToListAsync();
+
+
+                    var userResponsibilities = await _responsibilityUserRepository
+                        .Where(r => r.UserId == NewUserEntity.Id)
+                        .Select(r => r.ResponsibilityId)
+                        .ToListAsync();
+
+                    foreach(var Responsibility in Responsibilities)
+                    {
+                        if (!userResponsibilities.Contains(Responsibility.Id))
+                        {
+                            var ResponsibilityUser = new ResponsibilityUser()
+                            {
+                                IsAccept = false,
+                                UserId = NewUserEntity.Id,
+                                ResponsibilityId = Responsibility.Id
+                            };
+
+                            await _responsibilityUserRepository.AddAsync(ResponsibilityUser);
+                        }
+                    }
 
                     List<CategoryArbitrator> ListOfCategoriesArbitrators = Request.Categories
                         .Select(x => new CategoryArbitrator()

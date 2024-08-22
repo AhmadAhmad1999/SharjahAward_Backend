@@ -20,7 +20,8 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         public Gender Gender { get; set; }
         [PhoneNumberValidation]
         public string PhoneNumber { get; set; } = null!;
-        public int? RoleId { get; set; }
+        public List<int>? RoleId { get; set; }
+        public List<string>? RoleName { get; set; }
         public string? ImageURL { get; set; }
         public bool AcceptOnResponsibilities { get; set; }
         public bool? isChairman { get; set; }

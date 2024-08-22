@@ -21,7 +21,7 @@ namespace SharijhaAward.Domain.Entities
         [ForeignKey(nameof(Responsibility))]
         public int ResponsibilityId {  get; set; }
 
-        public bool IsAccept {  get; set; }
+        public bool IsAccept { get; set; } = false;
 
     }
 }

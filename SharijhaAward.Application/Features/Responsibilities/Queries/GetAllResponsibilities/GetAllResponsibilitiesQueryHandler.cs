@@ -35,7 +35,7 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
 
             var data = _mapper.Map<List<ResponsibilityListVM>>(responsibilities);
 
-            var count = _responsibilityRepository.GetCount(r=>!r.isDeleted);
+            var count = _responsibilityRepository.GetCount(r => !r.isDeleted);
 
             Pagination pagination = new Pagination(request.page, request.perPage, count);
 

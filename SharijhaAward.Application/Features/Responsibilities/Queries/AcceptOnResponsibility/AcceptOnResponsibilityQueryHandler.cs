@@ -50,7 +50,7 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.AcceptOnRe
             }
 
             var Responsibility = await _responsibilityRepository
-                .Include(r => r.ResponsibilityUsers!.FirstOrDefault(x=>x.UserId == User.Id && x.ResponsibilityId == request.ResponsibilityId)!)
+                .Include(r => r.ResponsibilityUsers)
                 .FirstOrDefaultAsync(r => r.Id == request.ResponsibilityId);
 
             if(Responsibility == null)
@@ -58,7 +58,15 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.AcceptOnRe
                 return new BaseResponse<object>("Responsibility not found", false, 404);
             }
             
-            if(Responsibility.ResponsibilityUsers == null)
+            if(Responsibility.ResponsibilityUsers.Any(x => x.UserId == User.Id && x.ResponsibilityId == request.ResponsibilityId)!)
+            {
+
+                var responsibilityUser = _responsibilityUserRepository.FirstOrDefault(x => x.UserId == User.Id && x.ResponsibilityId == request.ResponsibilityId);
+                responsibilityUser!.IsAccept = request.Accept;
+                await _responsibilityUserRepository.UpdateAsync(responsibilityUser);
+
+            }
+            else
             {
                 var ResponsibilityUser = new ResponsibilityUser()
                 {
@@ -68,10 +76,6 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.AcceptOnRe
                 };
 
                 await _responsibilityUserRepository.AddAsync(ResponsibilityUser);
-            }
-            else
-            {
-                Responsibility.ResponsibilityUsers.FirstOrDefault()!.IsAccept = request.Accept;
             }
 
             return new BaseResponse<object>("", true, 200);
