@@ -327,6 +327,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     GroupOfArbitrationEntities = await _ArbitrationRepository
                         .Where(x => x.ArbitratorId == UserId &&
                             x.isAccepted == FormStatus.Accepted && x.isAcceptedFromChairman == FormStatus.Accepted)
+                        .Include(x => x.DoneArbitrationUser!)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .GroupBy(x => x.ProvidedFormId)
@@ -345,6 +346,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                         .Where(x => ComitteeArbitratorIds.Contains(x.ArbitratorId) &&
                             x.isAccepted == FormStatus.Accepted && x.isAcceptedFromChairman == FormStatus.Accepted &&
                             x.ArbitrationAuditType == ArbitrationType.DoneArbitratod)
+                        .Include(x => x.DoneArbitrationUser!)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .GroupBy(x => x.ProvidedFormId)
