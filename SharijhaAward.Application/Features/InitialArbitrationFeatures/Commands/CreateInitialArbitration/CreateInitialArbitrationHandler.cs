@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.CreateArbitrationAudit;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
@@ -65,6 +66,10 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
 
             IEnumerable<InitialArbitrationMainCommand> InitialArbitrationMainCommands = Request.InitialArbitrationMainCommand
                 .Where(x => x.ArbitrationScore != null);
+
+            List<InitialArbitration> InitialArbitrationEntities = await _InitialArbitrationRepository
+                .Where(x => x.ArbitrationId == ArbitrationEntity.Id)
+                .ToListAsync();
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {
@@ -149,6 +154,8 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                     {
                         ArbitrationEntity.DateOfArbitration = DateTime.UtcNow;
                         ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
+
+                        ArbitrationEntity.isAcceptedFromChairman = FormStatus.NotArbitratedYet;
                     }
 
                     else

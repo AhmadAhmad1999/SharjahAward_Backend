@@ -38,19 +38,6 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            if (ArbitrationEntity.ArbitratorId == UserId && ArbitrationEntity.Arbitrator!.isChairman)
-            {
-                ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
-
-                await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
-
-                ResponseMessage = Request.lang == "en"
-                    ? "Form's status has been updated successfully"
-                    : "تم تعديل حالة الاستمارة المسندة بنجاح";
-
-                return new BaseResponse<object>(ResponseMessage, true, 200);
-            }
-
             ArbitrationEntity.isAccepted = Request.isAccepted;
             
             if (Request.isAccepted == FormStatus.Rejected)

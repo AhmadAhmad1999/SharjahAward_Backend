@@ -6,11 +6,10 @@ using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
-using System.Security.Cryptography;
 
 namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersDashboard
 {
-    public class GetAllWinnersDashboardHandler 
+    public class GetAllWinnersDashboardHandler
         : IRequestHandler<GetAllWinnersDashboardQuery, BaseResponse<List<GetAllWinnersDashboardListVM>>>
     {
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
@@ -31,7 +30,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
             _ArbitrationAuditRepository = ArbitrationAuditRepository;
         }
 
-        public async Task<BaseResponse<List<GetAllWinnersDashboardListVM>>> 
+        public async Task<BaseResponse<List<GetAllWinnersDashboardListVM>>>
             Handle(GetAllWinnersDashboardQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
@@ -124,21 +123,21 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                             .Select(y => y.ArbitrationScore)
                             .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
                         : 0,
-                    FinalArbitrationScore = x.FinalArbitration! ?.FinalScore ?? 0,
+                    FinalArbitrationScore = x.FinalArbitration!?.FinalScore ?? 0,
                     SubscriberName = SubscribersNames
                         .FirstOrDefault(y => y.FormId == x.ProvidedFormId)
                             ?.SubscriberName ?? string.Empty,
                     CycleNumber = x.ProvidedForm!.CycleNumber,
                     CycleYear = x.ProvidedForm!.CycleYear,
                     EducationalClassName = Request.lang == "en"
-                        ? x.ProvidedForm!.CategoryEducationalClass? .EducationalClass!.EnglishName ?? null
-                        : x.ProvidedForm!.CategoryEducationalClass? .EducationalClass!.ArabicName ?? null,
+                        ? x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName ?? null
+                        : x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName ?? null,
                     EducationalEntityName = Request.lang == "en"
-                        ? x.ProvidedForm!.CategoryEducationalEntity? .EducationalEntity!.EnglishName ?? null
-                        : x.ProvidedForm!.CategoryEducationalEntity? .EducationalEntity!.ArabicName ?? null,
+                        ? x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.EnglishName ?? null
+                        : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
                     ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                     Gender = x.ProvidedForm!.User.Gender,
-                    WinningLevel = x.WinningLevel!.Value
+                    WinningLevel = x.WinningLevel
                 }).ToList();
 
             Pagination PaginationParameter = new Pagination(Request.page,

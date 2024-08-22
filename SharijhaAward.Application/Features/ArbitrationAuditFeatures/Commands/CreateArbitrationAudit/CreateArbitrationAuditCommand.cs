@@ -9,5 +9,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
         public string? lang { get; set; }
         public bool isDoneArbitration { get; set; }
         public int FormId { get; set; }
+        public string? Token { get; set; }
     }
 }

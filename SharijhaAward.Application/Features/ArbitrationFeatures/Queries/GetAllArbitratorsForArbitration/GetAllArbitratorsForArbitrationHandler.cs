@@ -40,7 +40,10 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllA
                 .Include(x => x.Category!)
                 .ToListAsync();
 
-            IReadOnlyList<Arbitration> AllArbitrations = await _ArbitrationRepository.ListAllAsync();
+            List<Arbitration> AllArbitrations = await _ArbitrationRepository
+                .Include(x => x.ProvidedForm!)
+                .Where(x => x.ProvidedForm!.PercentCompletion == 100)
+                .ToListAsync();
 
             List<GetAllArbitratorsForArbitrationListVM> ArbitratorsForArbitration = Arbitrators
                 .Select(x => new GetAllArbitratorsForArbitrationListVM()

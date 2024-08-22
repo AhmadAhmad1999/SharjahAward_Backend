@@ -56,6 +56,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
             FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
+                .Include(x => x.DoneArbitrationUser!)
                 .Include(x => x.ProvidedForm!)
                 .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
 
@@ -331,7 +332,16 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             {
                 MainCriterions = FullResponse,
                 FinalArbitrationId = FinalArbitrationEntity.Id,
-                isChairman = ArbitratorEntity.isChairman
+                isChairman = ArbitratorEntity.isChairman,
+                isDoneArbitration = (FinalArbitrationEntity.Type == ArbitrationType.DoneArbitratod ? true : false),
+                isAcceptedFromChairman = FinalArbitrationEntity.isAcceptedFromChairman,
+                ReasonForRejecting = FinalArbitrationEntity.ReasonForRejecting,
+                DoneArbitrationUserId = FinalArbitrationEntity.DoneArbitrationUserId,
+                DoneArbitrationUserName = FinalArbitrationEntity.DoneArbitrationUser != null
+                    ? (Request.lang == "en"
+                        ? FinalArbitrationEntity.DoneArbitrationUser!.EnglishName
+                        : FinalArbitrationEntity.DoneArbitrationUser!.ArabicName)
+                    : null
             };
 
             return new BaseResponse<GetFinalArbitrationByIdMainDto>(ResponseMessage, true, 200, FinalResponse);

@@ -74,6 +74,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                         {
                             ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = FormStatus.Rejected;
                             ArbitrationEntity.ReasonForRejectingFromArbitrationAudit = Request.ReasonForRejecting;
+
+                            ArbitrationEntity.ArbitrationAuditType = ArbitrationType.BeingReviewed;
                         }
 
                         await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
@@ -86,19 +88,36 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                     {
                         int ArbitratorId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
-                        FinalArbitration NewFinalArbitrationEntity = new FinalArbitration()
-                        {
-                            ReasonForRejecting = null,
-                            isAcceptedFromChairman = FormStatus.NotArbitratedYet,
-                            ArbitratorId = ArbitratorId,
-                            ProvidedFormId = Request.FormId,
-                            Type = ArbitrationType.NotBeenArbitrated,
-                            DateOfArbitration = null,
-                            FullScore = 0,
-                            FinalScore = 0
-                        };
+                        FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
+                            .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
 
-                        await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);
+                        if (FinalArbitrationEntity is null)
+                        {
+                            FinalArbitration NewFinalArbitrationEntity = new FinalArbitration()
+                            {
+                                ReasonForRejecting = null,
+                                isAcceptedFromChairman = FormStatus.NotArbitratedYet,
+                                ArbitratorId = ArbitratorId,
+                                ProvidedFormId = Request.FormId,
+                                Type = ArbitrationType.NotBeenArbitrated,
+                                DateOfArbitration = null,
+                                FullScore = 0,
+                                FinalScore = 0
+                            };
+
+                            await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);
+                        }
+
+                        foreach (Arbitration? ArbitrationEntity in ArbitrationEntities)
+                        {
+                            ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = Request.IsAccepted;
+
+                            ArbitrationEntity.ArbitrationAuditType = ArbitrationType.DoneArbitratod;
+
+                            ArbitrationEntity.ReasonForRejectingFromArbitrationAudit = Request.ReasonForRejecting;
+                        }
+
+                        await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
 
                         ResponseMessage = Request.lang == "en"
                             ? "Initial arbitration has been accepted successfully"

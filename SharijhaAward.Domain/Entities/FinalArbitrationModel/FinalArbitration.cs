@@ -1,6 +1,7 @@
 ﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
 
 namespace SharijhaAward.Domain.Entities.FinalArbitrationModel
@@ -18,5 +19,7 @@ namespace SharijhaAward.Domain.Entities.FinalArbitrationModel
         public DateTime? DateOfArbitration { get; set; }
         public float FullScore { get; set; }
         public float FinalScore { get; set; }
+        public int? DoneArbitrationUserId { get; set; }
+        public User? DoneArbitrationUser { get; set; }
     }
 }

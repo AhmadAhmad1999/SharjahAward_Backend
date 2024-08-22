@@ -135,9 +135,9 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                     .ToListAsync();
             }
 
-            int SubscribersNumber = AllProvidedFormsEntities
-                .DistinctBy(x => x.userId)
-                .Count();
+            int SubscribersNumber = await _UserRepository
+                .Where(x => x.SubscriberId != null && x.isValidAccount)
+                .CountAsync();
 
             int FormsNumber = AllProvidedFormsEntities
                 .Count();
@@ -182,7 +182,7 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                 {
                     RoleType = RoleType.Arbitrator;
 
-                    List<Arbitration> ArbitratorEntities = _ArbitrationRepository
+                    List<Arbitration> ArbitrationEntities = _ArbitrationRepository
                         .Include(x => x.ProvidedForm!)
                         .Where(x => x.ArbitratorId == UserId &&
                             AllProvidedFormsEntities.AsEnumerable()
@@ -191,18 +191,17 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                         .DistinctBy(x => x.ProvidedFormId)
                         .ToList();
 
-                    int AssigedFormsNumber = ArbitratorEntities.Count();
+                    int AssigedFormsNumber = ArbitrationEntities.Count();
 
-                    int FormsInInitialArbitrationAsNumber = ArbitratorEntities
-                        .Where(x => x.isAccepted == FormStatus.Accepted &&
-                            x.isAcceptedFromChairman != FormStatus.Accepted)
+                    int FormsInInitialArbitrationAsNumber = ArbitrationEntities
+                        .Where(x => x.isAccepted == FormStatus.Accepted)
                         .Count();
 
                     if (AssigedFormsNumber > 0)
                     {
                         float FormsInInitialArbitrationAsPercentage = (100 * FormsInInitialArbitrationAsNumber) / AssigedFormsNumber;
 
-                        int FormsInArbitrationAuditAsNumber = ArbitratorEntities
+                        int FormsInArbitrationAuditAsNumber = ArbitrationEntities
                             .Where(x => x.isAcceptedFromChairman == FormStatus.Accepted &&
                                 x.isAccepted == FormStatus.Accepted)
                             .Count();
@@ -210,14 +209,14 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                         float FormsInArbitrationAuditAsPercentage = (100 * FormsInArbitrationAuditAsNumber) / AssigedFormsNumber;
 
                         int FormsInFinalArbitrationAsNumber = await _FinalArbitrationRepository
-                            .Where(x => ArbitratorEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
+                            .Where(x => ArbitrationEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
                             .CountAsync();
 
                         float FormsInFinalArbitrationAsPercentage = (100 * FormsInFinalArbitrationAsNumber) / AssigedFormsNumber;
 
                         List<IGrouping<Category, Domain.Entities.ProvidedFormModel.ProvidedForm>> AllProvidedFormsEntitiesGroupedByCategoryId =
                             AllProvidedFormsEntities
-                                .Where(x => ArbitratorEntities.Select(y => y.ProvidedFormId).Contains(x.Id))
+                                .Where(x => ArbitrationEntities.Select(y => y.ProvidedFormId).Contains(x.Id))
                                 .GroupBy(x => x.Category!)
                                 .ToList();
 

@@ -1,5 +1,6 @@
 ﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
 
 namespace SharijhaAward.Domain.Entities.ArbitrationModel
@@ -21,5 +22,7 @@ namespace SharijhaAward.Domain.Entities.ArbitrationModel
         public DateTime? DateOfArbitrationAuditing { get; set; }
         public string? ReasonForRejectingFromArbitrationAudit { get; set; }
         public FormStatus isAcceptedFromChairmanFromArbitrationAudit { get; set; }
+        public int? DoneArbitrationUserId { get; set; }
+        public User? DoneArbitrationUser { get; set; }
     }
 }

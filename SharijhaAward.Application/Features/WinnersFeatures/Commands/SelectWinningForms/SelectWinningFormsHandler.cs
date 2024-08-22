@@ -33,11 +33,20 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.SelectWinn
             }
             else
             {
-                await _ArbitrationResultRepository
+                List<ArbitrationResult> ArbitrationResultEntities = await _ArbitrationResultRepository
                     .Include(x => x.ProvidedForm!)
                     .Where(x => Request.DeleteFormId == x.ProvidedFormId &&
                         x.ProvidedForm!.categoryId == Request.CategoryId)
-                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.SelectedToWin, false));
+                    .ToListAsync();
+
+                foreach (ArbitrationResult ArbitrationResultEntity in ArbitrationResultEntities)
+                {
+                    ArbitrationResultEntity.WinningDate = null;
+                    ArbitrationResultEntity.Winner = false;
+                    ArbitrationResultEntity.SelectedToWin = false;
+                }
+
+                await _ArbitrationResultRepository.UpdateListAsync(ArbitrationResultEntities);
 
                 string ResponseMessage = Request.lang == "en"
                     ? "Winners in this category were unselected successfully"

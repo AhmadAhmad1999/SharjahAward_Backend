@@ -10,7 +10,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
         public FormStatus IsAccepted { get; set; }
         public string? ReasonForRejecting { get; set; }
         public string? Token { get; set; }
-        public bool? AsChairman { get; set; }
         public string? lang { get; set; }
     }
 }

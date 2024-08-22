@@ -33,59 +33,37 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
 
             if (Request.isCerticate is not null)
             {
-                if (ArbitrationResultEntityToUpdate.EligibleForCertification)
+                if (Request.isCerticate.Value)
                 {
-                    if (Request.isCerticate.Value)
-                    {
-                        ArbitrationResultEntityToUpdate.GotCertification = Request.isCerticate.Value;
-                        ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = Request.DateOfObtainingTheCertificate != null
-                            ? Request.DateOfObtainingTheCertificate.Value
-                            : DateTime.UtcNow;
-                    }
-                    else
-                    {
-                        ArbitrationResultEntityToUpdate.GotCertification = Request.isCerticate.Value;
-
-                        if (ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate is not null)
-                            ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = null;
-                    }
+                    ArbitrationResultEntityToUpdate.GotCertification = Request.isCerticate.Value;
+                    ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = Request.DateOfObtainingTheCertificate != null
+                        ? Request.DateOfObtainingTheCertificate.Value
+                        : DateTime.UtcNow;
                 }
                 else
                 {
-                    ResponseMessage = Request.lang == "en"
-                        ? "You can't change the status of the this arbitration result because it's not eligible for certification"
-                        : "لا يمكنك تغيير حالة نتيجة التحكيم هذه لأنها غير مؤهلة للحصول على الشهادة";
+                    ArbitrationResultEntityToUpdate.GotCertification = Request.isCerticate.Value;
 
-                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                    if (ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate is not null)
+                        ArbitrationResultEntityToUpdate.DateOfObtainingTheCertificate = null;
                 }
             }
 
             if (Request.isStatment is not null)
             {
-                if (ArbitrationResultEntityToUpdate.EligibleForAStatement)
+                if (Request.isStatment.Value)
                 {
-                    if (Request.isStatment.Value)
-                    {
-                        ArbitrationResultEntityToUpdate.GotStatement = Request.isStatment.Value;
-                        ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = Request.DateOfObtainingTheStatement != null
-                            ? Request.DateOfObtainingTheStatement.Value
-                            : DateTime.UtcNow;
-                    }
-                    else
-                    {
-                        ArbitrationResultEntityToUpdate.GotStatement = Request.isStatment.Value;
-
-                        if (ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement is not null)
-                            ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = null;
-                    }
+                    ArbitrationResultEntityToUpdate.GotStatement = Request.isStatment.Value;
+                    ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = Request.DateOfObtainingTheStatement != null
+                        ? Request.DateOfObtainingTheStatement.Value
+                        : DateTime.UtcNow;
                 }
                 else
                 {
-                    ResponseMessage = Request.lang == "en"
-                        ? "You can't change the status of the this arbitration result because it's not eligible for a statement"
-                        : "لا يمكنك تغيير حالة نتيجة التحكيم هذه لأنها غير مؤهلة للحصول على إفادة";
+                    ArbitrationResultEntityToUpdate.GotStatement = Request.isStatment.Value;
 
-                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                    if (ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement is not null)
+                        ArbitrationResultEntityToUpdate.DateOfObtainingTheStatement = null;
                 }
             }
 
