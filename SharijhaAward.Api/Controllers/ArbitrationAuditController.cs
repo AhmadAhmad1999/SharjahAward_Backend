@@ -198,11 +198,18 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> CreateArbitrationAudit([FromBody] CreateArbitrationAuditCommand CreateArbitrationAuditCommand)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             CreateArbitrationAuditCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            CreateArbitrationAuditCommand.Token = Token;
 
             BaseResponse<object>? Response = await _Mediator.Send(CreateArbitrationAuditCommand);
 

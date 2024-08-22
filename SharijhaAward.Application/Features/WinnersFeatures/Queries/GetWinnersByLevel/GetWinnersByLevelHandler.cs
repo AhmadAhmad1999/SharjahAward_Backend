@@ -55,10 +55,10 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
             if (Request.MaxLevelOfWinners == 0 && CategoryEntity.ExpectedNumberOfWinners != null)
                 Request.MaxLevelOfWinners = CategoryEntity.ExpectedNumberOfWinners.Value;
 
-            List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = _ArbitrationResultRepository
+            List<ArbitrationResult> ArbitrationResultEntities = await _ArbitrationResultRepository
                 .Include(x => x.ProvidedForm!)
                 .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId &&
-                    x.Winner && x.EligibleToWin)
+                    x.EligibleToWin)
                 .OrderByDescending(x => x.FinalArbitration!.FinalScore)
                 .Include(x => x.FinalArbitration!)
                 .Include(x => x.ProvidedForm!.Category!)
@@ -67,14 +67,16 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                 .Include(x => x.ProvidedForm!.CategoryEducationalEntity!)
                 .Include(x => x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!)
                 .Include(x => x.ProvidedForm!.User!)
-                .AsEnumerable()
+                .ToListAsync();
+
+            List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntitiesGroupedByFinalScore = ArbitrationResultEntities
                 .GroupBy(x => x.FinalArbitration!.FinalScore)
                 .ToList();
 
             var DynamicAttributeValueEntities = _DynamicAttributeValueRepository
                 .Include(x => x.DynamicAttribute!)
                 .AsEnumerable()
-                .Where(x => ArbitrationResultEntities.SelectMany(y => y.Select(z => z.ProvidedFormId)).Any(y => y == x.RecordId) &&
+                .Where(x => ArbitrationResultEntitiesGroupedByFinalScore.SelectMany(y => y.Select(z => z.ProvidedFormId)).Any(y => y == x.RecordId) &&
                     x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
                 .Select(x => new
                 {
@@ -84,19 +86,19 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
 
             List<Arbitration> ArbitrationEntities = _ArbitrationRepository
                 .AsEnumerable()
-                .Where(x => ArbitrationResultEntities
+                .Where(x => ArbitrationResultEntitiesGroupedByFinalScore
                     .SelectMany(y => y.Select(z => z.ProvidedFormId))
                     .Contains(x.ProvidedFormId))
                 .ToList();
 
             List<ArbitrationAudit> ArbitrationAuditEntities = _ArbitrationAuditRepository
                 .AsEnumerable()
-                .Where(x => ArbitrationResultEntities
+                .Where(x => ArbitrationResultEntitiesGroupedByFinalScore
                     .SelectMany(y => y.Select(z => z.ProvidedFormId))
                     .Contains(x.ProvidedFormId))
                 .ToList();
 
-            List<IGrouping<float, ArbitrationResult>> AlreadySelectedToWinList = ArbitrationResultEntities
+            List<IGrouping<float, ArbitrationResult>> AlreadySelectedToWinList = ArbitrationResultEntitiesGroupedByFinalScore
                 .Where(x => x.Any(y => y.SelectedToWin))
                 .ToList();
 
@@ -138,12 +140,11 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                             : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
                         ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                         Gender = x.ProvidedForm!.User.Gender,
-                        WinningLevel = x.WinningLevel!.Value,
                         NotifiedAsWinner = x.NotifiedAsWinner
                     }).ToList());
             }
 
-            List<IGrouping<float, ArbitrationResult>> RequestedWinnersList = ArbitrationResultEntities
+            List<IGrouping<float, ArbitrationResult>> RequestedWinnersList = ArbitrationResultEntitiesGroupedByFinalScore
                 .Where(x => !x.Any(y => y.SelectedToWin))
                 .Take(Request.MaxLevelOfWinners)
                 .ToList();
@@ -186,7 +187,6 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                             : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
                         ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                         Gender = x.ProvidedForm!.User.Gender,
-                        WinningLevel = x.WinningLevel!.Value,
                         NotifiedAsWinner = x.NotifiedAsWinner
                     }).ToList());
             }
@@ -208,7 +208,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                 .ToListAsync();
 
             List<ArbitrationResult> FilteredWinners = RemainingWinnersQuery
-                .Where(x => ArbitrationResultEntities.SelectMany(y => y.Select(z => z.Id)).Contains(x.Id))
+                .Where(x => ArbitrationResultEntitiesGroupedByFinalScore.SelectMany(y => y.Select(z => z.Id)).Contains(x.Id))
                 .ToList();
 
             List<GetWinnersByLevelListVM> RemainingWinners = FilteredWinners
@@ -248,39 +248,65 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                         : null,
                     ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                     Gender = x.ProvidedForm!.User.Gender,
-                    WinningLevel = x.WinningLevel!.Value,
                     NotifiedAsWinner = x.NotifiedAsWinner
                 }).ToList();
 
+            List<GetWinnersByLevelGroupByLevelListVM> RequestedWinnersResponse = new List<GetWinnersByLevelGroupByLevelListVM>();
+
+            if (RequestedWinners.Any())
+            {
+                var RequestedWinnersGroupedAndOrderd = RequestedWinners
+                    .GroupBy(x => x.FinalArbitrationScore)
+                    .OrderByDescending(x => x.Key)
+                    .ToList();
+
+                RequestedWinnersResponse = RequestedWinnersGroupedAndOrderd
+                    .Select(x => new GetWinnersByLevelGroupByLevelListVM()
+                    {
+                        WinningLevel = RequestedWinnersGroupedAndOrderd.IndexOf(x) + 1,
+                        GetWinnersByLevelListVM = x.ToList()
+                    }).ToList();
+            }
+
+            List<GetWinnersByLevelGroupByLevelListVM> RemainingWinnersResponse = new List<GetWinnersByLevelGroupByLevelListVM>();
+
+            if (RemainingWinners.Any())
+            {
+                var RemainingWinnersGroupedAndOrderd = RemainingWinners
+                    .GroupBy(x => x.FinalArbitrationScore)
+                    .OrderByDescending(x => x.Key)
+                    .ToList();
+
+                RemainingWinnersResponse = RemainingWinnersGroupedAndOrderd
+                    .Select(x => new GetWinnersByLevelGroupByLevelListVM()
+                    {
+                        WinningLevel = RemainingWinnersGroupedAndOrderd.IndexOf(x) + 1,
+                        GetWinnersByLevelListVM = x.ToList()
+                    }).ToList();
+            }
+
+            List<GetWinnersByLevelGroupByLevelListVM> SelectedWinnersResponse = new List<GetWinnersByLevelGroupByLevelListVM>();
+
+            if (SelectedWinners.Any())
+            {
+                var SelectedWinnersGroupedAndOrderd = SelectedWinners
+                    .GroupBy(x => x.FinalArbitrationScore)
+                    .OrderByDescending(x => x.Key)
+                    .ToList();
+
+                SelectedWinnersResponse = SelectedWinnersGroupedAndOrderd
+                    .Select(x => new GetWinnersByLevelGroupByLevelListVM()
+                    {
+                        WinningLevel = SelectedWinnersGroupedAndOrderd.IndexOf(x) + 1,
+                        GetWinnersByLevelListVM = x.ToList()
+                    }).ToList();
+            }
+
             GetWinnersByLevelMainResponse Response = new GetWinnersByLevelMainResponse()
             {
-                RequestedWinners = RequestedWinners.Any()
-                    ? RequestedWinners
-                        .GroupBy(x => x.WinningLevel)
-                        .Select(x => new GetWinnersByLevelGroupByLevelListVM()
-                        {
-                            WinningLevel = x.Key,
-                            GetWinnersByLevelListVM = x.ToList()
-                        }).ToList()
-                    : new List<GetWinnersByLevelGroupByLevelListVM>(),
-                RemainingWinners = RemainingWinners.Any()
-                    ? RemainingWinners
-                        .GroupBy(x => x.WinningLevel)
-                        .Select(x => new GetWinnersByLevelGroupByLevelListVM()
-                        {
-                            WinningLevel = x.Key,
-                            GetWinnersByLevelListVM = x.ToList()
-                        }).ToList()
-                    : new List<GetWinnersByLevelGroupByLevelListVM>(),
-                SelectedWinners = SelectedWinners.Any()
-                    ? SelectedWinners
-                        .GroupBy(x => x.WinningLevel)
-                        .Select(x => new GetWinnersByLevelGroupByLevelListVM()
-                        {
-                            WinningLevel = x.Key,
-                            GetWinnersByLevelListVM = x.ToList()
-                        }).ToList()
-                    : new List<GetWinnersByLevelGroupByLevelListVM>()
+                RequestedWinners = RequestedWinnersResponse,
+                RemainingWinners = RemainingWinnersResponse,
+                SelectedWinners = SelectedWinnersResponse
             };
 
             return new BaseResponse<GetWinnersByLevelMainResponse>(ResponseMessage, true, 200, Response);

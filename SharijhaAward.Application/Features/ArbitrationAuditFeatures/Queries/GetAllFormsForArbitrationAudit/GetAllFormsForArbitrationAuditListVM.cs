@@ -5,6 +5,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
     public class GetAllFormsForArbitrationAuditListVM
     {
         public int FormId { get; set; }
+        public int? DoneArbitrationUserId { get; set; }
+        public string? DoneArbitrationUserName { get; set; }
         public string Name { get; set; } = null!;
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;

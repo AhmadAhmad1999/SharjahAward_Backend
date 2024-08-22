@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
@@ -16,24 +17,35 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
+        private readonly IUserRepository _UserRepository;
         private readonly IMapper _Mapper;
+        private readonly IJwtProvider _JwtProvider;
 
         public CreateArbitrationAuditHandler(IAsyncRepository<ArbitrationAudit> ArbitrationAuditRepository,
             IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<Criterion> CriterionRepository,
             IAsyncRepository<CriterionItem> CriterionItemRepository,
-            IMapper Mapper)
+            IUserRepository UserRepository,
+            IMapper Mapper,
+            IJwtProvider JwtProvider)
         {
             _ArbitrationAuditRepository = ArbitrationAuditRepository;
             _ArbitrationRepository = ArbitrationRepository;
             _CriterionRepository = CriterionRepository;
             _CriterionItemRepository = CriterionItemRepository;
+            _UserRepository = UserRepository;
             _Mapper = Mapper;
+            _JwtProvider = JwtProvider;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateArbitrationAuditCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
+            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
+                .FirstOrDefaultAsync(x => x.Id == UserId);
 
             IEnumerable<ArbitrationAuditMainCommand> ArbitrationAuditMainCommands = Request.ArbitrationAuditMainCommand
                 .Where(x => x.ArbitrationScore != null);
@@ -156,9 +168,11 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
                             ArbitrationEntity.ArbitrationAuditType = ArbitrationType.DoneArbitratod;
 
                             ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = FormStatus.NotArbitratedYet;
+
+                            if (UserEntity is not null)
+                                ArbitrationEntity.DoneArbitrationUserId = UserEntity.Id;
                         }
                     }
-
                     else
                     {
                         foreach (Arbitration ArbitrationEntity in ArbitrationEntities)

@@ -5,6 +5,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
     public class GetAllFormsForFinalArbitrationListVM
     {
         public int FormId { get; set; }
+        public int? DoneArbitrationUserId { get; set; }
+        public string? DoneArbitrationUserName { get; set; }
         public string Name { get; set; } = null!;
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;

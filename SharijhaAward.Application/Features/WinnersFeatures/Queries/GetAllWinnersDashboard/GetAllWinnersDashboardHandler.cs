@@ -6,7 +6,6 @@ using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
-using System.Security.Cryptography;
 
 namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersDashboard
 {
@@ -138,7 +137,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                         : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
                     ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                     Gender = x.ProvidedForm!.User.Gender,
-                    WinningLevel = x.WinningLevel!.Value
+                    WinningLevel = x.WinningLevel
                 }).ToList();
 
             Pagination PaginationParameter = new Pagination(Request.page,

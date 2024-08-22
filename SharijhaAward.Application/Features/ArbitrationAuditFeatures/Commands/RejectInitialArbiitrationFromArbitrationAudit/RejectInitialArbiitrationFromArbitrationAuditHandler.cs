@@ -108,6 +108,17 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                             await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);
                         }
 
+                        foreach (Arbitration? ArbitrationEntity in ArbitrationEntities)
+                        {
+                            ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = Request.IsAccepted;
+
+                            ArbitrationEntity.ArbitrationAuditType = ArbitrationType.DoneArbitratod;
+
+                            ArbitrationEntity.ReasonForRejectingFromArbitrationAudit = Request.ReasonForRejecting;
+                        }
+
+                        await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
+
                         ResponseMessage = Request.lang == "en"
                             ? "Initial arbitration has been accepted successfully"
                             : "تم قبول التحكيم الأولي على الاستمارة بنجاح";
@@ -121,26 +132,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
                         return new BaseResponse<object>(ResponseMessage, true, 400);
                     }
 
-                    if (Request.ReasonForRejecting != null)
-                    {
-                        foreach (Arbitration ArbitrationEntity in ArbitrationEntities)
-                        {
-                            ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = Request.IsAccepted;
-                            ArbitrationEntity.ReasonForRejectingFromArbitrationAudit = Request.ReasonForRejecting;
-                        }
-
-                        await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
-                    }
-                    else
-                    {
-                        foreach (Arbitration ArbitrationEntity in ArbitrationEntities)
-                        {
-                            ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit = Request.IsAccepted;
-                        }
-
-                        await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
-                    }
-                    
                     Transaction.Complete();
 
                     return new BaseResponse<object>(ResponseMessage, true, 200);

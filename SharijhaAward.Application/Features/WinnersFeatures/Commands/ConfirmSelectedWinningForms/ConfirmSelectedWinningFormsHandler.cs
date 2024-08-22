@@ -47,6 +47,12 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
                                 x.ProvidedForm!.categoryId == Request.CategoryId)
                             .ExecuteUpdateAsync(x => x.SetProperty(y => y.WinningDate, DateTime.UtcNow));
 
+                        await _ArbitrationResultRepository
+                            .Include(x => x.ProvidedForm!)
+                            .Where(x => x.SelectedToWin &&
+                                x.ProvidedForm!.categoryId == Request.CategoryId)
+                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.Winner, true));
+
                         List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = _ArbitrationResultRepository
                             .Include(x => x.ProvidedForm!)
                             .Where(x => x.SelectedToWin &&
@@ -111,6 +117,12 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
                                 x.ProvidedForm!.categoryId == Request.CategoryId &&
                                 x.ProvidedForm!.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
                             .ExecuteUpdateAsync(x => x.SetProperty(y => y.WinningDate, DateTime.UtcNow));
+
+                        await _ArbitrationResultRepository
+                            .Include(x => x.ProvidedForm!)
+                            .Where(x => x.SelectedToWin &&
+                                x.ProvidedForm!.categoryId == Request.CategoryId)
+                            .ExecuteUpdateAsync(x => x.SetProperty(y => y.Winner, true));
 
                         List<IGrouping<float, ArbitrationResult>> ArbitrationResultEntities = _ArbitrationResultRepository
                             .Include(x => x.ProvidedForm!)

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateInitialArbitration;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
@@ -20,26 +20,37 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
         private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
+        private readonly IUserRepository _UserRepository;
         private readonly IMapper _Mapper;
+        private readonly IJwtProvider _JwtProvider;
 
         public CreateFinalArbitrationScoreHandler(IAsyncRepository<FinalArbitrationScore> FinalArbitrationScoreRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
             IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
             IAsyncRepository<Criterion> CriterionRepository,
             IAsyncRepository<CriterionItem> CriterionItemRepository,
-            IMapper Mapper)
+            IUserRepository UserRepository,
+            IMapper Mapper,
+            IJwtProvider JwtProvider)
         {
             _FinalArbitrationScoreRepository = FinalArbitrationScoreRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
             _ArbitrationResultRepository = ArbitrationResultRepository;
             _CriterionRepository = CriterionRepository;
             _CriterionItemRepository = CriterionItemRepository;
+            _UserRepository = UserRepository;
             _Mapper = Mapper;
+            _JwtProvider = JwtProvider;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateFinalArbitrationScoreCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
+            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
+                .FirstOrDefaultAsync(x => x.Id == UserId);
 
             var FinalArbitrationMainCommandCriterion = Request.CreateFinalArbitrationScoreMainCommand
                 .Where(y => y.CriterionId != null).Select(y => y.CriterionId);
@@ -160,6 +171,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                         FinalArbitrationEntity.FinalScore = Request.CreateFinalArbitrationScoreMainCommand.Sum(x => x.ArbitrationScore);
                         
                         FinalArbitrationEntity.isAcceptedFromChairman = FormStatus.NotArbitratedYet;
+
+                        if (UserEntity is not null)
+                            FinalArbitrationEntity.DoneArbitrationUserId = UserEntity.Id;
                     }
 
                     else

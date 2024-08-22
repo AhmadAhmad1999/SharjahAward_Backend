@@ -8,7 +8,6 @@ using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using System.Linq;
 
 namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetAllFormsForArbitrationAudit
 {
@@ -62,6 +61,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 {
                     GroupOfArbitrationEntities = await _ArbitrationRepository
                         .Where(x => x.Type == Request.ArbitrationType)
+                        .Include(x => x.DoneArbitrationUser!)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .GroupBy(x => x.ProvidedFormId)
@@ -70,6 +70,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 else
                 {
                     GroupOfArbitrationEntities = await _ArbitrationRepository
+                        .Include(x => x.DoneArbitrationUser!)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .GroupBy(x => x.ProvidedFormId)
@@ -137,7 +138,15 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                                     : ArbitrationEntity.ProvidedForm!.Category.ArabicName,
                                                 ItExceededTheMarginOfDifferenceInArbitrationScores = true,
                                                 FullScore = 0,
-                                                DoneArbitrationAudit = false
+                                                DoneArbitrationAudit = false,
+                                                DoneArbitrationUserId = ArbitrationEntity.DoneArbitrationUserId,
+                                                DoneArbitrationUserName = (GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser != null
+                                                    ? (Request.lang == "en"
+                                                        ? ArbitrationEntity.DoneArbitrationUser!.EnglishName
+                                                        : ArbitrationEntity.DoneArbitrationUser!.ArabicName)
+                                                    : null),
+                                                isAcceptedFromChairmanFromArbitrationAudit = ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit,
+                                                ReasonForRejectingFromArbitrationAudit = ArbitrationEntity.ReasonForRejectingFromArbitrationAudit,
                                             };
 
                                             Response.Add(GetAllFormsForArbitrationAuditListVM);
@@ -163,7 +172,15 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                     CategoryName = Request.lang == "en"
                                         ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
                                         : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName,
-                                    ItExceededTheMarginOfDifferenceInArbitrationScores = false
+                                    ItExceededTheMarginOfDifferenceInArbitrationScores = false,
+                                    DoneArbitrationUserId = GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUserId,
+                                    DoneArbitrationUserName = (GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser != null
+                                        ? (Request.lang == "en"
+                                            ? GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser!.EnglishName
+                                            : GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser!.ArabicName)
+                                        : null),
+                                    isAcceptedFromChairmanFromArbitrationAudit = GroupOfArbitrationEntity.FirstOrDefault()!.isAcceptedFromChairmanFromArbitrationAudit,
+                                    ReasonForRejectingFromArbitrationAudit = GroupOfArbitrationEntity.FirstOrDefault()!.ReasonForRejectingFromArbitrationAudit
                                 };
 
                                 foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
@@ -214,7 +231,15 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                 CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
                                 CategoryName = Request.lang == "en"
                                     ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
-                                    : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName
+                                    : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName,
+                                DoneArbitrationUserId = GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUserId,
+                                DoneArbitrationUserName = (GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser != null
+                                    ? (Request.lang == "en"
+                                        ? GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser!.EnglishName
+                                        : GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser!.ArabicName)
+                                    : null),
+                                isAcceptedFromChairmanFromArbitrationAudit = GroupOfArbitrationEntity.FirstOrDefault()!.isAcceptedFromChairmanFromArbitrationAudit,
+                                ReasonForRejectingFromArbitrationAudit = GroupOfArbitrationEntity.FirstOrDefault()!.ReasonForRejectingFromArbitrationAudit
                             };
 
                             foreach (Arbitration ArbitrationEntity in GroupOfArbitrationEntity)
@@ -393,7 +418,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                                 FullScore = 0,
                                                 DoneArbitrationAudit = false,
                                                 isAcceptedFromChairmanFromArbitrationAudit = ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit,
-                                                ReasonForRejectingFromArbitrationAudit = ArbitrationEntity.ReasonForRejectingFromArbitrationAudit
+                                                ReasonForRejectingFromArbitrationAudit = ArbitrationEntity.ReasonForRejectingFromArbitrationAudit,
+                                                DoneArbitrationUserId = ArbitrationEntity.DoneArbitrationUserId,
+                                                DoneArbitrationUserName = (ArbitrationEntity.DoneArbitrationUser != null
+                                                    ? (Request.lang == "en"
+                                                        ? ArbitrationEntity.DoneArbitrationUser!.EnglishName
+                                                        : ArbitrationEntity.DoneArbitrationUser!.ArabicName)
+                                                    : null)
                                             };
 
                                             List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
@@ -434,7 +465,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                         : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName,
                                     ItExceededTheMarginOfDifferenceInArbitrationScores = false,
                                     isAcceptedFromChairmanFromArbitrationAudit = GroupOfArbitrationEntity.FirstOrDefault()!.isAcceptedFromChairmanFromArbitrationAudit,
-                                    ReasonForRejectingFromArbitrationAudit = GroupOfArbitrationEntity.FirstOrDefault()!.ReasonForRejectingFromArbitrationAudit
+                                    ReasonForRejectingFromArbitrationAudit = GroupOfArbitrationEntity.FirstOrDefault()!.ReasonForRejectingFromArbitrationAudit,
+                                    DoneArbitrationUserId = GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUserId,
+                                    DoneArbitrationUserName = (GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser != null
+                                        ? (Request.lang == "en"
+                                            ? GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser!.EnglishName
+                                            : GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser!.ArabicName)
+                                        : null)
                                 };
 
                                 List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntity
@@ -497,7 +534,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                     ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
                                     : GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.ArabicName,
                                 isAcceptedFromChairmanFromArbitrationAudit = GroupOfArbitrationEntity.FirstOrDefault()!.isAcceptedFromChairmanFromArbitrationAudit,
-                                ReasonForRejectingFromArbitrationAudit = GroupOfArbitrationEntity.FirstOrDefault()!.ReasonForRejectingFromArbitrationAudit
+                                ReasonForRejectingFromArbitrationAudit = GroupOfArbitrationEntity.FirstOrDefault()!.ReasonForRejectingFromArbitrationAudit,
+                                DoneArbitrationUserId = GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUserId,
+                                DoneArbitrationUserName = (GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser != null
+                                    ? (Request.lang == "en"
+                                        ? GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser!.EnglishName
+                                        : GroupOfArbitrationEntity.FirstOrDefault()!.DoneArbitrationUser!.ArabicName)
+                                    : null)
                             };
 
                             List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntity

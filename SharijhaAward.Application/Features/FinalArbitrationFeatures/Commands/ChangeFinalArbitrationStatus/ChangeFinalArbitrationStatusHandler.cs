@@ -74,8 +74,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
             {
                 try
                 {
-                    if (!(!ArbitratorEntity.isChairman ||
-                        (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
+                    if (ArbitratorEntity.isChairman ||
+                        (Request.AsChairman != null ? Request.AsChairman.Value : false))
                     {
                         FinalArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
 
@@ -132,10 +132,11 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                     }
 
                     if (Request.isAccepted == FormStatus.Rejected &&
-                        !(!ArbitratorEntity.isChairman ||
-                        (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
+                        (ArbitratorEntity.isChairman ||
+                        (Request.AsChairman != null ? Request.AsChairman.Value : false)))
                     {
                         FinalArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+                        FinalArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
 
                         IEnumerable<ChairmanNotesOnFinalArbitrationScore> NewChairmanNotesOnInitialArbitrationEntities = Request.ChairmanNotes
                             .Select(x => new ChairmanNotesOnFinalArbitrationScore()
@@ -146,9 +147,11 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
 
                         await _ChairmanNotesOnFinalArbitrationScoreRepository.AddRangeAsync(NewChairmanNotesOnInitialArbitrationEntities);
                     }
-                    else if (Request.isAccepted == FormStatus.Rejected)
+                    else if (Request.isAccepted == FormStatus.Accepted &&
+                        (ArbitratorEntity.isChairman ||
+                        (Request.AsChairman != null ? Request.AsChairman.Value : false)))
                     {
-                        FinalArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+                        FinalArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
                     }
                     else if (Request.isAccepted == FormStatus.NotArbitratedYet)
                     {

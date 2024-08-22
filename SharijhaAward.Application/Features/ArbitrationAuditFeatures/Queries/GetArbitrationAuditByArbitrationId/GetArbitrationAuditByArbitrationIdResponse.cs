@@ -10,5 +10,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
         public bool isDoneArbitration { get; set; }
         public string? ReasonForRejectingFromArbitrationAudit { get; set; }
         public FormStatus isAcceptedFromChairmanFromArbitrationAudit { get; set; }
+        public int? DoneArbitrationUserId { get; set; }
+        public string? DoneArbitrationUserName { get; set; }
     }
 }

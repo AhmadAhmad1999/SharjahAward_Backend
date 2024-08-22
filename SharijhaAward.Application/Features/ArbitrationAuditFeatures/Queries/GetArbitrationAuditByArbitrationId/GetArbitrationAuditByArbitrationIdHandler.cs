@@ -56,6 +56,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
             Arbitration? ArbitrationEntity = await _ArbitrationRepository
                 .Include(x => x.ProvidedForm!)
+                .Include(x => x.DoneArbitrationUser!)
                 .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
 
             if (ArbitrationEntity is null)
@@ -277,7 +278,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 isItHisForm = isItHisForm,
                 ReasonForRejectingFromArbitrationAudit = ArbitrationEntity.ReasonForRejectingFromArbitrationAudit,
                 isAcceptedFromChairmanFromArbitrationAudit = ArbitrationEntity.isAcceptedFromChairmanFromArbitrationAudit,
-                isDoneArbitration = (ArbitrationEntity.ArbitrationAuditType == ArbitrationType.DoneArbitratod ? true : false)
+                isDoneArbitration = (ArbitrationEntity.ArbitrationAuditType == ArbitrationType.DoneArbitratod ? true : false),
+                DoneArbitrationUserId = ArbitrationEntity.DoneArbitrationUserId,
+                DoneArbitrationUserName = (ArbitrationEntity.DoneArbitrationUser != null
+                    ? (Request.lang == "en"
+                        ? ArbitrationEntity.DoneArbitrationUser!.EnglishName
+                        : ArbitrationEntity.DoneArbitrationUser!.ArabicName)
+                    : null)
             };
 
             return new BaseResponse<GetArbitrationAuditByArbitrationIdResponse>(ResponseMessage, true, 200, FinalResponse);

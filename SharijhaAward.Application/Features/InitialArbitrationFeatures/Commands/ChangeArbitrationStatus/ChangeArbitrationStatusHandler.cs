@@ -66,15 +66,15 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
             {
                 try
                 {
-                    if (!(!ArbitratorEntity.isChairman ||
-                        (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
-                        ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
-
                     if (Request.isAccepted == FormStatus.Rejected &&
-                        !(!ArbitratorEntity.isChairman ||
-                        (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
+                        (ArbitratorEntity.isChairman ||
+                        (Request.AsChairman != null ? Request.AsChairman.Value : false)))
                     {
                         ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+
+                        ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
+
+                        ArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
 
                         IEnumerable<ChairmanNotesOnInitialArbitration> NewChairmanNotesOnInitialArbitrationEntities = Request.ChairmanNotes
                             .Select(x => new ChairmanNotesOnInitialArbitration()
@@ -85,9 +85,13 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
 
                         await _ChairmanNotesOnInitialArbitrationRepository.AddRangeAsync(NewChairmanNotesOnInitialArbitrationEntities);
                     }
-                    else if (Request.isAccepted == FormStatus.Rejected)
+                    else if (Request.isAccepted == FormStatus.Accepted &&
+                        (ArbitratorEntity.isChairman ||
+                        (Request.AsChairman != null ? Request.AsChairman.Value : false)))
                     {
-                        ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+                        ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
+
+                        ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
                     }
                     else if (Request.isAccepted == FormStatus.NotArbitratedYet)
                     {

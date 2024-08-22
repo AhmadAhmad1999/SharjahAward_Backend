@@ -61,11 +61,18 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> CreateFinalArbitrationScore([FromBody] CreateFinalArbitrationScoreCommand CreateFinalArbitrationScoreCommand)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             CreateFinalArbitrationScoreCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            CreateFinalArbitrationScoreCommand.Token = Token;
 
             BaseResponse<object>? Response = await _Mediator.Send(CreateFinalArbitrationScoreCommand);
 

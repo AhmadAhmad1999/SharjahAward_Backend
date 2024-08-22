@@ -70,6 +70,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
+                        .Include(x => x.DoneArbitrationUser!)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .ToListAsync();
@@ -87,6 +88,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 {
                     FinalArbitrationEntities = await _FinalArbitrationRepository
                         .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
+                        .Include(x => x.DoneArbitrationUser!)
                         .Include(x => x.ProvidedForm!)
                         .Include(x => x.ProvidedForm!.Category!)
                         .ToListAsync();
@@ -125,7 +127,13 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         FinalScore = x.FinalScore,
                         DateOfArbitration = x.DateOfArbitration,
                         isAcceptedFromChairman = x.isAcceptedFromChairman,
-                        Type = x.Type
+                        Type = x.Type,
+                        DoneArbitrationUserId = x.DoneArbitrationUserId,
+                        DoneArbitrationUserName = x.DoneArbitrationUser != null
+                            ? (Request.lang == "en"
+                                ? x.DoneArbitrationUser!.EnglishName
+                                : x.DoneArbitrationUser!.ArabicName)
+                            : null
                     }).ToList();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
@@ -176,6 +184,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
+                            .Include(x => x.DoneArbitrationUser!)
                             .Include(x => x.ProvidedForm!)
                             .Include(x => x.ProvidedForm!.Category!)
                             .ToListAsync();
@@ -191,6 +200,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
+                            .Include(x => x.DoneArbitrationUser!)
                             .Include(x => x.ProvidedForm!)
                             .Include(x => x.ProvidedForm!.Category!)
                             .ToListAsync();
@@ -223,7 +233,13 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             FinalScore = x.FinalScore,
                             DateOfArbitration = x.DateOfArbitration,
                             isAcceptedFromChairman = x.isAcceptedFromChairman,
-                            Type = x.Type
+                            Type = x.Type,
+                            DoneArbitrationUserId = x.DoneArbitrationUserId,
+                            DoneArbitrationUserName = x.DoneArbitrationUser != null
+                                ? (Request.lang == "en"
+                                    ? x.DoneArbitrationUser!.EnglishName
+                                    : x.DoneArbitrationUser!.ArabicName)
+                                : null
                         }).ToList();
 
                     Dictionary<ArbitrationType, int> TypeCounts = await _FinalArbitrationRepository
@@ -273,6 +289,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
+                            .Include(x => x.DoneArbitrationUser!)
                             .Include(x => x.ProvidedForm!)
                             .Include(x => x.ProvidedForm!.Category!)
                             .ToListAsync();
@@ -288,6 +305,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
+                            .Include(x => x.DoneArbitrationUser!)
                             .Include(x => x.ProvidedForm!)
                             .Include(x => x.ProvidedForm!.Category!)
                             .ToListAsync();
@@ -320,7 +338,13 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             FinalScore = x.FinalScore,
                             DateOfArbitration = x.DateOfArbitration,
                             isAcceptedFromChairman = x.isAcceptedFromChairman,
-                            Type = x.Type
+                            Type = x.Type,
+                            DoneArbitrationUserId = x.DoneArbitrationUserId,
+                            DoneArbitrationUserName = x.DoneArbitrationUser != null
+                            ? (Request.lang == "en"
+                                ? x.DoneArbitrationUser!.EnglishName
+                                : x.DoneArbitrationUser!.ArabicName)
+                            : null
                         }).ToList();
 
                     Dictionary<ArbitrationType, int> TypeCounts = await _FinalArbitrationRepository
