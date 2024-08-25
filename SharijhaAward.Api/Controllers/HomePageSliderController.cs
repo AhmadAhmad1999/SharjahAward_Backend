@@ -95,6 +95,22 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpGet("WebsiteGetAllHomeSliderItems", Name = "WebsiteGetAllHomeSliderItems")]
+        public async Task<IActionResult> WebsiteGetAllHomeSliderItems([FromQuery] GetAllHomePageSliderItemsQuery query)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            query.lang = language!;
+
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
         [HttpGet("GetHomePageSliderItemById/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

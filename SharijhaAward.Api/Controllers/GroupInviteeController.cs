@@ -190,7 +190,45 @@ namespace SharijhaAward.Api.Controllers
                     }
                 });
         }
+        [HttpGet("WebsiteGetAllGroupInvitee", Name = "WebsiteGetAllGroupInvitee")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> WebsiteGetAllGroupInvitee(int page, int perPage, string? name, int? EventId)
+        {
+            if (perPage == 0)
+                perPage = 10;
 
+            var response = await _mediator.Send(new GetAllGroupInviteeQuery()
+            {
+                EventId = EventId,
+                page = page,
+                perPage = perPage,
+                name = name
+            });
+
+            var totalCount = response.totalItem;
+            var totalPage = (int)Math.Ceiling((decimal)totalCount / perPage);
+
+
+            return Ok(
+                new
+                {
+                    response.data,
+                    response.statusCode,
+                    pagination =
+                    new
+                    {
+                        current_page = page,
+                        last_page = totalPage,
+                        total_row = totalCount,
+                        per_page = perPage
+                    }
+                });
+        }
         [HttpPost("ConfirmAttendanceGroup", Name = "ConfirmAttendanceGroup")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]

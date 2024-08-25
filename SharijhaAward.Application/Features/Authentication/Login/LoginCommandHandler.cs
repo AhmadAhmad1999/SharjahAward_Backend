@@ -155,7 +155,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                     response.user.isChairman = CheckIfLogInUserIsArbitrator.isChairman;
 
                     List<DynamicAttributeSection> DynamicAttributeSectionEntities = await _DynamicAttributeSectionRepository
-                        .Where(x => x.AttributeTableNameId == 3 && x.RecordIdOnRelation == -2)
+                        .Where(x => x.AttributeTableNameId == 3)
                         .ToListAsync();
 
                     if (DynamicAttributeSectionEntities.Any())
@@ -184,7 +184,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                     if (CheckIfLogInUserIsCoordinator is not null)
                     {
                         List<DynamicAttributeSection> DynamicAttributeSectionEntities = await _DynamicAttributeSectionRepository
-                            .Where(x => x.AttributeTableNameId == 2 && x.RecordIdOnRelation == -1)
+                            .Where(x => x.AttributeTableNameId == 2)
                             .ToListAsync();
 
                         if (DynamicAttributeSectionEntities.Any())

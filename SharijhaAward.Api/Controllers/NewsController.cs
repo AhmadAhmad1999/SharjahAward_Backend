@@ -116,6 +116,25 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpGet("WebsiteGetNewsById/{Id}", Name = "WebsiteGetNewsById")]
+        public async Task<IActionResult> WebsiteGetNewsById(int Id)
+        {
+            //get Language from header
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetNewsByIdQuery()
+            {
+                Id = Id,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
         [HttpGet(Name ="GetAllNews")]
         public async Task<IActionResult> GetAllNews([FromQuery] GetAllNewsQuery query)
         {
@@ -155,7 +174,27 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpGet("WebsiteGetNewsForWebsite", Name = "WebsiteGetNewsForWebsite")]
+        public async Task<IActionResult> WebsiteGetNewsForWebsite(string? query, int page = 1, int perPage = 10)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
 
+            //get data from mediator
+            var response = await _mediator.Send(new GetNewsForWebsiteQuery()
+            {
+                lang = Language!,
+                page = page,
+                perPage = perPage,
+                query = query
+            });
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
         [HttpPut("HideNews", Name = "HideNews")]
         public async Task<IActionResult> HideNews(HideNewsQuery query)
         {

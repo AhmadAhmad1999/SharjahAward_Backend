@@ -32,7 +32,7 @@ namespace SharijhaAward.Api.Logger
             _Logger = logger;
             _JwtProvider = JwtProvider;
         }
-        public override async void OnActionExecuting(ActionExecutingContext filterContext)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext filterContext, ActionExecutionDelegate next)
         {
             Guid GuidId = Guid.NewGuid();
             Trace.CorrelationManager.ActivityId = GuidId;
@@ -46,47 +46,53 @@ namespace SharijhaAward.Api.Logger
 
             string token = filterContext.HttpContext.Request.Headers["Authorization"].ToString();
 
-            //try
-            //{
-            //    List<object> Controller_Function_Name = filterContext.RouteData.Values.Values.ToList();
+            try
+            {
+                List<object> Controller_Function_Name = filterContext.RouteData.Values.Values.ToList();
 
-            //    if (Controller_Function_Name[1].ToString() != "Authentication" &&
-            //        (Controller_Function_Name[0].ToString() != "Login" ||
-            //        Controller_Function_Name[0].ToString() != "SignUp"))
-            //    {
-            //        if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
-            //            token.ToLower() != "bearer" && token.ToLower() != "bearer ")
-            //        {
-            //            IAsyncRepository<UserToken>? _UserTokenRepository = _ServiceProvider.GetService<IAsyncRepository<UserToken>>();
+                if (Controller_Function_Name[0].ToString() != "Login" &&
+                    Controller_Function_Name[0].ToString() != "SignUp" &&
+                    Controller_Function_Name[0].ToString() != "SignUpFromAdminDashboard" &&
+                    (!string.IsNullOrEmpty(Controller_Function_Name[0].ToString())
+                        ? !Controller_Function_Name[0].ToString()!.StartsWith("Website")
+                        : true))
+                {
+                    if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
+                        token.ToLower() != "bearer" && token.ToLower() != "bearer ")
+                    {
+                        IAsyncRepository<UserToken>? _UserTokenRepository = _ServiceProvider.GetService<IAsyncRepository<UserToken>>();
 
-            //            UserToken? CheckUserId = await _UserTokenRepository!
-            //                .FirstOrDefaultAsync(x => x.Id == int.Parse(_JwtProvider.GetUserIdFromToken(token)) &&
-            //                    x.Token == token);
+                        token = token.Replace("Bearer ", string.Empty);
+                        token = token.Replace("bearer ", string.Empty);
 
-            //            if (CheckUserId is not null)
-            //                UserId = int.Parse(_JwtProvider.GetUserIdFromToken(token));
+                        UserToken? CheckUserId = await _UserTokenRepository!
+                            .FirstOrDefaultAsync(x => x.UserId == int.Parse(_JwtProvider.GetUserIdFromToken(token)) &&
+                                x.Token == token);
 
-            //            else
-            //            {
-            //                string StartException1 = null;
-            //                StartException1.ToLower();
-            //            }
-            //        }
-            //        else
-            //        {
-            //            string StartException1 = null;
-            //            StartException1.ToLower();
-            //        }
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //    throw new UnauthorizedAccessException();
-            //}
+                        if (CheckUserId is not null)
+                            UserId = int.Parse(_JwtProvider.GetUserIdFromToken(token));
+
+                        else
+                        {
+                            throw new UnauthorizedAccessException();
+                        }
+                    }
+                    else
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new UnauthorizedAccessException();
+            }
 
             if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
                 token.ToLower() != "bearer" && token.ToLower() != "bearer ")
                 UserId = int.Parse(_JwtProvider.GetUserIdFromToken(token));
+
+            await next();
         }
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)
