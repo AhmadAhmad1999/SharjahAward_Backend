@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
 {
     public class GetHistoryByControllerQuery : IRequest<BaseResponse<List<GetHistoryByControllerListVM>>>
     {
-        public string ControllerName { get; set; } = null!;
+        public string? ControllerName { get; set; } = null!;
         public string? lang { get; set; }
         public string? Token { get; set; }
         public bool ShowAll { get; set; } = false;

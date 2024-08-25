@@ -18,5 +18,6 @@ namespace SharijhaAward.Application.Responses
         public bool AcceptOnResponsibilities { get; set; }
         public List<UserPermissionsDto>? UserPermissions { get; set; }
         public bool NeedVerification { get; set; }
+        public bool DoesContainsRequiredFields { get; set; }
     }
 }

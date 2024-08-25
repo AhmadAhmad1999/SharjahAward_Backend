@@ -9,5 +9,6 @@
         public ActionsTypes? ActionType { get; set; }
         public string Result { get; set; } = null!;
         public int? RecordId { get; set; }
+        public string? ControllerName { get; set; }
     }
 }

@@ -1,11 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SharijhaAward.Application.Features.Circulars.Command.CreateCircular;
-using SharijhaAward.Application.Features.Circulars.Command.DeleteCircular;
-using SharijhaAward.Application.Features.Circulars.Command.UpdateCircular;
-using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
-using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Responsibilities.Commands.CreateResponsibility;
 using SharijhaAward.Application.Features.Responsibilities.Commands.DeleteResponsibility;
 using SharijhaAward.Application.Features.Responsibilities.Commands.UpdateResponsibility;
@@ -16,6 +12,7 @@ using SharijhaAward.Application.Features.Responsibilities.Queries.GetResponsibil
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ResponsibilityController : ControllerBase
