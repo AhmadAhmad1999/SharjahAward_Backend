@@ -63,6 +63,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
                             : x.ArabicName,
                         RelatedToClasses = x.RelatedToClasses,
                         Classes = CategoryEducationalClassEntities
+                            .Where(y => y.CategoryId == x.Id)
                             .Select(y => new ClassesDto()
                             {
                                 Id = y.Id,
@@ -95,6 +96,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
                             : x.ArabicName,
                         RelatedToClasses = x.RelatedToClasses,
                         Classes = CategoryEducationalClassEntities
+                            .Where(y => y.CategoryId == x.Id)
                             .Select(y => new ClassesDto()
                             {
                                 Id = y.Id,
