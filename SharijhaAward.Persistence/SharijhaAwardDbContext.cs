@@ -236,6 +236,8 @@ namespace SharijhaAward.Persistence
         public DbSet<TextCard> TextCards { get; set; }
         public DbSet<ImageCard> ImageCards { get; set; }
         public DbSet<PageStructureImages> PageStructureImages { get; set; }
+        public DbSet<OnePageText> OnePageText { get; set; }
+        public DbSet<News> News { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -3795,54 +3797,6 @@ namespace SharijhaAward.Persistence
                     EnglishName = "Educational Entity 2"
                 });
 
-
-
-            modelBuilder.Entity<EduInstitutionCoordinator>()
-                .HasData(new EduInstitutionCoordinator()
-                {
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Id = 1,
-                    EducationalInstitutionId = 1,
-                    CoordinatorId = 10
-                }, new EduInstitutionCoordinator()
-                {
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Id = 2,
-                    EducationalInstitutionId = 1,
-                    CoordinatorId = 11
-                }, new EduInstitutionCoordinator()
-                {
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Id = 3,
-                    EducationalInstitutionId = 2,
-                    CoordinatorId = 12
-                }, new EduInstitutionCoordinator()
-                {
-                    isDeleted = false,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = null,
-                    DeletedAt = null,
-                    LastModifiedAt = null,
-                    LastModifiedBy = null,
-                    Id = 4,
-                    EducationalInstitutionId = 2,
-                    CoordinatorId = 13
-                });
 
             modelBuilder.Entity<Role>().HasData(
                 new Role
