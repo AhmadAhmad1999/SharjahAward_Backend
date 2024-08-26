@@ -94,7 +94,24 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpGet("WebsiteGetAllAwardStatistics", Name = "WebsiteGetAllAwardStatistics")]
+        public async Task<IActionResult> WebsiteGetAllAwardStatistics([FromQuery] GetAllAwardStatisticsQuery query)
+        {
 
+            var token = HttpContext.Request.Headers.Authorization;
+            var language = HttpContext.Request.Headers["lang"];
+
+            query.lang = language!;
+
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
         [HttpGet("{Id}", Name = "GetAwardStatisticById")]
         public async Task<IActionResult> GetAwardStatisticById(int Id)
         {

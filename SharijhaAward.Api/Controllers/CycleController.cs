@@ -102,6 +102,24 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpGet("WebsiteGetAllCycle", Name = "WebsiteGetAllCycle")]
+        public async Task<IActionResult> WebsiteGetAllCycle([FromQuery] GetAllCyclesQuery query)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            query.lang = Language!;
+
+            //get data from mediator
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
         [HttpGet("GetLimitedNumberOfCategories", Name = "GetLimitedNumberOfCategories")]
         public async Task<IActionResult> GetLimitedNumberOfCategories()
         {

@@ -98,7 +98,23 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpGet("WebsiteGetAllSocialMediaItem", Name = "WebsiteGetAllSocialMediaItem")]
+        public async Task<IActionResult> WebsiteGetAllSocialMediaItem(int page = 1, int perPage = 10)
+        {
 
+            var response = await _mediator.Send(new GetAllSocialMediaItemsQuery()
+            {
+                page = page,
+                perPage = perPage
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
         [HttpGet("{Id}", Name = "GetSocialMediaItemById")]
         public async Task<IActionResult> GetSocialMediaItemById(int Id)
         {

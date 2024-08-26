@@ -91,7 +91,8 @@ namespace SharijhaAward.Api.Controllers
                         {
                             NeedVerification = response.NeedVerification,
                             Id = response.OutUserId,
-                            response.isChairman
+                            response.isChairman,
+                            response.DoesContainsRequiredFields
                         }
                     });
             }
@@ -102,7 +103,8 @@ namespace SharijhaAward.Api.Controllers
                         data = response.user,
                         key = response.token,
                         permission = response.UserPermissions,
-                        message = response.message
+                        message = response.message,
+                        response.DoesContainsRequiredFields
                     }
                 );
         }

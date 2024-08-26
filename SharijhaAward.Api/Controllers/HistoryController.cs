@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryByController;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Application.Features.LoggerFeatures.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -46,6 +47,25 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(Response),
                 200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("HistoryExportToExcel")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> HistoryExportToExcel()
+        {
+            BaseResponse<byte[]> Response = await _Mediator.Send(new ExportToExcelQuery());
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => File(Response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "History.xlsx"),
                 _ => BadRequest(Response)
             };
         }

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSelectedWinningForms;
 using SharijhaAward.Application.Features.WinnersFeatures.Commands.SelectWinningForms;
 using SharijhaAward.Application.Features.WinnersFeatures.Queries.ExportWinnersToExcel;
@@ -12,6 +13,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class WinnersController : ControllerBase
@@ -82,6 +84,32 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAllWinnersForWebsite([FromQuery] GetAllWinnersForWebsiteQuery GetAllWinnersForWebsiteQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllWinnersForWebsiteQuery.lang = HeaderValue;
+
+            BaseResponse<List<GetAllWinnersForWebsiteMainResponse>> Response = await _Mediator.Send(GetAllWinnersForWebsiteQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("WebsiteGetAllWinnersForWebsite")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> WebsiteGetAllWinnersForWebsite([FromQuery] GetAllWinnersForWebsiteQuery GetAllWinnersForWebsiteQuery)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

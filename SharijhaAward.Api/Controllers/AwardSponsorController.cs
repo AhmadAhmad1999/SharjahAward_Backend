@@ -98,7 +98,25 @@ namespace SharijhaAward.Api.Controllers
             };
 
         }
+        [HttpGet("WebsiteGetAwardSponser", Name = "WebsiteGetAwardSponser")]
+        public async Task<IActionResult> WebsiteGetAwardSponser()
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
 
+            var response = await _mediator.Send(new GetAwardSponsorQuery()
+            {
+                lang = Language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+
+        }
         [HttpGet("{Id}", Name = "GetAwardSponserById")]
         public async Task<IActionResult> GetAwardSponserById(int Id)
         {

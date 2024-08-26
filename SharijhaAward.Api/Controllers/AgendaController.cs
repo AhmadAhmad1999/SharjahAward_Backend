@@ -144,7 +144,28 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(response),
                 _ => BadRequest(response)
             };
-        } 
+        }
+        [HttpGet("WebsiteGetAgendasByCycleId", Name = "WebsiteGetAgendasByCycleId")]
+        public async Task<IActionResult> WebsiteGetAgendasByCycleId(int? Id, int page = 1, int perPage = 10)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAgendaByCycleIdQuery()
+            {
+                page = page,
+                perPage = perPage,
+                CycleId = Id,
+                lang = Language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
         [HttpGet("GetAgendasForAwardTeam", Name = "GetAgendasForAwardTeam")]
         public async Task<IActionResult> GetAgendasForAwardTeam([FromQuery] GetAgendasForAwardTeamQuery query)
         {

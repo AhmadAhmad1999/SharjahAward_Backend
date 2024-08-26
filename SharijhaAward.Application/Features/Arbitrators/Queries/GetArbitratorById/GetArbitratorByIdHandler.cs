@@ -85,7 +85,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                 ? Request.lang.ToLower() : "ar";
 
             List<GetAllDynamicAttributeSectionsForAddListVMAdminDashboard> DynamicAttributeSections = _DynamicAttributeSectionRepository
-                .IncludeThenWhere(x => x.AttributeTableName!, x => x.RecordIdOnRelation == ArbitratorEntity.Id &&
+                .IncludeThenWhere(x => x.AttributeTableName!, x => x.RecordIdOnRelation == -2 &&
                     x.AttributeTableName!.Name.ToLower() == Helpers.Constants.TableNames.Coordinator.ToString().ToLower())
                 .Select(x => new GetAllDynamicAttributeSectionsForAddListVMAdminDashboard()
                 {

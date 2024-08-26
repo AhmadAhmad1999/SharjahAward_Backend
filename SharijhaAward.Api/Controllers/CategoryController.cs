@@ -103,8 +103,48 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpGet("WebsiteGetAllCategories", Name = "WebsiteGetAllCategories")]
+        public async Task<IActionResult> WebsiteGetAllCategories(int? CycleId, int page = 1, int perPage = 10)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAllCategoryQuery
+            {
+                lang = Language!,
+                page = page,
+                perPage = perPage,
+                CycleId = CycleId
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
         [HttpGet("{Id}",Name ="GetCategoryById")]
         public async Task<IActionResult> GetCategoryById(int Id)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetCategoryByIdQuery()
+            {
+                Id = Id,
+                lang = Language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpGet("WebsiteGetCategoryById/{Id}", Name = "WebsiteGetCategoryById")]
+        public async Task<IActionResult> WebsiteGetCategoryById(int Id)
         {
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];

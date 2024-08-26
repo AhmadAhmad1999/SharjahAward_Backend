@@ -107,6 +107,19 @@
     "FileSizeInKB": "حجم الملف بالكيلو بايت",
     "UploadedAt": "تاريخ رفع الملف",
     "Description": "التفاصيل",
-    "FileType" : "نوع الملف"
+    "FileType": "نوع الملف",
+    "Date": "التاريخ",
+    "UserId": "معرف المستخدم",
+    "UserArabicName": "إسم المستخدم باللغة العربية",
+    "UserEnglishName": "إسم المستخدم باللغة الإنكليزية",
+    "ControllerName": "القسم",
+    "FunctionName": "العملية",
+    "HttpMethod": "نوع العملية",
+    "BodyParameters": "مدخلات جسد العملية",
+    "HeaderParameters": "مدخلات رأس العملية",
+    "ResponseStatus": "حالة الخرج",
+    "Result": "النتيجة",
+    "ActivityId": "المعرف الخاص بالعملية",
+    "RecordId": "المعرف الذي تمت عليه العملية"
   }
 }

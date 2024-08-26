@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Commands.UpdateExplanatoryMessage;
 using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetAllExplanatoryMessage;
 using SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.GetExplanatoryMessageById;
@@ -10,6 +11,7 @@ using SharijhaAward.Domain.Entities.ExplanatoryMessageModel;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ExplanatoryMessageController : ControllerBase

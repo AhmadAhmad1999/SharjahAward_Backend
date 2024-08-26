@@ -5,7 +5,9 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.Authentication.Login
@@ -21,6 +23,10 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         private readonly IAsyncRepository<RolePermission> _RolePermissionRepository;
         private readonly IAsyncRepository<UserToken> _UserTokenRepository;
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
+        private readonly IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository;
+        private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
+        private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
 
         public LoginCommandHandler(
             IUserRepository userRepository, 
@@ -31,7 +37,11 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             IAsyncRepository<RolePermission> RolePermissionRepository,
             IAsyncRepository<UserToken> UserTokenRepository,
             IAsyncRepository<ResponsibilityUser> responsibilityUserRepository,
-            IAsyncRepository<Arbitrator> ArbitratorRepository)
+            IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IAsyncRepository<Coordinator> CoordinatorRepository,
+            IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
+            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -42,6 +52,10 @@ namespace SharijhaAward.Application.Features.Authentication.Login
             _UserTokenRepository = UserTokenRepository;
             _responsibilityUserRepository = responsibilityUserRepository;
             _ArbitratorRepository = ArbitratorRepository;
+            _CoordinatorRepository = CoordinatorRepository;
+            _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
+            _DynamicAttributeRepository = DynamicAttributeRepository;
+            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
         }
         public async Task<AuthenticationResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -139,6 +153,58 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                 {
                     response.isChairman = CheckIfLogInUserIsArbitrator.isChairman;
                     response.user.isChairman = CheckIfLogInUserIsArbitrator.isChairman;
+
+                    List<DynamicAttributeSection> DynamicAttributeSectionEntities = await _DynamicAttributeSectionRepository
+                        .Where(x => x.AttributeTableNameId == 3)
+                        .ToListAsync();
+
+                    if (DynamicAttributeSectionEntities.Any())
+                    {
+                        List<DynamicAttribute> DynamicAttributeEntities = await _DynamicAttributeRepository
+                            .Where(x => x.IsRequired && 
+                                DynamicAttributeSectionEntities.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
+                            .ToListAsync();
+
+                        if (DynamicAttributeEntities.Any())
+                        {
+                            List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
+                                .Where(x => DynamicAttributeEntities.Select(y => y.Id).Contains(x.DynamicAttributeId))
+                                .ToListAsync();
+
+                            if (DynamicAttributeValueEntities.Count() != DynamicAttributeEntities.Count())
+                                response.DoesContainsRequiredFields = true;
+                        }
+                    }
+                }
+                else
+                {
+                    Coordinator? CheckIfLogInUserIsCoordinator = await _CoordinatorRepository
+                        .FirstOrDefaultAsync(x => x.Id == response.user.Id);
+
+                    if (CheckIfLogInUserIsCoordinator is not null)
+                    {
+                        List<DynamicAttributeSection> DynamicAttributeSectionEntities = await _DynamicAttributeSectionRepository
+                            .Where(x => x.AttributeTableNameId == 2)
+                            .ToListAsync();
+
+                        if (DynamicAttributeSectionEntities.Any())
+                        {
+                            List<DynamicAttribute> DynamicAttributeEntities = await _DynamicAttributeRepository
+                                .Where(x => x.IsRequired &&
+                                    DynamicAttributeSectionEntities.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
+                                .ToListAsync();
+
+                            if (DynamicAttributeEntities.Any())
+                            {
+                                List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
+                                    .Where(x => DynamicAttributeEntities.Select(y => y.Id).Contains(x.DynamicAttributeId))
+                                    .ToListAsync();
+
+                                if (DynamicAttributeValueEntities.Count() != DynamicAttributeEntities.Count())
+                                    response.DoesContainsRequiredFields = true;
+                            }
+                        }
+                    }
                 }
             }
 
