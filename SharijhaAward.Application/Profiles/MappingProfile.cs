@@ -358,6 +358,8 @@ using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetExce
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetExcelFilePrototype;
 using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.UpdateChairmanNotesOnArbitrationAudit;
 using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.CreateArbitrationAudit;
+using SharijhaAward.Application.Features.LoggerFeatures.Queries.ExportToExcel;
+using SharijhaAward.Domain.Entities.LoggerModel;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -778,6 +780,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GeneralFAQ, GeneralFAQDto>().ReverseMap();
             CreateMap<AppVersion, GetAllLastVersionsForAllTypesListVM>().ReverseMap();
             CreateMap<HomePageSlider, GetHomePageSliderItemByIdDto>().ReverseMap();
+            CreateMap<LogUserAction, LoggerDto>().ReverseMap();
         }
     }
 }
