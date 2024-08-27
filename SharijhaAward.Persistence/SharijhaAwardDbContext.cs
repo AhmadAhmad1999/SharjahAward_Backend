@@ -244,16 +244,23 @@ namespace SharijhaAward.Persistence
 
             //Filter for Deleted items
             modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Achievement>().HasQueryFilter(p => p.User != null ? !p.User.isDeleted : false);
 
             modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => p.Criterion != null ? !p.Criterion.isDeleted : false);
+            modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => p.Sender != null ? !p.Sender.isDeleted : false);
+            modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => p.Receiver != null ? !p.Receiver.isDeleted : false);
 
             modelBuilder.Entity<AppVersion>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Instruction>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Arbitration>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Arbitration>().HasQueryFilter(p => p.Arbitrator != null ? !p.Arbitrator.isDeleted : false);
+            modelBuilder.Entity<Arbitration>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<Notification>().HasQueryFilter(p => !p.isDeleted);
 
@@ -262,104 +269,186 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<LogUserAction>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<UserToken>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<UserToken>().HasQueryFilter(p => p.User != null ? !p.User.isDeleted : false);
 
             modelBuilder.Entity<UserNotification>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<UserNotification>().HasQueryFilter(p => p.User != null ? !p.User.isDeleted : false);
+            modelBuilder.Entity<UserNotification>().HasQueryFilter(p => p.Notification != null ? !p.Notification.isDeleted : false);
 
             modelBuilder.Entity<ChairmanNotesOnFinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ChairmanNotesOnFinalArbitrationScore>().HasQueryFilter(p => p.FinalArbitrationScore != null
+                ? !p.FinalArbitrationScore.isDeleted : false);
 
             modelBuilder.Entity<DynamicAttributeTableValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributeTableValue>().HasQueryFilter(p => p.DynamicAttribute != null ? !p.DynamicAttribute.isDeleted : false);
 
             modelBuilder.Entity<FinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<FinalArbitrationScore>().HasQueryFilter(p => p.Criterion != null ? !p.Criterion.isDeleted : false);
+            modelBuilder.Entity<FinalArbitrationScore>().HasQueryFilter(p => p.CriterionItem != null ? !p.CriterionItem.isDeleted : false);
+            modelBuilder.Entity<FinalArbitrationScore>().HasQueryFilter(p => p.FinalArbitration != null ? !p.FinalArbitration.isDeleted : false);
 
             modelBuilder.Entity<FinalArbitration>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<FinalArbitration>().HasQueryFilter(p => p.Arbitrator != null ? !p.Arbitrator.isDeleted : false);
+            modelBuilder.Entity<FinalArbitration>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<AdvancedFormBuilderValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderValue>().HasQueryFilter(p => p.AdvancedFormBuilder != null ? !p.AdvancedFormBuilder.isDeleted : false);
 
             modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>().HasQueryFilter(p => p.AdvancedFormBuilder != null
+                ? !p.AdvancedFormBuilder.isDeleted : false);
+            modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>().HasQueryFilter(p => p.AttributeOperation != null
+                ? !p.AttributeOperation.isDeleted : false);
 
             modelBuilder.Entity<CategoryEducationalEntity>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CategoryEducationalEntity>().HasQueryFilter(p => p.EducationalEntity != null ? !p.EducationalEntity.isDeleted : false);
+            modelBuilder.Entity<CategoryEducationalEntity>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<ArbitrationResult>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitrationResult>().HasQueryFilter(p => p.FinalArbitration != null ? !p.FinalArbitration.isDeleted : false);
+            modelBuilder.Entity<ArbitrationResult>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<ViewWhenRelation>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ViewWhenRelation>().HasQueryFilter(p => p.DynamicAttributeListValue != null
+                ? !p.DynamicAttributeListValue.isDeleted : false);
+            modelBuilder.Entity<ViewWhenRelation>().HasQueryFilter(p => p.DynamicAttribute != null
+                ? !p.DynamicAttribute.isDeleted : false);
+            modelBuilder.Entity<ViewWhenRelation>().HasQueryFilter(p => p.DynamicAttributeSection != null
+                ? !p.DynamicAttributeSection.isDeleted : false);
 
             modelBuilder.Entity<ExplanatoryMessage>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AdvancedFormBuilderTableValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderTableValue>().HasQueryFilter(p => p.AdvancedFormBuilder != null
+                ? !p.AdvancedFormBuilder.isDeleted : false);
 
             modelBuilder.Entity<AdvancedFormBuilderPatternValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderPatternValue>().HasQueryFilter(p => p.AdvancedFormBuilderPattern != null
+                ? !p.AdvancedFormBuilderPattern.isDeleted : false);
 
             modelBuilder.Entity<AdvancedFormBuilderPattern>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AdvancedFormBuilderListValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderListValue>().HasQueryFilter(p => p.AdvancedFormBuilder != null
+                ? !p.AdvancedFormBuilder.isDeleted : false);
 
             modelBuilder.Entity<AdvancedFormBuilder>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilder>().HasQueryFilter(p => p.AttributeDataType != null
+                ? !p.AttributeDataType.isDeleted : false);
+            modelBuilder.Entity<AdvancedFormBuilder>().HasQueryFilter(p => p.AdvancedFormBuilderSection != null
+                ? !p.AdvancedFormBuilderSection.isDeleted : false);
 
             modelBuilder.Entity<AdvancedFormBuilderSection>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<InterviewAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<InterviewAttachment>().HasQueryFilter(p => p.Interview != null ? !p.Interview.isDeleted : false);
 
             modelBuilder.Entity<Interview>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<InterviewQuestion>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<InterviewQuestion>().HasQueryFilter(p => p.Interview != null ? !p.Interview.isDeleted : false);
 
             modelBuilder.Entity<InterviewNote>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<InterviewNote>().HasQueryFilter(p => p.Interview != null ? !p.Interview.isDeleted : false);
 
             modelBuilder.Entity<InterviewCategory>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<InterviewCategory>().HasQueryFilter(p => p.Interview != null ? !p.Interview.isDeleted : false);
+            modelBuilder.Entity<InterviewCategory>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<InterviewUser>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<InterviewUser>().HasQueryFilter(p => p.Interview != null ? !p.Interview.isDeleted : false);
 
             modelBuilder.Entity<ChairmanNotesOnArbitrationAudit>().HasQueryFilter(p => !p.isDeleted);
-            
+            modelBuilder.Entity<ChairmanNotesOnArbitrationAudit>().HasQueryFilter(p => p.ArbitrationAudit != null
+                ? !p.ArbitrationAudit.isDeleted : false);
+
             modelBuilder.Entity<ChairmanNotesOnInitialArbitration>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ChairmanNotesOnInitialArbitration>().HasQueryFilter(p => p.InitialArbitration != null
+                ? !p.InitialArbitration.isDeleted : false);
 
             modelBuilder.Entity<InitialArbitration>().HasQueryFilter(p => !p.isDeleted);
-            
+            modelBuilder.Entity<InitialArbitration>().HasQueryFilter(p => p.Arbitration != null ? !p.Arbitration.isDeleted : false);
+            modelBuilder.Entity<InitialArbitration>().HasQueryFilter(p => p.Criterion != null ? !p.Criterion.isDeleted : false);
+            modelBuilder.Entity<InitialArbitration>().HasQueryFilter(p => p.CriterionItem != null ? !p.CriterionItem.isDeleted : false);
+
             modelBuilder.Entity<ArbitrationAudit>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitrationAudit>().HasQueryFilter(p => p.Criterion != null ? !p.Criterion.isDeleted : false);
+            modelBuilder.Entity<ArbitrationAudit>().HasQueryFilter(p => p.CriterionItem != null ? !p.CriterionItem.isDeleted : false);
+            modelBuilder.Entity<ArbitrationAudit>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<ArbitrationScale>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitrationScale>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<ArbitrationScalesCriterion>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitrationScalesCriterion>().HasQueryFilter(p => p.Criterion != null ? !p.Criterion.isDeleted : false);
+            modelBuilder.Entity<ArbitrationScalesCriterion>().HasQueryFilter(p => p.CriterionItem != null ? !p.CriterionItem.isDeleted : false);
+            modelBuilder.Entity<ArbitrationScalesCriterion>().HasQueryFilter(p => p.ArbitrationScale != null ? !p.ArbitrationScale.isDeleted : false);
 
             modelBuilder.Entity<MeetingCategory>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<MeetingCategory>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
+            modelBuilder.Entity<MeetingCategory>().HasQueryFilter(p => p.Meeting != null ? !p.Meeting.isDeleted : false);
 
             modelBuilder.Entity<Meeting>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<MeetingUser>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<MeetingUser>().HasQueryFilter(p => p.Meeting != null ? !p.Meeting.isDeleted : false);
 
             modelBuilder.Entity<UserRole>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<UserRole>().HasQueryFilter(p => p.Role != null ? !p.Role.isDeleted : false);
+            modelBuilder.Entity<UserRole>().HasQueryFilter(p => p.User != null ? !p.User.isDeleted : false);
 
             modelBuilder.Entity<PermissionHeader>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => p.Arbitrator != null ? !p.Arbitrator.isDeleted : false);
+            modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => p.EducationalClass != null ? !p.EducationalClass.isDeleted : false);
 
             modelBuilder.Entity<Committee>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Committee>().HasQueryFilter(p => p.Chairman != null ? !p.Chairman.isDeleted : false);
 
             modelBuilder.Entity<ComitteeArbitrator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ComitteeArbitrator>().HasQueryFilter(p => p.Committee != null ? !p.Committee.isDeleted : false);
+            modelBuilder.Entity<ComitteeArbitrator>().HasQueryFilter(p => p.Arbitrator != null ? !p.Arbitrator.isDeleted : false);
 
             modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => p.Committee != null ? !p.Committee.isDeleted : false);
+            modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<CategoryEducationalClass>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CategoryEducationalClass>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
+            modelBuilder.Entity<CategoryEducationalClass>().HasQueryFilter(p => p.EducationalClass != null ? !p.EducationalClass.isDeleted : false);
 
             modelBuilder.Entity<EducationalClass>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Agenda>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Agenda>().HasQueryFilter(p => p.Cycle != null ? !p.Cycle.isDeleted : false);
 
             modelBuilder.Entity<Arbitrator>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CategoryArbitrator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CategoryArbitrator>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
+            modelBuilder.Entity<CategoryArbitrator>().HasQueryFilter(p => p.Arbitrator != null ? !p.Arbitrator.isDeleted : false);
 
             modelBuilder.Entity<OnePageText>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => p.User1 != null ? !p.User1.isDeleted : false);
+            modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => p.User2 != null ? !p.User2.isDeleted : false);
 
             modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Criterion>().HasQueryFilter(p => p.Parent != null ? !p.Parent.isDeleted : false);
+            modelBuilder.Entity<Criterion>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => p.Criterion != null ? !p.Criterion.isDeleted : false);
 
             modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
+            modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => p.CriterionItem != null ? !p.CriterionItem.isDeleted : false);
 
             modelBuilder.Entity<GeneralFAQ>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<GeneralFAQ>().HasQueryFilter(p => p.GeneralFrequentlyAskedQuestionCategory != null
+                ? !p.GeneralFrequentlyAskedQuestionCategory.isDeleted : false);
 
             modelBuilder.Entity<GeneralFAQCategory>().HasQueryFilter(p => !p.isDeleted);
 
@@ -368,22 +457,29 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Cycle>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<GroupInvitee>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<GroupInvitee>().HasQueryFilter(p => p.Event != null ? !p.Event.isDeleted : false);
 
             modelBuilder.Entity<PersonalInvitee>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<PersonalInvitee>().HasQueryFilter(p => p.Event != null ? !p.Event.isDeleted : false);
 
             modelBuilder.Entity<Category>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Category>().HasQueryFilter(p => p.Parent != null ? !p.Parent.isDeleted : false);
+            modelBuilder.Entity<Category>().HasQueryFilter(p => p.Cycle != null ? !p.Cycle.isDeleted : false);
 
             modelBuilder.Entity<News>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<TrainingWorkshop>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<TrainingWorkshop>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<FrequentlyAskedQuestion>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<FrequentlyAskedQuestion>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<User>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Role>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Student>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Student>().HasQueryFilter(p => p.GroupInvitee != null ? !p.GroupInvitee.isDeleted : false);
 
             modelBuilder.Entity<AttributeDataType>().HasQueryFilter(p => !p.isDeleted);
 
@@ -392,78 +488,126 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<AttributeTableName>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Dependency>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Dependency>().HasQueryFilter(p => p.StaticAttribute != null ? !p.StaticAttribute.isDeleted : false);
+            modelBuilder.Entity<Dependency>().HasQueryFilter(p => p.DependencyGroup != null ? !p.DependencyGroup.isDeleted : false);
+            modelBuilder.Entity<Dependency>().HasQueryFilter(p => p.AttributeOperation != null ? !p.AttributeOperation.isDeleted : false);
+            modelBuilder.Entity<Dependency>().HasQueryFilter(p => p.DynamicAttribute != null ? !p.DynamicAttribute.isDeleted : false);
+            modelBuilder.Entity<Dependency>().HasQueryFilter(p => p.MainDynamicAttribute != null ? !p.MainDynamicAttribute.isDeleted : false);
 
             modelBuilder.Entity<DependencyValidation>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DependencyValidation>().HasQueryFilter(p => p.DependencyGroup != null ? !p.DependencyGroup.isDeleted : false);
+            modelBuilder.Entity<DependencyValidation>().HasQueryFilter(p => p.AttributeOperation != null ? !p.AttributeOperation.isDeleted : false);
 
             modelBuilder.Entity<DynamicAttribute>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttribute>().HasQueryFilter(p => p.DynamicAttributeSection != null ? !p.DynamicAttributeSection.isDeleted : false);
+            modelBuilder.Entity<DynamicAttribute>().HasQueryFilter(p => p.AttributeDataType != null ? !p.AttributeDataType.isDeleted : false);
 
             modelBuilder.Entity<GeneralValidation>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<GeneralValidation>().HasQueryFilter(p => p.AttributeOperation != null ? !p.AttributeOperation.isDeleted : false);
+            modelBuilder.Entity<GeneralValidation>().HasQueryFilter(p => p.DynamicAttribute != null ? !p.DynamicAttribute.isDeleted : false);
 
             modelBuilder.Entity<DynamicAttributeListValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributeListValue>().HasQueryFilter(p => p.DynamicAttribute != null ? !p.DynamicAttribute.isDeleted : false);
 
             modelBuilder.Entity<DynamicAttributeSection>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributeSection>().HasQueryFilter(p => p.AttributeTableName != null ? !p.AttributeTableName.isDeleted : false);
 
             modelBuilder.Entity<DynamicAttributeValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributeValue>().HasQueryFilter(p => p.DynamicAttribute != null ? !p.DynamicAttribute.isDeleted : false);
 
             modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => p.AttributeDataType != null ? !p.AttributeDataType.isDeleted : false);
+            modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => p.AttributeTableName != null ? !p.AttributeTableName.isDeleted : false);
 
             modelBuilder.Entity<TermAndCondition>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<TermAndCondition>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<ConditionsProvidedForms>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ConditionsProvidedForms>().HasQueryFilter(p => p.TermAndCondition != null ? !p.TermAndCondition.isDeleted : false);
+            modelBuilder.Entity<ConditionsProvidedForms>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<DynamicAttributePattern>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DynamicAttributePatternValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DynamicAttributePatternValue>().HasQueryFilter(p => p.DynamicAttributePattern != null
+                ? !p.DynamicAttributePattern.isDeleted : false);
 
             modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => p.CategoryEducationalClass != null ? !p.CategoryEducationalClass.isDeleted : false);
+            modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => p.CategoryEducationalEntity != null ? !p.CategoryEducationalEntity.isDeleted : false);
+            modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
+            modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => p.User != null ? !p.User.isDeleted : false);
 
             modelBuilder.Entity<CategoryFAQ>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CategoryFAQ>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<ExplanatoryGuide>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ExplanatoryGuide>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<CycleCondition>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CycleCondition>().HasQueryFilter(p => p.Cycle != null ? !p.Cycle.isDeleted : false);
 
             modelBuilder.Entity<ConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
-            
+            modelBuilder.Entity<ConditionAttachment>().HasQueryFilter(p => p.ConditionsProvidedForms != null ? !p.ConditionsProvidedForms.isDeleted : false);
+
             modelBuilder.Entity<Coordinator>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => p.EducationalEntity != null ? !p.EducationalEntity.isDeleted : false);
 
             modelBuilder.Entity<EducationalEntity>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<EduEntitiesCoordinator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EduEntitiesCoordinator>().HasQueryFilter(p => p.Coordinator != null ? !p.Coordinator.isDeleted : false);
+            modelBuilder.Entity<EduEntitiesCoordinator>().HasQueryFilter(p => p.EducationalEntity != null ? !p.EducationalEntity.isDeleted : false);
 
             modelBuilder.Entity<AboutAwardPage>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<GeneralWorkshop>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<OurGoal>().HasQueryFilter(p => p.AboutAwardPage != null ? !p.AboutAwardPage.isDeleted : false);
 
             modelBuilder.Entity<CycleConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CycleConditionAttachment>().HasQueryFilter(p => p.CycleConditionsProvidedForm != null
+                ? !p.CycleConditionsProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<CycleConditionsProvidedForm>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CycleConditionsProvidedForm>().HasQueryFilter(p => p.CycleCondition != null ? !p.CycleCondition.isDeleted : false);
+            modelBuilder.Entity<CycleConditionsProvidedForm>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<ExtraAttachment>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ExtraAttachment>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<ExtraAttachmentFile>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ExtraAttachmentFile>().HasQueryFilter(p => p.ExtraAttachment != null ? !p.ExtraAttachment.isDeleted : false);
 
             modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => p.message != null ? !p.message.isDeleted : false);
+            modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => p.User != null ? !p.User.isDeleted : false);
+            modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => p.Type != null ? !p.Type.isDeleted : false);
 
             modelBuilder.Entity<EmailAttachment>().HasQueryFilter(p => !p.isDeleted);
-            
+            modelBuilder.Entity<EmailAttachment>().HasQueryFilter(p => p.Message != null ? !p.Message.isDeleted : false);
+
             modelBuilder.Entity<RoleMessageType>().HasQueryFilter(p => !p.isDeleted);
-            
+            modelBuilder.Entity<RoleMessageType>().HasQueryFilter(p => p.MessageType != null ? !p.MessageType.isDeleted : false);
+            modelBuilder.Entity<RoleMessageType>().HasQueryFilter(p => p.Role != null ? !p.Role.isDeleted : false);
+
             modelBuilder.Entity<MessageType>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Circular>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<RolePermission>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<RolePermission>().HasQueryFilter(p => p.Role != null ? !p.Role.isDeleted : false);
+            modelBuilder.Entity<RolePermission>().HasQueryFilter(p => p.Permission != null ? !p.Permission.isDeleted : false);
 
             modelBuilder.Entity<AwardPublication>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Album>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Gallery>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Gallery>().HasQueryFilter(p => p.Album != null ? !p.Album.isDeleted : false);
 
             modelBuilder.Entity<HomePageSlider>().HasQueryFilter(p => !p.isDeleted);
 
@@ -474,40 +618,63 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<StrategicPartner>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<PageStructure>().HasQueryFilter(p => p.pageStructure != null ? !p.pageStructure.isDeleted : false);
 
             modelBuilder.Entity<DarkCard>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<DarkCard>().HasQueryFilter(p => p.PageStructure != null ? !p.PageStructure.isDeleted : false);
 
             modelBuilder.Entity<ParagraphCard>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ParagraphCard>().HasQueryFilter(p => p.PageStructure != null ? !p.PageStructure.isDeleted : false);
 
             modelBuilder.Entity<AwardSponsor>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Reward>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Reward>().HasQueryFilter(p => p.Category != null ? !p.Category.isDeleted : false);
 
             modelBuilder.Entity<AwardStatistic>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AwardStatistic>().HasQueryFilter(p => p.Cycle != null ? !p.Cycle.isDeleted : false);
 
             modelBuilder.Entity<CoordinatorForm>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CoordinatorForm>().HasQueryFilter(p => p.Coordinator != null ? !p.Coordinator.isDeleted : false);
+            modelBuilder.Entity<CoordinatorForm>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<ArbitratorForm>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ArbitratorForm>().HasQueryFilter(p => p.Arbitrator != null ? !p.Arbitrator.isDeleted : false);
+            modelBuilder.Entity<ArbitratorForm>().HasQueryFilter(p => p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : false);
 
             modelBuilder.Entity<Responsibility>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Responsibility>().HasQueryFilter(p => p.Role != null ? !p.Role.isDeleted : false);
 
             modelBuilder.Entity<ResponsibilityUser>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ResponsibilityUser>().HasQueryFilter(p => p.Responsibility != null ? !p.Responsibility.isDeleted : false);
+            modelBuilder.Entity<ResponsibilityUser>().HasQueryFilter(p => p.User != null ? !p.User.isDeleted : false);
 
             modelBuilder.Entity<NewsImage>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<NewsImage>().HasQueryFilter(p => p.News != null ? !p.News.isDeleted : false);
 
             modelBuilder.Entity<CircularAttachment>().HasQueryFilter(p => !p.isDeleted);
-            
+            modelBuilder.Entity<CircularAttachment>().HasQueryFilter(p => p.Circular != null ? !p.Circular.isDeleted : false);
+
             modelBuilder.Entity<CircularCoordinator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CircularCoordinator>().HasQueryFilter(p => p.Circular != null ? !p.Circular.isDeleted : false);
+            modelBuilder.Entity<CircularCoordinator>().HasQueryFilter(p => p.Coordinator != null ? !p.Coordinator.isDeleted : false);
 
             modelBuilder.Entity<CircularArbitrator>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CircularArbitrator>().HasQueryFilter(p => p.Circular != null ? !p.Circular.isDeleted : false);
+            modelBuilder.Entity<CircularArbitrator>().HasQueryFilter(p => p.Arbitrator != null ? !p.Arbitrator.isDeleted : false);
 
             modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => p.Circular != null ? !p.Circular.isDeleted : false);
+            modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => p.Chairman != null ? !p.Chairman.isDeleted : false);
 
             modelBuilder.Entity<TextCard>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<TextCard>().HasQueryFilter(p => p.PageStructure != null ? !p.PageStructure.isDeleted : false);
 
             modelBuilder.Entity<ImageCard>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ImageCard>().HasQueryFilter(p => p.PageStructure != null ? !p.PageStructure.isDeleted : false);
 
             modelBuilder.Entity<PageStructureImages>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<PageStructureImages>().HasQueryFilter(p => p.ImageCard != null ? !p.ImageCard.isDeleted : false);
 
             modelBuilder.Entity<Domain.Entities.IndexModel.Index>()
                 .HasIndex(p => p.EnglishName)

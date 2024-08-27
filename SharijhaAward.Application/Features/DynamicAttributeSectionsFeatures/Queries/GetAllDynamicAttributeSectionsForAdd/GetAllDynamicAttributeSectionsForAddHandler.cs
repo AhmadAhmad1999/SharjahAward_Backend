@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             _ViewWhenRelationRepository = ViewWhenRelationRepository;
             _ProvidedFormRepository = ProvidedFormRepository;
         }
-        public async Task<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>> 
+        public async Task<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>>
             Handle(GetAllDynamicAttributeSectionsForAddQuery Request, CancellationToken cancellationToken)
         {
             if (Request.ProvidedFormId is not null)
@@ -87,7 +87,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     .Where(x => x.RecordId != null
                         ? x.RecordId == Request.ProvidedFormId
                         : false).ToListAsync();
-                
+
                 List<DynamicAttributeTableValue> AlreadyInsertedDynamicAttributeTableValues = await _DynamicAttributeTableValueRepository
                     .Where(x => x.RecordId == Request.ProvidedFormId).ToListAsync();
 
@@ -374,7 +374,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                         }
                                         else if (DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "Phone Number".ToLower())
                                         {
-                                            DynamicAttributeValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeValues
+                                            DynamicAttributeTableValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeTableValues
                                                 .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id);
 
                                             if (CheckIfValueIsAlreadyInserted != null)
@@ -527,8 +527,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     {
                         DynamicAttributeInSection.DynamicAttributeListValues = AllInsertedDynamicAttributeListValueEntities
                             .Where(x => x.DynamicAttributeId == DynamicAttributeInSection.Id)
-                            .Select(x => new DynamicAttributeListValueListVM() 
-                            { 
+                            .Select(x => new DynamicAttributeListValueListVM()
+                            {
                                 Id = x.Id,
                                 EnglishValue = x.EnglishValue,
                                 ArabicValue = x.ArabicValue,
