@@ -8,5 +8,6 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Assign
         public int ArbitratorId { get; set; }
         public List<int> FormsIds { get; set; } = new List<int>();
         public string? lang { get; set; }
+        public string? Token { get; set; }
     }
 }

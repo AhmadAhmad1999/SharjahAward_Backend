@@ -8,7 +8,10 @@ namespace SharijhaAward.Domain.Entities.ArbitrationModel
     public class Arbitration : AuditableEntity
     {
         public int Id { get; set; }
+        public int AssignedByUserId { get; set; }
+        public User? AssignedByUser { get; set; }
         public FormStatus isAccepted { get; set; }
+        public DateTime? SortedAt { get; set; }
         public string? ReasonForRejecting { get; set; }
         public FormStatus isAcceptedFromChairman { get; set; }
         public int ArbitratorId { get; set; }

@@ -35,13 +35,20 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> CreateClass([FromBody] AssignFormsToArbitratorCommand AssignFormsToArbitratorCommand)
+        public async Task<IActionResult> AssignFormsToArbitrator([FromBody] AssignFormsToArbitratorCommand AssignFormsToArbitratorCommand)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             AssignFormsToArbitratorCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            AssignFormsToArbitratorCommand.Token = Token;
 
             BaseResponse<object>? Response = await _Mediator.Send(AssignFormsToArbitratorCommand);
 
