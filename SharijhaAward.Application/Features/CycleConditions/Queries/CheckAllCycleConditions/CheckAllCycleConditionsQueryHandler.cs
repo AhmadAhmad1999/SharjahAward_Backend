@@ -76,19 +76,15 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
                     if (terms[i].NeedAttachment) 
                     {
                         msg = request.lang == "en"
-                            ? "Please Complete Uploading The File "
-                            : "الرجاء إكمال رفع الملفات";
+                            ? "You can't upload more files"
+                            : "لا يمكنك رفع المزيد من الملفات";
 
                         List<CycleConditionsProvidedForm> conditionsProvidedsForThisTerm = conditionsProvideds
                             .Where(x => x.CycleConditionId == terms[i].Id)
                             .ToList();
 
-                        if (terms[i].RequiredAttachmentNumber != conditionsProvidedsForThisTerm.Count() && 
+                        if (terms[i].RequiredAttachmentNumber < conditionsProvidedsForThisTerm.Count() && 
                             terms[i].RequiredAttachmentNumber != 0)
-                        {
-                            return new BaseResponse<object>(msg, false, 400);
-                        }
-                        else if (terms[i].RequiredAttachmentNumber == 0 && conditionsProvidedsForThisTerm.Count() < 1)
                         {
                             return new BaseResponse<object>(msg, false, 400);
                         }

@@ -8,6 +8,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
+using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using System;
 using System.Collections.Generic;
@@ -76,41 +77,35 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
             {
                 for(int i=0; i < terms.Count(); i++)
                 {
-                    var AllConditionAttachmentEntititesForThisTerm = AllConditionAttachmentEntitites
-                        .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
-                        .ToList();
-
                     //Check on Terms that need Attachments
-                    if (terms[i].RequiredAttachmentNumber != AllConditionAttachmentEntititesForThisTerm.Count() 
-                        && terms[i].RequiredAttachmentNumber != 0 && terms[i].NeedAttachment == true )
+                    if (terms[i].NeedAttachment)
                     {
                         msg = request.lang == "en"
-                            ? "Please Complete Uploading The File "
-                            : "الرجاء إكمال رفع الملفات";
+                            ? "You can't upload more files"
+                            : "لا يمكنك رفع المزيد من الملفات";
 
-                        return new BaseResponse<object>(msg, false, 400);
+                        var AllConditionAttachmentEntititesForThisTerm = AllConditionAttachmentEntitites
+                            .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
+                            .ToList();
 
+                        if (terms[i].RequiredAttachmentNumber < AllConditionAttachmentEntititesForThisTerm.Count() &&
+                            terms[i].RequiredAttachmentNumber != 0)
+                        {
+                            return new BaseResponse<object>(msg, false, 400);
+                        }
                     }
+
                     //Check on Terms that don't need Attachments
-                    else if (!conditionsProvideds[i].IsAgree && !terms[i].NeedAttachment)
+                    if (!terms[i].NeedAttachment)
                     {
-                        msg = request.lang == "en"
-                            ? "Pleas Agree on All Terms and Conditions"
-                            : "الرجاء الموافقة على جميع الشروط و الأحكام";
-                        return new BaseResponse<object>(msg, false, 400);
+                        if (!conditionsProvideds[i].IsAgree && !terms[i].NeedAttachment)
+                        {
+                            msg = request.lang == "en"
+                                ? "Pleas Agree on All Terms and Conditions"
+                                : "الرجاء الموافقة على جميع الشروط و الأحكام";
+                            return new BaseResponse<object>(msg, false, 400);
 
-                    }
-                    else if (
-                        terms[i].RequiredAttachmentNumber == 0 &&
-                        AllConditionAttachmentEntititesForThisTerm.Count() < 1 &&
-                        terms[i].NeedAttachment
-                        )
-                    {
-                        msg = request.lang == "en"
-                             ? "Please Complete Uploading The File "
-                             : "الرجاء إكمال رفع الملفات";
-
-                        return new BaseResponse<object>(msg, false, 400);
+                        }
                     }
                 }
             }

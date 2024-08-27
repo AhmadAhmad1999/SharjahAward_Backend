@@ -52,7 +52,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
             List<Criterion> CriterionEntitiesWithNoAttachments = SubCriterionEntitiesWithNoItems
                 .Where(x => !InsertedSubCriterionAttachment.Select(y => y.CriterionId).Contains(x.Id)).ToList();
 
-            if (CriterionEntitiesWithNoAttachments.Count() > 0)
+            if (CriterionEntitiesWithNoAttachments.Any())
             {
                 ResponseMessage = Request.lang == "en"
                     ? $"You have to attach one file at least to this criterion: {CriterionEntitiesWithNoAttachments[0].EnglishTitle}"

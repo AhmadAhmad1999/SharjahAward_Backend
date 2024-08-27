@@ -24,13 +24,16 @@ namespace SharijhaAward.Application.Features.Identity.Role.Queries.GetAllRoles
 
         public async Task<List<RoleListVm>> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
         {
-            var allRoles = await _roleRepository.OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync();
+            var allRoles = await _roleRepository.OrderByDescending(x => x.CreatedAt, 0, -1)
+                .Where(x => (x.EnglishName != "Arbitrator" && x.ArabicName != "محكم") ||
+                    (x.EnglishName != "Coordinator" && x.ArabicName != "منسق")).ToListAsync();
+
             if(allRoles == null)
             {
                 throw new OpenQA.Selenium.NotFoundException("There is No Roles");
             }
-            return _mapper.Map<List<RoleListVm>>(allRoles);
 
+            return _mapper.Map<List<RoleListVm>>(allRoles);
         }
     }
 }

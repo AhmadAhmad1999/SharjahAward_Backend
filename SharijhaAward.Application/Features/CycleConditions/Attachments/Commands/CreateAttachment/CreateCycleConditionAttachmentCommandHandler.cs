@@ -97,7 +97,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Command
 
             if (term.NeedAttachment)
             {
-                if (term.RequiredAttachmentNumber > AttachmentsEntities.Count || term.RequiredAttachmentNumber == 0)
+                if (term.RequiredAttachmentNumber <= (AttachmentsEntities.Count + 1) || term.RequiredAttachmentNumber == 0)
                 {
                     data.AttachementPath = await _attachmentFileService.SaveProvidedFormFilesAsync(request.attachment, form!.Id);
                     data.IsAccept = null;
@@ -108,7 +108,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Command
                 else
                 {
                     msg = request.lang == "en"
-                       ? "You Can't Upload file"
+                       ? "You can't upload more files"
                        : "لا يمكنك رفع المزيد من الملفات";
 
                     return new BaseResponse<object>(msg, true, 400);
