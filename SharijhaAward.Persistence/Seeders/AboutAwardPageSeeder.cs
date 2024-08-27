@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.AboutAwardPage.AddRange(
                     new AboutAwardPage()
                     {
-                        Id = 1,
+                        // Id =1,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,

@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.DynamicAttributeListValues.AddRange(
                     new DynamicAttributeListValue()
                     {
-                        Id = 1,
+                        // Id =1,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -35,7 +35,7 @@ namespace SharijhaAward.Persistence.Seeders
                         ArabicValue = "Test Value 1"
                     }, new DynamicAttributeListValue()
                     {
-                        Id = 2,
+                        // Id =2,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -47,7 +47,7 @@ namespace SharijhaAward.Persistence.Seeders
                         ArabicValue = "Test Value 2"
                     }, new DynamicAttributeListValue()
                     {
-                        Id = 3,
+                        // Id =3,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -59,7 +59,7 @@ namespace SharijhaAward.Persistence.Seeders
                         ArabicValue = "Test Value 3"
                     }, new DynamicAttributeListValue()
                     {
-                        Id = 4,
+                        // Id =4,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -71,7 +71,7 @@ namespace SharijhaAward.Persistence.Seeders
                         ArabicValue = "Test Value 4"
                     }, new DynamicAttributeListValue()
                     {
-                        Id = 5,
+                        // Id =5,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,

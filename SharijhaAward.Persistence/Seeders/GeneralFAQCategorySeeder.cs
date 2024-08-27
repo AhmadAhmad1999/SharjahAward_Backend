@@ -28,7 +28,7 @@ namespace SharijhaAward.Persistence.Seeders
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = 1,
+                    // Id = 1,
                     ArabicName = "اختبار فئة أسئلة شائعة عامة 1",
                     EnglishName = "Test General FAQ Category 1"
                 }, new GeneralFAQCategory()
@@ -39,7 +39,7 @@ namespace SharijhaAward.Persistence.Seeders
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = 2,
+                    // Id = 2,
                     ArabicName = "اختبار فئة أسئلة شائعة عامة 2",
                     EnglishName = "Test General FAQ Category 2"
                 });

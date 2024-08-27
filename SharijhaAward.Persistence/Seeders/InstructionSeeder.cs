@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.Instructions.AddRange(
                     new Instruction()
                     {
-                        Id = 1,
+                        // Id = 1,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -35,7 +35,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الفعاليات"
                     }, new Instruction()
                     {
-                        Id = 2,
+                        // Id = 2,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -47,7 +47,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول حضور الفعاليات"
                     }, new Instruction()
                     {
-                        Id = 3,
+                        // Id = 3,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -59,7 +59,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول المًحكّمين"
                     }, new Instruction()
                     {
-                        Id = 4,
+                        // Id = 4,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -71,7 +71,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول المًنسقين"
                     }, new Instruction()
                     {
-                        Id = 5,
+                        // Id = 5,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -83,7 +83,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل معلومات مًحكّم"
                     }, new Instruction()
                     {
-                        Id = 6,
+                        // Id = 6,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -95,7 +95,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل معلومات مًنسق"
                     }, new Instruction()
                     {
-                        Id = 7,
+                        // Id = 7,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -107,7 +107,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول مًحكّمين الصف"
                     }, new Instruction()
                     {
-                        Id = 8,
+                        // Id = 8,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -119,7 +119,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل معلومات صف"
                     }, new Instruction()
                     {
-                        Id = 9,
+                        // Id = 9,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -131,7 +131,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الصفوف"
                     }, new Instruction()
                     {
-                        Id = 10,
+                        // Id = 10,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -143,7 +143,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل معلومات دورة"
                     }, new Instruction()
                     {
-                        Id = 11,
+                        // Id = 11,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -155,7 +155,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الدورات"
                     }, new Instruction()
                     {
-                        Id = 12,
+                        // Id = 12,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -167,7 +167,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الأجندة"
                     }, new Instruction()
                     {
-                        Id = 13,
+                        // Id = 13,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -179,7 +179,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الفئات الرئيسية مع الفئات الفرعية التابعة له"
                     }, new Instruction()
                     {
-                        Id = 14,
+                        // Id = 14,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -191,7 +191,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل معلومات فئة فرعية"
                     }, new Instruction()
                     {
-                        Id = 15,
+                        // Id = 15,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -203,7 +203,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل محددات الدورة"
                     }, new Instruction()
                     {
-                        Id = 16,
+                        // Id = 16,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -215,7 +215,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "عرض الدليل التفسيري مع الإجراءات الممكنة"
                     }, new Instruction()
                     {
-                        Id = 17,
+                        // Id = 17,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -227,7 +227,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الأسئلة الشائعة"
                     }, new Instruction()
                     {
-                        Id = 18,
+                        // Id = 18,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -239,7 +239,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الشروط العامة للدورة"
                     }, new Instruction()
                     {
-                        Id = 19,
+                        // Id = 19,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -251,7 +251,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "صفحة استيراد المعلومات"
                     }, new Instruction()
                     {
-                        Id = 20,
+                        // Id = 20,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -263,7 +263,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول شروط الفئة الفرعية"
                     }, new Instruction()
                     {
-                        Id = 21,
+                        // Id = 21,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -275,7 +275,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول حقول الفئة الفرعية"
                     }, new Instruction()
                     {
-                        Id = 22,
+                        // Id = 22,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -287,7 +287,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الورشات التدريبية للفئة الفرعية"
                     }, new Instruction()
                     {
-                        Id = 23,
+                        // Id = 23,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -299,7 +299,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الجهات التعليمية"
                     }, new Instruction()
                     {
-                        Id = 24,
+                        // Id = 24,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -311,7 +311,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل جهة تعليمية مع عرض المؤسسات التابعة في حال التعديل"
                     }, new Instruction()
                     {
-                        Id = 25,
+                        // Id = 25,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -323,7 +323,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل مؤسسة تعليمية"
                     }, new Instruction()
                     {
-                        Id = 26,
+                        // Id = 26,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -335,7 +335,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "الصفحة الرئيسية"
                     }, new Instruction()
                     {
-                        Id = 27,
+                        // Id = 27,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -347,7 +347,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الإرشادات"
                     }, new Instruction()
                     {
-                        Id = 28,
+                        // Id = 28,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -359,7 +359,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "صفحة تعديل إرشاد"
                     }, new Instruction()
                     {
-                        Id = 29,
+                        // Id = 29,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -371,7 +371,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الإشعارات"
                     }, new Instruction()
                     {
-                        Id = 30,
+                        // Id = 30,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -383,7 +383,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة إشعار"
                     }, new Instruction()
                     {
-                        Id = 31,
+                        // Id = 31,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -395,7 +395,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الأدوار"
                     }, new Instruction()
                     {
-                        Id = 32,
+                        // Id = 32,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -407,7 +407,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل دور"
                     }, new Instruction()
                     {
-                        Id = 33,
+                        // Id = 33,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -419,7 +419,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول حسابات المشتركين"
                     }, new Instruction()
                     {
-                        Id = 34,
+                        // Id = 34,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -431,7 +431,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول المستخدمين"
                     }, new Instruction()
                     {
-                        Id = 35,
+                        // Id = 35,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -443,7 +443,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل معلومات مستخدم"
                     }, new Instruction()
                     {
-                        Id = 36,
+                        // Id = 36,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -455,7 +455,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول نماذج الإشعارات"
                     }, new Instruction()
                     {
-                        Id = 37,
+                        // Id = 37,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -467,7 +467,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل نموذج إشعارات"
                     }, new Instruction()
                     {
-                        Id = 38,
+                        // Id = 38,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -479,7 +479,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول طلبات التواصل"
                     }, new Instruction()
                     {
-                        Id = 39,
+                        // Id = 39,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -491,7 +491,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "تفاصيل طلب تواصل"
                     }, new Instruction()
                     {
-                        Id = 40,
+                        // Id = 40,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -503,7 +503,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول اللجان"
                     }, new Instruction()
                     {
-                        Id = 41,
+                        // Id = 41,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -515,7 +515,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل لجنة"
                     }, new Instruction()
                     {
-                        Id = 42,
+                        // Id = 42,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -527,7 +527,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الاجتماعات"
                     }, new Instruction()
                     {
-                        Id = 43,
+                        // Id = 43,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -539,7 +539,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة اجتماع"
                     }, new Instruction()
                     {
-                        Id = 44,
+                        // Id = 44,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -551,7 +551,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول التعاميم"
                     }, new Instruction()
                     {
-                        Id = 45,
+                        // Id = 45,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -563,7 +563,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل تعميم"
                     }, new Instruction()
                     {
-                        Id = 46,
+                        // Id = 46,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -575,7 +575,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول الورشات التدريبية العامة"
                     }, new Instruction()
                     {
-                        Id = 47,
+                        // Id = 47,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -587,7 +587,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة أو تعديل ورشة تدريبية عامة"
                     }, new Instruction()
                     {
-                        Id = 48,
+                        // Id = 48,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -599,7 +599,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول نسخ التطبيق"
                     }, new Instruction()
                     {
-                        Id = 49,
+                        // Id = 49,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -611,7 +611,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "إضافة نسخة تطبيق"
                     }, new Instruction()
                     {
-                        Id = 50,
+                        // Id = 50,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -623,7 +623,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Title = "جدول برفايلات المستخدمين"
                     }, new Instruction()
                     {
-                        Id = 51,
+                        // Id = 51,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,

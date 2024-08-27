@@ -24,7 +24,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //-------------AboutAward---------
                 new Permission()
                 {
-                    Id = 1,
+                    // Id = 1,
                     Name = "تعديل حول الجائزة",
                     Action = "update",
                     PermissionHeaderId = 1,
@@ -38,7 +38,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //---------Album-------------
                 new Permission()
                 {
-                    Id = 2,
+                    // Id = 2,
                     Name = "إضافة معرض الصور",
                     Action = "create",
                     PermissionHeaderId = 2,
@@ -51,7 +51,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 3,
+                    // Id = 3,
                     Name = "عرض معرض الصور",
                     Action = "read",
                     PermissionHeaderId = 2,
@@ -64,7 +64,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 4,
+                    // Id = 4,
                     Name = "تعديل معرض الصور",
                     Action = "update",
                     PermissionHeaderId = 2,
@@ -76,7 +76,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 5,
+                    // Id = 5,
                     Name = "حذف معرض الصور",
                     Action = "delete",
                     PermissionHeaderId = 2,
@@ -90,7 +90,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                 new Permission()
                 {
-                    Id = 6,
+                    // Id = 6,
                     Name = "تصدير معرض الصور",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 2,
@@ -105,7 +105,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //-------------AppVersion---------------
                 new Permission()
                 {
-                    Id = 7,
+                    // Id = 7,
                     Name = "إضافة نسخة التطبيق",
                     Action = "create",
                     PermissionHeaderId = 3,
@@ -117,7 +117,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 8,
+                    // Id = 8,
                     Name = "عرض نسخة التطبيق",
                     Action = "read",
                     PermissionHeaderId = 3,
@@ -130,7 +130,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                 new Permission()
                 {
-                    Id = 9,
+                    // Id = 9,
                     Name = "تصدير نسخة التطبيق",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 3,
@@ -145,7 +145,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //----------AwardPublication------------
                 new Permission()
                 {
-                    Id = 10,
+                    // Id = 10,
                     Name = "إضافة إصدارات الجائزة",
                     Action = "create",
                     PermissionHeaderId = 4,
@@ -157,7 +157,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 11,
+                    // Id = 11,
                     Name = "عرض إصدارات الجائزة",
                     Action = "read",
                     PermissionHeaderId = 4,
@@ -171,7 +171,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                  new Permission()
                  {
-                     Id = 12,
+                     // Id = 12,
                      Name = "تعديل إصدارات الجائزة",
                      Action = "update",
                      PermissionHeaderId = 4,
@@ -183,7 +183,7 @@ namespace SharijhaAward.Persistence.Seeders
                      LastModifiedBy = null
                  }, new Permission()
                  {
-                     Id = 13,
+                     // Id = 13,
                      Name = "حذف إصدارات الجائزة",
                      Action = "delete",
                      PermissionHeaderId = 4,
@@ -196,7 +196,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 14,
+                     // Id = 14,
                      Name = "تصدير إصدارات الجائزة",
                      Action = "xlsx-exportable",
                      PermissionHeaderId = 4,
@@ -212,7 +212,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------AwardSponsor----------
                 new Permission()
                 {
-                    Id = 15,
+                    // Id = 15,
                     Name = "تعديل راعي الجائزة",
                     Action = "update",
                     PermissionHeaderId = 5,
@@ -227,7 +227,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //---------Circilar-----------
                 new Permission()
                 {
-                    Id = 16,
+                    // Id = 16,
                     Name = "إضافة التعاميم",
                     Action = "create",
                     PermissionHeaderId = 6,
@@ -239,7 +239,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 17,
+                    // Id = 17,
                     Name = "عرض التعاميم",
                     Action = "read",
                     PermissionHeaderId = 6,
@@ -253,7 +253,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                  new Permission()
                  {
-                     Id = 18,
+                     // Id = 18,
                      Name = "تعديل التعاميم",
                      Action = "update",
                      PermissionHeaderId = 6,
@@ -265,7 +265,7 @@ namespace SharijhaAward.Persistence.Seeders
                      LastModifiedBy = null
                  }, new Permission()
                  {
-                     Id = 19,
+                     // Id = 19,
                      Name = "حذف التعاميم",
                      Action = "delete",
                      PermissionHeaderId = 6,
@@ -278,7 +278,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 20,
+                     // Id = 20,
                      Name = "تصدير التعاميم",
                      Action = "xlsx-exportable",
                      PermissionHeaderId = 6,
@@ -293,7 +293,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //---------Class-----------
                 new Permission()
                 {
-                    Id = 21,
+                    // Id = 21,
                     Name = "إضافة الصفوف",
                     Action = "create",
                     PermissionHeaderId = 7,
@@ -305,7 +305,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 22,
+                    // Id = 22,
                     Name = "عرض الصفوف",
                     Action = "read",
                     PermissionHeaderId = 7,
@@ -319,7 +319,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                  new Permission()
                  {
-                     Id = 23,
+                     // Id = 23,
                      Name = "تعديل الصفوف",
                      Action = "update",
                      PermissionHeaderId = 7,
@@ -331,7 +331,7 @@ namespace SharijhaAward.Persistence.Seeders
                      LastModifiedBy = null
                  }, new Permission()
                  {
-                     Id = 24,
+                     // Id = 24,
                      Name = "حذف الصفوف",
                      Action = "delete",
                      PermissionHeaderId = 7,
@@ -344,7 +344,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 25,
+                     // Id = 25,
                      Name = "تصدير الصفوف",
                      Action = "xlsx-exportable",
                      PermissionHeaderId = 7,
@@ -359,7 +359,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //-------------ClassArbitrator-----------------
                  new Permission()
                  {
-                     Id = 26,
+                     // Id = 26,
                      Name = "إضافة محكم صف",
                      Action = "create",
                      PermissionHeaderId = 8,
@@ -371,7 +371,7 @@ namespace SharijhaAward.Persistence.Seeders
                      LastModifiedBy = null
                  }, new Permission()
                  {
-                     Id = 27,
+                     // Id = 27,
                      Name = "عرض محكم صف",
                      Action = "read",
                      PermissionHeaderId = 8,
@@ -385,7 +385,7 @@ namespace SharijhaAward.Persistence.Seeders
                  },
                  new Permission()
                  {
-                     Id = 28,
+                     // Id = 28,
                      Name = "حذف محكم صف",
                      Action = "delete",
                      PermissionHeaderId = 8,
@@ -398,7 +398,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 29,
+                     // Id = 29,
                      Name = "تصدير محكم صف",
                      Action = "xlsx-exportable",
                      PermissionHeaderId = 8,
@@ -413,7 +413,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //-----------Cycle------------
                 new Permission()
                 {
-                    Id = 30,
+                    // Id = 30,
                     Name = "عرض الدورات",
                     Action = "read",
                     PermissionHeaderId = 9,
@@ -425,7 +425,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 31,
+                    // Id = 31,
                     Name = "إضافة دورة",
                     Action = "create",
                     PermissionHeaderId = 9,
@@ -437,7 +437,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 32,
+                    // Id = 32,
                     Name = "عرض معلومات دورة",
                     Action = "read",
                     PermissionHeaderId = 9,
@@ -449,7 +449,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 33,
+                    // Id = 33,
                     Name = "تعديل دورة",
                     Action = "update",
                     PermissionHeaderId = 9,
@@ -461,7 +461,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 34,
+                    // Id = 34,
                     Name = "حذف دورة",
                     Action = "delete",
                     PermissionHeaderId = 9,
@@ -473,7 +473,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 35,
+                    // Id = 35,
                     Name = "تصدير دورة",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 9,
@@ -488,7 +488,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Agenda----------------
                 new Permission()
                 {
-                    Id = 36,
+                    // Id = 36,
                     Name = "إضافة أجندة",
                     Action = "create",
                     PermissionHeaderId = 10,
@@ -500,7 +500,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 37,
+                    // Id = 37,
                     Name = "عرض أجندة",
                     Action = "read",
                     PermissionHeaderId = 10,
@@ -512,7 +512,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 38,
+                    // Id = 38,
                     Name = "تعديل أجندة",
                     Action = "update",
                     PermissionHeaderId = 10,
@@ -524,7 +524,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 39,
+                    // Id = 39,
                     Name = "حذف أجندة",
                     Action = "delete",
                     PermissionHeaderId = 10,
@@ -536,7 +536,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 40,
+                    // Id = 40,
                     Name = "تصدير أجندة",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 10,
@@ -551,7 +551,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Category----------------
                 new Permission()
                 {
-                    Id = 41,
+                    // Id = 41,
                     Name = "إضافة فئات",
                     Action = "create",
                     PermissionHeaderId = 11,
@@ -563,7 +563,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 42,
+                    // Id = 42,
                     Name = "عرض فئات",
                     Action = "read",
                     PermissionHeaderId = 11,
@@ -575,7 +575,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 43,
+                    // Id = 43,
                     Name = "تعديل فئات",
                     Action = "update",
                     PermissionHeaderId = 11,
@@ -587,7 +587,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 44,
+                    // Id = 44,
                     Name = "حذف فئات",
                     Action = "delete",
                     PermissionHeaderId = 11,
@@ -599,7 +599,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 45,
+                    // Id = 45,
                     Name = "تصدير فئات",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 11,
@@ -614,7 +614,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------GeneralCondition----------------
                 new Permission()
                 {
-                    Id = 46,
+                    // Id = 46,
                     Name = "إضافة شروط عامة",
                     Action = "create",
                     PermissionHeaderId = 12,
@@ -626,7 +626,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 47,
+                    // Id = 47,
                     Name = "عرض شروط عامة",
                     Action = "read",
                     PermissionHeaderId = 12,
@@ -638,7 +638,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 48,
+                    // Id = 48,
                     Name = "تعديل شروط عامة",
                     Action = "update",
                     PermissionHeaderId = 12,
@@ -650,7 +650,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 49,
+                    // Id = 49,
                     Name = "حذف شروط عامة",
                     Action = "delete",
                     PermissionHeaderId = 12,
@@ -662,7 +662,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 50,
+                    // Id = 50,
                     Name = "تصدير شروط عامة",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 12,
@@ -677,7 +677,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------EducationalEntity----------------
                 new Permission()
                 {
-                    Id = 51,
+                    // Id = 51,
                     Name = "إضافة جهات تعليمية",
                     Action = "create",
                     PermissionHeaderId = 13,
@@ -689,7 +689,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 52,
+                    // Id = 52,
                     Name = "عرض جهات تعليمية",
                     Action = "read",
                     PermissionHeaderId = 13,
@@ -701,7 +701,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 53,
+                    // Id = 53,
                     Name = "تعديل جهات تعليمية",
                     Action = "update",
                     PermissionHeaderId = 13,
@@ -713,7 +713,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 54,
+                    // Id = 54,
                     Name = "حذف جهات تعليمية",
                     Action = "delete",
                     PermissionHeaderId = 13,
@@ -725,7 +725,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 55,
+                    // Id = 55,
                     Name = "تصدير معرض الصور",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 13,
@@ -740,7 +740,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------SystemFiles----------------
                 new Permission()
                 {
-                    Id = 56,
+                    // Id = 56,
                     Name = "عرض ملفات النظام",
                     Action = "read",
                     PermissionHeaderId = 14,
@@ -752,7 +752,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 57,
+                    // Id = 57,
                     Name = "تحميل ملفات النظام",
                     Action = "download",
                     PermissionHeaderId = 14,
@@ -767,7 +767,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------GeneralWorkshop----------------
                 new Permission()
                 {
-                    Id = 58,
+                    // Id = 58,
                     Name = "إضافة ورش تدريبية عامة",
                     Action = "create",
                     PermissionHeaderId = 15,
@@ -779,7 +779,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 59,
+                    // Id = 59,
                     Name = "عرض ورش تدريبية عامة",
                     Action = "read",
                     PermissionHeaderId = 15,
@@ -791,7 +791,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 60,
+                    // Id = 60,
                     Name = "تعديل ورش تدريبية عامة",
                     Action = "update",
                     PermissionHeaderId = 15,
@@ -803,7 +803,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 61,
+                    // Id = 61,
                     Name = "حذف ورش تدريبية عامة",
                     Action = "delete",
                     PermissionHeaderId = 15,
@@ -815,7 +815,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 62,
+                    // Id = 62,
                     Name = "تصدير معرض الصور",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 15,
@@ -830,7 +830,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Instruction----------------
                 new Permission()
                 {
-                    Id = 63,
+                    // Id = 63,
                     Name = "عرض التعليمات",
                     Action = "read",
                     PermissionHeaderId = 16,
@@ -842,7 +842,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 64,
+                    // Id = 64,
                     Name = "تعديل التعليمات",
                     Action = "update",
                     PermissionHeaderId = 16,
@@ -854,7 +854,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 65,
+                    // Id = 65,
                     Name = "تصدير التعليمات",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 16,
@@ -869,7 +869,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Meeting----------------
                 new Permission()
                 {
-                    Id = 66,
+                    // Id = 66,
                     Name = "إضافة الإجتماعات",
                     Action = "create",
                     PermissionHeaderId = 17,
@@ -881,7 +881,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 67,
+                    // Id = 67,
                     Name = "عرض الإجتماعات",
                     Action = "read",
                     PermissionHeaderId = 17,
@@ -893,7 +893,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 68,
+                    // Id = 68,
                     Name = "تعديل الإجتماعات",
                     Action = "update",
                     PermissionHeaderId = 17,
@@ -905,7 +905,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 69,
+                    // Id = 69,
                     Name = "حذف الإجتماعات",
                     Action = "delete",
                     PermissionHeaderId = 17,
@@ -917,7 +917,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 70,
+                    // Id = 70,
                     Name = "تصدير الإجتماعات",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 17,
@@ -930,7 +930,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 71,
+                    // Id = 71,
                     Name = "إرسال بريد إلكتروني للإجتماعات",
                     Action = "send_emails",
                     PermissionHeaderId = 17,
@@ -943,7 +943,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 72,
+                    // Id = 72,
                     Name = "إلغاء الإجتماعات",
                     Action = "cancel",
                     PermissionHeaderId = 17,
@@ -958,7 +958,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------News----------------
                 new Permission()
                 {
-                    Id = 73,
+                    // Id = 73,
                     Name = "إضافة الأخبار",
                     Action = "create",
                     PermissionHeaderId = 18,
@@ -970,7 +970,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 74,
+                    // Id = 74,
                     Name = "عرض الأخبار",
                     Action = "read",
                     PermissionHeaderId = 18,
@@ -982,7 +982,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 75,
+                    // Id = 75,
                     Name = "تعديل الأخبار",
                     Action = "update",
                     PermissionHeaderId = 18,
@@ -994,7 +994,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 76,
+                    // Id = 76,
                     Name = "حذف الأخبار",
                     Action = "delete",
                     PermissionHeaderId = 18,
@@ -1006,7 +1006,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 77,
+                    // Id = 77,
                     Name = "تصدير الأخبار",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 18,
@@ -1021,7 +1021,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Notification----------------
                 new Permission()
                 {
-                    Id = 78,
+                    // Id = 78,
                     Name = "إضافة الإشعارات",
                     Action = "create",
                     PermissionHeaderId = 19,
@@ -1033,7 +1033,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 79,
+                    // Id = 79,
                     Name = "عرض الإشعارات",
                     Action = "read",
                     PermissionHeaderId = 19,
@@ -1045,7 +1045,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 80,
+                    // Id = 80,
                     Name = "تعديل الإشعارات",
                     Action = "update",
                     PermissionHeaderId = 19,
@@ -1057,7 +1057,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 81,
+                    // Id = 81,
                     Name = "حذف الإشعارات",
                     Action = "delete",
                     PermissionHeaderId = 19,
@@ -1069,7 +1069,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 82,
+                    // Id = 82,
                     Name = "تصدير الإشعارات",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 19,
@@ -1084,7 +1084,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------NotificationTemplate----------------
                 new Permission()
                 {
-                    Id = 83,
+                    // Id = 83,
                     Name = "إضافة قالب الإشعارات",
                     Action = "create",
                     PermissionHeaderId = 20,
@@ -1096,7 +1096,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 84,
+                    // Id = 84,
                     Name = "عرض قالب الإشعارات",
                     Action = "read",
                     PermissionHeaderId = 20,
@@ -1108,7 +1108,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 85,
+                    // Id = 85,
                     Name = "تعديل قالب الإشعارات",
                     Action = "update",
                     PermissionHeaderId = 20,
@@ -1120,7 +1120,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 86,
+                    // Id = 86,
                     Name = "حذف قالب الإشعارات",
                     Action = "delete",
                     PermissionHeaderId = 20,
@@ -1133,7 +1133,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 87,
+                    // Id = 87,
                     Name = "تصدير قالب الإشعارات",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 20,
@@ -1148,7 +1148,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Role----------------
                 new Permission()
                 {
-                    Id = 88,
+                    // Id = 88,
                     Name = "إضافة دور",
                     Action = "create",
                     PermissionHeaderId = 21,
@@ -1160,7 +1160,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 89,
+                    // Id = 89,
                     Name = "عرض دور",
                     Action = "read",
                     PermissionHeaderId = 21,
@@ -1172,7 +1172,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 90,
+                    // Id = 90,
                     Name = "تعديل دور",
                     Action = "update",
                     PermissionHeaderId = 21,
@@ -1184,7 +1184,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 91,
+                    // Id = 91,
                     Name = "حذف دور",
                     Action = "delete",
                     PermissionHeaderId = 21,
@@ -1196,7 +1196,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 92,
+                    // Id = 92,
                     Name = "تصدير دور",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 21,
@@ -1211,7 +1211,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------User----------------
                 new Permission()
                 {
-                    Id = 93,
+                    // Id = 93,
                     Name = "إضافة مستخدم",
                     Action = "create",
                     PermissionHeaderId = 22,
@@ -1223,7 +1223,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 94,
+                    // Id = 94,
                     Name = "عرض مستخدم",
                     Action = "read",
                     PermissionHeaderId = 22,
@@ -1235,7 +1235,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 95,
+                    // Id = 95,
                     Name = "تعديل مستخدم",
                     Action = "update",
                     PermissionHeaderId = 22,
@@ -1247,7 +1247,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 96,
+                    // Id = 96,
                     Name = "حذف مستخدم",
                     Action = "delete",
                     PermissionHeaderId = 22,
@@ -1259,7 +1259,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 97,
+                    // Id = 97,
                     Name = "تصدير مستخدم",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 22,
@@ -1272,7 +1272,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 98,
+                    // Id = 98,
                     Name = "تغيير كلمة سر المستخدم",
                     Action = "user_change_password",
                     PermissionHeaderId = 22,
@@ -1288,7 +1288,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Coordinator----------------
                 new Permission()
                 {
-                    Id = 99,
+                    // Id = 99,
                     Name = "إضافة منسق",
                     Action = "create",
                     PermissionHeaderId = 23,
@@ -1300,7 +1300,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 100,
+                    // Id = 100,
                     Name = "عرض منسق",
                     Action = "read",
                     PermissionHeaderId = 23,
@@ -1312,7 +1312,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 101,
+                    // Id = 101,
                     Name = "تعديل منسق",
                     Action = "update",
                     PermissionHeaderId = 23,
@@ -1324,7 +1324,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 102,
+                    // Id = 102,
                     Name = "حذف منسق",
                     Action = "delete",
                     PermissionHeaderId = 23,
@@ -1336,7 +1336,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 103,
+                    // Id = 103,
                     Name = "تصدير منسق",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 23,
@@ -1349,7 +1349,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 104,
+                    // Id = 104,
                     Name = "حقول ديناميكية للمنسقين",
                     Action = "coordinator_dynamic_fields",
                     PermissionHeaderId = 23,
@@ -1364,7 +1364,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Arbitrator----------------
                 new Permission()
                 {
-                    Id = 105,
+                    // Id = 105,
                     Name = "إضافة محكم",
                     Action = "create",
                     PermissionHeaderId = 24,
@@ -1376,7 +1376,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 106,
+                    // Id = 106,
                     Name = "عرض محكم",
                     Action = "read",
                     PermissionHeaderId = 24,
@@ -1388,7 +1388,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 107,
+                    // Id = 107,
                     Name = "تعديل محكم",
                     Action = "update",
                     PermissionHeaderId = 24,
@@ -1400,7 +1400,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 108,
+                    // Id = 108,
                     Name = "حذف محكم",
                     Action = "delete",
                     PermissionHeaderId = 24,
@@ -1412,7 +1412,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 109,
+                    // Id = 109,
                     Name = "تصدير محكم",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 24,
@@ -1425,7 +1425,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 110,
+                    // Id = 110,
                     Name = "حقول ديناميكية للمحكمين",
                     Action = "arbitrator_dynamic_fields",
                     PermissionHeaderId = 24,
@@ -1440,7 +1440,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Committee----------------
                 new Permission()
                 {
-                    Id = 111,
+                    // Id = 111,
                     Name = "إضافة لجنة",
                     Action = "create",
                     PermissionHeaderId = 25,
@@ -1452,7 +1452,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 112,
+                    // Id = 112,
                     Name = "عرض لجنة",
                     Action = "read",
                     PermissionHeaderId = 25,
@@ -1464,7 +1464,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 113,
+                    // Id = 113,
                     Name = "تعديل لجنة",
                     Action = "update",
                     PermissionHeaderId = 25,
@@ -1476,7 +1476,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 114,
+                    // Id = 114,
                     Name = "حذف لجنة",
                     Action = "delete",
                     PermissionHeaderId = 25,
@@ -1488,7 +1488,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 115,
+                    // Id = 115,
                     Name = "تصدير لجنة",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 25,
@@ -1503,7 +1503,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------SubscriberAccount----------------
                 new Permission()
                 {
-                    Id = 116,
+                    // Id = 116,
                     Name = "إضافة حساب المشترك",
                     Action = "create",
                     PermissionHeaderId = 26,
@@ -1515,7 +1515,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 117,
+                    // Id = 117,
                     Name = "عرض حساب المشترك",
                     Action = "read",
                     PermissionHeaderId = 26,
@@ -1527,7 +1527,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 118,
+                    // Id = 118,
                     Name = "تعديل حساب المشترك",
                     Action = "update",
                     PermissionHeaderId = 26,
@@ -1539,7 +1539,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 119,
+                    // Id = 119,
                     Name = "حذف حساب المشترك",
                     Action = "delete",
                     PermissionHeaderId = 26,
@@ -1551,7 +1551,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 120,
+                    // Id = 120,
                     Name = "تصدير حساب المشترك",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 26,
@@ -1564,7 +1564,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 121,
+                    // Id = 121,
                     Name = "تغيير كلمة سر المشترك",
                     Action = "subscriber_change_password",
                     PermissionHeaderId = 26,
@@ -1577,7 +1577,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 122,
+                    // Id = 122,
                     Name = "تأكيد الحساب",
                     Action = "verify_account",
                     PermissionHeaderId = 26,
@@ -1592,7 +1592,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------SubscriberProfile----------------
                 new Permission()
                 {
-                    Id = 123,
+                    // Id = 123,
                     Name = "عرض ملف المشترك",
                     Action = "read",
                     PermissionHeaderId = 27,
@@ -1604,7 +1604,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 124,
+                    // Id = 124,
                     Name = "تصدير ملف المشترك",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 27,
@@ -1617,7 +1617,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 125,
+                    // Id = 125,
                     Name = "قراءة كمشترك",
                     Action = "read_as_subscriber",
                     PermissionHeaderId = 27,
@@ -1632,7 +1632,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------SubscriberForm----------------
                  new Permission()
                  {
-                     Id = 126,
+                     // Id = 126,
                      Name = "عرض إستمارة المشترك",
                      Action = "read",
                      PermissionHeaderId = 28,
@@ -1644,7 +1644,7 @@ namespace SharijhaAward.Persistence.Seeders
                      LastModifiedBy = null
                  }, new Permission()
                  {
-                     Id = 127,
+                     // Id = 127,
                      Name = "حذف إستمارة المشترك",
                      Action = "delete",
                      PermissionHeaderId = 28,
@@ -1656,7 +1656,7 @@ namespace SharijhaAward.Persistence.Seeders
                      LastModifiedBy = null
                  }, new Permission()
                  {
-                     Id = 128,
+                     // Id = 128,
                      Name = "تصدير إستمارة المشترك",
                      Action = "xlsx-exportable",
                      PermissionHeaderId = 28,
@@ -1669,7 +1669,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 129,
+                     // Id = 129,
                      Name = "رفض إستمارة",
                      Action = "reject",
                      PermissionHeaderId = 28,
@@ -1682,7 +1682,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 130,
+                     // Id = 130,
                      Name = "قبول إستمارة",
                      Action = "accept",
                      PermissionHeaderId = 28,
@@ -1695,7 +1695,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 131,
+                     // Id = 131,
                      Name = "معلومات الإستمارة",
                      Action = "information",
                      PermissionHeaderId = 28,
@@ -1708,7 +1708,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 132,
+                     // Id = 132,
                      Name = "شروط الإستمارة",
                      Action = "conditions",
                      PermissionHeaderId = 28,
@@ -1721,7 +1721,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 133,
+                     // Id = 133,
                      Name = "شروط الإستمارة",
                      Action = "attachments",
                      PermissionHeaderId = 28,
@@ -1734,7 +1734,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 134,
+                     // Id = 134,
                      Name = "معايير الإستمارة",
                      Action = "criteria",
                      PermissionHeaderId = 28,
@@ -1747,7 +1747,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 135,
+                     // Id = 135,
                      Name = "فريق الجائزة الإستمارة",
                      Action = "award_team",
                      PermissionHeaderId = 28,
@@ -1762,7 +1762,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Event----------------
                 new Permission()
                 {
-                    Id = 136,
+                    // Id = 136,
                     Name = "إضافة فعالية",
                     Action = "create",
                     PermissionHeaderId = 29,
@@ -1774,7 +1774,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 137,
+                    // Id = 137,
                     Name = "عرض فعالية",
                     Action = "read",
                     PermissionHeaderId = 29,
@@ -1786,7 +1786,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 138,
+                    // Id = 138,
                     Name = "تعديل فعالية",
                     Action = "update",
                     PermissionHeaderId = 29,
@@ -1799,7 +1799,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 139,
+                    // Id = 139,
                     Name = "حذف فعالية",
                     Action = "delete",
                     PermissionHeaderId = 29,
@@ -1812,7 +1812,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 140,
+                    // Id = 140,
                     Name = "تصدير فعالية",
                     Action = "xlsx-exportable",
                     PermissionHeaderId = 29,
@@ -1827,7 +1827,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------ContactUs----------------
                  new Permission()
                  {
-                     Id = 141,
+                     // Id = 141,
                      Name = "عرض رسالة تواصل",
                      Action = "read",
                      PermissionHeaderId = 30,
@@ -1839,7 +1839,7 @@ namespace SharijhaAward.Persistence.Seeders
                      LastModifiedBy = null
                  }, new Permission()
                  {
-                     Id = 142,
+                     // Id = 142,
                      Name = "حذف رسالة تواصل",
                      Action = "delete",
                      PermissionHeaderId = 30,
@@ -1851,7 +1851,7 @@ namespace SharijhaAward.Persistence.Seeders
                      LastModifiedBy = null
                  }, new Permission()
                  {
-                     Id = 143,
+                     // Id = 143,
                      Name = "تصدير رسالة تواصل",
                      Action = "xlsx-exportable",
                      PermissionHeaderId = 30,
@@ -1864,7 +1864,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 144,
+                     // Id = 144,
                      Name = "تحويل الرسالة",
                      Action = "forward_message",
                      PermissionHeaderId = 30,
@@ -1877,7 +1877,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 145,
+                     // Id = 145,
                      Name = "إغلاق الرسالة",
                      Action = "close_message",
                      PermissionHeaderId = 30,
@@ -1890,7 +1890,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 146,
+                     // Id = 146,
                      Name = "الرد على الرسالة",
                      Action = "replay",
                      PermissionHeaderId = 30,
@@ -1903,7 +1903,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 147,
+                     // Id = 147,
                      Name = "قراءة الرد",
                      Action = "read_replies",
                      PermissionHeaderId = 30,
@@ -1918,7 +1918,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------ExplanatoryMessage----------------
                  new Permission()
                  {
-                     Id = 148,
+                     // Id = 148,
                      Name = "عرض رسالة توضيحية",
                      Action = "read",
                      PermissionHeaderId = 31,
@@ -1930,7 +1930,7 @@ namespace SharijhaAward.Persistence.Seeders
                      LastModifiedBy = null
                  }, new Permission()
                  {
-                     Id = 149,
+                     // Id = 149,
                      Name = "تعديل رسالة توضيحية",
                      Action = "update",
                      PermissionHeaderId = 31,
@@ -1944,7 +1944,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Responsibility----------------
                 new Permission()
                 {
-                    Id = 150,
+                    // Id = 150,
                     Name = "إضافة مسؤولية",
                     Action = "create",
                     PermissionHeaderId = 32,
@@ -1956,7 +1956,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 151,
+                    // Id = 151,
                     Name = "عرض مسؤولية",
                     Action = "read",
                     PermissionHeaderId = 32,
@@ -1968,7 +1968,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 152,
+                    // Id = 152,
                     Name = "تعديل مسؤولية",
                     Action = "update",
                     PermissionHeaderId = 32,
@@ -1980,7 +1980,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 153,
+                    // Id = 153,
                     Name = "حذف مسؤولية",
                     Action = "delete",
                     PermissionHeaderId = 32,
@@ -1994,7 +1994,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------GeneralFAQ----------------
                 new Permission()
                 {
-                    Id = 154,
+                    // Id = 154,
                     Name = "إضافة الأسئلة الشائعة العامة",
                     Action = "create",
                     PermissionHeaderId = 33,
@@ -2006,7 +2006,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 155,
+                    // Id = 155,
                     Name = "عرض الأسئلة الشائعة العامة",
                     Action = "read",
                     PermissionHeaderId = 33,
@@ -2018,7 +2018,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 156,
+                    // Id = 156,
                     Name = "تعديل الأسئلة الشائعة العامة",
                     Action = "update",
                     PermissionHeaderId = 33,
@@ -2030,7 +2030,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 157,
+                    // Id = 157,
                     Name = "حذف الأسئلة الشائعة العامة",
                     Action = "delete",
                     PermissionHeaderId = 33,
@@ -2044,7 +2044,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------FAQCategory----------------
                 new Permission()
                 {
-                    Id = 158,
+                    // Id = 158,
                     Name = "إضافة فئة الأسئلة الشائعة",
                     Action = "create",
                     PermissionHeaderId = 34,
@@ -2056,7 +2056,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 159,
+                    // Id = 159,
                     Name = "عرض فئة الأسئلة الشائعة",
                     Action = "read",
                     PermissionHeaderId = 34,
@@ -2068,7 +2068,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 160,
+                    // Id = 160,
                     Name = "تعديل فئة الأسئلة الشائعة",
                     Action = "update",
                     PermissionHeaderId = 34,
@@ -2080,7 +2080,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 161,
+                    // Id = 161,
                     Name = "حذف فئة الأسئلة الشائعة",
                     Action = "delete",
                     PermissionHeaderId = 34,
@@ -2094,7 +2094,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------AwardStatistic----------------
                 new Permission()
                 {
-                    Id = 162,
+                    // Id = 162,
                     Name = "إضافة إحصائيات الجائزة",
                     Action = "create",
                     PermissionHeaderId = 35,
@@ -2106,7 +2106,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 163,
+                    // Id = 163,
                     Name = "عرض إحصائيات الجائزة",
                     Action = "read",
                     PermissionHeaderId = 35,
@@ -2118,7 +2118,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 164,
+                    // Id = 164,
                     Name = "تعديل إحصائيات الجائزة",
                     Action = "update",
                     PermissionHeaderId = 35,
@@ -2130,7 +2130,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 165,
+                    // Id = 165,
                     Name = "حذف إحصائيات الجائزة",
                     Action = "delete",
                     PermissionHeaderId = 35,
@@ -2144,7 +2144,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------Slider----------------
                 new Permission()
                 {
-                    Id = 166,
+                    // Id = 166,
                     Name = "إضافة شرائح",
                     Action = "create",
                     PermissionHeaderId = 36,
@@ -2156,7 +2156,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 167,
+                    // Id = 167,
                     Name = "عرض شرائح",
                     Action = "read",
                     PermissionHeaderId = 36,
@@ -2168,7 +2168,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 168,
+                    // Id = 168,
                     Name = "تعديل شرائح",
                     Action = "update",
                     PermissionHeaderId = 36,
@@ -2180,7 +2180,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new Permission()
                 {
-                    Id = 169,
+                    // Id = 169,
                     Name = "حذف شرائح",
                     Action = "delete",
                     PermissionHeaderId = 36,
@@ -2194,7 +2194,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------StrategicPartner----------------
                 new Permission()
                 {
-                    Id = 170,
+                    // Id = 170,
                     Name = "تعديل شريك إستراتيجي",
                     Action = "update",
                     PermissionHeaderId = 37,
@@ -2209,7 +2209,7 @@ namespace SharijhaAward.Persistence.Seeders
                 //------------CustomPages----------------
                 new Permission()
                 {
-                    Id = 171,
+                    // Id = 171,
                     Name = "إضافة صفحة",
                     Action = "create",
                     PermissionHeaderId = 38,
@@ -2222,7 +2222,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 172,
+                    // Id = 172,
                     Name = "عرض صفحة",
                     Action = "read",
                     PermissionHeaderId = 38,
@@ -2235,7 +2235,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 173,
+                    // Id = 173,
                     Name = "تعديل صفحة",
                     Action = "update",
                     PermissionHeaderId = 38,
@@ -2248,7 +2248,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new Permission()
                 {
-                    Id = 174,
+                    // Id = 174,
                     Name = "حذف صفحة",
                     Action = "delete",
                     PermissionHeaderId = 38,
@@ -2262,7 +2262,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------ArbitrationSorting----------------
                  new Permission()
                  {
-                     Id = 175,
+                     // Id = 175,
                      Name = "عرض فرز التحكيم",
                      Action = "read",
                      PermissionHeaderId = 39,
@@ -2275,7 +2275,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 176,
+                     // Id = 176,
                      Name = "تعديل فرز التحكيم",
                      Action = "update",
                      PermissionHeaderId = 39,
@@ -2290,7 +2290,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------ArbitrationAssign----------------
                  new Permission()
                  {
-                     Id = 177,
+                     // Id = 177,
                      Name = "عرض إسناد التحكيم",
                      Action = "read",
                      PermissionHeaderId = 40,
@@ -2303,7 +2303,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 178,
+                     // Id = 178,
                      Name = "تعديل إسناد التحكيم",
                      Action = "update",
                      PermissionHeaderId = 40,
@@ -2318,7 +2318,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------ArbitrationFirst----------------
                  new Permission()
                  {
-                     Id = 179,
+                     // Id = 179,
                      Name = "عرض التحكيم الأولي",
                      Action = "read",
                      PermissionHeaderId = 41,
@@ -2331,7 +2331,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 180,
+                     // Id = 180,
                      Name = "تعديل التحكيم الأولي",
                      Action = "update",
                      PermissionHeaderId = 41,
@@ -2346,7 +2346,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------ArbitrationAudit----------------
                  new Permission()
                  {
-                     Id = 181,
+                     // Id = 181,
                      Name = "عرض تدقيق التحكيم",
                      Action = "read",
                      PermissionHeaderId = 42,
@@ -2359,7 +2359,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 182,
+                     // Id = 182,
                      Name = "تعديل تدقيق التحكيم",
                      Action = "update",
                      PermissionHeaderId = 42,
@@ -2374,7 +2374,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------Interview----------------
                  new Permission()
                  {
-                     Id = 183,
+                     // Id = 183,
                      Name = "عرض مقابلات التحكيم",
                      Action = "read",
                      PermissionHeaderId = 43,
@@ -2387,7 +2387,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 184,
+                     // Id = 184,
                      Name = "إضافة مقابلة",
                      Action = "create",
                      PermissionHeaderId = 43,
@@ -2400,7 +2400,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 185,
+                     // Id = 185,
                      Name = "تعديل مقابلات التحكيم",
                      Action = "update",
                      PermissionHeaderId = 43,
@@ -2413,7 +2413,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 186,
+                     // Id = 186,
                      Name = "إلغاء مقابلات التحكيم",
                      Action = "cancel",
                      PermissionHeaderId = 43,
@@ -2426,7 +2426,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 187,
+                     // Id = 187,
                      Name = "إرسال البريد الإلكتروني",
                      Action = "send_emails",
                      PermissionHeaderId = 43,
@@ -2441,7 +2441,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------ArbitrationFinal----------------
                  new Permission()
                  {
-                     Id = 188,
+                     // Id = 188,
                      Name = "عرض التحكيم النهائي",
                      Action = "read",
                      PermissionHeaderId = 44,
@@ -2454,7 +2454,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 189,
+                     // Id = 189,
                      Name = "تعديل التحكيم النهائي",
                      Action = "update",
                      PermissionHeaderId = 44,
@@ -2469,7 +2469,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------ResultsArbitration----------------
                  new Permission()
                  {
-                     Id = 190,
+                     // Id = 190,
                      Name = "عرض نتائج التحكيم",
                      Action = "read",
                      PermissionHeaderId = 45,
@@ -2482,7 +2482,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 191,
+                     // Id = 191,
                      Name = "تعديل نتائج التحكيم",
                      Action = "update",
                      PermissionHeaderId = 45,
@@ -2497,7 +2497,7 @@ namespace SharijhaAward.Persistence.Seeders
                  //------------ArbitrationWinners----------------
                  new Permission()
                  {
-                     Id = 192,
+                     // Id = 192,
                      Name = "عرض تحكيم الفائزين",
                      Action = "read",
                      PermissionHeaderId = 46,
@@ -2510,7 +2510,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                  }, new Permission()
                  {
-                     Id = 193,
+                     // Id = 193,
                      Name = "تعديل تحكيم الفائزين",
                      Action = "update",
                      PermissionHeaderId = 46,

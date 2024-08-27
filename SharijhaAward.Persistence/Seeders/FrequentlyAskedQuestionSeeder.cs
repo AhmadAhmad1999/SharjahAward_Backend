@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.FrequentlyAskedQuestions.AddRange(
                     new FrequentlyAskedQuestion()
                     {
-                        Id = 1,
+                        // Id = 1,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -37,7 +37,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishAnswer = "You can participate in the award by following the following steps:\r\n\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria."
                     }, new FrequentlyAskedQuestion()
                     {
-                        Id = 2,
+                        // Id = 2,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -51,7 +51,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishAnswer = "You can participate in the award by following the following steps:\r\n\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria."
                     }, new FrequentlyAskedQuestion()
                     {
-                        Id = 3,
+                        // Id = 3,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -65,7 +65,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishAnswer = "You can participate in the award by following the following steps:\r\n\r\nClick on “Subscribers Portal” in the main menu of the site.\r\nIf you do not have an account on the portal, please create a new user account by clicking on the “Register Now” option and filling out the required data.\r\nIf you already have an account on the portal, please click on the “I have already registered” option and log in by entering your username and password.\r\nAfter entering the portal, you can register in the category you desire and upload the required documents.\r\nYou can upload evidence next to each category criteria."
                     }, new FrequentlyAskedQuestion()
                     {
-                        Id = 4,
+                        // Id = 4,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -79,7 +79,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishAnswer = "The conditions for participation in the Sharjah Award for Excellence and Educational Excellence are divided into two parts:\r\n\r\nGeneral conditions: These are conditions that apply to all categories of the award.\r\nSpecial Conditions: These are specific conditions for a specific award category.\r\n\r\nTo view the general and specific conditions for the award categories, please follow the following steps:\r\n\r\nAccess the award categories page from the main menu of the website.\r\nClick on “Download the category interpretive guide” for the category you wish to view.\r\nThrough the interpretive guide you can view the general and special conditions of the category."
                     }, new FrequentlyAskedQuestion()
                     {
-                        Id = 5,
+                        // Id = 5,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -93,7 +93,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishAnswer = "The conditions for participation in the Sharjah Award for Excellence and Educational Excellence are divided into two parts:\r\n\r\nGeneral conditions: These are conditions that apply to all categories of the award.\r\nSpecial Conditions: These are specific conditions for a specific award category.\r\n\r\nTo view the general and specific conditions for the award categories, please follow the following steps:\r\n\r\nAccess the award categories page from the main menu of the website.\r\nClick on “Download the category interpretive guide” for the category you wish to view.\r\nThrough the interpretive guide you can view the general and special conditions of the category."
                     }, new FrequentlyAskedQuestion()
                     {
-                        Id = 6,
+                        // Id = 6,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,

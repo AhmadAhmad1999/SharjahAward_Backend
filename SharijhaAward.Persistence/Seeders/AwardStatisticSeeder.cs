@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.AwardStatistics.AddRange(
                    new AwardStatistic()
                    {
-                       Id = 1,
+                       // Id =1,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -36,7 +36,7 @@ namespace SharijhaAward.Persistence.Seeders
                        CycleId = 1
                    }, new AwardStatistic()
                    {
-                       Id = 2,
+                       // Id =2,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -49,7 +49,7 @@ namespace SharijhaAward.Persistence.Seeders
                        CycleId = 1
                    }, new AwardStatistic()
                    {
-                       Id = 3,
+                       // Id =3,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -62,7 +62,7 @@ namespace SharijhaAward.Persistence.Seeders
                        CycleId = 1
                    }, new AwardStatistic()
                    {
-                       Id = 4,
+                       // Id =4,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -75,7 +75,7 @@ namespace SharijhaAward.Persistence.Seeders
                        CycleId = 1
                    }, new AwardStatistic()
                    {
-                       Id = 5,
+                       // Id =5,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,

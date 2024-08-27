@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.OnePageText.AddRange(
                     new OnePageText()
                     {
-                        Id = 1,
+                        // Id = 1,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -36,7 +36,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Slug = "Privacy_Policy_Website"
                     }, new OnePageText()
                     {
-                        Id = 2,
+                        // Id = 2,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -49,7 +49,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Slug = "Privacy_Policy_Subscriber"
                     }, new OnePageText()
                     {
-                        Id = 3,
+                        // Id = 3,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -62,7 +62,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Slug = "Terms_Of_Use_Website"
                     }, new OnePageText()
                     {
-                        Id = 4,
+                        // Id = 4,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -75,7 +75,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Slug = "Terms_Of_Use_Subscriber"
                     }, new OnePageText()
                     {
-                        Id = 5,
+                        // Id = 5,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,

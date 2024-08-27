@@ -29,7 +29,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 1,
+                        // Id = 1,
                         User1Id = 1,
                         User2Id = 4,
                     }, new RelatedAccount()
@@ -40,7 +40,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 2,
+                        // Id = 2,
                         User1Id = 1,
                         User2Id = 5,
                     });

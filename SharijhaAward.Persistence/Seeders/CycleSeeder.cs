@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.Cycles.AddRange(
                    new Cycle()
                    {
-                       Id = 1,
+                       //Id = 1,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,

@@ -22,7 +22,7 @@ namespace SharijhaAward.Persistence.Seeders
             {
                 _context.AttributeDataTypes.AddRange(new AttributeDataType()
                 {
-                    Id = 1,
+                    // Id =1,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -33,7 +33,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "نص"
                 }, new AttributeDataType()
                 {
-                    Id = 2,
+                    // Id =2,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -44,7 +44,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "بريد إلكتروني"
                 }, new AttributeDataType()
                 {
-                    Id = 3,
+                    // Id =3,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -55,7 +55,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "صورة"
                 }, new AttributeDataType()
                 {
-                    Id = 4,
+                    // Id =4,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -66,7 +66,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "ملف"
                 }, new AttributeDataType()
                 {
-                    Id = 5,
+                    // Id =5,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -77,7 +77,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "رقم هاتف متحرك"
                 }, new AttributeDataType()
                 {
-                    Id = 6,
+                    // Id =6,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -88,7 +88,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "رقم"
                 }, new AttributeDataType()
                 {
-                    Id = 7,
+                    // Id =7,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -99,7 +99,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "تاريخ"
                 }, new AttributeDataType()
                 {
-                    Id = 8,
+                    // Id =8,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -110,7 +110,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "قائمة منسدلة"
                 }, new AttributeDataType()
                 {
-                    Id = 9,
+                    // Id =9,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,
@@ -121,7 +121,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "موقع"
                 }, new AttributeDataType()
                 {
-                    Id = 10,
+                    // Id =10,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                     DeletedAt = null,

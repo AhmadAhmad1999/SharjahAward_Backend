@@ -22,7 +22,7 @@ namespace SharijhaAward.Persistence.Seeders
             {
                 _context.GeneralFAQs.AddRange(new GeneralFAQ()
                 {
-                    Id = 1,
+                    // Id = 1,
                     ArabicAnswer = "اختبار جواب 1",
                     ArabicQuestion = "اختبار سؤال 1",
                     EnglishAnswer = "Test Answer 1",
@@ -36,7 +36,7 @@ namespace SharijhaAward.Persistence.Seeders
                     GeneralFrequentlyAskedQuestionCategoryId = 1
                 }, new GeneralFAQ()
                 {
-                    Id = 2,
+                    // Id = 2,
                     ArabicAnswer = "اختبار جواب 2",
                     ArabicQuestion = "اختبار سؤال 2",
                     EnglishAnswer = "Test Answer 2",
@@ -50,7 +50,7 @@ namespace SharijhaAward.Persistence.Seeders
                     GeneralFrequentlyAskedQuestionCategoryId = 1
                 }, new GeneralFAQ()
                 {
-                    Id = 3,
+                    // Id = 3,
                     ArabicAnswer = "اختبار جواب 3",
                     ArabicQuestion = "اختبار سؤال 3",
                     EnglishAnswer = "Test Answer 3",
@@ -64,7 +64,7 @@ namespace SharijhaAward.Persistence.Seeders
                     GeneralFrequentlyAskedQuestionCategoryId = 2
                 }, new GeneralFAQ()
                 {
-                    Id = 4,
+                    // Id = 4,
                     ArabicAnswer = "اختبار جواب 4",
                     ArabicQuestion = "اختبار سؤال 4",
                     EnglishAnswer = "Test Answer 4",

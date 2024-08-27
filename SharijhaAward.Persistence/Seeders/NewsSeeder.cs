@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.News.AddRange(
                    new News()
                    {
-                       Id = 1,
+                       // Id = 1,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -37,7 +37,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Image = "https://award-shj.ae/media/n1lb4exq/screenshot-2024-03-07-121511.png?anchor=center&mode=crop&width=593&height=338&rnd=133542874516370000",
                    }, new News()
                    {
-                       Id = 2,
+                       // Id = 2,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -51,7 +51,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Image = "https://award-shj.ae/media/bx4famcb/5106559.jpeg?anchor=center&mode=crop&width=593&height=338&rnd=133280978690230000",
                    }, new News()
                    {
-                       Id = 3,
+                       // Id = 3,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,

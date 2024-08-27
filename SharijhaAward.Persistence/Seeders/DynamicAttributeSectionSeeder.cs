@@ -33,7 +33,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedAt = null,
                         LastModifiedBy = null,
                         RecordIdOnRelation = 2,
-                        Id = 1,
+                        // Id = 1,
                         OrderId = 1
                     }
                 );

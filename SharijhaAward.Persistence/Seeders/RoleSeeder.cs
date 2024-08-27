@@ -23,36 +23,36 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.Roles.AddRange(
                    new Role
                    {
-                       Id = 1,
+                       // Id = 1,
                        EnglishName = "Admin",
                        ArabicName = "ادمن"
                    },
                    new Role
                    {
-                       Id = 2,
+                       // Id = 2,
                        EnglishName = "Subscriber",
                        ArabicName = "مشترك"
                    },
                    new Role
                    {
-                       Id = 3,
+                       // Id = 3,
                        EnglishName = "Manager",
                        ArabicName = "مدير"
                    },
                    new Role
                    {
-                       Id = 4,
+                       // Id = 4,
                        EnglishName = "User",
                        ArabicName = "مستخدم"
                    },
                    new Role
                    {
-                       Id = 5,
+                       // Id = 5,
                        EnglishName = "Coordinator",
                        ArabicName = "منسق"
                    }, new Role
                    {
-                       Id = 6,
+                       // Id = 6,
                        EnglishName = "Arbitrator",
                        ArabicName = "محكم"
                    }

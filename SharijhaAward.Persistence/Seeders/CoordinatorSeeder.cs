@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Domain.Entities.CoordinatorModel;
+﻿using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Domain.Entities.CoordinatorModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,11 +30,10 @@ namespace SharijhaAward.Persistence.Seeders
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = 10,
+                    Id =1,
                     ArabicName = "منسق 1",
                     Email = "Coordinator@Coordinator.com",
                     EnglishName = "Coordinator 1",
-
                     PhoneNumber = "0993521579"
                 }, new Coordinator()
                 {
@@ -43,7 +43,7 @@ namespace SharijhaAward.Persistence.Seeders
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = 11,
+                    Id =2,
                     ArabicName = "منسق 2",
                     Email = "Coordinator2@Coordinator2.com",
                     EnglishName = "Coordinator 2",
@@ -56,7 +56,7 @@ namespace SharijhaAward.Persistence.Seeders
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = 12,
+                    Id =3,
                     ArabicName = "منسق 3",
                     Email = "Coordinator3@Coordinator3.com",
                     EnglishName = "Coordinator 3",
@@ -69,7 +69,7 @@ namespace SharijhaAward.Persistence.Seeders
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id = 13,
+                    Id =4,
                     ArabicName = "منسق 4",
                     Email = "Coordinator4@Coordinator4.com",
                     EnglishName = "Coordinator 4",

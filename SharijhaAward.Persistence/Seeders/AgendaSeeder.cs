@@ -24,7 +24,7 @@ namespace SharijhaAward.Persistence.Seeders
                    new Agenda()
                    {
                        CycleId = 1,
-                       Id = 1,
+                       // Id =1,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -42,7 +42,7 @@ namespace SharijhaAward.Persistence.Seeders
                    }, new Agenda()
                    {
                        CycleId = 1,
-                       Id = 2,
+                       // Id =2,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -60,7 +60,7 @@ namespace SharijhaAward.Persistence.Seeders
                    }, new Agenda()
                    {
                        CycleId = 1,
-                       Id = 3,
+                       // Id =3,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -78,7 +78,7 @@ namespace SharijhaAward.Persistence.Seeders
                    }, new Agenda()
                    {
                        CycleId = 1,
-                       Id = 4,
+                       // Id =4,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -96,7 +96,7 @@ namespace SharijhaAward.Persistence.Seeders
                    }, new Agenda()
                    {
                        CycleId = 1,
-                       Id = 5,
+                       // Id =5,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,

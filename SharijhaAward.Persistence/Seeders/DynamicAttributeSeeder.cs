@@ -29,7 +29,7 @@ namespace SharijhaAward.Persistence.Seeders
                        LastModifiedBy = null,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
-                       Id = 1,
+                       // Id = 1,
                        OrderId = 1,
                        ArabicLabel = "اختبار نص 1",
                        ArabicTitle = "اختبار نص 1",
@@ -46,7 +46,7 @@ namespace SharijhaAward.Persistence.Seeders
                        LinkedToAnotherAttribute = false
                    }, new DynamicAttribute()
                    {
-                       Id = 2,
+                       // Id = 2,
                        OrderId = 2,
                        isDeleted = false,
                        DeletedAt = null,
@@ -69,7 +69,7 @@ namespace SharijhaAward.Persistence.Seeders
                        LinkedToAnotherAttribute = false
                    }, new DynamicAttribute()
                    {
-                       Id = 3,
+                       // Id = 3,
                        OrderId = 3,
                        isDeleted = false,
                        DeletedAt = null,
@@ -92,7 +92,7 @@ namespace SharijhaAward.Persistence.Seeders
                        LinkedToAnotherAttribute = false
                    }, new DynamicAttribute()
                    {
-                       Id = 4,
+                       // Id = 4,
                        OrderId = 4,
                        isDeleted = false,
                        DeletedAt = null,
@@ -115,7 +115,7 @@ namespace SharijhaAward.Persistence.Seeders
                        LinkedToAnotherAttribute = false
                    }, new DynamicAttribute()
                    {
-                       Id = 5,
+                       // Id = 5,
                        OrderId = 5,
                        isDeleted = false,
                        DeletedAt = null,
@@ -138,7 +138,7 @@ namespace SharijhaAward.Persistence.Seeders
                        LinkedToAnotherAttribute = false
                    }, new DynamicAttribute()
                    {
-                       Id = 6,
+                       // Id = 6,
                        OrderId = 6,
                        isDeleted = false,
                        DeletedAt = null,
@@ -161,7 +161,7 @@ namespace SharijhaAward.Persistence.Seeders
                        LinkedToAnotherAttribute = false
                    }, new DynamicAttribute()
                    {
-                       Id = 7,
+                       // Id = 7,
                        OrderId = 7,
                        isDeleted = false,
                        DeletedAt = null,
@@ -184,7 +184,7 @@ namespace SharijhaAward.Persistence.Seeders
                        LinkedToAnotherAttribute = false
                    }, new DynamicAttribute()
                    {
-                       Id = 8,
+                       // Id = 8,
                        OrderId = 8,
                        isDeleted = false,
                        DeletedAt = null,

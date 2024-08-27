@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.CriterionItems.AddRange(
                     new CriterionItem()
                     {
-                        Id = 1,
+                        // Id =1,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -39,7 +39,7 @@ namespace SharijhaAward.Persistence.Seeders
                         SizeOfAttachmentInKB = 5000
                     }, new CriterionItem()
                     {
-                        Id = 2,
+                        // Id =2,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -55,7 +55,7 @@ namespace SharijhaAward.Persistence.Seeders
                         SizeOfAttachmentInKB = 5000
                     }, new CriterionItem()
                     {
-                        Id = 3,
+                        // Id =3,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -71,7 +71,7 @@ namespace SharijhaAward.Persistence.Seeders
                         SizeOfAttachmentInKB = 5000
                     }, new CriterionItem()
                     {
-                        Id = 4,
+                        // Id =4,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -87,7 +87,7 @@ namespace SharijhaAward.Persistence.Seeders
                         SizeOfAttachmentInKB = 5000
                     }, new CriterionItem()
                     {
-                        Id = 5,
+                        // Id =5,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -103,7 +103,7 @@ namespace SharijhaAward.Persistence.Seeders
                         SizeOfAttachmentInKB = 5000
                     }, new CriterionItem()
                     {
-                        Id = 6,
+                        // Id =6,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -119,7 +119,7 @@ namespace SharijhaAward.Persistence.Seeders
                         SizeOfAttachmentInKB = 5000
                     }, new CriterionItem()
                     {
-                        Id = 7,
+                        // Id =7,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,

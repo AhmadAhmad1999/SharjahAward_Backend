@@ -29,7 +29,7 @@ namespace SharijhaAward.Persistence.Seeders
                        DeletedAt = null,
                        LastModifiedAt = null,
                        LastModifiedBy = null,
-                       Id = 1,
+                       // Id = 1,
                        ArabicName = "مؤسسة تعليمية 1",
                        EducationalEntityId = 1,
                        EnglishName = "Educational Entity 1"
@@ -41,7 +41,7 @@ namespace SharijhaAward.Persistence.Seeders
                        DeletedAt = null,
                        LastModifiedAt = null,
                        LastModifiedBy = null,
-                       Id = 2,
+                       // Id = 2,
                        ArabicName = "مؤسسة تعليمية 2",
                        EducationalEntityId = 2,
                        EnglishName = "Educational Entity 2"

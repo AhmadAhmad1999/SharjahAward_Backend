@@ -29,7 +29,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 1,
+                        // Id = 1,
                         ArabicName = "الصف الأول",
                         EnglishName = "First class"
                     }, new EducationalClass()
@@ -40,7 +40,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 2,
+                        // Id = 2,
                         ArabicName = "الصف الثاني",
                         EnglishName = "Second class"
                     }, new EducationalClass()
@@ -51,7 +51,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 3,
+                        // Id = 3,
                         ArabicName = "الصف الثالث",
                         EnglishName = "Third class"
                     }, new EducationalClass()
@@ -62,7 +62,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 4,
+                        // Id = 4,
                         ArabicName = "الصف الرابع",
                         EnglishName = "Forth class"
                     }, new EducationalClass()
@@ -73,7 +73,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 5,
+                        // Id = 5,
                         ArabicName = "الصف الخامس",
                         EnglishName = "Fifth class"
                     }, new EducationalClass()
@@ -84,7 +84,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 6,
+                        // Id = 6,
                         ArabicName = "الصف السادس",
                         EnglishName = "Sixth class"
                     }, new EducationalClass()
@@ -95,7 +95,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 7,
+                        // Id = 7,
                         ArabicName = "الصف السابع",
                         EnglishName = "Seventh class"
                     }, new EducationalClass()
@@ -106,7 +106,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 8,
+                        // Id = 8,
                         ArabicName = "الصف الثامن",
                         EnglishName = "Eighth class"
                     }, new EducationalClass()
@@ -117,7 +117,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 9,
+                        // Id = 9,
                         ArabicName = "الصف التاسع",
                         EnglishName = "Ninth class"
                     }, new EducationalClass()
@@ -128,7 +128,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 10,
+                        // Id = 10,
                         ArabicName = "الصف العاشر",
                         EnglishName = "Tenth class"
                     }, new EducationalClass()
@@ -139,7 +139,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 11,
+                        // Id = 11,
                         ArabicName = "الصف الحادي عشر",
                         EnglishName = "Eleventh class"
                     }, new EducationalClass()
@@ -150,7 +150,7 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = null,
-                        Id = 12,
+                        // Id = 12,
                         ArabicName = "الصف الثاني عشر",
                         EnglishName = "Twelfth class"
                     }

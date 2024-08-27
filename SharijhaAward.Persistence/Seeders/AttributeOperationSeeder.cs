@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.AttributeOperations.AddRange(
                    new AttributeOperation()
                    {
-                       Id = 1,
+                       // Id =1,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -33,7 +33,7 @@ namespace SharijhaAward.Persistence.Seeders
                        OperationAsString = ">"
                    }, new AttributeOperation()
                    {
-                       Id = 2,
+                       // Id =2,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -43,7 +43,7 @@ namespace SharijhaAward.Persistence.Seeders
                        OperationAsString = ">="
                    }, new AttributeOperation()
                    {
-                       Id = 3,
+                       // Id =3,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -53,7 +53,7 @@ namespace SharijhaAward.Persistence.Seeders
                        OperationAsString = "<"
                    }, new AttributeOperation()
                    {
-                       Id = 4,
+                       // Id =4,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -63,7 +63,7 @@ namespace SharijhaAward.Persistence.Seeders
                        OperationAsString = "<="
                    }, new AttributeOperation()
                    {
-                       Id = 5,
+                       // Id =5,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -73,7 +73,7 @@ namespace SharijhaAward.Persistence.Seeders
                        OperationAsString = "="
                    }, new AttributeOperation()
                    {
-                       Id = 6,
+                       // Id =6,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -83,7 +83,7 @@ namespace SharijhaAward.Persistence.Seeders
                        OperationAsString = "!="
                    }, new AttributeOperation()
                    {
-                       Id = 7,
+                       // Id =7,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,
@@ -93,7 +93,7 @@ namespace SharijhaAward.Persistence.Seeders
                        OperationAsString = "is Empty"
                    }, new AttributeOperation()
                    {
-                       Id = 8,
+                       // Id =8,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
                        DeletedAt = null,

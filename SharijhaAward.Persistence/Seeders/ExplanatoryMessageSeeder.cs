@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.ExplanatoryMessages.AddRange(
                    new ExplanatoryMessage()
                    {
-                       Id = 1,
+                       // Id = 1,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -35,7 +35,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Type = TypeOfExplantoryMessage.SearchForCoordinator
                    }, new ExplanatoryMessage()
                    {
-                       Id = 2,
+                       // Id = 2,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -47,7 +47,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Type = TypeOfExplantoryMessage.Achievements
                    }, new ExplanatoryMessage()
                    {
-                       Id = 3,
+                       // Id = 3,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -59,7 +59,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Type = TypeOfExplantoryMessage.LinkedAccounts
                    }, new ExplanatoryMessage()
                    {
-                       Id = 4,
+                       // Id = 4,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -71,7 +71,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Type = TypeOfExplantoryMessage.HomePage
                    }, new ExplanatoryMessage()
                    {
-                       Id = 5,
+                       // Id = 5,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -83,7 +83,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Type = TypeOfExplantoryMessage.TheLastStepAfterSendingTheForm
                    }, new ExplanatoryMessage()
                    {
-                       Id = 6,
+                       // Id = 6,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -95,7 +95,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Type = TypeOfExplantoryMessage.TheFirstStepInTheForm
                    }, new ExplanatoryMessage()
                    {
-                       Id = 7,
+                       // Id = 7,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -107,7 +107,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Type = TypeOfExplantoryMessage.SpecialConditions
                    }, new ExplanatoryMessage()
                    {
-                       Id = 8,
+                       // Id = 8,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -119,7 +119,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Type = TypeOfExplantoryMessage.SignaturePage
                    }, new ExplanatoryMessage()
                    {
-                       Id = 9,
+                       // Id = 9,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -131,7 +131,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Type = TypeOfExplantoryMessage.Criterions
                    }, new ExplanatoryMessage()
                    {
-                       Id = 10,
+                       // Id = 10,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,

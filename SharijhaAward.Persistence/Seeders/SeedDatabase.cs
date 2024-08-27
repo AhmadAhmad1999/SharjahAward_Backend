@@ -51,11 +51,18 @@ namespace SharijhaAward.Persistence.Seeders
                 var aboutAwardPageSeeder = new AboutAwardPageSeeder(context);
                 aboutAwardPageSeeder.Seed();
 
-                var ArbitrationScalesCriterionSeeder = new ArbitrationScalesCriterionSeeder(context);
-                ArbitrationScalesCriterionSeeder.Seed();
+                var CriterionSeeder = new CriterionSeeder(context);
+                CriterionSeeder.Seed();
+
+                var CriterionItemSeeder = new CriterionItemSeeder(context);
+                CriterionItemSeeder.Seed();
 
                 var ArbitrationScaleSeeder = new ArbitrationScaleSeeder(context);
                 ArbitrationScaleSeeder.Seed();
+
+                var ArbitrationScalesCriterionSeeder = new ArbitrationScalesCriterionSeeder(context);
+                ArbitrationScalesCriterionSeeder.Seed();
+
                 
                 var AttributeDataTypeSeeder = new AttributeDataTypeSeeder(context);
                 AttributeDataTypeSeeder.Seed();
@@ -77,21 +84,18 @@ namespace SharijhaAward.Persistence.Seeders
                 
                 var CategorySeeder = new CategorySeeder(context);
                 CategorySeeder.Seed();
-                
-                var CriterionSeeder = new CriterionSeeder(context);
-                CriterionSeeder.Seed();
-                
-                var CriterionItemSeeder = new CriterionItemSeeder(context);
-                CriterionItemSeeder.Seed();
-                
+
+
+                var DynamicAttributeSectionSeeder = new DynamicAttributeSectionSeeder(context);
+                DynamicAttributeSectionSeeder.Seed();
+
+                var DynamicAttributeSeeder = new DynamicAttributeSeeder(context);
+                DynamicAttributeSeeder.Seed();
+
+
                 var DynamicAttributeListValueSeeder = new DynamicAttributeListValueSeeder(context);
                 DynamicAttributeListValueSeeder.Seed();
                 
-                var DynamicAttributeSectionSeeder = new DynamicAttributeSectionSeeder(context);
-                DynamicAttributeSectionSeeder.Seed();
-                
-                var DynamicAttributeSeeder = new DynamicAttributeSeeder(context);
-                DynamicAttributeSeeder.Seed();
                 
                 var EducationalClassSeeder = new EducationalClassSeeder(context);
                 EducationalClassSeeder.Seed();

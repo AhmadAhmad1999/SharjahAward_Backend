@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.PermissionHeaders.AddRange(
                    new PermissionHeader()
                    {
-                       Id = 1,
+                       // Id = 1,
                        EnglishName = "AboutAward",
                        ArabicName = "حول الجائزة",
                        isDeleted = false,
@@ -35,7 +35,7 @@ namespace SharijhaAward.Persistence.Seeders
                    },
                 new PermissionHeader()
                 {
-                    Id = 2,
+                    // Id = 2,
                     EnglishName = "Album",
                     ArabicName = "الألبوم",
                     isDeleted = false,
@@ -47,7 +47,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                 new PermissionHeader()
                 {
-                    Id = 3,
+                    // Id = 3,
                     EnglishName = "AppVersion",
                     ArabicName = "نسخة التطبيق",
                     isDeleted = false,
@@ -59,7 +59,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                 new PermissionHeader()
                 {
-                    Id = 4,
+                    // Id = 4,
                     EnglishName = "AwardPublication",
                     ArabicName = "إصدارات الجائزة",
                     isDeleted = false,
@@ -71,7 +71,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                 new PermissionHeader()
                 {
-                    Id = 5,
+                    // Id = 5,
                     EnglishName = "AwardSponsor",
                     ArabicName = "راعي الجائزة",
                     isDeleted = false,
@@ -83,7 +83,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                 new PermissionHeader()
                 {
-                    Id = 6,
+                    // Id = 6,
                     EnglishName = "Circular",
                     ArabicName = "التعاميم",
                     isDeleted = false,
@@ -95,7 +95,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                 new PermissionHeader()
                 {
-                    Id = 7,
+                    // Id = 7,
                     EnglishName = "Class",
                     ArabicName = "الصفوف",
                     isDeleted = false,
@@ -107,7 +107,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                 new PermissionHeader()
                 {
-                    Id = 8,
+                    // Id = 8,
                     EnglishName = "ClassArbitrator",
                     ArabicName = "صفوف المحكمين",
                     isDeleted = false,
@@ -119,7 +119,7 @@ namespace SharijhaAward.Persistence.Seeders
                 },
                 new PermissionHeader()
                 {
-                    Id = 9,
+                    // Id = 9,
                     EnglishName = "Cycle",
                     ArabicName = "الدورات",
                     isDeleted = false,
@@ -130,7 +130,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 10,
+                    // Id = 10,
                     EnglishName = "Agenda",
                     ArabicName = "الاجندة",
                     isDeleted = false,
@@ -141,7 +141,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 11,
+                    // Id = 11,
                     EnglishName = "Category",
                     ArabicName = "الفئات",
                     isDeleted = false,
@@ -152,7 +152,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 12,
+                    // Id = 12,
                     EnglishName = "GeneralCondition",
                     ArabicName = "حول الجائزة",
                     isDeleted = false,
@@ -163,7 +163,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 13,
+                    // Id = 13,
                     EnglishName = "EducationalEntity",
                     ArabicName = "الجهات التعليمية",
                     isDeleted = false,
@@ -174,7 +174,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 14,
+                    // Id = 14,
                     EnglishName = "SystemFiles",
                     ArabicName = "ملفات النظام",
                     isDeleted = false,
@@ -185,7 +185,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 15,
+                    // Id = 15,
                     EnglishName = "GeneralWorkshop",
                     ArabicName = "الدورات التدريبية العامة",
                     isDeleted = false,
@@ -196,7 +196,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 16,
+                    // Id = 16,
                     EnglishName = "Instruction",
                     ArabicName = "التعليمات",
                     isDeleted = false,
@@ -207,7 +207,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 17,
+                    // Id = 17,
                     EnglishName = "Meeting",
                     ArabicName = "الإجتماعات",
                     isDeleted = false,
@@ -218,7 +218,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 18,
+                    // Id = 18,
                     EnglishName = "News",
                     ArabicName = "الأخبار",
                     isDeleted = false,
@@ -229,7 +229,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 19,
+                    // Id = 19,
                     EnglishName = "Notification",
                     ArabicName = "الإشعارات",
                     isDeleted = false,
@@ -240,7 +240,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 20,
+                    // Id = 20,
                     EnglishName = "NotificationTemplate",
                     ArabicName = "قالب الإشعارات",
                     isDeleted = false,
@@ -251,7 +251,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 21,
+                    // Id = 21,
                     EnglishName = "Role",
                     ArabicName = "الدور",
                     isDeleted = false,
@@ -262,7 +262,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 22,
+                    // Id = 22,
                     EnglishName = "User",
                     ArabicName = "المستخدمين",
                     isDeleted = false,
@@ -273,7 +273,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 23,
+                    // Id = 23,
                     EnglishName = "Coordinator",
                     ArabicName = "المنسقين",
                     isDeleted = false,
@@ -284,7 +284,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 24,
+                    // Id = 24,
                     EnglishName = "Arbitrator",
                     ArabicName = "المحكمين",
                     isDeleted = false,
@@ -295,7 +295,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 25,
+                    // Id = 25,
                     EnglishName = "Committee",
                     ArabicName = "اللجان",
                     isDeleted = false,
@@ -306,7 +306,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 26,
+                    // Id = 26,
                     EnglishName = "SubscriberAccount",
                     ArabicName = "حسابات المشتركين",
                     isDeleted = false,
@@ -317,7 +317,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 27,
+                    // Id = 27,
                     EnglishName = "SubscriberProfile",
                     ArabicName = "الملف الشخصي للمشتركين",
                     isDeleted = false,
@@ -328,7 +328,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 28,
+                    // Id = 28,
                     EnglishName = "SubscriberForm",
                     ArabicName = "نموذج الإشتراك",
                     isDeleted = false,
@@ -339,7 +339,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 29,
+                    // Id = 29,
                     EnglishName = "Event",
                     ArabicName = "الفعاليات",
                     isDeleted = false,
@@ -350,7 +350,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 30,
+                    // Id = 30,
                     EnglishName = "ContactUs",
                     ArabicName = "تواصل معنا",
                     isDeleted = false,
@@ -361,7 +361,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 31,
+                    // Id = 31,
                     EnglishName = "ExplanatoryMessage",
                     ArabicName = "الرسائل التوضيحية",
                     isDeleted = false,
@@ -372,7 +372,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 32,
+                    // Id = 32,
                     EnglishName = "Responsibility",
                     ArabicName = "المسؤوليات",
                     isDeleted = false,
@@ -383,7 +383,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 33,
+                    // Id = 33,
                     EnglishName = "GeneralFAQ",
                     ArabicName = "الأسالة الشائعة العامة",
                     isDeleted = false,
@@ -394,7 +394,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 34,
+                    // Id = 34,
                     EnglishName = "FAQCategory",
                     ArabicName = "الأسالة الشائعة الخاصة بالفئة",
                     isDeleted = false,
@@ -405,7 +405,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 35,
+                    // Id = 35,
                     EnglishName = "AwardStatistic",
                     ArabicName = "إحصائيات الجائزة",
                     isDeleted = false,
@@ -416,7 +416,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 36,
+                    // Id = 36,
                     EnglishName = "Slider",
                     ArabicName = "شرائح",
                     isDeleted = false,
@@ -427,7 +427,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 37,
+                    // Id = 37,
                     EnglishName = "StrategicPartner",
                     ArabicName = "شريك استراتيجي",
                     isDeleted = false,
@@ -438,7 +438,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 38,
+                    // Id = 38,
                     EnglishName = "CustomPages",
                     ArabicName = "الصفحات المخصصة",
                     isDeleted = false,
@@ -449,7 +449,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 39,
+                    // Id = 39,
                     EnglishName = "ArbitrationSorting",
                     ArabicName = "فرز التحكيم",
                     isDeleted = false,
@@ -460,7 +460,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 40,
+                    // Id = 40,
                     EnglishName = "ArbitrationAssign",
                     ArabicName = "إسناد التحكيم",
                     isDeleted = false,
@@ -471,7 +471,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 41,
+                    // Id = 41,
                     EnglishName = "ArbitrationFirst",
                     ArabicName = "التحكيم الأولي",
                     isDeleted = false,
@@ -482,7 +482,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 42,
+                    // Id = 42,
                     EnglishName = "ArbitrationAudit",
                     ArabicName = "تدقيق التحكيم",
                     isDeleted = false,
@@ -494,7 +494,7 @@ namespace SharijhaAward.Persistence.Seeders
 
                 }, new PermissionHeader()
                 {
-                    Id = 43,
+                    // Id = 43,
                     EnglishName = "Interview",
                     ArabicName = "مقابلات التحكيم",
                     isDeleted = false,
@@ -505,7 +505,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 44,
+                    // Id = 44,
                     EnglishName = "ArbitrationFinal",
                     ArabicName = "التحكيم النهائي",
                     isDeleted = false,
@@ -516,7 +516,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 45,
+                    // Id = 45,
                     EnglishName = "ResultsArbitration",
                     ArabicName = "نتائج التحكيم",
                     isDeleted = false,
@@ -527,7 +527,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 46,
+                    // Id = 46,
                     EnglishName = "ArbitrationWinners",
                     ArabicName = "الفائزين",
                     isDeleted = false,
@@ -538,7 +538,7 @@ namespace SharijhaAward.Persistence.Seeders
                     CreatedBy = null,
                 }, new PermissionHeader()
                 {
-                    Id = 47,
+                    // Id = 47,
                     EnglishName = "Interview",
                     ArabicName = "المقابلات",
                     isDeleted = false,

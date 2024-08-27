@@ -22,7 +22,7 @@ namespace SharijhaAward.Persistence.Seeders
             {
                 _context.AttributeTableNames.AddRange(new AttributeTableName()
                 {
-                    Id = 1,
+                    // Id =1,
                     Name = "ProvidedForm",
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -32,7 +32,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new AttributeTableName()
                 {
-                    Id = 2,
+                    // Id =2,
                     Name = "Coordinator",
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -42,7 +42,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 }, new AttributeTableName()
                 {
-                    Id = 3,
+                    // Id =3,
                     Name = "Arbitrator",
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,

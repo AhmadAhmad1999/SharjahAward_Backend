@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.ReferenceSources.AddRange(
                    new ReferenceSource()
                    {
-                       Id = 1,
+                       // Id = 1,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -37,7 +37,7 @@ namespace SharijhaAward.Persistence.Seeders
                        ImageUrl = "https://award-shj.ae/media/hk2fyzfv/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B3%D9%84%D8%B7%D8%A7%D9%86.jpg?anchor=center&mode=crop&width=420&height=232&rnd=133099679521200000",
                    }, new ReferenceSource()
                    {
-                       Id = 2,
+                       // Id = 2,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -50,7 +50,7 @@ namespace SharijhaAward.Persistence.Seeders
                        ImageUrl = "https://award-shj.ae/media/hk2fyzfv/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B3%D9%84%D8%B7%D8%A7%D9%86.jpg?anchor=center&mode=crop&width=420&height=232&rnd=133099679521200000",
                    }, new ReferenceSource()
                    {
-                       Id = 3,
+                       // Id = 3,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -63,7 +63,7 @@ namespace SharijhaAward.Persistence.Seeders
                        ImageUrl = "https://award-shj.ae/media/hk2fyzfv/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B3%D9%84%D8%B7%D8%A7%D9%86.jpg?anchor=center&mode=crop&width=420&height=232&rnd=133099679521200000",
                    }, new ReferenceSource()
                    {
-                       Id = 4,
+                       // Id = 4,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,
@@ -76,7 +76,7 @@ namespace SharijhaAward.Persistence.Seeders
                        ImageUrl = "https://award-shj.ae/media/hk2fyzfv/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B3%D9%84%D8%B7%D8%A7%D9%86.jpg?anchor=center&mode=crop&width=420&height=232&rnd=133099679521200000",
                    }, new ReferenceSource()
                    {
-                       Id = 5,
+                       // Id = 5,
                        isDeleted = false,
                        DeletedAt = null,
                        LastModifiedAt = null,

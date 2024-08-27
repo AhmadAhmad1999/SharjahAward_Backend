@@ -23,7 +23,7 @@ namespace SharijhaAward.Persistence.Seeders
                 _context.Criterions.AddRange(
                     new Criterion()
                     {
-                        Id = 1,
+                        // Id =1,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -39,7 +39,7 @@ namespace SharijhaAward.Persistence.Seeders
                         CategoryId = 2
                     }, new Criterion()
                     {
-                        Id = 2,
+                        // Id =2,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
@@ -55,7 +55,7 @@ namespace SharijhaAward.Persistence.Seeders
                         CategoryId = 2
                     }, new Criterion()
                     {
-                        Id = 3,
+                        // Id =3,
                         isDeleted = false,
                         DeletedAt = null,
                         LastModifiedAt = null,
