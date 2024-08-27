@@ -3503,7 +3503,9 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    AssignedByUserId = table.Column<int>(type: "int", nullable: false),
                     isAccepted = table.Column<int>(type: "int", nullable: false),
+                    SortedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ReasonForRejecting = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     isAcceptedFromChairman = table.Column<int>(type: "int", nullable: false),
                     ArbitratorId = table.Column<int>(type: "int", nullable: false),
@@ -3538,6 +3540,11 @@ namespace SharijhaAward.Persistence.Migrations
                         principalTable: "ProvidedForms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Arbitrations_Users_AssignedByUserId",
+                        column: x => x.AssignedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Arbitrations_Users_DoneArbitrationUserId",
                         column: x => x.DoneArbitrationUserId,
@@ -4288,6 +4295,11 @@ namespace SharijhaAward.Persistence.Migrations
                 name: "IX_Arbitrations_ArbitratorId",
                 table: "Arbitrations",
                 column: "ArbitratorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Arbitrations_AssignedByUserId",
+                table: "Arbitrations",
+                column: "AssignedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Arbitrations_DoneArbitrationUserId",
