@@ -36,19 +36,28 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
             var ExtraAttachments = await _extraAttachmentRepository
                 .Where(e => e.ProvidedFormId == request.formId)
                 .OrderByDescending(x => x.CreatedAt)
-                .Include(e => e.ExtraAttachmentFiles!).ToListAsync();
-            
+                //.Include(e => e.ExtraAttachmentFiles!)
+                .ToListAsync();
+
+            List<ExtraAttachmentFile> AllAttachmentEntities = await _AttachmentRepository
+                .Where(x => ExtraAttachments.Select(y => y.Id).Contains(x.ExtraAttachmentId))
+                .ToListAsync();
+
             var data = _mapper.Map<List<ExtraAttachmentListVM>>(ExtraAttachments);
+
             for(int i = 0; i<ExtraAttachments.Count(); i++)
             {
                 data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
                 data[i].Description = request.lang == "en" ? data[i].EnglishDescription : data[i].ArabicDescription;
 
-                data[i].AttachmentList = _mapper.Map<List<AttachmentDto>>(ExtraAttachments[i].ExtraAttachmentFiles);
+                data[i].AttachmentList = _mapper.Map<List<AttachmentDto>>(AllAttachmentEntities
+                    .Where(x => x.ExtraAttachmentId == data[i].Id)
+                    .ToList());
 
                 if (data[i].AttachmentList!.Any(a => a.IsAccept == false))
                     data[i].Rejected = true;
             }
+
             return new BaseResponse<List<ExtraAttachmentListVM>>("", true, 200, data);
         }
     }

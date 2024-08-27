@@ -13,7 +13,7 @@ namespace SharijhaAward.Domain.Entities.ArbitrationProcedureModel
         public int Grade { get; set; }
         public string? StrengthPoints { get; set; }
         public string? ImprovementAreas { get; set; }
-        public virtual List<Note> Notes { get; set; }=new();
-        public virtual List<Criterion> Criteria { get; set; }=new();
+        //public virtual List<Note> Notes { get; set; }=new();
+        //public virtual List<Criterion> Criteria { get; set; }=new();
     }
 }

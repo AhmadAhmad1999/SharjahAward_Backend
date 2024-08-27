@@ -29,8 +29,8 @@ public class TrainingWorkshop : AuditableEntity
 
 
     // navigation property to the subscriber -> many-to-many relation
-    public virtual List<TrainingWrokshopeAttachment> Attachments { get; set; } = new();
-    public virtual List<User> Users { get; set; } = new();
-    public virtual List<TrainingWorkshopSubscriber> TrainingWorkshopSubscribers { get; set; } = new();
+    //public virtual List<TrainingWrokshopeAttachment> Attachments { get; set; } = new();
+    //public virtual List<User> Users { get; set; } = new();
+    //public virtual List<TrainingWorkshopSubscriber> TrainingWorkshopSubscribers { get; set; } = new();
     
 }

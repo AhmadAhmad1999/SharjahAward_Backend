@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
 using SharijhaAward.Application.Responses;
@@ -9,11 +8,6 @@ using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId
 {
@@ -62,45 +56,33 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
 
             var form = _providedFormRepository.FirstOrDefault(p => p.Id == request.formId);
 
-            var Terms = _termRepository
-                .WhereThenInclude(t => t.CategoryId == category.Id,t => t.ConditionAttachments)
-                .OrderByDescending(x => x.CreatedAt).ToList();
+            var Terms = await _termRepository
+                .Where(t => t.CategoryId == category.Id)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync();
             
-            List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
+            List<ConditionsProvidedForms> conditionsProvideds = await _conditionsProvidedFormsRepository
+                .Where(x => Terms.Select(y => y.Id).Contains(x.TermAndConditionId) &&
+                    x.ProvidedFormId == form!.Id)
+                .ToListAsync();
            
-            for(int i = 0; i < Terms.Count(); i++)
-            {
-                var conditionsProvidedsobject =
-                 _conditionsProvidedFormsRepository.WhereThenInclude(
-                     c => c.ProvidedFormId == form!.Id && c.TermAndConditionId == Terms[i].Id,
-                     c => c.Attachments).FirstOrDefault();
-
-                if(conditionsProvidedsobject != null)
-                      conditionsProvideds.Add(conditionsProvidedsobject!);
-            }
-                
-
-            
-
-            //List<AttachmentListVM> Attachmets = _mapper.Map<List<AttachmentListVM>>(await _conditionAttachmentRepository
-            //    .Include(x => x.ConditionsProvidedForms).Include(x => x.ConditionsProvidedForms.TermAndCondition)
-            //    .Where(x => x.ConditionsProvidedForms.TermAndCondition.CategoryId == category.Id &&
-            //        x.ConditionsProvidedForms.TermAndCondition.IsSpecial == false &&
-            //        x.ConditionsProvidedForms.ProvidedFormId == form!.Id).ToListAsync());
-            
             var data = _mapper.Map<List<TermAndConditionListVM>>(Terms);
+
+            List<ConditionAttachment> AllConditionAttachmentEntities = await _conditionAttachmentRepository
+                .Where(x => conditionsProvideds.Select(y => y.Id).Any(y => y == x.ConditionsProvidedFormsId))
+                .ToListAsync();
+
             for (int i = 0; i<data.Count; i++)
             {
                 data[i].ConditionsAttachments = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
                
                 if (data[i].NeedAttachment)
                 {
-                    
-                        data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<AttachmentListVM>>(conditionsProvideds[i].Attachments);
-                    
+                    data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<AttachmentListVM>>(AllConditionAttachmentEntities
+                        .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
+                        .ToList());
                 }
-              
-                
+
                 data[i].Title = request.lang == "en"
                     ? data[i].EnglishTitle
                     : data[i].ArabicTitle;

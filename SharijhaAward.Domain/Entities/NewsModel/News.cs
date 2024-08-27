@@ -24,6 +24,6 @@ public class News : AuditableEntity
 
     // navigation property to the cycle table
 
-    public List<NewsImage>? NewsImages { get; set; }
+    //public List<NewsImage>? NewsImages { get; set; }
 
 }

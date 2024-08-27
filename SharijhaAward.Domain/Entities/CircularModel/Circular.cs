@@ -16,9 +16,9 @@ namespace SharijhaAward.Domain.Entities.CircularModel
         public string Title { get; set; } = string.Empty;
         public string CircularText { get; set; } = string.Empty;
         public bool IsRead { get; set; } = false;
-        public List<CircularAttachment>? CircularAttachments { get; set; }
-        public List<CircularCoordinator>? CircularCoordinators { get; set; }
-        public List<CircularArbitrator>? CircularArbitrators { get; set; }
-        public List<CircularChairman>? CircularChairmans { get; set; }
+        //public List<CircularAttachment>? CircularAttachments { get; set; }
+        //public List<CircularCoordinator>? CircularCoordinators { get; set; }
+        //public List<CircularArbitrator>? CircularArbitrators { get; set; }
+        //public List<CircularChairman>? CircularChairmans { get; set; }
     }
 }

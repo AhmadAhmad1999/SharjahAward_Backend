@@ -10,6 +10,6 @@ public class Role : AuditableEntity
     public string EnglishName { get; set; } = null!;
     public string ArabicName { get; set; } = null!;
     public bool HaveFullAccess { get; set; }
-    public List<UserRole> UserRoles { get; set; } = new();
-    public List<Responsibility>? Responsibility { get; set; }
+    //public List<UserRole> UserRoles { get; set; } = new();
+    //public List<Responsibility>? Responsibility { get; set; }
 }

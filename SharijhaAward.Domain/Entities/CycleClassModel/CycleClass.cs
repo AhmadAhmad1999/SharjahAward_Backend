@@ -23,7 +23,7 @@ namespace SharijhaAward.Domain.Entities.CycleClassModel
         public int EducationalClassId { get; set; }
 
 
-        public virtual List<ArbitratorClass> ArbitratorClasses { get; set; } = new();
+        //public virtual List<ArbitratorClass> ArbitratorClasses { get; set; } = new();
 
     }
 }

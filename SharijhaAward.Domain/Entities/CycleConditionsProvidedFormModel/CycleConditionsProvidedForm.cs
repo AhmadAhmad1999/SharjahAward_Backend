@@ -16,7 +16,7 @@ namespace SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel
     {
         public int Id { get; set; }
         public bool IsAgree { get; set; } = false;
-        public List<CycleConditionAttachment> Attachments { get; set; } = null!;
+        //public List<CycleConditionAttachment> Attachments { get; set; } = null!;
 
         public CycleCondition CycleCondition { get; set; } = null!;
         [ForeignKey(nameof(CycleCondition))]

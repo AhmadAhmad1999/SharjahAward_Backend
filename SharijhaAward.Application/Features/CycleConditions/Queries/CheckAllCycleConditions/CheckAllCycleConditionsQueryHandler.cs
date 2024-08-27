@@ -59,22 +59,15 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
 
             var form = await _providedFormRepository.FirstOrDefaultAsync(p => p.Id == request.formId);
 
-            var terms = await _termRepository.WhereThenInclude(t => t.CycleId == cycle.Id, t => t.ConditionAttachments).ToListAsync();
+            var terms = await _termRepository
+                .Where(t => t.CycleId == cycle.Id)
+                .ToListAsync();
 
-            List<CycleConditionsProvidedForm> conditionsProvideds = new List<CycleConditionsProvidedForm>();
+            List<CycleConditionsProvidedForm> conditionsProvideds = await _conditionsProvidedFormsRepository
+                .Where(x => terms.Select(y => y.Id).Contains(x.CycleConditionId) &&
+                    x.ProvidedFormId == form!.Id)
+                .ToListAsync();
 
-            for (int i = 0; i < terms.Count(); i++)
-            {
-                var conditionsProvidedsobject =
-                 _conditionsProvidedFormsRepository.WhereThenInclude(
-                     c => c.ProvidedFormId == form!.Id && c.CycleConditionId == terms[i].Id,
-                     c => c.Attachments).FirstOrDefault();
-
-                if (conditionsProvidedsobject != null)
-                    conditionsProvideds.Add(conditionsProvidedsobject!);
-            }
-
-           
             if (terms.Count() != 0)
             {
                 for (int i = 0; i < terms.Count(); i++)
@@ -83,18 +76,24 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
                     if (terms[i].NeedAttachment) 
                     {
                         msg = request.lang == "en"
-                                ? "Please Complete Uploading The File "
-                                : "الرجاء إكمال رفع الملفات";
+                            ? "Please Complete Uploading The File "
+                            : "الرجاء إكمال رفع الملفات";
 
-                        if (terms[i].RequiredAttachmentNumber != conditionsProvideds[i].Attachments.Count()&& terms[i].RequiredAttachmentNumber != 0)
+                        List<CycleConditionsProvidedForm> conditionsProvidedsForThisTerm = conditionsProvideds
+                            .Where(x => x.CycleConditionId == terms[i].Id)
+                            .ToList();
+
+                        if (terms[i].RequiredAttachmentNumber != conditionsProvidedsForThisTerm.Count() && 
+                            terms[i].RequiredAttachmentNumber != 0)
                         {
                             return new BaseResponse<object>(msg, false, 400);
                         }
-                        else if (terms[i].RequiredAttachmentNumber == 0 && conditionsProvideds[i].Attachments.Count() < 1)
+                        else if (terms[i].RequiredAttachmentNumber == 0 && conditionsProvidedsForThisTerm.Count() < 1)
                         {
                             return new BaseResponse<object>(msg, false, 400);
                         }
                     }
+
                     //Check on Terms that don't need Attachments
                     if (!terms[i].NeedAttachment)
                     {

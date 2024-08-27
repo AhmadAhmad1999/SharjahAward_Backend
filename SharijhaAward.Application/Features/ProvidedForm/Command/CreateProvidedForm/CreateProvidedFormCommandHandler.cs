@@ -184,9 +184,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
                         {
                             TermAndConditionId = terms[i].Id,
                             ProvidedFormId = data.Id,
-                            IsAgree = false,
-                            Attachments = null!
-
+                            IsAgree = false
                         };
                         await _conditionFormsRepository.AddAsync(ConditionsProvidedForms);
                     }
@@ -199,9 +197,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
                         {
                             CycleConditionId = CycleConditions[i].Id,
                             ProvidedFormId = data.Id,
-                            IsAgree = false,
-                            Attachments = null!
-
+                            IsAgree = false
                         };
                         await _cycleConditionsProvidedFormRepository.AddAsync(CycleConditionsProvidedForms);
                     }

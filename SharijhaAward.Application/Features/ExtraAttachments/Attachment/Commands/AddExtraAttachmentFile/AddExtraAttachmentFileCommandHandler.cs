@@ -39,11 +39,14 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
 
             var ExtraAttachment = await _extraAttachmentsRepository
                 .Where(e => e.Id == request.ExtraAttachmentId)
-                .Include(e => e.ExtraAttachmentFiles)
+                //.Include(e => e.ExtraAttachmentFiles)
                 .FirstOrDefaultAsync();
-                
-           
-            if(ExtraAttachment == null)
+
+            List<ExtraAttachmentFile> ExtraAttachmentsFileEntities = await _extraAttachmentsFileRepository
+                .Where(x => x.ExtraAttachmentId == request.ExtraAttachmentId)
+                .ToListAsync();
+
+            if (ExtraAttachment == null)
             {
                 msg = request.lang == "en"
                      ? "This Condition Not Found"
@@ -51,7 +54,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
 
                 return new BaseResponse<object>(msg, false, 404);
             }
-            if  (ExtraAttachment.RequiredAttachmentNumber <= ExtraAttachment.ExtraAttachmentFiles!.Count())
+            if  (ExtraAttachment.RequiredAttachmentNumber <= ExtraAttachmentsFileEntities.Count())
             {
                 msg = request.lang == "en"
                 ? "You Can't Add More Files"
@@ -59,6 +62,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
 
                 return new BaseResponse<object>(msg, false, 400);
             }
+
             var data = _mapper.Map<ExtraAttachmentFile>(request);
 
             data.FileUrl = await _fileService.SaveProvidedFormFilesAsync(request.File, ExtraAttachment.ProvidedFormId);

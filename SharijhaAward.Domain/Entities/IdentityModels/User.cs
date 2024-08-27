@@ -23,9 +23,9 @@ public class User : AuditableEntity  {
     public int? NumberOfIndividualCategories { get; set; } = 0;
     public int? NumberOfGroupCategories { get; set; } = 0;
 
-    public virtual List<ResponsibilityUser> ResponsibilityUsers { get; set; } = null!;
-    public virtual List<EmailMessage> EmailMessages { get; set; } = null!;
-    public virtual List<MeetingUser> MeetingUsers { get; set; } = null!;
-    public virtual List<Note> Notes { get; set; } = null!;
-    public virtual List<UserRole> UserRoles { get; set; } = null!;
+    //public virtual List<ResponsibilityUser> ResponsibilityUsers { get; set; } = null!;
+    //public virtual List<EmailMessage> EmailMessages { get; set; } = null!;
+    //public virtual List<MeetingUser> MeetingUsers { get; set; } = null!;
+    //public virtual List<Note> Notes { get; set; } = null!;
+    //public virtual List<UserRole> UserRoles { get; set; } = null!;
 }

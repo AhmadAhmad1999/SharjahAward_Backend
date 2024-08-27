@@ -25,6 +25,6 @@ public class TermAndCondition: AuditableEntity {
     public int CategoryId { get; set; }
     public Category Category { get; set; } = null!;
 
-    public List<ConditionsProvidedForms> ConditionAttachments { get; set; } = null!;
+    //public List<ConditionsProvidedForms> ConditionAttachments { get; set; } = null!;
 
 }

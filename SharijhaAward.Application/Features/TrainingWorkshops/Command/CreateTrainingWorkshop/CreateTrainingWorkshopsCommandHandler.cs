@@ -32,20 +32,16 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
 
         public async Task<BaseResponse<int>> Handle(CreateTrainingWorkshopsCommand request, CancellationToken cancellationToken)
         {
-            Category category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            Category? category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+
             if (category == null)
-            {
                 return new BaseResponse<int>("Category Not Found",false,404);
-            }
+
             TrainingWorkshop workshop = _mapper.Map<TrainingWorkshop>(request);
             string ThumbnailPath = await _fileService.SaveFileAsync(request.Thumbnail, 0);
             workshop.Thumbnail = ThumbnailPath;
 
             var data = await _trainingWorkshopRepository.AddAsync(workshop);
-
-            category.TrainingWorkshops.Add(workshop);
-
-            await _categoryRepository.UpdateAsync(category);
 
             return new BaseResponse<int>("", true, 200, data.Id);
         }

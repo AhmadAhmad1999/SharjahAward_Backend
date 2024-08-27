@@ -43,23 +43,28 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.CheckAllEx
 
             var extraAttachment = await _extraAttachmentRepository
                 .Where(e => e.ProvidedFormId == form!.Id)
-                .Include(e=>e.ExtraAttachmentFiles)
                 .ToListAsync();
 
-            var ExtraAttachments = new List<ExtraAttachment>();
+            List<ExtraAttachmentFile> AllExtraAttachmentFileEntities = await _extraAttachmentFileRepository
+                .Where(x => extraAttachment.Select(y => y.Id).Contains(x.ExtraAttachmentId))
+                .ToListAsync();
 
             foreach (var attachment in extraAttachment)
             {
-                if (attachment.ExtraAttachmentFiles != null && attachment.RequiredAttachmentNumber > attachment.ExtraAttachmentFiles!.Count())
+                List<ExtraAttachmentFile> AllExtraAttachmentFileEntitiesForThisAttachment = AllExtraAttachmentFileEntities
+                    .Where(x => x.ExtraAttachmentId == attachment.Id)
+                    .ToList();
+
+                if (attachment.RequiredAttachmentNumber > AllExtraAttachmentFileEntitiesForThisAttachment.Count())
                 {
                     msg = request.lang == "en"
-                                ? "Please Complete Uploading The File "
-                                : "الرجاء إكمال رفع الملفات";
+                        ? "Please Complete Uploading The File "
+                        : "الرجاء إكمال رفع الملفات";
 
                     return new BaseResponse<object>(msg, false, 400);
                 }
-
             }
+
             return new BaseResponse<object>(msg, true, 200);
         }
     }

@@ -3,11 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharijhaAward.Domain.Entities.NewsModel;
 
 namespace SharijhaAward.Application.Features.News.Queries.GetNewsById
 {
@@ -15,19 +11,22 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsById
         : IRequestHandler<GetNewsByIdQuery, BaseResponse<NewsDto>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
+        private readonly IAsyncRepository<NewsImage> _NewsImageRepository;
         private readonly IMapper _mapper;
 
-        public GetNewsByIdQueryHandler(IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
+        public GetNewsByIdQueryHandler(IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository,
+            IAsyncRepository<NewsImage> NewsImageRepository,
+            IMapper mapper)
         {
             _newsRepository = newsRepository;
+            _NewsImageRepository = NewsImageRepository;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<NewsDto>> Handle(GetNewsByIdQuery request, CancellationToken cancellationToken)
         {
             var news = await _newsRepository
-                .WhereThenInclude(n => n.Id == request.Id, n => n.NewsImages!)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(n => n.Id == request.Id);
                 
             string msg;
 
@@ -43,7 +42,9 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsById
 
             data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle;
             data.Description = request.lang == "en" ? data.EnglishDescription! : data.ArabicDescription!;
-            data.Images = _mapper.Map<List<NewsImagesDto>>(news.NewsImages);
+            data.Images = _mapper.Map<List<NewsImagesDto>>(await _NewsImageRepository
+                .Where(x => x.Id == request.Id)
+                .ToListAsync());
             
             return new BaseResponse<NewsDto>("", true, 200, data);
         }

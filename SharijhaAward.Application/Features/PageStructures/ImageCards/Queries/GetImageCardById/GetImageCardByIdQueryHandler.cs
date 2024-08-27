@@ -2,13 +2,9 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetAllImageCards;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.PageStructureModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetImageCardById
 {
@@ -16,26 +12,38 @@ namespace SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.G
         : IRequestHandler<GetImageCardByIdQuery, BaseResponse<ImageCardDto>>
     {
         private readonly IAsyncRepository<ImageCard> _imageCardRepository;
+        private readonly IAsyncRepository<PageStructureImages> _PageStructureImagesRepository;
         private readonly IMapper _mapper;
 
-        public GetImageCardByIdQueryHandler(IAsyncRepository<ImageCard> imageCardRepository, IMapper mapper)
+        public GetImageCardByIdQueryHandler(IAsyncRepository<ImageCard> imageCardRepository,
+            IAsyncRepository<PageStructureImages> PageStructureImagesRepository,
+            IMapper mapper)
         {
             _imageCardRepository = imageCardRepository;
+            _PageStructureImagesRepository = PageStructureImagesRepository;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<ImageCardDto>> Handle(GetImageCardByIdQuery request, CancellationToken cancellationToken)
         {
             var imageCard = await _imageCardRepository
-                .WhereThenInclude(i => i.Id == request.Id, i => i.Images)
-                .FirstOrDefaultAsync();
-            
-            if(imageCard == null)
+                .FirstOrDefaultAsync(i => i.Id == request.Id);
+
+            if (imageCard == null)
             {
                 return new BaseResponse<ImageCardDto>("Image Card Not Found", false, 404);
             }
 
             var data = _mapper.Map<ImageCardDto>(imageCard);
+
+            data.CardImages = await _PageStructureImagesRepository
+                .Where(x => x.ImageCardId == request.Id)
+                .Select(x => new PageImageDto()
+                {
+                    Id = x.Id,
+                    ImageId = x.ImageCardId,
+                    ImageUrl = x.ImageUrl
+                }).ToListAsync();
 
             return new BaseResponse<ImageCardDto>("", true, 200, data);
         }

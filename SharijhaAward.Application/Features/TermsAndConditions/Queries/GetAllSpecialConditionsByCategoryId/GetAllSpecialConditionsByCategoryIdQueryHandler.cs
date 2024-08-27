@@ -66,19 +66,21 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
             var user = await _userRepository.GetByIdAsync(int.Parse(UserId));
             var form = await _providedFormRepository.FirstOrDefaultAsync(p => p.Id == request.formId);
 
-            var Terms = _termRepository
-                .WhereThenInclude(t => t.CategoryId == category.Id, t => t.ConditionAttachments)
-                .OrderByDescending(x => x.CreatedAt).ToList();
+            var Terms = await _termRepository
+                .Where(t => t.CategoryId == category.Id)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync();
 
-            List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
+            List<ConditionsProvidedForms> conditionsProvideds = await _conditionsProvidedFormsRepository
+                .Where(x => Terms.Select(y => y.Id).Contains(x.TermAndConditionId) &&
+                    x.ProvidedFormId == form!.Id)
+                .ToListAsync();
 
             for (int i = 0; i < Terms.Count(); i++)
             {
                 var conditionsProvidedsobject =
-                 _conditionsProvidedFormsRepository.WhereThenInclude(
-                     c => c.ProvidedFormId == form!.Id && c.TermAndConditionId == Terms[i].Id,
-                   
-                     c => c.Attachments).FirstOrDefault();
+                     conditionsProvideds.FirstOrDefault(
+                         c => c.ProvidedFormId == form!.Id && c.TermAndConditionId == Terms[i].Id);
 
                 if(conditionsProvidedsobject == null)
                 {
@@ -92,19 +94,23 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                     await _conditionsProvidedFormsRepository.AddAsync(conditionsProvided);
                     conditionsProvideds.Add(conditionsProvided);
                 }
-                if (conditionsProvidedsobject != null)
-                    conditionsProvideds.Add(conditionsProvidedsobject!);
             }
 
             var data = _mapper.Map<List<TermAndConditionListVM>>(Terms);
-            
+
+            List<ConditionAttachment> AllConditionAttachmentEntities = await _conditionAttachmentRepository
+                .Where(x => conditionsProvideds.Select(y => y.Id).Any(y => y == x.ConditionsProvidedFormsId))
+                .ToListAsync();
+
             for (int i = 0; i < data.Count; i++)
             {
                 data[i].ConditionsAttachments = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
 
                 if (data[i].NeedAttachment)
                 {
-                    data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<AttachmentListVM>>(conditionsProvideds[i].Attachments);
+                    data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<AttachmentListVM>>(AllConditionAttachmentEntities
+                        .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
+                        .ToList());
 
                     if (data[i].ConditionsAttachments!.Attachments.Any(a => a.IsAccept == false))
                         data[i].Rejected = true;

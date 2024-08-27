@@ -16,20 +16,39 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ExportGro
         : IRequestHandler<ExportGroupToExcelQuery , List<GroupExportVM>>
     {
         private readonly IAsyncRepository<GroupInvitee> _groupInviteeRepository;
+        private readonly IAsyncRepository<Student> _StudentRepository;
         private readonly IMapper _mapper;
 
-        public ExportGroupToExcelQueryHandler(IAsyncRepository<GroupInvitee> groupInviteeRepository, IMapper mapper)
+        public ExportGroupToExcelQueryHandler(IAsyncRepository<GroupInvitee> groupInviteeRepository,
+            IAsyncRepository<Student> StudentRepository,
+            IMapper mapper)
         {
             _groupInviteeRepository = groupInviteeRepository;
+            _StudentRepository = StudentRepository;
             _mapper = mapper;
         }
 
         public async Task<List<GroupExportVM>> Handle(ExportGroupToExcelQuery request, CancellationToken cancellationToken)
         {
-            var groupList =  _groupInviteeRepository.WhereThenInclude(g => g.isDeleted != true,g => g.StudentNames!);
+            var groupList = await _groupInviteeRepository
+                .Where(g => true)
+                .ToListAsync();
 
+            List<GroupExportVM> GroupExportVM = _mapper.Map<List<GroupExportVM>>(groupList);
+
+            List<Student> AllStudentEntities = await _StudentRepository
+                .Where(x => GroupExportVM.Select(y => y.Id).Contains(x.GroupInviteeId))
+                .ToListAsync();
+
+            foreach (var GroupExport in GroupExportVM)
+            {
+                GroupExport.StudentNames = AllStudentEntities
+                    .Where(x => x.GroupInviteeId == GroupExport.Id)
+                    .Select(x => x.StudentName)
+                    .ToList();
+            }
             
-            return _mapper.Map<List<GroupExportVM>>(groupList);
+            return GroupExportVM;
         }
     }
 }

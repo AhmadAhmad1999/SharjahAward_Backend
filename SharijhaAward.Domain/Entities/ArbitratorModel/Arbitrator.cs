@@ -13,8 +13,8 @@ namespace SharijhaAward.Domain.Entities.ArbitratorModel
         public string PhoneNumber { get; set; } = null!;
         public string Email { get; set; } = null!;
         public bool isChairman { get; set; } = false;
-        public virtual List<Arbitration> Arbitration { get; set; }=new();
-        public List<CircularArbitrator>? CircularArbitrators { get; set; }
-        public List<CircularChairman>? CircularChairmans { get; set; }
+        //public virtual List<Arbitration> Arbitration { get; set; }=new();
+        //public List<CircularArbitrator>? CircularArbitrators { get; set; }
+        //public List<CircularChairman>? CircularChairmans { get; set; }
     }
 }

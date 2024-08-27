@@ -19,6 +19,6 @@ namespace SharijhaAward.Domain.Entities.EducationalInstitutionModel
         [ForeignKey(nameof(EducationalEntity))]
         public int EducationalEntityId { get; set; }
 
-        public List<EduInstitutionCoordinator> EduInstitutionCoordinators { get; set; } = null!;
+        //public List<EduInstitutionCoordinator> EduInstitutionCoordinators { get; set; } = null!;
     }
 }

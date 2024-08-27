@@ -30,8 +30,6 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetEventWithInvitees
 
             Event = await _EventRepository.GetEventWithInvitees(Event.Id);
 
-            _mapper.Map<List<EventInvitessDto>>(Event.PersonalInvitees.ToList());
-
             var result = _mapper.Map<EventInviteesVM>(Event);
 
             return result;

@@ -24,6 +24,6 @@ namespace SharijhaAward.Domain.Entities.ExtraAttachmentModel
         public ProvidedForm ProvidedForm { get; set; } = null!;
         [ForeignKey(nameof(ProvidedForm))]
         public int ProvidedFormId {  get; set; }
-        public List<ExtraAttachmentFile>? ExtraAttachmentFiles { get; set; }
+        //public List<ExtraAttachmentFile>? ExtraAttachmentFiles { get; set; }
     }
 }

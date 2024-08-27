@@ -17,7 +17,7 @@ namespace SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel
     {
         public int Id { get; set; }
         public bool IsAgree { get; set; } = false;
-        public List<ConditionAttachment> Attachments { get; set; } = null!;
+        //public List<ConditionAttachment> Attachments { get; set; } = null!;
 
         public TermAndCondition TermAndCondition { get; set; } = null!;
         public int TermAndConditionId { get; set; }

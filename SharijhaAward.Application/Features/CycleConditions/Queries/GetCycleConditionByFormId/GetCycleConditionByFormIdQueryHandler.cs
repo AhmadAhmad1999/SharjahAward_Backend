@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionById;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
@@ -52,19 +53,21 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
             }
             var form = _providedFormRepository.FirstOrDefault(p => p.Id == request.formId);
 
-            var Terms = _cycleConditionRepository.WhereThenInclude(t => t.CycleId == Cycle.Id, t => t.ConditionAttachments).ToList();
+            var Terms = await _cycleConditionRepository.Where(t => t.CycleId == Cycle.Id).ToListAsync();
 
-            List<CycleConditionsProvidedForm> conditionsProvideds = new List<CycleConditionsProvidedForm>();
+            List<CycleConditionsProvidedForm> conditionsProvideds = await _conditionsProvidedFormsRepository
+                .Where(x => Terms.Select(y => y.Id).Contains(x.CycleConditionId) &&
+                    x.ProvidedFormId == form!.Id)
+                .ToListAsync(); ;
 
             for (int i = 0; i < Terms.Count(); i++)
             {
                 var conditionsProvidedsobject =
-                 _conditionsProvidedFormsRepository.WhereThenInclude(
-                     c => c.ProvidedFormId == form!.Id && c.CycleConditionId == Terms[i].Id,
-                     c => c.Attachments).FirstOrDefault();
+                     conditionsProvideds.FirstOrDefault(c => c.CycleConditionId == Terms[i].Id);
 
                 if (conditionsProvidedsobject != null)
                     conditionsProvideds.Add(conditionsProvidedsobject!);
+
                 else
                 {
                     var CycleConditionsProvidedForm = new CycleConditionsProvidedForm()
@@ -73,22 +76,31 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
                         CycleConditionId = Terms[i].Id,
                         IsAgree = false,
                     };
+
                     var conditionProvided = await _conditionsProvidedFormsRepository.AddAsync(CycleConditionsProvidedForm);
                     conditionsProvideds.Add(conditionProvided);
                 }
             }
 
-
             var data = _mapper.Map<List<CyclePublicConditionListVm>>(Terms);
+
+            List<CycleConditionAttachment> AllConditionAttachmentEntities = await _conditionAttachmentRepository
+                .Where(x => conditionsProvideds.Select(y => y.Id).Any(y => y == x.CycleConditionsProvidedFormId))
+                .ToListAsync();
 
             for (int i = 0; i < data.Count(); i++)
             {
-             
-                data[i].ConditionsAttachments = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvideds[i]);
+                data[i].ConditionsAttachments = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvideds
+                    .FirstOrDefault(x => x.CycleConditionId == data[i].Id));
                
                 if (data[i].NeedAttachment)
                 {
-                    data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<CycleConditionAttachmentListVm>>(conditionsProvideds[i].Attachments);
+                    List<CycleConditionAttachment> AllConditionAttachmentEntitiesForThisTerm = AllConditionAttachmentEntities
+                        .Where(x => conditionsProvideds[i].Id == x.CycleConditionsProvidedFormId)
+                        .ToList();
+
+                    data[i].ConditionsAttachments!.Attachments = 
+                        _mapper.Map<List<CycleConditionAttachmentListVm>>(AllConditionAttachmentEntitiesForThisTerm);
                    
                     if (data[i].ConditionsAttachments!.Attachments.Any(a => a.IsAccept == false))
                         data[i].Rejected = true;
@@ -102,6 +114,7 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleCon
                     ? data[i].EnglishDescription
                     : data[i].ArabicDescription;
             }
+
             return new BaseResponse<List<CyclePublicConditionListVm>>("", true, 200, data);
         }
     }

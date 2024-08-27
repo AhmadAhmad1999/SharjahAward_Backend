@@ -33,8 +33,7 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
         public async Task<BaseResponse<object>> Handle(UpdateNewsCommand request, CancellationToken cancellationToken)
         {
             var newsToUpdate = await _newsRepository
-                .WhereThenInclude(n => n.Id == request.Id, n => n.NewsImages!)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(n => n.Id == request.Id);
            
             string msg;
             if (newsToUpdate == null)
@@ -46,7 +45,6 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
                 return new BaseResponse<object>(msg,false,404);
             }
             var Image = newsToUpdate.Image;
-            var Images = newsToUpdate.NewsImages;
 
             _mapper.Map(request,newsToUpdate,typeof(UpdateNewsCommand),typeof(Domain.Entities.NewsModel.News));
 
@@ -68,10 +66,6 @@ namespace SharijhaAward.Application.Features.News.Commands.UpdateNews
                         await _newsImageRepository.AddAsync(NewsImage); 
                     }
                 }
-            }
-            else
-            {
-                newsToUpdate.NewsImages = Images;
             }
 
             await _newsRepository.UpdateAsync(newsToUpdate);

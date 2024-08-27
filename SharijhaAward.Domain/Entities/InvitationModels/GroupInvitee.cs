@@ -26,6 +26,6 @@ namespace SharijhaAward.Domain.Entities.InvitationModels
         public int EventId { get; set; }
         public Event Event { get; set; } = null!;
 
-        public List<Student>? StudentNames { get; set; }
+        //public List<Student>? StudentNames { get; set; }
     }
 }

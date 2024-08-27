@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
@@ -55,29 +56,28 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queri
 
                 return new BaseResponse<List<SpecialTermAndConditionListVM>>("Form not Found", false, 404);
             }
-            var Terms = _termRepository
-                .WhereThenInclude(t => t.CategoryId == form.categoryId , t => t.ConditionAttachments)
-                .OrderByDescending(x => x.CreatedAt).ToList();
+            var Terms = await _termRepository
+                .Where(t => t.CategoryId == form.categoryId)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync();
 
-            List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
+            List<ConditionsProvidedForms> conditionsProvideds = await _conditionsProvidedFormsRepository
+                .Where(x => x.ProvidedFormId == form!.Id &&
+                    Terms.Select(y => y.Id).Contains(x.TermAndConditionId))
+                .ToListAsync();
 
-            for (int i = 0; i < Terms.Count(); i++)
-            {
-                var conditionsProvidedsobject =
-                 _conditionsProvidedFormsRepository.WhereThenInclude(
-                     c => c.ProvidedFormId == form!.Id && c.TermAndConditionId == Terms[i].Id,
-                     c => c.Attachments).FirstOrDefault();
-
-                if (conditionsProvidedsobject != null)
-                    conditionsProvideds.Add(conditionsProvidedsobject!);
-            }
+            List<ConditionAttachment> AllConditionAttachmentEntities = await _conditionAttachmentRepository
+                .Where(x => conditionsProvideds.Select(y => y.Id).Any(y => y == x.ConditionsProvidedFormsId))
+                .ToListAsync();
 
             var data = _mapper.Map<List<SpecialTermAndConditionListVM>>(Terms);
 
             for (int i = 0; i < data.Count; i++)
             {
-                
-                data[i].Attachments =  _mapper.Map<List<AttachmentListVM>>(conditionsProvideds[i].Attachments);
+                data[i].Attachments =  _mapper.Map<List<AttachmentListVM>>(AllConditionAttachmentEntities
+                    .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
+                    .ToList());
+
                 data[i].Acceptance = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
 
                 data[i].Title = request.lang == "en"

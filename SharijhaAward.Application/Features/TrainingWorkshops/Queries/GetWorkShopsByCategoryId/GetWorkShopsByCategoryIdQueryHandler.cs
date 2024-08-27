@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTrainingWorkshops;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
+using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,18 +21,21 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
         : IRequestHandler<GetWorkShopsByCategoryIdQuery, BaseResponse<List<TrainingWorkshopListVm>>>
     {
         private readonly IAsyncRepository<TrainingWorkshop> _workShopRepository;
+        private readonly IAsyncRepository<TrainingWrokshopeAttachment> _TrainingWrokshopeAttachmentRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IMapper _mapper;
 
         public GetWorkShopsByCategoryIdQueryHandler(
-            IAsyncRepository<TrainingWorkshop> workShopRepository, 
+            IAsyncRepository<TrainingWorkshop> workShopRepository,
+            IAsyncRepository<TrainingWrokshopeAttachment> TrainingWrokshopeAttachmentRepository,
             IAsyncRepository<Category> categoryRepository, 
             IMapper mapper,
             IHttpContextAccessor httpContextAccessor
             )
         {
             _workShopRepository = workShopRepository;
+            _TrainingWrokshopeAttachmentRepository = TrainingWrokshopeAttachmentRepository;
             _categoryRepository = categoryRepository;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
@@ -44,26 +49,37 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
             if (category != null)
             {
                 var WorkShops = _workShopRepository.WhereThenInclude(
-                    w => w.CategoryId == request.CategoryId, filterObject, w => w.Attachments)
+                    w => w.CategoryId == request.CategoryId, filterObject)
                     .Skip((request.page - 1) * request.perPage)
                     .Take(request.perPage)
                     .ToList();
 
                 var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops);
-                
+
+                List<TrainingWrokshopeAttachment> AllTrainingWrokshopeAttachmentEntitites = await _TrainingWrokshopeAttachmentRepository
+                    .Where(x => data.Select(y => y.Id).Contains(x.WorkshopeId))
+                    .ToListAsync();
 
                 for (int i = 0; i < data.Count; i++)
                 {
-                    data[i].Attachments =  _mapper.Map<List<WorkshopAttachmentListVM>>(data[i].Attachments);
-                    for(int j = 0; j < data[i].Attachments.Count; j++)
-                    {
-                        data[i].Attachments[j].Name = request.lang == "en"
-                            ? data[i].Attachments[j].EnglishName
-                            : data[i].Attachments[j].ArabicName;
-                        data[i].Attachments[j].AttachementURl = WorkShops[i].Attachments[j].AttachementPath;
-                    }
+                    data[i].Attachments = AllTrainingWrokshopeAttachmentEntitites
+                        .Where(x => x.WorkshopeId == data[i].Id)
+                        .Select(x => new WorkshopAttachmentListVM()
+                        {
+                            Id = x.Id,
+                            ArabicName = x.ArabicName,
+                            AttachementURl = x.AttachementPath,
+                            AttachmentType = x.AttachmentType,
+                            EnglishName = x.EnglishName,
+                            SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                            Name = request.lang == "en"
+                                ? x.EnglishName
+                                : x.ArabicName
+                        }).ToList();
+                    
                     data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
                 }
+
                 data = data.OrderByDescending(t => t.CreatedAt).ToList();
 
                 var count = await _workShopRepository.GetCountAsync(w => w.CategoryId == category.Id);
@@ -72,6 +88,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
                
                 return new BaseResponse<List<TrainingWorkshopListVm>>("", true, 200, data,pagination);
             }
+
             return new BaseResponse<List<TrainingWorkshopListVm>>("", false, 404);
         }
     }

@@ -26,5 +26,5 @@ public class CycleCondition : AuditableEntity
     [ForeignKey(nameof(Cycle))]
     public int CycleId { get; set; }
 
-    public List<CycleConditionsProvidedForm> ConditionAttachments { get; set; } = null!;
+    //public List<CycleConditionsProvidedForm> ConditionAttachments { get; set; } = null!;
 }

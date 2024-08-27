@@ -1,17 +1,10 @@
-﻿using Aspose.Pdf.Plugins;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
-using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage
 {
@@ -20,14 +13,21 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
     {
         private readonly IAsyncRepository<EmailMessage> _emailMessageRepository;
         private readonly IAsyncRepository<MessageType> _messageTypeRepository;
+        private readonly IAsyncRepository<EmailAttachment> _EmailAttachmentRepository;
         private readonly IJwtProvider _jwtProvider;
         private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _userRepository;
         private readonly IMapper _mapper;
 
-        public GetAllEmailMessageQueryHandler(IAsyncRepository<MessageType> messageTypeRepository, IAsyncRepository<EmailMessage> emailMessageRepository, IJwtProvider jwtProvider, IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository, IMapper mapper)
+        public GetAllEmailMessageQueryHandler(IAsyncRepository<MessageType> messageTypeRepository, 
+            IAsyncRepository<EmailMessage> emailMessageRepository,
+            IAsyncRepository<EmailAttachment> EmailAttachmentRepository,
+            IJwtProvider jwtProvider, 
+            IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository, 
+            IMapper mapper)
         {
             _emailMessageRepository = emailMessageRepository;
             _messageTypeRepository = messageTypeRepository;
+            _EmailAttachmentRepository = EmailAttachmentRepository;
             _jwtProvider = jwtProvider;
             _userRepository = userRepository;
             _mapper = mapper;
@@ -54,14 +54,14 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                 .Where(e => e.Id == e.MessageId)
                 .ToListAsync();
 
-            foreach(var email in MainEmails)
+            foreach (var email in MainEmails)
             {
                 var emailMessage = await _emailMessageRepository
-                    .WhereThenInclude(m=> m.MessageId == email.Id && m.Id != email.Id, m => m.Attachments!)
+                    .Where(m=> m.MessageId == email.Id && m.Id != email.Id)
                     .OrderByDescending(x => x.CreatedAt)
                     .FirstOrDefaultAsync();
 
-                if(emailMessage == null)
+                if (emailMessage == null)
                 {
                     EmailMessages.Add(email);
                 }
@@ -94,13 +94,19 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
 
             if (request.query != null)
             {
-                EmailMessages = _emailMessageRepository.WhereThenInclude(m => m.Body.Contains(request.query), m => m.Attachments!).OrderByDescending(x => x.CreatedAt).ToList();
+                EmailMessages = _emailMessageRepository
+                    .Where(m => m.Body.Contains(request.query))
+                    .OrderByDescending(x => x.CreatedAt).ToList();
             }
           
             var data = _mapper.Map<List<EmailMessageListVM>>(EmailMessages);
             
             int UnReadingMessages = _emailMessageRepository.GetCount(m => !m.IsRead && m.To == User.Email);
-           
+
+            List<EmailAttachment> AllEmailAttachmentEntities = await _EmailAttachmentRepository
+                .Where(x => data.Select(y => y.Id).Contains(x.MessageId))
+                .ToListAsync();
+
             for (int i = 0; i < data.Count(); i++)
             {
                    
@@ -109,7 +115,9 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                 var Sender = await _userRepository.GetByIdAsync(EmailMessages[i].UserId);
 
                 data[i].TypeName = request.lang == "en" ? Type!.EnglishType : Type!.ArabicType;
-                data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(EmailMessages[i].Attachments);   
+                data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(AllEmailAttachmentEntities
+                    .Where(x => x.MessageId == EmailMessages[i].Id)
+                    .ToList());   
                 data[i].IsReplay = data[i].MessageId == data[i].Id ? false : true;
                 data[i].PersonalPhotoUrl = Sender.ImageURL!;
                 data[i].Gender = Sender.Gender;
@@ -121,8 +129,6 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
             Pagination pagination = new Pagination(request.page,request.perPage, Count);
                
             return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data, pagination,UnReadingMessages);
-            
         }
     }
-
 }

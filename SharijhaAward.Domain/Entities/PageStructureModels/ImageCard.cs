@@ -18,6 +18,6 @@ namespace SharijhaAward.Domain.Entities.PageStructureModels
         [ForeignKey(nameof(PageStructure))]
         public int PageId { get; set; }
 
-        public List<PageStructureImages> Images { get; set; } = null!;
+        //public List<PageStructureImages> Images { get; set; } = null!;
     }
 }

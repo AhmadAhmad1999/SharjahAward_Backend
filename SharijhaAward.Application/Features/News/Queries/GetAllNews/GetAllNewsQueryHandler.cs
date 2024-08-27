@@ -6,12 +6,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.News.Queries.GetNewsById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using SharijhaAward.Domain.Entities.NewsModel;
 
 namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
 {
@@ -19,11 +14,15 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
         : IRequestHandler<GetAllNewsQuery, BaseResponse<List<NewsListVM>>>
     {
         private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
+        private readonly IAsyncRepository<NewsImage> _NewsImageRepository;
         private readonly IMapper _mapper;
 
-        public GetAllNewsQueryHandler(IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository, IMapper mapper)
+        public GetAllNewsQueryHandler(IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository,
+            IAsyncRepository<NewsImage> NewsImageRepository,
+            IMapper mapper)
         {
             _newsRepository = newsRepository;
+            _NewsImageRepository = NewsImageRepository;
             _mapper = mapper;
         }
 
@@ -31,22 +30,28 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
         {
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
-            var newsList = request.Descending == false
-                ? await _newsRepository
-                    .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
-                    .Include(n => n.NewsImages)
-                    .ToListAsync()
-                : await _newsRepository
-                    .Include(n => n.NewsImages!, filterObject)
-                    .OrderBy(x => x.CreatedAt)
-                    .Skip((request.page - 1) * request.perPage).Take(request.perPage)
-                    .ToListAsync();
+            List<Domain.Entities.NewsModel.News> newsList = new List<Domain.Entities.NewsModel.News>();
 
+            if (request.Descending == false)
+            {
+                newsList = await _newsRepository
+                    .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
+                    .ToListAsync();
+            }
+            else
+            {
+                var AllNews = await _newsRepository
+                    .GetFilterThenPagedReponseAsync(filterObject, request.page, request.perPage);
+
+                newsList = AllNews.OrderBy(x => x.CreatedAt)
+                    .Skip((request.page - 1) * request.perPage).Take(request.perPage)
+                    .ToList();
+            }
 
             int count = _newsRepository.GetCount(n => n.isDeleted == false && !n.IsHidden);
-            
+
             Pagination pagination = new Pagination(request.page, request.perPage, count);
-            
+
             if (!request.query.IsNullOrEmpty())
             {
                 newsList = request.Descending == true
@@ -70,7 +75,12 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
                             .OrderBy(x => x.CreatedAt).ToListAsync();
                 }
             }
+
             var data = _mapper.Map<List<NewsListVM>>(newsList);
+
+            List<NewsImage> AllNewsImageEntities = await _NewsImageRepository
+                .Where(x => data.Select(y => y.Id).Contains(x.NewsId))
+                .ToListAsync();
 
             if (data.Count != 0)
             {
@@ -84,15 +94,16 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
                         ? data[i].EnglishDescription!
                         : data[i].ArabicDescription!;
 
-                    data[i].Images = _mapper.Map<List<NewsImagesDto>>(newsList[i].NewsImages);
+                    data[i].Images = _mapper.Map<List<NewsImagesDto>>(AllNewsImageEntities
+                        .Where(x => x.NewsId == data[i].Id)
+                        .ToList());
                 }
-
             }
+
             if (!request.query.IsNullOrEmpty())
                 return new BaseResponse<List<NewsListVM>>("", true, 200, data);
-            
+
             return new BaseResponse<List<NewsListVM>>("", true, 200, data, pagination);
-           
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
@@ -52,7 +53,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
         {
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
             var form = _formsRepository.FirstOrDefault(f => f.userId == int.Parse(UserId) && f.Id == request.formId);
-            var term = _termsRepository.WhereThenInclude(t => t.Id == request.TermAndConditionId, t => t.ConditionAttachments).FirstOrDefault();
+            var term = _termsRepository.FirstOrDefault(t => t.Id == request.TermAndConditionId);
            
             string msg;
            
@@ -65,21 +66,26 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
                 return new BaseResponse<object>(msg, false, 404);
             }
             
-            var conditionsProvided = _conditionFormsRepository
-                .WhereThenInclude(c => c.TermAndConditionId == term.Id 
-                && c.ProvidedFormId == form!.Id ,
-                c=>c.Attachments).FirstOrDefault();
+            var conditionsProvided = await _conditionFormsRepository
+                .FirstOrDefaultAsync(c => c.TermAndConditionId == term.Id &&
+                    c.ProvidedFormId == form!.Id);
 
-            if (conditionsProvided != null && conditionsProvided!.Attachments.Any(a => a.IsAccept == false))
+            List<ConditionAttachment> attachmentsEntities = new List<ConditionAttachment>();
+            
+            if (conditionsProvided != null)
             {
-                var Attachment = conditionsProvided
-                    .Attachments.Where(a => a.IsAccept == false).FirstOrDefault();
+                attachmentsEntities = await _attachmentsRepository
+                    .Where(x => x.ConditionsProvidedFormsId == conditionsProvided.Id &&
+                        (x.IsAccept != null ? !x.IsAccept.Value : false))
+                    .ToListAsync();
 
-                await _attachmentsRepository.DeleteAsync(Attachment!);
+                if (attachmentsEntities.Any())
+                {
+                    var Attachment = attachmentsEntities.FirstOrDefault(a => a.IsAccept == false);
 
-                conditionsProvided.Attachments.Remove(Attachment!);
+                    await _attachmentsRepository.DeleteAsync(Attachment!);
+                }
             }
-
 
             if (conditionsProvided == null)
             {
@@ -98,7 +104,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
           
             if(term.NeedAttachment)
             {
-                if (term.RequiredAttachmentNumber > conditionsProvided.Attachments.Count || term.RequiredAttachmentNumber == 0)
+                if (term.RequiredAttachmentNumber > attachmentsEntities.Count || term.RequiredAttachmentNumber == 0)
                 {
                     data.AttachementPath = await _attachmentFileService.SaveProvidedFormFilesAsync(request.attachment, form!.Id);
 

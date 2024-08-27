@@ -25,6 +25,5 @@ namespace SharijhaAward.Domain.Entities.AboutAwardPageModel
         public string ArabicOurGoalTitle { get; set; } = string.Empty;
         public string EnglishOurGoalTitle { get; set; } = string.Empty;
         public bool IsGoalsHidden { get; set; }
-        public List<OurGoal> OurGoals { get; set; } = null!;
     }
 }

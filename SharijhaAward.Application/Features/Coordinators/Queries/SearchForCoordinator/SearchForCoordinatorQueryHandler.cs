@@ -3,19 +3,11 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
-using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoordinator
 {
@@ -40,7 +32,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
 
         public async Task<BaseResponse<List<CoordinatorSearchListVM>>> Handle(SearchForCoordinatorQuery request, CancellationToken cancellationToken)
         {
-            var Coordinators = await _coordinatorRepository.Include(c => c.InstitutionCoordinators!).ToListAsync();
+            var Coordinators = await _coordinatorRepository
+                .Where(x => true).ToListAsync();
             
             var CoordinatorsResult = Coordinators;
 

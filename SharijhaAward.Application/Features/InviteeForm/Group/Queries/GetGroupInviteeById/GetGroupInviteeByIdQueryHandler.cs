@@ -3,11 +3,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.InvitationModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupInviteeById
 {
@@ -29,15 +24,21 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupI
 
         public async Task<GroupInviteeVM> Handle(GetGroupInviteeByIdQuery request, CancellationToken cancellationToken)
         {
-            var GroupInvitee = _groupInviteeRepository.IncludeThenFirstOrDefault(g => g.StudentNames!, g => g.Id == request.Id);
-            // var GroupInvitee = await _groupInviteeRepository.GetByIdAsync(request.Id);
-            
+            var GroupInvitee = await _groupInviteeRepository.FirstOrDefaultAsync(g => g.Id == request.Id);
+
             if (GroupInvitee == null)
             {
                 throw new OpenQA.Selenium.NotFoundException();
             }
 
-            return _mapper.Map<GroupInviteeVM>(GroupInvitee);
+            GroupInviteeVM GroupInviteeVM = _mapper.Map<GroupInviteeVM>(GroupInvitee);
+
+            GroupInviteeVM.StudentNamesAsString = await _studentRepository
+                .Where(x => x.GroupInviteeId == request.Id)
+                .Select(x => x.StudentName)
+                .ToListAsync();
+
+            return GroupInviteeVM;
         }
     }
 }

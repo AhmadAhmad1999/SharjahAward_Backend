@@ -15,9 +15,9 @@ namespace SharijhaAward.Domain.Entities.CoordinatorModel
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
 
-        public List<EduInstitutionCoordinator>? InstitutionCoordinators {  get; set; }
-        public List<EduEntitiesCoordinator>? EduEntitiesCoordinators { get; set; }
-        public List<CoordinatorForm> CoordinatorForms { get; set; } = null!;
-        public List<CircularCoordinator>? CircularCoordinators { get; set; }
+        //public List<EduInstitutionCoordinator>? InstitutionCoordinators {  get; set; }
+        //public List<EduEntitiesCoordinator>? EduEntitiesCoordinators { get; set; }
+        //public List<CoordinatorForm> CoordinatorForms { get; set; } = null!;
+        //public List<CircularCoordinator>? CircularCoordinators { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
         [ForeignKey(nameof(Type))]
         public int TypeId {  get; set; }
 
-        public List<EmailAttachment>? Attachments { get; set; } 
+        //public List<EmailAttachment>? Attachments { get; set; } 
 
 
     }

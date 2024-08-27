@@ -13,6 +13,6 @@ namespace SharijhaAward.Domain.Entities.ContactUsModels
         public int Id { get; set; }
         public string EnglishType { get; set; } = string.Empty;
         public string ArabicType { get; set; } = string.Empty;
-        public List<EmailMessage> EmailMessages { get; set; } = null!;
+        //public List<EmailMessage> EmailMessages { get; set; } = null!;
     }
 }

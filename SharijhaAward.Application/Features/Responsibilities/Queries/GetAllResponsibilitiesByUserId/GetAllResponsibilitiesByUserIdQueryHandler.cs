@@ -80,10 +80,16 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
             }
 
             var data = _mapper.Map<List<ResponsibilityListVM>>(Responsibilities);
-            
-            for(int i=0; i < data.Count(); i++)
+
+            var AllResponsibilityUserEntitties = await _responsibilityUserRepository
+                .Where(x => Responsibilities.Select(y => y.Id).Contains(x.ResponsibilityId))
+                .ToListAsync();
+
+            for (int i=0; i < data.Count(); i++)
             {
-                data[i].ResponsibilityUsers = _mapper.Map<List<ResponsibilityUserDto>>(Responsibilities[i].ResponsibilityUsers);
+                data[i].ResponsibilityUsers = _mapper.Map<List<ResponsibilityUserDto>>(AllResponsibilityUserEntitties
+                    .Where(x => x.ResponsibilityId == data[i].Id)
+                    .ToList());
 
                 data[i].RoleName = Responsibilities[i].Role!.ArabicName;
             }

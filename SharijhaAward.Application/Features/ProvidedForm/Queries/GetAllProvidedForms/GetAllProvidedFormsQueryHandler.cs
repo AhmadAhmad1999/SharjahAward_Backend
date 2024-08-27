@@ -5,6 +5,7 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
@@ -12,6 +13,8 @@ using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
+using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
+using SharijhaAward.Domain.Entities.SystemAttachmentModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 
 namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvidedForms
@@ -30,10 +33,17 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository;
         private readonly IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository;
+        private readonly IAsyncRepository<CycleConditionAttachment> _CycleConditionAttachmentRepository;
+        private readonly IAsyncRepository<ConditionAttachment> _ConditionAttachmentRepository;
+        private readonly IAsyncRepository<ExtraAttachmentFile> _ExtraAttachmentFileRepository;
+
         public GetAllProvidedFormsQueryHandler(IAsyncRepository<ExtraAttachment> extraAttachmentRepository,  IAsyncRepository<ConditionsProvidedForms> conditionsProvidedFormsRepository, IAsyncRepository<CycleConditionsProvidedForm> cycleConditionsProvidedFormRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository, IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository, IAsyncRepository<Category> categoryRepository, IJwtProvider jwtProvider, IMapper mapper,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
             IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
-            IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository)
+            IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository,
+            IAsyncRepository<CycleConditionAttachment> CycleConditionAttachmentRepository,
+            IAsyncRepository<ConditionAttachment> ConditionAttachmentRepository,
+            IAsyncRepository<ExtraAttachmentFile> ExtraAttachmentFileRepository)
         {
             _formRepository = formRepository;
             _userRepository = userRepository;
@@ -46,6 +56,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _CriterionAttachmentRepository = CriterionAttachmentRepository;
             _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
+            _CycleConditionAttachmentRepository = CycleConditionAttachmentRepository;
+            _ConditionAttachmentRepository = ConditionAttachmentRepository;
+            _ExtraAttachmentFileRepository = ExtraAttachmentFileRepository;
         }
 
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllProvidedFormsQuery request, CancellationToken cancellationToken)
@@ -69,11 +82,49 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
             
 
             var data = _mapper.Map<List<FormListVm>> (form);
-            
+
+            List<CycleConditionAttachment> AllCycleConditionAttachmentEntities = await _CycleConditionAttachmentRepository
+                .Include(x => x.CycleConditionsProvidedForm!)
+                .Include(x => x.CycleConditionsProvidedForm!.CycleCondition!)
+                .Where(x => form.Select(y => y.Id).Contains(x.CycleConditionsProvidedForm!.ProvidedFormId) &&
+                    x.CycleConditionsProvidedForm!.CycleCondition!.NeedAttachment &&
+                    (x.IsAccept != null ? !x.IsAccept.Value : false))
+                .ToListAsync();
+
+            List<ConditionAttachment> AllConditionAttachmentEntities = await _ConditionAttachmentRepository
+                .Include(x => x.ConditionsProvidedForms!)
+                .Include(x => x.ConditionsProvidedForms!.TermAndCondition!)
+                .Where(x => form.Select(y => y.Id).Contains(x.ConditionsProvidedForms!.ProvidedFormId) &&
+                    x.ConditionsProvidedForms.TermAndCondition.NeedAttachment &&
+                    (x.IsAccept != null ? !x.IsAccept.Value : false))
+                .ToListAsync();
+
+            List<ExtraAttachmentFile> AllExtraAttachmentFileEntities = await _ExtraAttachmentFileRepository
+                .Include(x => x.ExtraAttachment!)
+                .Where(x => form.Select(y => y.Id).Contains(x.ExtraAttachment!.ProvidedFormId) &&
+                    (x.IsAccept != null ? !x.IsAccept.Value : false))
+                .ToListAsync();
+
+            List<DynamicAttributeValue> AllDynamicAttributeValueEntities = await _DynamicAttributeValueRepository
+                .Include(x => x.DynamicAttribute!)
+                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
+                .Where(x => (x.isAccepted != null ? !x.isAccepted.Value : false) &&
+                    data.Select(y => y.Id).Any(y => y == x.RecordId) &&
+                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1)
+                .ToListAsync();
+
+            List<CriterionAttachment> AllCriterionAttachmentEntities = await _CriterionAttachmentRepository
+                .Where(x => data.Select(y => y.Id).Contains(x.ProvidedFormId) &&
+                    (x.IsAccepted != null ? !x.IsAccepted.Value : false))
+                .ToListAsync();
+
+            List<CriterionItemAttachment> AllCriterionItemAttachmentEntities = await _CriterionItemAttachmentRepository
+                .Where(x => data.Select(y => y.Id).Contains(x.ProvidedFormId) &&
+                    (x.IsAccepted != null ? !x.IsAccepted.Value : false))
+                .ToListAsync();
+
             for (int i = 0; i < data.Count(); i++)
             {
-
-                
                 var SubCategory = await _categoryRepository.GetByIdAsync(form[i].categoryId);
                 
                 if(SubCategory == null)
@@ -96,68 +147,45 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
                     ? Category.EnglishName
                     : Category.ArabicName;
 
-
                 data[i].RejectedSteps = new List<int>();
 
-                var cycleConditions = await _cycleConditionsProvidedFormRepository
-                    .Include(c=>c.CycleCondition)
-                    .Include(c => c.Attachments.Where(a => a.IsAccept == false))
-                    .Where(c => c.ProvidedFormId == form[i].Id && c.CycleCondition.NeedAttachment == true)
-                    .ToListAsync();
+                var cycleConditions = AllCycleConditionAttachmentEntities
+                    .Where(c => c.CycleConditionsProvidedForm.ProvidedFormId == form[i].Id)
+                    .ToList();
 
-                if(cycleConditions.Any(c=>c.Attachments.Any()))
-                {
+                if (cycleConditions.Any())
                     data[i].RejectedSteps!.Add(1);
-                }
-                
 
-                var TermAndConditions = await _conditionsProvidedFormsRepository
-                    .Include(c=>c.TermAndCondition)
-                    .Include(c => c.Attachments.Where(a => a.IsAccept == false))
-                    .Where(c => c.ProvidedFormId == form[i].Id && c.TermAndCondition.NeedAttachment == true)
-                    .ToListAsync();
+                var TermAndConditions = AllConditionAttachmentEntities
+                                .Where(c => c.ConditionsProvidedForms!.ProvidedFormId == form[i].Id)
+                                .ToList();
 
-
-                if (TermAndConditions.Any(c => c.Attachments.Any()))
-                {
+                if (TermAndConditions.Any())
                     data[i].RejectedSteps!.Add(3);
-                }
 
+                var ExtraAttachments = AllExtraAttachmentFileEntities
+                    .Where(e => e.ExtraAttachment!.ProvidedFormId == form[i].Id)
+                    .ToList();
 
-                var ExtraAttachments = await _extraAttachmentRepository
-                    .Where(e => e.ProvidedFormId == form[i].Id)
-                    .Include(e => e.ExtraAttachmentFiles!.Where(a=>a.IsAccept == false))
-                    .ToListAsync();
-
-                if (ExtraAttachments.Any(c => c.ExtraAttachmentFiles!.Any()))
-                {
+                if (ExtraAttachments.Any())
                     data[i].RejectedSteps!.Add(6);
-                }
 
-
-
-                bool CheckIfThereIsRejectedDynamicFields = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                    .AnyAsync(x => (x.isAccepted != null ? !x.isAccepted.Value : false) &&
-                        x.RecordId == data[i].Id &&
-                        x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1);
+                bool CheckIfThereIsRejectedDynamicFields = AllDynamicAttributeValueEntities
+                    .Any(x => x.RecordId == data[i].Id);
 
                 if (CheckIfThereIsRejectedDynamicFields)
                     data[i].RejectedSteps!.Add(4);
 
-                CriterionAttachment? CriterionAttachment = await _CriterionAttachmentRepository
-                    .FirstOrDefaultAsync(x => x.ProvidedFormId == data[i].Id &&
-                        (x.IsAccepted != null ? !x.IsAccepted.Value : false));
+                bool CriterionAttachment = AllCriterionAttachmentEntities
+                    .Any(x => x.ProvidedFormId == data[i].Id);
 
-                if (CriterionAttachment is not null)
+                if (CriterionAttachment)
                     data[i].RejectedSteps!.Add(5);
 
-                CriterionItemAttachment? CriterionItemAttachment = await _CriterionItemAttachmentRepository
-                    .FirstOrDefaultAsync(x => x.ProvidedFormId == data[i].Id &&
-                        (x.IsAccepted != null ? !x.IsAccepted.Value : false));
+                bool CriterionItemAttachment = AllCriterionItemAttachmentEntities
+                    .Any(x => x.ProvidedFormId == data[i].Id);
 
-                if (CriterionItemAttachment is not null)
+                if (CriterionItemAttachment)
                     data[i].RejectedSteps!.Add(5);
 
                 if (data[i].RejectedSteps!.Count() > 0)

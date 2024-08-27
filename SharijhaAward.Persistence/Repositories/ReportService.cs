@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Domain.Entities.ArbitratorFormModel;
+using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.CoordinatorFormModel;
+using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,45 +31,32 @@ namespace SharijhaAward.Persistence.Repositories
         {
             var cyclesQuery = _context.Cycles.AsQueryable();
 
-            if (userColumns.Length > 0)
-            {
-                cyclesQuery = cyclesQuery
-                    .Include(c => c.Categories)
-                    .ThenInclude(c => c.ProvidedForms)
-                    .ThenInclude(c => c.User);
-            }
-            if (arbitratorColumns.Length > 0)
-            {
-                cyclesQuery = cyclesQuery
-                   .Include(c => c.Categories)
-                   .ThenInclude(c => c.ProvidedForms)
-                   .ThenInclude(c => c.ArbitratorProvidedForms)
-                   .ThenInclude(c => c.Arbitrator);
-            }
-            if (coordinatorColumns.Length > 0)
-            {
-                cyclesQuery = cyclesQuery
-                    .Include(c => c.Categories)
-                    .ThenInclude(c => c.ProvidedForms)
-                    .ThenInclude(c => c.CoordinatorProvidedForms)
-                    .ThenInclude(c => c.Coordinator);
-            }
-            else if (providedFormColumns.Length > 0)
-            {
-                cyclesQuery = cyclesQuery.Include(c => c.Categories.Where(c => c.ParentId != null)).ThenInclude(c => c.ProvidedForms);
-            }
-
-            else if (categoryColumns.Length > 0)
-            {
-                cyclesQuery = cyclesQuery.Include(c => c.Categories);
-            }
-
             var cycles = await cyclesQuery.ToListAsync();
             
             var result = new List<Dictionary<string, object>>();
             
-            foreach( var cycle in cycles)
+            List<Category> AllCategoryEntities = await _context
+                .Categories.Where(x => cycles.Select(y => y.Id).Contains(x.CycleId))
+                .ToListAsync();
+
+            List<ProvidedForm> AllProvidedFormsEntities = await _context
+                .ProvidedForms.Where(x => AllCategoryEntities.Select(y => y.Id).Contains(x.categoryId))
+                .ToListAsync();
+
+            List<CoordinatorForm> AllCoordinatorFormEntitites = await _context
+                .CoordinatorForms.Where(x => AllProvidedFormsEntities.Select(y => y.Id).Contains(x.ProvidedFormId))
+                .ToListAsync();
+
+            List<ArbitratorForm> AllArbitratorFormEntitites = await _context
+                .ArbitratorForms.Where(x => AllProvidedFormsEntities.Select(y => y.Id).Contains(x.ProvidedFormId))
+                .ToListAsync();
+
+            foreach ( var cycle in cycles)
             {
+                List<Category> AllCategoryEntitiesForThisCycle = AllCategoryEntities
+                    .Where(x => x.CycleId == cycle.Id)
+                    .ToList();
+
                 var cyclesDict = new Dictionary<string, object>();
                 
                 foreach(var cycleColumn in cyclesColumns)
@@ -74,12 +65,16 @@ namespace SharijhaAward.Persistence.Repositories
                     cyclesDict[cycleColumn] = value!;
                 }
 
-                if(categoryColumns.Length > 0 && cycle.Categories != null)
+                if(categoryColumns.Length > 0 && AllCategoryEntitiesForThisCycle != null)
                 {
                     var categories = new List<Dictionary<string, object>>();
 
-                    foreach(var category in cycle.Categories)
+                    foreach(var category in AllCategoryEntitiesForThisCycle)
                     {
+                        List<ProvidedForm> AllProvidedFormsEntitiesForThisCategory = AllProvidedFormsEntities
+                            .Where(x => x.categoryId == category.Id)
+                            .ToList();
+
                         var categoryDict = new Dictionary<string, object>();
 
                         foreach(var categoryColumn in categoryColumns)
@@ -88,12 +83,20 @@ namespace SharijhaAward.Persistence.Repositories
                             categoryDict[categoryColumn] = value!;
                         }
 
-                        if(providedFormColumns.Length > 0 && category.ProvidedForms != null)
+                        if(providedFormColumns.Length > 0 && AllProvidedFormsEntitiesForThisCategory != null)
                         {
                             var providedForms = new List<Dictionary<string, object>>();
 
-                            foreach (var form in category.ProvidedForms)
+                            foreach (var form in AllProvidedFormsEntitiesForThisCategory)
                             {
+                                List<CoordinatorForm> AllCoordinatorFormEntititesForThisForm = AllCoordinatorFormEntitites
+                                    .Where(x => x.ProvidedFormId == form.Id)
+                                    .ToList();
+
+                                List<ArbitratorForm> AllArbitratorFormEntititesForThisForm = AllArbitratorFormEntitites
+                                    .Where(x => x.ProvidedFormId == form.Id)
+                                    .ToList();
+
                                 var formDict = new Dictionary<string, object>();
                                 foreach (var formColumn in providedFormColumns)
                                 {
@@ -114,11 +117,11 @@ namespace SharijhaAward.Persistence.Repositories
 
                                 }
 
-                                if (coordinatorColumns.Length > 0 && form.CoordinatorProvidedForms != null)
+                                if (coordinatorColumns.Length > 0 && AllCoordinatorFormEntititesForThisForm != null)
                                 {
                                     var coordinators = new List<Dictionary<string, object>>();
 
-                                    foreach (var coordinatorForm in form.CoordinatorProvidedForms)
+                                    foreach (var coordinatorForm in AllCoordinatorFormEntititesForThisForm)
                                     {
                                         var coordinatorDic = new Dictionary<string, object>();
                                        
@@ -136,11 +139,11 @@ namespace SharijhaAward.Persistence.Repositories
                                     formDict["Coordinators"] = coordinators;
                                 }
 
-                                if (arbitratorColumns.Length > 0 && form.ArbitratorProvidedForms != null)
+                                if (arbitratorColumns.Length > 0 && AllArbitratorFormEntititesForThisForm != null)
                                 {
                                     var arbitrators = new List<Dictionary<string, object>>();
 
-                                    foreach (var arbitratorForm in form.ArbitratorProvidedForms)
+                                    foreach (var arbitratorForm in AllArbitratorFormEntititesForThisForm)
                                     {
                                         var arbitratorDic = new Dictionary<string, object>();
                                        

@@ -6,11 +6,6 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMessageById
 {
@@ -49,10 +44,8 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
             }
 
             var message = await _emailMessageRepository
-                .Where(m => m.Id == request.Id)
-                .Where(m => m.To == User.Email || m.From == User.Email)
-                .Include(m => m.Attachments)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(m => m.Id == request.Id && 
+                    (m.To == User.Email || m.From == User.Email));
 
             if(message == null)
             {
@@ -74,23 +67,35 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
 
             var Sender = await _userRepository.GetByIdAsync(message.UserId);
 
-            data.Attachments = _mapper.Map<List<EmailAttachmentListVm>>(message.Attachments);
+            data.Attachments = _mapper.Map<List<EmailAttachmentListVm>>(await _emailAttachmentRepository
+                .Where(x => x.MessageId == data.Id).ToListAsync());
+
             data.PersonalPhotoUrl = Sender.ImageURL!;
             data.Gender = Sender.Gender;
             data.TypeName = request.lang == "en" ? Type!.EnglishType : Type!.ArabicType;
 
-            var ReplayMessages = _emailMessageRepository.WhereThenInclude(m => m.MessageId == message.Id && m.Id != message.Id, m => m.Attachments!).ToList();
+            var ReplayMessages = await _emailMessageRepository
+                .Where(m => m.MessageId == message.Id && m.Id != message.Id)
+                .ToListAsync();
            
             data.ReplayMessages = _mapper.Map<List<EmailMessageDto>>(ReplayMessages);
-            
+
+            List<EmailAttachment> AllEmailAttachmentEntities = await _emailAttachmentRepository
+                .Where(x => data.ReplayMessages.Select(y => y.Id).Contains(x.MessageId))
+                .ToListAsync();
+
             for (int i = 0; i < data.ReplayMessages.Count(); i++)
             {
                 data.ReplayMessages[i].PersonalPhotoUrl = User.ImageURL!;
                 data.ReplayMessages[i].Gender = User.Gender;
                 data.IsReplay = true;
+
+                data.ReplayMessages[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(AllEmailAttachmentEntities
+                    .Where(x => x.MessageId == data.ReplayMessages[i].Id)
+                    .ToList());
             }
+
             return new BaseResponse<EmailMessageDto>("", true, 200, data);
-          
         }
     }
 }

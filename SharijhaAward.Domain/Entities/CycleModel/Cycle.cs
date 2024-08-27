@@ -47,13 +47,13 @@ public class Cycle : AuditableEntity
     [Range(ValidationConstants.GroupCategoryNumberMinValue, ValidationConstants.GroupCategoryNumberMaxValue)]
     public int GroupCategoryNumber { get; set; } = 0;
     // navigation property to the category
-    public virtual List<Category> Categories { get; set; } = new();
+    //public virtual List<Category> Categories { get; set; } = new();
     
     // navigation property to the cycle condition
-    public virtual List<CycleCondition> CycleConditions { get; set; } = new();
+    //public virtual List<CycleCondition> CycleConditions { get; set; } = new();
     
     // navigation property to the Agenda 
-    public virtual List<Agenda> Agendas { get; set; } = new();
+    //public virtual List<Agenda> Agendas { get; set; } = new();
     
     // navigation property to the News
    

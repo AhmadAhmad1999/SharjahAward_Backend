@@ -45,20 +45,20 @@ public class Category : AuditableEntity
     public int? ParentId { get; set; }
     
     
-    public  List<CategoryCommittee> CategoryCommittees { get; set; } = new();
-    public virtual List<Committee> Committees { get; set; } = new();
+    //public  List<CategoryCommittee> CategoryCommittees { get; set; } = new();
+    //public virtual List<Committee> Committees { get; set; } = new();
     
-    public virtual List<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; } = new();
+    //public virtual List<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; } = new();
     
     public Cycle Cycle { get; set; } = null!;
     [ForeignKey(nameof(Cycle))]
     public int CycleId { get; set; }
     
-    public virtual List<Category> SubCategories { get; set; } = null!;
-    public virtual List<TermAndCondition> TermsAndConditions { get; set; } = new();
-    public virtual List<TrainingWorkshop> TrainingWorkshops { get; set; } = new();
-    public virtual List<Criterion> Criterions { get; set; } = new();
-    public virtual List<ProvidedForm> ProvidedForms { get; set; } = new();
-    public virtual List<Meeting> Meetings { get; set; } = new();
-    public virtual List<CategoryArbitrator> CategoryArbitrators { get; set; } = new();
+    //public virtual List<Category> SubCategories { get; set; } = null!;
+    //public virtual List<TermAndCondition> TermsAndConditions { get; set; } = new();
+    //public virtual List<TrainingWorkshop> TrainingWorkshops { get; set; } = new();
+    //public virtual List<Criterion> Criterions { get; set; } = new();
+    //public virtual List<ProvidedForm> ProvidedForms { get; set; } = new();
+    //public virtual List<Meeting> Meetings { get; set; } = new();
+    //public virtual List<CategoryArbitrator> CategoryArbitrators { get; set; } = new();
 }

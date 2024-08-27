@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
@@ -7,11 +8,6 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgForAwardTeam
 {
@@ -25,8 +21,16 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
+        private readonly IAsyncRepository<EmailAttachment> _EmailAttachmentRepository;
 
-        public GetAllMsgForAwardTeamQueryHandler(IUserRepository userRepository, IAsyncRepository<MessageType> messageTypeRepository, IAsyncRepository<EmailMessage> emailMessageRepository, IAsyncRepository<RoleMessageType> roleMessageTypeRepository, IAsyncRepository<UserRole> userRoleRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetAllMsgForAwardTeamQueryHandler(IUserRepository userRepository, 
+            IAsyncRepository<MessageType> messageTypeRepository, 
+            IAsyncRepository<EmailMessage> emailMessageRepository, 
+            IAsyncRepository<RoleMessageType> roleMessageTypeRepository, 
+            IAsyncRepository<UserRole> userRoleRepository, 
+            IJwtProvider jwtProvider, 
+            IMapper mapper,
+            IAsyncRepository<EmailAttachment> EmailAttachmentRepository)
         {
             _emailMessageRepository = emailMessageRepository;
             _roleMessageTypeRepository = roleMessageTypeRepository;
@@ -35,6 +39,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
             _userRepository = userRepository;
             _jwtProvider = jwtProvider;
             _mapper = mapper;
+            _EmailAttachmentRepository = EmailAttachmentRepository;
         }
 
         public async Task<BaseResponse<List<EmailMessageListVM>>> Handle(GetAllMsgForAwardTeamQuery request, CancellationToken cancellationToken)
@@ -63,7 +68,9 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
            
             for (int i = 0; i < MessageTypeIds.Count(); i++)
             {
-                var EmailMessage = _emailMessageRepository.WhereThenIncludeThenPagination(m => m.TypeId == MessageTypeIds[i] && m.Id == m.MessageId, request.page, request.perPage , m => m.Attachments!).ToList();
+                var EmailMessage = await _emailMessageRepository.WhereThenIncludeThenPagination(m => m.TypeId == MessageTypeIds[i] && 
+                    m.Id == m.MessageId, request.page, request.perPage).ToListAsync();
+
                 emailMessages.AddRange(EmailMessage);
 
                 Count = _emailMessageRepository.GetCount(m => m.TypeId == MessageTypeIds[i]);
@@ -71,22 +78,26 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
             
             var data = _mapper.Map<List<EmailMessageListVM>>(emailMessages);
             
-            for(int i=0; i< data.Count(); i++)
+            List<EmailAttachment> AllEmailAttachmentEntities = await _EmailAttachmentRepository
+                .Where(x => data.Select(y => y.Id).Contains(x.MessageId))
+                .ToListAsync();
+
+            for (int i=0; i< data.Count(); i++)
             {
                 var Type = await _messageTypeRepository.GetByIdAsync(emailMessages[i].TypeId);
                 
-                data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(emailMessages[i].Attachments);
+                data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(AllEmailAttachmentEntities
+                    .Where(x => x.MessageId == data[i].Id)
+                    .ToList());
                 
                 data[i].TypeName = request.lang == "en" ? Type!.EnglishType : Type!.ArabicType;
 
                 data[i].IsOutComing = data[i].From == User!.Email ? true : false; 
             }
-            
 
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
             
             return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data.OrderByDescending(d=>d.CreatedAt).ToList(), pagination, Count);
-
         }
     }
 }

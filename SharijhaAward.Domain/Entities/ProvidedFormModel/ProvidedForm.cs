@@ -40,8 +40,9 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public CategoryEducationalClass? CategoryEducationalClass { get; set; }
         public int? CategoryEducationalEntityId { get; set; }
         public CategoryEducationalEntity? CategoryEducationalEntity { get; set; }
-        public List<CoordinatorForm> CoordinatorProvidedForms { get; set; } = null!;
-        public List<ArbitratorForm> ArbitratorProvidedForms { get; set; } = null!;
+        public string Formlanguage { get; set; } = string.Empty;
+        //public List<CoordinatorForm> CoordinatorProvidedForms { get; set; } = null!;
+        //public List<ArbitratorForm> ArbitratorProvidedForms { get; set; } = null!;
 
         //public virtual List<Arbitration> Arbitrations { get; set; } = new();
 

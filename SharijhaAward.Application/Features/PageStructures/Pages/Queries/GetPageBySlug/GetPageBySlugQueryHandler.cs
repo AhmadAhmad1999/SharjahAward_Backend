@@ -23,22 +23,32 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
     {
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
         private readonly IAsyncRepository<PageStructureImages> _pageStructureImagesRepository;
+        private readonly IAsyncRepository<DarkCard> _DarkCardRepository;
+        private readonly IAsyncRepository<ParagraphCard> _ParagraphCardRepository;
+        private readonly IAsyncRepository<TextCard> _TextCardRepository;
+        private readonly IAsyncRepository<ImageCard> _ImageCardRepository;
         private readonly IMapper _mapper;
 
-        public GetPageBySlugQueryHandler(IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper, IAsyncRepository<PageStructureImages> pageStructureImagesRepository)
+        public GetPageBySlugQueryHandler(IAsyncRepository<PageStructure> pageStructureRepository,
+            IMapper mapper, 
+            IAsyncRepository<PageStructureImages> pageStructureImagesRepository,
+            IAsyncRepository<DarkCard> DarkCardRepository,
+            IAsyncRepository<ParagraphCard> ParagraphCardRepository,
+            IAsyncRepository<TextCard> TextCardRepository,
+            IAsyncRepository<ImageCard> ImageCardRepository)
         {
             _pageStructureRepository = pageStructureRepository;
             _mapper = mapper;
             _pageStructureImagesRepository = pageStructureImagesRepository;
+            _DarkCardRepository = DarkCardRepository;
+            _ParagraphCardRepository = ParagraphCardRepository;
+            _TextCardRepository = TextCardRepository;
+            _ImageCardRepository = ImageCardRepository;
         }
         public async Task<BaseResponse<PageDto>> Handle(GetPageBySlugQuery request, CancellationToken cancellationToken)
         {
             var page = await _pageStructureRepository
-                .WhereThenInclude(p => p.Slug == request.Slug, p => p.DarkCards!)
-                .Include(p => p.ParagraphCards)
-                .Include(p=>p.ImageCards)
-                .Include(p=>p.TextCards)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(p => p.Slug == request.Slug);
 
             if (page == null)
             {
@@ -49,13 +59,21 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
 
             data.Components = new List<Component>();
 
-            var DarkCardsList = _mapper.Map<List<DarkCardListVM>>(page.DarkCards);
+            var DarkCardsList = _mapper.Map<List<DarkCardListVM>>(await _DarkCardRepository
+                .Where(x => x.PageId == page.Id)
+                .ToListAsync());
 
-            var ParagraphCardsList = _mapper.Map<List<ParagraphCardListVM>>(page.ParagraphCards);
+            var ParagraphCardsList = _mapper.Map<List<ParagraphCardListVM>>(await _ParagraphCardRepository
+                .Where(x => x.PageId == page.Id)
+                .ToListAsync());
 
-            var ImageCardsList = _mapper.Map<List<ImageCardListVM>>(page.ImageCards);
+            var ImageCardsList = _mapper.Map<List<ImageCardListVM>>(await _ImageCardRepository
+                .Where(x => x.PageId == page.Id)
+                .ToListAsync());
 
-            var TextCardsList = _mapper.Map<List<TextCardListVM>>(page.TextCards);
+            var TextCardsList = _mapper.Map<List<TextCardListVM>>(await _TextCardRepository
+                .Where(x => x.PageStructureId == page.Id)
+                .ToListAsync());
 
             foreach (var Darkcard in DarkCardsList)
             {

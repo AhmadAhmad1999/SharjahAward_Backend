@@ -60,29 +60,28 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
          
             var form = await _providedFormRepository.Where(p => p.Id == request.formId).FirstOrDefaultAsync();
 
-            var terms = await _termRepository.WhereThenInclude(t => t.CategoryId == category.Id 
-                , t => t.ConditionAttachments).ToListAsync();
+            var terms = await _termRepository.WhereThenInclude(t => t.CategoryId == category.Id).ToListAsync();
 
-            List<ConditionsProvidedForms> conditionsProvideds = new List<ConditionsProvidedForms>();
+            List<ConditionsProvidedForms> conditionsProvideds = await _conditionsProvidedFormsRepository
+                .Where(x => terms.Select(y => y.Id).Contains(x.TermAndConditionId) &&
+                    x.ProvidedFormId == form!.Id)
+                .ToListAsync();
 
-            for (int i = 0; i < terms.Count(); i++)
-            {
-                var conditionsProvidedsobject =
-                 _conditionsProvidedFormsRepository.WhereThenInclude(
-                     c => c.ProvidedFormId == form!.Id && c.TermAndConditionId == terms[i].Id,
-                     c => c.Attachments).FirstOrDefault();
-
-                if (conditionsProvidedsobject != null)
-                    conditionsProvideds.Add(conditionsProvidedsobject!);
-            }
+            var AllConditionAttachmentEntitites = await _conditionAttachmentRepository
+                .Where(x => conditionsProvideds.Select(y => y.Id).Any(y => y == x.ConditionsProvidedFormsId))
+                .ToListAsync();
 
             string msg;
             if(terms.Count() != 0)
             {
                 for(int i=0; i < terms.Count(); i++)
                 {
+                    var AllConditionAttachmentEntititesForThisTerm = AllConditionAttachmentEntitites
+                        .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
+                        .ToList();
+
                     //Check on Terms that need Attachments
-                    if (terms[i].RequiredAttachmentNumber != conditionsProvideds[i].Attachments.Count() 
+                    if (terms[i].RequiredAttachmentNumber != AllConditionAttachmentEntititesForThisTerm.Count() 
                         && terms[i].RequiredAttachmentNumber != 0 && terms[i].NeedAttachment == true )
                     {
                         msg = request.lang == "en"
@@ -102,8 +101,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
 
                     }
                     else if (
-                        terms[i].RequiredAttachmentNumber == 0 && 
-                        conditionsProvideds[i].Attachments.Count() < 1 &&
+                        terms[i].RequiredAttachmentNumber == 0 &&
+                        AllConditionAttachmentEntititesForThisTerm.Count() < 1 &&
                         terms[i].NeedAttachment
                         )
                     {
