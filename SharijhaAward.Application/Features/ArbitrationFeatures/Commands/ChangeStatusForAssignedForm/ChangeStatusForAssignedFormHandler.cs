@@ -39,9 +39,12 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
             }
 
             ArbitrationEntity.isAccepted = Request.isAccepted;
-            
+            ArbitrationEntity.SortedAt = DateTime.UtcNow;
+
             if (Request.isAccepted == FormStatus.Rejected)
+            {
                 ArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
+            }
 
             await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
 
