@@ -23,6 +23,7 @@ using SharijhaAward.Infrastructure;
 using SharijhaAward.Infrastructure.Authentication;
 using SharijhaAward.Persistence;
 using SharijhaAward.Persistence.Repositories;
+using SharijhaAward.Persistence.Seeders;
 using System.Net;
 
 try
@@ -149,6 +150,13 @@ try
 
 
     var app = builder.Build();
+
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        SeedDatabase.Initialize(services);
+    }
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
