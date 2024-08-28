@@ -9,6 +9,7 @@ using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 using SharijhaAward.Application.Features.Albums.Galleries.Queries.GetAllGalleries;
 using SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums;
+using SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllLastVersionsForAllTypes;
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwardPublications;
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAwardPublicationById;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSponsor;
@@ -26,6 +27,7 @@ using SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId;
 using SharijhaAward.Application.Features.News.Queries.GetNewsById;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPagesWithSubPages;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageBySlug;
 using SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferenceSourcePage;
@@ -799,6 +801,59 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(Response),
                 404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("Page/GetMainPagesWithSubPages")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetMainPagesWithSubPages([FromQuery] GetMainPagesWithSubPagesQuery query)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            query.lang = HeaderValue!;
+
+            BaseResponse<List<MainPageWithSubPageListVM>> Response = await _Mediator.Send(query);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("AppsVersions/GetAllLastVersionsForAllTypes")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllLastVersionsForAllTypes()
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllLastVersionsForAllTypesListVM>> Response = await _Mediator.Send(new GetAllLastVersionsForAllTypesQuery()
+            {
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
                 _ => BadRequest(Response)
             };
         }
