@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.IdentityModels;
@@ -52,6 +53,8 @@ namespace SharijhaAward.Api.Logger
 
                 if (Controller_Function_Name[0].ToString() != "Login" &&
                     Controller_Function_Name[0].ToString() != "SignUp" &&
+                    Controller_Function_Name[0].ToString() != "CheckConfirmationCodeForSignUp" &&
+                    Controller_Function_Name[0].ToString() != "CheckConfirmationCodeForForgettonPassword" &&
                     Controller_Function_Name[0].ToString() != "SignUpFromAdminDashboard" &&
                     (Controller_Function_Name[1].ToString() != "Website"))
                 {
@@ -64,6 +67,7 @@ namespace SharijhaAward.Api.Logger
                         token = token.Replace("bearer ", string.Empty);
 
                         UserToken? CheckUserId = await _UserTokenRepository!
+                            .Include(x => x.User!)
                             .FirstOrDefaultAsync(x => x.UserId == int.Parse(_JwtProvider.GetUserIdFromToken(token)) &&
                                 x.Token == token);
 

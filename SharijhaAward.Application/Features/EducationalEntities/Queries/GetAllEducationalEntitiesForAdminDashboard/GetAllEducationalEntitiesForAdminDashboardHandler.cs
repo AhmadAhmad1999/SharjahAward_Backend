@@ -17,11 +17,11 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
     {
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
         private readonly IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository;
-        private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
+        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduInstitutionCoordinatorRepository;
         private readonly IMapper _Mapper;
         public GetAllEducationalEntitiesForAdminDashboardHandler(IAsyncRepository<EducationalEntity> EducationalEntityRepository,
             IAsyncRepository<EducationalInstitution> EducationalInstitutionRepository,
-            IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
+            IAsyncRepository<EduEntitiesCoordinator> EduInstitutionCoordinatorRepository,
             IMapper Mapper)
         {
             _EducationalEntityRepository = EducationalEntityRepository;
@@ -43,10 +43,10 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
                 .Where(x => EducationalEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
                 .ToListAsync();
 
-            List<EduInstitutionCoordinator> CoordinatorFromEducationalInstitution = await _EduInstitutionCoordinatorRepository
-                .Include(x => x.EducationalInstitution!)
+            List<EduEntitiesCoordinator> CoordinatorFromEducationalEntities = await _EduInstitutionCoordinatorRepository
+                .Include(x => x.EducationalEntity!)
                 .Include(x => x.Coordinator!)
-                .Where(x => EducationalEntities.Select(y => y.Id).Contains(x.EducationalInstitution!.EducationalEntityId))
+                .Where(x => EducationalEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
                 .ToListAsync();
 
             EducationalEntities = EducationalEntities.Select(x => new GetAllEducationalEntitiesForAdminDashboardListVM()
@@ -60,7 +60,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
                         Id = y.Id,
                         ArabicName = y.ArabicName,
                         EnglishName = y.EnglishName,
-                        Coordinators = _Mapper.Map<List<CoordinatorDto>>(CoordinatorFromEducationalInstitution.Select(c=>c.Coordinator))
+                        Coordinators = _Mapper.Map<List<CoordinatorDto>>(CoordinatorFromEducationalEntities.Select(c=>c.Coordinator))
                     }).ToList()
             }).ToList();
 
