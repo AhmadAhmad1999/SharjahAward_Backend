@@ -57,9 +57,7 @@ namespace SharijhaAward.Api.Logger
                     Controller_Function_Name[0].ToString() != "CheckConfirmationCodeForSignUp" &&
                     Controller_Function_Name[0].ToString() != "CheckConfirmationCodeForForgettonPassword" &&
                     Controller_Function_Name[0].ToString() != "SignUpFromAdminDashboard" &&
-                    (!string.IsNullOrEmpty(Controller_Function_Name[0].ToString())
-                        ? !Controller_Function_Name[0].ToString()!.StartsWith("Website")
-                        : true) )
+                    (Controller_Function_Name[1].ToString() != "Website"))
                 {
                     if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
                         token.ToLower() != "bearer" && token.ToLower() != "bearer ")
