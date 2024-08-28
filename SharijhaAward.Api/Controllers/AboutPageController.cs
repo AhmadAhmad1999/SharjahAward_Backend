@@ -94,25 +94,6 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpGet("WebsiteGetAboutPageWebSite", Name = "WebsiteGetAboutPageWebSite")]
-        public async Task<IActionResult> WebsiteGetAboutPageWebSite()
-        {
-            //get Language from header
-            var language = HttpContext.Request.Headers["lang"];
-
-            var response = await _mediator.Send(new GetAboutPageWebSiteQuery()
-            {
-                lang = language!
-            });
-
-            return response.statusCode switch
-            {
-                200 => Ok(response),
-                404 => NotFound(response),
-                _ => BadRequest(response)
-            };
-        }
-
         [HttpPut(Name = "UpdateAboutPage")]
         public async Task<IActionResult> UpdateAboutPage([FromForm] UpdateAboutPageCommand command)
         {

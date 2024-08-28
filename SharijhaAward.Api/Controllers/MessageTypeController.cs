@@ -93,23 +93,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response),
             };
         }
-        [HttpGet("WebsiteGetAllMessageType", Name = "WebsiteGetAllMessageType")]
-        public async Task<IActionResult> WebsiteGetAllMessageType()
-        {
-            var language = HttpContext.Request.Headers["lang"];
-
-            var response = await _mediator.Send(new GetAllMsgQuery()
-            {
-                lang = language!
-            });
-
-            return response.statusCode switch
-            {
-                200 => Ok(response),
-                404 => NotFound(response),
-                _ => BadRequest(response),
-            };
-        }
+        
         [HttpPost("AsignMessageTypeToRole",Name = "AsignMessageTypeToRole")]
         public async Task<IActionResult> AsignMessageTypeToRole(AsignMessageToRoleQuery query)
         {

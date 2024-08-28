@@ -152,23 +152,6 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpGet("WebsiteGetPageBySlug/{Slug}", Name = "WebsiteGetPageBySlug")]
-        public async Task<IActionResult> WebsiteGetPageBySlug(string Slug)
-        {
-            var language = HttpContext.Request.Headers["lang"];
-
-            var response = await _mediator.Send(new GetPageBySlugQuery()
-            {
-                lang = language!,
-                Slug = Slug
-            });
-
-            return response.statusCode switch
-            {
-                200 => Ok(response),
-                404 => NotFound(response),
-                _ => BadRequest(response)
-            };
-        }
+        
     }
 }

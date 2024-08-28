@@ -278,34 +278,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("WebsiteGetPrivacyPolicy")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> WebsiteGetPrivacyPolicy(string Slug)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            if (string.IsNullOrEmpty(HeaderValue))
-                HeaderValue = "en";
-
-            BaseResponse<GetPrivacyPolicyDto> Response = await _Mediator.Send(new GetPrivacyPolicyQuery()
-            {
-                Slug = Slug,
-                lang = HeaderValue!
-            });
-
-            return Response.statusCode switch
-            {
-                404 => NotFound(Response),
-                200 => Ok(Response),
-                _ => BadRequest(Response)
-            };
-        }
+        
         [HttpPut("EditTermsOfUse")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -359,34 +332,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("WebsiteGetTermsOfUse")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> WebsiteGetTermsOfUse(string Slug)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            if (string.IsNullOrEmpty(HeaderValue))
-                HeaderValue = "en";
-
-            BaseResponse<GetTermsOfUseDto> Response = await _Mediator.Send(new GetTermsOfUseQuery()
-            {
-                Slug = Slug,
-                lang = HeaderValue!
-            });
-
-            return Response.statusCode switch
-            {
-                404 => NotFound(Response),
-                200 => Ok(Response),
-                _ => BadRequest(Response)
-            };
-        }
+        
         [HttpPut("ChangeUserAccountLanguage")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

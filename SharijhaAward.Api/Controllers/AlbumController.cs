@@ -101,23 +101,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpGet("WebsiteGetAllAlbums", Name = "WebsiteGetAllAlbums")]
-        public async Task<IActionResult> WebsiteGetAllAlbums([FromQuery] GetAllAlbumsQuery query)
-        {
-            //get Language from header
-            var Language = HttpContext.Request.Headers["lang"];
-
-            query.lang = Language!;
-
-            var response = await _mediator.Send(query);
-
-            return response.statusCode switch
-            {
-                200 => Ok(response),
-                404 => NotFound(response),
-                _ => BadRequest(response)
-            };
-        }
+        
         [HttpGet("{Id}", Name = "GetAlbumById")]
         public async Task<IActionResult> GetAlbumById(int Id)
         {
@@ -195,25 +179,6 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpGet("WebsiteGetAllGalleries/{AlbumId}", Name = "WebsiteGetAllGalleries")]
-        public async Task<IActionResult> WebsiteGetAllGalleries(int AlbumId, int page = 1, int perPage = 10)
-        {
-            //get Language from header
-            var language = HttpContext.Request.Headers["lang"];
-
-            var response = await _mediator.Send(new GetAllGalleriesQuery()
-            {
-                AlbumId = AlbumId,
-                lang = language!,
-                page = page,
-                perPage = perPage
-            });
-            return response.statusCode switch
-            {
-                200 => Ok(response),
-                404 => NotFound(response),
-                _ => BadRequest(response)
-            };
-        }
+        
     }
 }

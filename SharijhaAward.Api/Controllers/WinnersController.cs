@@ -101,32 +101,6 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("WebsiteGetAllWinnersForWebsite")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> WebsiteGetAllWinnersForWebsite([FromQuery] GetAllWinnersForWebsiteQuery GetAllWinnersForWebsiteQuery)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            if (string.IsNullOrEmpty(HeaderValue))
-                HeaderValue = "en";
-
-            GetAllWinnersForWebsiteQuery.lang = HeaderValue;
-
-            BaseResponse<List<GetAllWinnersForWebsiteMainResponse>> Response = await _Mediator.Send(GetAllWinnersForWebsiteQuery);
-
-            return Response.statusCode switch
-            {
-                404 => NotFound(Response),
-                200 => Ok(Response),
-                _ => BadRequest(Response)
-            };
-        }
         [HttpGet("GetWinnersByLevel")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
