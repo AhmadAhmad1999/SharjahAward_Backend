@@ -54,23 +54,6 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpGet("WebsiteGetReferenceSourcePage", Name = "WebsiteGetReferenceSourcePage")]
-        public async Task<IActionResult> WebsiteGetReferenceSourcePage()
-        {
-            var language = HttpContext.Request.Headers["lang"];
-
-
-            var response = await _mediator.Send(new GetReferenceSourcePageQuery
-            {
-                lang = language!,
-            });
-
-            return response.statusCode switch
-            {
-                200 => Ok(response),
-                404 => NotFound(response),
-                _ => BadRequest(response)
-            };
-        }
+        
     }
 }

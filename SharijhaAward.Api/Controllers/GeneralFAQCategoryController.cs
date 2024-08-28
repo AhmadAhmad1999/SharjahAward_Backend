@@ -153,31 +153,6 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("WebsiteGetAllGeneralFAQCategories")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> WebsiteGetAllGeneralFAQCategories([FromQuery] GetAllGeneralFAQCategoryQuery query)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            if (string.IsNullOrEmpty(HeaderValue))
-                HeaderValue = "en";
-
-            query.lang = HeaderValue!;
-
-            var Response = await _Mediator.Send(query);
-
-            return Response.statusCode switch
-            {
-                404 => NotFound(Response),
-                200 => Ok(Response),
-                _ => BadRequest(Response)
-            };
-        }
+        
     }
 }

@@ -138,27 +138,7 @@ namespace SharijhaAward.Api.Controllers
             return Ok(new { data = Event });
          
         }
-        [HttpGet("WebsiteGetEventById/{Id}", Name = "WebsiteGetEventById")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult> WebsiteGetEventById(int id)
-        {
-            var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
-            var Event = await _Mediator.Send(new GetEventByIdQuery()
-            {
-                Id = id,
-                lang = headerValue
-            });
-
-            return Ok(new { data = Event });
-
-        }
+        
         [HttpGet("GetEventWithInvitees/{id}", Name = "GetEventWithInvitees")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

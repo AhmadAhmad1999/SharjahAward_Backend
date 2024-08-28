@@ -79,35 +79,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        [HttpGet("WebsiteGetAllMessages", Name = "WebsiteGetAllMessages")]
-        public async Task<IActionResult> WebsiteGetAllMessages(string? query, int? filter, int page = 1, int perPage = 10)
-        {
-            var token = HttpContext.Request.Headers.Authorization;
-
-            var Language = HttpContext.Request.Headers["lang"];
-
-            if (string.IsNullOrEmpty(token))
-                return Language == "en"
-                    ? Unauthorized("Un Authorize")
-                    : Unauthorized("إنتهت صلاحية الجلسة");
-
-            var response = await _mediator.Send(new GetAllEmailMessageQuery()
-            {
-                filter = filter,
-                page = page,
-                perPage = perPage,
-                query = query,
-                lang = Language!,
-                token = token!
-            });
-            return response.statusCode switch
-            {
-                404 => NotFound(response),
-                200 => Ok(response),
-                401 => Unauthorized(response),
-                _ => BadRequest(response)
-            };
-        }
+        
         [HttpDelete("{Id}", Name= "DeleteMessage")]
         public async Task<IActionResult> DeleteMessage(int Id)
         {
