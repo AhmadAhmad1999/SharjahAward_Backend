@@ -69,7 +69,7 @@ namespace SharijhaAward.Persistence.Seeders
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null,
-                    Id =4,
+                    Id = 4,
                     ArabicName = "منسق 4",
                     Email = "Coordinator4@Coordinator4.com",
                     EnglishName = "Coordinator 4",

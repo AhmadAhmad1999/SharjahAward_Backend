@@ -80,7 +80,6 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(response),
                 _ => BadRequest(response)
             };
-           
         }
 
         [HttpGet(Name = "GetAllAgenda")]
