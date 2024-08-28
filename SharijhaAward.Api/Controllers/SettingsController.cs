@@ -16,6 +16,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Settings.Commands.EditAboutApp;
 using SharijhaAward.Application.Features.Settings.Queries.GetAboutApp;
+using SharijhaAward.Application.Features.Settings.Commands.ApplySeeder;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -419,6 +420,19 @@ namespace SharijhaAward.Api.Controllers
                 Slug = Slug,
                 lang = HeaderValue!
             });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("ApplySeeder", Name = "ApplySeeder")]
+        public async Task<IActionResult> ApplySeeder()
+        {
+            var Response = await _Mediator.Send(new ApplySeederQuery());
 
             return Response.statusCode switch
             {

@@ -1,16 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SharijhaAward.Application.Contract.Persistence;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SharijhaAward.Persistence.Seeders
 {
-    public static class SeedDatabase
+    public class SeedDatabase : ISeedDatabase
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new SharijhaAwardDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<SharijhaAwardDbContext>>()))
@@ -152,5 +154,27 @@ namespace SharijhaAward.Persistence.Seeders
                 TrainingWorkshopSeeder.Seed();
             }
         }
+
+        //public void MakeMigration(IServiceProvider serviceProvider)
+        //{
+        //    using (var DBContext = new SharijhaAwardDbContext(
+        //        serviceProvider.GetRequiredService<DbContextOptions<SharijhaAwardDbContext>>()))
+        //    {
+        //        try
+        //        {
+        //            System.Data.Entity.Database.SetInitializer(new MigrateDatabaseToLatestVersion<SharijhaAwardDbContext, Configuration>());
+        //            using (var context = new SharijhaAwardDbContext())
+        //            {
+        //                context.Database.Initialize(force: true);
+        //            }
+
+        //        }
+        //        catch (Exception ex) when
+        //        {
+        //            return InternalServerError(ex);
+        //        }
+        //    }
+                
+        //}
     }
 }
