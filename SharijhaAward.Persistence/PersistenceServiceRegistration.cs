@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Persistence.Repositories;
+using SharijhaAward.Persistence.Seeders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,7 @@ namespace SharijhaAward.Persistence
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICategoryRepository , CategoryRepository>();
             services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<ISeedDatabase, SeedDatabase>();
 
             return services;
         }

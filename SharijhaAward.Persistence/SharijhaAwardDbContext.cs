@@ -436,7 +436,7 @@ namespace SharijhaAward.Persistence
                 (p.User2 != null ? !p.User2.isDeleted : false));
 
             modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Parent != null ? !p.Parent.isDeleted : false) &&
+                //(p.Parent != null ? !p.Parent.isDeleted : false) &&
                 (p.Category != null ? !p.Category.isDeleted : false));
 
             modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted &&
@@ -463,7 +463,7 @@ namespace SharijhaAward.Persistence
                 (p.Event != null ? !p.Event.isDeleted : false));
 
             modelBuilder.Entity<Category>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Parent != null ? !p.Parent.isDeleted : false) &&
+                //(p.Parent != null ? !p.Parent.isDeleted : false) &&
                 (p.Cycle != null ? !p.Cycle.isDeleted : false));
 
             modelBuilder.Entity<News>().HasQueryFilter(p => !p.isDeleted);
@@ -675,6 +675,8 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<PageStructureImages>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<PageStructureImages>().HasQueryFilter(p => p.ImageCard != null ? !p.ImageCard.isDeleted : false);
+            
+            modelBuilder.Entity<RolePermission>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Domain.Entities.IndexModel.Index>()
                 .HasIndex(p => p.EnglishName)

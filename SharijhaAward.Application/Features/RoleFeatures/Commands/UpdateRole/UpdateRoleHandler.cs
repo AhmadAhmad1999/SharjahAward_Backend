@@ -121,7 +121,7 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole
                             LastModifiedBy = null
                         });
 
-                    if (NewRolePermissionEntites.Count() > 0)
+                    if (NewPermissionIds.Any() || DeletePermissionIds.Any())
                     {
                         await _RolePermissionRepository.AddRangeAsync(NewRolePermissionEntites);
 

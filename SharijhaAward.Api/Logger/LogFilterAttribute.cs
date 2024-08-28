@@ -53,6 +53,7 @@ namespace SharijhaAward.Api.Logger
 
                 if (Controller_Function_Name[0].ToString() != "Login" &&
                     Controller_Function_Name[0].ToString() != "SignUp" &&
+                    Controller_Function_Name[0].ToString() != "ApplySeeder" &&
                     Controller_Function_Name[0].ToString() != "CheckConfirmationCodeForSignUp" &&
                     Controller_Function_Name[0].ToString() != "CheckConfirmationCodeForForgettonPassword" &&
                     Controller_Function_Name[0].ToString() != "SignUpFromAdminDashboard" &&
