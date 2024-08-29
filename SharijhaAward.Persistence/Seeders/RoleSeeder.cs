@@ -55,6 +55,28 @@ namespace SharijhaAward.Persistence.Seeders
                        // Id = 6,
                        EnglishName = "Arbitrator",
                        ArabicName = "محكم"
+                   },
+                   new Role
+                   {
+                       // Id = 5,
+                       EnglishName = "Subcommittee Chairman",
+                       ArabicName = "رئيس لجنة فرعية"
+                   }, new Role
+                   {
+                       // Id = 6,
+                       EnglishName = "Chief Arbitrator",
+                       ArabicName = "رئيس المحكمين"
+                   },
+                   new Role
+                   {
+                       // Id = 5,
+                       EnglishName = "Chairman of Committees",
+                       ArabicName = "رئيس اللجان"
+                   }, new Role
+                   {
+                       // Id = 6,
+                       EnglishName = "Award Team",
+                       ArabicName = "فريق الجائزة"
                    }
                 );
                 _context.SaveChanges();

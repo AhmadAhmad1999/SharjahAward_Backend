@@ -19,7 +19,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public string SubCategoryName { get; set; } = string.Empty;
         public float FinalScore { get; set; }
         public bool? IsAccepted { get; set; }
-        public string ReasonOfRejection { get; set; } = string.Empty;
+        //public string ReasonOfRejection { get; set; } = string.Empty;
         public int categoryId { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool? SucceedToFinalArbitration { get; set; }
