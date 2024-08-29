@@ -104,7 +104,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
           
             if(term.NeedAttachment)
             {
-                if (term.RequiredAttachmentNumber <= (attachmentsEntities.Count + 1) || term.RequiredAttachmentNumber == 0)
+                if (term.RequiredAttachmentNumber > attachmentsEntities.Count() || term.RequiredAttachmentNumber == 0)
                 {
                     data.AttachementPath = await _attachmentFileService.SaveProvidedFormFilesAsync(request.attachment, form!.Id);
 

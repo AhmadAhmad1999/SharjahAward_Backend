@@ -157,24 +157,16 @@ namespace SharijhaAward.Persistence.Seeders
 
         //public void MakeMigration(IServiceProvider serviceProvider)
         //{
-        //    using (var DBContext = new SharijhaAwardDbContext(
-        //        serviceProvider.GetRequiredService<DbContextOptions<SharijhaAwardDbContext>>()))
-        //    {
-        //        try
-        //        {
-        //            System.Data.Entity.Database.SetInitializer(new MigrateDatabaseToLatestVersion<SharijhaAwardDbContext, Configuration>());
-        //            using (var context = new SharijhaAwardDbContext())
-        //            {
-        //                context.Database.Initialize(force: true);
-        //            }
 
-        //        }
-        //        catch (Exception ex) when
-        //        {
-        //            return InternalServerError(ex);
-        //        }
+        //    Database.SetInitializer();
+        //    using (var context = new SharijhaAwardDbContext(
+        //         serviceProvider.GetRequiredService<DbContextOptions<SharijhaAwardDbContext>>()))
+        //    {
+                     
         //    }
-                
+
+            
+
         //}
     }
 }
