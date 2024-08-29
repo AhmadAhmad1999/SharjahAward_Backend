@@ -43,10 +43,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
                 .Where(x => !CriterionItemEntities.Select(y => y.CriterionId).Contains(x.Id)).ToList();
 
             List<CriterionAttachment> InsertedSubCriterionAttachment = await _CriterionAttachmentRepository
-                .Include(x => x.Criterion!)
                 .Where(x => x.Criterion!.CategoryId == Request.CategoryId &&
                     x.ProvidedFormId == Request.ProvidedFormId)
-                .Include(x => x.Criterion)
                 .ToListAsync();
 
             List<Criterion> CriterionEntitiesWithNoAttachments = SubCriterionEntitiesWithNoItems
@@ -83,7 +81,6 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
             }
 
             List<CriterionItemAttachment> InsertedCriterionItemAttachment = await _CriterionItemAttachmentRepository
-                .Include(x => x.CriterionItem!).Include(x => x.CriterionItem!.Criterion!)
                 .Where(x => x.CriterionItem!.Criterion!.CategoryId == Request.CategoryId &&
                     x.ProvidedFormId == Request.ProvidedFormId)
                 .ToListAsync();

@@ -36,7 +36,6 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
             string ResponseMessage = string.Empty;
 
             List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
                 .Where(x => x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)" &&
                     (!string.IsNullOrEmpty(Request.SubscriberName)
                         ? x.Value.ToLower().StartsWith(Request.SubscriberName.ToLower())
@@ -44,7 +43,6 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                 .ToListAsync();
 
             List<ArbitrationResult> ArbitrationResultEntities = await _ArbitrationResultRepository
-                .Include(x => x.ProvidedForm!)
                 .Where(x => x.Winner && x.EligibleToWin &&
                     (Request.CategoryId != null
                         ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
@@ -56,12 +54,6 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                         ? x.ProvidedForm!.CycleNumber == Request.CycleNumber
                         : true) &&
                     (DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId)))
-                .Include(x => x.ProvidedForm!.User!)
-                .Include(x => x.ProvidedForm!.Category!)
-                .Include(x => x.ProvidedForm!.Category!.Cycle!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!)
-                .Include(x => x.FinalArbitration!)
                 .ToListAsync();
 
             int TotalCount = ArbitrationResultEntities.Count();

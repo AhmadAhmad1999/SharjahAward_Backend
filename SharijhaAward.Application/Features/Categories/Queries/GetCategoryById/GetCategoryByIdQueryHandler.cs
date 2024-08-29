@@ -64,7 +64,6 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
             {
                 data.EducationalClasses = await _CategoryEducationalClassRepository
                     .Where(x => x.CategoryId == request.Id)
-                    .Include(x => x.EducationalClass!)
                     .Select(x => new CategoryEducationalClassesDto()
                     {
                         Id = x.EducationalClassId,
@@ -78,7 +77,6 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
             {
                 data.EducationalEntityIds = await _CategoryEducationalEntityRepository
                     .Where(x => x.CategoryId == request.Id)
-                    .Include(x => x.EducationalEntity!)
                     .Select(x => new CategoryEducationalEntitiesDto()
                     {
                         Id = x.EducationalEntityId,

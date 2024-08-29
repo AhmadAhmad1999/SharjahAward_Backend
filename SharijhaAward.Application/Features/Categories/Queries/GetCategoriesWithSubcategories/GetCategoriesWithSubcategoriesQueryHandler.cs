@@ -70,12 +70,10 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
 
             List<CategoryEducationalClass> AllCategoryEducationalClasses = await _CategoryEducationalClassRepository
                 .Where(x => AllSubCategories.Select(y => y.Id).Contains(x.CategoryId))
-                .Include(x => x.EducationalClass!)
                 .ToListAsync();
 
             List<CategoryEducationalEntity> AllCategoryEducationalEntities = await _CategoryEducationalEntityRepository
                 .Where(x => AllSubCategories.Select(y => y.Id).Contains(x.CategoryId))
-                .Include(x => x.EducationalEntity!)
                 .ToListAsync();
 
             foreach (CategoriesSubcategoriesDto MainCategory in MainCategories)

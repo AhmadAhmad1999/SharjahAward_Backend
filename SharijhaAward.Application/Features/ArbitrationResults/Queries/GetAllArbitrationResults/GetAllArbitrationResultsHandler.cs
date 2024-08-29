@@ -33,7 +33,6 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
             string ResponseMessage = string.Empty;
 
             List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
                 .Where(x => x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)" &&
                     (!string.IsNullOrEmpty(Request.SubscriberName)
                         ? x.Value.ToLower().StartsWith(Request.SubscriberName.ToLower())
@@ -43,7 +42,6 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
             List<ArbitrationResult> ArbitrationResultEntities = new List<ArbitrationResult>();
 
             int TotalCount = await _ArbitrationResultRepository
-                .Include(x => x.ProvidedForm!)
                 .Where(x => Request.CategoryId != null 
                     ? (x.ProvidedForm!.categoryId == Request.CategoryId.Value)
                     : true)
@@ -52,7 +50,6 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
             if (Request.page != 0 && Request.PerPage != -1)
             {
                 ArbitrationResultEntities = await _ArbitrationResultRepository
-                    .Include(x => x.ProvidedForm!)
                     .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId) &&
                         (Request.CategoryId != null 
                             ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
@@ -71,15 +68,11 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.PerPage)
                     .Take(Request.PerPage)
-                    .Include(x => x.ProvidedForm!.Category!)
-                    .Include(x => x.ProvidedForm!.Category!.Cycle!)
-                    .Include(x => x.FinalArbitration!)
                     .ToListAsync();
             }
             else
             {
                 ArbitrationResultEntities = await _ArbitrationResultRepository
-                    .Include(x => x.ProvidedForm!)
                     .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId) &&
                         (Request.CategoryId != null
                             ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
@@ -96,9 +89,6 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                             ? x.EligibleToWin == Request.EligibleToWin
                             : true))
                     .OrderByDescending(x => x.CreatedAt)
-                    .Include(x => x.ProvidedForm!.Category!)
-                    .Include(x => x.ProvidedForm!.Category!.Cycle!)
-                    .Include(x => x.FinalArbitration!)
                     .ToListAsync();
             }
 

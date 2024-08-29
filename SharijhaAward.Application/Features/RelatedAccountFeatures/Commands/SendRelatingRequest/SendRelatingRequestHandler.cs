@@ -35,8 +35,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
             int SenderId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
             UserRole? UserRole = await _UserRoleRepository
-                .Include(x => x.Role!)
-                .Include(x => x.User!)
                 .FirstOrDefaultAsync(x => x.User!.Email.ToLower() == Request.ReceiverEmail.ToLower() && x.User!.isValidAccount &&
                     x.Role!.EnglishName.ToLower() == "Subscriber".ToLower());
 

@@ -77,7 +77,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeet
                         .Where(x => x.MeetingId == Request.Id)
                         .ToListAsync();
 
-                    await _MeetingUserRepository.RemoveListAsync(OldMeetingUserEntities);
+                    await _MeetingUserRepository.DeleteListAsync(OldMeetingUserEntities);
 
                     List<MeetingUser> NewMeetingUserEntities = Request.UsersInfo
                         .Select(x => new MeetingUser()
@@ -93,7 +93,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeet
                         .Where(x => x.MeetingId == Request.Id)
                         .ToListAsync();
 
-                    await _MeetingCategoryRepository.RemoveListAsync(OldMeetingCategoryEntities);
+                    await _MeetingCategoryRepository.DeleteListAsync(OldMeetingCategoryEntities);
 
                     List<MeetingCategory> NewMeetingCategoryEntities = Request.CategoriesIds
                         .Select(x => new MeetingCategory()

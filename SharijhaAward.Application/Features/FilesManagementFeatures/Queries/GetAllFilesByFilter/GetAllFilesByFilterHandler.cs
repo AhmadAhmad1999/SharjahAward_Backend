@@ -192,22 +192,18 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
             else if (Request.FilterId == (int)FilesFilter.SubscriberPersonalAndAcademicInformation)
             {
                 int TotalCount1 = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .CountAsync(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                    .GetCountAsync(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) && 
                         (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4));
 
                 int TotalCount2 = await _DynamicAttributeTableValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .CountAsync(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                    .GetCountAsync(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4));
 
                 int TotalCount = TotalCount1 + TotalCount2;
 
                 List<DynamicAttributeTableValue> DynamicAttributeTableValueList1 = await _DynamicAttributeTableValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
@@ -238,8 +234,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                     }).ToList();
 
                 List<DynamicAttributeValue> DynamicAttributeValueList2 = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
@@ -286,21 +280,17 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
             else if (Request.FilterId == (int)FilesFilter.CoordinatorFiles)
             {
                 int TotalCount1 = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .CountAsync(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                    .GetCountAsync(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4));
 
                 int TotalCount2 = await _DynamicAttributeTableValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .CountAsync(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                    .GetCountAsync(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4));
 
                 int TotalCount = TotalCount1 + TotalCount2;
 
                 List<DynamicAttributeTableValue> DynamicAttributeTableValueList1 = await _DynamicAttributeTableValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
@@ -331,8 +321,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                     }).ToList();
 
                 List<DynamicAttributeValue> DynamicAttributeValueList2 = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
                     .ToListAsync();
@@ -378,21 +366,17 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
             else if (Request.FilterId == (int)FilesFilter.ArbitratorFiles)
             {
                 int TotalCount1 = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .CountAsync(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
+                    .GetCountAsync(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
                         (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4));
 
                 int TotalCount2 = await _DynamicAttributeTableValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .CountAsync(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                    .GetCountAsync(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         (x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4));
 
                 int TotalCount = TotalCount1 + TotalCount2;
 
                 List<DynamicAttributeTableValue> DynamicAttributeTableValueList1 = await _DynamicAttributeTableValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
@@ -423,8 +407,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                     }).ToList();
 
                 List<DynamicAttributeValue> DynamicAttributeValueList2 = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
                     .ToListAsync();

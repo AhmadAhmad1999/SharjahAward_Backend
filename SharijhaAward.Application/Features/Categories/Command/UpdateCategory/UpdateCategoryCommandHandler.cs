@@ -65,7 +65,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                 try
                 {
                     DynamicAttribute? ClassDynamicAttribute = await _DynamicAttributeRepository
-                        .Include(x => x.DynamicAttributeSection!)
                         .FirstOrDefaultAsync(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
                             x.EnglishTitle == "Class" && x.ArabicTitle == "الصف" &&
                             x.DynamicAttributeSection!.AttributeTableNameId == 1);
@@ -79,7 +78,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             : false)
                     {
                         var LastOrderId = await _DynamicAttributeRepository
-                            .Include(x => x.DynamicAttributeSection!)
                             .Where(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
                                 x.DynamicAttributeSection.EnglishName == "Main Information")
                             .OrderBy(x => x.OrderId)
@@ -124,7 +122,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                     }
 
                     DynamicAttribute? EducationalEntityDynamicAttribute = await _DynamicAttributeRepository
-                        .Include(x => x.DynamicAttributeSection!)
                         .FirstOrDefaultAsync(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
                             x.EnglishTitle == "Educational Entity" && x.ArabicTitle == "الجهة التعليمية" &&
                             x.DynamicAttributeSection!.AttributeTableNameId == 1);
@@ -136,7 +133,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                         : false)
                     {
                         var LastOrderId = await _DynamicAttributeRepository
-                            .Include(x => x.DynamicAttributeSection!)
                             .Where(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
                                 x.DynamicAttributeSection.EnglishName == "Main Information")
                             .OrderBy(x => x.OrderId)
@@ -206,7 +202,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                         List<CategoryEducationalClass> DeleteCategoryEducationalClassEntites = await _CategoryEducationalClassRepository
                             .Where(x => x.CategoryId == request.Id &&
                                 DeleteEducationalClassIds.Contains(x.EducationalClassId))
-                            .Include(x => x.EducationalClass!)
                             .ToListAsync();
 
                         if (DeleteCategoryEducationalClassEntites.Count() > 0)
@@ -214,8 +209,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             await _CategoryEducationalClassRepository.DeleteListAsync(DeleteCategoryEducationalClassEntites);
 
                             List<DynamicAttributeListValue> DeleteClassesValues = await _DynamicAttributeListValueRepository
-                                .Include(x => x.DynamicAttribute!)
-                                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
                                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                                     x.DynamicAttribute!.EnglishTitle.ToLower() == "Class".ToLower() &&
@@ -244,7 +237,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             List<CategoryEducationalClass> NewCategoryEducationalClassEntitiesWithInclude = await _CategoryEducationalClassRepository
                                 .Where(x => NewCategoryEducationalClassEntities.Select(y => y.EducationalClassId).Contains(x.EducationalClassId) &&
                                     NewCategoryEducationalClassEntities.Select(y => y.CategoryId).Contains(x.CategoryId))
-                                .Include(x => x.EducationalClass!)
                                 .ToListAsync();
 
                             if (ClassDynamicAttributeId is not null)
@@ -265,7 +257,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                     {
                         List<CategoryEducationalClass> DeleteCategoryEducationalClassEntites = await _CategoryEducationalClassRepository
                             .Where(x => x.CategoryId == request.Id)
-                            .Include(x => x.EducationalClass!)
                             .ToListAsync();
 
                         if (DeleteCategoryEducationalClassEntites.Count() > 0)
@@ -273,8 +264,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             await _CategoryEducationalClassRepository.DeleteListAsync(DeleteCategoryEducationalClassEntites);
 
                             List<DynamicAttributeListValue> DeleteClassesValues = await _DynamicAttributeListValueRepository
-                                .Include(x => x.DynamicAttribute!)
-                                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
                                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                                     x.DynamicAttribute!.EnglishTitle.ToLower() == "Class".ToLower() &&
@@ -305,7 +294,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                         List<CategoryEducationalEntity> DeleteCategoryEducationalEntityEntites = await _CategoryEducationalEntityRepository
                             .Where(x => x.CategoryId == request.Id &&
                                 DeleteEducationalEntityIds.Contains(x.EducationalEntityId))
-                            .Include(x => x.EducationalEntity!)
                             .ToListAsync();
 
                         if (DeleteCategoryEducationalEntityEntites.Count() > 0)
@@ -313,8 +301,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             await _CategoryEducationalEntityRepository.DeleteListAsync(DeleteCategoryEducationalEntityEntites);
 
                             List<DynamicAttributeListValue> DeleteEntityesValues = await _DynamicAttributeListValueRepository
-                                .Include(x => x.DynamicAttribute!)
-                                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
                                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                                     x.DynamicAttribute!.EnglishTitle.ToLower() == "Educational Entity".ToLower() &&
@@ -342,7 +328,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             List<CategoryEducationalEntity> NewCategoryEducationalEntityEntitiesWithInclude = await _CategoryEducationalEntityRepository
                                 .Where(x => NewCategoryEducationalEntityEntities.Select(y => y.EducationalEntityId).Contains(x.EducationalEntityId) &&
                                     NewCategoryEducationalEntityEntities.Select(y => y.CategoryId).Contains(x.CategoryId))
-                                .Include(x => x.EducationalEntity!)
                                 .ToListAsync();
 
                             if (EducationalEntityDynamicAttributeId is not null)
@@ -363,7 +348,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                     {
                         List<CategoryEducationalEntity> DeleteCategoryEducationalEntityEntites = await _CategoryEducationalEntityRepository
                             .Where(x => x.CategoryId == request.Id)
-                            .Include(x => x.EducationalEntity!)
                             .ToListAsync();
 
                         if (DeleteCategoryEducationalEntityEntites.Count() > 0)
@@ -371,8 +355,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             await _CategoryEducationalEntityRepository.DeleteListAsync(DeleteCategoryEducationalEntityEntites);
 
                             List<DynamicAttributeListValue> DeleteEntityesValues = await _DynamicAttributeListValueRepository
-                                .Include(x => x.DynamicAttribute!)
-                                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
                                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                                     x.DynamicAttribute!.EnglishTitle.ToLower() == "Educational Entity".ToLower() &&

@@ -316,9 +316,9 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("ArbitratorExportToExcel", Name = "ArbitratorExportToExcel")]
-        public async Task<IActionResult> ArbitratorExportToExcel()
+        public async Task<IActionResult> ArbitratorExportToExcel([FromQuery] int formId)
         {
-            var response = await _Mediator.Send(new ArbitratorExportToExcelQuery());
+            var response = await _Mediator.Send(new ArbitratorExportToExcelQuery(){formId = formId });
 
             return response.statusCode switch
             {

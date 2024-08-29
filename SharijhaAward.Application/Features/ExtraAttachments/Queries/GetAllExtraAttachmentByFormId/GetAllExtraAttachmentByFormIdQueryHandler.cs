@@ -36,7 +36,6 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
             var ExtraAttachments = await _extraAttachmentRepository
                 .Where(e => e.ProvidedFormId == request.formId)
                 .OrderByDescending(x => x.CreatedAt)
-                //.Include(e => e.ExtraAttachmentFiles!)
                 .ToListAsync();
 
             List<ExtraAttachmentFile> AllAttachmentEntities = await _AttachmentRepository

@@ -85,13 +85,19 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         MaxAttachmentNumber = x.MaxAttachmentNumber != null
                             ? x.MaxAttachmentNumber.Value
                             : null,
-                        AttachmentType = x.AttachmentType
+                        AttachmentType = x.AttachmentType,
+                        
                     }).ToList();
 
                 foreach (SubCriterionListVM SubCriterionObject in MainCriterionObject.SubCriterionListVM)
                 {
                     SubCriterionObject.SubCriterionAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionAttachmentRepository
                         .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
+                    
+                    if(SubCriterionObject.SubCriterionAttachments.Any(a=>a.IsAccepted == false))
+                    {
+                        SubCriterionObject.rejected = true;
+                    }
 
                     SubCriterionObject.CriterionItemListVM = _CriterionItemRepository
                         .Where(x => x.CriterionId == SubCriterionObject.Id)
@@ -105,13 +111,31 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                             SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
                             MaxAttachmentNumber = x.MaxAttachmentNumber,
                             AttachmentType = x.AttachmentType
+                            
                         }).ToList();
 
                     foreach (CriterionItemListVM CriterionItemObject in SubCriterionObject.CriterionItemListVM)
                     {
                         CriterionItemObject.CriterionItemAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionItemAttachmentRepository
                             .Where(x => x.CriterionItemId == CriterionItemObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
+
+                        if(CriterionItemObject.CriterionItemAttachments.Any(a=>a.IsAccepted == false))
+                        {
+                            CriterionItemObject.rejected = true;
+                        }
+                        
                     }
+
+                    if(SubCriterionObject.CriterionItemListVM.Any(a=>a.rejected == true))
+                    {
+                        SubCriterionObject.rejected = true;
+                    }
+                }
+
+                if(MainCriterionObject.SubCriterionListVM.Any(s=>s.rejected == true) 
+                    || MainCriterionObject.SubCriterionListVM.Any(s=>s.CriterionItemListVM.Any(c=>c.rejected == true)))
+                {
+                    MainCriterionObject.rejected = true;
                 }
 
                 FullObjectResponse.Add(MainCriterionObject);

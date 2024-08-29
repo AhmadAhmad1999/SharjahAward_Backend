@@ -26,8 +26,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.ExportToExce
         public async Task<BaseResponse<byte[]>> Handle(ExportToExcelQuery Request, CancellationToken cancellationToken)
         {
             List<LoggerDto> LogUserActionEntities = _Mapper.Map<List<LoggerDto>>(await _LogUserActionRepository
-                .Include(x => x.User!)
-                .ToListAsync());
+                .ListAllAsync());
 
             byte[] File = _ExcelHelper.ExportToExcel(LogUserActionEntities);
 

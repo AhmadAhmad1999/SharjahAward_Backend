@@ -37,11 +37,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllA
             List<CategoryArbitrator> CategoryArbitratorEntities = await _CategoryArbitratorRepository
                 .Where(x => Arbitrators.Select(y => y.Id).Contains(x.ArbitratorId))
                 .OrderByDescending(x => x.CreatedAt)
-                .Include(x => x.Category!)
                 .ToListAsync();
 
             List<Arbitration> AllArbitrations = await _ArbitrationRepository
-                .Include(x => x.ProvidedForm!)
                 .Where(x => x.ProvidedForm!.PercentCompletion == 100)
                 .ToListAsync();
 

@@ -126,7 +126,6 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                 
                 List<string> UserRolesNames = await _UserRoleRepository
                     .Where(x => x.UserId == response.user.Id)
-                    .Include(x=>x.Role)
                     .Select(x => x.Role!.EnglishName)
                     .ToListAsync();
 
@@ -135,8 +134,6 @@ namespace SharijhaAward.Application.Features.Authentication.Login
 
                 response.UserPermissions = await _RolePermissionRepository
                     .Where(x => UserRolesIds.Contains(x.RoleId))
-                    .Include(x => x.Permission!)
-                    .Include(x => x.Permission!.PermissionHeader!)
                     .Select(x => new UserPermissionsDto()
                     {
                         Action = x.Permission!.Action,

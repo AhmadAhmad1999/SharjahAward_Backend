@@ -131,7 +131,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
                         var Categories = _CategoryRepository
                             .Where(x => CategoriesIds.Contains(x.Id))
-                            .Include(x => x.Parent!)
                             .AsEnumerable();
 
 
@@ -363,7 +362,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
                         var Categories = _CategoryRepository
                             .Where(x => CategoriesIds.Contains(x.Id))
-                            .Include(x => x.Parent!)
                             .AsEnumerable();
 
                         var data = forms.AsEnumerable().Select(x => new FormListVm()

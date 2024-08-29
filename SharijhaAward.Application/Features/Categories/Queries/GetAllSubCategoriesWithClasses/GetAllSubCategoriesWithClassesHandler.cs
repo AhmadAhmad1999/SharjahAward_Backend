@@ -51,7 +51,6 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
 
                 List<CategoryEducationalClass> CategoryEducationalClassEntities = await _CategoryEducationalClassRepository
                     .Where(x => CategoriesEntities.Select(y => y.Id).Contains(x.CategoryId))
-                    .Include(x => x.EducationalClass!)
                     .ToListAsync();
 
                 List<GetAllSubCategoriesWithClassesListVM> Response = CategoriesEntities
@@ -84,7 +83,6 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
 
                 List<CategoryEducationalClass> CategoryEducationalClassEntities = await _CategoryEducationalClassRepository
                     .Where(x => CategoriesEntities.Select(y => y.Id).Contains(x.CategoryId))
-                    .Include(x => x.EducationalClass!)
                     .ToListAsync();
 
                 List<GetAllSubCategoriesWithClassesListVM> Response = CategoriesEntities

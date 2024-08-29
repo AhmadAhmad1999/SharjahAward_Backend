@@ -126,7 +126,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
                         .Where(x => x.InterviewId == Request.Id)
                         .ToListAsync();
 
-                    await _InterviewUserRepository.RemoveListAsync(OldInterviewUserEntities);
+                    await _InterviewUserRepository.DeleteListAsync(OldInterviewUserEntities);
 
                     List<InterviewUser> NewInterviewUserEntities = Request.UsersInfo
                         .Select(x => new InterviewUser()
@@ -142,7 +142,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
                         .Where(x => x.InterviewId == Request.Id)
                         .ToListAsync();
 
-                    await _InterviewCategoryRepository.RemoveListAsync(OldInterviewCategoryEntities);
+                    await _InterviewCategoryRepository.DeleteListAsync(OldInterviewCategoryEntities);
 
                     List<InterviewCategory> NewInterviewCategoryEntities = Request.CategoriesIds
                         .Select(x => new InterviewCategory()

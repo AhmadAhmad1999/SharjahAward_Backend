@@ -82,8 +82,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                 try
                 {
                     FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
-                        .Include(x => x.ProvidedForm!)
-                        .Include(x => x.ProvidedForm!.Category!)
                         .FirstOrDefaultAsync(x => x.Id == Request.FinalArbitrationId);
 
                     if (FinalArbitrationEntity is null)

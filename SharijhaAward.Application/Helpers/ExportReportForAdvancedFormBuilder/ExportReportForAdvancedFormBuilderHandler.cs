@@ -43,7 +43,6 @@ namespace SharijhaAward.Application.Helpers.ExportReportForAdvancedFormBuilder
             List<object> OutPutList = new List<object>();
 
             List<AdvancedFormBuilder> AdvancedFormBuilderEntities = await _AdvancedFormBuilderRepository
-                .Include(x => x.AdvancedFormBuilderSection!)
                 .Where(x => x.AdvancedFormBuilderSection!.VirtualTableForSectionId == Request.VirtualTableForSectionId)
                 .ToListAsync();
 
@@ -54,8 +53,6 @@ namespace SharijhaAward.Application.Helpers.ExportReportForAdvancedFormBuilder
             {
                 var AdvancedFormBuilderValueEntities = _AdvancedFormBuilderValueRepository
                     .Where(x => AdvancedFormBuilderEntities.Select(y => y.Id).Any(y => y == x.AdvancedFormBuilderId))
-                    .Include(x => x.AdvancedFormBuilder!)
-                    .Include(x => x.AdvancedFormBuilder!.AttributeDataType!)
                     .Select(x => new
                     {
                         x.AdvancedFormBuilderId,
@@ -154,8 +151,6 @@ namespace SharijhaAward.Application.Helpers.ExportReportForAdvancedFormBuilder
             {
                 var AdvancedFormBuilderValueEntities = await _AdvancedFormBuilderValueRepository
                     .Where(x => AdvancedFormBuilderEntities.Select(y => y.Id).Any(y => y == x.AdvancedFormBuilderId))
-                    .Include(x => x.AdvancedFormBuilder!)
-                    .Include(x => x.AdvancedFormBuilder!.AttributeDataType!)
                     .Select(x => new
                     {
                         x.AdvancedFormBuilderId,

@@ -31,7 +31,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                 ? await _RelatedAccountRequestRepository
                     .Where(x => x.ReceiverId == UserId)
                     .OrderByDescending(x => x.CreatedAt)
-                    .Include(x => x.Sender)
                     .Select(x => new GetAllReceivedRequestsListVM()
                     {
                         Id = x.Id,
@@ -45,7 +44,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                 : await _RelatedAccountRequestRepository
                     .Where(x => x.ReceiverId == UserId)
                     .OrderByDescending(x => x.CreatedAt)
-                    .Include(x => x.Sender)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
                     .Select(x => new GetAllReceivedRequestsListVM()

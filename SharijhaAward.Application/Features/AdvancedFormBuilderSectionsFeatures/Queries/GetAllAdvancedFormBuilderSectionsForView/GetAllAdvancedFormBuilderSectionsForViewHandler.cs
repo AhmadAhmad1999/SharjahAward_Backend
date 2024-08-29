@@ -78,7 +78,6 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
 
             List<AdvancedFormBuilder> AdvancedFormBuilderEntities = await _AdvancedFormBuilderRepository
                 .Where(x => AdvancedFormBuilderSections.Select(y => y.Id).Contains(x.AdvancedFormBuilderSectionId))
-                .Include(x => x.AttributeDataType!)
                 .ToListAsync();
 
             foreach (AdvancedFormBuilderSectionListVM AdvancedFormBuilderSection in AdvancedFormBuilderSections)

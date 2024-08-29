@@ -26,7 +26,6 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
             List<GetAllCommitteesListVM> Committees = Request.ChairmanName == null
                 ? await _CommitteeRepository
                 .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
-                .Include(x => x.Chairman!)
                 .Select(x => new GetAllCommitteesListVM()
                 {
                     Id = x.Id,
@@ -42,7 +41,6 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
 
                 : await _CommitteeRepository
                 .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
-                .Include(x => x.Chairman!)
                 .Select(x => new GetAllCommitteesListVM()
                 {
                     Id = x.Id,

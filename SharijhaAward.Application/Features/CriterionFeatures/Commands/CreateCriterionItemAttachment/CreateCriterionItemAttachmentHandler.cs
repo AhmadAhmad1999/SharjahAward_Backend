@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -38,7 +39,18 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
-            
+
+            var AttachmentsEntities = await _CriterionItemAttachmentRepository
+                .Where(x => x.CriterionItemId == Request.CriterionItemId)
+                .ToListAsync();
+
+            if (AttachmentsEntities.Any(a => a.IsAccepted == false))
+            {
+                var Attachment = AttachmentsEntities.FirstOrDefault(a => a.IsAccepted == false);
+
+                await _CriterionItemAttachmentRepository.DeleteAsync(Attachment!);
+            }
+
             if (CheckIfCriterionItemIdIsExist.MaxAttachmentNumber > 0)
             {
                 int CountOfPreviousAttachments = await _CriterionItemAttachmentRepository
@@ -55,6 +67,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
                     return new BaseResponse<object>(ResponseMessage, false, 400);
                 }
             }
+
 
             CriterionItemAttachment NewCriterionEntity = _Mapper.Map<CriterionItemAttachment>(Request);
 

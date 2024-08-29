@@ -34,7 +34,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
             List<CategoryArbitrator> CategoryArbitratorEntities = await _CategoryArbitratorRepository
                 .Where(x => Arbitrators.Select(y => y.Id).Contains(x.ArbitratorId))
                 .OrderByDescending(x => x.CreatedAt)
-                .Include(x => x.Category!)
                 .ToListAsync();
 
             if(Request.CategoryId != null)

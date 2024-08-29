@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.UpdateGro
                 List<Student> AlreadyExistStudents = _StudentRepository
                     .Where(x => x.GroupInviteeId == Request.Id).ToList();
 
-                await _StudentRepository.RemoveListAsync(AlreadyExistStudents);
+                await _StudentRepository.DeleteListAsync(AlreadyExistStudents);
 
                 List<Student> Students = Request.StudentNamesAsString.Select(StudentName =>
                     new Student

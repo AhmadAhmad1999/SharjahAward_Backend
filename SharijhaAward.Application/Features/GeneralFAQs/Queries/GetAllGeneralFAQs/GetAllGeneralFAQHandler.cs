@@ -37,7 +37,6 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
-                        .Include(x => x.GeneralFrequentlyAskedQuestionCategory!)
                         .Select(x => new GetAllGeneralFAQListVM()
                         {
                             Id = x.Id,
@@ -57,7 +56,6 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
                 {
                     GeneralFAQs = await _GeneralFAQRepository
                         .WhereThenFilter(x => x.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId, filterObject)
-                        .Include(x => x.GeneralFrequentlyAskedQuestionCategory!)
                         .OrderByDescending(x => x.CreatedAt)
                         .Select(x => new GetAllGeneralFAQListVM()
                         {
@@ -79,7 +77,6 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
             {
                 GeneralFAQs = await _GeneralFAQRepository
                     .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
-                    .Include(x => x.GeneralFrequentlyAskedQuestionCategory!)
                     .Select(x => new GetAllGeneralFAQListVM()
                     {
                         Id = x.Id,

@@ -58,23 +58,14 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                 Request.MaxLevelOfWinners = CategoryEntity.ExpectedNumberOfWinners.Value;
 
             List<IGrouping<EducationalClass, ArbitrationResult>> ArbitrationResultEntitiesForAllClasses = _ArbitrationResultRepository
-                .Include(x => x.ProvidedForm!)
                 .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId &&
                     x.EligibleToWin && x.ProvidedForm!.CategoryEducationalClassId != null)
                 .OrderByDescending(x => x.FinalArbitration!.FinalScore)
-                .Include(x => x.FinalArbitration!)
-                .Include(x => x.ProvidedForm!.Category!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalClass!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalEntity!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!)
-                .Include(x => x.ProvidedForm!.User!)
                 .AsEnumerable()
                 .GroupBy(x => x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!)
                 .ToList();
 
             List<DynamicAttributeValue> DynamicAttributeValueEntitiesToAllClasses = _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
                 .AsEnumerable()
                 .Where(x => ArbitrationResultEntitiesForAllClasses
                     .SelectMany(y => y.Select(z => z.ProvidedFormId)).Any(y => y == x.RecordId) &&
@@ -230,14 +221,6 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                 List<ArbitrationResult> RemainingWinnersQuery = await _ArbitrationResultRepository
                     .Where(x => !RequestedWinners.Select(y => y.FormId).Contains(x.ProvidedFormId) &&
                         !SelectedWinners.Select(y => y.FormId).Contains(x.ProvidedFormId))
-                    .Include(x => x.FinalArbitration!)
-                    .Include(x => x.ProvidedForm!)
-                    .Include(x => x.ProvidedForm!.User!)
-                    .Include(x => x.ProvidedForm!.Category!)
-                    .Include(x => x.ProvidedForm!.CategoryEducationalClass!)
-                    .Include(x => x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!)
-                    .Include(x => x.ProvidedForm!.CategoryEducationalEntity!)
-                    .Include(x => x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!)
                     .ToListAsync();
 
                 List<ArbitrationResult> FilteredWinners = RemainingWinnersQuery

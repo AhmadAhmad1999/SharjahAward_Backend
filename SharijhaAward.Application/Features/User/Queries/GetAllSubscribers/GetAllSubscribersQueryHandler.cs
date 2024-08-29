@@ -38,7 +38,6 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
             var SubscribersIds = await _UserRoleRepository
-                .Include(x => x.User!, filterObject)
                 .Where(x => x.RoleId == SubscriberRole.Id &&
                     (request.isValidAccount != null 
                         ? x.User!.isValidAccount == request.isValidAccount
@@ -53,8 +52,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllSubscribers
             var data = _mapper.Map<List<UserListVm>>(Subscribers);
 
             int Count = await _UserRoleRepository
-                .Include(x => x.User!)
-                .CountAsync(u => u.RoleId == SubscriberRole.Id && 
+                .GetCountAsync(u => u.RoleId == SubscriberRole.Id && 
                     (request.isValidAccount != null
                         ? u.User!.isValidAccount == request.isValidAccount
                         : true));

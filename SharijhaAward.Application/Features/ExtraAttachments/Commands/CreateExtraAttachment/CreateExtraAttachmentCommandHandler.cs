@@ -48,6 +48,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Commands.CreateExt
             
             var PercentFormula = ((providedForm.CurrentStep - 1) * 100) / providedForm.TotalStep;
             providedForm.PercentCompletion = PercentFormula < 0 ? 0 : PercentFormula;
+            providedForm.needSing = true;
 
             var extraAttachment = _mapper.Map<ExtraAttachment>(request);
 

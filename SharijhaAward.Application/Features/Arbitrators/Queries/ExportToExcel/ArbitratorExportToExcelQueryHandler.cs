@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Domain.Entities.ArbitratorFormModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using System;
 using System.Collections.Generic;
@@ -18,18 +20,26 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel
     {
         private readonly IAsyncRepository<Arbitrator> _arbitratorRepository;
         private readonly IExcelHelper<ArbitratorExportVM> _excelHelper;
+        private readonly IAsyncRepository<ArbitratorForm> _arbitratorFormRepository;
         private readonly IMapper _mapper;
 
-        public ArbitratorExportToExcelQueryHandler(IAsyncRepository<Arbitrator> arbitratorRepository, IExcelHelper<ArbitratorExportVM> excelHelper, IMapper mapper)
+        public ArbitratorExportToExcelQueryHandler(IAsyncRepository<ArbitratorForm> arbitratorFormRepository, IAsyncRepository<Arbitrator> arbitratorRepository, IExcelHelper<ArbitratorExportVM> excelHelper, IMapper mapper)
         {
             _arbitratorRepository = arbitratorRepository;
+            _arbitratorFormRepository = arbitratorFormRepository;
             _excelHelper = excelHelper;
             _mapper = mapper;
         }
 
         public async Task<BaseResponse<byte[]>> Handle(ArbitratorExportToExcelQuery request, CancellationToken cancellationToken)
         {
-            var Arbitrators = await _arbitratorRepository.ListAllAsync();
+
+            var Arbitrators = request.formId! == null 
+                ? await _arbitratorRepository.ListAllAsync()
+                : await _arbitratorFormRepository
+                        .Where(a => a.ProvidedFormId == request.formId)
+                        .Select(f => f.Arbitrator)
+                        .ToListAsync();
 
             var data = _mapper.Map<List<ArbitratorExportVM>>(Arbitrators);
 

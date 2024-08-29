@@ -46,7 +46,6 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetMeetingB
 
             List<Category> CategoriesEntities = await _MeetingCategoryRepository
                 .Where(x => x.MeetingId == Request.Id)
-                .Include(x => x.Category!)
                 .Select(x => x.Category!)
                 .ToListAsync();
 

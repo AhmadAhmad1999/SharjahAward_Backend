@@ -33,7 +33,6 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommit
             string ResponseMessage = string.Empty;
 
             Committee? CommitteeEntity = await _CommitteeRepository
-                .Include(x => x.Chairman!)
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (CommitteeEntity == null)
@@ -47,13 +46,11 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommit
 
             List<ArbitratorDto> Arbitrators = _Mapper.Map<List<ArbitratorDto>>(await _ComitteeArbitratorRepository
                 .Where(x => x.CommitteeId == Request.Id)
-                .Include(x => x.Arbitrator!)
                 .Select(x => x.Arbitrator!)
                 .ToListAsync());
 
             List<CategoryDto> Categories = _Mapper.Map<List<CategoryDto>>(await _CategoryCommitteeRepository
                 .Where(x => x.CommitteeId == Request.Id)
-                .Include(x => x.Category!)
                 .Select(x => x.Category!)
                 .ToListAsync());
 

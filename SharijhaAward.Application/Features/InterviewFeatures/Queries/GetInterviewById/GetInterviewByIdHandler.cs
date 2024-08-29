@@ -50,7 +50,6 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetInterv
 
             List<Category> CategoriesEntities = await _InterviewCategoryRepository
                 .Where(x => x.InterviewId == Request.Id)
-                .Include(x => x.Category!)
                 .Select(x => x.Category!)
                 .ToListAsync();
 

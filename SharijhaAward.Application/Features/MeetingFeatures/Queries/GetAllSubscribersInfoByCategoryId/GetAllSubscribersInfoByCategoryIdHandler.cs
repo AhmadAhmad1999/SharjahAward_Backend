@@ -28,7 +28,6 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllSubsc
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((Request.page - 1) * Request.perPage)
                 .Take(Request.perPage)
-                .Include(x => x.User!)
                 .Select(x => new
                 {
                     x.User!.Email,
@@ -36,8 +35,6 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllSubsc
                 }).ToListAsync();
 
             var SubscribersNames = await _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
-                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                     x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
                     x.DynamicAttribute.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower() &&

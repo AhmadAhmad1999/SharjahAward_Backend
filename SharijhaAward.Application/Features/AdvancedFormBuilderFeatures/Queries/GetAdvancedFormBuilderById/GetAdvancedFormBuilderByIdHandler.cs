@@ -57,9 +57,6 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
 
             IQueryable<IGrouping<int, AdvancedFormBuilderDependency>> Dependencies = _AdvancedFormBuilderDependencyRepository
                 .Where(x => x.MainAdvancedFormBuilderId == Request.Id)
-                .Include(x => x.AttributeOperation!)
-                .Include(x => x.AdvancedFormBuilder!)
-                .Include(x => x.StaticAttribute!)
                 .GroupBy(x => x.AdvancedFormBuilderDependencyGroupId);
 
             foreach (IGrouping<int, AdvancedFormBuilderDependency> AdvancedFormBuilderDependency in Dependencies)

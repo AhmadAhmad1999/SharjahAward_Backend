@@ -25,5 +25,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFor
         public float FinalScore { get; set; }
         public int categoryId { get; set; }
         public DateTime CreatedAt { get; set; }
+        public List<int>? RejectedSteps { get; set; }
     }
 }
