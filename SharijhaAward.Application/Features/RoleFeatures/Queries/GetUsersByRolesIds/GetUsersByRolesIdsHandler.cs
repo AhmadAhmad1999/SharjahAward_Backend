@@ -23,7 +23,6 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRole
 
             var UserRolesIds = await _UserRoleRepository
                 .Where(x => Request.RolesIds.Contains(x.RoleId))
-                .Include(x => x.Role!)
                 .Select(x => new 
                 {
                     x.UserId,
@@ -38,7 +37,6 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRole
                 .ToList();
 
             List<UsersInRoleDto> SubscriberInRoleDtos = _UserTokenRepository
-                .Include(x => x.User!)
                 .Where(x => SubscribersIds.Contains(x.UserId) && x.User!.isValidAccount)
                 .AsEnumerable()
                 .DistinctBy(x => x.UserId)
@@ -56,7 +54,6 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRole
                 .ToList();
 
             List<UsersInRoleDto> NotSubscriberInRoleDtos = _UserTokenRepository
-                .Include(x => x.User!)
                 .Where(x => NotSubscribersIds.Contains(x.UserId) && x.User!.isValidAccount)
                 .AsEnumerable()
                 .DistinctBy(x => x.UserId)

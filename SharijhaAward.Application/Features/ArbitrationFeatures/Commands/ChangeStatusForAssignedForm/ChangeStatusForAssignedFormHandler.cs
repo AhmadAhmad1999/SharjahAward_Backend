@@ -26,7 +26,6 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
             Arbitration? ArbitrationEntity = await _ArbitrationRepository
-                .Include(x => x.Arbitrator!)
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (ArbitrationEntity == null)

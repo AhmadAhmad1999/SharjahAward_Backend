@@ -29,7 +29,6 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
-                    .Include(x => x.AttributeDataType!)
                     .Select(x => new AdvancedFormBuilderListVM()
                     {
                         Id = x.Id,
@@ -49,7 +48,6 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
-                    .Include(x => x.AttributeDataType!)
                     .Select(x => new AdvancedFormBuilderListVM()
                     {
                         Id = x.Id,

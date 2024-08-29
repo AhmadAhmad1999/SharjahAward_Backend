@@ -25,7 +25,6 @@ namespace SharijhaAward.Application.Features.PermissionFeatures.Queries.GetAllPe
 
             List<IGrouping<PermissionHeader, Permission>> ListOfGroupOfPermissionsHeaderAndPermissions = await _PermissionRepository
                 .OrderByDescending(x => x.CreatedAt, 0, -1)
-                .Include(x => x.PermissionHeader!)
                 .GroupBy(x => x.PermissionHeader!)
                 .ToListAsync();
 

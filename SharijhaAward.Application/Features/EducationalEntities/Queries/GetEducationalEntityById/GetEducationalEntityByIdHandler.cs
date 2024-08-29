@@ -42,7 +42,6 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetEduc
 
             GetEducationEntityByIdDto.EducationalInstitutions = await _EducationalInstitutionRepository
                 .Where(x => x.EducationalEntityId == Request.EducationEntityId)
-                .Include(x => x.EducationalEntity!)
                 .Select(x => new EducationalInstitutionListVM()
                 {
                     Id = x.EducationalEntity!.Id,

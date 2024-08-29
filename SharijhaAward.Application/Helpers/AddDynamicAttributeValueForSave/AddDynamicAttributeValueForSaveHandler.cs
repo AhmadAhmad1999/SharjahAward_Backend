@@ -82,8 +82,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
             List<DynamicAttribute> DynamicAttributeEntities = await _DynamicAttributeRepository
                 .Where(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId).Contains(x.Id) ||
                     Request.DynamicAttributesWithTableValues.Select(y => y.DynamicAttributeId).Contains(x.Id))
-                .Include(x => x.DynamicAttributeSection!)
-                .Include(x => x.AttributeDataType!)
                 .ToListAsync();
 
             //int DynamicAttributeEntitiesCount = DynamicAttributeEntities.Count();
@@ -182,7 +180,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                         .Where(x => x.RecordId == Request.RecordId).ToListAsync();
 
                     if (CheckForUpdateValues.Count() > 0)
-                        await _DynamicAttributeValueRepository.RemoveListAsync(CheckForUpdateValues);
+                        await _DynamicAttributeValueRepository.DeleteListAsync(CheckForUpdateValues);
 
                     List<AddDynamicAttributeValueForSaveMainCommand> DynamicAttributesAsFile = Request.DynamicAttributesWithValues
                         .Where(x => x.ValueAsBinaryFile != null).ToList();
@@ -243,7 +241,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                         .ToListAsync();
 
                     if (DynamicAttributeTableValueEnititiesToDelete.Any())
-                        await _DynamicAttributeTableValueRepository.RemoveListAsync(DynamicAttributeTableValueEnititiesToDelete);
+                        await _DynamicAttributeTableValueRepository.DeleteListAsync(DynamicAttributeTableValueEnititiesToDelete);
 
                     List<AddDynamicAttributeTableValueForSaveMainCommand> DynamicAttributesTableValueAsFile = Request.DynamicAttributesWithTableValues
                         .Where(x => x.ValueAsBinaryFile != null).ToList();
@@ -303,8 +301,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                     if (Request.DynamicAttributesWithValues.Any())
                     {
                         DynamicAttribute? CheckIfThereisClassAttribute = await _DynamicAttributeRepository
-                            .Include(x => x.DynamicAttributeSection!)
-                            .Include(x => x.DynamicAttributeSection!.AttributeTableName!)
                             .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithValues[0].DynamicAttributeId);
 
                         if (CheckIfThereisClassAttribute is not null)

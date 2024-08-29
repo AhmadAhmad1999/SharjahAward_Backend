@@ -20,7 +20,6 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.SelectWinn
             if (Request.NewFormId is not null)
             {
                 await _ArbitrationResultRepository
-                    .Include(x => x.ProvidedForm!)
                     .Where(x => Request.NewFormId == x.ProvidedFormId &&
                         x.ProvidedForm!.categoryId == Request.CategoryId)
                     .ExecuteUpdateAsync(x => x.SetProperty(y => y.SelectedToWin, true));
@@ -34,7 +33,6 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.SelectWinn
             else
             {
                 List<ArbitrationResult> ArbitrationResultEntities = await _ArbitrationResultRepository
-                    .Include(x => x.ProvidedForm!)
                     .Where(x => Request.DeleteFormId == x.ProvidedFormId &&
                         x.ProvidedForm!.categoryId == Request.CategoryId)
                     .ToListAsync();

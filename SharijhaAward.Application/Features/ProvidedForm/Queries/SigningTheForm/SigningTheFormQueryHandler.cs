@@ -55,10 +55,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
             }
             var form = await _formRepository
                 .Where(f => f.userId == User.Id && f.Id == request.providedFormId)
-                .Include(x => x.User!)
-                .Include(x => x.Category!)
-                .Include(x => x.Category!.Parent!)
-                .Include(x => x.Category!.Cycle!)
                 .FirstOrDefaultAsync();
             
             if(form == null)
@@ -113,7 +109,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
 
                         FirebaseAdmin.Messaging.Message? NotificationMessages = await _UserTokenRepository
                             .Where(x => User.Id == x.UserId && !string.IsNullOrEmpty(x.DeviceToken))
-                            .Include(x => x.User!)
                             .Select(x => x.AppLanguage == "en"
                                 ? new FirebaseAdmin.Messaging.Message()
                                 {

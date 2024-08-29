@@ -41,20 +41,12 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                 .ToListAsync();
 
             List<Arbitration> AllArbitratorAssingedForms = await _ArbitrationRepository
-                .Include(x => x.ProvidedForm!)
                 .Where(x => x.ArbitratorId == Request.Id &&
                     x.ProvidedForm!.PercentCompletion == 100)
                 .OrderByDescending(x => x.CreatedAt)
-                .Include(x => x.ProvidedForm!)
-                .Include(x => x.ProvidedForm!.Category!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalClass!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!)
                 .ToListAsync();
 
             List<DynamicAttributeValue> SubscribersNames = await _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
-                .Include(x => x.DynamicAttribute!.DynamicAttributeSection)
                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                     x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
@@ -93,9 +85,6 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                 !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
                                 x.IsAccepted != null &&
                                 ArbitratorCategoriesIds.Contains(x.categoryId))
-                            .Include(x => x.Category!)
-                            .Include(x => x.CategoryEducationalClass!)
-                            .Include(x => x.CategoryEducationalClass!.EducationalClass!)
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
@@ -138,9 +127,6 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                 !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
                                 x.IsAccepted != null &&
                                 ArbitratorCategoriesIds.Contains(x.categoryId))
-                            .Include(x => x.Category!)
-                            .Include(x => x.CategoryEducationalClass!)
-                            .Include(x => x.CategoryEducationalClass!.EducationalClass!)
                             .OrderByDescending(x => x.CreatedAt)
                             .AsEnumerable()
                             .Select(x => Request.lang == "en"

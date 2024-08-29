@@ -142,16 +142,6 @@ namespace SharijhaAward.Persistence.Repositories
 
             await _dbContext.SaveChangesAsync();
         }
-        public async Task RemoveAsync(T entity)
-        {
-            _dbContext.Remove(entity);
-            await _dbContext.SaveChangesAsync();
-        }
-        public async Task RemoveListAsync(IEnumerable<T> entities)
-        {
-            _dbContext.RemoveRange(entities);
-            await _dbContext.SaveChangesAsync();
-        }
         public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
         {
             return _DbSet.AsNoTracking().Where(predicate);
@@ -275,31 +265,31 @@ namespace SharijhaAward.Persistence.Repositories
 
             return query;
         }
-        public IQueryable<T> Include(string navigationPropertyPath)
-        {
-            return _DbSet.AsNoTracking().Include(navigationPropertyPath);
-        }
-        public IQueryable<T> Include(Expression<Func<T, object>> navigationProperty)
-        {
-            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.AsNoTracking().Include(navigationPropertyPath);
-        }
-        public IQueryable<T> Include(Expression<Func<T, object>> navigationProperty, FilterObject filterObject)
-        {
-            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            var query = _DbSet.AsNoTracking().Include(navigationPropertyPath);
+        //public IQueryable<T> Include(string navigationPropertyPath)
+        //{
+        //    return _DbSet.AsNoTracking().Include(navigationPropertyPath);
+        //}
+        //public IQueryable<T> Include(Expression<Func<T, object>> navigationProperty)
+        //{
+        //    string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+        //    return _DbSet.AsNoTracking().Include(navigationPropertyPath);
+        //}
+        //public IQueryable<T> Include(Expression<Func<T, object>> navigationProperty, FilterObject filterObject)
+        //{
+        //    string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+        //    var query = _DbSet.AsNoTracking().Include(navigationPropertyPath);
 
-            if (filterObject != null && filterObject.Filters != null)
-            {
-                query = Filtration(filterObject);
-            }
-            return query;
-        }
+        //    if (filterObject != null && filterObject.Filters != null)
+        //    {
+        //        query = Filtration(filterObject);
+        //    }
+        //    return query;
+        //}
         public IQueryable<T> IncludeThenWhere(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate)
         {
-            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.AsNoTracking().Include(navigationPropertyPath).Where(predicate);
+            // string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            return _DbSet.AsNoTracking()/*.Include(navigationPropertyPath)*/.Where(predicate);
         }
         public IQueryable<T> WhereThenIncludeThenPagination(
             Expression<Func<T, bool>> predicate, int page, int size,
@@ -316,11 +306,11 @@ namespace SharijhaAward.Persistence.Repositories
                 query = _DbSet.AsNoTracking()
                     .Where(predicate).Skip((page - 1) * size).Take(size);
 
-            foreach (var navigationProperty in navigationProperties)
-            {
-                string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-                query = query.Include(navigationPropertyPath);
-            }
+            //foreach (var navigationProperty in navigationProperties)
+            //{
+            //    string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            //    query = query.Include(navigationPropertyPath);
+            //}
 
             return query;
         }
@@ -333,11 +323,11 @@ namespace SharijhaAward.Persistence.Repositories
                 query = Filtration(filterObject);
             }
 
-            foreach (var navigationProperty in navigationProperties)
-            {
-                string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-                query = query.Include(navigationPropertyPath);
-            }
+            //foreach (var navigationProperty in navigationProperties)
+            //{
+            //    string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            //    query = query.Include(navigationPropertyPath);
+            //}
 
             return query;
         }
@@ -348,31 +338,31 @@ namespace SharijhaAward.Persistence.Repositories
         {
             IQueryable<T> query = _DbSet.AsNoTracking().Where(predicate);
 
-            foreach (var navigationProperty in navigationProperties)
-            {
-                string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-                query = query.Include(navigationPropertyPath);
-            }
+            //foreach (var navigationProperty in navigationProperties)
+            //{
+            //    string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            //    query = query.Include(navigationPropertyPath);
+            //}
 
             return query;
         }
         public T? IncludeThenFirstOrDefault(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate)
         {
-            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.AsNoTracking().Include(navigationPropertyPath).FirstOrDefault(predicate);
+            //string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            return _DbSet.AsNoTracking()/*.Include(navigationPropertyPath)*/.FirstOrDefault(predicate);
         }
         public async Task<T?> IncludeThenFirstOrDefaultAsync(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate)
         {
-            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return await _DbSet.AsNoTracking().Include(navigationPropertyPath).FirstOrDefaultAsync(predicate);
+            //string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            return await _DbSet.AsNoTracking()/*.Include(navigationPropertyPath)*/.FirstOrDefaultAsync(predicate);
         }
         public T? IncludeThenLastOrDefault(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate)
         {
-            string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
-            return _DbSet.AsNoTracking().Include(navigationPropertyPath).LastOrDefault(predicate);
+            //string navigationPropertyPath = GetNavigationPropertyPath(navigationProperty);
+            return _DbSet.AsNoTracking()/*.Include(navigationPropertyPath)*/.LastOrDefault(predicate);
         }
         private string GetNavigationPropertyPath(Expression<Func<T, object>> navigationProperty)
         {
@@ -413,7 +403,7 @@ namespace SharijhaAward.Persistence.Repositories
                     {
                         
                         var providedForm = _dbContext.ProvidedForms
-                            .Include(p => p.User)
+                            // .Include(p => p.User)
                             .AsQueryable();
 
                         query = (IQueryable<T>)providedForm.Where(p => p.User.SubscriberId.Contains(SubscriberIdValue)).AsQueryable();

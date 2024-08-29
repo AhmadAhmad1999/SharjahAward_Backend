@@ -28,15 +28,12 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
             string ResponseMessage = string.Empty;
 
             List<ArbitrationScalesCriterion> ArbitrationScalesCriterionEntities = await _ArbitrationScalesCriterionRepository
-                .Include(x => x.ArbitrationScale!)
-                .Include(x => x.Criterion!)
                 .Where(x => x.ArbitrationScale!.CategoryId == Request.SubCategoryId)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
 
             List<Criterion> AllCriterions = await _CriterionRepository
                 .Where(x => x.CategoryId == Request.SubCategoryId)
-                .Include(x => x.Parent!)
                 .ToListAsync();
 
             List<Criterion> AllMainCriterionsEntities = AllCriterions

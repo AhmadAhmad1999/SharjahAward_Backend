@@ -68,7 +68,6 @@ namespace SharijhaAward.Api.Logger
                         token = token.Replace("bearer ", string.Empty);
 
                         UserToken? CheckUserId = await _UserTokenRepository!
-                            .Include(x => x.User!)
                             .FirstOrDefaultAsync(x => x.UserId == int.Parse(_JwtProvider.GetUserIdFromToken(token)) &&
                                 x.Token == token);
 

@@ -30,16 +30,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetRema
             List<Arbitration> AllArbitratorAssingedForms = await _ArbitrationRepository
                 .Where(x => x.ArbitratorId == Request.ArbitratorId)
                 .OrderByDescending(x => x.CreatedAt)
-                .Include(x => x.ProvidedForm!)
-                .Include(x => x.ProvidedForm!.Category!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalClass!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!)
                 .ToListAsync();
 
             List<DynamicAttributeValue> SubscribersNames = await _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
-                .Include(x => x.DynamicAttribute!.DynamicAttributeSection)
                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                     AllArbitratorAssingedForms.Select(y => y.ProvidedFormId)

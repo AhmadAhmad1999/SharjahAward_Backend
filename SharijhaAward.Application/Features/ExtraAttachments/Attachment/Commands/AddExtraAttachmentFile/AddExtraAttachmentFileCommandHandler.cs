@@ -39,7 +39,6 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
 
             var ExtraAttachment = await _extraAttachmentsRepository
                 .Where(e => e.Id == request.ExtraAttachmentId)
-                //.Include(e => e.ExtraAttachmentFiles)
                 .FirstOrDefaultAsync();
 
             List<ExtraAttachmentFile> ExtraAttachmentsFileEntities = await _extraAttachmentsFileRepository

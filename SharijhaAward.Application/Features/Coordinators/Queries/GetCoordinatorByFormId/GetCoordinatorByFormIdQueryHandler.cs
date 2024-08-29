@@ -53,7 +53,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
 
             var Coordinators = await _coordinatorFormRepository
                 .Where(x => x.ProvidedFormId == request.formId)
-                .Include(x => x.Coordinator!)
                 .Select(x => x.Coordinator!)
                 .Skip((request.page - 1) * request.perPage)
                 .Take(request.perPage)

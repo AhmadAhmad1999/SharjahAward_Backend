@@ -49,7 +49,6 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.Token!));
 
             UserRole? CheckIfThisUserHasFullAccessOrArbitratorRole = await _UserRoleRepository
-                .Include(x => x.Role!)
                 .FirstOrDefaultAsync(x => x.UserId == UserId && 
                     x.Role!.EnglishName.ToLower() == "arbitrator");
 
@@ -63,15 +62,9 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
-                    .Include(x => x.Arbitrator!)
-                    .Include(x => x.ProvidedForm!)
-                    .Include(x => x.ProvidedForm!.Category!)
                     .ToListAsync();
 
                 var SubscribersNames = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableName!)
                     .Where(x => ArbitrationEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId) &&
                         x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableName!.Name.ToLower() == "ProvidedForm".ToLower() &&
                         x.DynamicAttribute.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
@@ -163,7 +156,6 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     (Request.asChairman != null ? Request.asChairman.Value : false))
                 {
                     List<int> ArbitratorsIdsInCommittee = await _ComitteeArbitratorRepository
-                        .Include(x => x.Committee!)
                         .Where(x => x.Committee!.ChairmanId == ArbitratorEntity.Id)
                         .Select(x => x.ArbitratorId)
                         .Distinct()
@@ -180,9 +172,6 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
-                            .Include(x => x.Arbitrator!)
-                            .Include(x => x.ProvidedForm!)
-                            .Include(x => x.ProvidedForm!.Category!)
                             .ToListAsync();
                     }
                     else
@@ -193,16 +182,10 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
-                            .Include(x => x.Arbitrator!)
-                            .Include(x => x.ProvidedForm!)
-                            .Include(x => x.ProvidedForm!.Category!)
                             .ToListAsync();
                     }
 
                     var SubscribersNames = await _DynamicAttributeValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableName!)
                         .Where(x => ArbitrationEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId) &&
                             x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableName!.Name.ToLower() == "ProvidedForm".ToLower() &&
                             x.DynamicAttribute.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
@@ -278,15 +261,9 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
-                        .Include(x => x.Arbitrator!)
-                        .Include(x => x.ProvidedForm!)
-                        .Include(x => x.ProvidedForm!.Category!)
                         .ToListAsync();
 
                     var SubscribersNames = await _DynamicAttributeValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableName!)
                         .Where(x => ArbitrationEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId) &&
                             x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableName!.Name.ToLower() == "ProvidedForm".ToLower() &&
                             x.DynamicAttribute.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())

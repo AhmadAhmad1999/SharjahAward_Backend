@@ -28,7 +28,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
-                    .Include(x => x.AttributeDataType!)
                     .Select(x => new DynamicAttributeListVM()
                     {
                         Id = x.Id,
@@ -46,7 +45,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                 DynamicAttributes = await _DynamicAttributeRepository
                     .Where(x => x.DynamicAttributeSectionId == Request.SectionId)
                     .OrderByDescending(x => x.CreatedAt)
-                    .Include(x => x.AttributeDataType!)
                     .Select(x => new DynamicAttributeListVM()
                     {
                         Id = x.Id,

@@ -31,8 +31,6 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers
             string ResponseMessage = string.Empty;
 
             List<UserRole> UserRoleEntities = await _UserRoleRepository
-                .Include(x => x.User!)
-                .Include(x => x.Role!)
                 .Where(x => x.User!.isValidAccount)
                 .ToListAsync();
 

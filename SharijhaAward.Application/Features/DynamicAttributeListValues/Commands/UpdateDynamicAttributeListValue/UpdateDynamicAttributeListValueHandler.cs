@@ -29,8 +29,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeListValues.Commands
             string ResponseMessage = string.Empty;
 
             DynamicAttributeListValue? DynamicAttributeListValueOldData = await _DynamicAttributeListValueRepository
-                .Include(x => x.DynamicAttribute!)
-                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (DynamicAttributeListValueOldData == null)

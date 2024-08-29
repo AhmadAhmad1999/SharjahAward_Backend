@@ -68,8 +68,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
                 : RelatedAccountUserEntity.ArabicName;
 
             List<RelatedAccountProvidedForms> ProvidedForms = await _FormRepository
-                .Include(x => x.Category!)
-                .Include(x => x.Category!.Parent!)
                 .Where(x => x.userId == RelatedAccountEntity.User2Id && 
                     (Request.Type != null 
                         ? x.Type == Request.Type

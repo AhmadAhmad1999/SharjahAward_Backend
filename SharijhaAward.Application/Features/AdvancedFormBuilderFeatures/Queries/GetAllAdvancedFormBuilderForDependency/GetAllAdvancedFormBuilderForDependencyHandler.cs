@@ -23,7 +23,6 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                 ? Request.lang.ToLower() : "ar";
 
             List<GetAllAdvancedFormBuilderForDependencyListVM> DynamicAttributes = await _AdvancedFormBuilderRepository
-                .Include(x => x.AdvancedFormBuilderSection!)
                 .Where(x => x.AdvancedFormBuilderSection!.VirtualTableForSectionId == Request.VirtualTableForSectionId &&
                     !x.AdvancedFormBuilderSection!.TableTypeSection)
                 .OrderByDescending(x => x.CreatedAt)

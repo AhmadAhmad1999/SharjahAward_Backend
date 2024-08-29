@@ -155,7 +155,6 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
                 {
                     List<IGrouping<int, AdvancedFormBuilderTableValue>> AdvancedFormBuilderTableValueEntities = await _AdvancedFormBuilderTableValueRepository
                         .Where(x => AdvancedFormBuilderSection.AdvancedFormBuilders.Select(y => y.Id).Contains(x.AdvancedFormBuilderId))
-                        .Include(x => x.AdvancedFormBuilder!)
                         .GroupBy(x => x.RowId)
                         .ToListAsync();
 

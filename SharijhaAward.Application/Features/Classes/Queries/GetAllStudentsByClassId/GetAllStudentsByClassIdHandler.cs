@@ -28,25 +28,19 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByCla
             if (Request.page != 0 && Request.perPage != -1)
                 ProvidedFormsEntities = await _ProvidedFormRepository
                     .Where(x => x.CategoryEducationalClassId != null && x.PercentCompletion == 100)
-                    .Include(x => x.CategoryEducationalClass!)
                     .Where(x => x.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
-                    .Include(x => x.Category!)
                     .ToListAsync();
             else
                 ProvidedFormsEntities = await _ProvidedFormRepository
                     .Where(x => x.CategoryEducationalClassId != null && x.PercentCompletion == 100)
-                    .Include(x => x.CategoryEducationalClass!)
                     .Where(x => x.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
                     .OrderByDescending(x => x.CreatedAt)
-                    .Include(x => x.Category!)
                     .ToListAsync();
 
             List<GetAllStudentsByClassIdListVM> Response = await _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
-                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                 .Where(x => (x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower() ||
                         x.DynamicAttribute.ArabicTitle == "الاسم الكامل (مطابق للهوية الإماراتية)") &&
                     x.RecordId != null &&
@@ -66,7 +60,6 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByCla
 
             int TotalCount = await _ProvidedFormRepository
                 .Where(x => x.CategoryEducationalClassId != null && x.PercentCompletion == 100)
-                .Include(x => x.CategoryEducationalClass!)
                 .Where(x => x.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId)
                 .CountAsync();
 

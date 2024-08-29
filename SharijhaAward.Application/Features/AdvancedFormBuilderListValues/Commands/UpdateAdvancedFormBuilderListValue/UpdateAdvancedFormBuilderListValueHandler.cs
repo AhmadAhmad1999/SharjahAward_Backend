@@ -30,8 +30,6 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderListValues.Comma
             string ResponseMessage = string.Empty;
 
             AdvancedFormBuilderListValue? AdvancedFormBuilderListValueOldData = await _AdvancedFormBuilderListValueRepository
-                .Include(x => x.AdvancedFormBuilder!)
-                .Include(x => x.AdvancedFormBuilder!.AdvancedFormBuilderSection!)
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (AdvancedFormBuilderListValueOldData == null)

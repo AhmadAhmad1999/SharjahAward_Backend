@@ -49,7 +49,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.Token!));
 
             UserRole? CheckIfThisUserHasFullAccessOrArbitratorRole = await _UserRoleRepository
-                .Include(x => x.Role!)
                 .FirstOrDefaultAsync(x => x.UserId == UserId &&
                     x.Role!.EnglishName.ToLower() == "arbitrator");
 
@@ -61,18 +60,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 {
                     GroupOfArbitrationEntities = await _ArbitrationRepository
                         .Where(x => x.Type == Request.ArbitrationType)
-                        .Include(x => x.DoneArbitrationUser!)
-                        .Include(x => x.ProvidedForm!)
-                        .Include(x => x.ProvidedForm!.Category!)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
                 }
                 else
                 {
                     GroupOfArbitrationEntities = await _ArbitrationRepository
-                        .Include(x => x.DoneArbitrationUser!)
-                        .Include(x => x.ProvidedForm!)
-                        .Include(x => x.ProvidedForm!.Category!)
+                        .Where(x => true)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
                 }
@@ -95,13 +89,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     .ToListAsync();
 
                 int MarginOfDifferenceBetweenArbitrators = await _ArbitrationRepository
-                    .Include(x => x.ProvidedForm!)
-                    .Include(x => x.ProvidedForm!.Category!.Cycle!)
                     .Select(x => x.ProvidedForm!.Category!.Cycle!.MarginOfDifferenceBetweenArbitrators)
                     .FirstOrDefaultAsync();
 
                 var Names = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
                     .Where(x => GroupOfArbitrationEntities.Select(y => y.Key).Any(y => y == x.RecordId) &&
                         x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
                     .Select(x => new
@@ -327,16 +318,12 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     GroupOfArbitrationEntities = await _ArbitrationRepository
                         .Where(x => x.ArbitratorId == UserId &&
                             x.isAccepted == FormStatus.Accepted && x.isAcceptedFromChairman == FormStatus.Accepted)
-                        .Include(x => x.DoneArbitrationUser!)
-                        .Include(x => x.ProvidedForm!)
-                        .Include(x => x.ProvidedForm!.Category!)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
                 }
                 else
                 {
                     List<int> ComitteeArbitratorIds = await _ComitteeArbitratorRepository
-                        .Include(x => x.Committee!)
                         .Where(x => x.Committee!.ChairmanId == UserId)
                         .Select(x => x.ArbitratorId)
                         .Distinct()
@@ -346,9 +333,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                         .Where(x => ComitteeArbitratorIds.Contains(x.ArbitratorId) &&
                             x.isAccepted == FormStatus.Accepted && x.isAcceptedFromChairman == FormStatus.Accepted &&
                             x.ArbitrationAuditType == ArbitrationType.DoneArbitratod)
-                        .Include(x => x.DoneArbitrationUser!)
-                        .Include(x => x.ProvidedForm!)
-                        .Include(x => x.ProvidedForm!.Category!)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
                 }
@@ -371,13 +355,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     .ToListAsync();
 
                 int MarginOfDifferenceBetweenArbitrators = await _ArbitrationRepository
-                    .Include(x => x.ProvidedForm!)
-                    .Include(x => x.ProvidedForm!.Category!.Cycle!)
                     .Select(x => x.ProvidedForm!.Category!.Cycle!.MarginOfDifferenceBetweenArbitrators)
                     .FirstOrDefaultAsync();
 
                 var Names = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
                     .Where(x => GroupOfArbitrationEntities.Select(y => y.Key).Any(y => y == x.RecordId) &&
                         x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
                     .Select(x => new

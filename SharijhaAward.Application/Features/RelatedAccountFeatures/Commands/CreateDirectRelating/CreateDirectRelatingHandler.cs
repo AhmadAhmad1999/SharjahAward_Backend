@@ -28,8 +28,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Cre
             string ResponseMessage = string.Empty;
 
             UserRole? UserRole = await _UserRoleRepository
-                .Include(x => x.Role!)
-                .Include(x => x.User!)
                 .FirstOrDefaultAsync(x => x.User!.Email.ToLower() == Request.ReceiverEmail.ToLower() && x.User!.isValidAccount &&
                     x.Role!.EnglishName.ToLower() == "Subscriber".ToLower());
 

@@ -49,7 +49,6 @@ namespace SharijhaAward.Application.Features.User.Queries.GetUserById
             }
 
             List<string> UserRoles = await _UserRoleRepository.Where(x => x.UserId == User.Id)
-                .Include(x => x.Role!)
                 .Select(x => request.lang.ToLower() == "en"
                     ? x.Role!.EnglishName
                     : x.Role!.ArabicName)

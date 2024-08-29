@@ -84,30 +84,23 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
             var data = _mapper.Map<List<FormListVm>> (form);
 
             List<CycleConditionAttachment> AllCycleConditionAttachmentEntities = await _CycleConditionAttachmentRepository
-                .Include(x => x.CycleConditionsProvidedForm!)
-                .Include(x => x.CycleConditionsProvidedForm!.CycleCondition!)
                 .Where(x => form.Select(y => y.Id).Contains(x.CycleConditionsProvidedForm!.ProvidedFormId) &&
                     x.CycleConditionsProvidedForm!.CycleCondition!.NeedAttachment &&
                     (x.IsAccept != null ? !x.IsAccept.Value : false))
                 .ToListAsync();
 
             List<ConditionAttachment> AllConditionAttachmentEntities = await _ConditionAttachmentRepository
-                .Include(x => x.ConditionsProvidedForms!)
-                .Include(x => x.ConditionsProvidedForms!.TermAndCondition!)
                 .Where(x => form.Select(y => y.Id).Contains(x.ConditionsProvidedForms!.ProvidedFormId) &&
                     x.ConditionsProvidedForms.TermAndCondition.NeedAttachment &&
                     (x.IsAccept != null ? !x.IsAccept.Value : false))
                 .ToListAsync();
 
             List<ExtraAttachmentFile> AllExtraAttachmentFileEntities = await _ExtraAttachmentFileRepository
-                .Include(x => x.ExtraAttachment!)
                 .Where(x => form.Select(y => y.Id).Contains(x.ExtraAttachment!.ProvidedFormId) &&
                     (x.IsAccept != null ? !x.IsAccept.Value : false))
                 .ToListAsync();
 
             List<DynamicAttributeValue> AllDynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
-                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                 .Where(x => (x.isAccepted != null ? !x.isAccepted.Value : false) &&
                     data.Select(y => y.Id).Any(y => y == x.RecordId) &&
                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1)

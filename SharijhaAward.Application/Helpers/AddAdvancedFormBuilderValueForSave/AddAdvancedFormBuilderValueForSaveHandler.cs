@@ -53,7 +53,7 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValueForSave
                         .Where(x => x.VirtualTableId == Request.VirtualTableId).ToListAsync();
 
                     if (CheckForUpdateValues.Count() > 0)
-                        await _AdvancedFormBuilderValueRepository.RemoveListAsync(CheckForUpdateValues);
+                        await _AdvancedFormBuilderValueRepository.DeleteListAsync(CheckForUpdateValues);
 
                     List<AddAdvancedFormBuilderValueForSaveMainCommand> AdvancedFormBuildersAsFile = Request.AdvancedFormBuildersWithValues
                         .Where(x => x.ValueAsBinaryFile != null).ToList();

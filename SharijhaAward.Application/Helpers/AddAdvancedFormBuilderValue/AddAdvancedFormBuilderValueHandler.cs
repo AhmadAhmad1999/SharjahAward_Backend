@@ -47,7 +47,6 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValue
             List<AdvancedFormBuilder> AdvancedFormBuilderEntities = await _AdvancedFormBuilderRepository
                 .Where(x => Request.AdvancedFormBuildersWithValues.Select(y => y.AdvancedFormBuilderId).Contains(x.Id) ||
                     Request.AdvancedFormBuildersWithTableValues.Select(y => y.AdvancedFormBuilderId).Contains(x.Id))
-                .Include(x => x.AttributeDataType!)
                 .ToListAsync();
 
             foreach (AddAdvancedFormBuilderValueMainCommand InputAdvancedFormBuilderWithValues in Request.AdvancedFormBuildersWithValues)
@@ -2802,7 +2801,7 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValue
                         .Where(x => x.VirtualTableId == Request.VirtualTableId).ToListAsync();
 
                     if (DynamicValuesToDelete.Count() > 0)
-                        await _AdvancedFormBuilderValueRepository.RemoveListAsync(DynamicValuesToDelete);
+                        await _AdvancedFormBuilderValueRepository.DeleteListAsync(DynamicValuesToDelete);
 
                     List<AddAdvancedFormBuilderValueMainCommand> AdvancedFormBuildersAsFile = Request.AdvancedFormBuildersWithValues
                         .Where(x => x.ValueAsBinaryFile != null).ToList();

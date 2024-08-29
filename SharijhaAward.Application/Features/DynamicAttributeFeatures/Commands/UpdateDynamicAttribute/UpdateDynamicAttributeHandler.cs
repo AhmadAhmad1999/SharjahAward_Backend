@@ -78,7 +78,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                     string ResponseMessage = string.Empty;
 
                     DynamicAttribute? DynamicAttributeOldData = await _DynamicAttributeRepository
-                        .Include(x => x.DynamicAttributeSection!)
                         .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
                     if (DynamicAttributeOldData == null)
@@ -158,16 +157,16 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                         await _DynamicAttributeListValueRepository.DeleteListAsync(DeleteDynamicAttributeListValuesEntities);
 
                     if (GeneralValidationEntity is not null)
-                        await _GeneralValidationRepository.RemoveAsync(GeneralValidationEntity);
+                        await _GeneralValidationRepository.DeleteAsync(GeneralValidationEntity);
 
                     if (DependenciesEntities.Any())
-                        await _DependencyRepository.RemoveListAsync(DependenciesEntities);
+                        await _DependencyRepository.DeleteListAsync(DependenciesEntities);
 
                     if (DependencyValidationEntities.Any())
-                        await _DependencyValidationRepository.RemoveListAsync(DependencyValidationEntities);
+                        await _DependencyValidationRepository.DeleteListAsync(DependencyValidationEntities);
 
                     if (ViewWhenRelationEntities.Any())
-                        await _ViewWhenRelationRepository.RemoveListAsync(ViewWhenRelationEntities);
+                        await _ViewWhenRelationRepository.DeleteListAsync(ViewWhenRelationEntities);
 
                     // Add General Validaiton if The Request.GeneralValidationObject is NOT NULL..
                     if (Request.GeneralValidationObject is not null)

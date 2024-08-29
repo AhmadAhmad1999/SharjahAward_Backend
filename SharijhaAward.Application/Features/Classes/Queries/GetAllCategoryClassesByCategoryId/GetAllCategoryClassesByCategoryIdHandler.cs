@@ -38,7 +38,6 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllCategoryClass
             List<GetAllCategoryClassesByCategoryIdDto> CategoryClasses = await _CategoryEducationalClassRepository
                 .Where(x => x.CategoryId == CategoryEntity.Id)
                 .OrderByDescending(x => x.CreatedAt)
-                .Include(x => x.EducationalClass!)
                 .Select(x => new GetAllCategoryClassesByCategoryIdDto()
                 {
                     Id = x.Id,

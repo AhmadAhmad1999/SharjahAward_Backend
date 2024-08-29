@@ -103,8 +103,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
             else if (Request.FilterId == (int)FilesFilter.SubscriberPersonalAndAcademicInformation)
             {
                 List<DownloadFilesByIdsListVM> FilesValues = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
@@ -117,8 +115,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                         FilePath = x.Value
                     })
                     .Union(await _DynamicAttributeTableValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                         .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                             x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                             ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
@@ -137,8 +133,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
             else if (Request.FilterId == (int)FilesFilter.CoordinatorFiles)
             {
                 List<DownloadFilesByIdsListVM> FilesValues = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
                         (!Request.DownloadAllFiles
@@ -150,8 +144,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                         FilePath = x.Value
                     })
                     .Union(await _DynamicAttributeTableValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                         .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                             x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                             ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
@@ -170,8 +162,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
             else if (Request.FilterId == (int)FilesFilter.ArbitratorFiles)
             {
                 List<DownloadFilesByIdsListVM> FilesValues = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
                         (!Request.DownloadAllFiles
@@ -183,8 +173,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                         FilePath = x.Value
                     })
                     .Union(await _DynamicAttributeTableValueRepository
-                        .Include(x => x.DynamicAttribute!)
-                        .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                         .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                             x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                             ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
