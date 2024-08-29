@@ -108,7 +108,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         .ToListAsync();
 
                     var forms = await _FormRepository
-                        .Include(f => f.Category, filterObject)
                         .Where(f => f.Category.CycleId == cycle.Id)
                         .ToListAsync();
 
@@ -123,8 +122,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             .ToListAsync();
 
                         var SubscribersNames = await _DynamicAttributeValueRepository
-                            .Include(x => x.DynamicAttribute!)
-                            .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                             .Where(x => forms.Select(y => y.Id).Any(y => y == x.RecordId) &&
                                 x.DynamicAttribute!.DynamicAttributeSection!.EnglishName == "Main Information" &&
                                 x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
@@ -137,37 +134,37 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             .Include(x => x.Parent!)
                             .AsEnumerable();
 
-                        
+
                         var data = request.SubscriberName == null
                             ? forms.AsEnumerable().Select(x => new FormListVm()
-                        {
-                            Id = x.Id,
-                            SubscriberName = (SubscribersNames.Select(y => y.RecordId).Contains(x.Id) && SubscribersNames.Any())
+                            {
+                                Id = x.Id,
+                                SubscriberName = (SubscribersNames.Select(y => y.RecordId).Contains(x.Id) && SubscribersNames.Any())
                                 ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
                                 : null,
-                            subscriberCode = (Subscribers.Select(s => s.Id).Contains(x.userId) && Subscribers.Any())
+                                subscriberCode = (Subscribers.Select(s => s.Id).Contains(x.userId) && Subscribers.Any())
                                 ? Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId
                                 : null,
-                            PercentCompletion = x.PercentCompletion,
-                            CycleNumber = x.CycleNumber,
-                            CycleYear = x.CycleYear,
-                            Type = x.Type,
-                            Status = x.Status,
-                            SubscriberType = x.SubscriberType,
-                            CurrentStep = x.CurrentStep,
-                            TotalStep = x.TotalStep,
-                            FinalScore = x.FinalScore,
-                            IsAccepted = x.IsAccepted,
-                            ReasonOfRejection = x.ReasonOfRejection!,
-                            categoryId = x.categoryId,
-                            CreatedAt = x.CreatedAt,
-                            CategoryName = request.lang == "en"
+                                PercentCompletion = x.PercentCompletion,
+                                CycleNumber = x.CycleNumber,
+                                CycleYear = x.CycleYear,
+                                Type = x.Type,
+                                Status = x.Status,
+                                SubscriberType = x.SubscriberType,
+                                CurrentStep = x.CurrentStep,
+                                TotalStep = x.TotalStep,
+                                FinalScore = x.FinalScore,
+                                IsAccepted = x.IsAccepted,
+                                ReasonOfRejection = x.ReasonOfRejection!,
+                                categoryId = x.categoryId,
+                                CreatedAt = x.CreatedAt,
+                                CategoryName = request.lang == "en"
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
-                            SubCategoryName = request.lang == "en"
+                                SubCategoryName = request.lang == "en"
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
-                            SucceedToFinalArbitration = GetAllFromsInFinalArbitration
+                                SucceedToFinalArbitration = GetAllFromsInFinalArbitration
                                 .AsEnumerable()
                                 .Select(y => y.ProvidedFormId)
                                 .Contains(x.Id)
@@ -209,30 +206,23 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                           .ToList();
 
                         List<CycleConditionAttachment> AllCycleConditionAttachmentEntities = await _CycleConditionAttachmentRepository
-                            .Include(x => x.CycleConditionsProvidedForm!)
-                            .Include(x => x.CycleConditionsProvidedForm!.CycleCondition!)
                             .Where(x => forms.Select(y => y.Id).Contains(x.CycleConditionsProvidedForm!.ProvidedFormId) &&
                                 x.CycleConditionsProvidedForm!.CycleCondition!.NeedAttachment &&
                                 (x.IsAccept != null ? !x.IsAccept.Value : false))
                             .ToListAsync();
 
                         List<ConditionAttachment> AllConditionAttachmentEntities = await _ConditionAttachmentRepository
-                            .Include(x => x.ConditionsProvidedForms!)
-                            .Include(x => x.ConditionsProvidedForms!.TermAndCondition!)
                             .Where(x => forms.Select(y => y.Id).Contains(x.ConditionsProvidedForms!.ProvidedFormId) &&
                                 x.ConditionsProvidedForms.TermAndCondition.NeedAttachment &&
                                 (x.IsAccept != null ? !x.IsAccept.Value : false))
                             .ToListAsync();
 
                         List<ExtraAttachmentFile> AllExtraAttachmentFileEntities = await _ExtraAttachmentFileRepository
-                            .Include(x => x.ExtraAttachment!)
                             .Where(x => forms.Select(y => y.Id).Contains(x.ExtraAttachment!.ProvidedFormId) &&
                                 (x.IsAccept != null ? !x.IsAccept.Value : false))
                             .ToListAsync();
 
                         List<DynamicAttributeValue> AllDynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                            .Include(x => x.DynamicAttribute!)
-                            .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                             .Where(x => (x.isAccepted != null ? !x.isAccepted.Value : false) &&
                                 data.Select(y => y.Id).Any(y => y == x.RecordId) &&
                                 x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1)
@@ -318,18 +308,15 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         .ToListAsync();
 
                     var forms = await _FormRepository
-                        .Include(f => f.Category)
                         .Where(f => f.Category.CycleId == cycle.Id)
                         .ToListAsync();
 
                     List<int> EduEntitiesIds = await _EduEntitiesCoordinatorRepository
-                            .Where(x => x.CoordinatorId == UserId)
-                            .Include(x => x.EducationalEntity!)
-                            .Select(x => x.EducationalEntityId)
-                            .ToListAsync();
+                        .Where(x => x.CoordinatorId == UserId)
+                        .Select(x => x.EducationalEntityId)
+                        .ToListAsync();
 
                     List<DynamicAttributeValue> DynamicAttributeValueEtities = await _DynamicAttributeValueRepository
-                        .Include(x => x.DynamicAttribute!)
                         .Where(x => forms.Select(y => y.Id).Any(y => y == x.RecordId) &&
                             x.DynamicAttribute!.EnglishTitle.ToLower() == "Educational Entity".ToLower())
                         .ToListAsync();
@@ -367,8 +354,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             .ToListAsync();
 
                         var SubscribersNames = await _DynamicAttributeValueRepository
-                            .Include(x => x.DynamicAttribute!)
-                            .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                             .Where(x => forms.Select(y => y.Id).Any(y => y == x.RecordId) &&
                                 x.DynamicAttribute!.DynamicAttributeSection!.EnglishName == "Main Information" &&
                                 x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
@@ -416,30 +401,23 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         }).ToList();
 
                         List<CycleConditionAttachment> AllCycleConditionAttachmentEntities = await _CycleConditionAttachmentRepository
-                            .Include(x => x.CycleConditionsProvidedForm!)
-                            .Include(x => x.CycleConditionsProvidedForm!.CycleCondition!)
                             .Where(x => forms.Select(y => y.Id).Contains(x.CycleConditionsProvidedForm!.ProvidedFormId) &&
                                 x.CycleConditionsProvidedForm!.CycleCondition!.NeedAttachment &&
                                 (x.IsAccept != null ? !x.IsAccept.Value : false))
                             .ToListAsync();
 
                         List<ConditionAttachment> AllConditionAttachmentEntities = await _ConditionAttachmentRepository
-                            .Include(x => x.ConditionsProvidedForms!)
-                            .Include(x => x.ConditionsProvidedForms!.TermAndCondition!)
                             .Where(x => forms.Select(y => y.Id).Contains(x.ConditionsProvidedForms!.ProvidedFormId) &&
                                 x.ConditionsProvidedForms.TermAndCondition.NeedAttachment &&
                                 (x.IsAccept != null ? !x.IsAccept.Value : false))
                             .ToListAsync();
 
                         List<ExtraAttachmentFile> AllExtraAttachmentFileEntities = await _ExtraAttachmentFileRepository
-                            .Include(x => x.ExtraAttachment!)
                             .Where(x => forms.Select(y => y.Id).Contains(x.ExtraAttachment!.ProvidedFormId) &&
                                 (x.IsAccept != null ? !x.IsAccept.Value : false))
                             .ToListAsync();
 
                         List<DynamicAttributeValue> AllDynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                            .Include(x => x.DynamicAttribute!)
-                            .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                             .Where(x => (x.isAccepted != null ? !x.isAccepted.Value : false) &&
                                 data.Select(y => y.Id).Any(y => y == x.RecordId) &&
                                 x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1)

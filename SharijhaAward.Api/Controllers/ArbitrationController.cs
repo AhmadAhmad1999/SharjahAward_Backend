@@ -69,11 +69,18 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> UpdateAssignedFormsToArbitrator([FromBody] UpdateAssignedFormsToArbitratorCommand UpdateAssignedFormsToArbitratorCommand)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             UpdateAssignedFormsToArbitratorCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            UpdateAssignedFormsToArbitratorCommand.Token = Token;
 
             BaseResponse<object>? Response = await _Mediator.Send(UpdateAssignedFormsToArbitratorCommand);
 
@@ -200,6 +207,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(Response),
                 200 => Ok(Response),
+                401 => Unauthorized(Response),
                 _ => BadRequest(Response)
             };
         }

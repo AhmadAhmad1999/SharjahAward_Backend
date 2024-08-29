@@ -12,7 +12,7 @@ using System.Transactions;
 
 namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
 {
-    public class SigningTheFormQueryHandler 
+    public class SigningTheFormQueryHandler
         : IRequestHandler<SigningTheFormQuery, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formRepository;
@@ -24,7 +24,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
         private readonly IEmailSender _EmailSender;
 
         public SigningTheFormQueryHandler(IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formRepository,
-            IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository, 
+            IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository,
             IJwtProvider jwtProvider,
             IAsyncRepository<Notification> NotificationRepository,
             IAsyncRepository<UserToken> UserTokenRepository,
@@ -55,13 +55,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
             }
             var form = await _formRepository
                 .Where(f => f.userId == User.Id && f.Id == request.providedFormId)
-                .Include(x => x.User!)
-                .Include(x => x.Category!)
                 .Include(x => x.Category!.Parent!)
-                .Include(x => x.Category!.Cycle!)
                 .FirstOrDefaultAsync();
-            
-            if(form == null)
+
+            if (form == null)
             {
                 return new BaseResponse<object>("", false, 404);
             }
@@ -84,7 +81,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
 
             if (User.Password == CheckPassword)
             {
-                
+
                 TransactionOptions TransactionOptions = new TransactionOptions
                 {
                     IsolationLevel = IsolationLevel.ReadCommitted,
@@ -113,7 +110,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
 
                         FirebaseAdmin.Messaging.Message? NotificationMessages = await _UserTokenRepository
                             .Where(x => User.Id == x.UserId && !string.IsNullOrEmpty(x.DeviceToken))
-                            .Include(x => x.User!)
                             .Select(x => x.AppLanguage == "en"
                                 ? new FirebaseAdmin.Messaging.Message()
                                 {

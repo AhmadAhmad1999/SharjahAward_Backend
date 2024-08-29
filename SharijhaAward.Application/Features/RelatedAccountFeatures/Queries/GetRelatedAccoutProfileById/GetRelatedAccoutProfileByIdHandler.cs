@@ -29,7 +29,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
             _RelatedAccountRepository = RelatedAccountRepository;
             _JWTProvider = JWTProvider;
         }
-        public async Task<BaseResponse<GetRelatedAccoutProfileByIdResponse>> Handle(GetRelatedAccoutProfileByIdQuery Request, 
+        public async Task<BaseResponse<GetRelatedAccoutProfileByIdResponse>> Handle(GetRelatedAccoutProfileByIdQuery Request,
             CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
@@ -62,18 +62,17 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetR
             }
 
             RelatedAccountProfileData ProfileData = _Mapper.Map<RelatedAccountProfileData>(RelatedAccountUserEntity);
-            
+
             ProfileData.Name = Request.lang == "en"
                 ? RelatedAccountUserEntity.EnglishName
                 : RelatedAccountUserEntity.ArabicName;
 
             List<RelatedAccountProvidedForms> ProvidedForms = await _FormRepository
-                .Include(x => x.Category!)
-                .Include(x => x.Category!.Parent!)
-                .Where(x => x.userId == RelatedAccountEntity.User2Id && 
-                    (Request.Type != null 
+                .Where(x => x.userId == RelatedAccountEntity.User2Id &&
+                    (Request.Type != null
                         ? x.Type == Request.Type
                         : true))
+                .Include(x => x.Category!.Parent!)
                 .Select(x => new RelatedAccountProvidedForms()
                 {
                     CategoryId = x.categoryId,

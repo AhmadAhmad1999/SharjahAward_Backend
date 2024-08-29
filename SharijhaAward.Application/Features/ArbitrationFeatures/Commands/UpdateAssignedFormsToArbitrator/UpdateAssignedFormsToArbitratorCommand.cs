@@ -9,5 +9,6 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Update
         public List<int> NewFormsIds { get; set; } = new List<int>();
         public List<int> DeleteFormsIds { get; set; } = new List<int>();
         public string? lang { get; set; }
+        public string? Token { get; set; }
     }
 }

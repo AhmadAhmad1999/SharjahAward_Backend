@@ -1056,12 +1056,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.User)
                 .AutoInclude();
 
-            modelBuilder.Entity<EmailMessage>()
-                .Navigation(p => p.message)
-                .AutoInclude();
-
             modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => !p.isDeleted &&
-                (p.message != null ? !p.message.isDeleted : true) &&
                 (p.User != null ? !p.User.isDeleted : true) &&
                 (p.Type != null ? !p.Type.isDeleted : true));
 

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
@@ -8,20 +9,23 @@ using System.Transactions;
 
 namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.UpdateAssignedFormsToArbitrator
 {
-    public class UpdateAssignedFormsToArbitratorHandler 
+    public class UpdateAssignedFormsToArbitratorHandler
         : IRequestHandler<UpdateAssignedFormsToArbitratorCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
+        private readonly IJwtProvider _JwtProvider;
 
         public UpdateAssignedFormsToArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
-            IAsyncRepository<Arbitration> ArbitrationRepository)
+            IAsyncRepository<Arbitration> ArbitrationRepository,
+            IJwtProvider JwtProvider)
         {
             _ArbitratorRepository = ArbitratorRepository;
             _ArbitrationRepository = ArbitrationRepository;
+            _JwtProvider = JwtProvider;
         }
 
-        public async Task<BaseResponse<object>> 
+        public async Task<BaseResponse<object>>
             Handle(UpdateAssignedFormsToArbitratorCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
@@ -43,6 +47,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Update
                     x.ArbitratorId == Request.ArbitratorId)
                 .ToListAsync();
 
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
             IEnumerable<Arbitration> NewArbitrationEntites = Request.NewFormsIds
                 .Select(x => new Arbitration()
                 {
@@ -55,7 +61,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Update
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     isAccepted = FormStatus.NotArbitratedYet,
-                    isAcceptedFromChairman = FormStatus.NotArbitratedYet
+                    isAcceptedFromChairman = FormStatus.NotArbitratedYet,
+                    AssignedByUserId = UserId
                 });
 
             TransactionOptions TransactionOptions = new TransactionOptions
