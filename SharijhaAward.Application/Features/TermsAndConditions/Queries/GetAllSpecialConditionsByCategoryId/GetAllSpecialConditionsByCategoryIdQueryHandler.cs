@@ -112,7 +112,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
                         .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
                         .ToList());
 
-                    if (data[i].ConditionsAttachments!.Attachments.Any(a => a.IsAccept == false))
+                    if (data[i].ConditionsAttachments!.Attachments.Any(a => a.IsAccepted == false))
                         data[i].Rejected = true;
                 }
 

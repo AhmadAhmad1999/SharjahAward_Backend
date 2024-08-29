@@ -55,6 +55,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
             }
             var form = await _formRepository
                 .Where(f => f.userId == User.Id && f.Id == request.providedFormId)
+                .Include(x => x.Category!.Parent!)
                 .FirstOrDefaultAsync();
             
             if(form == null)

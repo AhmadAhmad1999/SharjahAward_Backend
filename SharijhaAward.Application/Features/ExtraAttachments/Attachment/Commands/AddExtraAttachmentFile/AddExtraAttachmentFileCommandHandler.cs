@@ -53,6 +53,14 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
 
                 return new BaseResponse<object>(msg, false, 404);
             }
+
+            if(ExtraAttachmentsFileEntities.Any(a => a.IsAccept == false))
+            {
+                var Attachment = await _extraAttachmentsFileRepository.FirstOrDefaultAsync(a => a.IsAccept == false);
+
+                await _extraAttachmentsFileRepository.DeleteAsync(Attachment!);
+            }
+
             if  (ExtraAttachment.RequiredAttachmentNumber <= ExtraAttachmentsFileEntities.Count())
             {
                 msg = request.lang == "en"
@@ -63,6 +71,8 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
             }
 
             var data = _mapper.Map<ExtraAttachmentFile>(request);
+
+            data.IsAccept = null;
 
             data.FileUrl = await _fileService.SaveProvidedFormFilesAsync(request.File, ExtraAttachment.ProvidedFormId);
 

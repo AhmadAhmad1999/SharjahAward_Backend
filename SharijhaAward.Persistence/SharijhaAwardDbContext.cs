@@ -303,6 +303,8 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<UserToken>().HasQueryFilter(p => !p.isDeleted &&
                 (p.User != null ? !p.User.isDeleted : true));
 
+            modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => !p.isDeleted);
+
             modelBuilder.Entity<UserNotification>()
                 .Navigation(p => p.User)
                 .AutoInclude();

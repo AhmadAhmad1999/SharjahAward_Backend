@@ -158,12 +158,15 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> SigningTheForm(SigningTheFormQuery query)
         {
             var token = HttpContext.Request.Headers.Authorization;
+            var language = HttpContext.Request.Headers["lang"];
 
             if (token.IsNullOrEmpty())
             {
                 return Unauthorized();
             }
             query.token = token!;
+            query.lang = language.IsNullOrEmpty() ? "ar" : language!; 
+
             var response = await _mediator.Send(query);
 
             return response.statusCode switch

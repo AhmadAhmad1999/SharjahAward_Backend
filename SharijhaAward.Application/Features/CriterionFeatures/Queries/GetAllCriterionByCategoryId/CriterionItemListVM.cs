@@ -7,6 +7,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        public bool? rejected { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public int MaxAttachmentNumber { get; set; }
         public AttachmentType AttachmentType { get; set; }

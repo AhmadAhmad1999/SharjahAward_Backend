@@ -98,7 +98,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     EducationalClassName = x.CategoryEducationalClass != null
                                         ? x.CategoryEducationalClass!.EducationalClass!.EnglishName
                                         : null,
-                                    IsAccepted = x.IsAccepted!.Value
+                                    IsAccepted = x.IsAccepted!
                                 }
                                 : new FormsListVMForArbitrationDto()
                                 {
@@ -107,7 +107,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)?.Value,
                                     EducationalClassName = x.CategoryEducationalClass != null
                                         ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null,
-                                    IsAccepted = x.IsAccepted!.Value
+                                    IsAccepted = x.IsAccepted!
                                 }).ToList()
                     };
 
@@ -140,7 +140,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     EducationalClassName = x.CategoryEducationalClass != null
                                         ? x.CategoryEducationalClass!.EducationalClass!.EnglishName
                                         : null,
-                                    IsAccepted = x.IsAccepted!.Value
+                                    IsAccepted = x.IsAccepted!
                                 }
                                 : new FormsListVMForArbitrationDto()
                                 {
@@ -150,7 +150,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                         ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value : null,
                                     EducationalClassName = x.CategoryEducationalClass != null
                                         ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null,
-                                    IsAccepted = x.IsAccepted!.Value
+                                    IsAccepted = x.IsAccepted!
                                 }).ToList()
                     };
 
@@ -181,7 +181,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     CategoryName = x.ProvidedForm!.Category!.EnglishName,
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
                                     EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName,
-                                    IsAccepted = x.ProvidedForm!.IsAccepted!.Value
+                                    IsAccepted = x.ProvidedForm!.IsAccepted!
                                 }
                                 : new FormsListVMForArbitrationDto()
                                 {
@@ -189,7 +189,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     CategoryName = x.ProvidedForm!.Category!.ArabicName,
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
                                     EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName,
-                                    IsAccepted = x.ProvidedForm!.IsAccepted!.Value
+                                    IsAccepted = x.ProvidedForm!.IsAccepted!
                                 }).ToList()
                     };
 
@@ -212,7 +212,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     CategoryName = x.ProvidedForm!.Category!.EnglishName,
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
                                     EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName,
-                                    IsAccepted = x.ProvidedForm!.IsAccepted!.Value
+                                    IsAccepted = x.ProvidedForm!.IsAccepted!
                                 }
                                 : new FormsListVMForArbitrationDto()
                                 {
@@ -220,7 +220,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                                     CategoryName = x.ProvidedForm!.Category!.ArabicName,
                                     SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value,
                                     EducationalClassName = x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName,
-                                    IsAccepted = x.ProvidedForm!.IsAccepted!.Value
+                                    IsAccepted = x.ProvidedForm!.IsAccepted!
                                 }).ToList()
                     };
 
