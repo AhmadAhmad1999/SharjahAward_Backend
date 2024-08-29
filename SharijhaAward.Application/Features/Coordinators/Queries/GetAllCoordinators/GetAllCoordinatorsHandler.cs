@@ -37,7 +37,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
 
             List<EduEntitiesCoordinator> EduEntitiesCoordinatorEntities = await _EduEntitiesCoordinatorRepository
                 .Where(x => Coordinators.Select(y => y.Id).Contains(x.CoordinatorId))
-                .Include(x => x.EducationalEntity!)
                 .ToListAsync();
 
             if(Request.EducationalEntityId != null)

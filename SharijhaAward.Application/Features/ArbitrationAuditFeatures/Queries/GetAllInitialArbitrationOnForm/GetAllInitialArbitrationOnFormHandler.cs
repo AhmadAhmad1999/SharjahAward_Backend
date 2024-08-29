@@ -26,13 +26,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
             List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
                 .Where(x => x.ProvidedFormId == Request.FormId)
-                .Include(x => x.Arbitrator!)
                 .ToListAsync();
 
             List<InitialArbitration> InitialArbitrationEntities = await _InitialArbitrationRepository
                 .Where(x => ArbitrationEntities.Select(y => y.Id).Contains(x.ArbitrationId))
-                .Include(x => x.Criterion!)
-                .Include(x => x.CriterionItem!)
                 .ToListAsync();
 
             List<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrationEntities = await _ChairmanNotesOnInitialArbitrationRepository

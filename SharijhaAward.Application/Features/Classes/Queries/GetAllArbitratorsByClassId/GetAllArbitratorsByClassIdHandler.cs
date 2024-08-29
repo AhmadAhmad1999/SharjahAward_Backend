@@ -42,14 +42,12 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
-                    .Include(x => x.Arbitrator!)
                     .Select(x => x.Arbitrator!)
                     .ToListAsync();
             else
                 ArbitratorClassesEntities = await _ArbitratorClassRepository
                     .WhereThenFilter(x => x.EducationalClassId == Request.EducationalClassId, filterObject)
                     .OrderByDescending(x => x.CreatedAt)
-                    .Include(x => x.Arbitrator!)
                     .Select(x => x.Arbitrator!)
                     .ToListAsync();
 
@@ -57,7 +55,6 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
 
             List<CategoryArbitrator> CategoryArbitratorEntities = await _CategoryArbitratorRepository
                 .Where(x => Arbitrators.Select(y => y.Id).Contains(x.ArbitratorId))
-                .Include(x => x.Category!)
                 .ToListAsync();
 
             Arbitrators = Arbitrators.Select(x => new ArbitratorsListVM()

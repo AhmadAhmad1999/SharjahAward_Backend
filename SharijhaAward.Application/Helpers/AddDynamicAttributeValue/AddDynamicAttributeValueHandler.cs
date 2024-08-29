@@ -93,8 +93,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             List<DynamicAttribute> DynamicAttributeEntities = await _DynamicAttributeRepository
                 .Where(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId).Contains(x.Id) ||
                     Request.DynamicAttributesWithTableValues.Select(y => y.DynamicAttributeId).Contains(x.Id))
-                .Include(x => x.AttributeDataType!)
-                .Include(x => x.DynamicAttributeSection!)
                 .ToListAsync();
 
             List<ViewWhenRelation> ViewWhenRelationEntities = await _ViewWhenRelationRepository
@@ -2983,14 +2981,14 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
 
                     if (DynamicValuesToDelete.Count() > 0)
-                        await _DynamicAttributeValueRepository.RemoveListAsync(DynamicValuesToDelete);
+                        await _DynamicAttributeValueRepository.DeleteListAsync(DynamicValuesToDelete);
                     
                     List<DynamicAttributeTableValue> DynamicAttributeTableValueEnititiesToDelete = await _DynamicAttributeTableValueRepository
                         .Where(x => x.RecordId == Request.RecordId)
                         .ToListAsync();
 
                     if (DynamicAttributeTableValueEnititiesToDelete.Any())
-                        await _DynamicAttributeTableValueRepository.RemoveListAsync(DynamicAttributeTableValueEnititiesToDelete);
+                        await _DynamicAttributeTableValueRepository.DeleteListAsync(DynamicAttributeTableValueEnititiesToDelete);
 
                     List<AddDynamicAttributeTableValueMainCommand> DynamicAttributesTableValueAsFile = Request.DynamicAttributesWithTableValues
                         .Where(x => x.ValueAsBinaryFile != null).ToList();
@@ -3056,8 +3054,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                     if (Request.DynamicAttributesWithValues.Any())
                     {
                         DynamicAttribute? CheckIfThereisClassAttribute = await _DynamicAttributeRepository
-                            .Include(x => x.DynamicAttributeSection!)
-                            .Include(x => x.DynamicAttributeSection!.AttributeTableName!)
                             .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithValues[0].DynamicAttributeId);
 
                         if (CheckIfThereisClassAttribute is not null)

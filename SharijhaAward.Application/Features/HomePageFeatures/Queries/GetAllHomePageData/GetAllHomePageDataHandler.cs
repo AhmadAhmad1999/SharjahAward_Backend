@@ -94,11 +94,6 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
             if (Request.CycleId is not null)
             {
                 AllProvidedFormsEntities = await _ProvidedFormRepository
-                    .Include(x => x.User!)
-                    .Include(x => x.Category!)
-                    .Include(x => x.Category!.Cycle)
-                    .Include(x => x.CategoryEducationalEntity!)
-                    .Include(x => x.CategoryEducationalEntity!.EducationalEntity!)
                     .Where(x => x.User.isValidAccount &&
                         x.Category.CycleId == Request.CycleId.Value)
                     .ToListAsync();
@@ -125,11 +120,6 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                     ActiveCycleId = CheckIfThereIsActiveCycle.Id;
 
                 AllProvidedFormsEntities = await _ProvidedFormRepository
-                    .Include(x => x.User!)
-                    .Include(x => x.Category!)
-                    .Include(x => x.Category!.Cycle)
-                    .Include(x => x.CategoryEducationalEntity!)
-                    .Include(x => x.CategoryEducationalEntity!.EducationalEntity!)
                     .Where(x => x.User.isValidAccount &&
                         x.Category!.CycleId == ActiveCycleId)
                     .ToListAsync();
@@ -183,7 +173,6 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                     RoleType = RoleType.Arbitrator;
 
                     List<Arbitration> ArbitrationEntities = _ArbitrationRepository
-                        .Include(x => x.ProvidedForm!)
                         .Where(x => x.ArbitratorId == UserId &&
                             AllProvidedFormsEntities.AsEnumerable()
                                 .Select(y => y.userId).Contains(x.ProvidedForm!.userId))
@@ -297,12 +286,10 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
 
                         List<int> EduEntitiesIds = await _EduEntitiesCoordinatorRepository
                             .Where(x => x.CoordinatorId == UserId)
-                            .Include(x => x.EducationalEntity!)
                             .Select(x => x.EducationalEntityId)
                             .ToListAsync();
 
                         List<DynamicAttributeValue> DynamicAttributeValueEtities = await _DynamicAttributeValueRepository
-                            .Include(x => x.DynamicAttribute!)
                             .Where(x => AllProvidedFormsEntities.Select(y => y.Id).Any(y => y == x.RecordId) &&
                                 x.DynamicAttribute!.EnglishTitle.ToLower() == "Educational Entity".ToLower())
                             .ToListAsync();

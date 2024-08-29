@@ -72,7 +72,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                 var EducationalInstitutions = await _educationalInstitutionRepository.Where(predicate1).ToListAsync();
 
                 CoordinatorsResult = await _EduInstitutionCoordinatorRepository
-                    .Include(x => x.Coordinator!)
                     .Where(x => EducationalInstitutions.Select(y => y.Id).Contains(x.EducationalInstitutionId))
                     .Select(x => x.Coordinator!)
                     .ToListAsync();
@@ -80,17 +79,14 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                 if (request.EducationalEntity != null)
                 {
                      CoordinatorsResult = await _EduInstitutionCoordinatorRepository
-                        .Include(x => x.EducationalInstitution!)
                         .Where(x => x.EducationalInstitution!.EducationalEntityId == request.EducationalEntity)
                         .Where(x=>x.EducationalInstitution.Emirates == request.Emirates && x.EducationalInstitution.EducationType == request.EducationType)
-                        .Include(x => x.Coordinator!)
                         .Select(x => x.Coordinator!)
                         .ToListAsync();
 
                     if (request.School != null)
                     {
                         CoordinatorsResult = _EduInstitutionCoordinatorRepository
-                            .Include(x => x.Coordinator!)
                             .Where(x => x.EducationalInstitutionId == request.School)
                             .Where(x => x.EducationalInstitution.Emirates == request.Emirates && x.EducationalInstitution.EducationType == request.EducationType)
                             .Where(x => x.EducationalInstitution.EducationalEntityId == request.EducationalEntity)
@@ -102,7 +98,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                 if (request.School != null)
                 {
                     CoordinatorsResult = _EduInstitutionCoordinatorRepository
-                        .Include(x => x.Coordinator!)
                         .Where(x => x.EducationalInstitutionId == request.School)
                         .Where(x => x.EducationalInstitution.Emirates == request.Emirates && x.EducationalInstitution.EducationType == request.EducationType)
                         .Select(x => x.Coordinator)
@@ -112,16 +107,13 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
             else if (request.EducationalEntity != null)
             {
                 CoordinatorsResult = await _EduInstitutionCoordinatorRepository
-                   .Include(x => x.EducationalInstitution!)
                    .Where(x => x.EducationalInstitution!.EducationalEntityId == request.EducationalEntity)
-                   .Include(x => x.Coordinator!)
                    .Select(x => x.Coordinator!)
                    .ToListAsync();
 
                 if (request.School != null)
                 {
                     CoordinatorsResult = _EduInstitutionCoordinatorRepository
-                        .Include(x => x.Coordinator!)
                         .Where(x => x.EducationalInstitutionId == request.School)
                         .Where(x => x.EducationalInstitution.EducationalEntityId == request.EducationalEntity)
                         .Select(x => x.Coordinator)
@@ -132,7 +124,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
             else if (request.School != null)
             {
                 CoordinatorsResult = _EduInstitutionCoordinatorRepository
-                    .Include(x => x.Coordinator!)
                     .Where(x => x.EducationalInstitutionId == request.School)
                     .Select(x => x.Coordinator)
                     .ToList()!;

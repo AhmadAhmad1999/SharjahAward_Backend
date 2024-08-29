@@ -23,7 +23,6 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCr
             string ResponseMessage = string.Empty;
 
             CriterionItem? CriterionItemEntityToUpdate = await _CriterionItemRepository
-                .Include(x => x.Criterion!)
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             if (CriterionItemEntityToUpdate == null)

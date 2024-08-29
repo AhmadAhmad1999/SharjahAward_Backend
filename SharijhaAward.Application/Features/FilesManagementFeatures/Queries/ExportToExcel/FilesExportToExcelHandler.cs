@@ -118,8 +118,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Exp
             else if (Request.FilterId == (int)FilesFilter.SubscriberPersonalAndAcademicInformation)
             {
                 List<FilesExportToExcelListVM> FilesValues1 = await _DynamicAttributeTableValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
@@ -134,8 +132,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Exp
                     }).ToListAsync();
 
                 List<FilesExportToExcelListVM> FilesValues2 = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
@@ -160,8 +156,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Exp
             else if (Request.FilterId == (int)FilesFilter.CoordinatorFiles)
             {
                 List<FilesExportToExcelListVM> FirstFilesValues = await _DynamicAttributeTableValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
@@ -176,8 +170,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Exp
                     }).ToListAsync();
 
                 List<FilesExportToExcelListVM> SecondFilesValues = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
                     .Select(x => new FilesExportToExcelListVM()
@@ -201,8 +193,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Exp
             else if (Request.FilterId == (int)FilesFilter.ArbitratorFiles)
             {
                 List<FilesExportToExcelListVM> FirstFilesValues = await _DynamicAttributeTableValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
@@ -217,8 +207,6 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Exp
                     }).ToListAsync();
 
                 List<FilesExportToExcelListVM> SecondFilesValues = await _DynamicAttributeValueRepository
-                    .Include(x => x.DynamicAttribute!)
-                    .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)))
                     .Select(x => new FilesExportToExcelListVM()

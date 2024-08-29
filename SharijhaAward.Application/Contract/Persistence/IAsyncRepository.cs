@@ -26,8 +26,6 @@ namespace SharijhaAward.Application.Contract.Persistence
         Task UpdateListAsync(IEnumerable<T> entities);
         Task DeleteAsync(T entity);
         Task DeleteListAsync(IEnumerable<T> entities);
-        Task RemoveAsync(T entity);
-        Task RemoveListAsync(IEnumerable<T> entities);
         IQueryable<T> Where(Expression<Func<T, bool>> predicate);
         IQueryable<T> WhereThenFilter(Expression<Func<T, bool>> predicate, FilterObject filterObject);
         Task<IReadOnlyList<T>> GetFilterThenPagedReponseAsync(FilterObject filterObject, int page, int size);
@@ -44,9 +42,9 @@ namespace SharijhaAward.Application.Contract.Persistence
             params Expression<Func<T, object>>[] navigationProperties);
         IQueryable<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector, int page, int size);
         IQueryable<T> OrderByDescending<TKey>(FilterObject filterObject, Expression<Func<T, TKey>> keySelector, int page, int size);
-        IQueryable<T> Include(string navigationPropertyPath);
-        IQueryable<T> Include(Expression<Func<T, object>> navigationProperty);
-        IQueryable<T> Include(Expression<Func<T, object>> navigationProperty, FilterObject filterObject);
+        //IQueryable<T> Include(string navigationPropertyPath);
+        //IQueryable<T> Include(Expression<Func<T, object>> navigationProperty);
+        //IQueryable<T> Include(Expression<Func<T, object>> navigationProperty, FilterObject filterObject);
         IQueryable<T> IncludeThenWhere(Expression<Func<T, object>> navigationProperty,
             Expression<Func<T, bool>> predicate);
         public IQueryable<T> WhereThenInclude(Expression<Func<T, bool>> predicate,

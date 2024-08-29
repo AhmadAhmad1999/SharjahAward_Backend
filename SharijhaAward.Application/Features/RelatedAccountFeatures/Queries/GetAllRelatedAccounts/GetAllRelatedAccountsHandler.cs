@@ -31,7 +31,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                     ? await _RelatedAccountRepository
                         .Where(x => x.User1Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Include(x => x.User1).Include(x => x.User2)
                         .Select(x => new GetAllRelatedAccountsListVM()
                         {
                             Id = x.Id,
@@ -48,7 +47,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
-                        .Include(x => x.User1).Include(x => x.User2)
                         .Select(x => new GetAllRelatedAccountsListVM()
                         {
                             Id = x.Id,
@@ -79,7 +77,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                     ? await _RelatedAccountRepository
                         .Where(x => x.User1Id == UserId || x.User2Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
-                        .Include(x => x.User1).Include(x => x.User2)
                         .Select(x => new GetAllRelatedAccountsListVM()
                         {
                             Id = x.Id,
@@ -96,7 +93,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
-                        .Include(x => x.User1).Include(x => x.User2)
                         .Select(x => new GetAllRelatedAccountsListVM()
                         {
                             Id = x.Id,

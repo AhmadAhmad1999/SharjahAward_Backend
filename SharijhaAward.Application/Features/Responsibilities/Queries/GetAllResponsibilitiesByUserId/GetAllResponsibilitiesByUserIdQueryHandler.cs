@@ -65,8 +65,6 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
            
             var UserResponsibility = await _responsibilityUserRepository
             .Where(r => r.UserId == UserId)
-            .Include(r => r.Responsibility)
-            .Include(r => r.Responsibility.Role)
             .ToListAsync();
 
             var RoleIds = _userRoleRepository

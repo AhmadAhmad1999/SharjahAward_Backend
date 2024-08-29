@@ -47,8 +47,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                 string ResponseMessage = string.Empty;
 
                 Category? CategoryEntity = await _CategoryRepository
-                    .Include(x => x.Cycle!)
-                    .Include(x => x.Parent!)
                     .FirstOrDefaultAsync(x => x.Id == Request.CategoryId);
 
                 if (CategoryEntity == null)
@@ -384,7 +382,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     {
                         List<DynamicAttributeListValue> NewEducationalClasses = await _CategoryEducationalClassRepository
                             .Where(x => x.CategoryId == Request.CategoryId)
-                            .Include(x => x.EducationalClass!)
                             .Select(x => new DynamicAttributeListValue()
                             {
                                 isDeleted = false,
@@ -408,7 +405,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     {
                         List<DynamicAttributeListValue> NewEducationalEntities = await _CategoryEducationalEntityRepository
                             .Where(x => x.CategoryId == Request.CategoryId)
-                            .Include(x => x.EducationalEntity!)
                             .Select(x => new DynamicAttributeListValue()
                             {
                                 isDeleted = false,

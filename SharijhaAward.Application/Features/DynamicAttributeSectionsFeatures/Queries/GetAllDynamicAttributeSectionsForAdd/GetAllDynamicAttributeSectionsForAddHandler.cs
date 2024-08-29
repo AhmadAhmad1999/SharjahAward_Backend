@@ -75,7 +75,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 List<DynamicAttribute> AllDynamicAttributeEntitiesInSections = await _DynamicAttributeRepository
                     .Where(x => DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
-                    .Include(x => x.AttributeDataType!)
                     .ToListAsync();
 
                 List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
@@ -199,11 +198,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     else
                     {
                         List<IGrouping<int, DynamicAttributeTableValue>> DynamicAttributeTableValueEntities = await _DynamicAttributeTableValueRepository
-                            .Include(x => x.DynamicAttribute!)
                             .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Contains(x.DynamicAttributeId) &&
                                 x.RecordId == Request.ProvidedFormId && x.DynamicAttribute!.DynamicAttributeSectionId == DynamicAttributeSection.Id)
-                            .Include(x => x.DynamicAttribute!)
-                            .Include(x => x.DynamicAttribute!.AttributeDataType!)
                             .GroupBy(x => x.RowId)
                             .ToListAsync();
 
@@ -456,7 +452,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 List<DynamicAttribute> AllDynamicAttributeEntitiesInSections = await _DynamicAttributeRepository
                     .Where(x => DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
-                    .Include(x => x.AttributeDataType!)
                     .ToListAsync();
 
                 List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository

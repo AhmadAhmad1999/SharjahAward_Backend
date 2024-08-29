@@ -69,7 +69,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
 
             ArbitratorDto.ArbitratorCategories = await _CategoryArbitratorRepository
                 .Where(x => x.ArbitratorId == Request.ArbitratorId)
-                .Include(x => x.Category!)
                 .Select(x => new ArbitratorCategoryDto()
                 {
                     Id = x.CategoryId,
@@ -163,7 +162,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
             // Classes..
             List<GetAllClassesListVM> ArbitratorClasses = await _ArbitratorClassRepository
                 .Where(x => x.ArbitratorId == Request.ArbitratorId)
-                .Include(x => x.EducationalClass!)
                 .Select(x => new GetAllClassesListVM()
                 {
                     Id = x.EducationalClassId,

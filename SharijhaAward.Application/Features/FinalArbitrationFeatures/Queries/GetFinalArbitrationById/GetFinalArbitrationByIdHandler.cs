@@ -56,8 +56,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
             FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
-                .Include(x => x.DoneArbitrationUser!)
-                .Include(x => x.ProvidedForm!)
                 .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
 
             if (FinalArbitrationEntity is null)
@@ -116,8 +114,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 .ToListAsync();
 
             var ChairmanNotesOnInitialArbitrationEnttities = await _ChairmanNotesOnInitialArbitrationRepository
-                .Include(x => x.InitialArbitration!)
-                .Include(x => x.InitialArbitration!.Arbitration!)
                 .Where(x => x.InitialArbitration!.Arbitration!.ProvidedFormId == Request.FormId)
                 .Select(x => new
                 {

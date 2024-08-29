@@ -50,7 +50,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
             UserRole? CheckIfThisUserHasFullAccessOrArbitratorRole = await _UserRoleRepository
-                .Include(x => x.Role!)
                 .FirstOrDefaultAsync(x => x.UserId == UserId &&
                     x.Role!.EnglishName.ToLower() == "arbitrator");
 
@@ -70,9 +69,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
-                        .Include(x => x.DoneArbitrationUser!)
-                        .Include(x => x.ProvidedForm!)
-                        .Include(x => x.ProvidedForm!.Category!)
                         .ToListAsync();
 
                     TotalCount = await _FinalArbitrationRepository
@@ -88,9 +84,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 {
                     FinalArbitrationEntities = await _FinalArbitrationRepository
                         .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
-                        .Include(x => x.DoneArbitrationUser!)
-                        .Include(x => x.ProvidedForm!)
-                        .Include(x => x.ProvidedForm!.Category!)
                         .ToListAsync();
 
                     TotalCount = await _FinalArbitrationRepository
@@ -184,9 +177,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
-                            .Include(x => x.DoneArbitrationUser!)
-                            .Include(x => x.ProvidedForm!)
-                            .Include(x => x.ProvidedForm!.Category!)
                             .ToListAsync();
 
                         TotalCount = await _FinalArbitrationRepository
@@ -200,9 +190,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
-                            .Include(x => x.DoneArbitrationUser!)
-                            .Include(x => x.ProvidedForm!)
-                            .Include(x => x.ProvidedForm!.Category!)
                             .ToListAsync();
 
                         TotalCount = await _FinalArbitrationRepository
@@ -265,7 +252,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 else
                 {
                     List<int> ArbitratorIdsInCommitee = await _ComitteeArbitratorRepository
-                        .Include(x => x.Committee!)
                         .Where(x => x.Committee!.ChairmanId == UserId)
                         .Select(x => x.ArbitratorId)
                         .Distinct()
@@ -289,9 +275,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
-                            .Include(x => x.DoneArbitrationUser!)
-                            .Include(x => x.ProvidedForm!)
-                            .Include(x => x.ProvidedForm!.Category!)
                             .ToListAsync();
 
                         TotalCount = await _FinalArbitrationRepository
@@ -305,9 +288,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
-                            .Include(x => x.DoneArbitrationUser!)
-                            .Include(x => x.ProvidedForm!)
-                            .Include(x => x.ProvidedForm!.Category!)
                             .ToListAsync();
 
                         TotalCount = await _FinalArbitrationRepository

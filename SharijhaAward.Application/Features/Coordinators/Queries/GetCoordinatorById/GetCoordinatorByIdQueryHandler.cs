@@ -82,7 +82,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
 
             data.EntityCoordinator = _EduEntitiesCoordinatorRepository
                 .Where(x => x.CoordinatorId == CoordinatorEntity.Id)
-                .Include(x => x.EducationalEntity!)
                 .AsEnumerable()
                 .DistinctBy(x => x.EducationalEntityId)
                 .Select(x => new EduEntityCoordinatorDto()

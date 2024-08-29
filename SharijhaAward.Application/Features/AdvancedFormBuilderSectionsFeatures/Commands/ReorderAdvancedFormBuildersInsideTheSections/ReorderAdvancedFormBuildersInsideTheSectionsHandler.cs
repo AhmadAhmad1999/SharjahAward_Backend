@@ -28,7 +28,6 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
             List<AdvancedFormBuilder> AllAdvancedFormBuilderEntities = await _AdvancedFormBuilderRepository
                 .Where(x => Request.AdvancedFormBuilderSectionDto.Select(y => y.SectionId)
                     .Any(y => y == x.AdvancedFormBuilderSectionId))
-                .Include(x => x.AdvancedFormBuilderSection!)
                 .ToListAsync();
 
             List<AdvancedFormBuilderSection> AllAdvancedFormBuilderSectionsEntities = AllAdvancedFormBuilderEntities

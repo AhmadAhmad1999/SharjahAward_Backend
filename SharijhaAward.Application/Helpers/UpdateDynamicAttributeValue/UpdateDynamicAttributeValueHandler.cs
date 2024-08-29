@@ -1355,7 +1355,7 @@ namespace SharijhaAward.Application.Helpers.UpdateDynamicAttributeValue
                     List<DynamicAttributeValue> DynamicValuesToDelete = await _DynamicAttributeValueRepository
                         .Where(x => x.RecordId == Request.RecordId).ToListAsync();
 
-                    await _DynamicAttributeValueRepository.RemoveListAsync(DynamicValuesToDelete);
+                    await _DynamicAttributeValueRepository.DeleteListAsync(DynamicValuesToDelete);
 
                     // Add The New Values..
 

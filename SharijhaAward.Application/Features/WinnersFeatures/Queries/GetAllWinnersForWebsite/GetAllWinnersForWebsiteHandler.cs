@@ -35,14 +35,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
             Handle(GetAllWinnersForWebsiteQuery Request, CancellationToken cancellationToken)
         {
             List<IGrouping<Category, ArbitrationResult>> WinnersEntities = await _ArbitrationResultRepository
-                .Include(x => x.ProvidedForm!)
-                .Include(x => x.ProvidedForm!.Category!)
                 .Where(x => x.ProvidedForm!.Category!.CycleId == Request.CycleId &&
                     x.Winner && x.WinningLevel != null && x.WinningDate != null)
-                .Include(x => x.ProvidedForm!.CategoryEducationalEntity!)
-                .Include(x => x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!)
-                .Include(x => x.FinalArbitration!)
-                .Include(x => x.ProvidedForm!.User!)
                 .GroupBy(x => x.ProvidedForm!.Category!)
                 .ToListAsync();
 
@@ -60,7 +54,6 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                 .ToListAsync();
 
             var DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
                 .Where(x => ProvidedFormsIds.Any(y => y == x.RecordId) &&
                     x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)")
                 .Select(x => new

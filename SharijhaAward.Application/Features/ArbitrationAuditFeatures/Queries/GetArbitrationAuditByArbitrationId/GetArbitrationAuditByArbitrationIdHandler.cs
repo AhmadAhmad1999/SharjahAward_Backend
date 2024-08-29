@@ -55,8 +55,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 .FirstOrDefaultAsync(x => x.Id == UserId);
 
             Arbitration? ArbitrationEntity = await _ArbitrationRepository
-                .Include(x => x.ProvidedForm!)
-                .Include(x => x.DoneArbitrationUser!)
                 .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);
 
             if (ArbitrationEntity is null)

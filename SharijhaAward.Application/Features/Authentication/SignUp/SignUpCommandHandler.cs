@@ -195,8 +195,6 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
                     List<UserPermissionsDto> ListOfUserPermissionsDto = await _RolePermissionRepository
                         .Where(x => x.RoleId == NewUserRoleEntity.RoleId)
-                        .Include(x => x.Permission!)
-                        .Include(x => x.Permission!.PermissionHeader!)
                         .Select(x => new UserPermissionsDto()
                         {
                             Action = x.Permission!.Name,

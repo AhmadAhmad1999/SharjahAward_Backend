@@ -49,8 +49,6 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                 {
                     UserNotifications = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
-                        .Include(x => x.User!)
-                        .Include(x => x.Notification!)
                         .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
                             ? new GetAllNotificationsByFCM_TokenListVM()
                             {
@@ -74,8 +72,6 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                 {
                     UserNotifications = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
-                        .Include(x => x.User!)
-                        .Include(x => x.Notification!)
                         .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
                             ? new GetAllNotificationsByFCM_TokenListVM()
                             {
@@ -124,8 +120,6 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                 {
                     UserNotifications = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
-                        .Include(x => x.User!)
-                        .Include(x => x.Notification!)
                         .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
                             ? new GetAllNotificationsByFCM_TokenListVM()
                             {
@@ -149,8 +143,6 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                 {
                     UserNotifications = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
-                        .Include(x => x.User!)
-                        .Include(x => x.Notification!)
                         .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
                             ? new GetAllNotificationsByFCM_TokenListVM()
                             {

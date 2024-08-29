@@ -40,7 +40,6 @@ namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
             string ResponseMessage = string.Empty;
 
             Domain.Entities.ProvidedFormModel.ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
-                .Include(x => x.Category!)
                 .FirstOrDefaultAsync(x => Request.RejectDynamicAttributeValueCommand.Any()
                     ? x.Id == Request.RejectDynamicAttributeValueCommand.FirstOrDefault()!.FormId
                     : false);
@@ -55,8 +54,6 @@ namespace SharijhaAward.Application.Helpers.RejectDynamicAttributeValue
             }
 
             List<DynamicAttributeValue> DynamicAttributeValueEntities = _DynamicAttributeValueRepository
-                .Include(x => x.DynamicAttribute!)
-                .Include(x => x.DynamicAttribute!.DynamicAttributeSection!)
                 .AsEnumerable()
                 .Where(x => Request.RejectDynamicAttributeValueCommand.Select(y => new
                 {

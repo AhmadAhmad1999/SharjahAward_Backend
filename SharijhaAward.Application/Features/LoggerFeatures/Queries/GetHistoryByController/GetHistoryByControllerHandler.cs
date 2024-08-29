@@ -34,7 +34,6 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                 {
                     List<GetHistoryByControllerListVM> Response = _LogUserActionRepository
                         .Where(x => x.ControllerName.ToLower() == Request.ControllerName.ToLower())
-                        .Include(x => x.User!)
                         .AsEnumerable()
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
@@ -73,7 +72,6 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                     List<GetHistoryByControllerListVM> Response = _LogUserActionRepository
                         .Where(x => x.ControllerName.ToLower() == Request.ControllerName.ToLower() &&
                             x.UserId == UserId)
-                        .Include(x => x.User!)
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
@@ -108,7 +106,6 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
             else
             {
                 List<GetHistoryByControllerListVM> Response = _LogUserActionRepository
-                    .Include(x => x.User!)
                     .AsEnumerable()
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)

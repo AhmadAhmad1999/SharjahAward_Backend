@@ -32,7 +32,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
             List<DynamicAttribute> AllDynamicAttributeEntities = await _DynamicAttributeRepository
                 .Where(x => Request.DynamicAttributeSectionsDto.Select(y => y.SectionId)
                     .Any(y => y == x.DynamicAttributeSectionId))
-                .Include(x => x.DynamicAttributeSection!)
                 .ToListAsync();
 
             TransactionOptions TransactionOptions = new TransactionOptions

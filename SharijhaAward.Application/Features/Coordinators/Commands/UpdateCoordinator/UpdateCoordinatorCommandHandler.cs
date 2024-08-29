@@ -74,7 +74,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordin
                     .Where(c => c.CoordinatorId == CoordinatorToUpdate.Id)
                     .ToListAsync();
 
-                await _EduEntitiesCoordinatorRepository.RemoveListAsync(EntityCoordinator);
+                await _EduEntitiesCoordinatorRepository.DeleteListAsync(EntityCoordinator);
 
                 foreach(var EntityId in Request.EducationalEntitiesIds)
                 {
