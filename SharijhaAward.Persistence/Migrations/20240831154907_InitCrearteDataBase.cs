@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SharijhaAward.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitCrearteDataBase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -123,6 +123,7 @@ namespace SharijhaAward.Persistence.Migrations
                     EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArbitrationLanguage = table.Column<int>(type: "int", nullable: false),
                     isChairman = table.Column<bool>(type: "bit", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -2210,8 +2211,7 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_UserNotifications_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -2271,8 +2271,7 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_UserTokens_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -2300,8 +2299,7 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_AdvancedFormBuilderSections_VirtualTableForSections_VirtualTableForSectionId",
                         column: x => x.VirtualTableForSectionId,
                         principalTable: "VirtualTableForSections",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -2375,8 +2373,7 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_DynamicAttributes_DynamicAttributeSections_DynamicAttributeSectionId",
                         column: x => x.DynamicAttributeSectionId,
                         principalTable: "DynamicAttributeSections",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -2403,8 +2400,7 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_ArbitrationScales_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -2435,8 +2431,7 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_CategoriesArbitrators_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -2500,7 +2495,8 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_CategoryEducationalClasses_EducationalClasses_EducationalClassId",
                         column: x => x.EducationalClassId,
                         principalTable: "EducationalClasses",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -3574,14 +3570,12 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_ArbitratorForms_Arbitrators_ArbitratorId",
                         column: x => x.ArbitratorId,
                         principalTable: "Arbitrators",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ArbitratorForms_ProvidedForms_ProvidedFormId",
                         column: x => x.ProvidedFormId,
                         principalTable: "ProvidedForms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -3675,8 +3669,7 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_CriterionAttachments_Criterions_CriterionId",
                         column: x => x.CriterionId,
                         principalTable: "Criterions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CriterionAttachments_ProvidedForms_ProvidedFormId",
                         column: x => x.ProvidedFormId,
@@ -3777,12 +3770,14 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_FinalArbitrations_Arbitrators_ArbitratorId",
                         column: x => x.ArbitratorId,
                         principalTable: "Arbitrators",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FinalArbitrations_ProvidedForms_ProvidedFormId",
                         column: x => x.ProvidedFormId,
                         principalTable: "ProvidedForms",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FinalArbitrations_Users_DoneArbitrationUserId",
                         column: x => x.DoneArbitrationUserId,
@@ -4075,8 +4070,7 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_ArbitrationResults_ProvidedForms_ProvidedFormId",
                         column: x => x.ProvidedFormId,
                         principalTable: "ProvidedForms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -4115,8 +4109,7 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_FinalArbitrationScores_FinalArbitrations_FinalArbitrationId",
                         column: x => x.FinalArbitrationId,
                         principalTable: "FinalArbitrations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -4167,7 +4160,8 @@ namespace SharijhaAward.Persistence.Migrations
                         name: "FK_ChairmanNotesOnInitialArbitrations_InitialArbitrations_InitialArbitrationId",
                         column: x => x.InitialArbitrationId,
                         principalTable: "InitialArbitrations",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

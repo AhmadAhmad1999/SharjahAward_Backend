@@ -467,6 +467,12 @@ namespace SharijhaAward.Persistence.Repositories
 
                         query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
                     }
+                    else if (propertyType == typeof(Domain.Constants.ArbitrationLanguage) && filter.Value is string ArbitrationLanguageValue)
+                    {
+                        int Value = int.Parse(ArbitrationLanguageValue);
+
+                        query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
+                    }
                     else if(propertyType == typeof(Domain.Constants.AgendaConstants.AgendaStatus) && filter.Value is string AgendaStatusValue)
                     {
                         int Value = int.Parse(AgendaStatusValue);

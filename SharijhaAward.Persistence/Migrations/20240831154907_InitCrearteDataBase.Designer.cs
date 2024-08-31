@@ -12,8 +12,8 @@ using SharijhaAward.Persistence;
 namespace SharijhaAward.Persistence.Migrations
 {
     [DbContext(typeof(SharijhaAwardDbContext))]
-    [Migration("20240827142716_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240831154907_InitCrearteDataBase")]
+    partial class InitCrearteDataBase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1432,6 +1432,9 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<string>("ArabicName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ArbitrationLanguage")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
