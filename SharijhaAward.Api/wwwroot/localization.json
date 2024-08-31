@@ -120,6 +120,8 @@
     "ResponseStatus": "حالة الخرج",
     "Result": "النتيجة",
     "ActivityId": "المعرف الخاص بالعملية",
-    "RecordId": "المعرف الذي تمت عليه العملية"
+    "RecordId": "المعرف الذي تمت عليه العملية",
+    "SubCategoryName": "إسم الفئة الفرعية",
+    "ArbitratorsNames" :  "أسماء المحكمين"
   }
 }

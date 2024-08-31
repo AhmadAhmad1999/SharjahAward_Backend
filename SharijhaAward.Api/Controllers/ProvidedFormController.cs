@@ -18,6 +18,8 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.AcceptOnForm;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllCriterionsForCoordinator;
 using SharijhaAward.Application.Responses;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsWithArbitrators;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.ExportFormsWithArbitratorsToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -119,6 +121,30 @@ namespace SharijhaAward.Api.Controllers
 
             query.lang = Language!;
             query.Token = token!;
+            //if (token.IsNullOrEmpty())
+            //{
+            //    return Unauthorized();
+            //}
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetFormsWithArbitrators", Name = "GetFormsWithArbitrators")]
+        public async Task<IActionResult> GetFormsWithArbitrators([FromQuery] GetFormsWithArbitratorsQuery query)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request.Headers.Authorization;
+
+            //query.lang = Language!;
+            //query.Token = token!;
             //if (token.IsNullOrEmpty())
             //{
             //    return Unauthorized();
@@ -360,6 +386,19 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(Response),
                 200 => Ok(Response),
                 _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("ExportFormsWithArbitratorsToExcel", Name = "ExportFormsWithArbitratorsToExcel")]
+        public async Task<IActionResult> ExportFormsWithArbitratorsToExcel([FromQuery] ExportFormsWithArbitratorsToExcelQuery query)
+        {
+            var response = await _mediator.Send(query);
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ProvidedFormsWithArbitrators.xlsx"),
+                _ => BadRequest(response)
             };
         }
     }

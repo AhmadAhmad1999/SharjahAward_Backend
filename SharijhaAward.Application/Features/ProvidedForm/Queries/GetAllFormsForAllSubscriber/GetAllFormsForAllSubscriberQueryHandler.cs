@@ -155,7 +155,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                 TotalStep = x.TotalStep,
                                 FinalScore = x.FinalScore,
                                 IsAccepted = x.IsAccepted,
-                                ReasonOfRejection = x.ReasonOfRejection!,
+                                //ReasonOfRejection = x.ReasonOfRejection!,
                                 categoryId = x.categoryId,
                                 CreatedAt = x.CreatedAt,
                                 CategoryName = request.lang == "en"
@@ -188,7 +188,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                               TotalStep = x.TotalStep,
                               FinalScore = x.FinalScore,
                               IsAccepted = x.IsAccepted,
-                              ReasonOfRejection = x.ReasonOfRejection!,
+                              //ReasonOfRejection = x.ReasonOfRejection!,
                               categoryId = x.categoryId,
                               CreatedAt = x.CreatedAt,
                               CategoryName = request.lang == "en"
@@ -384,7 +384,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             TotalStep = x.TotalStep,
                             FinalScore = x.FinalScore,
                             IsAccepted = x.IsAccepted,
-                            ReasonOfRejection = x.ReasonOfRejection!,
+                            //ReasonOfRejection = x.ReasonOfRejection!,
                             categoryId = x.categoryId,
                             CreatedAt = x.CreatedAt,
                             CategoryName = request.lang == "en"
