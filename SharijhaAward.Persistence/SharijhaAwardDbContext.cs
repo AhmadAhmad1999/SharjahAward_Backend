@@ -89,15 +89,28 @@ using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
 using SharijhaAward.Domain.Entities.IndexModel;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using NPOI.POIFS.FileSystem;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using AutoMapper;
+using SharijhaAward.Application.Helpers.DatabaseRelationsHelper;
+using static SharijhaAward.Application.Helpers.DatabaseRelationsHelper.DatabaseRelationsClass;
+using System.Reflection;
 
 namespace SharijhaAward.Persistence
 {
     public class SharijhaAwardDbContext : DbContext
     {
+        private IMapper _Mapper;
         public SharijhaAwardDbContext(DbContextOptions<SharijhaAwardDbContext> options)
         : base(options)
         {
-
+        }
+        public SharijhaAwardDbContext(DbContextOptions<SharijhaAwardDbContext> options,
+            IMapper Mapper)
+        : base(options)
+        {
+            _Mapper = Mapper;
         }
 
         public DbSet<ViewWhenRelation> ViewWhenRelations { get; set; }
@@ -1056,12 +1069,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.User)
                 .AutoInclude();
 
-            modelBuilder.Entity<EmailMessage>()
-                .Navigation(p => p.message)
-                .AutoInclude();
-
             modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => !p.isDeleted &&
-                (p.message != null ? !p.message.isDeleted : true) &&
                 (p.User != null ? !p.User.isDeleted : true) &&
                 (p.Type != null ? !p.Type.isDeleted : true));
 
@@ -1344,8 +1352,18 @@ namespace SharijhaAward.Persistence
                 .IsUnique();
 
         }
+        public override int SaveChanges()
+        {
+            ApplySoftDeletes();
+            return base.SaveChanges();
+        }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ApplySoftDeletes();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+        private void ApplySoftDeletes()
         {
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
@@ -1359,7 +1377,74 @@ namespace SharijhaAward.Persistence
                         break;
                 }
             }
-            return base.SaveChangesAsync(cancellationToken);
+
+            ChangeTracker.DetectChanges();
+
+            List<AuditableEntity> DeletedEntities = ChangeTracker.Entries<AuditableEntity>()
+                .Where(e => e.State == EntityState.Deleted)
+                .Select(e => e.Entity)
+                .ToList();
+
+            foreach (AuditableEntity DeletedEntity in DeletedEntities)
+            {
+                string EntityId = DeletedEntity.GetType().GetProperty("Id")!.GetValue(DeletedEntity)!.ToString()!;
+
+                DatabaseRelations Item = (DatabaseRelations)Enum.Parse(typeof(DatabaseRelations), DeletedEntity.GetType().Name);
+
+                List<string> Path = GetEnumDescription(Item).Split(" ").ToList();
+
+                List<PropertyInfo> ReflectedTables = this.GetType().GetProperties()
+                    .Where(x => Path.Any(y => y.Split('/')[0] == x.Name))
+                    .ToList();
+
+                foreach (PropertyInfo ReflectedTable in ReflectedTables)
+                {
+                    string ForeginKeyName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[1];
+
+                    List<object> TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
+                        .Where(Record => Record.GetType().GetProperty(ForeginKeyName)!.GetValue(Record) != null
+                            ? Record.GetType().GetProperty(ForeginKeyName)!.GetValue(Record)!.ToString() == EntityId
+                            : false)
+                        .ToList();
+
+                    foreach (object TableRecord in TableRecords)
+                    {
+                        DeleteBackword(ReflectedTable.Name, TableRecord.GetType().GetProperty("Id")!.ToString()!);
+                    }
+                }
+            }
+        }
+        public void DeleteBackword(string ReflectedTableName, string EntityId)
+        {
+            DatabaseRelations Item = (DatabaseRelations)Enum.Parse(typeof(DatabaseRelations), ReflectedTableName);
+
+            List<string> Path = GetEnumDescription(Item).Split(" ").ToList();
+
+            List<PropertyInfo> ReflectedTables = this.GetType().GetProperties()
+                .Where(x => Path.Any(y => y.Split('/')[0] == x.Name))
+                .ToList();
+
+            foreach (PropertyInfo ReflectedTable in ReflectedTables)
+            {
+                string ForeginKeyName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[1];
+
+                List<object> TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
+                    .Where(Record => Record.GetType().GetProperty(ForeginKeyName)!.GetValue(Record) != null
+                        ? Record.GetType().GetProperty(ForeginKeyName)!.GetValue(Record)!.ToString() == EntityId
+                        : false)
+                    .ToList();
+
+                foreach (object TableRecord in TableRecords)
+                {
+                    DeleteBackword(ReflectedTable.Name, TableRecord.GetType().GetProperty("Id")!.ToString()!);
+
+                    if (TableRecord.GetType().GetProperty("isDeleted") != null)
+                    {
+                        TableRecord.GetType().GetProperty("isDeleted")!.SetValue(TableRecord, true);
+                        TableRecord.GetType().GetProperty("DeletedAt")!.SetValue(TableRecord, DateTime.UtcNow);
+                    }
+                }
+            }
         }
     }
 }
