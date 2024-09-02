@@ -23,14 +23,14 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "MeetingCategories/CategoryId InterviewCategories/CategoryId FrequentlyAskedQuestions/CategoryId " + // Done
                 "ExplanatoryGuides/CategoryId Criterions/CategoryId CategoryFAQs/CategoryId CategoryEducationalEntities/CategoryId " + // Done
                 "CategoryEducationalClasses/CategoryId CategoryCommittees/CategoryId CategoriesArbitrators/CategoryId " + // Done
-                "Categories/ParentId ArbitrationScales/CategoryId")] // Done
+                "Categories/ParentId ArbitrationScales/CategoryId DynamicAttributeSections/RecordIdOnRelation")] // Done
             Category,
 
             [Description("TrainingWorkshops/CategoryId TermsAndConditions/CategoryId Rewards/CategoryId ProvidedForms/categoryId " + // Done
                 "MeetingCategories/CategoryId InterviewCategories/CategoryId FrequentlyAskedQuestions/CategoryId " + // Done
                 "ExplanatoryGuides/CategoryId Criterions/CategoryId CategoryFAQs/CategoryId CategoryEducationalEntities/CategoryId " + // Done
                 "CategoryEducationalClasses/CategoryId CategoryCommittees/CategoryId CategoriesArbitrators/CategoryId " + // Done
-                "Categories/ParentId ArbitrationScales/CategoryId")] // Done
+                "Categories/ParentId ArbitrationScales/CategoryId DynamicAttributeSections/RecordIdOnRelation")] // Done
             Categories,
 
             [Description("")] // Done
@@ -63,13 +63,13 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("Arbitrations/ProvidedFormId ArbitrationAudits/ProvidedFormId ArbitrationResults/ProvidedFormId " + // Done
                 "ArbitratorForms/ProvidedFormId ConditionsProvidedForms/ProvidedFormId CoordinatorForms/ProvidedFormId " + // Done
                 "FinalArbitrations/ProvidedFormId ExtraAttachments/ProvidedFormId CycleConditionsProvidedForms/ProvidedFormId " + // Done
-                "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId")] // Done
+                "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId DynamicAttributeValues/RecordId/ProvidedForm")] // Done
             ProvidedForm,
 
             [Description("Arbitrations/ProvidedFormId ArbitrationAudits/ProvidedFormId ArbitrationResults/ProvidedFormId " + // Done
                 "ArbitratorForms/ProvidedFormId ConditionsProvidedForms/ProvidedFormId CoordinatorForms/ProvidedFormId " + // Done
                 "FinalArbitrations/ProvidedFormId ExtraAttachments/ProvidedFormId CycleConditionsProvidedForms/ProvidedFormId " + // Done
-                "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId")] // Done
+                "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId DynamicAttributeValues/RecordId/ProvidedForm")] // Done
             ProvidedForms,
 
             [Description("")] // Done
@@ -301,11 +301,11 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             InterviewAttachments,
 
-            [Description("InterviewUsers/InterviewId InterviewQuestions/InterviewId InterviewNotes/InterviewId " +
+            [Description("InterviewUsers/InterviewId InterviewQuestions/InterviewId InterviewNotes/InterviewId " + // Done
                 "InterviewCategories/InterviewId InterviewAttachments/InterviewId")] // Done
             Interview,
 
-            [Description("InterviewUsers/InterviewId InterviewQuestions/InterviewId InterviewNotes/InterviewId " +
+            [Description("InterviewUsers/InterviewId InterviewQuestions/InterviewId InterviewNotes/InterviewId " + // Done
                 "InterviewCategories/InterviewId InterviewAttachments/InterviewId")] // Done
             Interviews,
 
@@ -387,179 +387,376 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             ArbitratorClasses,
 
+            [Description("ComitteesArbitrators/CommitteeId CategoryCommittees/CommitteeId")] // Done
             Committee,
+
+            [Description("ComitteesArbitrators/CommitteeId CategoryCommittees/CommitteeId")] // Done
             Committees,
 
+            [Description("")] // Done
             ComitteeArbitrator,
+
+            [Description("")] // Done
             ComitteesArbitrators,
 
+            [Description("CategoryEducationalClasses/EducationalClassId ArbitratorClasses/EducationalClassId")] // Done
             EducationalClass,
+
+            [Description("CategoryEducationalClasses/EducationalClassId ArbitratorClasses/EducationalClassId")] // Done
             EducationalClasses,
 
+            [Description("FinalArbitrations/ArbitratorId Committees/ChairmanId ComitteesArbitrators/ArbitratorId CircularChairmans/ChairmanId " +
+                "CircularArbitrators/ArbitratorId CategoriesArbitrators/ArbitratorId ArbitratorForms/ArbitratorId " +
+                "ArbitratorClasses/ArbitratorId Arbitrations/ArbitratorId Users/Id DynamicAttributeValues/RecordId/Arbitrator")] // Done
             Arbitrator,
+
+            [Description("FinalArbitrations/ArbitratorId Committees/ChairmanId ComitteesArbitrators/ArbitratorId CircularChairmans/ChairmanId " +
+                "CircularArbitrators/ArbitratorId CategoriesArbitrators/ArbitratorId ArbitratorForms/ArbitratorId " +
+                "ArbitratorClasses/ArbitratorId Arbitrations/ArbitratorId Users/Id DynamicAttributeValues/RecordId/Arbitrator")] // Done
             Arbitrators,
 
+            [Description("")] // Done
             RelatedAccount,
+
+            [Description("")] // Done
             RelatedAccounts,
 
+            [Description("")] // Done
             GeneralFAQ,
+
+            [Description("")] // Done
             GeneralFAQs,
 
+            [Description("GeneralFAQs/GeneralFrequentlyAskedQuestionCategoryId")] // Done
             GeneralFAQCategory,
+
+            [Description("GeneralFAQs/GeneralFrequentlyAskedQuestionCategoryId")] // Done
             GeneralFAQCategories,
 
+            [Description("Personalnvitees/EventId GroupInvitees/EventId")] // Done
             Event,
+
+            [Description("Personalnvitees/EventId GroupInvitees/EventId")] // Done
             Events,
 
+            [Description("")] // Done
             PersonalInvitee,
+
+            [Description("")] // Done
             Personalnvitees,
 
+            [Description("Students/GroupInviteeId")] // Done
             GroupInvitee,
+
+            [Description("Students/GroupInviteeId")] // Done
             GroupInvitees,
 
+            [Description("Arbitrators/Id Coordinators/Id UserTokens/UserId UsersRoles/UserId UserNotifications/UserId " + // Done
+                "TrainingWorkshopSubscribers/UserId ResponsibilitiesUsers/UserId RelatedAccountRequests/SenderId " + // Done
+                "RelatedAccountRequests/ReceiverId RelatedAccounts/User1Id RelatedAccounts/User2Id " + // Done
+                "ProvidedForms/userId FinalArbitrations/DoneArbitrationUserId EmailMessages/UserId " + // Done
+                "Arbitrations/DoneArbitrationUserId Achievements/UserId")] // Done
             User,
+
+            [Description("Arbitrators/Id Coordinators/Id UserTokens/UserId UsersRoles/UserId UserNotifications/UserId " + // Done
+                "TrainingWorkshopSubscribers/UserId ResponsibilitiesUsers/UserId RelatedAccountRequests/SenderId " + // Done
+                "RelatedAccountRequests/ReceiverId RelatedAccounts/User1Id RelatedAccounts/User2Id " + // Done
+                "ProvidedForms/userId FinalArbitrations/DoneArbitrationUserId EmailMessages/UserId " + // Done
+                "Arbitrations/DoneArbitrationUserId Achievements/UserId")] // Done
             Users,
 
+            [Description("UsersRoles/RoleId RolePermissions/RoleId RoleMessageTypes/RoleId Responsibilities/RoleId")] // Done
             Role,
+
+            [Description("UsersRoles/RoleId RolePermissions/RoleId RoleMessageTypes/RoleId Responsibilities/RoleId")] // Done
             Roles,
 
+            [Description("")] // Done
             RolePermission,
+
+            [Description("")] // Done
             RolePermissions,
 
+            [Description("")] // Done
             Dependency,
+
+            [Description("")] // Done
             Dependencies,
 
+            [Description("")] // Done
             DependencyValidation,
-            DependencyValidations,
 
+            [Description("")] // Done
+            DependencyValidations,
+            
+            [Description("ViewWhenRelations/DynamicAttributeId DynamicAttributeGeneralValidations/DynamicAttributeId " + // Done
+                "DynamicAttributeValues/DynamicAttributeId DynamicAttributeTableValue/DynamicAttributeId " + // Done
+                "DynamicAttributeListValues/DynamicAttributeId Dependencies/DynamicAttributeId Dependencies/MainDynamicAttributeId")] // Done
             DynamicAttribute,
+
+            [Description("ViewWhenRelations/DynamicAttributeId DynamicAttributeGeneralValidations/DynamicAttributeId " + // Done
+                "DynamicAttributeValues/DynamicAttributeId DynamicAttributeTableValue/DynamicAttributeId " + // Done
+                "DynamicAttributeListValues/DynamicAttributeId Dependencies/DynamicAttributeId Dependencies/MainDynamicAttributeId")] // Done
             DynamicAttributes,
 
+            [Description("")] // Done
             GeneralValidation,
+
+            [Description("")] // Done
             DynamicAttributeGeneralValidations,
 
+            [Description("ViewWhenRelations/DynamicAttributeListValueId")] // Done
             DynamicAttributeListValue,
+            
+            [Description("ViewWhenRelations/DynamicAttributeListValueId")] // Done
             DynamicAttributeListValues,
 
+            [Description("ViewWhenRelations/DynamicAttributeSectionId DynamicAttributes/DynamicAttributeSectionId")] // Done
             DynamicAttributeSection,
+
+            [Description("ViewWhenRelations/DynamicAttributeSectionId DynamicAttributes/DynamicAttributeSectionId")] // Done
             DynamicAttributeSections,
 
+            [Description("")] // Done
             DynamicAttributeValue,
+
+            [Description("")] // Done
             DynamicAttributeValues,
 
+            [Description("")] // Done
             Student,
+
+            [Description("")] // Done
             Students,
 
+            [Description("DynamicAttributePatternValues/DynamicAttributePatternId")] // Done
             DynamicAttributePattern,
+            
+            [Description("DynamicAttributePatternValues/DynamicAttributePatternId")] // Done
             DynamicAttributePatterns,
 
+            [Description("")] // Done
             DynamicAttributePatternValue,
+
+            [Description("")] // Done
             DynamicAttributePatternValues,
 
+            [Description("")] // Done
+            ConditionAttachment,
+
+            [Description("")] // Done
             ConditionAttachments,
 
+            [Description("Users/Id EntitiesCoordinators/CoordinatorId CoordinatorForms/CoordinatorId " + // Done
+                "CircularCoordinators/CoordinatorId DynamicAttributeValues/RecordId/Coordinator")] // Done
             Coordinator,
+
+            [Description("Users/Id EntitiesCoordinators/CoordinatorId CoordinatorForms/CoordinatorId " + // Done
+                "CircularCoordinators/CoordinatorId DynamicAttributeValues/RecordId/Coordinator")] // Done
             Coordinators,
 
+            [Description("EntitiesCoordinators/EducationalEntityId EducationalInstitutions/EducationalEntityId " + // Done
+                "CategoryEducationalEntities/EducationalEntityId")] // Done
             EducationalEntity,
+
+            [Description("EntitiesCoordinators/EducationalEntityId EducationalInstitutions/EducationalEntityId " + // Done
+                "CategoryEducationalEntities/EducationalEntityId")] // Done
             EducationalEntities,
 
+            [Description("")] // Done
             EducationalInstitution,
+
+            [Description("")] // Done
             EducationalInstitutions,
 
+            [Description("")] // Done
             EduEntitiesCoordinator,
+
+            [Description("")] // Done
             EduEntitiesCoordinators,
 
+            [Description("OurGoals/AboutAwardPageId")] // Done
             AboutAwardPage,
 
+            [Description("")] // Done
             GeneralWorkshop,
+
+            [Description("")] // Done
             GeneralWorkshops,
 
+            [Description("")] // Done
             OurGoal,
+
+            [Description("")] // Done
             OurGoals,
 
+            [Description("")] // Done
             Achievement,
+
+            [Description("")] // Done
             Achievements,
 
+            [Description("EmailMessages/MessageId EmailAttachments/MessageId")] // Done
             EmailMessage,
+
+            [Description("EmailMessages/MessageId EmailAttachments/MessageId")] // Done
             EmailMessages,
 
+            [Description("")] // Done
             EmailAttachment,
+
+            [Description("")] // Done
             EmailAttachments,
 
+            [Description("")] // Done
             RoleMessageType,
+
+            [Description("")] // Done
             RoleMessageTypes,
 
+            [Description("RoleMessageTypes/MessageTypeId EmailMessages/TypeId")] // Done
             MessageType,
+
+            [Description("RoleMessageTypes/MessageTypeId EmailMessages/TypeId")] // Done
             MessageTypes,
 
+            [Description("CircularCoordinators/CircularId CircularChairmans/CircularId CircularAttachments/CircularId " + // Done
+                "CircularArbitrators/CircularId")] // Done
             Circular,
+
+            [Description("CircularCoordinators/CircularId CircularChairmans/CircularId CircularAttachments/CircularId " + // Done
+                "CircularArbitrators/CircularId")] // Done
             Circulars,
 
+            [Description("")] // Done
             AwardPublication,
+
+            [Description("")] // Done
             AwardPublications,
 
+            [Description("Galleries/AlbumId")] // Done
             Album,
+
+            [Description("Galleries/AlbumId")] // Done
             Albums,
 
+            [Description("")] // Done
             Gallery,
+
+            [Description("")] // Done
             Galleries,
 
+            [Description("")] // Done
             HomePageSlider,
+
+            [Description("")] // Done
             HomePageSliders,
 
+            [Description("")] // Done
             ReferenceSource,
+
+            [Description("")] // Done
             ReferenceSources,
 
+            [Description("")] // Done
             StrategicPartner,
+
+            [Description("")] // Done
             StrategicPartners,
 
+            [Description("")] // Done
             SocialMedia,
+
+            [Description("")] // Done
             SocialMedias,
 
+            [Description("PageStructures/ParentId TextCards/PageStructureId ParagraphCards/PageId " + // Done
+                "ImageCards/PageId DarkCards/PageId")] // Done
             PageStructure,
+
+            [Description("PageStructures/ParentId TextCards/PageStructureId ParagraphCards/PageId " + // Done
+                "ImageCards/PageId DarkCards/PageId")] // Done
             PageStructures,
 
+            [Description("")] // Done
             DarkCard,
+
+            [Description("")] // Done
             DarkCards,
 
+            [Description("")] // Done
             ParagraphCard,
+
+            [Description("")] // Done
             ParagraphCards,
 
+            [Description("")] // Done
             AwardSponsor,
+
+            [Description("")] // Done
             AwardSponsors,
 
+            [Description("ResponsibilitiesUsers/ResponsibilityId")] // Done
             Responsibility,
+
+            [Description("ResponsibilitiesUsers/ResponsibilityId")] // Done
             Responsibilities,
 
+            [Description("")] // Done
             ResponsibilityUser,
+
+            [Description("")] // Done
             ResponsibilitiesUsers,
 
+            [Description("")] // Done
             NewsImage,
+
+            [Description("")] // Done
             NewsImages,
 
+            [Description("")] // Done
             CircularArbitrator,
+
+            [Description("")] // Done
             CircularArbitrators,
 
+            [Description("")] // Done
             CircularCoordinator,
+
+            [Description("")] // Done
             CircularCoordinators,
 
+            [Description("")] // Done
             CircularChairman,
+
+            [Description("")] // Done
             CircularChairmans,
 
+            [Description("")] // Done
             CircularAttachment,
+
+            [Description("")] // Done
             CircularAttachments,
 
+            [Description("")] // Done
             TextCard,
+
+            [Description("")] // Done
             TextCards,
 
+            [Description("PageStructureImages/ImageCardId")] // Done
             ImageCard,
+            
+            [Description("PageStructureImages/ImageCardId")] // Done
             ImageCards,
 
+            [Description("")] // Done
             PageStructureImages,
 
+            [Description("")] // Done
             OnePageText,
 
+            [Description("NewsImages/NewsId")] // Done
             News
         }
         public static string GetEnumDescription(Enum value)

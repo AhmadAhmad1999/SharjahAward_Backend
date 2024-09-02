@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Crmf;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.EventModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
@@ -7,20 +6,13 @@ using SharijhaAward.Domain.Entities.InvitationModels;
 using SharijhaAward.Domain.Entities.CategoryCommitteeModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopSubscriberModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
-using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 using SharijhaAward.Domain.Entities.FAQModel;
 using SharijhaAward.Domain.Entities.NewsModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
-using System.Net.Mail;
 using SharijhaAward.Domain.Entities.CategoryFAQ;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
@@ -34,7 +26,6 @@ using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel;
-using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
 using SharijhaAward.Domain.Entities.AboutAwardPageModel;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
@@ -54,8 +45,6 @@ using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
 using SharijhaAward.Domain.Entities.AppVersioningModel;
 using SharijhaAward.Domain.Entities.InstructionModel;
 using SharijhaAward.Domain.Entities.ContactUsModels;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Internal;
 using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
 using SharijhaAward.Domain.Entities.CircularModel;
 using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
@@ -78,7 +67,6 @@ using SharijhaAward.Domain.Entities.AwardSponsorModel;
 using SharijhaAward.Domain.Entities.RewardModel;
 using SharijhaAward.Domain.Entities.LoggerModel;
 using SharijhaAward.Domain.Entities.AwardStatisticModel;
-using SharijhaAward.Domain.Entities.TrainingManualModel;
 using SharijhaAward.Domain.Entities.InterviewModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorFormModel;
@@ -88,19 +76,17 @@ using SharijhaAward.Domain.Entities.ExplanatoryMessageModel;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
-using SharijhaAward.Domain.Entities.IndexModel;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using NPOI.POIFS.FileSystem;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using AutoMapper;
-using SharijhaAward.Application.Helpers.DatabaseRelationsHelper;
-using static SharijhaAward.Application.Helpers.DatabaseRelationsHelper.DatabaseRelationsClass;
 using System.Reflection;
+using static SharijhaAward.Application.Helpers.DatabaseRelationsHelper.DatabaseRelationsClass;
 
 namespace SharijhaAward.Persistence
 {
     public class SharijhaAwardDbContext : DbContext
     {
+        public List<object> EntitiesToDelete;
+
         private IMapper _Mapper;
         public SharijhaAwardDbContext(DbContextOptions<SharijhaAwardDbContext> options)
         : base(options)
@@ -260,8 +246,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.User)
                 .AutoInclude();
 
-            modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted &&
-                (p.User != null ? !p.User.isDeleted : true));
+            modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CriterionAttachment>()
                 .Navigation(p => p.Criterion)
@@ -271,9 +256,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.ProvidedForm)
                 .AutoInclude();
 
-            modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Criterion != null ? !p.Criterion.isDeleted : true) &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true));
+            modelBuilder.Entity<CriterionAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<RelatedAccountRequest>()
                 .Navigation(p => p.Sender)
@@ -283,9 +266,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Receiver)
                 .AutoInclude();
 
-            modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Sender != null ? !p.Sender.isDeleted : true) &&
-                (p.Receiver != null ? !p.Receiver.isDeleted : true));
+            modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AppVersion>().HasQueryFilter(p => !p.isDeleted);
 
@@ -299,9 +280,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.ProvidedForm)
                 .AutoInclude();
 
-            modelBuilder.Entity<Arbitration>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Arbitrator != null ? !p.Arbitrator.isDeleted : true) &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true));
+            modelBuilder.Entity<Arbitration>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Notification>().HasQueryFilter(p => !p.isDeleted);
 
@@ -313,8 +292,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.User)
                 .AutoInclude();
 
-            modelBuilder.Entity<UserToken>().HasQueryFilter(p => !p.isDeleted &&
-                (p.User != null ? !p.User.isDeleted : true));
+            modelBuilder.Entity<UserToken>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<UserNotification>()
                 .Navigation(p => p.User)
@@ -324,24 +302,19 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Notification)
                 .AutoInclude();
 
-            modelBuilder.Entity<UserNotification>().HasQueryFilter(p => !p.isDeleted &&
-                (p.User != null ? !p.User.isDeleted : true) &&
-                (p.Notification != null ? !p.Notification.isDeleted : true));
+            modelBuilder.Entity<UserNotification>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ChairmanNotesOnFinalArbitrationScore>()
                 .Navigation(p => p.FinalArbitrationScore)
                 .AutoInclude();
 
-            modelBuilder.Entity<ChairmanNotesOnFinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted &&
-                (p.FinalArbitrationScore != null
-                    ? !p.FinalArbitrationScore.isDeleted : true));
+            modelBuilder.Entity<ChairmanNotesOnFinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DynamicAttributeTableValue>()
                 .Navigation(p => p.DynamicAttribute)
                 .AutoInclude();
 
-            modelBuilder.Entity<DynamicAttributeTableValue>().HasQueryFilter(p => !p.isDeleted &&
-                (p.DynamicAttribute != null ? !p.DynamicAttribute.isDeleted : true));
+            modelBuilder.Entity<DynamicAttributeTableValue>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<FinalArbitrationScore>()
                 .Navigation(p => p.FinalArbitration)
@@ -355,10 +328,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Criterion)
                 .AutoInclude();
 
-            modelBuilder.Entity<FinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Criterion != null ? !p.Criterion.isDeleted : true) &&
-                (p.CriterionItem != null ? !p.CriterionItem.isDeleted : true) &&
-                (p.FinalArbitration != null ? !p.FinalArbitration.isDeleted : true));
+            modelBuilder.Entity<FinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<FinalArbitration>()
                 .Navigation(p => p.ProvidedForm)
@@ -368,16 +338,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Arbitrator)
                 .AutoInclude();
 
-            modelBuilder.Entity<FinalArbitration>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Arbitrator != null ? !p.Arbitrator.isDeleted : true) &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true));
+            modelBuilder.Entity<FinalArbitration>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AdvancedFormBuilderValue>()
                 .Navigation(p => p.AdvancedFormBuilder)
                 .AutoInclude();
 
-            modelBuilder.Entity<AdvancedFormBuilderValue>().HasQueryFilter(p => !p.isDeleted &&
-                (p.AdvancedFormBuilder != null ? !p.AdvancedFormBuilder.isDeleted : true));
+            modelBuilder.Entity<AdvancedFormBuilderValue>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>()
                 .Navigation(p => p.AdvancedFormBuilder)
@@ -387,11 +354,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.AttributeOperation)
                 .AutoInclude();
 
-            modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>().HasQueryFilter(p => !p.isDeleted &&
-                (p.AdvancedFormBuilder != null
-                    ? !p.AdvancedFormBuilder.isDeleted : true) &&
-                (p.AttributeOperation != null
-                    ? !p.AttributeOperation.isDeleted : true));
+            modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CategoryEducationalEntity>()
                 .Navigation(p => p.Category)
@@ -401,9 +364,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.EducationalEntity)
                 .AutoInclude();
 
-            modelBuilder.Entity<CategoryEducationalEntity>().HasQueryFilter(p => !p.isDeleted &&
-                (p.EducationalEntity != null ? !p.EducationalEntity.isDeleted : true) &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<CategoryEducationalEntity>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ArbitrationResult>()
                 .Navigation(p => p.ProvidedForm)
@@ -413,9 +374,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.FinalArbitration)
                 .AutoInclude();
 
-            modelBuilder.Entity<ArbitrationResult>().HasQueryFilter(p => !p.isDeleted &&
-                (p.FinalArbitration != null ? !p.FinalArbitration.isDeleted : true) &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true));
+            modelBuilder.Entity<ArbitrationResult>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ViewWhenRelation>()
                 .Navigation(p => p.DynamicAttributeSection)
@@ -429,13 +388,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.DynamicAttributeListValue)
                 .AutoInclude();
 
-            modelBuilder.Entity<ViewWhenRelation>().HasQueryFilter(p => !p.isDeleted &&
-                (p.DynamicAttributeListValue != null
-                    ? !p.DynamicAttributeListValue.isDeleted : true) &&
-                (p.DynamicAttribute != null
-                    ? !p.DynamicAttribute.isDeleted : true) &&
-                (p.DynamicAttributeSection != null
-                    ? !p.DynamicAttributeSection.isDeleted : true));
+            modelBuilder.Entity<ViewWhenRelation>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ExplanatoryMessage>().HasQueryFilter(p => !p.isDeleted);
 
@@ -443,17 +396,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.AdvancedFormBuilder)
                 .AutoInclude();
 
-            modelBuilder.Entity<AdvancedFormBuilderTableValue>().HasQueryFilter(p => !p.isDeleted &&
-                (p.AdvancedFormBuilder != null
-                    ? !p.AdvancedFormBuilder.isDeleted : true));
+            modelBuilder.Entity<AdvancedFormBuilderTableValue>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AdvancedFormBuilderPatternValue>()
                 .Navigation(p => p.AdvancedFormBuilderPattern)
                 .AutoInclude();
 
-            modelBuilder.Entity<AdvancedFormBuilderPatternValue>().HasQueryFilter(p => !p.isDeleted &&
-                (p.AdvancedFormBuilderPattern != null
-                    ? !p.AdvancedFormBuilderPattern.isDeleted : true));
+            modelBuilder.Entity<AdvancedFormBuilderPatternValue>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AdvancedFormBuilderPattern>().HasQueryFilter(p => !p.isDeleted);
 
@@ -461,9 +410,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.AdvancedFormBuilder)
                 .AutoInclude();
 
-            modelBuilder.Entity<AdvancedFormBuilderListValue>().HasQueryFilter(p => !p.isDeleted &&
-                (p.AdvancedFormBuilder != null
-                    ? !p.AdvancedFormBuilder.isDeleted : true));
+            modelBuilder.Entity<AdvancedFormBuilderListValue>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AdvancedFormBuilder>()
                 .Navigation(p => p.AdvancedFormBuilderSection)
@@ -473,11 +420,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.AttributeDataType)
                 .AutoInclude();
 
-            modelBuilder.Entity<AdvancedFormBuilder>().HasQueryFilter(p => !p.isDeleted &&
-                (p.AttributeDataType != null
-                    ? !p.AttributeDataType.isDeleted : true) &&
-                (p.AdvancedFormBuilderSection != null
-                    ? !p.AdvancedFormBuilderSection.isDeleted : true));
+            modelBuilder.Entity<AdvancedFormBuilder>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AdvancedFormBuilderSection>().HasQueryFilter(p => !p.isDeleted);
 
@@ -485,8 +428,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Interview)
                 .AutoInclude();
 
-            modelBuilder.Entity<InterviewAttachment>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Interview != null ? !p.Interview.isDeleted : true));
+            modelBuilder.Entity<InterviewAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Interview>().HasQueryFilter(p => !p.isDeleted);
 
@@ -494,15 +436,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Interview)
                 .AutoInclude();
 
-            modelBuilder.Entity<InterviewQuestion>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Interview != null ? !p.Interview.isDeleted : true));
+            modelBuilder.Entity<InterviewQuestion>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<InterviewNote>()
                 .Navigation(p => p.Interview)
                 .AutoInclude();
 
-            modelBuilder.Entity<InterviewNote>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Interview != null ? !p.Interview.isDeleted : true));
+            modelBuilder.Entity<InterviewNote>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<InterviewCategory>()
                 .Navigation(p => p.Interview)
@@ -512,32 +452,25 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<InterviewCategory>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Interview != null ? !p.Interview.isDeleted : true) &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<InterviewCategory>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<InterviewUser>()
                 .Navigation(p => p.Interview)
                 .AutoInclude();
 
-            modelBuilder.Entity<InterviewUser>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Interview != null ? !p.Interview.isDeleted : true));
+            modelBuilder.Entity<InterviewUser>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ChairmanNotesOnArbitrationAudit>()
                 .Navigation(p => p.ArbitrationAudit)
                 .AutoInclude();
 
-            modelBuilder.Entity<ChairmanNotesOnArbitrationAudit>().HasQueryFilter(p => !p.isDeleted &&
-                (p.ArbitrationAudit != null
-                    ? !p.ArbitrationAudit.isDeleted : true));
+            modelBuilder.Entity<ChairmanNotesOnArbitrationAudit>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ChairmanNotesOnInitialArbitration>()
                 .Navigation(p => p.InitialArbitration)
                 .AutoInclude();
 
-            modelBuilder.Entity<ChairmanNotesOnInitialArbitration>().HasQueryFilter(p => !p.isDeleted &&
-                (p.InitialArbitration != null
-                    ? !p.InitialArbitration.isDeleted : true));
+            modelBuilder.Entity<ChairmanNotesOnInitialArbitration>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<InitialArbitration>()
                 .Navigation(p => p.CriterionItem)
@@ -547,14 +480,9 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Criterion)
                 .AutoInclude();
 
-            modelBuilder.Entity<InitialArbitration>()
-                .Navigation(p => p.Arbitration)
-                .AutoInclude();
+            //modelBuilder.Entity<InitialArbitration>()
 
-            modelBuilder.Entity<InitialArbitration>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Arbitration != null ? !p.Arbitration.isDeleted : true) &&
-                (p.Criterion != null ? !p.Criterion.isDeleted : true) &&
-                (p.CriterionItem != null ? !p.CriterionItem.isDeleted : true));
+            modelBuilder.Entity<InitialArbitration>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ArbitrationAudit>()
                 .Navigation(p => p.ProvidedForm)
@@ -568,17 +496,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Criterion)
                 .AutoInclude();
 
-            modelBuilder.Entity<ArbitrationAudit>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Criterion != null ? !p.Criterion.isDeleted : true) &&
-                (p.CriterionItem != null ? !p.CriterionItem.isDeleted : true) &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true));
+            modelBuilder.Entity<ArbitrationAudit>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ArbitrationScale>()
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<ArbitrationScale>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<ArbitrationScale>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ArbitrationScalesCriterion>()
                 .Navigation(p => p.ArbitrationScale)
@@ -592,10 +516,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Criterion)
                 .AutoInclude();
 
-            modelBuilder.Entity<ArbitrationScalesCriterion>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Criterion != null ? !p.Criterion.isDeleted : true) &&
-                (p.CriterionItem != null ? !p.CriterionItem.isDeleted : true) &&
-                (p.ArbitrationScale != null ? !p.ArbitrationScale.isDeleted : true));
+            modelBuilder.Entity<ArbitrationScalesCriterion>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<MeetingCategory>()
                 .Navigation(p => p.Meeting)
@@ -605,9 +526,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<MeetingCategory>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true) &&
-                (p.Meeting != null ? !p.Meeting.isDeleted : true));
+            modelBuilder.Entity<MeetingCategory>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Meeting>().HasQueryFilter(p => !p.isDeleted);
 
@@ -615,8 +534,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Meeting)
                 .AutoInclude();
 
-            modelBuilder.Entity<MeetingUser>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Meeting != null ? !p.Meeting.isDeleted : true));
+            modelBuilder.Entity<MeetingUser>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<UserRole>()
                 .Navigation(p => p.User)
@@ -626,9 +544,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Role)
                 .AutoInclude();
 
-            modelBuilder.Entity<UserRole>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Role != null ? !p.Role.isDeleted : true) &&
-                (p.User != null ? !p.User.isDeleted : true));
+            modelBuilder.Entity<UserRole>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<PermissionHeader>().HasQueryFilter(p => !p.isDeleted);
 
@@ -640,16 +556,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Arbitrator)
                 .AutoInclude();
 
-            modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Arbitrator != null ? !p.Arbitrator.isDeleted : true) &&
-                (p.EducationalClass != null ? !p.EducationalClass.isDeleted : true));
+            modelBuilder.Entity<ArbitratorClass>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Committee>()
                 .Navigation(p => p.Chairman)
                 .AutoInclude();
 
-            modelBuilder.Entity<Committee>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Chairman != null ? !p.Chairman.isDeleted : true));
+            modelBuilder.Entity<Committee>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ComitteeArbitrator>()
                 .Navigation(p => p.Arbitrator)
@@ -659,9 +572,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Committee)
                 .AutoInclude();
 
-            modelBuilder.Entity<ComitteeArbitrator>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Committee != null ? !p.Committee.isDeleted : true) &&
-                (p.Arbitrator != null ? !p.Arbitrator.isDeleted : true));
+            modelBuilder.Entity<ComitteeArbitrator>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CategoryCommittee>()
                 .Navigation(p => p.Committee)
@@ -671,9 +582,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Committee != null ? !p.Committee.isDeleted : true) &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<CategoryCommittee>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CategoryEducationalClass>()
                 .Navigation(p => p.Category)
@@ -683,9 +592,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.EducationalClass)
                 .AutoInclude();
 
-            modelBuilder.Entity<CategoryEducationalClass>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true) &&
-                (p.EducationalClass != null ? !p.EducationalClass.isDeleted : true));
+            modelBuilder.Entity<CategoryEducationalClass>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<EducationalClass>().HasQueryFilter(p => !p.isDeleted);
 
@@ -693,8 +600,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Cycle)
                 .AutoInclude();
 
-            modelBuilder.Entity<Agenda>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Cycle != null ? !p.Cycle.isDeleted : true));
+            modelBuilder.Entity<Agenda>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Arbitrator>().HasQueryFilter(p => !p.isDeleted);
 
@@ -706,9 +612,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Arbitrator)
                 .AutoInclude();
 
-            modelBuilder.Entity<CategoryArbitrator>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true) &&
-                (p.Arbitrator != null ? !p.Arbitrator.isDeleted : true));
+            modelBuilder.Entity<CategoryArbitrator>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<OnePageText>().HasQueryFilter(p => !p.isDeleted);
 
@@ -720,23 +624,19 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.User2)
                 .AutoInclude();
 
-            modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => !p.isDeleted &&
-                (p.User1 != null ? !p.User1.isDeleted : true) &&
-                (p.User2 != null ? !p.User2.isDeleted : true));
+            modelBuilder.Entity<RelatedAccount>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Criterion>()
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<Criterion>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CriterionItem>()
                 .Navigation(p => p.Criterion)
                 .AutoInclude();
 
-            modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Criterion != null ? !p.Criterion.isDeleted : true));
+            modelBuilder.Entity<CriterionItem>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CriterionItemAttachment>()
                 .Navigation(p => p.CriterionItem)
@@ -746,17 +646,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.ProvidedForm)
                 .AutoInclude();
 
-            modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => !p.isDeleted &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true) &&
-                (p.CriterionItem != null ? !p.CriterionItem.isDeleted : true));
+            modelBuilder.Entity<CriterionItemAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<GeneralFAQ>()
                 .Navigation(p => p.GeneralFrequentlyAskedQuestionCategory)
                 .AutoInclude();
 
-            modelBuilder.Entity<GeneralFAQ>().HasQueryFilter(p => !p.isDeleted &&
-                (p.GeneralFrequentlyAskedQuestionCategory != null
-                    ? !p.GeneralFrequentlyAskedQuestionCategory.isDeleted : true));
+            modelBuilder.Entity<GeneralFAQ>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<GeneralFAQCategory>().HasQueryFilter(p => !p.isDeleted);
 
@@ -768,22 +664,19 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Event)
                 .AutoInclude();
 
-            modelBuilder.Entity<GroupInvitee>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Event != null ? !p.Event.isDeleted : true));
+            modelBuilder.Entity<GroupInvitee>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<PersonalInvitee>()
                 .Navigation(p => p.Event)
                 .AutoInclude();
 
-            modelBuilder.Entity<PersonalInvitee>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Event != null ? !p.Event.isDeleted : true));
+            modelBuilder.Entity<PersonalInvitee>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Category>()
                 .Navigation(p => p.Cycle)
                 .AutoInclude();
 
-            modelBuilder.Entity<Category>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Cycle != null ? !p.Cycle.isDeleted : true));
+            modelBuilder.Entity<Category>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<News>().HasQueryFilter(p => !p.isDeleted);
 
@@ -791,15 +684,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<TrainingWorkshop>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<TrainingWorkshop>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<FrequentlyAskedQuestion>()
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<FrequentlyAskedQuestion>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<FrequentlyAskedQuestion>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<User>().HasQueryFilter(p => !p.isDeleted);
 
@@ -809,8 +700,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.GroupInvitee)
                 .AutoInclude();
 
-            modelBuilder.Entity<Student>().HasQueryFilter(p => !p.isDeleted &&
-                (p.GroupInvitee != null ? !p.GroupInvitee.isDeleted : true));
+            modelBuilder.Entity<Student>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AttributeDataType>().HasQueryFilter(p => !p.isDeleted);
 
@@ -838,12 +728,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.StaticAttribute)
                 .AutoInclude();
 
-            modelBuilder.Entity<Dependency>().HasQueryFilter(p => !p.isDeleted &&
-                (p.StaticAttribute != null ? !p.StaticAttribute.isDeleted : true) &&
-                (p.DependencyGroup != null ? !p.DependencyGroup.isDeleted : true) &&
-                (p.AttributeOperation != null ? !p.AttributeOperation.isDeleted : true) &&
-                (p.DynamicAttribute != null ? !p.DynamicAttribute.isDeleted : true) &&
-                (p.MainDynamicAttribute != null ? !p.MainDynamicAttribute.isDeleted : true));
+            modelBuilder.Entity<Dependency>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DependencyValidation>()
                 .Navigation(p => p.AttributeOperation)
@@ -853,9 +738,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.DependencyGroup)
                 .AutoInclude();
 
-            modelBuilder.Entity<DependencyValidation>().HasQueryFilter(p => !p.isDeleted &&
-                (p.DependencyGroup != null ? !p.DependencyGroup.isDeleted : true) &&
-                (p.AttributeOperation != null ? !p.AttributeOperation.isDeleted : true));
+            modelBuilder.Entity<DependencyValidation>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DynamicAttribute>()
                 .Navigation(p => p.AttributeDataType)
@@ -865,9 +748,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.DynamicAttributeSection)
                 .AutoInclude();
 
-            modelBuilder.Entity<DynamicAttribute>().HasQueryFilter(p => !p.isDeleted &&
-                (p.DynamicAttributeSection != null ? !p.DynamicAttributeSection.isDeleted : true) &&
-                (p.AttributeDataType != null ? !p.AttributeDataType.isDeleted : true));
+            modelBuilder.Entity<DynamicAttribute>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<GeneralValidation>()
                 .Navigation(p => p.DynamicAttribute)
@@ -877,30 +758,25 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.AttributeOperation)
                 .AutoInclude();
 
-            modelBuilder.Entity<GeneralValidation>().HasQueryFilter(p => !p.isDeleted &&
-                (p.AttributeOperation != null ? !p.AttributeOperation.isDeleted : true) &&
-                (p.DynamicAttribute != null ? !p.DynamicAttribute.isDeleted : true));
+            modelBuilder.Entity<GeneralValidation>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DynamicAttributeListValue>()
                 .Navigation(p => p.DynamicAttribute)
                 .AutoInclude();
 
-            modelBuilder.Entity<DynamicAttributeListValue>().HasQueryFilter(p => !p.isDeleted &&
-                (p.DynamicAttribute != null ? !p.DynamicAttribute.isDeleted : true));
+            modelBuilder.Entity<DynamicAttributeListValue>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DynamicAttributeSection>()
                 .Navigation(p => p.AttributeTableName)
                 .AutoInclude();
 
-            modelBuilder.Entity<DynamicAttributeSection>().HasQueryFilter(p => !p.isDeleted &&
-                (p.AttributeTableName != null ? !p.AttributeTableName.isDeleted : true));
+            modelBuilder.Entity<DynamicAttributeSection>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DynamicAttributeValue>()
                 .Navigation(p => p.DynamicAttribute)
                 .AutoInclude();
 
-            modelBuilder.Entity<DynamicAttributeValue>().HasQueryFilter(p => !p.isDeleted &&
-                (p.DynamicAttribute != null ? !p.DynamicAttribute.isDeleted : true));
+            modelBuilder.Entity<DynamicAttributeValue>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<StaticAttribute>()
                 .Navigation(p => p.AttributeTableName)
@@ -910,16 +786,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.AttributeDataType)
                 .AutoInclude();
 
-            modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => !p.isDeleted &&
-                (p.AttributeDataType != null ? !p.AttributeDataType.isDeleted : true) &&
-                (p.AttributeTableName != null ? !p.AttributeTableName.isDeleted : true));
+            modelBuilder.Entity<StaticAttribute>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<TermAndCondition>()
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<TermAndCondition>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<TermAndCondition>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ConditionsProvidedForms>()
                 .Navigation(p => p.ProvidedForm)
@@ -929,9 +802,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.TermAndCondition)
                 .AutoInclude();
 
-            modelBuilder.Entity<ConditionsProvidedForms>().HasQueryFilter(p => !p.isDeleted &&
-                (p.TermAndCondition != null ? !p.TermAndCondition.isDeleted : true) &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true));
+            modelBuilder.Entity<ConditionsProvidedForms>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DynamicAttributePattern>().HasQueryFilter(p => !p.isDeleted);
 
@@ -939,9 +810,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.DynamicAttributePattern)
                 .AutoInclude();
 
-            modelBuilder.Entity<DynamicAttributePatternValue>().HasQueryFilter(p => !p.isDeleted &&
-                (p.DynamicAttributePattern != null
-                    ? !p.DynamicAttributePattern.isDeleted : true));
+            modelBuilder.Entity<DynamicAttributePatternValue>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ProvidedForm>()
                 .Navigation(p => p.User)
@@ -959,39 +828,31 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.CategoryEducationalClass)
                 .AutoInclude();
 
-            modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => !p.isDeleted &&
-                (p.CategoryEducationalClass != null ? !p.CategoryEducationalClass.isDeleted : true) &&
-                (p.CategoryEducationalEntity != null ? !p.CategoryEducationalEntity.isDeleted : true) &&
-                (p.Category != null ? !p.Category.isDeleted : true) &&
-                (p.User != null ? !p.User.isDeleted : true));
+            modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CategoryFAQ>()
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<CategoryFAQ>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<CategoryFAQ>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ExplanatoryGuide>()
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<ExplanatoryGuide>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<ExplanatoryGuide>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CycleCondition>()
                 .Navigation(p => p.Cycle)
                 .AutoInclude();
 
-            modelBuilder.Entity<CycleCondition>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Cycle != null ? !p.Cycle.isDeleted : true));
+            modelBuilder.Entity<CycleCondition>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ConditionAttachment>()
                 .Navigation(p => p.ConditionsProvidedForms)
                 .AutoInclude();
 
-            modelBuilder.Entity<ConditionAttachment>().HasQueryFilter(p => !p.isDeleted &&
-                (p.ConditionsProvidedForms != null ? !p.ConditionsProvidedForms.isDeleted : true));
+            modelBuilder.Entity<ConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Coordinator>().HasQueryFilter(p => !p.isDeleted);
 
@@ -999,8 +860,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.EducationalEntity)
                 .AutoInclude();
 
-            modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted &&
-                (p.EducationalEntity != null ? !p.EducationalEntity.isDeleted : true));
+            modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<EducationalEntity>().HasQueryFilter(p => !p.isDeleted);
 
@@ -1012,9 +872,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Coordinator)
                 .AutoInclude();
 
-            modelBuilder.Entity<EduEntitiesCoordinator>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Coordinator != null ? !p.Coordinator.isDeleted : true) &&
-                (p.EducationalEntity != null ? !p.EducationalEntity.isDeleted : true));
+            modelBuilder.Entity<EduEntitiesCoordinator>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AboutAwardPage>().HasQueryFilter(p => !p.isDeleted);
 
@@ -1024,16 +882,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.AboutAwardPage)
                 .AutoInclude();
 
-            modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted &&
-                (p.AboutAwardPage != null ? !p.AboutAwardPage.isDeleted : true));
+            modelBuilder.Entity<OurGoal>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CycleConditionAttachment>()
                 .Navigation(p => p.CycleConditionsProvidedForm)
                 .AutoInclude();
 
-            modelBuilder.Entity<CycleConditionAttachment>().HasQueryFilter(p => !p.isDeleted &&
-                (p.CycleConditionsProvidedForm != null
-                    ? !p.CycleConditionsProvidedForm.isDeleted : true));
+            modelBuilder.Entity<CycleConditionAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CycleConditionsProvidedForm>()
                 .Navigation(p => p.ProvidedForm)
@@ -1043,23 +898,19 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.CycleCondition)
                 .AutoInclude();
 
-            modelBuilder.Entity<CycleConditionsProvidedForm>().HasQueryFilter(p => !p.isDeleted &&
-                (p.CycleCondition != null ? !p.CycleCondition.isDeleted : true) &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true));
+            modelBuilder.Entity<CycleConditionsProvidedForm>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ExtraAttachment>()
                 .Navigation(p => p.ProvidedForm)
                 .AutoInclude();
 
-            modelBuilder.Entity<ExtraAttachment>().HasQueryFilter(p => !p.isDeleted &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true));
+            modelBuilder.Entity<ExtraAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ExtraAttachmentFile>()
                 .Navigation(p => p.ExtraAttachment)
                 .AutoInclude();
 
-            modelBuilder.Entity<ExtraAttachmentFile>().HasQueryFilter(p => !p.isDeleted &&
-                (p.ExtraAttachment != null ? !p.ExtraAttachment.isDeleted : true));
+            modelBuilder.Entity<ExtraAttachmentFile>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<EmailMessage>()
                 .Navigation(p => p.Type)
@@ -1069,16 +920,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.User)
                 .AutoInclude();
 
-            modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => !p.isDeleted &&
-                (p.User != null ? !p.User.isDeleted : true) &&
-                (p.Type != null ? !p.Type.isDeleted : true));
+            modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<EmailAttachment>()
                 .Navigation(p => p.Message)
                 .AutoInclude();
 
-            modelBuilder.Entity<EmailAttachment>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Message != null ? !p.Message.isDeleted : true));
+            modelBuilder.Entity<EmailAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<RoleMessageType>()
                 .Navigation(p => p.Role)
@@ -1088,9 +936,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.MessageType)
                 .AutoInclude();
 
-            modelBuilder.Entity<RoleMessageType>().HasQueryFilter(p => !p.isDeleted &&
-                (p.MessageType != null ? !p.MessageType.isDeleted : true) &&
-                (p.Role != null ? !p.Role.isDeleted : true));
+            modelBuilder.Entity<RoleMessageType>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<MessageType>().HasQueryFilter(p => !p.isDeleted);
 
@@ -1104,9 +950,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Role)
                 .AutoInclude();
 
-            modelBuilder.Entity<RolePermission>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Role != null ? !p.Role.isDeleted : true) &&
-                (p.Permission != null ? !p.Permission.isDeleted : true));
+            modelBuilder.Entity<RolePermission>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AwardPublication>().HasQueryFilter(p => !p.isDeleted);
 
@@ -1116,8 +960,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Album)
                 .AutoInclude();
 
-            modelBuilder.Entity<Gallery>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Album != null ? !p.Album.isDeleted : true));
+            modelBuilder.Entity<Gallery>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<HomePageSlider>().HasQueryFilter(p => !p.isDeleted);
 
@@ -1131,22 +974,19 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.pageStructure)
                 .AutoInclude();
 
-            modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted &&
-                (p.pageStructure != null ? !p.pageStructure.isDeleted : true));
+            modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DarkCard>()
                 .Navigation(p => p.PageStructure)
                 .AutoInclude();
 
-            modelBuilder.Entity<DarkCard>().HasQueryFilter(p => !p.isDeleted &&
-                (p.PageStructure != null ? !p.PageStructure.isDeleted : true));
+            modelBuilder.Entity<DarkCard>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ParagraphCard>()
                 .Navigation(p => p.PageStructure)
                 .AutoInclude();
 
-            modelBuilder.Entity<ParagraphCard>().HasQueryFilter(p => !p.isDeleted &&
-                (p.PageStructure != null ? !p.PageStructure.isDeleted : true));
+            modelBuilder.Entity<ParagraphCard>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AwardSponsor>().HasQueryFilter(p => !p.isDeleted);
 
@@ -1154,15 +994,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Category)
                 .AutoInclude();
 
-            modelBuilder.Entity<Reward>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Category != null ? !p.Category.isDeleted : true));
+            modelBuilder.Entity<Reward>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AwardStatistic>()
                 .Navigation(p => p.Cycle)
                 .AutoInclude();
 
-            modelBuilder.Entity<AwardStatistic>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Cycle != null ? !p.Cycle.isDeleted : true));
+            modelBuilder.Entity<AwardStatistic>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CoordinatorForm>()
                 .Navigation(p => p.ProvidedForm)
@@ -1172,9 +1010,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Coordinator)
                 .AutoInclude();
 
-            modelBuilder.Entity<CoordinatorForm>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Coordinator != null ? !p.Coordinator.isDeleted : true) &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true));
+            modelBuilder.Entity<CoordinatorForm>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ArbitratorForm>()
                 .Navigation(p => p.ProvidedForm)
@@ -1184,16 +1020,13 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Arbitrator)
                 .AutoInclude();
 
-            modelBuilder.Entity<ArbitratorForm>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Arbitrator != null ? !p.Arbitrator.isDeleted : true) &&
-                (p.ProvidedForm != null ? !p.ProvidedForm.isDeleted : true));
+            modelBuilder.Entity<ArbitratorForm>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Responsibility>()
                 .Navigation(p => p.Role)
                 .AutoInclude();
 
-            modelBuilder.Entity<Responsibility>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Role != null ? !p.Role.isDeleted : true));
+            modelBuilder.Entity<Responsibility>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ResponsibilityUser>()
                 .Navigation(p => p.Responsibility)
@@ -1203,23 +1036,19 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.User)
                 .AutoInclude();
 
-            modelBuilder.Entity<ResponsibilityUser>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Responsibility != null ? !p.Responsibility.isDeleted : true) &&
-                (p.User != null ? !p.User.isDeleted : true));
+            modelBuilder.Entity<ResponsibilityUser>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<NewsImage>()
                 .Navigation(p => p.News)
                 .AutoInclude();
 
-            modelBuilder.Entity<NewsImage>().HasQueryFilter(p => !p.isDeleted &&
-                (p.News != null ? !p.News.isDeleted : true));
+            modelBuilder.Entity<NewsImage>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CircularAttachment>()
                 .Navigation(p => p.Circular)
                 .AutoInclude();
 
-            modelBuilder.Entity<CircularAttachment>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Circular != null ? !p.Circular.isDeleted : true));
+            modelBuilder.Entity<CircularAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CircularCoordinator>()
                 .Navigation(p => p.Coordinator)
@@ -1229,9 +1058,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Circular)
                 .AutoInclude();
 
-            modelBuilder.Entity<CircularCoordinator>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Circular != null ? !p.Circular.isDeleted : true) &&
-                (p.Coordinator != null ? !p.Coordinator.isDeleted : true));
+            modelBuilder.Entity<CircularCoordinator>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CircularArbitrator>()
                 .Navigation(p => p.Circular)
@@ -1241,9 +1068,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Arbitrator)
                 .AutoInclude();
 
-            modelBuilder.Entity<CircularArbitrator>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Circular != null ? !p.Circular.isDeleted : true) &&
-                (p.Arbitrator != null ? !p.Arbitrator.isDeleted : true));
+            modelBuilder.Entity<CircularArbitrator>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<CircularChairman>()
                 .Navigation(p => p.Chairman)
@@ -1253,30 +1078,25 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Circular)
                 .AutoInclude();
 
-            modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => !p.isDeleted &&
-                (p.Circular != null ? !p.Circular.isDeleted : true) &&
-                (p.Chairman != null ? !p.Chairman.isDeleted : true));
+            modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<TextCard>()
                 .Navigation(p => p.PageStructure)
                 .AutoInclude();
 
-            modelBuilder.Entity<TextCard>().HasQueryFilter(p => !p.isDeleted &&
-                (p.PageStructure != null ? !p.PageStructure.isDeleted : true));
+            modelBuilder.Entity<TextCard>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ImageCard>()
                 .Navigation(p => p.PageStructure)
                 .AutoInclude();
 
-            modelBuilder.Entity<ImageCard>().HasQueryFilter(p => !p.isDeleted &&
-                (p.PageStructure != null ? !p.PageStructure.isDeleted : true));
+            modelBuilder.Entity<ImageCard>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<PageStructureImages>()
                 .Navigation(p => p.ImageCard)
                 .AutoInclude();
 
-            modelBuilder.Entity<PageStructureImages>().HasQueryFilter(p => !p.isDeleted &&
-                (p.ImageCard != null ? !p.ImageCard.isDeleted : true));
+            modelBuilder.Entity<PageStructureImages>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Domain.Entities.IndexModel.Index>()
                 .HasIndex(p => p.EnglishName)
@@ -1355,38 +1175,34 @@ namespace SharijhaAward.Persistence
         public override int SaveChanges()
         {
             ApplySoftDeletes();
+
             return base.SaveChanges();
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             ApplySoftDeletes();
+                    
             return base.SaveChangesAsync(cancellationToken);
         }
         private void ApplySoftDeletes()
         {
-            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
-            {
-                switch (entry.State)
-                {
-                    case EntityState.Added:
-                        entry.Entity.CreatedAt = DateTime.Now;
-                        break;
-                    case EntityState.Modified:
-                        entry.Entity.LastModifiedAt = DateTime.Now;
-                        break;
-                }
-            }
+            if (EntitiesToDelete == null)
+                EntitiesToDelete = new List<object>();
 
             ChangeTracker.DetectChanges();
 
-            List<AuditableEntity> DeletedEntities = ChangeTracker.Entries<AuditableEntity>()
-                .Where(e => e.State == EntityState.Deleted)
-                .Select(e => e.Entity)
-                .ToList();
+            List<AuditableEntity> DeletedEntities = ChangeTracker.Entries<AuditableEntity>().Where(entry =>
+            {
+                return entry.State == EntityState.Modified &&
+                       entry.Property(nameof(AuditableEntity.isDeleted)).IsModified &&
+                       (bool)entry.Property(nameof(AuditableEntity.isDeleted)).CurrentValue!;
+            }).Select(x => x.Entity).ToList();
 
             foreach (AuditableEntity DeletedEntity in DeletedEntities)
             {
+                EntitiesToDelete.Add(DeletedEntity);
+
                 string EntityId = DeletedEntity.GetType().GetProperty("Id")!.GetValue(DeletedEntity)!.ToString()!;
 
                 DatabaseRelations Item = (DatabaseRelations)Enum.Parse(typeof(DatabaseRelations), DeletedEntity.GetType().Name);
@@ -1399,22 +1215,93 @@ namespace SharijhaAward.Persistence
 
                 foreach (PropertyInfo ReflectedTable in ReflectedTables)
                 {
-                    string ForeginKeyName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[1];
-
-                    List<object> TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
-                        .Where(Record => Record.GetType().GetProperty(ForeginKeyName)!.GetValue(Record) != null
-                            ? Record.GetType().GetProperty(ForeginKeyName)!.GetValue(Record)!.ToString() == EntityId
-                            : false)
-                        .ToList();
-
-                    foreach (object TableRecord in TableRecords)
+                    if (ReflectedTable.Name == "DynamicAttributeValues")
                     {
-                        DeleteBackword(ReflectedTable.Name, TableRecord.GetType().GetProperty("Id")!.ToString()!);
+                        string ForeignKeyName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[1];
+                        string MainTableName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[2];
+
+                        List<object> TableRecords = new List<object>();
+
+                        if (MainTableName == "ProvidedForm")
+                        {
+                            TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
+                                .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
+                                    ? (Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString() == EntityId &&
+                                        Record.GetType().GetProperty("DynamicAttribute")!.GetValue(Record)!
+                                            .GetType().GetProperty("DynamicAttributeSection")!.GetValue(Record)!
+                                            .GetType().GetProperty("AttributeTableNameId")!.GetValue(Record)!.ToString() == "1")
+                                    : false)
+                                .ToList();
+                        }
+                        else if (MainTableName == "Coordinator")
+                        {
+                            TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
+                                .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
+                                    ? (Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString() == EntityId &&
+                                        Record.GetType().GetProperty("DynamicAttribute")!.GetValue(Record)!
+                                            .GetType().GetProperty("DynamicAttributeSection")!.GetValue(Record)!
+                                            .GetType().GetProperty("AttributeTableNameId")!.GetValue(Record)!.ToString() == "2")
+                                    : false)
+                                .ToList();
+                        }
+                        else if (MainTableName == "Arbitrator")
+                        {
+                            TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
+                                .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
+                                    ? (Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString() == EntityId &&
+                                        Record.GetType().GetProperty("DynamicAttribute")!.GetValue(Record)!
+                                            .GetType().GetProperty("DynamicAttributeSection")!.GetValue(Record)!
+                                            .GetType().GetProperty("AttributeTableNameId")!.GetValue(Record)!.ToString() == "3")
+                                    : false)
+                                .ToList();
+                        }
+
+                        if (TableRecords.Any())
+                        {
+                            EntitiesToDelete.AddRange(TableRecords);
+
+                            DeleteBackword(ReflectedTable.Name, TableRecords
+                                .Select(TableRecord => TableRecord.GetType().GetProperty("Id")!.GetValue(TableRecord)!.ToString()!)
+                                .ToList());
+                        }
+                    }
+                    else
+                    {
+                        string ForeignKeyName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[1];
+
+                        List<object> TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
+                            .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
+                                ? Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString() == EntityId
+                                : false)
+                            .ToList();
+
+                        if (TableRecords.Any())
+                        {
+                            EntitiesToDelete.AddRange(TableRecords);
+
+                            DeleteBackword(ReflectedTable.Name, TableRecords
+                                .Select(TableRecord => TableRecord.GetType().GetProperty("Id")!.GetValue(TableRecord)!.ToString()!)
+                                .ToList());
+                        }
                     }
                 }
             }
+
+            DateTime DeleteAtValue = DateTime.UtcNow;
+
+            foreach (var TableRecord in EntitiesToDelete)
+            {
+                if (TableRecord.GetType().GetProperty("isDeleted") != null
+                    ? bool.Parse(TableRecord.GetType().GetProperty("isDeleted")!.GetValue(TableRecord)!.ToString()!) != true
+                    : false)
+                {
+                    TableRecord.GetType().GetProperty("isDeleted")!.SetValue(TableRecord, true);
+                    TableRecord.GetType().GetProperty("DeletedAt")!.SetValue(TableRecord, DeleteAtValue);
+                }
+            }
         }
-        public void DeleteBackword(string ReflectedTableName, string EntityId)
+
+        public void DeleteBackword(string ReflectedTableName, List<string> EntitiesIds)
         {
             DatabaseRelations Item = (DatabaseRelations)Enum.Parse(typeof(DatabaseRelations), ReflectedTableName);
 
@@ -1426,22 +1313,73 @@ namespace SharijhaAward.Persistence
 
             foreach (PropertyInfo ReflectedTable in ReflectedTables)
             {
-                string ForeginKeyName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[1];
-
-                List<object> TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
-                    .Where(Record => Record.GetType().GetProperty(ForeginKeyName)!.GetValue(Record) != null
-                        ? Record.GetType().GetProperty(ForeginKeyName)!.GetValue(Record)!.ToString() == EntityId
-                        : false)
-                    .ToList();
-
-                foreach (object TableRecord in TableRecords)
+                if (ReflectedTable.Name == "DynamicAttributeValues")
                 {
-                    DeleteBackword(ReflectedTable.Name, TableRecord.GetType().GetProperty("Id")!.ToString()!);
+                    string ForeignKeyName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[1];
+                    string MainTableName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[2];
 
-                    if (TableRecord.GetType().GetProperty("isDeleted") != null)
+                    List<object> TableRecords = new List<object>();
+
+                    if (MainTableName == "ProvidedForm")
                     {
-                        TableRecord.GetType().GetProperty("isDeleted")!.SetValue(TableRecord, true);
-                        TableRecord.GetType().GetProperty("DeletedAt")!.SetValue(TableRecord, DateTime.UtcNow);
+                        TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
+                            .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
+                                ? (EntitiesIds.Contains(Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString()!) &&
+                                    Record.GetType().GetProperty("DynamicAttribute")!.GetValue(Record)!
+                                        .GetType().GetProperty("DynamicAttributeSection")!.GetValue(Record)!
+                                        .GetType().GetProperty("AttributeTableNameId")!.GetValue(Record)!.ToString() == "1")
+                                : false)
+                            .ToList();
+                    }
+                    else if (MainTableName == "Coordinator")
+                    {
+                        TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
+                            .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
+                                ? (EntitiesIds.Contains(Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString()!) &&
+                                    Record.GetType().GetProperty("DynamicAttribute")!.GetValue(Record)!
+                                        .GetType().GetProperty("DynamicAttributeSection")!.GetValue(Record)!
+                                        .GetType().GetProperty("AttributeTableNameId")!.GetValue(Record)!.ToString() == "2")
+                                : false)
+                            .ToList();
+                    }
+                    else if (MainTableName == "Arbitrator")
+                    {
+                        TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
+                            .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
+                                ? (EntitiesIds.Contains(Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString()!) &&
+                                    Record.GetType().GetProperty("DynamicAttribute")!.GetValue(Record)!
+                                        .GetType().GetProperty("DynamicAttributeSection")!.GetValue(Record)!
+                                        .GetType().GetProperty("AttributeTableNameId")!.GetValue(Record)!.ToString() == "3")
+                                : false)
+                            .ToList();
+                    }
+
+                    if (TableRecords.Any())
+                    {
+                        EntitiesToDelete.AddRange(TableRecords);
+
+                        DeleteBackword(ReflectedTable.Name, TableRecords
+                            .Select(TableRecord => TableRecord.GetType().GetProperty("Id")!.GetValue(TableRecord)!.ToString()!)
+                            .ToList());
+                    }
+                }
+                else
+                {
+                    string ForeignKeyName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[1];
+
+                    List<object> TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
+                        .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
+                            ? EntitiesIds.Contains(Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString()!)
+                            : false)
+                        .ToList();
+
+                    if (TableRecords.Any())
+                    {
+                        EntitiesToDelete.AddRange(TableRecords);
+
+                        DeleteBackword(ReflectedTable.Name, TableRecords
+                            .Select(TableRecord => TableRecord.GetType().GetProperty("Id")!.GetValue(TableRecord)!.ToString()!)
+                            .ToList());
                     }
                 }
             }

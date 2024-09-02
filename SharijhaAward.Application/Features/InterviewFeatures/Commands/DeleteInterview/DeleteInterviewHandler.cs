@@ -1,30 +1,16 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.InterviewModel;
-using System.Transactions;
 
 namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteInterview
 {
     public class DeleteInterviewHandler : IRequestHandler<DeleteInterviewCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Interview> _InterviewRepository;
-        private readonly IAsyncRepository<InterviewUser> _InterviewUserRepository;
-        private readonly IAsyncRepository<InterviewNote> _InterviewNoteRepository;
-        private readonly IAsyncRepository<InterviewQuestion> _InterviewQuestionRepository;
-        private readonly IAsyncRepository<InterviewAttachment> _InterviewAttachmentRepository;
-        public DeleteInterviewHandler(IAsyncRepository<Interview> InterviewRepository,
-            IAsyncRepository<InterviewUser> InterviewUserRepository,
-            IAsyncRepository<InterviewNote> InterviewNoteRepository,
-            IAsyncRepository<InterviewQuestion> InterviewQuestionRepository,
-            IAsyncRepository<InterviewAttachment> InterviewAttachmentRepository)
+        public DeleteInterviewHandler(IAsyncRepository<Interview> InterviewRepository)
         {
             _InterviewRepository = InterviewRepository;
-            _InterviewUserRepository = InterviewUserRepository;
-            _InterviewNoteRepository = InterviewNoteRepository;
-            _InterviewQuestionRepository = InterviewQuestionRepository;
-            _InterviewAttachmentRepository = InterviewAttachmentRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(DeleteInterviewCommand Request, CancellationToken cancellationToken)
@@ -43,53 +29,13 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteIn
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            List<InterviewUser> InterviewUserEntitiesToDelete = await _InterviewUserRepository
-                .Where(x => x.InterviewId == Request.Id)
-                .ToListAsync();
+            await _InterviewRepository.DeleteAsync(InterviewEntityToDelete);
 
-            List<InterviewNote> InterviewNoteEntitiesToDelete = await _InterviewNoteRepository
-                .Where(x => x.InterviewId == Request.Id)
-                .ToListAsync();
+            ResponseMessage = Request.lang == "en"
+                ? "Interview has been deleted successfully"
+                : "تم حذف المقابلة بنجاح";
 
-            List<InterviewQuestion> InterviewQuestionEntitiesToDelete = await _InterviewQuestionRepository
-                .Where(x => x.InterviewId == Request.Id)
-                .ToListAsync();
-
-            List<InterviewAttachment> InterviewAttachmentEntitiesToDelete = await _InterviewAttachmentRepository
-                .Where(x => x.InterviewId == Request.Id)
-                .ToListAsync();
-
-            TransactionOptions TransactionOptions = new TransactionOptions
-            {
-                IsolationLevel = IsolationLevel.ReadCommitted,
-                Timeout = TimeSpan.FromMinutes(5)
-            };
-
-            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
-               TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
-            {
-                try
-                {
-                    await _InterviewRepository.DeleteAsync(InterviewEntityToDelete);
-                    await _InterviewUserRepository.DeleteListAsync(InterviewUserEntitiesToDelete);
-                    await _InterviewNoteRepository.DeleteListAsync(InterviewNoteEntitiesToDelete);
-                    await _InterviewQuestionRepository.DeleteListAsync(InterviewQuestionEntitiesToDelete);
-                    await _InterviewAttachmentRepository.DeleteListAsync(InterviewAttachmentEntitiesToDelete);
-
-                    ResponseMessage = Request.lang == "en"
-                        ? "Interview has been deleted successfully"
-                        : "تم حذف المقابلة بنجاح";
-
-                    Transaction.Complete();
-
-                    return new BaseResponse<object>(ResponseMessage, true, 200);
-                }
-                catch (Exception)
-                {
-                    Transaction.Dispose();
-                    throw;
-                }
-            }
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }
