@@ -6,6 +6,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
 {
     public class GetAllSubCategoriesQuery : IRequest<BaseResponse<List<GetAllSubCategoriesListVM>>>
     {
+        public int? CycleId { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

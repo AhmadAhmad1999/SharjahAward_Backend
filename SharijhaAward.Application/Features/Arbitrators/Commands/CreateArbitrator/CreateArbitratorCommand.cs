@@ -25,5 +25,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         public List<int> Categories { get; set; } = new List<int>();
         public List<int> ArbitratorClasses { get; set; } = new List<int>();
         public string? WWWRootFilePath { get; set; }
+        public bool SendEmail { get; set; }
     }
 }

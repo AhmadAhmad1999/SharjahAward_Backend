@@ -34,6 +34,8 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllClassesByCate
                         : x.ArabicName
                 }).ToListAsync();
 
+            Classes = Classes.Distinct().ToList();
+
             return new BaseResponse<List<GetAllClassesByCategoriesIdsListVM>>(ResponseMessage, true, 200, Classes);
         }
     }

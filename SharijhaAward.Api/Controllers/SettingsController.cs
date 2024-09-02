@@ -17,6 +17,8 @@ using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Settings.Commands.EditAboutApp;
 using SharijhaAward.Application.Features.Settings.Queries.GetAboutApp;
 using SharijhaAward.Application.Features.Settings.Commands.ApplySeeder;
+using SharijhaAward.Persistence;
+//using System.Web.Http;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -27,12 +29,15 @@ namespace SharijhaAward.Api.Controllers
     {
         private readonly IMediator _Mediator;
         private readonly IWebHostEnvironment _WebHostEnvironment;
+        private IServiceProvider _ServiceProvider;
 
         public SettingsController(IMediator Mediator,
-            IWebHostEnvironment WebHostEnvironment)
+            IWebHostEnvironment WebHostEnvironment,
+            IServiceProvider ServiceProvider)
         {
             _Mediator = Mediator;
             _WebHostEnvironment = WebHostEnvironment;
+            _ServiceProvider = ServiceProvider;
         }
         [HttpGet("GetProfileById/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -440,6 +445,27 @@ namespace SharijhaAward.Api.Controllers
                 200 => Ok(Response),
                 _ => BadRequest(Response)
             };
+        }
+
+        [HttpGet("MigrateAndSeedDatabase", Name = "MigrateAndSeedDatabase")]
+        public async Task<IActionResult> MigrateAndSeedDatabase()
+        {
+            var db = _ServiceProvider.GetService<SharijhaAwardDbContext>();
+            // Drop the existing database
+            await db!.Database.EnsureDeletedAsync();
+
+            // Recreate the database schema
+            await db.Database.EnsureCreatedAsync();
+
+            var Response = await _Mediator.Send(new ApplySeederQuery());
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+
         }
     }
 }

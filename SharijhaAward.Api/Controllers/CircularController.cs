@@ -112,10 +112,12 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> GetCircularById(int Id)
         {
             var language = HttpContext.Request.Headers["lang"];
+            var token = HttpContext.Request?.Headers.Authorization;
 
             var response = await _mediator.Send(new GetCircularByIdQuery()
             {
                 lang = language!,
+                token = token!,
                 Id = Id
             });
 

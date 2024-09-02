@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
         public async Task<BaseResponse<CircularDto>> Handle(GetCircularByIdQuery request, CancellationToken cancellationToken)
         {
             var UserId = _jwtProvider.GetUserIdFromToken(request.token!);
-           
+
             if (UserId == null)
             {
                 return new BaseResponse<CircularDto>("UnAuth", false, 401);
@@ -64,16 +64,19 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
 
             data.Coordinators = await _circularCoordinatorRepository
                 .Where(c => c.CircularId == Circular.Id)
+                .Include(c=>c.Coordinator)
                 .Select(c => c.CoordinatorId)
                 .ToListAsync();
 
             data.Arbitrators = await _circularArbitratorRepository
                 .Where(c => c.CircularId == Circular.Id)
+                .Include(c=>c.Arbitrator)
                 .Select(c => c.ArbitratorId)
                 .ToListAsync();
 
             data.Chairmans = await _circularChairman
                 .Where(c=>c.CircularId == Circular.Id)
+                .Include(c=>c.Chairman)
                 .Select(c=>c.ChairmanId)
                 .ToListAsync();
 

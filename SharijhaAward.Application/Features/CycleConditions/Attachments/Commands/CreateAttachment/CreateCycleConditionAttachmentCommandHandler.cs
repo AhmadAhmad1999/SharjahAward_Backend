@@ -79,6 +79,8 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Command
                     var Attachment = AttachmentsEntities.FirstOrDefault(a => a.IsAccept == false);
 
                     await _attachmentsRepository.DeleteAsync(Attachment!);
+
+                    AttachmentsEntities.Remove(Attachment!);
                 }
             }
             else

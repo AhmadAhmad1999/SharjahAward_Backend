@@ -59,24 +59,31 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
                 var Attachment = await _extraAttachmentsFileRepository.FirstOrDefaultAsync(a => a.IsAccept == false);
 
                 await _extraAttachmentsFileRepository.DeleteAsync(Attachment!);
+
+                ExtraAttachmentsFileEntities.Remove(Attachment!);
             }
 
-            if  (ExtraAttachment.RequiredAttachmentNumber <= ExtraAttachmentsFileEntities.Count())
+            if  (ExtraAttachment.RequiredAttachmentNumber > ExtraAttachmentsFileEntities.Count() || ExtraAttachment.RequiredAttachmentNumber == 0)
+            {
+                var data = _mapper.Map<ExtraAttachmentFile>(request);
+
+                data.IsAccept = null;
+
+                data.FileUrl = await _fileService.SaveProvidedFormFilesAsync(request.File, ExtraAttachment.ProvidedFormId);
+
+                await _extraAttachmentsFileRepository.AddAsync(data);
+
+            }
+            else
             {
                 msg = request.lang == "en"
-                ? "You Can't Add More Files"
-                : "لا يمكنك رفع المزيد من الملفات";
+                    ? "You Can't Add More Files"
+                    : "لا يمكنك رفع المزيد من الملفات";
 
                 return new BaseResponse<object>(msg, false, 400);
             }
 
-            var data = _mapper.Map<ExtraAttachmentFile>(request);
 
-            data.IsAccept = null;
-
-            data.FileUrl = await _fileService.SaveProvidedFormFilesAsync(request.File, ExtraAttachment.ProvidedFormId);
-
-            await _extraAttachmentsFileRepository.AddAsync(data);
 
             return new BaseResponse<object>(msg, true, 200);
             

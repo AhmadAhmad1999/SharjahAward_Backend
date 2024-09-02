@@ -165,7 +165,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     {
                                         DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
                                         DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
-                                        DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
+                                        DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.isAccepted == true || CheckIfValueIsAlreadyInserted.isAccepted == null
+                                            ? null
+                                            : CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                     }
                                 }
                                 else if (DynamicAttributeInSection.AttributeDataTypeName.ToLower() == "Phone Number".ToLower())
@@ -177,7 +179,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     {
                                         DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value.Replace("0097105", string.Empty);
                                         DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
-                                        DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
+                                        DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.isAccepted == true || CheckIfValueIsAlreadyInserted.isAccepted == null
+                                            ? null
+                                            : CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                     }
                                 }
                                 else
@@ -189,7 +193,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                     {
                                         DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value;
                                         DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
-                                        DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
+                                        DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.isAccepted == true || CheckIfValueIsAlreadyInserted.isAccepted == null
+                                            ? null
+                                            : CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                     }
                                 }
                             }

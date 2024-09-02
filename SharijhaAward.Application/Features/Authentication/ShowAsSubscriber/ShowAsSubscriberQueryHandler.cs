@@ -4,6 +4,7 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Authentication.Login;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,13 @@ namespace SharijhaAward.Application.Features.Authentication.ShowAsSubscriber
     public class ShowAsSubscriberQueryHandler
         : IRequestHandler<ShowAsSubscriberQuery, AuthenticationResponse>
     {
+        private readonly IAsyncRepository<UserToken> _userTokenRepository;
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
         private readonly IMapper _mapper;
-        public ShowAsSubscriberQueryHandler(IMapper mapper, IUserRepository userRepository, IJwtProvider jwtProvider)
+        public ShowAsSubscriberQueryHandler(IAsyncRepository<UserToken> userTokenRepository,  IMapper mapper, IUserRepository userRepository, IJwtProvider jwtProvider)
         {
+            _userTokenRepository = userTokenRepository;
             _userRepository = userRepository;
             _jwtProvider = jwtProvider;
             _mapper = mapper;
@@ -52,8 +55,19 @@ namespace SharijhaAward.Application.Features.Authentication.ShowAsSubscriber
                         : "المستخدم غير موجود"
                 };
             }
+
             var token = _jwtProvider.Generate(User);
-           
+
+            var userToken = new UserToken()
+            {
+                Token = token,
+                UserId = User.Id,
+                AppLanguage = "ar",
+                Platform = PlatformType.Web
+            };
+
+            await _userTokenRepository.AddAsync(userToken);
+
             var response = new AuthenticationResponse()
             {
                 token = token,

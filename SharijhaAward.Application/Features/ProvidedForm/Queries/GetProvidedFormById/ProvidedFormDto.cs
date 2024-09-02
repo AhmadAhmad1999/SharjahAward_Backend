@@ -23,6 +23,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFor
         public float FirstArbitrationScore { get; set; }
         public float SecondArbitrationScore { get; set; }
         public float FinalScore { get; set; }
+        public bool? needSing { get; set; }
         public int categoryId { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<int>? RejectedSteps { get; set; }

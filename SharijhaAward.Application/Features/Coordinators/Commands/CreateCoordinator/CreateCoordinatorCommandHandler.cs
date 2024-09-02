@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
@@ -23,6 +24,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRepository _userRepository;
         private readonly IFileService _fileService;
+        private readonly IEmailSender _EmailSender;
         private readonly IMapper _mapper;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;
@@ -32,7 +34,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
             IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
             IAsyncRepository<Coordinator> coordinatorRepository, 
             IFileService fileService, 
-            IUserRepository userRepository, 
+            IUserRepository userRepository,
+            IEmailSender EmailSender,
             IMapper Mapper,
             IAsyncRepository<ResponsibilityUser> responsibilityUserRepository,
             IAsyncRepository<Responsibility> responsibilityRepository,
@@ -43,6 +46,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
             _coordinatorRepository = coordinatorRepository;
             _userRepository = userRepository;
             _fileService = fileService;
+            _EmailSender = EmailSender;
             _mapper = Mapper;
             _UserRoleRepository = UserRoleRepository;
             _responsibilityRepository = responsibilityRepository;
@@ -118,6 +122,25 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                     
 
                     var data =  await _coordinatorRepository.AddAsync(Coordinator);
+                    
+                    if (Request.SendEmail)
+                    {
+                        EmailRequest EmailRequest = new EmailRequest()
+                        {
+                            ToEmail = Request.Email,
+                            Subject = Request.lang == "ar"
+                                    ? $"معلومات حساب المنسق"
+                                    : "Coordinator Account Informations",
+                            Body = Request.lang == "ar"
+                                    ? $"البريد الإلكترني الخاص بك: {Request.Email} <br>" + "\n" +
+                                    $" كلمة المرور: {Request.Password}"
+                                    
+                                    : $"Your Email: {Request.Email} " +"\n" +
+                                    $" Password: {Request.Password}"
+                        };
+
+                        await _EmailSender.SendEmailForConfirmationCode(EmailRequest);
+                    }
 
                     var role = await _roleRepository.GetByName("Coordinator");
                     if (role != null)

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.LoggerModel;
 
 namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryByController
@@ -26,6 +27,8 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
         public async Task<BaseResponse<List<GetHistoryByControllerListVM>>> 
             Handle(GetHistoryByControllerQuery Request, CancellationToken cancellationToken)
         {
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+
             string ResponseMessage = string.Empty;
 
             if (!string.IsNullOrEmpty(Request.ControllerName))
@@ -33,7 +36,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                 if (Request.ShowAll)
                 {
                     List<GetHistoryByControllerListVM> Response = _LogUserActionRepository
-                        .Where(x => x.ControllerName.ToLower() == Request.ControllerName.ToLower())
+                        .WhereThenFilter(x => x.ControllerName.ToLower() == Request.ControllerName.ToLower(), filterObject)
                         .AsEnumerable()
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
@@ -70,8 +73,8 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                     int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
                     List<GetHistoryByControllerListVM> Response = _LogUserActionRepository
-                        .Where(x => x.ControllerName.ToLower() == Request.ControllerName.ToLower() &&
-                            x.UserId == UserId)
+                        .WhereThenFilter(x => x.ControllerName.ToLower() == Request.ControllerName.ToLower() &&
+                            x.UserId == UserId, filterObject)
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
@@ -106,6 +109,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
             else
             {
                 List<GetHistoryByControllerListVM> Response = _LogUserActionRepository
+                    .WhereThenFilter(x => true, filterObject)
                     .AsEnumerable()
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)

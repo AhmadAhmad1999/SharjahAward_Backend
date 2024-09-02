@@ -29,5 +29,6 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
         public string lang { get; set; } = string.Empty;
         public List<int>? EducationalEntitiesIds { get; set; }
         public string? WWWRootFilePath { get; set; }
+        public bool SendEmail { get; set; }
     }
 }

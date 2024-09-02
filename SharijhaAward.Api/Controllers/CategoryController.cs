@@ -178,7 +178,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllSubCategories()
+        public async Task<IActionResult> GetAllSubCategories([FromQuery] int? CycleId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -187,7 +187,8 @@ namespace SharijhaAward.Api.Controllers
 
             BaseResponse<List<GetAllSubCategoriesListVM>> Response = await _mediator.Send(new GetAllSubCategoriesQuery()
             {
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                CycleId = CycleId
             });
 
             return Response.statusCode switch

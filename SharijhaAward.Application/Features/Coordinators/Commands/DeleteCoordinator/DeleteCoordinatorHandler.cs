@@ -13,17 +13,17 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordin
     public class DeleteCoordinatorHandler : IRequestHandler<DeleteCoordinatorCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
-        private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
+        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
 
         public DeleteCoordinatorHandler(IAsyncRepository<Coordinator> CoordinatorRepository,
-            IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
+            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository,
             IUserRepository UserRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
         {
             _CoordinatorRepository = CoordinatorRepository;
-            _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
+            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
             _UserRepository = UserRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
         }
@@ -60,7 +60,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordin
                 .Where(x => x.RecordIdAsGuid == Request.Id)
                 .ToListAsync();
 
-            List<EduInstitutionCoordinator> EduInstitutionCoordinatorEntities = await _EduInstitutionCoordinatorRepository
+            var EduEntitiesCoordinatorRepository = await _EduEntitiesCoordinatorRepository
                 .Where(x => x.CoordinatorId == Request.Id)
                 .ToListAsync();
 
@@ -81,8 +81,8 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordin
                     if (DynamicAttributeValues.Count() > 0)
                         await _DynamicAttributeValueRepository.DeleteListAsync(DynamicAttributeValues);
 
-                    if (EduInstitutionCoordinatorEntities.Count() > 0)
-                        await _EduInstitutionCoordinatorRepository.DeleteListAsync(EduInstitutionCoordinatorEntities);
+                    if (EduEntitiesCoordinatorRepository.Count() > 0)
+                        await _EduEntitiesCoordinatorRepository.DeleteListAsync(EduEntitiesCoordinatorRepository);
 
                     ResponseMessage = Request.lang == "en"
                         ? "Coordinator has been deleted successfully"

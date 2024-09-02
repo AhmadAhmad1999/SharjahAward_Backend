@@ -99,21 +99,33 @@ namespace SharijhaAward.Persistence
         {
 
         }
-
+        public DbSet<Cycle> Cycles { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UsersRoles { get; set; }
+        public DbSet<PermissionHeader> PermissionHeaders { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
+        //-----------------------
         public DbSet<ViewWhenRelation> ViewWhenRelations { get; set; }
         public DbSet<ArbitrationResult> ArbitrationResults { get; set; }
         public DbSet<CategoryEducationalEntity> CategoryEducationalEntities { get; set; }
         public DbSet<ExplanatoryMessage> ExplanatoryMessages { get; set; }
         public DbSet<AdvancedFormBuilderGeneralValidation> AdvancedFormBuilderGeneralValidations { get; set; }
         public DbSet<VirtualTable> VirtualTables { get; set; }
+        public DbSet<AdvancedFormBuilderSection> AdvancedFormBuilderSections { get; set; }
+        public DbSet<AdvancedFormBuilder> AdvancedFormBuilders { get; set; }
         public DbSet<VirtualTableForSection> VirtualTableForSections { get; set; }
         public DbSet<AdvancedFormBuilderValue> AdvancedFormBuilderValues { get; set; }
         public DbSet<AdvancedFormBuilderTableValue> AdvancedFormBuilderTableValues { get; set; }
-        public DbSet<AdvancedFormBuilderPatternValue> AdvancedFormBuilderPatternValues { get; set; }
         public DbSet<AdvancedFormBuilderPattern> AdvancedFormBuilderPatterns { get; set; }
+        public DbSet<AdvancedFormBuilderPatternValue> AdvancedFormBuilderPatternValues { get; set; }
+        
         public DbSet<AdvancedFormBuilderListValue> AdvancedFormBuilderListValues { get; set; }
-        public DbSet<AdvancedFormBuilder> AdvancedFormBuilders { get; set; }
-        public DbSet<AdvancedFormBuilderSection> AdvancedFormBuilderSections { get; set; }
+        
+       
         public DbSet<DynamicAttributeTableValue> DynamicAttributeTableValue { get; set; }
         public DbSet<FinalArbitrationScore> FinalArbitrationScores { get; set; }
         public DbSet<ChairmanNotesOnFinalArbitrationScore> ChairmanNotesOnFinalArbitrationScores { get; set; }
@@ -129,7 +141,7 @@ namespace SharijhaAward.Persistence
         public DbSet<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrations { get; set; }
         public DbSet<ChairmanNotesOnArbitrationAudit> ChairmanNotesOnArbitrationAudits { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }
-        public DbSet<UserToken> UserTokens { get; set; }
+        
         public DbSet<LogUserAction> LogUserActions { get; set; }
         public DbSet<ArbitrationScale> ArbitrationScales { get; set; }
         public DbSet<ArbitrationScalesCriterion> ArbitrationScalesCriterions { get; set; }
@@ -139,8 +151,8 @@ namespace SharijhaAward.Persistence
         public DbSet<MeetingUser> MeetingUsers { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Arbitration> Arbitrations { get; set; }
-        public DbSet<UserRole> UsersRoles { get; set; }
-        public DbSet<PermissionHeader> PermissionHeaders { get; set; }
+        
+        
         public DbSet<Instruction> Instructions { get; set; }
         public DbSet<AppVersion> AppVersions { get; set; }
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
@@ -154,21 +166,14 @@ namespace SharijhaAward.Persistence
         public DbSet<CategoryArbitrator> CategoriesArbitrators { get; set; }
         public DbSet<Agenda> Agendas { get; set; }
         public DbSet<RelatedAccount> RelatedAccounts { get; set; }
-        public DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; }
-        public DbSet<GeneralFAQ> GeneralFAQs { get; set; }
         public DbSet<GeneralFAQCategory> GeneralFAQCategories { get; set; }
+        public DbSet<GeneralFAQ> GeneralFAQs { get; set; }
         public DbSet<TrainingWorkshop> TrainingWorkshops { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<PersonalInvitee> Personalnvitees { get; set; }
         public DbSet<GroupInvitee> GroupInvitees { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<TrainingWorkshopSubscriber> TrainingWorkshopSubscribers { get; set; }
-        public DbSet<Cycle> Cycles { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<Permission> Permissions { get; set; }
-        public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<ProvidedForm> ProvidedForms { get; set; }
-        public DbSet<Category> Categories { get; set; }
         public DbSet<AttributeDataType> AttributeDataTypes { get; set; }
         public DbSet<AttributeOperation> AttributeOperations { get; set; }
         public DbSet<AttributeTableName> AttributeTableNames { get; set; }
@@ -186,6 +191,7 @@ namespace SharijhaAward.Persistence
         public DbSet<DynamicAttributePattern> DynamicAttributePatterns { get; set; }
         public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues { get; set; }
         public DbSet<CategoryFAQ> CategoryFAQs { get; set; }
+        public DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; }
         public DbSet<ExplanatoryGuide> ExplanatoryGuides { get; set; }
         public DbSet<CycleCondition> CycleCondition { get; set; }
         public DbSet<TrainingWrokshopeAttachment> TrainingWrokshopeAttachment { get; set; }
@@ -228,6 +234,7 @@ namespace SharijhaAward.Persistence
         public DbSet<CoordinatorForm> CoordinatorForms { get; set; }
         public DbSet<Responsibility> Responsibilities { get; set; }
         public DbSet<ResponsibilityUser> ResponsibilitiesUsers { get; set; }
+        public DbSet<News> News { get; set; }
         public DbSet<NewsImage> NewsImages { get; set; }
         public DbSet<CircularArbitrator> CircularArbitrators { get; set; }
         public DbSet<CircularCoordinator> CircularCoordinators { get; set; }
@@ -237,7 +244,7 @@ namespace SharijhaAward.Persistence
         public DbSet<ImageCard> ImageCards { get; set; }
         public DbSet<PageStructureImages> PageStructureImages { get; set; }
         public DbSet<OnePageText> OnePageText { get; set; }
-        public DbSet<News> News { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -1116,12 +1123,11 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<StrategicPartner>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<PageStructure>()
-                .Navigation(p => p.pageStructure)
-                .AutoInclude();
+            //modelBuilder.Entity<PageStructure>()
+            //    .Navigation(p => p.pageStructure)
+            //    .AutoInclude();
 
-            modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted &&
-                (p.pageStructure != null ? !p.pageStructure.isDeleted : true));
+            modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DarkCard>()
                 .Navigation(p => p.PageStructure)

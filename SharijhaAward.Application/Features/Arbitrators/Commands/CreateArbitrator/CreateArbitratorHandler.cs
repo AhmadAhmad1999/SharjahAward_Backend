@@ -2,7 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.ArbitratorClassModel;
@@ -22,6 +24,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         private readonly IRoleRepository _RoleRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IMapper _Mapper;
+        private readonly IEmailSender _EmailSender;
         private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;    
@@ -31,7 +34,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
             IRoleRepository RoleRepository, 
             IUserRepository UserRepository, 
-            IMapper Mapper, 
+            IMapper Mapper,
+            IEmailSender EmailSender,
             IAsyncRepository<ArbitratorClass> ArbitratorClassRepository,
             IAsyncRepository<UserRole> UserRoleRepository,
             IAsyncRepository<ResponsibilityUser> responsibilityUserRepository,
@@ -42,6 +46,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             _RoleRepository = RoleRepository;
             _UserRepository = UserRepository;
             _Mapper = Mapper;
+            _EmailSender = EmailSender;
             _ArbitratorClassRepository = ArbitratorClassRepository;
             _UserRoleRepository = UserRoleRepository;
             _responsibilityUserRepository = responsibilityUserRepository;
@@ -141,6 +146,22 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                     NewArbitratorEntity.Id = NewUserEntity.Id;
 
                     await _ArbitratorRepository.AddAsync(NewArbitratorEntity);
+
+                    if (Request.SendEmail)
+                    {
+                        var EmailRequest = new EmailRequest()
+                        {
+                            ToEmail = Request.Email,
+                            Subject = Request.lang == "ar"
+                                    ? $"معلومات حساب المحكم"
+                                    : "Arbitrator Account Informations",
+                            Body = Request.lang == "ar"
+                                    ? $"البريد الإلكترني الخاص بك : {Request.Email} /n كلمة المرور : {Request.Password}"
+                                    : $"Your Email : {Request.Email} /n Password : {Request.Password}"
+                        };
+
+                        await _EmailSender.SendEmailForConfirmationCode(EmailRequest);
+                    }
 
                     var Responsibilities = await _responsibilityRepository
                          .Where(r => r.RoleId == Role.Id)

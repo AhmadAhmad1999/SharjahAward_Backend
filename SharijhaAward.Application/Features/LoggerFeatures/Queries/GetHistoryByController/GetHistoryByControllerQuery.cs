@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 
 namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryByController
 {
@@ -11,5 +12,6 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
         public bool ShowAll { get; set; } = false;
         public int page { get; set; } = 1;
         public int perPage { get; set; } = 10;
+        public List<Filter>? filters { get; set; }
     }
 }
