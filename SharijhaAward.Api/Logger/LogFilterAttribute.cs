@@ -57,6 +57,7 @@ namespace SharijhaAward.Api.Logger
                     Controller_Function_Name[0].ToString() != "CheckConfirmationCodeForSignUp" &&
                     Controller_Function_Name[0].ToString() != "CheckConfirmationCodeForForgettonPassword" &&
                     Controller_Function_Name[0].ToString() != "SignUpFromAdminDashboard" &&
+                    Controller_Function_Name[0].ToString() != "MigrateAndSeedDatabase" &&
                     (Controller_Function_Name[1].ToString() != "Website"))
                 {
                     if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
@@ -94,7 +95,9 @@ namespace SharijhaAward.Api.Logger
                 token.ToLower() != "bearer" && token.ToLower() != "bearer ")
                 UserId = int.Parse(_JwtProvider.GetUserIdFromToken(token));
 
-            await next();
+            ActionExecutedContext APIResponse = await next();
+
+            OnActionExecuted(APIResponse);
         }
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)

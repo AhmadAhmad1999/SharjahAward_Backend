@@ -52,6 +52,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorsB
 
             var Arbitrators = await _arbitratorFormRepository
                 .Where(a => a.ProvidedFormId == form.Id)
+                .Include(a=>a.Arbitrator)
                 .Select(f => f.Arbitrator)
                 .Skip((request.page - 1) * request.perPage)
                 .Take(request.perPage)
