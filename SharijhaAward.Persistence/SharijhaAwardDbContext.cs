@@ -80,6 +80,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using AutoMapper;
 using System.Reflection;
 using static SharijhaAward.Application.Helpers.DatabaseRelationsHelper.DatabaseRelationsClass;
+using NPOI.HSSF.Record;
 
 namespace SharijhaAward.Persistence
 {
@@ -1313,7 +1314,10 @@ namespace SharijhaAward.Persistence
 
             foreach (PropertyInfo ReflectedTable in ReflectedTables)
             {
-                if (ReflectedTable.Name == "DynamicAttributeValues")
+                if (ReflectedTable.Name == "DynamicAttributeValues" &&
+                    (ReflectedTableName == "Coordinator" || ReflectedTableName == "Coordinators" ||
+                    ReflectedTableName == "Arbitrator" || ReflectedTableName == "Arbitrators" ||
+                    ReflectedTableName == "ProvidedForm" || ReflectedTableName == "ProvidedForms"))
                 {
                     string ForeignKeyName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[1];
                     string MainTableName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[2];
@@ -1325,9 +1329,14 @@ namespace SharijhaAward.Persistence
                         TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
                             .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
                                 ? (EntitiesIds.Contains(Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString()!) &&
-                                    Record.GetType().GetProperty("DynamicAttribute")!.GetValue(Record)!
-                                        .GetType().GetProperty("DynamicAttributeSection")!.GetValue(Record)!
-                                        .GetType().GetProperty("AttributeTableNameId")!.GetValue(Record)!.ToString() == "1")
+                                    Record!.GetType().GetProperty("DynamicAttribute")!
+                                        .GetValue(Record)!.GetType().GetProperty("DynamicAttributeSection")!
+                                            .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
+                                                .GetValue(Record)!)!.GetType().GetProperty("AttributeTableNameId")!
+                                                    .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
+                                                        .GetValue(Record)!.GetType().GetProperty("DynamicAttributeSection")!
+                                                            .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
+                                                                .GetValue(Record)!)!)!.ToString() == "1")
                                 : false)
                             .ToList();
                     }
@@ -1336,9 +1345,14 @@ namespace SharijhaAward.Persistence
                         TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
                             .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
                                 ? (EntitiesIds.Contains(Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString()!) &&
-                                    Record.GetType().GetProperty("DynamicAttribute")!.GetValue(Record)!
-                                        .GetType().GetProperty("DynamicAttributeSection")!.GetValue(Record)!
-                                        .GetType().GetProperty("AttributeTableNameId")!.GetValue(Record)!.ToString() == "2")
+                                    Record!.GetType().GetProperty("DynamicAttribute")!
+                                        .GetValue(Record)!.GetType().GetProperty("DynamicAttributeSection")!
+                                            .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
+                                                .GetValue(Record)!)!.GetType().GetProperty("AttributeTableNameId")!
+                                                    .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
+                                                        .GetValue(Record)!.GetType().GetProperty("DynamicAttributeSection")!
+                                                            .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
+                                                                .GetValue(Record)!)!)!.ToString() == "2")
                                 : false)
                             .ToList();
                     }
@@ -1347,9 +1361,14 @@ namespace SharijhaAward.Persistence
                         TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
                             .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
                                 ? (EntitiesIds.Contains(Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString()!) &&
-                                    Record.GetType().GetProperty("DynamicAttribute")!.GetValue(Record)!
-                                        .GetType().GetProperty("DynamicAttributeSection")!.GetValue(Record)!
-                                        .GetType().GetProperty("AttributeTableNameId")!.GetValue(Record)!.ToString() == "3")
+                                    Record!.GetType().GetProperty("DynamicAttribute")!
+                                        .GetValue(Record)!.GetType().GetProperty("DynamicAttributeSection")!
+                                            .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
+                                                .GetValue(Record)!)!.GetType().GetProperty("AttributeTableNameId")!
+                                                    .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
+                                                        .GetValue(Record)!.GetType().GetProperty("DynamicAttributeSection")!
+                                                            .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
+                                                                .GetValue(Record)!)!)!.ToString() == "3")
                                 : false)
                             .ToList();
                     }
