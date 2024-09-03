@@ -481,7 +481,9 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Criterion)
                 .AutoInclude();
 
-            //modelBuilder.Entity<InitialArbitration>()
+            modelBuilder.Entity<InitialArbitration>()
+                .Navigation(p => p.Arbitration)
+                .AutoInclude();
 
             modelBuilder.Entity<InitialArbitration>().HasQueryFilter(p => !p.isDeleted);
 
