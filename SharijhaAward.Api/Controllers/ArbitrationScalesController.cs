@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Api.Logger;
@@ -7,8 +6,8 @@ using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.Crea
 using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.DeleteArbitrationScale;
 using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.UpdateArbitrationScale;
 using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.GetAllArbitrationScales;
-using SharijhaAward.Application.Features.Classes.Commands.DeleteClass;
-using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
+using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.GetArbitrationScaleById;
+using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -121,6 +120,35 @@ namespace SharijhaAward.Api.Controllers
             {
                 SubCategoryId = SubCategoryId,
                 lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetArbitrationScaleById")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetArbitrationScaleById(int? CriterionId, int? CriterionItemId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetArbitrationScaleByIdListVM> Response = await _Mediator.Send(new GetArbitrationScaleByIdQuery()
+            {
+                lang = HeaderValue!,
+                CriterionId = CriterionId,
+                CriterionItemId = CriterionItemId
             });
 
             return Response.statusCode switch
