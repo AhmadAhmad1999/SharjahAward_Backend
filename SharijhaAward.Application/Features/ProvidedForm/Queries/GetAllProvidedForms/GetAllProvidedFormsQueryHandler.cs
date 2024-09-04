@@ -183,7 +183,21 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
 
                 if (data[i].RejectedSteps!.Count() > 0)
                 {
+                    int percent = 15 * data[i].RejectedSteps!.Count();
+
                     form[i].needSing = true;
+                    if (form[i].PercentCompletion > percent)
+                    {
+                        form[i].PercentCompletion = form[i].PercentCompletion - percent;
+
+                        data[i].PercentCompletion = form[i].PercentCompletion - percent;
+                    }
+                    else
+                    {
+                        form[i].PercentCompletion = 0;
+
+                        data[i].PercentCompletion = 0;
+                    }
 
                     await _formRepository.UpdateAsync(form[i]);
                 }
