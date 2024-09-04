@@ -155,7 +155,7 @@ namespace SharijhaAward.Persistence.Repositories
                 query = Filtration(filterObject);
             }
 
-            return query;
+            return query.Where(predicate);
         }
         public async virtual Task<IReadOnlyList<T>> GetFilterThenPagedReponseAsync(FilterObject filterObject, int page, int size)
         {

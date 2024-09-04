@@ -9,7 +9,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
         public string? ControllerName { get; set; } = null!;
         public string? lang { get; set; }
         public string? Token { get; set; }
-        public bool ShowAll { get; set; } = false;
+        public string? UserName { get; set; } 
         public int page { get; set; } = 1;
         public int perPage { get; set; } = 10;
         public List<Filter>? filters { get; set; }
