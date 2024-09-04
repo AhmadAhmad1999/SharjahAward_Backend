@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.LoggerModel;
 
 namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryByController
@@ -12,14 +14,16 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
     public class GetHistoryByControllerHandler : IRequestHandler<GetHistoryByControllerQuery, BaseResponse<List<GetHistoryByControllerListVM>>>
     {
         private readonly IAsyncRepository<LogUserAction> _LogUserActionRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IMapper _Mapper;
         private readonly IJwtProvider _JwtProvider;
 
-        public GetHistoryByControllerHandler(IAsyncRepository<LogUserAction> LogUserActionRepository,
+        public GetHistoryByControllerHandler(IAsyncRepository<UserRole> UserRoleRepository, IAsyncRepository<LogUserAction> LogUserActionRepository,
             IMapper Mapper,
             IJwtProvider JwtProvider)
         {
             _LogUserActionRepository = LogUserActionRepository;
+            _UserRoleRepository = UserRoleRepository;
             _Mapper = Mapper;
             _JwtProvider = JwtProvider;
         }
@@ -29,23 +33,23 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
         {
             FilterObject filterObject = new FilterObject() { Filters = Request.filters };
 
-            string ResponseMessage = string.Empty;
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+            var UserRoles = _UserRoleRepository.Where(u => u.UserId == UserId).Select(u => u.RoleId);
 
-            if (!string.IsNullOrEmpty(Request.ControllerName))
-            {
-                if (Request.ShowAll)
+            string ResponseMessage = string.Empty;
+            var Response = new List<GetHistoryByControllerListVM>();
+
+
+                if (UserRoles.Contains(1))
                 {
-                    List<GetHistoryByControllerListVM> Response = _LogUserActionRepository
-                        .WhereThenFilter(x => x.ControllerName.ToLower() == Request.ControllerName.ToLower(), filterObject)
-                        .AsEnumerable()
-                        .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.perPage)
-                        .Take(Request.perPage)
+                     Response = await _LogUserActionRepository
+                        .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
                         .Select(x => new GetHistoryByControllerListVM()
                         {
                             Id = x.Id,
                             Date = x.Date,
                             UserId = x.UserId,
+                            ControllerName = x.ControllerName,
                             UserName = Request.lang == "en"
                                 ? x.User!.EnglishName
                                 : x.User!.ArabicName,
@@ -58,23 +62,14 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                             Result = x.Result,
                             RecordId = (x.HttpMethod.ToLower() == "put" || x.HttpMethod.ToLower() == "delete")
                                 ? x.RecordId : null
-                        }).ToList();
+                        }).ToListAsync();
 
-                    int TotalCount = await _LogUserActionRepository
-                        .GetCountAsync(x => x.ControllerName.ToLower() == Request.ControllerName.ToLower());
-
-                    Pagination PaginationParameter = new Pagination(Request.page,
-                        Request.perPage, TotalCount);
-
-                    return new BaseResponse<List<GetHistoryByControllerListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
+                    
                 }
                 else
                 {
-                    int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
-
-                    List<GetHistoryByControllerListVM> Response = _LogUserActionRepository
-                        .WhereThenFilter(x => x.ControllerName.ToLower() == Request.ControllerName.ToLower() &&
-                            x.UserId == UserId, filterObject)
+                     Response = _LogUserActionRepository
+                        .WhereThenFilter(x => x.UserId == UserId, filterObject)
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
@@ -83,6 +78,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                             Id = x.Id,
                             Date = x.Date,
                             UserId = x.UserId,
+                            ControllerName = x.ControllerName,
                             UserName = Request.lang == "en"
                                 ? x.User!.EnglishName
                                 : x.User!.ArabicName,
@@ -97,51 +93,20 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                                 ? x.RecordId : null
                         }).ToList();
 
-                    int TotalCount = await _LogUserActionRepository.GetCountAsync(x => x.UserId == UserId &&
-                        x.ControllerName.ToLower() == Request.ControllerName.ToLower());
-
-                    Pagination PaginationParameter = new Pagination(Request.page,
-                        Request.perPage, TotalCount);
-
-                    return new BaseResponse<List<GetHistoryByControllerListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
+                    
                 }
-            }
-            else
+
+            if (!Request.UserName.IsNullOrEmpty())
             {
-                List<GetHistoryByControllerListVM> Response = _LogUserActionRepository
-                    .WhereThenFilter(x => true, filterObject)
-                    .AsEnumerable()
-                    .OrderByDescending(x => x.CreatedAt)
-                    .Skip((Request.page - 1) * Request.perPage)
-                    .Take(Request.perPage)
-                    .Select(x => new GetHistoryByControllerListVM()
-                    {
-                        Id = x.Id,
-                        Date = x.Date,
-                        UserId = x.UserId,
-                        UserName = Request.lang == "en"
-                            ? x.User!.EnglishName
-                            : x.User!.ArabicName,
-                        ActionType = x.HttpMethod.ToLower() == "post"
-                            ? ActionsTypes.Add
-                            : (x.HttpMethod.ToLower() == "put"
-                                ? ActionsTypes.Update
-                                : (x.HttpMethod.ToLower() == "delete"
-                                    ? ActionsTypes.Delete : null)),
-                        Result = x.Result,
-                        RecordId = (x.HttpMethod.ToLower() == "put" || x.HttpMethod.ToLower() == "delete")
-                            ? x.RecordId : null,
-                        ControllerName = x.ControllerName
-                    }).ToList();
-
-                int TotalCount = await _LogUserActionRepository
-                    .GetCountAsync(null);
-
-                Pagination PaginationParameter = new Pagination(Request.page,
-                    Request.perPage, TotalCount);
-
-                return new BaseResponse<List<GetHistoryByControllerListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
+                Response = Response.Where(r => r.UserName.Contains(Request.UserName!)).ToList();
             }
+
+            int TotalCount = await _LogUserActionRepository.GetCountAsync(c => c.isDeleted);
+
+            Pagination PaginationParameter = new Pagination(Request.page,
+                Request.perPage, TotalCount);
+
+            return new BaseResponse<List<GetHistoryByControllerListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
         }
     }
 }
