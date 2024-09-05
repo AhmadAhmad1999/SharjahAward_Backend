@@ -94,7 +94,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                     try
                     {
                         form.PercentCompletion = 100;
-                        form.CurrentStep = 6;
+                        form.CurrentStep = form.TotalStep;
+                        form.SubmitedAt = DateTime.Now;
 
                         await _formRepository.UpdateAsync(form);
 

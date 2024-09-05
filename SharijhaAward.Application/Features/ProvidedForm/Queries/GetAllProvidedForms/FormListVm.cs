@@ -21,6 +21,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public bool? IsAccepted { get; set; }
         //public string ReasonOfRejection { get; set; } = string.Empty;
         public int categoryId { get; set; }
+        public DateTime? SubmitedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool? SucceedToFinalArbitration { get; set; }
         public bool? needSing { get; set; }
