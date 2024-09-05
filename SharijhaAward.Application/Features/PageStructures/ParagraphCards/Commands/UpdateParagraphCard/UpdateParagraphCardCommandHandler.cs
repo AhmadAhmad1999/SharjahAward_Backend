@@ -18,12 +18,12 @@ namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Comma
     public class UpdateParagraphCardCommandHandler
         : IRequestHandler<UpdateParagraphCardCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<ParagraphCard> _paragraphCardRepository;
+        private readonly IAsyncRepository<PageCard> _paragraphCardRepository;
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public UpdateParagraphCardCommandHandler(IAsyncRepository<PageStructure> pageStructureRepository, IAsyncRepository<ParagraphCard> paragraphCardRepository, IFileService fileService, IMapper mapper)
+        public UpdateParagraphCardCommandHandler(IAsyncRepository<PageStructure> pageStructureRepository, IAsyncRepository<PageCard> paragraphCardRepository, IFileService fileService, IMapper mapper)
         {
             _paragraphCardRepository = paragraphCardRepository;
             _pageStructureRepository = pageStructureRepository;
@@ -57,7 +57,7 @@ namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Comma
                 return new BaseResponse<object>(msg, false, 404);
             }
 
-            _mapper.Map(request, ParagraphCard, typeof(UpdateParagraphCardCommand), typeof(ParagraphCard));
+            _mapper.Map(request, ParagraphCard, typeof(UpdateParagraphCardCommand), typeof(PageCard));
          
             if(request.UpdateonImage != null && request.UpdateonImage == true)
             {

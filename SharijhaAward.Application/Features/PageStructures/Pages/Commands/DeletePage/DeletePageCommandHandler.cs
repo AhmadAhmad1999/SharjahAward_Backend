@@ -22,11 +22,25 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Delet
 
         public async Task<BaseResponse<object>> Handle(DeletePageCommand request, CancellationToken cancellationToken)
         {
-            var page = await _pageStructureRepository.GetByIdAsync(request.Id);
+            string msg = "";
 
+            var page = await _pageStructureRepository.GetByIdAsync(request.Id);
+            
             if(page == null)
             {
-                return new BaseResponse<object>("", false, 404);
+                msg = request.lang == "en"
+                    ? "Page not Found"
+                    : "الصفحة غير موجودة";
+
+                return new BaseResponse<object>(msg, false, 404);
+            }
+            if (!page.Deletable)
+            {
+                msg = request.lang == "en"
+                    ? "You Can't Delete This Page"
+                    : "لا يمكنك حذف هذه الصفحة";
+
+                return new BaseResponse<object>(msg, true, 400);
             }
 
             await _pageStructureRepository.DeleteAsync(page);

@@ -14,10 +14,10 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Queries.Ge
     public class GetTextCardByIdQueryHandler
         : IRequestHandler<GetTextCardByIdQuery, BaseResponse<TextCardDto>>
     {
-        private readonly IAsyncRepository<TextCard> _textCardRepository;
+        private readonly IAsyncRepository<PageCard> _textCardRepository;
         private readonly IMapper _mapper;
 
-        public GetTextCardByIdQueryHandler(IAsyncRepository<TextCard> textCardRepository, IMapper mapper)
+        public GetTextCardByIdQueryHandler(IAsyncRepository<PageCard> textCardRepository, IMapper mapper)
         {
             _textCardRepository = textCardRepository;
             _mapper = mapper;

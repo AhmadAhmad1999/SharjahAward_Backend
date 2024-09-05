@@ -15,6 +15,7 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.C
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishContent { get; set; } = string.Empty;
         public string ArabicContent { get; set; } = string.Empty;
+        public bool IsHide { get; set; }
         public int PageId { get; set; }
         public string? lang {  get; set; }
     }

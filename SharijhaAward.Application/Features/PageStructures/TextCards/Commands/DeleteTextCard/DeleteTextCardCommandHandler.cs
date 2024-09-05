@@ -13,9 +13,9 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Commands.D
     public class DeleteTextCardCommandHandler
         : IRequestHandler<DeleteTextCardCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<TextCard> _textCardRepository;
+        private readonly IAsyncRepository<PageCard> _textCardRepository;
 
-        public DeleteTextCardCommandHandler(IAsyncRepository<TextCard> textCardRepository)
+        public DeleteTextCardCommandHandler(IAsyncRepository<PageCard> textCardRepository)
         {
             _textCardRepository = textCardRepository;
         }

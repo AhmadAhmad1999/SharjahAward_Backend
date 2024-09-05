@@ -39,7 +39,6 @@ namespace SharijhaAward.Application.Features.SocialMediaPage.Commands.CreateSoci
             {
                 item.LogoUrl = await _fileService.SaveFileAsync(request.Logo, SystemFileType.Icons);
             }
-            item.ThumbnailUrl = await _fileService.SaveFileAsync(request.Thumbnail, 0);
 
             await _socialMediaRepository.AddAsync(item);
 

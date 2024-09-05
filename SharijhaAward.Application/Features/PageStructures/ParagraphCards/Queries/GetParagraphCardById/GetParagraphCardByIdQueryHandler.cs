@@ -15,10 +15,10 @@ namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queri
     public class GetParagraphCardByIdQueryHandler
         : IRequestHandler<GetParagraphCardByIdQuery, BaseResponse<ParagraphCardDto>>
     {
-        private readonly IAsyncRepository<ParagraphCard> _paragraphCardRepository;
+        private readonly IAsyncRepository<PageCard> _paragraphCardRepository;
         private readonly IMapper _mapper;
 
-        public GetParagraphCardByIdQueryHandler(IAsyncRepository<ParagraphCard> paragraphCardRepository, IMapper mapper)
+        public GetParagraphCardByIdQueryHandler(IAsyncRepository<PageCard> paragraphCardRepository, IMapper mapper)
         {
             _paragraphCardRepository = paragraphCardRepository;
             _mapper = mapper;

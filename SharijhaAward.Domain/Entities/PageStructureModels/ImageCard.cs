@@ -13,6 +13,8 @@ namespace SharijhaAward.Domain.Entities.PageStructureModels
     {
         public int Id { get; set; }
         public int orderId { get; set; }
+        public bool IsHide { get; set; }
+        public List<PageStructureImages> Images { get; set; } = null!;
         public PageStructure PageStructure { get; set; } = null!;
 
         [ForeignKey(nameof(PageStructure))]

@@ -2446,6 +2446,9 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<int?>("MessageId")
                         .HasColumnType("int");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("Status")
                         .HasColumnType("int");
 
@@ -6148,6 +6151,9 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Deletable")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
@@ -6163,6 +6169,9 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.Property<string>("IconUrl")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsHide")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
@@ -6196,61 +6205,6 @@ namespace SharijhaAward.Persistence.Migrations
                     b.ToTable("PageStructures");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.DarkCard", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ArabicContent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ArabicTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EnglishContent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EnglishTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PageId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("orderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PageId");
-
-                    b.ToTable("DarkCards");
-                });
-
             modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.ImageCard", b =>
                 {
                     b.Property<int>("Id")
@@ -6267,6 +6221,9 @@ namespace SharijhaAward.Persistence.Migrations
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsHide")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
@@ -6288,6 +6245,66 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasIndex("PageId");
 
                     b.ToTable("ImageCards");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.PageCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ArabicContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("ImageInStart")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsHide")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PageId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("orderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PageId");
+
+                    b.ToTable("PageCards");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.PageStructureImages", b =>
@@ -6328,112 +6345,6 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasIndex("ImageCardId");
 
                     b.ToTable("PageStructureImages");
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.ParagraphCard", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ArabicContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ArabicTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EnglishContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EnglishTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("ImageInStart")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PageId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("orderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PageId");
-
-                    b.ToTable("ParagraphCards");
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.TextCard", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ArabicContent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EnglishContent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PageStructureId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("orderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PageStructureId");
-
-                    b.ToTable("TextCards");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", b =>
@@ -6863,7 +6774,8 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<string>("LogoUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ThumbnailUrl")
+                    b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")
@@ -8502,7 +8414,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("pageStructure");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.DarkCard", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.ImageCard", b =>
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.PageStructureModel.PageStructure", "PageStructure")
                         .WithMany()
@@ -8513,7 +8425,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Navigation("PageStructure");
                 });
 
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.ImageCard", b =>
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.PageCard", b =>
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.PageStructureModel.PageStructure", "PageStructure")
                         .WithMany()

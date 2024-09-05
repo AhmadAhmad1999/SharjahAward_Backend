@@ -13,5 +13,6 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public int numberOfSubPages { get; set; }
+        public bool IsHide { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queri
         public string? ArabicContent { get; set; } = string.Empty;
         public string? ImageUrl { get; set; } = string.Empty;
         public bool? ImageInStart { get; set; }
+        public bool IsHide { get; set; }
         public int orderId { get; set; }
         public int PageId { get; set; }
     }

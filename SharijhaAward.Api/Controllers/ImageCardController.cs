@@ -6,6 +6,7 @@ using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.Crea
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.DeleteImageCard;
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.UpdateImageCard;
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetAllImageCards;
+using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetAllImageCardsDashboard;
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetImageCardById;
 
 namespace SharijhaAward.Api.Controllers
@@ -113,6 +114,33 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 Id = Id
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetAllImageCardDashboard/{pageId}", Name = "GetAllImageCardDashboard")]
+        public async Task<IActionResult> GetAllImageCardDashboard(int? pageId, int page = 1, int perPage = 10)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            var token = HttpContext.Request.Headers.Authorization;
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+
+            var response = await _mediator.Send(new GetAllImageCardsDashboardQuery()
+            {
+                pageId = pageId,
+                page = page,
+                perPage = perPage,
+
             });
 
             return response.statusCode switch

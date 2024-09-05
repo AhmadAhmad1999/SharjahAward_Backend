@@ -15,11 +15,11 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.U
     public class UpdateDarkCardCommandHandler
         : IRequestHandler<UpdateDarkCardCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<DarkCard> _darkCardRepository;
+        private readonly IAsyncRepository<PageCard> _darkCardRepository;
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
         private readonly IMapper _mapper;
 
-        public UpdateDarkCardCommandHandler(IAsyncRepository<DarkCard> darkCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
+        public UpdateDarkCardCommandHandler(IAsyncRepository<PageCard> darkCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
         {
             _darkCardRepository = darkCardRepository;
             _pageStructureRepository = pageStructureRepository;
@@ -52,7 +52,7 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.U
                 return new BaseResponse<object>(msg, false, 404);
             }
 
-            _mapper.Map(request, darkCard, typeof(UpdateDarkCardCommand), typeof(DarkCard));
+            _mapper.Map(request, darkCard, typeof(UpdateDarkCardCommand), typeof(PageCard));
 
             await _darkCardRepository.UpdateAsync(darkCard);
 

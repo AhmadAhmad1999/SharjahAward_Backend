@@ -13,6 +13,7 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Commands.C
         public string EnglishContent { get; set; } = string.Empty;
         public string ArabicContent { get; set; } = string.Empty;
         public int orderId { get; set; }
+        public bool IsHide { get; set; }
         public int PageStructureId { get; set; }
         public string? lang { get; set; }
     }

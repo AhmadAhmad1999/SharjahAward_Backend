@@ -13,6 +13,7 @@ namespace SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.
     {
         public int orderId { get; set; }
         public int PageId { get; set; }
+        public bool IsHide { get; set; }
         public string? lang { get; set; }
         public List<IFormFile> CardImages { get; set; } = null!;
     }

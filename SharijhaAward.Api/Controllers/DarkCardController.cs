@@ -12,6 +12,7 @@ using SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.Updat
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsByPageId;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetDarkCardById;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsDashboard;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -108,6 +109,25 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 Id = Id
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetAllDarkCardDashboard/{PageId}", Name = "GetAllDarkCardDashboard")]
+        public async Task<IActionResult> GetAllDarkCardDashboard(int PageId)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetAllDarkCardsDashboardQuery()
+            {
+                PageId = PageId,
+                lang = language!
             });
 
             return response.statusCode switch

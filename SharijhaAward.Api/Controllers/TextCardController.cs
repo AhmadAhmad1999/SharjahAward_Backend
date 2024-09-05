@@ -6,6 +6,7 @@ using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.Creat
 using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.DeleteTextCard;
 using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.UpdateTextCard;
 using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetAllTextCard;
+using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetAllTextCardDashborad;
 using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetTextCardById;
 
 namespace SharijhaAward.Api.Controllers
@@ -112,6 +113,33 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 Id = Id
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetAllTextCardDashboard/{pageId}", Name = "GetAllTextCardDashboard")]
+        public async Task<IActionResult> GetAllTextCardDashboard(int? pageId, int page = 1, int perPage = 10)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            var token = HttpContext.Request.Headers.Authorization;
+            if (token.IsNullOrEmpty())
+            {
+                return Unauthorized();
+            }
+
+            var response = await _mediator.Send(new GetAllTextCardDashboradQuery()
+            {
+                pageId = pageId,
+                page = page,
+                perPage = perPage,
+
             });
 
             return response.statusCode switch

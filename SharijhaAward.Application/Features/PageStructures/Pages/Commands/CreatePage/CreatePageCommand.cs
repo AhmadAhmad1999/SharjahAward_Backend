@@ -20,9 +20,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
         public string? EnglishContent { get; set; }
         public string? ArabicContent { get; set; }
         public string? Slug { get; set; }
+        public bool IsHide { get; set; }
         public int? ParentId { get; set; }
-
-
         public string? lang { get; set; }
     }
 }

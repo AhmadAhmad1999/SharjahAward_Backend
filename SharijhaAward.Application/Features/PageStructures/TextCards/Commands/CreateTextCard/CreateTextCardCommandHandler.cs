@@ -15,11 +15,11 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Commands.C
     public class CreateTextCardCommandHandler
         : IRequestHandler<CreateTextCardCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<TextCard> _textCardRepository;
+        private readonly IAsyncRepository<PageCard> _textCardRepository;
         private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
         private readonly IMapper _mapper;
 
-        public CreateTextCardCommandHandler(IAsyncRepository<TextCard> textCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
+        public CreateTextCardCommandHandler(IAsyncRepository<PageCard> textCardRepository, IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
         {
             _textCardRepository = textCardRepository;
             _pageStructureRepository = pageStructureRepository;
@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Commands.C
                 return new BaseResponse<object>(msg, false, 400);
             }
 
-            var textCard = _mapper.Map<TextCard>(request);
+            var textCard = _mapper.Map<PageCard>(request);
 
             await _textCardRepository.AddAsync(textCard);
 
