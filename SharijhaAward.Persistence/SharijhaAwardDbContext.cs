@@ -1146,18 +1146,11 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<DarkCard>()
+            modelBuilder.Entity<PageCard>()
                 .Navigation(p => p.PageStructure)
                 .AutoInclude();
 
-            modelBuilder.Entity<DarkCard>().HasQueryFilter(p => !p.isDeleted &&
-                (p.PageStructure != null ? !p.PageStructure.isDeleted : true));
-
-            modelBuilder.Entity<ParagraphCard>()
-                .Navigation(p => p.PageStructure)
-                .AutoInclude();
-
-            modelBuilder.Entity<ParagraphCard>().HasQueryFilter(p => !p.isDeleted &&
+            modelBuilder.Entity<PageCard>().HasQueryFilter(p => !p.isDeleted &&
                 (p.PageStructure != null ? !p.PageStructure.isDeleted : true));
 
             modelBuilder.Entity<AwardSponsor>().HasQueryFilter(p => !p.isDeleted);
@@ -1268,13 +1261,6 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => !p.isDeleted &&
                 (p.Circular != null ? !p.Circular.isDeleted : true) &&
                 (p.Chairman != null ? !p.Chairman.isDeleted : true));
-
-            modelBuilder.Entity<TextCard>()
-                .Navigation(p => p.PageStructure)
-                .AutoInclude();
-
-            modelBuilder.Entity<TextCard>().HasQueryFilter(p => !p.isDeleted &&
-                (p.PageStructure != null ? !p.PageStructure.isDeleted : true));
 
             modelBuilder.Entity<ImageCard>()
                 .Navigation(p => p.PageStructure)
