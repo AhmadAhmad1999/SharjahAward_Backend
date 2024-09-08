@@ -116,10 +116,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("ProvidedForms/CategoryEducationalEntityId")] // Done
             CategoryEducationalEntities,
 
-            [Description("ProvidedForms/CategoryEducationalClassId")] // Done
+            [Description("ProvidedForms/CategoryEducationalClassId ArbitratorClasses/CategoryEducationalClassId")] // Done
             CategoryEducationalClass,
 
-            [Description("ProvidedForms/CategoryEducationalClassId")] // Done
+            [Description("ProvidedForms/CategoryEducationalClassId ArbitratorClasses/CategoryEducationalClassId")] // Done
             CategoryEducationalClasses,
 
             [Description("")] // Done
@@ -399,10 +399,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             ComitteesArbitrators,
 
-            [Description("CategoryEducationalClasses/EducationalClassId ArbitratorClasses/EducationalClassId")] // Done
+            [Description("CategoryEducationalClasses/EducationalClassId")] // Done
             EducationalClass,
 
-            [Description("CategoryEducationalClasses/EducationalClassId ArbitratorClasses/EducationalClassId")] // Done
+            [Description("CategoryEducationalClasses/EducationalClassId")] // Done
             EducationalClasses,
 
             [Description("FinalArbitrations/ArbitratorId Committees/ChairmanId ComitteesArbitrators/ArbitratorId CircularChairmans/ChairmanId " +

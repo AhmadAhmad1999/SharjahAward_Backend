@@ -182,7 +182,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteArbitratorClass(int ArbitratorId, int EducationalClassId)
+        public async Task<IActionResult> DeleteArbitratorClass(int ArbitratorId, int CategoryEducationalClassId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -192,7 +192,7 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<object>? Response = await _Mediator.Send(new DeleteArbitratorClassCommand()
             {
                 ArbitratorId = ArbitratorId,
-                EducationalClassId = EducationalClassId,
+                CategoryEducationalClassId = CategoryEducationalClassId,
                 lang = HeaderValue!
             });
 

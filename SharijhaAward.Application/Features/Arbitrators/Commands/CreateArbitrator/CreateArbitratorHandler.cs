@@ -24,8 +24,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
-        private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;    
-        private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
+        private readonly IAsyncRepository<ResponsibilityUser> _ResponsibilityUserRepository;    
+        private readonly IAsyncRepository<Responsibility> _ResponsibilityRepository;
 
         public CreateArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
@@ -34,8 +34,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             IMapper Mapper, 
             IAsyncRepository<ArbitratorClass> ArbitratorClassRepository,
             IAsyncRepository<UserRole> UserRoleRepository,
-            IAsyncRepository<ResponsibilityUser> responsibilityUserRepository,
-            IAsyncRepository<Responsibility> responsibilityRepository)
+            IAsyncRepository<ResponsibilityUser> ResponsibilityUserRepository,
+            IAsyncRepository<Responsibility> ResponsibilityRepository)
         {
             _ArbitratorRepository = ArbitratorRepository;
             _CategoryArbitratorRepository = CategoryArbitratorRepository;
@@ -44,8 +44,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             _Mapper = Mapper;
             _ArbitratorClassRepository = ArbitratorClassRepository;
             _UserRoleRepository = UserRoleRepository;
-            _responsibilityUserRepository = responsibilityUserRepository;
-            _responsibilityRepository = responsibilityRepository;
+            _ResponsibilityUserRepository = ResponsibilityUserRepository;
+            _ResponsibilityRepository = ResponsibilityRepository;
         }
 
         public async Task<BaseResponse<int>> Handle(CreateArbitratorCommand Request, CancellationToken cancellationToken)
@@ -142,29 +142,24 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 
                     await _ArbitratorRepository.AddAsync(NewArbitratorEntity);
 
-                    var Responsibilities = await _responsibilityRepository
+                    List<Responsibility> ResponsibilitiesEntities = await _ResponsibilityRepository
                          .Where(r => r.RoleId == Role.Id)
                          .ToListAsync();
 
-
-                    var userResponsibilities = await _responsibilityUserRepository
-                        .Where(r => r.UserId == NewUserEntity.Id)
-                        .Select(r => r.ResponsibilityId)
-                        .ToListAsync();
-
-                    foreach(var Responsibility in Responsibilities)
+                    if (ResponsibilitiesEntities.Any())
                     {
-                        if (!userResponsibilities.Contains(Responsibility.Id))
-                        {
-                            var ResponsibilityUser = new ResponsibilityUser()
+                        List<ResponsibilityUser> ResponsibilityUserEntities = await _ResponsibilityUserRepository
+                            .Where(r => r.UserId == NewUserEntity.Id &&
+                                !ResponsibilitiesEntities.Select(y => y.Id).Contains(r.ResponsibilityId))
+                            .Select(r => new ResponsibilityUser()
                             {
                                 IsAccept = false,
                                 UserId = NewUserEntity.Id,
-                                ResponsibilityId = Responsibility.Id
-                            };
+                                ResponsibilityId = r.ResponsibilityId
+                            }).ToListAsync();
 
-                            await _responsibilityUserRepository.AddAsync(ResponsibilityUser);
-                        }
+                        if (ResponsibilityUserEntities.Any())
+                            await _ResponsibilityUserRepository.AddRangeAsync(ResponsibilityUserEntities);
                     }
 
                     List<CategoryArbitrator> ListOfCategoriesArbitrators = Request.Categories
@@ -182,7 +177,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 
                     await _CategoryArbitratorRepository.AddRangeAsync(ListOfCategoriesArbitrators);
 
-                    IEnumerable<ArbitratorClass> ArbitratorClassesEntities = Request.ArbitratorClasses
+                    IEnumerable<ArbitratorClass> ArbitratorClassesEntities = Request.ArbitratorCateogryClasses
                         .Select(x => new ArbitratorClass()
                         {
                             CreatedAt = DateTime.UtcNow,
@@ -191,7 +186,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                             isDeleted = false,
                             LastModifiedAt = null,
                             LastModifiedBy = null,
-                            EducationalClassId = x,
+                            CategoryEducationalClassId = x,
                             ArbitratorId = NewArbitratorEntity.Id
                         });
 

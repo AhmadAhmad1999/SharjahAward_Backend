@@ -24,6 +24,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }
         public List<int> Categories { get; set; } = new List<int>();
-        public List<int> ArbitratorClasses { get; set; } = new List<int>();
+        public List<int> ArbitratorCategoryClasses { get; set; } = new List<int>();
     }
 }

@@ -552,7 +552,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<PermissionHeader>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ArbitratorClass>()
-                .Navigation(p => p.EducationalClass)
+                .Navigation(p => p.CategoryEducationalClass)
                 .AutoInclude();
 
             modelBuilder.Entity<ArbitratorClass>()
