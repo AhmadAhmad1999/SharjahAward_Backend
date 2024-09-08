@@ -34,7 +34,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "منسق 1",
                     Email = "Coordinator@Coordinator.com",
                     EnglishName = "Coordinator 1",
-                    PhoneNumber = "0993521579"
+                    PhoneNumber = "009710512345678"
                 }, new Coordinator()
                 {
                     isDeleted = false,
@@ -47,7 +47,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "منسق 2",
                     Email = "Coordinator2@Coordinator2.com",
                     EnglishName = "Coordinator 2",
-                    PhoneNumber = "0993521579"
+                    PhoneNumber = "009710585469325"
                 }, new Coordinator()
                 {
                     isDeleted = false,
@@ -60,7 +60,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "منسق 3",
                     Email = "Coordinator3@Coordinator3.com",
                     EnglishName = "Coordinator 3",
-                    PhoneNumber = "0993521579"
+                    PhoneNumber = "009710598563247"
                 }, new Coordinator()
                 {
                     isDeleted = false,
@@ -73,7 +73,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "منسق 4",
                     Email = "Coordinator4@Coordinator4.com",
                     EnglishName = "Coordinator 4",
-                    PhoneNumber = "0993521579"
+                    PhoneNumber = "009710574596825"
                 });
                 _context.SaveChanges();
             }
