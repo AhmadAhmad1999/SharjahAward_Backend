@@ -255,6 +255,38 @@ namespace SharijhaAward.Persistence
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                // Check if the entity inherits from AuditableEntity
+                if (typeof(AuditableEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    // Configure the 'isDeleted' property to have a default value of false
+                    modelBuilder.Entity(entityType.ClrType)
+                        .Property(nameof(AuditableEntity.isDeleted))
+                        .HasDefaultValue(false);
+
+                    modelBuilder.Entity(entityType.ClrType)
+                        .Property(nameof(AuditableEntity.DeletedAt))
+                        .HasDefaultValue(null);
+
+                    modelBuilder.Entity(entityType.ClrType)
+                        .Property(nameof(AuditableEntity.CreatedBy))
+                        .HasDefaultValue(null);
+
+                    modelBuilder.Entity(entityType.ClrType)
+                        .Property(nameof(AuditableEntity.CreatedAt))
+                        .HasDefaultValue(DateTime.UtcNow);
+
+                    modelBuilder.Entity(entityType.ClrType)
+                        .Property(nameof(AuditableEntity.LastModifiedBy))
+                        .HasDefaultValue(null);
+
+                    modelBuilder.Entity(entityType.ClrType)
+                        .Property(nameof(AuditableEntity.LastModifiedAt))
+                        .HasDefaultValue(null);
+                }
+            }
+
             base.OnModelCreating(modelBuilder);
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))

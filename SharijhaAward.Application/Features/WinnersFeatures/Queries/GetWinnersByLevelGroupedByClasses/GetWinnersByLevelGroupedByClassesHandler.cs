@@ -5,6 +5,7 @@ using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersByLev
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
+using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.EducationalClassModel;
@@ -21,13 +22,15 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<ArbitrationAudit> _ArbitrationAuditRepository;
+        private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
 
         public GetWinnersByLevelGroupedByClassesHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
             IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
             IAsyncRepository<Category> CategoryRepository,
-            IAsyncRepository<ArbitrationAudit> ArbitrationAuditRepository)
+            IAsyncRepository<ArbitrationAudit> ArbitrationAuditRepository,
+            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
@@ -35,6 +38,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _CategoryRepository = CategoryRepository;
             _ArbitrationAuditRepository = ArbitrationAuditRepository;
+            _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
         }
 
         public async Task<BaseResponse<List<GetWinnersByLevelGroupedByClassesListVM>>>
@@ -57,8 +61,12 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
             if (Request.MaxLevelOfWinners == 0 && CategoryEntity.ExpectedNumberOfWinners != null)
                 Request.MaxLevelOfWinners = CategoryEntity.ExpectedNumberOfWinners.Value;
 
+            List<CategoryEducationalClass> CategoryEducationalClassEntities = await _CategoryEducationalClassRepository
+                .Where(x => x.CategoryId == Request.CategoryId)
+                .ToListAsync();
+
             List<IGrouping<EducationalClass, ArbitrationResult>> ArbitrationResultEntitiesForAllClasses = _ArbitrationResultRepository
-                .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId &&
+                .Where(x => CategoryEducationalClassEntities.Select(y => y.CategoryId).Contains(x.ProvidedForm!.categoryId) &&
                     x.EligibleToWin && x.ProvidedForm!.CategoryEducationalClassId != null)
                 .OrderByDescending(x => x.FinalArbitration!.FinalScore)
                 .AsEnumerable()
@@ -330,6 +338,20 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     }
                 });
             }
+
+            List<CategoryEducationalClass> RemainigClassWithNoWinners = CategoryEducationalClassEntities
+                .Where(x => !Response.Select(y => y.ClassId).Contains(x.EducationalClassId))
+                .ToList();
+
+            Response.AddRange(RemainigClassWithNoWinners
+                .Select(x => new GetWinnersByLevelGroupedByClassesListVM()
+                {
+                    ClassId = x.EducationalClassId,
+                    ClassName = Request.lang == "en"
+                        ? x.EducationalClass!.EnglishName
+                        : x.EducationalClass!.ArabicName,
+                    GetWinnersByLevelMainResponse = new GetWinnersByLevelMainResponse()
+                }));
 
             return new BaseResponse<List<GetWinnersByLevelGroupedByClassesListVM>>(ResponseMessage, true, 200, Response);
         }
