@@ -100,6 +100,7 @@ namespace SharijhaAward.Persistence
             _Mapper = Mapper;
         }
 
+        public DbSet<SwitchArbitration> SwitchArbitrations { get; set; }
         public DbSet<ViewWhenRelation> ViewWhenRelations { get; set; }
         public DbSet<ArbitrationResult> ArbitrationResults { get; set; }
         public DbSet<CategoryEducationalEntity> CategoryEducationalEntities { get; set; }
@@ -376,6 +377,16 @@ namespace SharijhaAward.Persistence
                 .AutoInclude();
 
             modelBuilder.Entity<ArbitrationResult>().HasQueryFilter(p => !p.isDeleted);
+
+            modelBuilder.Entity<SwitchArbitration>()
+                .Navigation(p => p.OldArbitrator)
+                .AutoInclude();
+
+            modelBuilder.Entity<SwitchArbitration>()
+                .Navigation(p => p.NewArbitrator)
+                .AutoInclude();
+
+            modelBuilder.Entity<SwitchArbitration>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ViewWhenRelation>()
                 .Navigation(p => p.DynamicAttributeSection)

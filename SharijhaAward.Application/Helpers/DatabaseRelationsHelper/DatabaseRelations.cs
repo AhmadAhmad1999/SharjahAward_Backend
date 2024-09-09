@@ -63,13 +63,15 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("Arbitrations/ProvidedFormId ArbitrationAudits/ProvidedFormId ArbitrationResults/ProvidedFormId " + // Done
                 "ArbitratorForms/ProvidedFormId ConditionsProvidedForms/ProvidedFormId CoordinatorForms/ProvidedFormId " + // Done
                 "FinalArbitrations/ProvidedFormId ExtraAttachments/ProvidedFormId CycleConditionsProvidedForms/ProvidedFormId " + // Done
-                "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId DynamicAttributeValues/RecordId/ProvidedForm")] // Done
+                "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId DynamicAttributeValues/RecordId/ProvidedForm " +
+                "SwitchArbitrations/ProvidedFormId")] // Done
             ProvidedForm,
 
             [Description("Arbitrations/ProvidedFormId ArbitrationAudits/ProvidedFormId ArbitrationResults/ProvidedFormId " + // Done
                 "ArbitratorForms/ProvidedFormId ConditionsProvidedForms/ProvidedFormId CoordinatorForms/ProvidedFormId " + // Done
                 "FinalArbitrations/ProvidedFormId ExtraAttachments/ProvidedFormId CycleConditionsProvidedForms/ProvidedFormId " + // Done
-                "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId DynamicAttributeValues/RecordId/ProvidedForm")] // Done
+                "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId DynamicAttributeValues/RecordId/ProvidedForm " +
+                "SwitchArbitrations/ProvidedFormId")] // Done
             ProvidedForms,
 
             [Description("")] // Done
@@ -407,12 +409,14 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
 
             [Description("FinalArbitrations/ArbitratorId Committees/ChairmanId ComitteesArbitrators/ArbitratorId CircularChairmans/ChairmanId " +
                 "CircularArbitrators/ArbitratorId CategoriesArbitrators/ArbitratorId ArbitratorForms/ArbitratorId " +
-                "ArbitratorClasses/ArbitratorId Arbitrations/ArbitratorId Users/Id DynamicAttributeValues/RecordId/Arbitrator")] // Done
+                "ArbitratorClasses/ArbitratorId Arbitrations/ArbitratorId Users/Id DynamicAttributeValues/RecordId/Arbitrator " +
+                "SwitchArbitrations/OldArbitratorId SwitchArbitrations/NewArbitratorId")] // Done
             Arbitrator,
 
             [Description("FinalArbitrations/ArbitratorId Committees/ChairmanId ComitteesArbitrators/ArbitratorId CircularChairmans/ChairmanId " +
                 "CircularArbitrators/ArbitratorId CategoriesArbitrators/ArbitratorId ArbitratorForms/ArbitratorId " +
-                "ArbitratorClasses/ArbitratorId Arbitrations/ArbitratorId Users/Id DynamicAttributeValues/RecordId/Arbitrator")] // Done
+                "ArbitratorClasses/ArbitratorId Arbitrations/ArbitratorId Users/Id DynamicAttributeValues/RecordId/Arbitrator " +
+                "SwitchArbitrations/OldArbitratorId SwitchArbitrations/NewArbitratorId")] // Done
             Arbitrators,
 
             [Description("")] // Done
@@ -757,7 +761,13 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             OnePageText,
 
             [Description("NewsImages/NewsId")] // Done
-            News
+            News,
+
+            [Description("")] // Done
+            SwitchArbitration,
+
+            [Description("")] // Done
+            SwitchArbitrations
         }
         public static string GetEnumDescription(Enum value)
         {
