@@ -38,7 +38,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
         public int? ExpectedNumberOfWinners { get; set; }
         public List<CreateCategoryEducationalClassDto>? EducationalClasses { get; set; }
         public bool? RelatedToEducationalEntities { get; set; }
-        public List<int>? EducationalEntityIds { get; set; }
         public string lang { get; set; } = string.Empty;
     }
 }

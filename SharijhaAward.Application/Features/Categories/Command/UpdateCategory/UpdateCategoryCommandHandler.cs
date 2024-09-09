@@ -9,6 +9,7 @@ using SharijhaAward.Domain.Constants.DynamicAttribute;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
@@ -23,12 +24,14 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
         private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
+        private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
 
         public UpdateCategoryCommandHandler(IAsyncRepository<Category> categoryRepository, IMapper mapper, IFileService fileService,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
-            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository)
+            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository,
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository)
         {
             _categoryRepository = categoryRepository;
             _fileService = fileService;
@@ -37,12 +40,44 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
+            _EducationalEntityRepository = EducationalEntityRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var categoryToUpdate = await _categoryRepository.GetByIdAsync(request.Id);
             string msg;
+
+            if (request.RelatedToClasses == null && (request.EducationalClasses != null ? request.EducationalClasses.Any() : false))
+            {
+                msg = request.lang == "en"
+                    ? "If you select the \"is related to classes\" flag's value as \"null\" then " +
+                        "you can't select classes for this category"
+                    : "إذا قمت بتحديد قيمة المعلومة \"مرتبط بالصفوف\" على أنها \"بدون قيمة\" فلن تتمكن من تحديد الصفوف لهذه الفئة";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
+            else if ((request.RelatedToClasses != null ? request.RelatedToClasses.Value : false) &&
+                (request.EducationalClasses == null ? true : !request.EducationalClasses.Any()))
+            {
+                msg = request.lang == "en"
+                    ? "If you select the \"is related to classes\" flag's value as \"true\" then " +
+                        "you have to select classes for this category"
+                    : "إذا قمت بتحديد قيمة المعلومة \"مرتبط بالصفوف\" على أنها \"صحيح\"، فيجب عليك تحديد الصفوف لهذه الفئة";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
+            else if ((request.RelatedToClasses != null ? !request.RelatedToClasses.Value : false) &&
+                    (request.EducationalClasses != null ? request.EducationalClasses.Any() : false))
+            {
+                msg = request.lang == "en"
+                    ? "If you select the \"is related to classes\" flag's value as \"false\" then " +
+                        "you can't select classes for this category"
+                    : "إذا قمت بتحديد قيمة المعلومة \"مرتبط بالصفوف\" على أنها \"خطأ\"، فلن تتمكن من تحديد الصفوف لهذه الفئة";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
+
             if (categoryToUpdate == null)
             {
                 msg = request.lang == "en"
@@ -277,15 +312,21 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                         }
                     }
 
-                    if (request.EducationalEntityIds is not null)
+                    if (request.RelatedToEducationalEntities is not null &&
+                        request.RelatedToEducationalEntities.Value)
                     {
+                        List<int> EducationalEntityEntitiesIds = await _EducationalEntityRepository
+                            .Where(x => true)
+                            .Select(x => x.Id)
+                            .ToListAsync();
+
                         List<int> AlreadyExistEducationalEntityIds = await _CategoryEducationalEntityRepository
                             .Where(x => x.CategoryId == request.Id)
                             .Select(x => x.EducationalEntityId)
                             .ToListAsync();
 
                         List<int> IntersectEducationalEntityIds = AlreadyExistEducationalEntityIds
-                            .Intersect(request.EducationalEntityIds!).ToList();
+                            .Intersect(EducationalEntityEntitiesIds).ToList();
 
                         List<int> DeleteEducationalEntityIds = AlreadyExistEducationalEntityIds
                             .Where(x => !IntersectEducationalEntityIds.Contains(x))
@@ -313,7 +354,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                                 await _DynamicAttributeListValueRepository.DeleteListAsync(DeleteEntityesValues);
                         }
 
-                        List<CategoryEducationalEntity> NewCategoryEducationalEntityEntities = request.EducationalEntityIds
+                        List<CategoryEducationalEntity> NewCategoryEducationalEntityEntities = EducationalEntityEntitiesIds
                             .Where(x => !IntersectEducationalEntityIds.Contains(x))
                             .Select(x => new CategoryEducationalEntity()
                             {
