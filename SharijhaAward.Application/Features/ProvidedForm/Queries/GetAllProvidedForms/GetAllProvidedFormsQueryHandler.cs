@@ -140,67 +140,89 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
                     ? Category.EnglishName
                     : Category.ArabicName;
 
-                data[i].RejectedSteps = new List<int>();
+                if (form[i].RejectedSteps == null)
+                {
+                    form[i].RejectedSteps = data[i].RejectedSteps;
+                }
+
+                data[i].RejectedSteps!.Clear();
 
                 var cycleConditions = AllCycleConditionAttachmentEntities
                     .Where(c => c.CycleConditionsProvidedForm.ProvidedFormId == form[i].Id)
                     .ToList();
 
-                if (cycleConditions.Any())
+                if (cycleConditions.Any() && !data[i].RejectedSteps!.Contains(1))
                     data[i].RejectedSteps!.Add(1);
 
                 var TermAndConditions = AllConditionAttachmentEntities
                                 .Where(c => c.ConditionsProvidedForms!.ProvidedFormId == form[i].Id)
                                 .ToList();
 
-                if (TermAndConditions.Any())
+                if (TermAndConditions.Any() && !data[i].RejectedSteps!.Contains(3))
                     data[i].RejectedSteps!.Add(3);
 
                 var ExtraAttachments = AllExtraAttachmentFileEntities
                     .Where(e => e.ExtraAttachment!.ProvidedFormId == form[i].Id)
                     .ToList();
 
-                if (ExtraAttachments.Any())
+                if (ExtraAttachments.Any() && !data[i].RejectedSteps!.Contains(6))
                     data[i].RejectedSteps!.Add(6);
 
                 bool CheckIfThereIsRejectedDynamicFields = AllDynamicAttributeValueEntities
                     .Any(x => x.RecordId == data[i].Id);
 
-                if (CheckIfThereIsRejectedDynamicFields)
+                if (CheckIfThereIsRejectedDynamicFields && !data[i].RejectedSteps!.Contains(4))
                     data[i].RejectedSteps!.Add(4);
 
                 bool CriterionAttachment = AllCriterionAttachmentEntities
                     .Any(x => x.ProvidedFormId == data[i].Id);
 
-                if (CriterionAttachment)
+                if (CriterionAttachment && !data[i].RejectedSteps!.Contains(5))
                     data[i].RejectedSteps!.Add(5);
 
                 bool CriterionItemAttachment = AllCriterionItemAttachmentEntities
                     .Any(x => x.ProvidedFormId == data[i].Id);
 
-                if (CriterionItemAttachment)
+                if (CriterionItemAttachment && !data[i].RejectedSteps!.Contains(5))
                     data[i].RejectedSteps!.Add(5);
 
-                if (data[i].RejectedSteps!.Count() > 0)
+                if (data[i].RejectedSteps!.Count() == 0)
+                {
+                    form[i].RejectedSteps!.Clear();
+                    data[i].RejectedSteps!.Clear();
+
+                    await _formRepository.UpdateAsync(form[i]);
+                }
+
+                if (data[i].RejectedSteps!.Count() != form[i].RejectedSteps!.Count())
                 {
                     int percent = 15 * data[i].RejectedSteps!.Count();
 
+                    //data[i].RejectedSteps = rejectedSteps!;
+                    form[i].RejectedSteps = data[i].RejectedSteps!;
+
                     form[i].needSing = true;
+                    data[i].needSing = true;
+
                     if (form[i].PercentCompletion > percent)
                     {
                         form[i].PercentCompletion = form[i].PercentCompletion - percent;
 
-                        data[i].PercentCompletion = form[i].PercentCompletion - percent;
+                        data[i].PercentCompletion = data[i].PercentCompletion - percent;
                     }
                     else
                     {
                         form[i].PercentCompletion = 0;
 
                         data[i].PercentCompletion = 0;
+
+                        form[i].RejectedSteps = data[i].RejectedSteps;
+                        //data[i].RejectedSteps = rejectedSteps;
                     }
 
                     await _formRepository.UpdateAsync(form[i]);
                 }
+
             }
 
             return new BaseResponse<List<FormListVm>> ("", true, 200, data);

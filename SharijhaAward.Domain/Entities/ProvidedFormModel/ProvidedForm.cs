@@ -28,6 +28,7 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public string? ReasonOfRejection { get; set; }
         public bool? needSing { get; set; }
         public DateTime? SubmitedAt { get; set; }
+        public List<int>? RejectedSteps { get; set; }
         public User User { get; set; } = null!;
 
         [ForeignKey(nameof(User))]

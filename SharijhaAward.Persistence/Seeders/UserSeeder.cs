@@ -213,6 +213,26 @@ namespace SharijhaAward.Persistence.Seeders
                        isValidAccount = true,
                        ImageURL = null,
                        SubscriberId = "ABC123"
+                   }, new User()
+                   {
+                       isDeleted = false,
+                       DeletedAt = null,
+                       LastModifiedAt = null,
+                       LastModifiedBy = null,
+                       CreatedAt = DateTime.UtcNow,
+                       CreatedBy = null,
+                       ArabicName = "يمان",
+                       Email = "yamansakka5@gmail.com",
+                       PhoneNumber = "009710574596817",
+                       EnglishName = "yaman",
+                       Gender = Gender.Male,
+                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       // Id = 7,
+                       ConfirmationCodeForResetPassword = null,
+                       ConfirmationCodeForSignUp = null,
+                       isValidAccount = true,
+                       ImageURL = null,
+                       SubscriberId = "ABC124"
                    });
                 _context.SaveChanges();
             }

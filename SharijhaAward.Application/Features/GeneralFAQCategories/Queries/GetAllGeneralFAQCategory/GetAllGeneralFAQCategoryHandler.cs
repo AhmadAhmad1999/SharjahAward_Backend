@@ -42,7 +42,27 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
 
             foreach (GetAllGeneralFAQCategoryListVM GeneralFAQCategory in GeneralFAQCategories)
             {
-                GeneralFAQCategory.GeneralFAQListVM = await _GeneralFAQRepository
+                GeneralFAQCategory.GeneralFAQListVM =  Request.searchQuery != null
+
+                    ? await _GeneralFAQRepository
+                    .Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == GeneralFAQCategory.Id)
+                    .Where(x=>x.ArabicQuestion.Contains(Request.searchQuery!) 
+                    || x.ArabicAnswer.Contains(Request.searchQuery!)
+                    || x.EnglishQuestion.Contains(Request.searchQuery!)
+                    || x.EnglishAnswer.Contains(Request.searchQuery!))
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Select(x => new GetAllGeneralFAQListVM()
+                    {
+                        Id = x.Id,
+                        Answer = Request.lang == "ar"
+                            ? x.ArabicAnswer
+                            : x.EnglishAnswer,
+                        Question = Request.lang == "ar"
+                            ? x.ArabicQuestion
+                            : x.EnglishQuestion
+                    }).ToListAsync()
+
+                    : await _GeneralFAQRepository
                     .Where(x => x.GeneralFrequentlyAskedQuestionCategoryId == GeneralFAQCategory.Id)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new GetAllGeneralFAQListVM()

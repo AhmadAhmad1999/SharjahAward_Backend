@@ -73,6 +73,11 @@ namespace SharijhaAward.Persistence.Seeders
                         // Id =10,
                         UserId = 10,
                         RoleId = 2
+                    }, new UserRole()
+                    {
+                        // Id =10,
+                        UserId = 11,
+                        RoleId = 2
                     }
                 );
                 _context.SaveChanges();
