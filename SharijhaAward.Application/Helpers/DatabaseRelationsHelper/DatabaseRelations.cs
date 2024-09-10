@@ -112,12 +112,6 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             CategoryFAQs,
 
-            [Description("ProvidedForms/CategoryEducationalEntityId")] // Done
-            CategoryEducationalEntity,
-
-            [Description("ProvidedForms/CategoryEducationalEntityId")] // Done
-            CategoryEducationalEntities,
-
             [Description("ProvidedForms/CategoryEducationalClassId ArbitratorClasses/CategoryEducationalClassId")] // Done
             CategoryEducationalClass,
 
@@ -559,12 +553,12 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "CircularCoordinators/CoordinatorId DynamicAttributeValues/RecordId/Coordinator")] // Done
             Coordinators,
 
-            [Description("EntitiesCoordinators/EducationalEntityId EducationalInstitutions/EducationalEntityId " + // Done
-                "CategoryEducationalEntities/EducationalEntityId")] // Done
+            [Description("EntitiesCoordinators/EducationalEntityId EducationalInstitutions/EducationalEntityId " +
+                "ProvidedForms/EducationalEntityId")] // Done
             EducationalEntity,
 
-            [Description("EntitiesCoordinators/EducationalEntityId EducationalInstitutions/EducationalEntityId " + // Done
-                "CategoryEducationalEntities/EducationalEntityId")] // Done
+            [Description("EntitiesCoordinators/EducationalEntityId EducationalInstitutions/EducationalEntityId " +
+                "ProvidedForms/EducationalEntityId")] // Done
             EducationalEntities,
 
             [Description("")] // Done

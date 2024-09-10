@@ -5,6 +5,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 
 namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
@@ -16,19 +17,19 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<ExplanatoryGuide> _explanatoryGuideRepository;
         private readonly IMapper _mapper;
-        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
+        private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
 
         public GetCategoryByIdQueryHandler(IAsyncRepository<Category> categoryRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
             IAsyncRepository<ExplanatoryGuide> explanatoryGuideRepository,
             IMapper mapper,
-            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository)
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository)
         {
             _categoryRepository = categoryRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _explanatoryGuideRepository = explanatoryGuideRepository;
             _mapper = mapper;
-            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
+            _EducationalEntityRepository = EducationalEntityRepository;
         }
 
         public async Task<BaseResponse<CategoryDto>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
@@ -75,14 +76,13 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
             }
             if (data.RelatedToEducationalEntities)
             {
-                data.EducationalEntityIds = await _CategoryEducationalEntityRepository
-                    .Where(x => x.CategoryId == request.Id)
+                data.EducationalEntityIds = await _EducationalEntityRepository
                     .Select(x => new CategoryEducationalEntitiesDto()
                     {
-                        Id = x.EducationalEntityId,
+                        Id = x.Id,
                         Name = request.lang == "en"
-                            ? x.EducationalEntity!.EnglishName
-                            : x.EducationalEntity!.ArabicName
+                            ? x.EnglishName
+                            : x.ArabicName
                     }).ToListAsync();
             }
 

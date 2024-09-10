@@ -103,7 +103,6 @@ namespace SharijhaAward.Persistence
         public DbSet<SwitchArbitration> SwitchArbitrations { get; set; }
         public DbSet<ViewWhenRelation> ViewWhenRelations { get; set; }
         public DbSet<ArbitrationResult> ArbitrationResults { get; set; }
-        public DbSet<CategoryEducationalEntity> CategoryEducationalEntities { get; set; }
         public DbSet<ExplanatoryMessage> ExplanatoryMessages { get; set; }
         public DbSet<AdvancedFormBuilderGeneralValidation> AdvancedFormBuilderGeneralValidations { get; set; }
         public DbSet<VirtualTable> VirtualTables { get; set; }
@@ -357,16 +356,6 @@ namespace SharijhaAward.Persistence
                 .AutoInclude();
 
             modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>().HasQueryFilter(p => !p.isDeleted);
-
-            modelBuilder.Entity<CategoryEducationalEntity>()
-                .Navigation(p => p.Category)
-                .AutoInclude();
-
-            modelBuilder.Entity<CategoryEducationalEntity>()
-                .Navigation(p => p.EducationalEntity)
-                .AutoInclude();
-
-            modelBuilder.Entity<CategoryEducationalEntity>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ArbitrationResult>()
                 .Navigation(p => p.ProvidedForm)
@@ -835,11 +824,11 @@ namespace SharijhaAward.Persistence
                 .AutoInclude();
 
             modelBuilder.Entity<ProvidedForm>()
-                .Navigation(p => p.CategoryEducationalEntity)
+                .Navigation(p => p.CategoryEducationalClass)
                 .AutoInclude();
 
             modelBuilder.Entity<ProvidedForm>()
-                .Navigation(p => p.CategoryEducationalClass)
+                .Navigation(p => p.EducationalEntity)
                 .AutoInclude();
 
             modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => !p.isDeleted);

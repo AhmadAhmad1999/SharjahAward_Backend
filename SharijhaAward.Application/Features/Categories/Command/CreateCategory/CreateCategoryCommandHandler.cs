@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -19,7 +18,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<Cycle> _cycleRepository;
-        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
@@ -28,7 +26,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
             IAsyncRepository<Category> categoryRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
             IAsyncRepository<Cycle> cycleRepository,
-            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository,
             IAsyncRepository<EducationalEntity> EducationalEntityRepository,
             IFileService fileService,
             IMapper mapper)
@@ -36,7 +33,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
             _categoryRepository = categoryRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _cycleRepository = cycleRepository;
-            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
             _EducationalEntityRepository = EducationalEntityRepository;
             _fileService = fileService;
             _mapper = mapper;
@@ -144,21 +140,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
 
                             await _CategoryEducationalClassRepository.AddRangeAsync(CategoryEducationalClasses);
                         }
-                    }
-
-                    if (request.RelatedToEducationalEntities != null
-                        ? request.RelatedToEducationalEntities.Value
-                        : false)
-                    {
-                        List<CategoryEducationalEntity> NewCategoryEducationalEntityEntities = await _EducationalEntityRepository
-                            .Where(x => true)
-                            .Select(x => new CategoryEducationalEntity()
-                            {
-                                EducationalEntityId = x.Id,
-                                CategoryId = category.Id
-                            }).ToListAsync();
-
-                        await _CategoryEducationalEntityRepository.AddRangeAsync(NewCategoryEducationalEntityEntities);
                     }
 
                     msg = request.lang == "en"
