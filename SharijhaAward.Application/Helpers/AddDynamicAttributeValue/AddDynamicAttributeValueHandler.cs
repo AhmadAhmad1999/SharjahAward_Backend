@@ -74,15 +74,15 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                 }
             }
 
-            if ((Request.DynamicAttributesWithTableValuesMobile != null && Request.ValueAsBinaryFiles != null)
-                ? (Request.DynamicAttributesWithTableValuesMobile.Any() && Request.ValueAsBinaryFiles.Any()) : false)
+            if ((Request.DynamicAttributesWithTableValuesMobile != null && Request.ValueAsBinaryFilesForTable != null)
+                ? (Request.DynamicAttributesWithTableValuesMobile.Any() && Request.ValueAsBinaryFilesForTable.Any()) : false)
             {
                 for (int i = 0; i < Request.DynamicAttributesWithTableValuesMobile.Count(); i++)
                 {
                     Request.DynamicAttributesWithTableValues.Add(new AddDynamicAttributeTableValueMainCommand()
                     {
                         DynamicAttributeId = Request.DynamicAttributesWithTableValuesMobile[i].DynamicAttributeId,
-                        ValueAsBinaryFile = Request.ValueAsBinaryFiles[i],
+                        ValueAsBinaryFile = Request.ValueAsBinaryFilesForTable[i],
                         RowId = Request.DynamicAttributesWithTableValuesMobile[i].RowId
                     });
                 }
@@ -115,16 +115,19 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 
                 if (DynamicAttributeEntity.AttributeDataType!.Name == "Phone Number")
                 {
-                    if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString)
-                        ? (!InputDynamicAttributeWithValues.ValueAsString.StartsWith("0097105") ||
-                            InputDynamicAttributeWithValues.ValueAsString.Replace("0097105", string.Empty).Count() != 8)
-                        : false)
+                    if (InputDynamicAttributeWithValues.ValueAsString != "0097105")
                     {
-                        ResponseMessage = Request.lang == "en"
-                            ? $"The field {DynamicAttributeEntity.EnglishTitle} can't has this value"
-                            : $"الحقل {DynamicAttributeEntity.ArabicTitle} لا يمكن أن يحتوي على هذه القيمة";
+                        if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString)
+                            ? (!InputDynamicAttributeWithValues.ValueAsString.StartsWith("0097105") ||
+                                InputDynamicAttributeWithValues.ValueAsString.Replace("0097105", string.Empty).Count() != 8)
+                        : false)
+                        {
+                            ResponseMessage = Request.lang == "en"
+                                ? $"The field {DynamicAttributeEntity.EnglishTitle} can't has this value"
+                                : $"الحقل {DynamicAttributeEntity.ArabicTitle} لا يمكن أن يحتوي على هذه القيمة";
 
-                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                        }
                     }
                 }
 
@@ -1541,16 +1544,19 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 
                     if (DynamicAttributeEntity.AttributeDataType!.Name == "Phone Number")
                     {
-                        if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString)
-                            ? (!InputDynamicAttributeWithValues.ValueAsString.StartsWith("0097105") ||
-                                InputDynamicAttributeWithValues.ValueAsString.Replace("0097105", string.Empty).Count() != 8)
-                            : false)
+                        if (InputDynamicAttributeWithValues.ValueAsString != "0097105")
                         {
-                            ResponseMessage = Request.lang == "en"
-                                ? $"The field {DynamicAttributeEntity.EnglishTitle} can't has this value"
-                                : $"الحقل {DynamicAttributeEntity.ArabicTitle} لا يمكن أن يحتوي على هذه القيمة";
+                            if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString)
+                                ? (!InputDynamicAttributeWithValues.ValueAsString.StartsWith("0097105") ||
+                                    InputDynamicAttributeWithValues.ValueAsString.Replace("0097105", string.Empty).Count() != 8)
+                                : false)
+                            {
+                                ResponseMessage = Request.lang == "en"
+                                    ? $"The field {DynamicAttributeEntity.EnglishTitle} can't has this value"
+                                    : $"الحقل {DynamicAttributeEntity.ArabicTitle} لا يمكن أن يحتوي على هذه القيمة";
 
-                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                            }
                         }
                     }
 

@@ -12,6 +12,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         public List<AddDynamicAttributeValueMobileCommand>? DynamicAttributesWithValuesMobile { get; set; }
         public List<AddDynamicAttributeTableValueMobileCommand>? DynamicAttributesWithTableValuesMobile { get; set; }
         public List<IFormFile>? ValueAsBinaryFiles { get; set; }
+        public List<IFormFile>? ValueAsBinaryFilesForTable { get; set; }
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }
     }
