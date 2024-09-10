@@ -17,7 +17,7 @@ namespace SharijhaAward.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -55,7 +55,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 848, DateTimeKind.Utc).AddTicks(5835));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -103,7 +105,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -126,7 +130,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 848, DateTimeKind.Utc).AddTicks(7491));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -148,7 +154,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -175,7 +183,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 848, DateTimeKind.Utc).AddTicks(9124));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -235,7 +245,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -271,7 +283,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 849, DateTimeKind.Utc).AddTicks(823));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -316,7 +330,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -342,7 +358,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 849, DateTimeKind.Utc).AddTicks(2531));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -360,7 +378,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -383,7 +403,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 849, DateTimeKind.Utc).AddTicks(4305));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -402,7 +424,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -428,7 +452,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 849, DateTimeKind.Utc).AddTicks(5920));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -461,7 +487,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -480,7 +508,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 849, DateTimeKind.Utc).AddTicks(7350));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -499,7 +529,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -521,7 +553,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 849, DateTimeKind.Utc).AddTicks(8725));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -549,7 +583,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -570,7 +606,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 850, DateTimeKind.Utc).AddTicks(167));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -595,7 +633,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -618,7 +658,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 850, DateTimeKind.Utc).AddTicks(1667));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -640,7 +682,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -698,7 +742,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 850, DateTimeKind.Utc).AddTicks(3160));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -742,7 +788,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -764,7 +812,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 850, DateTimeKind.Utc).AddTicks(4586));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -787,7 +837,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -806,7 +858,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 850, DateTimeKind.Utc).AddTicks(5878));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -825,7 +879,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -850,7 +906,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 850, DateTimeKind.Utc).AddTicks(7187));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -876,7 +934,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("isRequired")
                         .HasColumnType("bit");
@@ -904,7 +964,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 850, DateTimeKind.Utc).AddTicks(8822));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -955,7 +1017,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -982,7 +1046,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 851, DateTimeKind.Utc).AddTicks(460));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1012,7 +1078,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1037,7 +1105,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 851, DateTimeKind.Utc).AddTicks(1912));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1056,7 +1126,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1074,7 +1146,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 851, DateTimeKind.Utc).AddTicks(3382));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1096,7 +1170,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1120,7 +1196,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 851, DateTimeKind.Utc).AddTicks(4875));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1147,7 +1225,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1169,7 +1249,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 851, DateTimeKind.Utc).AddTicks(6433));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1226,7 +1308,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1253,7 +1337,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 851, DateTimeKind.Utc).AddTicks(7831));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1276,7 +1362,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1301,7 +1389,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 851, DateTimeKind.Utc).AddTicks(9289));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1326,7 +1416,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1351,7 +1443,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 852, DateTimeKind.Utc).AddTicks(807));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1369,7 +1463,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1392,7 +1488,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 852, DateTimeKind.Utc).AddTicks(2255));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1410,7 +1508,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1434,7 +1534,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 852, DateTimeKind.Utc).AddTicks(3589));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1464,7 +1566,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1487,7 +1591,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 852, DateTimeKind.Utc).AddTicks(4936));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1519,7 +1625,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1545,7 +1653,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 852, DateTimeKind.Utc).AddTicks(6241));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1576,7 +1686,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1616,7 +1728,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 852, DateTimeKind.Utc).AddTicks(7715));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1667,7 +1781,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1687,7 +1803,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 852, DateTimeKind.Utc).AddTicks(9427));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1712,7 +1830,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1736,7 +1856,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 853, DateTimeKind.Utc).AddTicks(1087));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1751,7 +1873,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1777,7 +1901,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 853, DateTimeKind.Utc).AddTicks(3053));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1792,7 +1918,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1815,7 +1943,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 853, DateTimeKind.Utc).AddTicks(4833));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1836,7 +1966,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1863,7 +1995,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 853, DateTimeKind.Utc).AddTicks(6564));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1882,7 +2016,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1911,7 +2047,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 853, DateTimeKind.Utc).AddTicks(8229));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -1971,7 +2109,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -1994,7 +2134,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 854, DateTimeKind.Utc).AddTicks(141));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2012,7 +2154,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2036,7 +2180,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 854, DateTimeKind.Utc).AddTicks(1758));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2058,7 +2204,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2080,7 +2228,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 854, DateTimeKind.Utc).AddTicks(3485));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2095,7 +2245,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2122,7 +2274,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 854, DateTimeKind.Utc).AddTicks(5221));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2137,7 +2291,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2161,7 +2317,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 854, DateTimeKind.Utc).AddTicks(6964));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2176,7 +2334,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2202,7 +2362,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 854, DateTimeKind.Utc).AddTicks(8723));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2217,7 +2379,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2243,7 +2407,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 855, DateTimeKind.Utc).AddTicks(577));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2258,7 +2424,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2285,7 +2453,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 855, DateTimeKind.Utc).AddTicks(2339));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2307,7 +2477,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2325,7 +2497,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 855, DateTimeKind.Utc).AddTicks(4040));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2349,7 +2523,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2373,7 +2549,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 855, DateTimeKind.Utc).AddTicks(5821));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2391,7 +2569,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2416,7 +2596,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 855, DateTimeKind.Utc).AddTicks(7826));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2462,7 +2644,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2488,7 +2672,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 855, DateTimeKind.Utc).AddTicks(9561));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2507,7 +2693,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2526,7 +2714,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 856, DateTimeKind.Utc).AddTicks(1359));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2544,7 +2734,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2565,7 +2757,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 856, DateTimeKind.Utc).AddTicks(3053));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2592,7 +2786,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2618,7 +2814,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 856, DateTimeKind.Utc).AddTicks(4637));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2652,7 +2850,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2674,7 +2874,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 856, DateTimeKind.Utc).AddTicks(6547));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2709,7 +2911,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2739,7 +2943,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 856, DateTimeKind.Utc).AddTicks(8288));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2773,7 +2979,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2797,7 +3005,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 857, DateTimeKind.Utc).AddTicks(73));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2832,7 +3042,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2863,7 +3075,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 857, DateTimeKind.Utc).AddTicks(1727));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2901,7 +3115,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2919,7 +3135,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 857, DateTimeKind.Utc).AddTicks(3662));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -2943,7 +3161,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -2968,7 +3188,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 857, DateTimeKind.Utc).AddTicks(5261));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3031,7 +3253,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3051,7 +3275,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 857, DateTimeKind.Utc).AddTicks(6762));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3070,7 +3296,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3086,7 +3314,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 857, DateTimeKind.Utc).AddTicks(8611));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3105,7 +3335,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3121,7 +3353,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 858, DateTimeKind.Utc).AddTicks(454));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3140,7 +3374,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3159,7 +3395,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 858, DateTimeKind.Utc).AddTicks(2550));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3190,7 +3428,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3216,7 +3456,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 858, DateTimeKind.Utc).AddTicks(5096));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3231,7 +3473,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3250,7 +3494,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 858, DateTimeKind.Utc).AddTicks(7112));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3272,7 +3518,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3307,7 +3555,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 858, DateTimeKind.Utc).AddTicks(8428));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3355,7 +3605,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3379,7 +3631,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 858, DateTimeKind.Utc).AddTicks(9857));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3401,7 +3655,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3431,7 +3687,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 859, DateTimeKind.Utc).AddTicks(1323));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3464,7 +3722,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3484,7 +3744,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 859, DateTimeKind.Utc).AddTicks(2396));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3506,7 +3768,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3531,7 +3795,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 859, DateTimeKind.Utc).AddTicks(3636));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3565,7 +3831,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3583,7 +3851,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 859, DateTimeKind.Utc).AddTicks(4841));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3617,7 +3887,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3635,7 +3907,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 859, DateTimeKind.Utc).AddTicks(5998));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3669,7 +3943,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3690,7 +3966,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 859, DateTimeKind.Utc).AddTicks(7194));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3711,7 +3989,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3741,7 +4021,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 859, DateTimeKind.Utc).AddTicks(8439));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3764,7 +4046,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3784,7 +4068,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 860, DateTimeKind.Utc).AddTicks(7));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3808,7 +4094,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3833,7 +4121,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 860, DateTimeKind.Utc).AddTicks(1404));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3854,7 +4144,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3878,7 +4170,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 860, DateTimeKind.Utc).AddTicks(2584));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3897,7 +4191,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3917,7 +4213,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 860, DateTimeKind.Utc).AddTicks(3840));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3936,7 +4234,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -3956,7 +4256,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 860, DateTimeKind.Utc).AddTicks(5158));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -3984,7 +4286,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4018,7 +4322,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 860, DateTimeKind.Utc).AddTicks(6251));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4061,7 +4367,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4088,7 +4396,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 860, DateTimeKind.Utc).AddTicks(7316));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4111,7 +4421,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4133,7 +4445,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 860, DateTimeKind.Utc).AddTicks(8355));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4155,7 +4469,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4182,7 +4498,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 860, DateTimeKind.Utc).AddTicks(9498));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4214,7 +4532,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4232,7 +4552,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 861, DateTimeKind.Utc).AddTicks(645));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4268,7 +4590,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4297,7 +4621,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 861, DateTimeKind.Utc).AddTicks(1901));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4320,7 +4646,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4338,7 +4666,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 861, DateTimeKind.Utc).AddTicks(3087));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4360,7 +4690,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4381,7 +4713,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 861, DateTimeKind.Utc).AddTicks(4382));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4420,7 +4754,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4445,7 +4781,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 861, DateTimeKind.Utc).AddTicks(5849));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4475,7 +4813,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4505,7 +4845,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 861, DateTimeKind.Utc).AddTicks(7334));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4531,7 +4873,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4553,7 +4897,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 861, DateTimeKind.Utc).AddTicks(8485));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4572,7 +4918,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4599,7 +4947,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 862, DateTimeKind.Utc).AddTicks(982));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4643,7 +4993,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4667,7 +5019,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 862, DateTimeKind.Utc).AddTicks(2974));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4694,7 +5048,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4714,7 +5070,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 862, DateTimeKind.Utc).AddTicks(5743));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4736,7 +5094,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4758,7 +5118,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 862, DateTimeKind.Utc).AddTicks(7785));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4777,7 +5139,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4797,7 +5161,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 862, DateTimeKind.Utc).AddTicks(9724));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4819,7 +5185,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4835,7 +5203,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 863, DateTimeKind.Utc).AddTicks(2163));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4856,7 +5226,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -4889,7 +5261,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 863, DateTimeKind.Utc).AddTicks(5019));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4935,7 +5309,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("isValidAccount")
                         .HasColumnType("bit");
@@ -4958,7 +5334,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 863, DateTimeKind.Utc).AddTicks(6841));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4979,7 +5357,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5003,7 +5383,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 863, DateTimeKind.Utc).AddTicks(8730));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5031,7 +5413,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5115,7 +5499,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 864, DateTimeKind.Utc).AddTicks(726));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5138,7 +5524,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5174,7 +5562,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 864, DateTimeKind.Utc).AddTicks(2233));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5215,7 +5605,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("isImplemented")
                         .HasColumnType("bit");
@@ -5238,7 +5630,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 864, DateTimeKind.Utc).AddTicks(3736));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5263,7 +5657,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5284,7 +5680,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 864, DateTimeKind.Utc).AddTicks(5356));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5302,7 +5700,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5326,7 +5726,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 864, DateTimeKind.Utc).AddTicks(7075));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5348,7 +5750,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5370,7 +5774,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 864, DateTimeKind.Utc).AddTicks(9057));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5392,7 +5798,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5410,7 +5818,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 865, DateTimeKind.Utc).AddTicks(1389));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5436,7 +5846,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5457,7 +5869,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 865, DateTimeKind.Utc).AddTicks(3132));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5501,7 +5915,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5523,7 +5939,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 865, DateTimeKind.Utc).AddTicks(4909));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5571,7 +5989,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5593,7 +6013,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 865, DateTimeKind.Utc).AddTicks(6816));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5615,7 +6037,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5643,7 +6067,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 865, DateTimeKind.Utc).AddTicks(8276));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5686,7 +6112,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5707,7 +6135,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 865, DateTimeKind.Utc).AddTicks(9764));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5725,7 +6155,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5759,7 +6191,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 866, DateTimeKind.Utc).AddTicks(1394));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5797,7 +6231,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("isImplemented")
                         .HasColumnType("bit");
@@ -5816,7 +6252,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 866, DateTimeKind.Utc).AddTicks(3105));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5842,7 +6280,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5867,7 +6307,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 866, DateTimeKind.Utc).AddTicks(4761));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5898,7 +6340,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5914,7 +6358,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 866, DateTimeKind.Utc).AddTicks(6438));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5936,7 +6382,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -5962,7 +6410,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 866, DateTimeKind.Utc).AddTicks(8393));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5985,7 +6435,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6001,7 +6453,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 867, DateTimeKind.Utc).AddTicks(206));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6022,7 +6476,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("isReaded")
                         .HasColumnType("bit");
@@ -6053,7 +6509,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 867, DateTimeKind.Utc).AddTicks(2400));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6076,7 +6534,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6095,7 +6555,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 867, DateTimeKind.Utc).AddTicks(4190));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6120,7 +6582,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6146,7 +6610,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 867, DateTimeKind.Utc).AddTicks(6755));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6190,7 +6656,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6214,7 +6682,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 867, DateTimeKind.Utc).AddTicks(8848));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6235,7 +6705,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("orderId")
                         .HasColumnType("int");
@@ -6262,7 +6734,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 868, DateTimeKind.Utc).AddTicks(667));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6295,7 +6769,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("orderId")
                         .HasColumnType("int");
@@ -6316,7 +6792,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 868, DateTimeKind.Utc).AddTicks(2756));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6338,7 +6816,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6362,7 +6842,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 868, DateTimeKind.Utc).AddTicks(5087));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6402,8 +6884,14 @@ namespace SharijhaAward.Persistence.Migrations
                     b.Property<string>("ReasonOfRejection")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RejectedSteps")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("SubmitedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("SubscriberType")
                         .HasColumnType("int");
@@ -6418,7 +6906,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool?>("needSing")
                         .HasColumnType("bit");
@@ -6460,7 +6950,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 868, DateTimeKind.Utc).AddTicks(7113));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6487,7 +6979,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6503,7 +6997,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 868, DateTimeKind.Utc).AddTicks(8945));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6524,7 +7020,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6544,7 +7042,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 869, DateTimeKind.Utc).AddTicks(773));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6565,7 +7065,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6585,7 +7087,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 869, DateTimeKind.Utc).AddTicks(2644));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6607,7 +7111,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6625,7 +7131,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 869, DateTimeKind.Utc).AddTicks(4617));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6649,7 +7157,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6676,7 +7186,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 869, DateTimeKind.Utc).AddTicks(6745));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6698,7 +7210,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6716,7 +7230,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 869, DateTimeKind.Utc).AddTicks(8768));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6737,7 +7253,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6757,7 +7275,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 870, DateTimeKind.Utc).AddTicks(649));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6783,7 +7303,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6799,7 +7321,9 @@ namespace SharijhaAward.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 870, DateTimeKind.Utc).AddTicks(2725));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6825,7 +7349,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6845,7 +7371,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 870, DateTimeKind.Utc).AddTicks(4385));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6880,7 +7408,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6911,7 +7441,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 870, DateTimeKind.Utc).AddTicks(6324));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -6945,7 +7477,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -6974,7 +7508,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 870, DateTimeKind.Utc).AddTicks(8168));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -7001,7 +7537,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -7072,7 +7610,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 9, 9, 17, 54, 28, 871, DateTimeKind.Utc).AddTicks(26));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -7097,7 +7637,9 @@ namespace SharijhaAward.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -7111,7 +7653,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.AboutAwardPageModel.AboutAwardPage", "AboutAwardPage")
                         .WithMany()
                         .HasForeignKey("AboutAwardPageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AboutAwardPage");
@@ -7122,7 +7664,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -7133,13 +7675,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.AdvancedFormBuilderModel.AdvancedFormBuilderSection", "AdvancedFormBuilderSection")
                         .WithMany()
                         .HasForeignKey("AdvancedFormBuilderSectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeDataType", "AttributeDataType")
                         .WithMany()
                         .HasForeignKey("AttributeDataTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AdvancedFormBuilderSection");
@@ -7152,13 +7694,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.AdvancedFormBuilderModel.AdvancedFormBuilder", "AdvancedFormBuilder")
                         .WithMany()
                         .HasForeignKey("AdvancedFormBuilderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeOperation", "AttributeOperation")
                         .WithMany()
                         .HasForeignKey("AttributeOperationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AdvancedFormBuilder");
@@ -7171,7 +7713,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.AdvancedFormBuilderModel.AdvancedFormBuilder", "AdvancedFormBuilder")
                         .WithMany()
                         .HasForeignKey("AdvancedFormBuilderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AdvancedFormBuilder");
@@ -7182,7 +7724,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.AdvancedFormBuilderModel.AdvancedFormBuilderPattern", "AdvancedFormBuilderPattern")
                         .WithMany()
                         .HasForeignKey("AdvancedFormBuilderPatternId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AdvancedFormBuilderPattern");
@@ -7193,7 +7735,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.AdvancedFormBuilderModel.VirtualTableForSection", "VirtualTableForSection")
                         .WithMany()
                         .HasForeignKey("VirtualTableForSectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("VirtualTableForSection");
@@ -7204,13 +7746,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.AdvancedFormBuilderModel.AdvancedFormBuilder", "AdvancedFormBuilder")
                         .WithMany()
                         .HasForeignKey("AdvancedFormBuilderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.AdvancedFormBuilderModel.VirtualTable", "VirtualTable")
                         .WithMany()
                         .HasForeignKey("VirtualTableId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AdvancedFormBuilder");
@@ -7223,13 +7765,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.AdvancedFormBuilderModel.AdvancedFormBuilder", "AdvancedFormBuilder")
                         .WithMany()
                         .HasForeignKey("AdvancedFormBuilderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.AdvancedFormBuilderModel.VirtualTable", "VirtualTable")
                         .WithMany()
                         .HasForeignKey("VirtualTableId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AdvancedFormBuilder");
@@ -7242,7 +7784,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CycleModel.Cycle", "Cycle")
                         .WithMany()
                         .HasForeignKey("CycleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Cycle");
@@ -7253,7 +7795,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.AlbumModel.Album", "Album")
                         .WithMany()
                         .HasForeignKey("AlbumId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Album");
@@ -7264,23 +7806,24 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany()
                         .HasForeignKey("ArbitratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "AssignedByUser")
                         .WithMany()
                         .HasForeignKey("AssignedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "DoneArbitrationUser")
                         .WithMany()
-                        .HasForeignKey("DoneArbitrationUserId");
+                        .HasForeignKey("DoneArbitrationUserId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Arbitrator");
@@ -7296,16 +7839,18 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
                         .WithMany()
-                        .HasForeignKey("CriterionId");
+                        .HasForeignKey("CriterionId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", "CriterionItem")
                         .WithMany()
-                        .HasForeignKey("CriterionItemId");
+                        .HasForeignKey("CriterionItemId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Criterion");
@@ -7320,7 +7865,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitrationModel.ArbitrationAudit", "ArbitrationAudit")
                         .WithMany()
                         .HasForeignKey("ArbitrationAuditId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ArbitrationAudit");
@@ -7331,7 +7876,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitrationModel.InitialArbitration", "InitialArbitration")
                         .WithMany()
                         .HasForeignKey("InitialArbitrationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("InitialArbitration");
@@ -7342,16 +7887,18 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitrationModel.Arbitration", "Arbitration")
                         .WithMany()
                         .HasForeignKey("ArbitrationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
                         .WithMany()
-                        .HasForeignKey("CriterionId");
+                        .HasForeignKey("CriterionId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", "CriterionItem")
                         .WithMany()
-                        .HasForeignKey("CriterionItemId");
+                        .HasForeignKey("CriterionItemId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Arbitration");
 
@@ -7365,13 +7912,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.FinalArbitrationModel.FinalArbitration", "FinalArbitration")
                         .WithMany()
                         .HasForeignKey("FinalArbitrationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("FinalArbitration");
@@ -7384,7 +7931,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -7395,16 +7942,18 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitrationScaleModel.ArbitrationScale", "ArbitrationScale")
                         .WithMany()
                         .HasForeignKey("ArbitrationScaleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
                         .WithMany()
-                        .HasForeignKey("CriterionId");
+                        .HasForeignKey("CriterionId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", "CriterionItem")
                         .WithMany()
-                        .HasForeignKey("CriterionItemId");
+                        .HasForeignKey("CriterionItemId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("ArbitrationScale");
 
@@ -7418,13 +7967,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany()
                         .HasForeignKey("ArbitratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.EducationalClassModel.EducationalClass", "EducationalClass")
                         .WithMany()
                         .HasForeignKey("EducationalClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Arbitrator");
@@ -7437,13 +7986,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany()
                         .HasForeignKey("ArbitratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Arbitrator");
@@ -7455,7 +8004,8 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel.ConditionsProvidedForms", "ConditionsProvidedForms")
                         .WithMany()
-                        .HasForeignKey("ConditionsProvidedFormsId");
+                        .HasForeignKey("ConditionsProvidedFormsId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("ConditionsProvidedForms");
                 });
@@ -7465,7 +8015,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CycleModel.Cycle", "Cycle")
                         .WithMany()
                         .HasForeignKey("CycleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Cycle");
@@ -7476,13 +8026,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany()
                         .HasForeignKey("ArbitratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Arbitrator");
@@ -7495,13 +8045,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.CommitteeModel.Committee", "Committee")
                         .WithMany()
                         .HasForeignKey("CommitteeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -7514,13 +8064,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.EducationalClassModel.EducationalClass", "EducationalClass")
                         .WithMany()
                         .HasForeignKey("EducationalClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -7533,7 +8083,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -7544,12 +8094,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CycleModel.Cycle", "Cycle")
                         .WithMany()
                         .HasForeignKey("CycleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Parent")
                         .WithMany()
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Cycle");
 
@@ -7561,13 +8112,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.EducationalEntityModel.EducationalEntity", "EducationalEntity")
                         .WithMany()
                         .HasForeignKey("EducationalEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -7580,13 +8131,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany()
                         .HasForeignKey("ArbitratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.CircularModel.Circular", "Circular")
                         .WithMany()
                         .HasForeignKey("CircularId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Arbitrator");
@@ -7599,7 +8150,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CircularModel.Circular", "Circular")
                         .WithMany()
                         .HasForeignKey("CircularId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Circular");
@@ -7610,13 +8161,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Chairman")
                         .WithMany()
                         .HasForeignKey("ChairmanId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.CircularModel.Circular", "Circular")
                         .WithMany()
                         .HasForeignKey("CircularId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Chairman");
@@ -7629,13 +8180,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CircularModel.Circular", "Circular")
                         .WithMany()
                         .HasForeignKey("CircularId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.CoordinatorModel.Coordinator", "Coordinator")
                         .WithMany()
                         .HasForeignKey("CoordinatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Circular");
@@ -7648,13 +8199,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany()
                         .HasForeignKey("ArbitratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.CommitteeModel.Committee", "Committee")
                         .WithMany()
                         .HasForeignKey("CommitteeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Arbitrator");
@@ -7667,7 +8218,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Chairman")
                         .WithMany()
                         .HasForeignKey("ChairmanId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Chairman");
@@ -7678,13 +8229,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.TermsAndConditionsModel.TermAndCondition", "TermAndCondition")
                         .WithMany()
                         .HasForeignKey("TermAndConditionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ProvidedForm");
@@ -7697,7 +8248,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ContactUsModels.EmailMessage", "Message")
                         .WithMany()
                         .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Message");
@@ -7707,17 +8258,19 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.ContactUsModels.EmailMessage", "message")
                         .WithMany()
-                        .HasForeignKey("MessageId");
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.ContactUsModels.MessageType", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Type");
 
@@ -7731,13 +8284,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CoordinatorModel.Coordinator", "Coordinator")
                         .WithMany()
                         .HasForeignKey("CoordinatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Coordinator");
@@ -7750,7 +8303,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
                         .WithMany()
                         .HasForeignKey("CriterionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Criterion");
@@ -7761,13 +8314,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", "CriterionItem")
                         .WithMany()
                         .HasForeignKey("CriterionItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CriterionItem");
@@ -7780,12 +8333,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Parent")
                         .WithMany()
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Category");
 
@@ -7797,13 +8351,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
                         .WithMany()
                         .HasForeignKey("CriterionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Criterion");
@@ -7816,7 +8370,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CycleModel.Cycle", "Cycle")
                         .WithMany()
                         .HasForeignKey("CycleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Cycle");
@@ -7827,13 +8381,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CycleConditionModel.CycleCondition", "CycleCondition")
                         .WithMany()
                         .HasForeignKey("CycleConditionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CycleCondition");
@@ -7846,28 +8400,30 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeOperation", "AttributeOperation")
                         .WithMany()
                         .HasForeignKey("AttributeOperationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DependencyGroup", "DependencyGroup")
                         .WithMany()
                         .HasForeignKey("DependencyGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "DynamicAttribute")
                         .WithMany()
-                        .HasForeignKey("DynamicAttributeId");
+                        .HasForeignKey("DynamicAttributeId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "MainDynamicAttribute")
                         .WithMany()
                         .HasForeignKey("MainDynamicAttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.StaticAttribute", "StaticAttribute")
                         .WithMany()
-                        .HasForeignKey("StaticAttributeId");
+                        .HasForeignKey("StaticAttributeId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("AttributeOperation");
 
@@ -7885,13 +8441,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeOperation", "AttributeOperation")
                         .WithMany()
                         .HasForeignKey("AttributeOperationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DependencyGroup", "DependencyGroup")
                         .WithMany()
                         .HasForeignKey("DependencyGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AttributeOperation");
@@ -7904,13 +8460,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeDataType", "AttributeDataType")
                         .WithMany()
                         .HasForeignKey("AttributeDataTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeSection", "DynamicAttributeSection")
                         .WithMany()
                         .HasForeignKey("DynamicAttributeSectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AttributeDataType");
@@ -7923,7 +8479,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "DynamicAttribute")
                         .WithMany()
                         .HasForeignKey("DynamicAttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("DynamicAttribute");
@@ -7934,7 +8490,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributePattern", "DynamicAttributePattern")
                         .WithMany()
                         .HasForeignKey("DynamicAttributePatternId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("DynamicAttributePattern");
@@ -7945,7 +8501,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeTableName", "AttributeTableName")
                         .WithMany()
                         .HasForeignKey("AttributeTableNameId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AttributeTableName");
@@ -7956,7 +8512,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "DynamicAttribute")
                         .WithMany()
                         .HasForeignKey("DynamicAttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("DynamicAttribute");
@@ -7967,7 +8523,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "DynamicAttribute")
                         .WithMany()
                         .HasForeignKey("DynamicAttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("DynamicAttribute");
@@ -7978,13 +8534,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeOperation", "AttributeOperation")
                         .WithMany()
                         .HasForeignKey("AttributeOperationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "DynamicAttribute")
                         .WithMany()
                         .HasForeignKey("DynamicAttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AttributeOperation");
@@ -7997,13 +8553,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeDataType", "AttributeDataType")
                         .WithMany()
                         .HasForeignKey("AttributeDataTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.AttributeTableName", "AttributeTableName")
                         .WithMany()
                         .HasForeignKey("AttributeTableNameId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AttributeDataType");
@@ -8015,17 +8571,19 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttribute", "DynamicAttribute")
                         .WithMany()
-                        .HasForeignKey("DynamicAttributeId");
+                        .HasForeignKey("DynamicAttributeId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeListValue", "DynamicAttributeListValue")
                         .WithMany()
                         .HasForeignKey("DynamicAttributeListValueId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.DynamicAttributeModel.DynamicAttributeSection", "DynamicAttributeSection")
                         .WithMany()
-                        .HasForeignKey("DynamicAttributeSectionId");
+                        .HasForeignKey("DynamicAttributeSectionId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("DynamicAttribute");
 
@@ -8039,13 +8597,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CoordinatorModel.Coordinator", "Coordinator")
                         .WithMany()
                         .HasForeignKey("CoordinatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.EducationalEntityModel.EducationalEntity", "EducationalEntity")
                         .WithMany()
                         .HasForeignKey("EducationalEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Coordinator");
@@ -8058,7 +8616,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.EducationalEntityModel.EducationalEntity", "EducationalEntity")
                         .WithMany()
                         .HasForeignKey("EducationalEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("EducationalEntity");
@@ -8069,7 +8627,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -8080,7 +8638,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ProvidedForm");
@@ -8091,7 +8649,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ExtraAttachmentModel.ExtraAttachment", "ExtraAttachment")
                         .WithMany()
                         .HasForeignKey("ExtraAttachmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ExtraAttachment");
@@ -8102,7 +8660,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -8113,7 +8671,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.FinalArbitrationModel.FinalArbitrationScore", "FinalArbitrationScore")
                         .WithMany()
                         .HasForeignKey("FinalArbitrationScoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("FinalArbitrationScore");
@@ -8124,17 +8682,18 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ArbitratorModel.Arbitrator", "Arbitrator")
                         .WithMany()
                         .HasForeignKey("ArbitratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "DoneArbitrationUser")
                         .WithMany()
-                        .HasForeignKey("DoneArbitrationUserId");
+                        .HasForeignKey("DoneArbitrationUserId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", "ProvidedForm")
                         .WithMany()
                         .HasForeignKey("ProvidedFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Arbitrator");
@@ -8148,16 +8707,18 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionModel.Criterion", "Criterion")
                         .WithMany()
-                        .HasForeignKey("CriterionId");
+                        .HasForeignKey("CriterionId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.CriterionItemModel.CriterionItem", "CriterionItem")
                         .WithMany()
-                        .HasForeignKey("CriterionItemId");
+                        .HasForeignKey("CriterionItemId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.FinalArbitrationModel.FinalArbitration", "FinalArbitration")
                         .WithMany()
                         .HasForeignKey("FinalArbitrationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Criterion");
@@ -8172,7 +8733,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.GeneralFrequentlyAskedQuestionModel.GeneralFAQCategory", "GeneralFrequentlyAskedQuestionCategory")
                         .WithMany()
                         .HasForeignKey("GeneralFrequentlyAskedQuestionCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("GeneralFrequentlyAskedQuestionCategory");
@@ -8183,7 +8744,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.PermissionHeader", "PermissionHeader")
                         .WithMany()
                         .HasForeignKey("PermissionHeaderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("PermissionHeader");
@@ -8194,13 +8755,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.Permission", "Permission")
                         .WithMany()
                         .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Permission");
@@ -8213,13 +8774,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Role");
@@ -8232,7 +8793,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -8243,7 +8804,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.InterviewModel.Interview", "Interview")
                         .WithMany()
                         .HasForeignKey("InterviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Interview");
@@ -8254,13 +8815,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.InterviewModel.Interview", "Interview")
                         .WithMany()
                         .HasForeignKey("InterviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -8273,7 +8834,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.InterviewModel.Interview", "Interview")
                         .WithMany()
                         .HasForeignKey("InterviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Interview");
@@ -8284,7 +8845,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.InterviewModel.Interview", "Interview")
                         .WithMany()
                         .HasForeignKey("InterviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Interview");
@@ -8295,7 +8856,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.InterviewModel.Interview", "Interview")
                         .WithMany()
                         .HasForeignKey("InterviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Interview");
@@ -8306,7 +8867,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.EventModel.Event", "Event")
                         .WithMany()
                         .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Event");
@@ -8317,7 +8878,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.EventModel.Event", "Event")
                         .WithMany()
                         .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Event");
@@ -8328,7 +8889,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.InvitationModels.GroupInvitee", "GroupInvitee")
                         .WithMany()
                         .HasForeignKey("GroupInviteeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("GroupInvitee");
@@ -8339,7 +8900,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -8350,13 +8911,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.MeetingModel.Meeting", "Meeting")
                         .WithMany()
                         .HasForeignKey("MeetingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -8369,7 +8930,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.MeetingModel.Meeting", "Meeting")
                         .WithMany()
                         .HasForeignKey("MeetingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Meeting");
@@ -8380,7 +8941,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.NewsModel.News", "News")
                         .WithMany()
                         .HasForeignKey("NewsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("News");
@@ -8391,13 +8952,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.NotificationModel.Notification", "Notification")
                         .WithMany()
                         .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Notification");
@@ -8409,7 +8970,8 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.PageStructureModel.PageStructure", "pageStructure")
                         .WithMany()
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("pageStructure");
                 });
@@ -8419,7 +8981,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.PageStructureModel.PageStructure", "PageStructure")
                         .WithMany()
                         .HasForeignKey("PageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("PageStructure");
@@ -8430,7 +8992,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.PageStructureModel.PageStructure", "PageStructure")
                         .WithMany()
                         .HasForeignKey("PageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("PageStructure");
@@ -8439,56 +9001,36 @@ namespace SharijhaAward.Persistence.Migrations
             modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.PageStructureImages", b =>
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.PageStructureModels.ImageCard", "ImageCard")
-                        .WithMany()
+                        .WithMany("Images")
                         .HasForeignKey("ImageCardId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ImageCard");
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.ParagraphCard", b =>
-                {
-                    b.HasOne("SharijhaAward.Domain.Entities.PageStructureModel.PageStructure", "PageStructure")
-                        .WithMany()
-                        .HasForeignKey("PageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PageStructure");
-                });
-
-            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.TextCard", b =>
-                {
-                    b.HasOne("SharijhaAward.Domain.Entities.PageStructureModel.PageStructure", "PageStructure")
-                        .WithMany()
-                        .HasForeignKey("PageStructureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PageStructure");
                 });
 
             modelBuilder.Entity("SharijhaAward.Domain.Entities.ProvidedFormModel.ProvidedForm", b =>
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryEducationalClassModel.CategoryEducationalClass", "CategoryEducationalClass")
                         .WithMany()
-                        .HasForeignKey("CategoryEducationalClassId");
+                        .HasForeignKey("CategoryEducationalClassId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.CategoryEducationalEntity", "CategoryEducationalEntity")
                         .WithMany()
-                        .HasForeignKey("CategoryEducationalEntityId");
+                        .HasForeignKey("CategoryEducationalEntityId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("categoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany()
                         .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -8505,13 +9047,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User1")
                         .WithMany()
                         .HasForeignKey("User1Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User2")
                         .WithMany()
                         .HasForeignKey("User2Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User1");
@@ -8524,13 +9066,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Receiver");
@@ -8543,7 +9085,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Role");
@@ -8554,13 +9096,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ResponsibilityModel.Responsibility", "Responsibility")
                         .WithMany()
                         .HasForeignKey("ResponsibilityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Responsibility");
@@ -8573,7 +9115,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -8584,13 +9126,13 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.ContactUsModels.MessageType", "MessageType")
                         .WithMany()
                         .HasForeignKey("MessageTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("MessageType");
@@ -8602,7 +9144,8 @@ namespace SharijhaAward.Persistence.Migrations
                 {
                     b.HasOne("SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel.CycleConditionsProvidedForm", "CycleConditionsProvidedForm")
                         .WithMany()
-                        .HasForeignKey("CycleConditionsProvidedFormId");
+                        .HasForeignKey("CycleConditionsProvidedFormId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("CycleConditionsProvidedForm");
                 });
@@ -8612,7 +9155,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -8623,7 +9166,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.CategoryModel.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -8640,7 +9183,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", "TrainingWorkshop")
                         .WithMany()
                         .HasForeignKey("TrainingWorkshopsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "UpdatedBy")
@@ -8652,7 +9195,7 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.IdentityModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
@@ -8669,10 +9212,15 @@ namespace SharijhaAward.Persistence.Migrations
                     b.HasOne("SharijhaAward.Domain.Entities.TrainingWorkshopModel.TrainingWorkshop", "TrainingWorkshop")
                         .WithMany()
                         .HasForeignKey("WorkshopeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("TrainingWorkshop");
+                });
+
+            modelBuilder.Entity("SharijhaAward.Domain.Entities.PageStructureModels.ImageCard", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

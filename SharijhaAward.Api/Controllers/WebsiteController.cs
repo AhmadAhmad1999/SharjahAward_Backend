@@ -16,6 +16,7 @@ using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSpons
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStatistics;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 using SharijhaAward.Application.Features.Categories.Queries.GetCategoryById;
+using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
 using SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles;
 using SharijhaAward.Application.Features.Event.Queries.GetEventById;
@@ -548,6 +549,26 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
+        [HttpPost("ContactUs")]
+        public async Task<IActionResult> SendMessage([FromForm] CreateMessageCommand command)
+        {
+            var token = HttpContext.Request.Headers.Authorization;
+            var language = HttpContext.Request.Headers["lang"];
+
+            command.token = token!;
+            command.lang = language!;
+
+            var response = await _Mediator.Send(command);
+
+            return response.statusCode switch
+            {
+                404 => NotFound(response),
+                200 => Ok(response),
+                401 => Unauthorized(response),
+                _ => BadRequest(response)
+            };
+        }
+
         [HttpGet("ContactUs")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Rej
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
-
+            RelatedAccountRequestEntity.Status = Domain.Constants.RelatedAccountRequestStatus.Rejected;
             await _RelatedAccountRequestRepository.DeleteAsync(RelatedAccountRequestEntity);
 
             ResponseMessage = Request.lang == "en"

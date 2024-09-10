@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharijhaAward.Domain.Entities.PageStructureModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.Ge
         public string ArabicTitle { get; set; } = string.Empty;
         public string EnglishContent { get; set; } = string.Empty;
         public string ArabicContent { get; set; } = string.Empty;
+        public CardType CardType { get; set; }
         public int PageId { get; set; }
     }
 }

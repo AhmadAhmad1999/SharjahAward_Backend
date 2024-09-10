@@ -216,7 +216,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
 
                         data[i].PercentCompletion = 0;
 
-                        form[i].RejectedSteps = data[i].RejectedSteps;
+                        //form[i].RejectedSteps = data[i].RejectedSteps;
                         //data[i].RejectedSteps = rejectedSteps;
                     }
 

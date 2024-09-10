@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using EnumsNET;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using QRCoder.Extensions;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -29,7 +31,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
 
             List<GetAllReceivedRequestsListVM> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
                 ? await _RelatedAccountRequestRepository
-                    .Where(x => x.ReceiverId == UserId)
+                    .Where(x => x.ReceiverId == UserId && x.Status == Domain.Constants.RelatedAccountRequestStatus.Pending)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new GetAllReceivedRequestsListVM()
                     {
@@ -39,10 +41,11 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                         Name = Request.lang == "en"
                             ? x.Sender!.EnglishName
                             : x.Sender!.ArabicName,
-                        ImageURL = x.Sender!.ImageURL
+                        ImageURL = x.Sender!.ImageURL,
+                        Status = x.Status.GetName()!
                     }).ToListAsync()
                 : await _RelatedAccountRequestRepository
-                    .Where(x => x.ReceiverId == UserId)
+                    .Where(x => x.ReceiverId == UserId && x.Status == Domain.Constants.RelatedAccountRequestStatus.Pending)
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
@@ -54,7 +57,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                         Name = Request.lang == "en"
                             ? x.Sender!.EnglishName
                             : x.Sender!.ArabicName,
-                        ImageURL = x.Sender!.ImageURL
+                        ImageURL = x.Sender!.ImageURL,
+                        Status = x.Status.GetName()!
                     }).ToListAsync();
 
             int TotalCount = await _RelatedAccountRequestRepository

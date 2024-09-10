@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Responses;
@@ -75,7 +76,12 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
                             ? x.ArabicQuestion
                             : x.EnglishQuestion
                     }).ToListAsync();
+
             }
+
+            GeneralFAQCategories = GeneralFAQCategories
+                .Where(x => x.GeneralFAQListVM.Any())
+                .ToList();
 
             int TotalCount = await _GeneralFAQCategoryRepository.GetCountAsync(null);
 

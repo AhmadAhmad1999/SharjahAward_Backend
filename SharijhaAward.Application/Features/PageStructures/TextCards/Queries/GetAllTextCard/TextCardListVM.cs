@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharijhaAward.Domain.Entities.PageStructureModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Queries.Ge
         public string Content { get; set; } = string.Empty;
         public int orderId { get; set; }
         public bool IsHide { get; set; }
+        public CardType CardType { get; set; }
         public int PageStructureId { get; set; }
     }
 }

@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllRe
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetRelatedAccoutProfileById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetallSendedRequests;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -189,6 +190,43 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
+
+        [HttpGet("GetAllSendedRequests")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllSendedRequests(int Page = 1, int PerPage = 10)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
+            BaseResponse<List<GetAllReceivedRequestsListVM>> Response = await _Mediator.Send(new GetallSendedRequestsQuery()
+            {
+                lang = HeaderValue!,
+                token = Token,
+                page = Page,
+                perPage = PerPage
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+
         [HttpGet("GetAllRelatedAccounts")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

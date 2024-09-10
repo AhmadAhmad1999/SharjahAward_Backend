@@ -62,7 +62,9 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Acc
                         User2Id = RelatedAccountRequestEntity.ReceiverId
                     };
 
-                    await _RelatedAccountRequestRepository.DeleteAsync(RelatedAccountRequestEntity);
+                    RelatedAccountRequestEntity.Status = Domain.Constants.RelatedAccountRequestStatus.Accepted;
+                    
+                    //await _RelatedAccountRequestRepository.DeleteAsync(RelatedAccountRequestEntity);
                     await _RelatedAccountRepository.AddAsync(NewRelatedAccountEntity);
 
                     Transaction.Complete();

@@ -12,5 +12,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
         public string Name { get; set; } = null!;
         public Gender Gender { get; set; }
         public string? ImageURL { get; set; }
+        public string? Status { get; set; }
     }
 }

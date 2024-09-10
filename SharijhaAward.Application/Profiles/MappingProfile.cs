@@ -360,6 +360,9 @@ using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.Updat
 using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.CreateArbitrationAudit;
 using SharijhaAward.Application.Features.LoggerFeatures.Queries.ExportToExcel;
 using SharijhaAward.Domain.Entities.LoggerModel;
+using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetGoalCardById;
+using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.CreateGoalCard;
+using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetAllGoalCardsByPageId;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -582,6 +585,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<PageCard, UpdateDarkCardCommand>().ReverseMap();
             CreateMap<PageCard, DarkCardListVM>().ReverseMap();
             CreateMap<PageCard, DarkCardDto>().ReverseMap();
+
+            CreateMap<PageCard, CreateGoalCardCommand>().ReverseMap();
+            //CreateMap<PageCard, UpdateGoalCardCommand>().ReverseMap();
+            CreateMap<PageCard, GoalCardListVM>().ReverseMap();
+            CreateMap<PageCard, GoalCardDto>().ReverseMap();
 
             CreateMap<PageCard, CreateParagraphCardCommand>().ReverseMap();
             CreateMap<PageCard, UpdateParagraphCardCommand>().ReverseMap();

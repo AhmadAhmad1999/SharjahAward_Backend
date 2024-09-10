@@ -54,6 +54,8 @@ namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Comma
                 ParagraphCard.ImageUrl = await _fileService.SaveFileAsync(request.Image, SystemFileType.Images);
             }
 
+            ParagraphCard.CardType = CardType.ParagraphCard;
+
             await _paragraphCardRepository.AddAsync(ParagraphCard);
 
             return new BaseResponse<object>(msg, true, 200);

@@ -1,4 +1,5 @@
 ﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Domain.Entities.RelatedAccountModel

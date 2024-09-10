@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.User.Queries.GetAllUsers
 
             var data = _mapper.Map<List<UserListVm>>(Users );
 
-            var count = _userRepository.GetCount(u => true);
+            var count = _userRepository.GetCount(u =>!u.isDeleted);
            
             Pagination pagination = new Pagination(request.page, request.perPage, count);
            

@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsByPageId;
+using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetAllGoalCardsByPageId;
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetAllImageCards;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsByPageId;
@@ -54,11 +55,11 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
             data.Components = new List<Component>();
 
             var DarkCardsList = _mapper.Map<List<DarkCardListVM>>(await _PageCardRepository
-                .Where(x => x.PageId == page.Id)
+                .Where(x => x.PageId == page.Id && x.CardType == CardType.DarkCard)
                 .ToListAsync());
 
             var ParagraphCardsList = _mapper.Map<List<ParagraphCardListVM>>(await _PageCardRepository
-                .Where(x => x.PageId == page.Id)
+                .Where(x => x.PageId == page.Id && x.CardType == CardType.ParagraphCard)
                 .ToListAsync());
 
             var ImageCardsList = _mapper.Map<List<ImageCardListVM>>(await _ImageCardRepository
@@ -66,7 +67,11 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 .ToListAsync());
 
             var TextCardsList = _mapper.Map<List<TextCardListVM>>(await _PageCardRepository
-                .Where(x => x.PageId == page.Id)
+                .Where(x => x.PageId == page.Id && x.CardType == CardType.TextCard)
+                .ToListAsync());
+            
+            var GoalCardsList = _mapper.Map<List<GoalCardListVM>>(await _PageCardRepository
+                .Where(x => x.PageId == page.Id && x.CardType == CardType.GoalCard)
                 .ToListAsync());
 
             foreach (var Darkcard in DarkCardsList)
@@ -79,6 +84,20 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                     Card = Darkcard,
                     CardType = "DarkCard",
                     orderId = Darkcard.orderId
+                };
+
+                data.Components!.Add(Component);
+            }
+
+            foreach (var GoalCard in GoalCardsList)
+            {
+                GoalCard.Content = request.lang == "en" ? GoalCard.EnglishContent : GoalCard.ArabicContent;
+
+                var Component = new Component()
+                {
+                    Card = GoalCard,
+                    CardType = "GoalCard",
+                    orderId = GoalCard.orderId
                 };
 
                 data.Components!.Add(Component);

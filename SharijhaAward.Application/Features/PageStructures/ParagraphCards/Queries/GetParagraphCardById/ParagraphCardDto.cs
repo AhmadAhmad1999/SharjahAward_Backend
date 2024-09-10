@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharijhaAward.Domain.Entities.PageStructureModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queri
         public string? ArabicContent { get; set; } = string.Empty;
         public string? ImageUrl { get; set; } = string.Empty;
         public bool? ImageInStart { get; set; }
+        public CardType CardType { get; set; }
         public int PageId { get; set; }
     }
 }

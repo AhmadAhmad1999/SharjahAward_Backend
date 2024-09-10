@@ -45,6 +45,8 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Commands.C
 
             var textCard = _mapper.Map<PageCard>(request);
 
+            textCard.CardType = CardType.TextCard;
+
             await _textCardRepository.AddAsync(textCard);
 
             return new BaseResponse<object>(msg, true, 200);

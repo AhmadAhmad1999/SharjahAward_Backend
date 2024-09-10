@@ -20,6 +20,7 @@ namespace SharijhaAward.Domain.Entities.PageStructureModels
         public string? ImageUrl { get; set; } = string.Empty;
         public bool? ImageInStart { get; set; }
         public bool IsHide { get; set; }
+        public CardType CardType { get; set; }
         public PageStructure PageStructure { get; set; } = null!;
 
         [ForeignKey(nameof(PageStructure))]

@@ -45,6 +45,8 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.C
 
             var DarkCard = _mapper.Map<PageCard>(request);
 
+            DarkCard.CardType = CardType.DarkCard;
+
             await _darkCardRepository.AddAsync(DarkCard);
 
             return new BaseResponse<object>(msg, true, 200);
