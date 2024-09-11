@@ -53,6 +53,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
             var data = _mapper.Map<PageDto>(page);
 
             data.Components = new List<Component>();
+           
 
             var DarkCardsList = _mapper.Map<List<DarkCardListVM>>(await _PageCardRepository
                 .Where(x => x.PageId == page.Id && x.CardType == CardType.DarkCard)
@@ -89,19 +90,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 data.Components!.Add(Component);
             }
 
-            foreach (var GoalCard in GoalCardsList)
-            {
-                GoalCard.Content = request.lang == "en" ? GoalCard.EnglishContent : GoalCard.ArabicContent;
 
-                var Component = new Component()
-                {
-                    Card = GoalCard,
-                    CardType = "GoalCard",
-                    orderId = GoalCard.orderId
-                };
-
-                data.Components!.Add(Component);
-            }
 
             foreach (var Paragraphcard in ParagraphCardsList)
             {
@@ -149,7 +138,17 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 data.Components!.Add(Component);
             }
 
+            var goalComponent = new Component()
+            {
+                Goals = GoalCardsList,
+                CardType = "GoalCard",
+                orderId = 0
+            };
+
+            data.Components.Add(goalComponent);
+
             data.Components = data.Components.OrderBy(c => c.orderId).ToList();
+            //data.Goals = data.Goals.OrderBy(c => c.orderId).ToList();
 
             data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle;
 

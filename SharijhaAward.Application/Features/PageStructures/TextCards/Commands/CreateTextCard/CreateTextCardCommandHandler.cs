@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Commands.C
                 ? "Text Card has been Created"
                 : "تم إنشاء بطاقة نص";
 
-            var page = await _pageStructureRepository.GetByIdAsync(request.PageStructureId);
+            var page = await _pageStructureRepository.GetByIdAsync(request.PageId);
             
             if(page == null)
             {

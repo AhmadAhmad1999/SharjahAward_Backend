@@ -46,11 +46,11 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
 
             if (ArbitratorEntity is null)
             {
-                List<UserRole> CheckIfThisUserHaveAllAccess = await _UserRoleRepository
-                    .Where(x => x.UserId == UserId)
-                    .ToListAsync();
+                var CheckIfThisUserHaveAllAccess = 
+                    await _UserRoleRepository.Where(x => x.UserId == UserId && x.Role!.HaveFullAccess).FirstOrDefaultAsync()
+                    == null ? false : true;
 
-                UserId = 0;
+                UserId = CheckIfThisUserHaveAllAccess == false ? 0 : UserId;
 
                 List<Arbitration> ArbitrationsEntities = new List<Arbitration>();
 

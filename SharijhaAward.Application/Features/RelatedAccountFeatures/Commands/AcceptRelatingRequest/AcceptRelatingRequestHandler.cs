@@ -63,7 +63,9 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Acc
                     };
 
                     RelatedAccountRequestEntity.Status = Domain.Constants.RelatedAccountRequestStatus.Accepted;
-                    
+
+                    await _RelatedAccountRequestRepository.UpdateAsync(RelatedAccountRequestEntity);
+
                     //await _RelatedAccountRequestRepository.DeleteAsync(RelatedAccountRequestEntity);
                     await _RelatedAccountRepository.AddAsync(NewRelatedAccountEntity);
 

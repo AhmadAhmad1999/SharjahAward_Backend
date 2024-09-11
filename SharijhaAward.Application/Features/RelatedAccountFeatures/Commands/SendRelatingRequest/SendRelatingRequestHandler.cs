@@ -7,12 +7,14 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.NotificationModel;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.SendRelatingRequest
 {
     public class SendRelatingRequestHandler : IRequestHandler<SendRelatingRequestCommand, BaseResponse<object>>
     {
         private readonly IUserRepository _UserRepository;
+        private readonly IAsyncRepository<Notification> _NotificationRepository;
         private readonly IAsyncRepository<RelatedAccountRequest> _RelatedAccountRequestRepository;
         private readonly IAsyncRepository<RelatedAccount> _RelatedAccountRepository;
         private readonly IJwtProvider _JWTProvider;
@@ -24,6 +26,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
             IAsyncRepository<RelatedAccount> RelatedAccountRepository,
             IJwtProvider JWTProvider,
             IAsyncRepository<UserRole> UserRoleRepository,
+            IAsyncRepository<Notification> NotificationRepository,
             IAsyncRepository<UserToken> UserTokenRepository)
         {
             _UserRepository = UserRepository;
@@ -32,6 +35,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
             _JWTProvider = JWTProvider;
             _UserRoleRepository = UserRoleRepository;
             _UserTokenRepository = UserTokenRepository;
+            _NotificationRepository = NotificationRepository;
         }
         public async Task<BaseResponse<object>> Handle(SendRelatingRequestCommand Request, CancellationToken cancellationToken)
         {
@@ -98,33 +102,62 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
 
             NewRelatedAccountRequestEntity.Status = Domain.Constants.RelatedAccountRequestStatus.Pending;
 
-            await _RelatedAccountRequestRepository.AddAsync(NewRelatedAccountRequestEntity);
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
+
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+
+                    await _RelatedAccountRequestRepository.AddAsync(NewRelatedAccountRequestEntity);
 
 
-            List<FirebaseAdmin.Messaging.Message> NotificationMessages = await _UserTokenRepository
-                .Where(x=>x.User!.Email == Request.ReceiverEmail && !x.DeviceToken.IsNullOrEmpty())
-                .Select(x => x.AppLanguage == "en"
-                    ? new FirebaseAdmin.Messaging.Message()
+                    List<FirebaseAdmin.Messaging.Message> NotificationMessages = await _UserTokenRepository
+                        .Where(x => x.User!.Email == Request.ReceiverEmail && !string.IsNullOrEmpty(x.DeviceToken))
+                        .Select(x => x.AppLanguage == "en"
+                            ? new FirebaseAdmin.Messaging.Message()
+                            {
+                                Notification = new FirebaseAdmin.Messaging.Notification
+                                {
+                                    Title = "Related Account Request",
+                                    Body = "You have a new Related Account Request"
+                                },
+                                Token = x.DeviceToken
+                            } : new FirebaseAdmin.Messaging.Message()
+                            {
+                                Notification = new FirebaseAdmin.Messaging.Notification
+                                {
+                                    Title = "طلب إرتباط",
+                                    Body = "لديك طلب إرتباط جديد"
+                                },
+                                Token = x.DeviceToken
+                            }).ToListAsync();
+
+                    if (NotificationMessages.Any())
+                        await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendEachAsync(NotificationMessages);
+
+                    var Notification = new Notification()
                     {
-                        Notification = new FirebaseAdmin.Messaging.Notification
-                        {
-                            Title = "Related Account Request",
-                            Body = "You have a new Related Account Request"
-                        },
-                        Token = x.DeviceToken
-                    } : new FirebaseAdmin.Messaging.Message()
-                    {
-                        Notification = new FirebaseAdmin.Messaging.Notification
-                        {
-                            Title = "طلب إرتباط",
-                            Body = "لديك طلب إرتباط جديد"
-                        },
-                        Token = x.DeviceToken
-                    }).ToListAsync();
+                        EnglishTitle = "Related Account Request",
+                        EnglishBody = "You have a new Related Account Request",
+                        ArabicTitle = "طلب إرتباط",
+                        ArabicBody = "لديك طلب إرتباط جديد"
+                    };
+                    await _NotificationRepository.AddAsync(Notification);
 
-            if (NotificationMessages.Any())
-                await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendEachAsync(NotificationMessages);
-
+                    Transaction.Complete();
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
             ResponseMessage = Request.lang == "en"
                 ? "Request sent successfuly"
                 : "تم إرسال الطلب بنجاح";

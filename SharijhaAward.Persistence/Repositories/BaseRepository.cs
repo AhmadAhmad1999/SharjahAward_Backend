@@ -188,17 +188,20 @@ namespace SharijhaAward.Persistence.Repositories
             {
                 query = await _DbSet.AsNoTracking().Where(predicate).ToListAsync();
             }
+            else
+            {
+                if (size == 0)
+                    size = 10;
+                query = query.Skip((page - 1) * size).Take(size).ToList();
+            }
 
             if (filterObject != null && filterObject.Filters != null)
             {
                 query = Filtration(filterObject).ToList();
             }
 
-            if (size == 0)
-                size = 10;
-            query = query
-                .Skip((page - 1) * size).Take(size).ToList();
-
+            
+                
             return query;
         }  
         public async virtual Task<IReadOnlyList<T>> GetWhereThenPagedReponseAsync(Expression<Func<T, bool>> predicate, int page, int size)

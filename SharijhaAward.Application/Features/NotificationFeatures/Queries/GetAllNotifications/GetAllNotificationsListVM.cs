@@ -7,5 +7,7 @@
         public string EnglishTitle { get; set; } = null!;
         public string ArabicBody { get; set; } = null!;
         public string EnglishBody { get; set; } = null!;
+        public DateTime CreatedAt { get; set; }
+
     }
 }

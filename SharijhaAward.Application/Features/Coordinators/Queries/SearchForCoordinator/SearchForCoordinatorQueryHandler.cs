@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
@@ -15,19 +16,22 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
         : IRequestHandler<SearchForCoordinatorQuery, BaseResponse<List<CoordinatorSearchListVM>>>
     {
         private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
-        private readonly IAsyncRepository<EduEntitiesCoordinator> _educationalEntityRepository;
+        private readonly IAsyncRepository<EducationalEntity> _educationalEntityRepository;
         private readonly IAsyncRepository<EducationalInstitution> _educationalInstitutionRepository;
         private readonly IAsyncRepository<EduInstitutionCoordinator> _EduInstitutionCoordinatorRepository;
+        private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IMapper _mapper;
 
-        public SearchForCoordinatorQueryHandler(IAsyncRepository<EducationalInstitution> educationalInstitutionRepository,IAsyncRepository<Coordinator> coordinatorRepository, IAsyncRepository<EduEntitiesCoordinator> educationalEntityRepository, IMapper mapper,
-            IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository)
+        public SearchForCoordinatorQueryHandler(IAsyncRepository<EducationalInstitution> educationalInstitutionRepository,IAsyncRepository<Coordinator> coordinatorRepository, IAsyncRepository<EducationalEntity> educationalEntityRepository, IMapper mapper,
+            IAsyncRepository<EduInstitutionCoordinator> EduInstitutionCoordinatorRepository,
+            IAsyncRepository<EduEntitiesCoordinator> EduEntitiesCoordinatorRepository)
         {
             _coordinatorRepository = coordinatorRepository;
             _educationalInstitutionRepository = educationalInstitutionRepository;
             _educationalEntityRepository = educationalEntityRepository;
             _mapper = mapper;
             _EduInstitutionCoordinatorRepository = EduInstitutionCoordinatorRepository;
+            _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
         }
 
         public async Task<BaseResponse<List<CoordinatorSearchListVM>>> Handle(SearchForCoordinatorQuery request, CancellationToken cancellationToken)
@@ -68,65 +72,93 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.SearchForCoord
                 }
                 var predicate1 = Expression.Lambda<Func<EducationalInstitution, bool>>(
                       predicateBody, EducationalInstitutionParam);
+                
 
-                var EducationalInstitutions = await _educationalInstitutionRepository.Where(predicate1).ToListAsync();
+                var EduEntities = await _educationalInstitutionRepository.Where(predicate1).Select(e=>e.EducationalEntity).ToListAsync();
 
-                CoordinatorsResult = await _EduInstitutionCoordinatorRepository
-                    .Where(x => EducationalInstitutions.Select(y => y.Id).Contains(x.EducationalInstitutionId))
+                CoordinatorsResult = await _EduEntitiesCoordinatorRepository
+                    .Where(x => EduEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
                     .Select(x => x.Coordinator!)
                     .ToListAsync();
 
                 if (request.EducationalEntity != null)
-                {
-                     CoordinatorsResult = await _EduInstitutionCoordinatorRepository
-                        .Where(x => x.EducationalInstitution!.EducationalEntityId == request.EducationalEntity)
-                        .Where(x=>x.EducationalInstitution.Emirates == request.Emirates && x.EducationalInstitution.EducationType == request.EducationType)
+                {   
+                    EduEntities = EduEntities
+                        .Where(x => x.Id == request.EducationalEntity).ToList();
+
+                    CoordinatorsResult = await _EduEntitiesCoordinatorRepository
+                        .Where(x => EduEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
                         .Select(x => x.Coordinator!)
                         .ToListAsync();
 
                     if (request.School != null)
                     {
-                        CoordinatorsResult = _EduInstitutionCoordinatorRepository
-                            .Where(x => x.EducationalInstitutionId == request.School)
-                            .Where(x => x.EducationalInstitution.Emirates == request.Emirates && x.EducationalInstitution.EducationType == request.EducationType)
-                            .Where(x => x.EducationalInstitution.EducationalEntityId == request.EducationalEntity)
-                            .Select(x => x.Coordinator)
-                            .ToList()!;
+
+                        EduEntities = await _educationalInstitutionRepository
+                            .Where(x => x.Id == request.School)
+                            .Where(x => EduEntities.Select(e => e.Id).Contains(x.EducationalEntityId))
+                            .Where(predicate1)
+                            .Select(e => e.EducationalEntity).ToListAsync();
+
+                        CoordinatorsResult = await _EduEntitiesCoordinatorRepository
+                           .Where(x => EduEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
+                           .Select(x => x.Coordinator!)
+                           .ToListAsync();
+
                     }
                 }
 
                 if (request.School != null)
                 {
-                    CoordinatorsResult = _EduInstitutionCoordinatorRepository
-                        .Where(x => x.EducationalInstitutionId == request.School)
-                        .Where(x => x.EducationalInstitution.Emirates == request.Emirates && x.EducationalInstitution.EducationType == request.EducationType)
-                        .Select(x => x.Coordinator)
-                        .ToList()!;
+                    EduEntities = await _educationalInstitutionRepository
+                        .Where(x => x.Id == request.School)
+                        .Where(predicate1)
+                        .Select(e => e.EducationalEntity).ToListAsync();
+
+                    CoordinatorsResult = await _EduEntitiesCoordinatorRepository
+                       .Where(x => EduEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
+                       .Select(x => x.Coordinator!)
+                       .ToListAsync();
+
                 }
             }
             else if (request.EducationalEntity != null)
             {
-                CoordinatorsResult = await _EduInstitutionCoordinatorRepository
-                   .Where(x => x.EducationalInstitution!.EducationalEntityId == request.EducationalEntity)
+
+               var EduEntities = _educationalEntityRepository
+                        .Where(x => x.Id == request.EducationalEntity).ToList();
+
+               CoordinatorsResult = await _EduEntitiesCoordinatorRepository
+                   .Where(x => EduEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
                    .Select(x => x.Coordinator!)
                    .ToListAsync();
 
                 if (request.School != null)
                 {
-                    CoordinatorsResult = _EduInstitutionCoordinatorRepository
-                        .Where(x => x.EducationalInstitutionId == request.School)
-                        .Where(x => x.EducationalInstitution.EducationalEntityId == request.EducationalEntity)
-                        .Select(x => x.Coordinator)
-                        .ToList()!;
+
+                    EduEntities = await _educationalInstitutionRepository
+                        .Where(x => x.Id == request.School)
+                        .Select(e => e.EducationalEntity).ToListAsync();
+
+                    CoordinatorsResult = await _EduEntitiesCoordinatorRepository
+                       .Where(x => EduEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
+                       .Select(x => x.Coordinator!)
+                       .ToListAsync();
 
                 }
             }
             else if (request.School != null)
             {
-                CoordinatorsResult = _EduInstitutionCoordinatorRepository
-                    .Where(x => x.EducationalInstitutionId == request.School)
-                    .Select(x => x.Coordinator)
-                    .ToList()!;
+
+                var EduEntities = await _educationalInstitutionRepository
+                    .Where(x => x.Id == request.School)
+                    .Select(e => e.EducationalEntity).ToListAsync();
+
+                CoordinatorsResult = await _EduEntitiesCoordinatorRepository
+                    .Where(x => EduEntities.Select(y => y.Id).Contains(x.EducationalEntityId))
+                    .Select(x => x.Coordinator!)
+                    .ToListAsync();
+
             }
             else
             {

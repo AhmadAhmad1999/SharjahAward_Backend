@@ -9,6 +9,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
         public bool GetRemainigForms { get; set; }
         public int page { get; set; }
         public int perPage { get; set; }
+        public string token { get; set; } = string.Empty;
         public string? lang { get; set; }
     }
 }
