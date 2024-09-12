@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
 
                 if (Request.page != 0 && Request.perPage != -1)
                 {
-                    UserNotifications = await _UserNotificationRepository
+                    var xx = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
                         .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
                             ? new GetAllNotificationsByFCM_TokenListVM()
@@ -63,10 +63,13 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                                 Title = x.Notification!.ArabicTitle,
                                 Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
                             })
-                        .OrderByDescending(x => x.Id)
+                        .ToListAsync();
+
+                    UserNotifications = xx
+                        .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
-                        .ToListAsync();
+                        .ToList();
                 }
                 else
                 {
@@ -87,6 +90,7 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                                 Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
                             })
                         .OrderByDescending(x => x.Id)
+                        .OrderByDescending(x => x.CreatedAt)
                         .ToListAsync();
                 }
 

@@ -14,6 +14,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
     public class SendRelatingRequestHandler : IRequestHandler<SendRelatingRequestCommand, BaseResponse<object>>
     {
         private readonly IUserRepository _UserRepository;
+        private readonly IAsyncRepository<UserNotification> _UserNotificationRepository;
         private readonly IAsyncRepository<Notification> _NotificationRepository;
         private readonly IAsyncRepository<RelatedAccountRequest> _RelatedAccountRequestRepository;
         private readonly IAsyncRepository<RelatedAccount> _RelatedAccountRepository;
@@ -23,12 +24,14 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
 
         public SendRelatingRequestHandler(IUserRepository UserRepository,
             IAsyncRepository<RelatedAccountRequest> RelatedAccountRequestRepository,
+            IAsyncRepository<UserNotification> UserNotificationRepository,
             IAsyncRepository<RelatedAccount> RelatedAccountRepository,
             IJwtProvider JWTProvider,
             IAsyncRepository<UserRole> UserRoleRepository,
             IAsyncRepository<Notification> NotificationRepository,
             IAsyncRepository<UserToken> UserTokenRepository)
         {
+            _UserNotificationRepository = UserNotificationRepository;
             _UserRepository = UserRepository;
             _RelatedAccountRequestRepository = RelatedAccountRequestRepository;
             _RelatedAccountRepository = RelatedAccountRepository;
@@ -116,7 +119,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
 
                     await _RelatedAccountRequestRepository.AddAsync(NewRelatedAccountRequestEntity);
 
-
                     List<FirebaseAdmin.Messaging.Message> NotificationMessages = await _UserTokenRepository
                         .Where(x => x.User!.Email == Request.ReceiverEmail && !string.IsNullOrEmpty(x.DeviceToken))
                         .Select(x => x.AppLanguage == "en"
@@ -141,14 +143,21 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
                     if (NotificationMessages.Any())
                         await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendEachAsync(NotificationMessages);
 
-                    var Notification = new Notification()
+         
+                    var Notification = await _NotificationRepository.AddAsync(new Notification()
                     {
                         EnglishTitle = "Related Account Request",
                         EnglishBody = "You have a new Related Account Request",
                         ArabicTitle = "طلب إرتباط",
                         ArabicBody = "لديك طلب إرتباط جديد"
-                    };
-                    await _NotificationRepository.AddAsync(Notification);
+                    });
+
+                    await _UserNotificationRepository.AddAsync(new UserNotification()
+                    {
+                        NotificationId = Notification.Id,
+                        UserId = UserRole.UserId,
+                        isReaded = false
+                    });
 
                     Transaction.Complete();
                 }

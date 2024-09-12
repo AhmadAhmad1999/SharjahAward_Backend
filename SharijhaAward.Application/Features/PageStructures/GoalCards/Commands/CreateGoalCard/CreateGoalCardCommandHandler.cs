@@ -43,11 +43,24 @@ namespace SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.C
                 return new BaseResponse<object>(msg, false, 404);
             }
 
-            var GoalCard = _mapper.Map<PageCard>(request);
+            var GoalCards = new List<PageCard>();
 
-            GoalCard.CardType = CardType.GoalCard;
+            foreach (var card in request.GoalCards)
+            {
+                var GoalCard = new PageCard()
+                {
+                    ArabicContent = card.ArabicContent,
+                    orderId = card.orderId,
+                    EnglishContent = card.EnglishContent,
+                    IsHide = card.IsHide,
+                    PageId = request.PageId,
+                    CardType = card.CardType,
+                };
 
-            await _pageCardRepository.AddAsync(GoalCard);
+                GoalCards.Add(GoalCard);
+            }
+
+            await _pageCardRepository.AddRangeAsync(GoalCards);
 
             return new BaseResponse<object>(msg, true, 200);
         }
