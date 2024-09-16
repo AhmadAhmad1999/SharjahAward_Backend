@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public string Slug { get; set; } = string.Empty;
+        public PageType PageType { get; set; }
         public List<SubPageListVM>? SubPages { get; set; } 
     }
 }

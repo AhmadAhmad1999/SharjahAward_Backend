@@ -363,6 +363,7 @@ using SharijhaAward.Domain.Entities.LoggerModel;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetGoalCardById;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.CreateGoalCard;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetAllGoalCardsByPageId;
+using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.UpdateGoalCard;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -587,7 +588,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<PageCard, DarkCardDto>().ReverseMap();
 
             CreateMap<PageCard, CreateGoalCardCommand>().ReverseMap();
-            //CreateMap<PageCard, UpdateGoalCardCommand>().ReverseMap();
+            CreateMap<PageCard, UpdateGoalCardCommand>().ReverseMap();
             CreateMap<PageCard, GoalCardListVM>().ReverseMap();
             CreateMap<PageCard, GoalCardDto>().ReverseMap();
 

@@ -9,6 +9,7 @@ namespace SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.Ge
 {
     public class GoalCardListVM
     {
+        public int Id { get; set; }
         public int orderId { get; set; }
         public string Content { get; set; } = string.Empty;
         public string EnglishContent { get; set; } = string.Empty;

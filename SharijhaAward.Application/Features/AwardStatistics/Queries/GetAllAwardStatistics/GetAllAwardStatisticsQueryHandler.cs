@@ -50,6 +50,7 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
                 foreach (var item in data)
                 {
                     item.Title = request.lang == "en" ? item.EnglishTitle : item.ArabicTitle;
+                    item.CycleNumber = cycle.CycleNumber;
                 }
 
                 int count = _awardStatisticRepository.GetCount(a => a.CycleId == request.CycleId);
@@ -60,6 +61,7 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
             }
             else
             {
+                
                 var AllStatistics = await _awardStatisticRepository
                     .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
                     .ToListAsync();
@@ -68,7 +70,10 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
 
                 foreach (var item in data)
                 {
+                    var cycle = await _cycleRepository.GetByIdAsync(item.CycleId);
+                    
                     item.Title = request.lang == "en" ? item.EnglishTitle : item.ArabicTitle;
+                    item.CycleNumber = cycle == null ? 0 : cycle!.CycleNumber;
                 }
 
                 int count = _awardStatisticRepository.GetCount(a => a.CycleId == request.CycleId);

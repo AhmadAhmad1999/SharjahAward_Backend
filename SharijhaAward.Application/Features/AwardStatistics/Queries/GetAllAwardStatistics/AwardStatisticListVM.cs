@@ -14,5 +14,6 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
         public string ArabicTitle { get; set; } = string.Empty;
         public int StatisticValue { get; set; }
         public int CycleId { get; set; }
+        public int CycleNumber { get; set; }
     }
 }

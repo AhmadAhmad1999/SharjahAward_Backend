@@ -121,7 +121,7 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(Token) && string.IsNullOrEmpty(DeviceToken))
                 return Unauthorized("You must send either the token or the device token");
 
-            BaseResponse<List<GetAllNotificationsByFCM_TokenListVM>> Response = await _Mediator.Send(new GetAllNotificationsByFCM_TokenQuery()
+            BaseResponse<GetAllNotificationsByFCM_TokenListVM> Response = await _Mediator.Send(new GetAllNotificationsByFCM_TokenQuery()
             {
                 lang = HeaderValue!,
                 page = Page,

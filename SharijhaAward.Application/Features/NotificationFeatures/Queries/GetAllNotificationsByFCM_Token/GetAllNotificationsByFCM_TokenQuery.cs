@@ -3,7 +3,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotificationsByFCM_Token
 {
-    public class GetAllNotificationsByFCM_TokenQuery : IRequest<BaseResponse<List<GetAllNotificationsByFCM_TokenListVM>>>
+    public class GetAllNotificationsByFCM_TokenQuery : IRequest<BaseResponse<GetAllNotificationsByFCM_TokenListVM>>
     {
         public int page { get; set; }
         public int perPage { get; set; }

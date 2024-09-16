@@ -8,6 +8,7 @@ using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetAll
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetGoalCardById;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.CreateGoalCard;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetAllGoalCardsDashboard;
+using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.UpdateGoalCard;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -59,22 +60,22 @@ namespace SharijhaAward.Api.Controllers
             };
         }
 
-        //[HttpPut(Name = "UpdateGoalCard")]
-        //public async Task<IActionResult> UpdateGoalCard(UpdateGoalCardCommand command)
-        //{
-        //    var language = HttpContext.Request.Headers["lang"];
+        [HttpPut(Name = "UpdateGoalCard")]
+        public async Task<IActionResult> UpdateGoalCard(UpdateGoalCardCommand command)
+        {
+            var language = HttpContext.Request.Headers["lang"];
 
-        //    command.lang = language!;
+            command.lang = language!;
 
-        //    var response = await _mediator.Send(command);
+            var response = await _mediator.Send(command);
 
-        //    return response.statusCode switch
-        //    {
-        //        200 => Ok(response),
-        //        404 => NotFound(response),
-        //        _ => BadRequest(response)
-        //    };
-        //}
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
 
         [HttpGet("GetAllGoalCard/{PageId}", Name = "GetAllGoalCard")]
         public async Task<IActionResult> GetAllGoalCard(int PageId)

@@ -84,7 +84,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 {
                     Card = Darkcard,
                     CardType = "DarkCard",
-                    orderId = Darkcard.orderId
+                    orderId = Darkcard.orderId,
+                    IsHide = Darkcard.IsHide
                 };
 
                 data.Components!.Add(Component);
@@ -101,7 +102,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 {
                     Card = Paragraphcard,
                     CardType = "ParagraphCard",
-                    orderId = Paragraphcard.orderId
+                    orderId = Paragraphcard.orderId,
+                    IsHide = Paragraphcard.IsHide
                 };
 
                 data.Components!.Add(Component);
@@ -117,7 +119,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 {
                     Card = Imagecard,
                     CardType = "ImageCard",
-                    orderId = Imagecard.orderId
+                    orderId = Imagecard.orderId,
+                    IsHide = Imagecard.IsHide
                 };
 
                 data.Components!.Add(Component);
@@ -132,7 +135,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 {
                     Card = Textcard,
                     CardType = "TextCard",
-                    orderId = Textcard.orderId
+                    orderId = Textcard.orderId,
+                    IsHide = Textcard.IsHide
                 };
 
                 data.Components!.Add(Component);

@@ -75,8 +75,10 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Commands.Creat
                                     Title = NewNotificationEntity.EnglishTitle,
                                     Body = NewNotificationEntity.EnglishBody.Replace("$Email$", x.User!.Email)
                                 },
-                                Token = x.DeviceToken
-                            } : new FirebaseAdmin.Messaging.Message()
+                                Token = x.DeviceToken,
+   
+                            }
+                            : new FirebaseAdmin.Messaging.Message()
                             {
                                 Notification = new FirebaseAdmin.Messaging.Notification
                                 {
