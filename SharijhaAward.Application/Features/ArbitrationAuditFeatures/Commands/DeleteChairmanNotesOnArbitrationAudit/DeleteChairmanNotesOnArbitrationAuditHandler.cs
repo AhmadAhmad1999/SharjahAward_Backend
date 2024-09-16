@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.DeleteChairmanNotesOnArbitrationAudit;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 

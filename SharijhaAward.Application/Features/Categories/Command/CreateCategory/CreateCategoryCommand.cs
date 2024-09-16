@@ -31,7 +31,6 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
         public int? ParentId { get; set; }
         public int? CycleId { get; set; }
         public bool? RelatedToEducationalEntities { get; set; }
-        public List<int>? EducationalEntityIds { get; set; }
         public string lang {  get; set; } = string.Empty;
     }
 }

@@ -164,9 +164,9 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                 .Where(x => x.ArbitratorId == Request.ArbitratorId)
                 .Select(x => new GetAllClassesListVM()
                 {
-                    Id = x.EducationalClassId,
-                    ArabicName = x.EducationalClass!.ArabicName,
-                    EnglishName = x.EducationalClass!.EnglishName
+                    Id = x.CategoryEducationalClassId,
+                    ArabicName = x.CategoryEducationalClass!.EducationalClass!.ArabicName,
+                    EnglishName = x.CategoryEducationalClass!.EducationalClass!.EnglishName
                 }).ToListAsync();
 
             var ResponsibilitiesUser = await _userRepository

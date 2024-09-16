@@ -1,18 +1,14 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
-using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
-using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
-using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinator
 {
     public class DeleteCoordinatorHandler : IRequestHandler<DeleteCoordinatorCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
+<<<<<<< HEAD
         private readonly IAsyncRepository<EduEntitiesCoordinator> _EduEntitiesCoordinatorRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
@@ -26,6 +22,12 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordin
             _EduEntitiesCoordinatorRepository = EduEntitiesCoordinatorRepository;
             _UserRepository = UserRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+=======
+
+        public DeleteCoordinatorHandler(IAsyncRepository<Coordinator> CoordinatorRepository)
+        {
+            _CoordinatorRepository = CoordinatorRepository;
+>>>>>>> ArbitrationFeeback_1
         }
 
         public async Task<BaseResponse<object>> Handle(DeleteCoordinatorCommand Request, CancellationToken cancellationToken)
@@ -44,15 +46,13 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordin
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            Domain.Entities.IdentityModels.User? UserEntityToDelete = await _UserRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+            await _CoordinatorRepository.DeleteAsync(CoordinatorEntityToDelete);
 
-            if (UserEntityToDelete == null)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "User is not found"
-                    : "المستخدم غير موجود";
+            ResponseMessage = Request.lang == "en"
+                ? "Coordinator has been deleted successfully"
+                : "تم حذف المنسق بنجاح";
 
+<<<<<<< HEAD
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
@@ -98,6 +98,9 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordin
                     throw;
                 }
             }
+=======
+            return new BaseResponse<object>(ResponseMessage, true, 200);
+>>>>>>> ArbitrationFeeback_1
         }
     }
 }

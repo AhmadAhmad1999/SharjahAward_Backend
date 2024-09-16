@@ -126,9 +126,11 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                         EducationalClassName = Request.lang == "en"
                             ? x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName ?? null
                             : x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName ?? null,
-                        EducationalEntityName = Request.lang == "en"
-                            ? x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.EnglishName ?? null
-                            : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
+                        EducationalEntityName = x.ProvidedForm.EducationalEntityId != null
+                            ? (Request.lang == "en"
+                                ? x.ProvidedForm!.EducationalEntity!.EnglishName ?? null
+                                : x.ProvidedForm!.EducationalEntity!.ArabicName ?? null)
+                            : null,
                         ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                         Gender = x.ProvidedForm!.User.Gender,
                         NotifiedAsWinner = x.NotifiedAsWinner
@@ -173,9 +175,11 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                         EducationalClassName = Request.lang == "en"
                             ? x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName ?? null
                             : x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName ?? null,
-                        EducationalEntityName = Request.lang == "en"
-                            ? x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.EnglishName ?? null
-                            : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
+                        EducationalEntityName = x.ProvidedForm.EducationalEntityId != null
+                            ? (Request.lang == "en"
+                                ? x.ProvidedForm!.EducationalEntity!.EnglishName ?? null
+                                : x.ProvidedForm!.EducationalEntity!.ArabicName ?? null)
+                            : null,
                         ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                         Gender = x.ProvidedForm!.User.Gender,
                         NotifiedAsWinner = x.NotifiedAsWinner
@@ -224,10 +228,10 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                             ? x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!.EnglishName ?? null
                             : x.ProvidedForm!.CategoryEducationalClass!.EducationalClass!.ArabicName ?? null)
                         : null,
-                    EducationalEntityName = x.ProvidedForm!.CategoryEducationalEntity != null
+                    EducationalEntityName = x.ProvidedForm.EducationalEntityId != null
                         ? (Request.lang == "en"
-                            ? x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!.EnglishName ?? null
-                            : x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!.ArabicName ?? null)
+                            ? x.ProvidedForm!.EducationalEntity!.EnglishName ?? null
+                            : x.ProvidedForm!.EducationalEntity!.ArabicName ?? null)
                         : null,
                     ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                     Gender = x.ProvidedForm!.User.Gender,

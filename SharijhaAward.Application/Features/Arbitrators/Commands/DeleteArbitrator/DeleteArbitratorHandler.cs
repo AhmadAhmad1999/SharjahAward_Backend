@@ -1,34 +1,17 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
-using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
-using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitrator
 {
     public class DeleteArbitratorHandler : IRequestHandler<DeleteArbitratorCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
-        private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
-        private readonly IUserRepository _UserRepository;
-        private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
-        private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
 
-        public DeleteArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
-            IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
-            IUserRepository UserRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<ArbitratorClass> ArbitratorClassRepository)
+        public DeleteArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository)
         {
             _ArbitratorRepository = ArbitratorRepository;
-            _CategoryArbitratorRepository = CategoryArbitratorRepository;
-            _UserRepository = UserRepository;
-            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
-            _ArbitratorClassRepository = ArbitratorClassRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(DeleteArbitratorCommand Request, CancellationToken cancellationToken)
@@ -47,67 +30,13 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.DeleteArbitrat
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            Domain.Entities.IdentityModels.User? UserEntityToDelete = await _UserRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+            await _ArbitratorRepository.DeleteAsync(ArbitratorEntityToDelete);
 
-            if (UserEntityToDelete == null)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "User is not found"
-                    : "المستخدم غير موجود";
+            ResponseMessage = Request.lang == "en"
+                ? "Arbitrator has been deleted successfully"
+                : "تم حذف المحكم بنجاح";
 
-                return new BaseResponse<object>(ResponseMessage, false, 404);
-            }
-
-            List<DynamicAttributeValue> DynamicAttributeValues = await _DynamicAttributeValueRepository
-                .Where(x => x.RecordIdAsGuid == Request.Id)
-                .ToListAsync();
-
-            List<CategoryArbitrator> AlreadyInsertedCategoryArbitrators = await _CategoryArbitratorRepository
-                .Where(x => x.ArbitratorId == Request.Id)
-                .ToListAsync();
-
-            List<ArbitratorClass> AlreadyInsertedArbitratorClasses = await _ArbitratorClassRepository
-                .Where(x => x.ArbitratorId == Request.Id)
-                .ToListAsync();
-
-            TransactionOptions TransactionOptions = new TransactionOptions
-            {
-                IsolationLevel = IsolationLevel.ReadCommitted,
-                Timeout = TimeSpan.FromMinutes(5)
-            };
-
-            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
-                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
-            {
-                try
-                {
-                    await _ArbitratorRepository.DeleteAsync(ArbitratorEntityToDelete);
-                    await _UserRepository.DeleteAsync(UserEntityToDelete);
-
-                    if (DynamicAttributeValues.Count() > 0)
-                        await _DynamicAttributeValueRepository.DeleteListAsync(DynamicAttributeValues);
-
-                    if (AlreadyInsertedCategoryArbitrators.Count() > 0)
-                        await _CategoryArbitratorRepository.DeleteListAsync(AlreadyInsertedCategoryArbitrators);
-
-                    if (AlreadyInsertedArbitratorClasses.Count() > 0)
-                        await _ArbitratorClassRepository.DeleteListAsync(AlreadyInsertedArbitratorClasses);
-
-                    ResponseMessage = Request.lang == "en"
-                        ? "Arbitrator has been deleted successfully"
-                        : "تم حذف المحكم بنجاح";
-
-                    Transaction.Complete();
-
-                    return new BaseResponse<object>(ResponseMessage, true, 200);
-                }
-                catch (Exception)
-                {
-                    Transaction.Dispose();
-                    throw;
-                }
-            }
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }
