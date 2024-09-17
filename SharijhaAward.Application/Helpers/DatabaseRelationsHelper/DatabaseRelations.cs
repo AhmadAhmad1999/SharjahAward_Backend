@@ -669,11 +669,11 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             SocialMedias,
 
             [Description("PageStructures/ParentId TextCards/PageStructureId ParagraphCards/PageId " + // Done
-                "ImageCards/PageId DarkCards/PageId")] // Done
+                "ImageCards/PageId DarkCards/PageId PageCards/PageId")] // Done
             PageStructure,
 
             [Description("PageStructures/ParentId TextCards/PageStructureId ParagraphCards/PageId " + // Done
-                "ImageCards/PageId DarkCards/PageId")] // Done
+                "ImageCards/PageId DarkCards/PageId PageCards/PageId")] // Done
             PageStructures,
 
             [Description("")] // Done
@@ -761,7 +761,13 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             SwitchArbitration,
 
             [Description("")] // Done
-            SwitchArbitrations
+            SwitchArbitrations,
+
+            [Description("")] // Done
+            PageCard,
+
+            [Description("")] // Done
+            PageCards
         }
         public static string GetEnumDescription(Enum value)
         {

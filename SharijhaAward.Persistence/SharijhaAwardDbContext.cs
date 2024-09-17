@@ -76,16 +76,11 @@ using SharijhaAward.Domain.Entities.ExplanatoryMessageModel;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
 using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
-<<<<<<< HEAD
-using SharijhaAward.Domain.Entities.IndexModel;
-using System.Data.Entity.ModelConfiguration.Conventions;
-=======
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using AutoMapper;
 using System.Reflection;
 using static SharijhaAward.Application.Helpers.DatabaseRelationsHelper.DatabaseRelationsClass;
 using NPOI.HSSF.Record;
->>>>>>> ArbitrationFeeback_1
 
 namespace SharijhaAward.Persistence
 {
@@ -104,63 +99,37 @@ namespace SharijhaAward.Persistence
         {
             _Mapper = Mapper;
         }
-<<<<<<< HEAD
-        public DbSet<Cycle> Cycles { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UsersRoles { get; set; }
-        public DbSet<PermissionHeader> PermissionHeaders { get; set; }
-        public DbSet<Permission> Permissions { get; set; }
-        public DbSet<RolePermission> RolePermissions { get; set; }
-        public DbSet<UserToken> UserTokens { get; set; }
-        //-----------------------
-        public DbSet<EducationalEntity> EducationalEntities { get; set; }
-        public DbSet<Criterion> Criterions { get; set; }
-        public DbSet<CriterionItem> CriterionItems { get; set; }
-        public DbSet<EducationalClass> EducationalClasses { get; set; }
-        public DbSet<CategoryEducationalClass> CategoryEducationalClasses { get; set; }
-        public DbSet<CategoryEducationalEntity> CategoryEducationalEntities { get; set; }
-        public DbSet<ProvidedForm> ProvidedForms { get; set; }
-        public DbSet<CycleCondition> CycleCondition { get; set; }
-        public DbSet<CriterionAttachment> CriterionAttachments { get; set; }
-        public DbSet<CriterionItemAttachment> CriterionItemAttachments { get; set; }
-        
-        public DbSet<ArbitrationResult> ArbitrationResults { get; set; }
-        
-=======
 
         public DbSet<SwitchArbitration> SwitchArbitrations { get; set; }
         public DbSet<ViewWhenRelation> ViewWhenRelations { get; set; }
         public DbSet<ArbitrationResult> ArbitrationResults { get; set; }
->>>>>>> ArbitrationFeeback_1
         public DbSet<ExplanatoryMessage> ExplanatoryMessages { get; set; }
         public DbSet<AdvancedFormBuilderGeneralValidation> AdvancedFormBuilderGeneralValidations { get; set; }
         public DbSet<VirtualTable> VirtualTables { get; set; }
-        public DbSet<AdvancedFormBuilderSection> AdvancedFormBuilderSections { get; set; }
-        public DbSet<AdvancedFormBuilder> AdvancedFormBuilders { get; set; }
         public DbSet<VirtualTableForSection> VirtualTableForSections { get; set; }
         public DbSet<AdvancedFormBuilderValue> AdvancedFormBuilderValues { get; set; }
         public DbSet<AdvancedFormBuilderTableValue> AdvancedFormBuilderTableValues { get; set; }
-        public DbSet<AdvancedFormBuilderPattern> AdvancedFormBuilderPatterns { get; set; }
         public DbSet<AdvancedFormBuilderPatternValue> AdvancedFormBuilderPatternValues { get; set; }
-        
+        public DbSet<AdvancedFormBuilderPattern> AdvancedFormBuilderPatterns { get; set; }
         public DbSet<AdvancedFormBuilderListValue> AdvancedFormBuilderListValues { get; set; }
-        
-       
+        public DbSet<AdvancedFormBuilder> AdvancedFormBuilders { get; set; }
+        public DbSet<AdvancedFormBuilderSection> AdvancedFormBuilderSections { get; set; }
         public DbSet<DynamicAttributeTableValue> DynamicAttributeTableValue { get; set; }
         public DbSet<FinalArbitrationScore> FinalArbitrationScores { get; set; }
         public DbSet<ChairmanNotesOnFinalArbitrationScore> ChairmanNotesOnFinalArbitrationScores { get; set; }
-        
+        public DbSet<FinalArbitration> FinalArbitrations { get; set; }
         public DbSet<InterviewAttachment> InterviewAttachments { get; set; }
         public DbSet<Interview> Interviews { get; set; }
         public DbSet<InterviewNote> InterviewNotes { get; set; }
         public DbSet<InterviewQuestion> InterviewQuestions { get; set; }
         public DbSet<InterviewCategory> InterviewCategories { get; set; }
         public DbSet<InterviewUser> InterviewUsers { get; set; }
-        
+        public DbSet<InitialArbitration> InitialArbitrations { get; set; }
+        public DbSet<ArbitrationAudit> ArbitrationAudits { get; set; }
+        public DbSet<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrations { get; set; }
+        public DbSet<ChairmanNotesOnArbitrationAudit> ChairmanNotesOnArbitrationAudits { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }
-        
+        public DbSet<UserToken> UserTokens { get; set; }
         public DbSet<LogUserAction> LogUserActions { get; set; }
         public DbSet<ArbitrationScale> ArbitrationScales { get; set; }
         public DbSet<ArbitrationScalesCriterion> ArbitrationScalesCriterions { get; set; }
@@ -169,44 +138,47 @@ namespace SharijhaAward.Persistence
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<MeetingUser> MeetingUsers { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        
+        public DbSet<Arbitration> Arbitrations { get; set; }
+        public DbSet<UserRole> UsersRoles { get; set; }
+        public DbSet<PermissionHeader> PermissionHeaders { get; set; }
         public DbSet<Instruction> Instructions { get; set; }
         public DbSet<AppVersion> AppVersions { get; set; }
         public DbSet<RelatedAccountRequest> RelatedAccountRequests { get; set; }
         public DbSet<ArbitratorClass> ArbitratorClasses { get; set; }
         public DbSet<Committee> Committees { get; set; }
-        public DbSet<Arbitrator> Arbitrators { get; set; }
         public DbSet<ComitteeArbitrator> ComitteesArbitrators { get; set; }
         public DbSet<CategoryCommittee> CategoryCommittees { get; set; }
-        public DbSet<FinalArbitration> FinalArbitrations { get; set; }
-        public DbSet<InitialArbitration> InitialArbitrations { get; set; }
-        public DbSet<ArbitrationAudit> ArbitrationAudits { get; set; }
-        public DbSet<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrations { get; set; }
-        public DbSet<ChairmanNotesOnArbitrationAudit> ChairmanNotesOnArbitrationAudits { get; set; }
-        public DbSet<Arbitration> Arbitrations { get; set; }
+        public DbSet<CategoryEducationalClass> CategoryEducationalClasses { get; set; }
+        public DbSet<EducationalClass> EducationalClasses { get; set; }
+        public DbSet<Arbitrator> Arbitrators { get; set; }
         public DbSet<CategoryArbitrator> CategoriesArbitrators { get; set; }
         public DbSet<Agenda> Agendas { get; set; }
         public DbSet<RelatedAccount> RelatedAccounts { get; set; }
-        public DbSet<GeneralFAQCategory> GeneralFAQCategories { get; set; }
+        public DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; }
         public DbSet<GeneralFAQ> GeneralFAQs { get; set; }
+        public DbSet<GeneralFAQCategory> GeneralFAQCategories { get; set; }
         public DbSet<TrainingWorkshop> TrainingWorkshops { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<PersonalInvitee> Personalnvitees { get; set; }
         public DbSet<GroupInvitee> GroupInvitees { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<TrainingWorkshopSubscriber> TrainingWorkshopSubscribers { get; set; }
-
+        public DbSet<Cycle> Cycles { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<ProvidedForm> ProvidedForms { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<AttributeDataType> AttributeDataTypes { get; set; }
         public DbSet<AttributeOperation> AttributeOperations { get; set; }
         public DbSet<AttributeTableName> AttributeTableNames { get; set; }
         public DbSet<Dependency> Dependencies { get; set; }
         public DbSet<DependencyValidation> DependencyValidations { get; set; }
-        public DbSet<DynamicAttributeSection> DynamicAttributeSections { get; set; }
         public DbSet<DynamicAttribute> DynamicAttributes { get; set; }
         public DbSet<GeneralValidation> DynamicAttributeGeneralValidations { get; set; }
         public DbSet<DynamicAttributeListValue> DynamicAttributeListValues { get; set; }
-        
+        public DbSet<DynamicAttributeSection> DynamicAttributeSections { get; set; }
         public DbSet<DynamicAttributeValue> DynamicAttributeValues { get; set; }
-        public DbSet<ViewWhenRelation> ViewWhenRelations { get; set; }
         public DbSet<StaticAttribute> StaticAttributes { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<TermAndCondition> TermsAndConditions { get; set; }
@@ -214,17 +186,18 @@ namespace SharijhaAward.Persistence
         public DbSet<DynamicAttributePattern> DynamicAttributePatterns { get; set; }
         public DbSet<DynamicAttributePatternValue> DynamicAttributePatternValues { get; set; }
         public DbSet<CategoryFAQ> CategoryFAQs { get; set; }
-        public DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestions { get; set; }
         public DbSet<ExplanatoryGuide> ExplanatoryGuides { get; set; }
-        
+        public DbSet<CycleCondition> CycleCondition { get; set; }
         public DbSet<TrainingWrokshopeAttachment> TrainingWrokshopeAttachment { get; set; }
         public DbSet<ConditionAttachment> ConditionAttachments { get; set; }
         public DbSet<Coordinator> Coordinators { get; set; }
-        
+        public DbSet<EducationalEntity> EducationalEntities { get; set; }
         public DbSet<EducationalInstitution> EducationalInstitutions { get; set; }
         public DbSet<EduEntitiesCoordinator> EntitiesCoordinators { get; set; }
-
-        
+        public DbSet<CriterionAttachment> CriterionAttachments { get; set; }
+        public DbSet<Criterion> Criterions { get; set; }
+        public DbSet<CriterionItem> CriterionItems { get; set; }
+        public DbSet<CriterionItemAttachment> CriterionItemAttachments { get; set; }
         public DbSet<AboutAwardPage> AboutAwardPage { get; set; }
         public DbSet<GeneralWorkshop> GeneralWorkshops { get; set; }
         public DbSet<OurGoal> OurGoals { get; set; }
@@ -246,7 +219,6 @@ namespace SharijhaAward.Persistence
         public DbSet<StrategicPartner> StrategicPartners { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<PageStructure> PageStructures { get; set; }
-        public DbSet<PageCard> PageCards { get; set; }
         public DbSet<AwardSponsor> AwardSponsors { get; set; }
         public DbSet<Reward> Rewards { get; set; }
         public DbSet<AwardStatistic> AwardStatistics { get; set; }
@@ -254,7 +226,6 @@ namespace SharijhaAward.Persistence
         public DbSet<CoordinatorForm> CoordinatorForms { get; set; }
         public DbSet<Responsibility> Responsibilities { get; set; }
         public DbSet<ResponsibilityUser> ResponsibilitiesUsers { get; set; }
-        public DbSet<News> News { get; set; }
         public DbSet<NewsImage> NewsImages { get; set; }
         public DbSet<CircularArbitrator> CircularArbitrators { get; set; }
         public DbSet<CircularCoordinator> CircularCoordinators { get; set; }
@@ -263,47 +234,12 @@ namespace SharijhaAward.Persistence
         public DbSet<ImageCard> ImageCards { get; set; }
         public DbSet<PageStructureImages> PageStructureImages { get; set; }
         public DbSet<OnePageText> OnePageText { get; set; }
-        
+        public DbSet<News> News { get; set; }
+        public DbSet<PageCard> PageCards { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                // Check if the entity inherits from AuditableEntity
-                if (typeof(AuditableEntity).IsAssignableFrom(entityType.ClrType))
-                {
-                    // Configure the 'isDeleted' property to have a default value of false
-                    modelBuilder.Entity(entityType.ClrType)
-                        .Property(nameof(AuditableEntity.isDeleted))
-                        .HasDefaultValue(false);
-
-                    modelBuilder.Entity(entityType.ClrType)
-                        .Property(nameof(AuditableEntity.DeletedAt))
-                        .HasDefaultValue(null);
-
-                    modelBuilder.Entity(entityType.ClrType)
-                        .Property(nameof(AuditableEntity.CreatedBy))
-                        .HasDefaultValue(null);
-
-                    modelBuilder.Entity(entityType.ClrType)
-                        .Property(nameof(AuditableEntity.CreatedAt))
-                        .HasDefaultValue(DateTime.UtcNow);
-
-                    modelBuilder.Entity(entityType.ClrType)
-                        .Property(nameof(AuditableEntity.LastModifiedBy))
-                        .HasDefaultValue(null);
-
-                    modelBuilder.Entity(entityType.ClrType)
-                        .Property(nameof(AuditableEntity.LastModifiedAt))
-                        .HasDefaultValue(null);
-                }
-            }
-
             base.OnModelCreating(modelBuilder);
-
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            {
-                relationship.DeleteBehavior = DeleteBehavior.NoAction;
-            }
 
             //Filter for Deleted items
             modelBuilder.Entity<Achievement>()
@@ -350,10 +286,6 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<NotificationTemplate>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<LogUserAction>()
-                .Navigation(p => p.User)
-                .AutoInclude();
-
             modelBuilder.Entity<LogUserAction>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<UserToken>()
@@ -361,8 +293,6 @@ namespace SharijhaAward.Persistence
                 .AutoInclude();
 
             modelBuilder.Entity<UserToken>().HasQueryFilter(p => !p.isDeleted);
-
-            modelBuilder.Entity<ProvidedForm>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<UserNotification>()
                 .Navigation(p => p.User)
@@ -992,13 +922,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.User)
                 .AutoInclude();
 
-<<<<<<< HEAD
-            modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => !p.isDeleted &&
-                (p.User != null ? !p.User.isDeleted : true) &&
-                (p.Type != null ? !p.Type.isDeleted : true));
-=======
             modelBuilder.Entity<EmailMessage>().HasQueryFilter(p => !p.isDeleted);
->>>>>>> ArbitrationFeeback_1
 
             modelBuilder.Entity<EmailAttachment>()
                 .Navigation(p => p.Message)
@@ -1048,36 +972,17 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<StrategicPartner>().HasQueryFilter(p => !p.isDeleted);
 
-<<<<<<< HEAD
-            //modelBuilder.Entity<PageStructure>()
-            //    .Navigation(p => p.pageStructure)
-            //    .AutoInclude();
-
-            modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted);
-=======
             modelBuilder.Entity<PageStructure>()
                 .Navigation(p => p.pageStructure)
                 .AutoInclude();
 
             modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<DarkCard>()
-                .Navigation(p => p.PageStructure)
-                .AutoInclude();
-
-            modelBuilder.Entity<DarkCard>().HasQueryFilter(p => !p.isDeleted);
->>>>>>> ArbitrationFeeback_1
-
             modelBuilder.Entity<PageCard>()
                 .Navigation(p => p.PageStructure)
                 .AutoInclude();
 
-<<<<<<< HEAD
-            modelBuilder.Entity<PageCard>().HasQueryFilter(p => !p.isDeleted &&
-                (p.PageStructure != null ? !p.PageStructure.isDeleted : true));
-=======
-            modelBuilder.Entity<ParagraphCard>().HasQueryFilter(p => !p.isDeleted);
->>>>>>> ArbitrationFeeback_1
+            modelBuilder.Entity<PageCard>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AwardSponsor>().HasQueryFilter(p => !p.isDeleted);
 
@@ -1171,15 +1076,6 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<CircularChairman>().HasQueryFilter(p => !p.isDeleted);
 
-<<<<<<< HEAD
-=======
-            modelBuilder.Entity<TextCard>()
-                .Navigation(p => p.PageStructure)
-                .AutoInclude();
-
-            modelBuilder.Entity<TextCard>().HasQueryFilter(p => !p.isDeleted);
-
->>>>>>> ArbitrationFeeback_1
             modelBuilder.Entity<ImageCard>()
                 .Navigation(p => p.PageStructure)
                 .AutoInclude();
@@ -1265,7 +1161,6 @@ namespace SharijhaAward.Persistence
                 .HasFilter("[isDeleted] = 0")
                 .IsUnique();
 
-
         }
         public override int SaveChanges()
         {
@@ -1277,7 +1172,7 @@ namespace SharijhaAward.Persistence
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             ApplySoftDeletes();
-                    
+
             return base.SaveChangesAsync(cancellationToken);
         }
         private void ApplySoftDeletes()
