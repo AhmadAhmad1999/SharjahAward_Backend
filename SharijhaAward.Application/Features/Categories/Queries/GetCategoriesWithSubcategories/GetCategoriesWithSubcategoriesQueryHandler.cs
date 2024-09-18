@@ -6,6 +6,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CycleModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
 
 namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories
 {
@@ -14,17 +15,17 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
     {
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
-        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
+        private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
         private readonly IAsyncRepository<Cycle> _CycleRepository;
 
         public GetCategoriesWithSubcategoriesQueryHandler(IAsyncRepository<Category> CategoryRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
-            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository,
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository,
             IAsyncRepository<Cycle> CycleRepository)
         {
             _CategoryRepository = CategoryRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
-            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
+            _EducationalEntityRepository = EducationalEntityRepository;
             _CycleRepository = CycleRepository;
         }
 
@@ -72,9 +73,14 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
                 .Where(x => AllSubCategories.Select(y => y.Id).Contains(x.CategoryId))
                 .ToListAsync();
 
-            List<CategoryEducationalEntity> AllCategoryEducationalEntities = await _CategoryEducationalEntityRepository
-                .Where(x => AllSubCategories.Select(y => y.Id).Contains(x.CategoryId))
-                .ToListAsync();
+            List<GetAllCategoryEducationalEntitiesByCategoryIdDto> AllCategoryEducationalEntities = await _EducationalEntityRepository
+                .Select(x => new GetAllCategoryEducationalEntitiesByCategoryIdDto()
+                {
+                    Id = x.Id,
+                    Name = Request.lang == "en"
+                        ? x.EnglishName 
+                        : x.ArabicName,
+                }).ToListAsync();
 
             foreach (CategoriesSubcategoriesDto MainCategory in MainCategories)
             {
@@ -104,17 +110,9 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
                                 : new List<GetAllCategoryClassesByCategoryIdDto>()
                             : new List<GetAllCategoryClassesByCategoryIdDto>()),
                         RelatedToEducationalEntities = x.RelatedToEducationalEntities,
-                        SubCategoryEducationalEntities = (x.RelatedToEducationalEntities
+                        SubCategoryEducationalEntities = x.RelatedToEducationalEntities 
                             ? AllCategoryEducationalEntities
-                                .Where(y => y.CategoryId == x.Id)
-                                .Select(y => new GetAllCategoryEducationalEntitiesByCategoryIdDto()
-                                {
-                                    Id = y.Id,
-                                    Name = Request.lang == "en"
-                                        ? y.EducationalEntity!.EnglishName
-                                        : y.EducationalEntity!.ArabicName
-                                }).ToList()
-                            : new List<GetAllCategoryEducationalEntitiesByCategoryIdDto>())
+                            : new List<GetAllCategoryEducationalEntitiesByCategoryIdDto>()
                     }).ToList();
             }
 

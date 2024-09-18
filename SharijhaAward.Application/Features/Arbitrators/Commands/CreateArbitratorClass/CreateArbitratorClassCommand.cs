@@ -5,7 +5,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 {
     public class CreateArbitratorClassCommand : IRequest<BaseResponse<object>>
     {
-        public int EducationalClassId { get; set; }
+        public int CategoryEducationalClassId { get; set; }
         public int ArbitratorId { get; set; }
         public string? lang { get; set; }
     }

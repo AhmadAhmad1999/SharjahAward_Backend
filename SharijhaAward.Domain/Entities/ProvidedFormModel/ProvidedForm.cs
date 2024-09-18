@@ -7,6 +7,7 @@ using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CoordinatorFormModel;
 using SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -40,8 +41,8 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public int categoryId { get; set; }
         public int? CategoryEducationalClassId { get; set; }
         public CategoryEducationalClass? CategoryEducationalClass { get; set; }
-        public int? CategoryEducationalEntityId { get; set; }
-        public CategoryEducationalEntity? CategoryEducationalEntity { get; set; }
+        public int? EducationalEntityId { get; set; }
+        public EducationalEntity? EducationalEntity { get; set; }
         public string Formlanguage { get; set; } = string.Empty;
         //public List<CoordinatorForm> CoordinatorProvidedForms { get; set; } = null!;
         //public List<ArbitratorForm> ArbitratorProvidedForms { get; set; } = null!;

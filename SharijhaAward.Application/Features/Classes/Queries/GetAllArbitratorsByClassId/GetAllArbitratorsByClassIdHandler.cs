@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
             
             if (Request.page != 0 && Request.perPage != -1)
                 ArbitratorClassesEntities = await _ArbitratorClassRepository
-                    .Where(x => x.EducationalClassId == Request.EducationalClassId)
+                    .WhereThenFilter(x => x.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId, filterObject)
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllArbitratorsBy
                     .ToListAsync();
             else
                 ArbitratorClassesEntities = await _ArbitratorClassRepository
-                    .WhereThenFilter(x => x.EducationalClassId == Request.EducationalClassId, filterObject)
+                    .WhereThenFilter(x => x.CategoryEducationalClass!.EducationalClassId == Request.EducationalClassId, filterObject)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => x.Arbitrator!)
                     .ToListAsync();

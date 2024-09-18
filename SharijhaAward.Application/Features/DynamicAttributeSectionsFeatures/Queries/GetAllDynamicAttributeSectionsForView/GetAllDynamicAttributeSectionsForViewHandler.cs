@@ -9,6 +9,7 @@ using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using RestSharp;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
+using SharijhaAward.Domain.Entities.EducationalEntityModel;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView
 {
@@ -20,21 +21,21 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
-        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
+        private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
 
         public GetAllDynamicAttributeSectionsForViewHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<Category> CategoryRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
-            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository)
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository)
         {
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _CategoryRepository = CategoryRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
-            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
+            _EducationalEntityRepository = EducationalEntityRepository;
         }
         public async Task<BaseResponse<List<DynamicAttributeSectionListVM>>> Handle(GetAllDynamicAttributeSectionsForViewQuery Request,
             CancellationToken cancellationToken)
@@ -403,8 +404,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                     if (EducationalEntityDynamicAttributes is not null)
                     {
-                        List<DynamicAttributeListValue> NewEducationalEntities = await _CategoryEducationalEntityRepository
-                            .Where(x => x.CategoryId == Request.CategoryId)
+                        List<DynamicAttributeListValue> NewEducationalEntities = await _EducationalEntityRepository
                             .Select(x => new DynamicAttributeListValue()
                             {
                                 isDeleted = false,
@@ -414,8 +414,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                 LastModifiedAt = null,
                                 LastModifiedBy = null,
                                 DynamicAttributeId = EducationalEntityDynamicAttributes.Id,
-                                ArabicValue = x.EducationalEntity!.ArabicName,
-                                EnglishValue = x.EducationalEntity!.EnglishName
+                                ArabicValue = x.ArabicName,
+                                EnglishValue = x.EnglishName
                             }).ToListAsync();
 
                         await _DynamicAttributeListValueRepository.AddRangeAsync(NewEducationalEntities);

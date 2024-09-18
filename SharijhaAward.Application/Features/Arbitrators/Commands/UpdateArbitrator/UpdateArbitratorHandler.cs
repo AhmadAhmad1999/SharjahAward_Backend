@@ -90,13 +90,13 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
 
             List<int> AlreadyExistArbitratorClassIds = await _ArbitratorClassRepository
                 .Where(x => x.ArbitratorId == Request.Id)
-                .Select(x => x.EducationalClassId)
+                .Select(x => x.CategoryEducationalClassId)
                 .ToListAsync();
 
             List<int> IntersectArbitratorClassIds = AlreadyExistArbitratorClassIds
-                .Intersect(Request.ArbitratorClasses).ToList();
+                .Intersect(Request.ArbitratorCategoryClasses).ToList();
 
-            List<int> NewArbitratorClassIds = Request.ArbitratorClasses
+            List<int> NewArbitratorClassIds = Request.ArbitratorCategoryClasses
                 .Where(x => !IntersectArbitratorClassIds.Contains(x))
                 .ToList();
 
@@ -148,7 +148,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                     
                     IQueryable<ArbitratorClass> DeleteArbitratorClassEntites = _ArbitratorClassRepository
                         .Where(x => x.ArbitratorId == Request.Id &&
-                            DeleteArbitratorClassIds.Contains(x.EducationalClassId));
+                            DeleteArbitratorClassIds.Contains(x.CategoryEducationalClassId));
 
                     if (DeleteArbitratorClassEntites.Count() > 0)
                         await _ArbitratorClassRepository.DeleteListAsync(DeleteArbitratorClassEntites);
@@ -157,7 +157,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                         Select(x => new ArbitratorClass()
                         {
                             ArbitratorId = Request.Id,
-                            EducationalClassId = x,
+                            CategoryEducationalClassId = x,
                             CreatedAt = DateTime.UtcNow,
                             CreatedBy = null,
                             DeletedAt = null,
