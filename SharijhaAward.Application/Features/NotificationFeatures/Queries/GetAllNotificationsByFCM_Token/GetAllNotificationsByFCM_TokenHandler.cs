@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotifications;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.NotificationModel;
@@ -43,20 +44,20 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                     return new BaseResponse<GetAllNotificationsByFCM_TokenListVM> (ResponseMessage, false, 404);
                 }
 
-                List<NotificationDto> Notifications = new List<NotificationDto>();
+                List<GetAllNotificationsListVM> Notifications = new List<GetAllNotificationsListVM>();
 
                 if (Request.page != 0 && Request.perPage != -1)
                 {
                     var xx = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
                         .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
-                            ? new NotificationDto()
+                            ? new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.EnglishTitle,
                                 Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email)
-                            } : new NotificationDto()
+                            } : new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
@@ -76,13 +77,13 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                     Notifications = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
                         .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
-                            ? new NotificationDto()
+                            ? new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.EnglishTitle,
                                 Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email)
-                            } : new NotificationDto()
+                            } : new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
@@ -124,20 +125,20 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                     return new BaseResponse<GetAllNotificationsByFCM_TokenListVM>(ResponseMessage, false, 404);
                 }
 
-                List<NotificationDto> Notifications = new List<NotificationDto>();
+                List<GetAllNotificationsListVM> Notifications = new List<GetAllNotificationsListVM>();
 
                 if (Request.page != 0 && Request.perPage != -1)
                 {
                     Notifications = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
                         .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
-                            ? new NotificationDto()
+                            ? new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.EnglishTitle,
                                 Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email)
-                            } : new NotificationDto()
+                            } : new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
@@ -154,13 +155,13 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                     Notifications = await _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
                         .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
-                            ? new NotificationDto()
+                            ? new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.EnglishTitle,
                                 Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email)
-                            } : new NotificationDto()
+                            } : new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,

@@ -11,7 +11,7 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.AsignMessageTo
     public class AsignMessageToRoleQuery : IRequest<BaseResponse<object>>
     {
         public int TypeId {  get; set; }
-        public int RoleId { get; set; }
+        public List<int> RoleId { get; set; } = null!;
         public string lang { get; set; } = string.Empty;
     }
 }

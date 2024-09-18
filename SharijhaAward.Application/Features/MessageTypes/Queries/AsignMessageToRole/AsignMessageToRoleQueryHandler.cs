@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
@@ -34,23 +35,29 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.AsignMessageTo
                 : "تم إضافة نوع الرسالة للدور";
 
             var type = await _messageTypeRepository.GetByIdAsync(request.TypeId);
-            var Role = await _roleRepository.GetByIdAsync(request.RoleId);
-            if(type == null || Role ==null)
+            var Role = await _roleRepository.Where(r => request.RoleId.Contains(r.Id)).ToListAsync();
+
+            if (type == null || Role ==null)
             {
                 msg = request.lang == "en"
-                ? "Message Type or Role Not Found"
-                : "الدور او نوع الرسالة غير موجودين";
+                ? "Roles or Message Type Not Found"
+                : "الأدوار أو نوع الرسالة غير موجودين";
 
                 return new BaseResponse<object>(msg, false, 400);
             }
 
-            var RoleType = new RoleMessageType()
+            foreach(var role in request.RoleId)
             {
-                RoleId = request.RoleId,
-                MessageTypeId = request.TypeId
-            };
-
-            var data = await _roleTypeRepository.AddAsync(RoleType);
+                
+                var RoleType = new RoleMessageType()
+                {
+               
+                    RoleId = role,
+                    MessageTypeId = request.TypeId
+                };
+                await _roleTypeRepository.AddAsync(RoleType);
+            }
+           
 
             return new BaseResponse<object>(msg, true, 200);
 

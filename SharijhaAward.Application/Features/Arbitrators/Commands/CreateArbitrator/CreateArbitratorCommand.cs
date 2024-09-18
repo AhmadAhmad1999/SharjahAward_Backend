@@ -5,6 +5,7 @@ using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PasswordValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator
 {
@@ -21,6 +22,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         public bool isChairman { get; set; } = false;
         [PasswordValidation]
         public string Password { get; set; } = null!;
+        public ArbitrationLanguage ArbitrationLanguage { get; set; }
         public string? lang { get; set; }
         public List<int> Categories { get; set; } = new List<int>();
         public List<int> ArbitratorClasses { get; set; } = new List<int>();

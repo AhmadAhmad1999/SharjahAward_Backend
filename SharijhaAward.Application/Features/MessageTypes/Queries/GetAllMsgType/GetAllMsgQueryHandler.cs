@@ -25,7 +25,8 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType
 
         public async Task<BaseResponse<List<MessageTypeListVM>>> Handle(GetAllMsgQuery request, CancellationToken cancellationToken)
         {
-            var allMessageTypes = await _messageTypeRepository.ListAllAsync();
+            var allMessageTypes = await _messageTypeRepository
+                .GetPagedReponseAsync(request.page,request.perPage);
 
             var data = _mapper.Map<List<MessageTypeListVM>>(allMessageTypes);
            
@@ -33,7 +34,10 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType
             {
                 messageType.Type = request.lang == "en" ? messageType.EnglishType : messageType.ArabicType;
             }
-            return new BaseResponse<List<MessageTypeListVM>>("", true, 200, data);
+
+            var count = _messageTypeRepository.GetCount(m => !m.isDeleted);
+            Pagination pagination = new Pagination(request.page, request.perPage, count);
+            return new BaseResponse<List<MessageTypeListVM>>("", true, 200, data, pagination);
         }
     }
 }

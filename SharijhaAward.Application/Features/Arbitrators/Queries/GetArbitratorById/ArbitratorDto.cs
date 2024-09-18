@@ -2,6 +2,7 @@
 using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
+using SharijhaAward.Domain.Constants;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById
@@ -17,6 +18,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
         public string PhoneNumber { get; set; } = string.Empty;
         [EmailValidation]
         public string Email { get; set; } = string.Empty;
+        public ArbitrationLanguage ArbitrationLanguage { get; set; }
         public bool isChairman { get; set; } = false;
         public string? lang { get; set; }
         public List<ArbitratorCategoryDto> ArbitratorCategories { get; set; } = new List<ArbitratorCategoryDto>();

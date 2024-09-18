@@ -5,6 +5,7 @@ using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrator
@@ -21,6 +22,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         [EmailValidation]
         public string Email { get; set; } = string.Empty;
         public bool isChairman { get; set; } = false;
+        public ArbitrationLanguage ArbitrationLanguage { get; set; }
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }
         public List<int> Categories { get; set; } = new List<int>();

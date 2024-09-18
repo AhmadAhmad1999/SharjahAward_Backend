@@ -500,7 +500,11 @@ namespace SharijhaAward.Persistence.Repositories
 
                         query = query.Where(entity => EF.Property<int>(entity, filter.Key!) == Value);
                     }
-
+                    else if(propertyType == typeof(DateTime) && filter.Key == "CreatedAt" && filter.DateRange is DateTimeRange CreatedDate)
+                    {
+                        query = query.Where(entity =>
+                               EF.Property<DateTime>(entity, filter.Key) == CreatedDate.StartDate);
+                    }
                     else if (propertyType == typeof(DateTime) && filter.DateRange is DateTimeRange dateRange)
                     {
                         // Process date range

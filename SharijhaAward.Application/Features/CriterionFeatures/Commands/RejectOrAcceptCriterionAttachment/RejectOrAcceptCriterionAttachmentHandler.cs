@@ -31,7 +31,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.RejectOr
 
             CriterionAttachmentEntity.IsAccepted = Request.Status;
 
-            if (!string.IsNullOrEmpty(Request.ReasonForRejecting) && Request.Status)
+            if (!string.IsNullOrEmpty(Request.ReasonForRejecting) && !Request.Status)
                 CriterionAttachmentEntity.ReasonForRejecting = Request.ReasonForRejecting;
 
             await _CriterionAttachmentRepository.UpdateAsync(CriterionAttachmentEntity);

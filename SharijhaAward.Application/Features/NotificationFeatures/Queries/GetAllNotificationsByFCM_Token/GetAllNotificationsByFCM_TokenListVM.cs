@@ -1,10 +1,14 @@
-﻿namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotificationsByFCM_Token
+﻿using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotifications;
+
+namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotificationsByFCM_Token
 {
     public class GetAllNotificationsByFCM_TokenListVM
     {
-        public List<NotificationDto> ReadedNotifications = new List<NotificationDto>();
-        
-        public List<NotificationDto> UnReadedNotifications = new List<NotificationDto>();
+        public string Test { get; set; } = "Malek";
+        public List<GetAllNotificationsListVM>? ReadedNotifications { get; set; } = new List<GetAllNotificationsListVM>();
+
+
+        public List<GetAllNotificationsListVM>? UnReadedNotifications { get; set; } = new List<GetAllNotificationsListVM>();
 
     }
     public class NotificationDto

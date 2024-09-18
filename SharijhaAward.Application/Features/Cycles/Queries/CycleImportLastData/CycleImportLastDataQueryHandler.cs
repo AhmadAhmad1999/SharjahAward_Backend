@@ -61,13 +61,25 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData
 
                 return new BaseResponse<object>(msg, false, 404);
             }
+            
+            var newCycle = await _cycleRepository.GetByIdAsync(request.newCycleId);
+            if(newCycle == null)
+            {
+                msg = request.lang == "en"
+                ? "Cycle not found"
+                : "الدورة غير موجودة";
+
+                return new BaseResponse<object>(msg, false, 404);
+            }
 
             // Import Cycle Conditions (public conditions)
-            if (request.ImportCycleConditions)
+            if (request.ImportCycleConditions != null && request.ImportCycleConditions == true)
             {
-                var cycleConditions = _cycleConditionRepository.Where(c => c.CycleId == cycle.Id).ToList();
+                var cycleConditions = request.CycleConditionIds!.Count() > 0 
+                    ? _cycleConditionRepository.Where(c => c.CycleId == cycle.Id && request.CycleConditionIds!.Contains(c.Id)).ToList()
+                    : _cycleConditionRepository.Where(c => c.CycleId == cycle.Id).ToList();
                 
-                if (request.ReplaceCycleConditions)
+                if (request.ReplaceCycleConditions != null && request.ReplaceCycleConditions == true)
                 {
                     // Replce All Cycle Conditions
                     var cycleConditionsForNewCycle = _cycleConditionRepository.Where(c => c.CycleId == request.newCycleId).ToList();
@@ -82,23 +94,30 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData
                 await _cycleConditionRepository.AddRangeAsync(cycleConditions);
             }
             // Import Categories
-            if (request.ImportCategories)
+            if (request.ImportCategories != null && request.ImportCategories == true)
             {
-                if (request.ReplaceCategories)
+                if (request.ReplaceCategories != null && request.ReplaceCategories == true)
                 {
                     // Replace All Categories
                     var categoriesForNewCycle = _categoryRepository.Where(c => c.CycleId == request.newCycleId);
                     await _categoryRepository.DeleteListAsync(categoriesForNewCycle);
                 }
                 // get All Main Categories
-                var MainCategories = _categoryRepository.Where(c => c.CycleId == cycle.Id && c.ParentId == null);
-                
-                
-                foreach(var mainCategory in MainCategories)
+                //var MainCategories = _categoryRepository.Where(c => c.CycleId == cycle.Id && c.ParentId == null);
+               
+                var MainCategories = request.CategoryIds!.Count() > 0
+                   ? _categoryRepository.Where(c => c.CycleId == cycle.Id && c.ParentId == null && request.CategoryIds!.Contains(c.Id)).ToList()
+                   : _categoryRepository.Where(c => c.CycleId == cycle.Id && c.ParentId == null).ToList();
+
+                foreach (var mainCategory in MainCategories)
                 {
                     //get All Sub Categories
-                    var SubCategories = _categoryRepository.Where(c => c.ParentId == mainCategory.Id && c.CycleId == cycle.Id).ToList();
-                    
+                    //var SubCategories = _categoryRepository.Where(c => c.ParentId == mainCategory.Id && c.CycleId == cycle.Id).ToList();
+
+                    var SubCategories = request.SubCategoryIds!.Count() > 0
+                   ? _categoryRepository.Where(c => c.ParentId == mainCategory.Id && c.CycleId == cycle.Id && request.SubCategoryIds!.Contains(c.Id)).ToList()
+                   : _categoryRepository.Where(c => c.ParentId == mainCategory.Id && c.CycleId == cycle.Id).ToList();
+
                     ExplanatoryGuide explanatoryGuide = null!;
                     List<FrequentlyAskedQuestion> faqs = null!;
                     List<TermAndCondition> termAndConditions = null!;
@@ -117,69 +136,126 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData
                         }
                         if(request.ImportFAQs == true)
                         {
-                            faqs = _faqRepository.Where(f => f.CategoryId == subCategory.Id).ToList();
+                            faqs = request.FAQIds!.Count() > 0
+                                 ? _faqRepository.Where(f => f.CategoryId == subCategory.Id &&  request.FAQIds!.Contains(f.Id)).ToList()
+                                 : _faqRepository.Where(f => f.CategoryId == subCategory.Id).ToList();
+
+                            //faqs = _faqRepository.Where(f => f.CategoryId == subCategory.Id).ToList();
                         }
                         if(request.ImportSpecialConditions == true)
                         {
-                            termAndConditions = _termAndConditionRepository.Where(t => t.CategoryId == subCategory.Id).ToList();
+                            termAndConditions = request.SpecialConditionIds!.Count() > 0
+                                 ? _termAndConditionRepository.Where(t => t.CategoryId == subCategory.Id && request.SpecialConditionIds!.Contains(t.Id)).ToList()
+                                 : _termAndConditionRepository.Where(t => t.CategoryId == subCategory.Id).ToList();
+
+                            //termAndConditions = _termAndConditionRepository.Where(t => t.CategoryId == subCategory.Id).ToList();
                         }
                         if(request.ImportCriterions == true)
                         {
-                            criterions = _criterionRepository.Where(c => c.CategoryId == subCategory.Id).ToList();
+                            criterions = request.CriterionIds!.Count() > 0
+                                 ? _criterionRepository.Where(c => c.CategoryId == subCategory.Id && request.CriterionIds!.Contains(c.Id)).ToList()
+                                 : _criterionRepository.Where(c => c.CategoryId == subCategory.Id).ToList();
+                            
+                            //criterions = _criterionRepository.Where(c => c.CategoryId == subCategory.Id).ToList();
                         }
                         if(request.ImportRewards == true)
                         {
-                            rewards = _rewardRepository.Where(r => r.CategoryId == subCategory.Id).ToList();
+                            rewards = request.RewardIds!.Count() > 0
+                                 ? _rewardRepository.Where(r => r.CategoryId == subCategory.Id && request.RewardIds!.Contains(r.Id)).ToList()
+                                 : _rewardRepository.Where(r => r.CategoryId == subCategory.Id).ToList();
+
+                            //rewards = _rewardRepository.Where(r => r.CategoryId == subCategory.Id).ToList();
                         }
                         if(request.ImportTrainingWorkshop == true)
                         {
-                            trainingWorkshops = _trainingWorkshopRepository.Where(t => t.CategoryId == subCategory.Id).ToList();
+                            trainingWorkshops = request.TrainingWorkshopIds!.Count() > 0
+                                 ? _trainingWorkshopRepository.Where(t => t.CategoryId == subCategory.Id && request.TrainingWorkshopIds!.Contains(t.Id)).ToList()
+                                 : _trainingWorkshopRepository.Where(t => t.CategoryId == subCategory.Id).ToList();
+
+                            //trainingWorkshops = _trainingWorkshopRepository.Where(t => t.CategoryId == subCategory.Id).ToList();
+                        }
+                    
+                        mainCategory.Id = 0;
+                        mainCategory.Cycle = newCycle!;
+                        mainCategory.CycleId = request.newCycleId;
+                        var main = await _categoryRepository.AddAsync(mainCategory);
+
+                        SubCategory.Id = 0;
+                        SubCategory.Parent = main;
+                        SubCategory.ParentId = main.Id;
+                        SubCategory.Cycle = newCycle;
+                        SubCategory.CycleId = request.newCycleId;
+                        var sub = await _categoryRepository.AddAsync(SubCategory);
+
+                        if (request.ImportExplanatoryGuide == true && explanatoryGuide != null)
+                        {
+                            explanatoryGuide.Id = 0;
+                            explanatoryGuide.Category = sub;
+                            explanatoryGuide.CategoryId = sub.Id;
+                            await _explanatoryGuideRepository.AddAsync(explanatoryGuide);
+                        }
+                    
+                        if(request.ImportFAQs == true)
+                        {
+                            foreach (var faq in faqs)
+                            {
+                                faq.Id = 0;
+                                faq.Category = sub;
+                                faq.CategoryId = sub.Id;
+                            }
+                            await _faqRepository.AddRangeAsync(faqs);
+                        }
+
+                        if(request.ImportSpecialConditions == true)
+                        {
+                            foreach (var term in termAndConditions)
+                            {
+                                term.Id = 0;
+                                term.Category = sub;
+                                term.CategoryId = sub.Id;
+                            }
+                            await _termAndConditionRepository.AddRangeAsync(termAndConditions);
+                        }
+                    
+                   
+
+                        if (request.ImportCriterions == true)
+                        {
+                            foreach (var criterion in criterions)
+                            {
+                                criterion.Id = 0;
+                                criterion.Category = sub;
+                                criterion.CategoryId = sub.Id;
+                            }
+                            await _criterionRepository.AddRangeAsync(criterions);
+                        }
+
+
+                        if (request.ImportRewards == true)
+                        {
+                            foreach (var reward in rewards)
+                            {
+                                reward.Id = 0;
+                                reward.Category = sub;
+                                reward.CategoryId = sub.Id;
+                            }
+
+                            await _rewardRepository.AddRangeAsync(rewards);
+                        }
+                    
+
+                        if (request.ImportTrainingWorkshop == true)
+                        {
+                            foreach (var trainingWorkshop in trainingWorkshops)
+                            {
+                                trainingWorkshop.Id = 0;
+                                trainingWorkshop.Category = sub;
+                                trainingWorkshop.CategoryId = sub.Id;
+                            }
+                            await _trainingWorkshopRepository.AddRangeAsync(trainingWorkshops);
+
                         }
                     }
-                    mainCategory.Id = 0;
-                    mainCategory.CycleId = request.newCycleId;
-                    var main = await _categoryRepository.AddAsync(mainCategory);
-
-                    SubCategory.Id = 0;
-                    SubCategory.ParentId = main.Id;
-                    SubCategory.CycleId = request.newCycleId;
-                    var sub = await _categoryRepository.AddAsync(SubCategory);
-
-                    explanatoryGuide.Id = 0;
-                    explanatoryGuide.CategoryId = sub.Id;
-                    await _explanatoryGuideRepository.AddAsync(explanatoryGuide);
-
-                    foreach(var faq in faqs)
-                    {
-                        faq.Id = 0;
-                        faq.CategoryId = sub.Id;
-                    }
-                    foreach (var term in termAndConditions)
-                    {
-                        term.Id = 0;
-                        term.CategoryId = sub.Id;
-                    }
-                    foreach (var criterion in criterions)
-                    {
-                        criterion.Id = 0;
-                        criterion.CategoryId = sub.Id;
-                    }
-                    foreach (var reward in rewards)
-                    {
-                        reward.Id = 0;
-                        reward.CategoryId = sub.Id;
-                    }
-                    foreach (var trainingWorkshop in trainingWorkshops)
-                    {
-                        trainingWorkshop.Id = 0;
-                        trainingWorkshop.CategoryId = sub.Id;
-                    }
-
-                    await _faqRepository.AddRangeAsync(faqs);
-                    await _termAndConditionRepository.AddRangeAsync(termAndConditions);
-                    await _criterionRepository.AddRangeAsync(criterions);
-                    await _rewardRepository.AddRangeAsync(rewards);
-                    await _trainingWorkshopRepository.AddRangeAsync(trainingWorkshops);
                 }
              
             }

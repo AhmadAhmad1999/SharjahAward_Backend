@@ -8,6 +8,10 @@
         public string EnglishTitle { get; set; } = null!;
         public string ArabicBody { get; set; } = null!;
         public string EnglishBody { get; set; } = null!;
+        public bool isReaded { get; set; }
+        public string Title { get; set; } = null!;
+        public string Body { get; set; } = null!;
+        
         public DateTime CreatedAt { get; set; }
 
     }
