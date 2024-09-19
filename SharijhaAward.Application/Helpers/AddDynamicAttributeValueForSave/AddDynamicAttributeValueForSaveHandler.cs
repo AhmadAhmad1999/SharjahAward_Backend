@@ -24,7 +24,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
         private readonly IAsyncRepository<EducationalClass> _EducationalClassRepository;
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
-        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
 
         public AddDynamicAttributeValueForSaveHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
@@ -33,8 +32,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
             IAsyncRepository<ProvidedForm> ProvidedFormRepository,
             IAsyncRepository<EducationalClass> EducationalClassRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
-            IAsyncRepository<EducationalEntity> EducationalEntityRepository,
-            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository)
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
@@ -44,7 +42,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
             _EducationalClassRepository = EducationalClassRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _EducationalEntityRepository = EducationalEntityRepository;
-            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
         }
 
         public async Task<BaseResponse<AddDynamicAttributeValueForSaveResponse>> Handle(AddDynamicAttributeValueForSaveCommand Request,
@@ -369,15 +366,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
 
                                     if (EducationalEntity is not null)
                                     {
-                                        CategoryEducationalEntity NewCategoryEducationalEntityEntity = new CategoryEducationalEntity()
-                                        {
-                                            CategoryId = ProvidedFormEntity!.categoryId,
-                                            EducationalEntityId = EducationalEntity.Id
-                                        };
-
-                                        await _CategoryEducationalEntityRepository.AddAsync(NewCategoryEducationalEntityEntity);
-
-                                        ProvidedFormEntity.CategoryEducationalEntityId = NewCategoryEducationalEntityEntity.Id;
+                                        ProvidedFormEntity.EducationalEntityId = EducationalEntity.Id;
                                     }
                                 }
 

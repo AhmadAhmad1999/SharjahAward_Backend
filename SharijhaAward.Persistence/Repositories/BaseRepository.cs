@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace SharijhaAward.Persistence.Repositories
@@ -126,21 +127,62 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public async Task DeleteAsync(T entity)
         {
-            typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
-            typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
-            _dbContext.Entry(entity).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
+
+            using (TransactionScope Transaction2 = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
+                    typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
+                    _dbContext.Entry(entity).State = EntityState.Modified;
+                    await _dbContext.SaveChangesAsync();
+
+                    Transaction2.Complete();
+                }
+                catch (Exception)
+                {
+                    Transaction2.Dispose();
+                    throw;
+                }
+            }
         }
         public async Task DeleteListAsync(IEnumerable<T> entities)
         {
-            entities.ToList().ForEach(entity =>
+            TransactionOptions TransactionOptions = new TransactionOptions
             {
-                typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
-                typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
-                _dbContext.Entry(entity).State = EntityState.Modified;
-            });
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
-            await _dbContext.SaveChangesAsync();
+            using (TransactionScope Transaction2 = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    entities.ToList().ForEach(entity =>
+                    {
+                        typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
+                        typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
+                        _dbContext.Entry(entity).State = EntityState.Modified;
+                    });
+
+                    await _dbContext.SaveChangesAsync();
+
+                    Transaction2.Complete();
+                }
+                catch (Exception)
+                {
+                    Transaction2.Dispose();
+                    throw;
+                }
+            }
+            
         }
         public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
         {

@@ -27,13 +27,13 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         private readonly IEmailSender _EmailSender;
         private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
-        private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;    
+        private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;
         private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
 
         public CreateArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
-            IRoleRepository RoleRepository, 
-            IUserRepository UserRepository, 
+            IRoleRepository RoleRepository,
+            IUserRepository UserRepository,
             IMapper Mapper,
             IEmailSender EmailSender,
             IAsyncRepository<ArbitratorClass> ArbitratorClassRepository,
@@ -173,7 +173,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                         .Select(r => r.ResponsibilityId)
                         .ToListAsync();
 
-                    foreach(var Responsibility in Responsibilities)
+                    foreach (var Responsibility in Responsibilities)
                     {
                         if (!userResponsibilities.Contains(Responsibility.Id))
                         {
@@ -203,7 +203,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 
                     await _CategoryArbitratorRepository.AddRangeAsync(ListOfCategoriesArbitrators);
 
-                    IEnumerable<ArbitratorClass> ArbitratorClassesEntities = Request.ArbitratorClasses
+                    IEnumerable<ArbitratorClass> ArbitratorClassesEntities = Request.ArbitratorCateogryClasses
                         .Select(x => new ArbitratorClass()
                         {
                             CreatedAt = DateTime.UtcNow,
@@ -212,7 +212,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                             isDeleted = false,
                             LastModifiedAt = null,
                             LastModifiedBy = null,
-                            EducationalClassId = x,
+                            CategoryEducationalClassId = x,
                             ArbitratorId = NewArbitratorEntity.Id
                         });
 

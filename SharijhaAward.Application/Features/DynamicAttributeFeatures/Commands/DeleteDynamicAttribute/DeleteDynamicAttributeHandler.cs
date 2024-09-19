@@ -62,48 +62,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.D
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            List<DynamicAttributeValue> DynamicAttributeValueToDelete = await _DynamicAttributeValueRepository
-                .Where(x => x.DynamicAttributeId == Request.Id)
-                .ToListAsync();
+            await _DynamicAttributeRepository.DeleteAsync(DynamicAttributeToDelete);
 
-            List<ViewWhenRelation> ViewWhenRelationToDelete = await _ViewWhenRelationRepository
-                .Where(x => x.DynamicAttributeId == Request.Id ||
-                    x.DynamicAttributeListValue!.DynamicAttributeId == Request.Id)
-                .ToListAsync();
+            ResponseMessage = Request.lang == "en"
+                ? "Field has been deleted successfully"
+                : "تم حذف الحقل بنجاح";
 
-            TransactionOptions TransactionOptions = new TransactionOptions
-            {
-                IsolationLevel = IsolationLevel.ReadCommitted,
-                Timeout = TimeSpan.FromMinutes(5)
-            };
-
-            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
-                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
-            {
-                try
-                {
-                    await _DynamicAttributeRepository.DeleteAsync(DynamicAttributeToDelete);
-
-                    if (DynamicAttributeValueToDelete.Any())
-                        await _DynamicAttributeValueRepository.DeleteListAsync(DynamicAttributeValueToDelete);
-
-                    if (ViewWhenRelationToDelete.Any())
-                        await _ViewWhenRelationRepository.DeleteListAsync(ViewWhenRelationToDelete);
-
-                    ResponseMessage = Request.lang == "en"
-                        ? "Field has been deleted successfully"
-                        : "تم حذف الحقل بنجاح";
-
-                    Transaction.Complete();
-
-                    return new BaseResponse<object>(ResponseMessage, true, 200);
-                }
-                catch (Exception)
-                {
-                    Transaction.Dispose();
-                    throw;
-                }
-            }
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

@@ -26,7 +26,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         private readonly IAsyncRepository<GeneralValidation> _GeneralValidationRepository;
         private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
-        private readonly IAsyncRepository<CategoryEducationalEntity> _CategoryEducationalEntityRepository;
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
         private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
 
@@ -40,7 +39,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             IAsyncRepository<GeneralValidation> GeneralValidationRepository,
             IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
             IHttpContextAccessor HttpContextAccessor,
-            IAsyncRepository<CategoryEducationalEntity> CategoryEducationalEntityRepository,
             IAsyncRepository<EducationalEntity> EducationalEntityRepository,
             IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository)
         {
@@ -54,7 +52,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             _GeneralValidationRepository = GeneralValidationRepository;
             _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
             _HttpContextAccessor = HttpContextAccessor;
-            _CategoryEducationalEntityRepository = CategoryEducationalEntityRepository;
             _EducationalEntityRepository = EducationalEntityRepository;
             _ViewWhenRelationRepository = ViewWhenRelationRepository;
         }
@@ -3122,15 +3119,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 
                                     if (EducationalEntity is not null)
                                     {
-                                        CategoryEducationalEntity NewCategoryEducationalEntityEntity = new CategoryEducationalEntity()
-                                        {
-                                            CategoryId = ProvidedFormEntity!.categoryId,
-                                            EducationalEntityId = EducationalEntity.Id
-                                        };
-
-                                        await _CategoryEducationalEntityRepository.AddAsync(NewCategoryEducationalEntityEntity);
-
-                                        ProvidedFormEntity.CategoryEducationalEntityId = NewCategoryEducationalEntityEntity.Id;
+                                        ProvidedFormEntity.EducationalEntityId = EducationalEntity.Id;
                                     }
                                 }
 

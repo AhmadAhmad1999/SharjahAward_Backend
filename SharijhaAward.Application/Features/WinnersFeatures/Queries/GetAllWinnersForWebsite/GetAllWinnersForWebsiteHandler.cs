@@ -82,10 +82,10 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                             SubscriberName = DynamicAttributeValueEntities
                                 .FirstOrDefault(y => y.FormId == x.ProvidedFormId)
                                 ?.SubscriberName ?? string.Empty,
-                            EducationalEntityName = x.ProvidedForm!.CategoryEducationalEntityId != null
+                            EducationalEntityName = x.ProvidedForm!.EducationalEntityId != null
                                 ? (Request.lang == "en"
-                                    ? x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!.EnglishName
-                                    : x.ProvidedForm!.CategoryEducationalEntity!.EducationalEntity!.EnglishName)
+                                    ? x.ProvidedForm!.EducationalEntity!.EnglishName
+                                    : x.ProvidedForm!.EducationalEntity!.ArabicName)
                                 : null,
                             InitialArbitrationScore = (ArbitrationEntities.Any() && ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId) != 0)
                                 ? (ArbitrationEntities

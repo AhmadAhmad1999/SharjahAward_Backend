@@ -3,7 +3,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitratorClassModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
-using SharijhaAward.Domain.Entities.EducationalClassModel;
+using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitratorClass
 {
@@ -11,15 +11,15 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
     {
         private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
-        private readonly IAsyncRepository<EducationalClass> _EducationalClassRepository;
+        private readonly IAsyncRepository<CategoryEducationalClass> _CateogryEducationalClassRepository;
 
         public CreateArbitratorClassHandler(IAsyncRepository<ArbitratorClass> ArbitratorClassRepository,
              IAsyncRepository<Arbitrator> ArbitratorRepository,
-             IAsyncRepository<EducationalClass> EducationalClassRepository)
+             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository)
         {
             _ArbitratorClassRepository = ArbitratorClassRepository;
             _ArbitratorRepository = ArbitratorRepository;
-            _EducationalClassRepository = EducationalClassRepository;
+            _CateogryEducationalClassRepository = CategoryEducationalClassRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateArbitratorClassCommand Request, CancellationToken cancellationToken)
@@ -38,21 +38,21 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                 return new BaseResponse<object>(ResponseMessage, false, 204);
             }
 
-            EducationalClass? CheckIfEducationalClassIdIsExist = await _EducationalClassRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.EducationalClassId);
+            CategoryEducationalClass? CheckIfCategoryEducationalClassIdIsExist = await _CateogryEducationalClassRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.CategoryEducationalClassId);
 
-            if (CheckIfEducationalClassIdIsExist is null)
+            if (CheckIfCategoryEducationalClassIdIsExist is null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Class is not found"
-                    : "الصف غير موجود";
+                    ? "Category class is not found"
+                    : "الصف ضمن الفئة غير موجود";
 
                 return new BaseResponse<object>(ResponseMessage, false, 204);
             }
 
             ArbitratorClass? CheckIfArbitratorDoesConnectWithClass = await _ArbitratorClassRepository
                 .FirstOrDefaultAsync(x => x.ArbitratorId == CheckIfArbitratorIdIsExist.Id &&
-                    x.EducationalClassId == CheckIfEducationalClassIdIsExist.Id);
+                    x.CategoryEducationalClassId == CheckIfCategoryEducationalClassIdIsExist.Id);
 
             if (CheckIfArbitratorDoesConnectWithClass is not null)
             {
@@ -72,7 +72,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                 LastModifiedAt = null,
                 LastModifiedBy = null,
                 ArbitratorId = CheckIfArbitratorIdIsExist.Id,
-                EducationalClassId = CheckIfEducationalClassIdIsExist.Id
+                CategoryEducationalClassId = CheckIfCategoryEducationalClassIdIsExist.Id
             };
 
             await _ArbitratorClassRepository.AddAsync(NewArbitratorClassEntity);

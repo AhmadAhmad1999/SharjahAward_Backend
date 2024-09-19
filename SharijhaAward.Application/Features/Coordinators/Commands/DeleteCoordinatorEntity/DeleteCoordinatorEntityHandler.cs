@@ -2,7 +2,6 @@
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
-using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 
 namespace SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinatorEntity
 {

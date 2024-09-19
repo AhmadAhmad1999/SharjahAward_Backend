@@ -125,8 +125,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                         ? x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName ?? null
                         : x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName ?? null,
                     EducationalEntityName = Request.lang == "en"
-                        ? x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.EnglishName ?? null
-                        : x.ProvidedForm!.CategoryEducationalEntity?.EducationalEntity!.ArabicName ?? null,
+                        ? x.ProvidedForm!.EducationalEntity!.EnglishName ?? null
+                        : x.ProvidedForm!.EducationalEntity!.ArabicName ?? null,
                     ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                     Gender = x.ProvidedForm!.User.Gender,
                     WinningLevel = x.WinningLevel
