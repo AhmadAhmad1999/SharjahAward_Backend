@@ -188,10 +188,10 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                         }
                     }
 
-                    List<CategoryArbitrator> ListOfCategoriesArbitrators = Request.ArbitratorCateogryClasses
+                    List<CategoryArbitrator> ListOfCategoriesArbitrators = Request.Categories
                         .Select(x => new CategoryArbitrator()
                         {
-                            CategoryId = x.Id,
+                            CategoryId = x,
                             ArbitratorId = NewUserEntity.Id,
                             isDeleted = false,
                             CreatedAt = DateTime.UtcNow,
@@ -204,7 +204,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                     await _CategoryArbitratorRepository.AddRangeAsync(ListOfCategoriesArbitrators);
 
                     IEnumerable<ArbitratorClass> ArbitratorClassesEntities = Request.ArbitratorCateogryClasses
-                        .SelectMany(x => x.ClassesId)
                         .Select(x => new ArbitratorClass()
                         {
                             CreatedAt = DateTime.UtcNow,

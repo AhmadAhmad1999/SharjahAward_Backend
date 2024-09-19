@@ -3,6 +3,8 @@ using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +17,15 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType
         : IRequestHandler<GetAllMsgQuery, BaseResponse<List<MessageTypeListVM>>>
     {
         private readonly IAsyncRepository<MessageType> _messageTypeRepository;
+        private readonly IAsyncRepository<RoleMessageType> _roleTypeRepository;
+        private readonly IAsyncRepository<Role> _roleRepository;
         private readonly IMapper _mapper;
 
-        public GetAllMsgQueryHandler(IAsyncRepository<MessageType> messageTypeRepository, IMapper mapper)
+        public GetAllMsgQueryHandler(IAsyncRepository<Role> roleRepository, IAsyncRepository<RoleMessageType> roleTypeRepository, IAsyncRepository<MessageType> messageTypeRepository, IMapper mapper)
         {
             _messageTypeRepository = messageTypeRepository;
+            _roleTypeRepository = roleTypeRepository;
+            _roleRepository = roleRepository;
             _mapper = mapper;
         }
 
@@ -33,6 +39,8 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType
             foreach( var messageType in data)
             {
                 messageType.Type = request.lang == "en" ? messageType.EnglishType : messageType.ArabicType;
+                var RoleIds = _roleTypeRepository.Where(m => m.MessageTypeId == messageType.Id).Select(m => m.RoleId).ToList();
+                messageType.RoleName = _roleRepository.Where(r => RoleIds.Contains(r.Id)).Select(r => r.ArabicName).ToList();
             }
 
             var count = _messageTypeRepository.GetCount(m => !m.isDeleted);
