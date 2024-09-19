@@ -12,6 +12,7 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType
         public string Type { get; set; } = string.Empty;
         public string EnglishType { get; set; } = string.Empty;
         public string ArabicType { get; set; } = string.Empty;
+        public List<string> RoleName { get; set; } = null!;
 
     }
 }

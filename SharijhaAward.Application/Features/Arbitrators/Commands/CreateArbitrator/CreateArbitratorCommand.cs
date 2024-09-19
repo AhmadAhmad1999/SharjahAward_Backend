@@ -24,7 +24,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         public string Password { get; set; } = null!;
         public ArbitrationLanguage ArbitrationLanguage { get; set; }
         public string? lang { get; set; }
-        public List<ArbitratorCateogryClassesCommand> ArbitratorCateogryClasses { get; set; } = new List<ArbitratorCateogryClassesCommand>();
+        public List<int> Categories { get; set; } = new List<int>();
+        public List<int> ArbitratorCateogryClasses { get; set; } = new List<int>();
         public string? WWWRootFilePath { get; set; }
         public bool SendEmail { get; set; }
     }

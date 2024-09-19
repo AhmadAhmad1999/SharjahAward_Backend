@@ -547,6 +547,17 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    // Id = 48,
+                    EnglishName = "MessageType",
+                    ArabicName = "أنواع رسائل التواصل",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
                 });
                 _context.SaveChanges();
             }

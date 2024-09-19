@@ -2521,7 +2521,74 @@ namespace SharijhaAward.Persistence.Seeders
                      LastModifiedAt = null,
                      LastModifiedBy = null
 
-                 });
+                 },
+                //---------------MessageType---------------
+                new Permission()
+                {
+                    // Id = 192,
+                    Name = "عرض أنواع رسائل التواصل",
+                    Action = "read",
+                    PermissionHeaderId = 48,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+
+                }, new Permission()
+                {
+                    // Id = 193,
+                    Name = "تعديل تحكيم الفائزين",
+                    Action = "update",
+                    PermissionHeaderId = 48,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+
+                }, new Permission()
+                {
+                    // Id = 184,
+                    Name = "إضافة أنواع رسائل لتواصل",
+                    Action = "create",
+                    PermissionHeaderId = 48,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+
+                }, new Permission()
+                {
+                    // Id = 184,
+                    Name = "حذف أنواع رسائل لتواصل",
+                    Action = "delete",
+                    PermissionHeaderId = 48,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+
+                }, new Permission()
+                {
+                    // Id = 184,
+                    Name = "إسناد الى دور",
+                    Action = "asignToRole",
+                    PermissionHeaderId = 48,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+
+                });
                 _context.SaveChanges();
             }
         }
