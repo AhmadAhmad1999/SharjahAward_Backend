@@ -126,6 +126,11 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData
                     List<TrainingWorkshop> trainingWorkshops = null!;
                     Category SubCategory = null!;
 
+                    mainCategory.Id = 0;
+                    mainCategory.Cycle = newCycle!;
+                    mainCategory.CycleId = request.newCycleId;
+                    var main = await _categoryRepository.AddAsync(mainCategory);
+
                     foreach (var subCategory in SubCategories)
                     {
                         SubCategory = subCategory;
@@ -175,10 +180,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData
                             //trainingWorkshops = _trainingWorkshopRepository.Where(t => t.CategoryId == subCategory.Id).ToList();
                         }
                     
-                        mainCategory.Id = 0;
-                        mainCategory.Cycle = newCycle!;
-                        mainCategory.CycleId = request.newCycleId;
-                        var main = await _categoryRepository.AddAsync(mainCategory);
+
 
                         SubCategory.Id = 0;
                         SubCategory.Parent = main;
