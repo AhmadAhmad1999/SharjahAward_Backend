@@ -171,12 +171,22 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                         .OrderByDescending(x => x.Id)
                         .ToListAsync();
                 }
+              
 
                 var UserNotifications = new GetAllNotificationsByFCM_TokenListVM()
                 {
-                    ReadedNotifications = Notifications.Where(n => n.isReaded).ToList(),
-                    UnReadedNotifications = Notifications.Where(n => !n.isReaded).ToList()
+                    ReadedNotifications = Notifications.Where(n => n.isReaded).OrderByDescending(n=>n.CreatedAt).ToList(),
+                    UnReadedNotifications = Notifications.Where(n => !n.isReaded).OrderByDescending(n => n.CreatedAt).ToList()
                 };
+
+                var UnRead = _UserNotificationRepository.Where(n => !n.isReaded).ToList();
+
+                foreach (var notification in UnRead)
+                {
+                    notification.isReaded = true;
+                }
+
+                await _UserNotificationRepository.UpdateListAsync(UnRead);
 
                 int TotalCount = await _UserNotificationRepository.GetCountAsync(x => x.UserId == CheckUserTokenIfExist.UserId);
 
