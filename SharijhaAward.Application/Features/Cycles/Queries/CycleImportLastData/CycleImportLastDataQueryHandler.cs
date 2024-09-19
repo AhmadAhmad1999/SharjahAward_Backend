@@ -88,6 +88,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData
 
                 foreach(var cycleCondition in cycleConditions)
                 {
+                    cycleCondition.Cycle = newCycle;
                     cycleCondition.CycleId = request.newCycleId;
                     cycleCondition.Id = 0;
                 }
