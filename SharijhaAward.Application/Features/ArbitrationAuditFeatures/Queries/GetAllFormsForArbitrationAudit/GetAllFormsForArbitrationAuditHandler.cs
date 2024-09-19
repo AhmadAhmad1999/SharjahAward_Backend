@@ -192,8 +192,16 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                         .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
                                         .ToList();
 
+                                    int NumberOfArbitrationEntitiesForThisAudit = InitialArbitrationEntitiesForThisArbitrations
+                                        .DistinctBy(x => x.ArbitrationId)
+                                        .Count();
+
+                                    if (NumberOfArbitrationEntitiesForThisAudit != 0)
+                                        GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
+                                            .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
+
                                     GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                                        .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
+                                        .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
 
                                     List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
                                         .Where(x => GroupOfArbitrationEntity.Key == x.ProvidedFormId)
@@ -258,8 +266,16 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                     .Where(x => GroupOfArbitrationEntity.Select(y => y.Id).Contains(x.ArbitrationId))
                                     .ToList();
 
+                                int NumberOfArbitrationEntitiesForThisAudit = InitialArbitrationEntitiesForThisArbitrations
+                                    .DistinctBy(x => x.ArbitrationId)
+                                    .Count();
+
+                                if (NumberOfArbitrationEntitiesForThisAudit != 0)
+                                    GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
+                                        .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
+
                                 GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                                    .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
+                                    .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
 
                                 List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
                                     .Where(x => GroupOfArbitrationEntity.Key == x.ProvidedFormId)
@@ -482,8 +498,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                             y.Type
                                         }).Any(y => y.Id == x.ArbitrationId && y.Type == ArbitrationType.DoneArbitratod)).ToList();
 
-                                    GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                                        .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
+                                    int NumberOfArbitrationEntitiesForThisAudit = InitialArbitrationEntitiesForThisArbitrations
+                                        .DistinctBy(x => x.ArbitrationId)
+                                        .Count();
+
+                                    if (NumberOfArbitrationEntitiesForThisAudit != 0)
+                                        GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
+                                            .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
 
                                     List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
                                         .Where(x => GroupOfArbitrationEntity.Key == x.ProvidedFormId)
@@ -569,9 +590,17 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                         y.Id,
                                         y.Type
                                     }).Any(y => y.Id == x.ArbitrationId && y.Type == ArbitrationType.DoneArbitratod)).ToList();
+                                
+                                int NumberOfArbitrationEntitiesForThisAudit = InitialArbitrationEntitiesForThisArbitrations
+                                    .DistinctBy(x => x.ArbitrationId)
+                                    .Count();
+
+                                if (NumberOfArbitrationEntitiesForThisAudit != 0)
+                                    GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
+                                        .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
 
                                 GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                                    .Sum(x => x.ArbitrationScore) / ArbitrationIds.Count();
+                                    .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
 
                                 List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
                                     .Where(x => GroupOfArbitrationEntity.Key == x.ProvidedFormId)
