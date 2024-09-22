@@ -34,6 +34,9 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
             List<Criterion> SubCriterionEntities = await _CriterionRepository
                 .Where(x => x.CategoryId == Request.CategoryId &&
                     x.ParentId != null &&
+                    (x.AttachFilesOnSubCriterion != null
+                        ? x.AttachFilesOnSubCriterion.Value
+                        : false) &&
                     MainCriterionEntities.Select(y => y.Id).Any(y => y == x.ParentId)).ToListAsync();
 
             List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository

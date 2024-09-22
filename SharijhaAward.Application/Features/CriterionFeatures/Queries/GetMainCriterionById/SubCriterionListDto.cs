@@ -11,6 +11,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCr
         public int? SizeOfAttachmentInKB { get; set; }
         public int? MaxAttachmentNumber { get; set; }
         public AttachmentType? AttachmentType { get; set; }
+        public bool AttachFilesOnSubCriterion { get; set; }
         public List<CriterionItemListDto>? CriterionItems { get; set; }
     }
 }

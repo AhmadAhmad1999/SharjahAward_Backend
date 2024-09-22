@@ -63,7 +63,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
 
             string ResponseMessage = string.Empty;
 
-            int TotalCount = await _ArbitratorRepository.GetCountAsync(null);
+            int TotalCount = await _ArbitratorRepository.WhereThenFilter(x => true, filterObject)
+                .CountAsync();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

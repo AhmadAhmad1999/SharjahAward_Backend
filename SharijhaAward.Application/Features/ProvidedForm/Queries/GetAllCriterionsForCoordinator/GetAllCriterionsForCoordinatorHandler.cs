@@ -80,7 +80,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllCriterio
                         Title = Language == "ar"
                             ? x.ArabicTitle
                             : x.EnglishTitle,
-                        OrderId = x.OrderId
+                        OrderId = x.OrderId,
+                        AttachFilesOnSubCriterion = x.AttachFilesOnSubCriterion != null
+                            ? x.AttachFilesOnSubCriterion.Value
+                            : false
                     }).ToList();
 
                 foreach (GetAllCriterionsForCoordinatorSubCriterion SubCriterionObject in MainCriterionObject.SubCriterions)

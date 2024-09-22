@@ -67,13 +67,33 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
 
             ArbitratorDto ArbitratorDto = _Mapper.Map<ArbitratorDto>(ArbitratorEntity);
 
+            // Classes..
+            IEnumerable<ArbitratorClass> ArbitratorClasses = _ArbitratorClassRepository
+                .Where(x => x.ArbitratorId == Request.ArbitratorId)
+                .AsEnumerable();
+
             ArbitratorDto.ArbitratorCategories = await _CategoryArbitratorRepository
                 .Where(x => x.ArbitratorId == Request.ArbitratorId)
                 .Select(x => new ArbitratorCategoryDto()
                 {
                     Id = x.CategoryId,
                     ArabicName = x.Category!.ArabicName,
-                    EnglishName = x.Category!.EnglishName
+                    EnglishName = x.Category!.EnglishName,
+                    CategoryName = Request.lang == "en"
+                        ? x.Category!.EnglishName
+                        : x.Category!.ArabicName,
+                    RelatedToClasses = x.Category!.RelatedToClasses != null
+                        ? x.Category!.RelatedToClasses.Value : false,
+                    Classes = ArbitratorClasses
+                        .Where(y => y.CategoryEducationalClass!.CategoryId == x.CategoryId)
+                        .AsEnumerable()
+                        .Select(y => new CategoryClassesDto()
+                        {
+                            Id = y.CategoryEducationalClassId,
+                            ClassName = Request.lang == "en"
+                                ? y.CategoryEducationalClass!.EducationalClass!.EnglishName
+                                : y.CategoryEducationalClass!.EducationalClass!.ArabicName
+                        }).ToList()
                 }).ToListAsync();
 
             //
@@ -158,17 +178,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                     }
                 }
             }
-
-            // Classes..
-            List<GetAllClassesListVM> ArbitratorClasses = await _ArbitratorClassRepository
-                .Where(x => x.ArbitratorId == Request.ArbitratorId)
-                .Select(x => new GetAllClassesListVM()
-                {
-                    Id = x.CategoryEducationalClassId,
-                    ArabicName = x.CategoryEducationalClass!.EducationalClass!.ArabicName,
-                    EnglishName = x.CategoryEducationalClass!.EducationalClass!.EnglishName
-                }).ToListAsync();
-
+            
             var ResponsibilitiesUser = await _userRepository
                 .Where(u => u.UserId == Request.ArbitratorId)
                 .ToListAsync();
@@ -177,7 +187,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
             {
                 ArbitratorDto = ArbitratorDto,
                 DynamicAttributesSections = DynamicAttributeSections,
-                ArbitratorClasses = ArbitratorClasses,
                 ResponsibilityUsers = _Mapper.Map<List<ResponsibilityUserDto>>(ResponsibilitiesUser)
             };
 

@@ -85,7 +85,10 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         MaxAttachmentNumber = x.MaxAttachmentNumber != null
                             ? x.MaxAttachmentNumber.Value
                             : null,
-                        AttachmentType = x.AttachmentType
+                        AttachmentType = x.AttachmentType,
+                        AttachFilesOnSubCriterion = (x.AttachFilesOnSubCriterion != null
+                            ? x.AttachFilesOnSubCriterion.Value
+                            : false)
                     }).ToListAsync();
 
                 MainCriterion.SubCriterions = SubCriterions;

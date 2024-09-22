@@ -4,7 +4,6 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
 {
     public class GetAllNotificationsByFCM_TokenListVM
     {
-        public string Test { get; set; } = "Malek";
         public List<GetAllNotificationsListVM>? ReadedNotifications { get; set; } = new List<GetAllNotificationsListVM>();
 
 

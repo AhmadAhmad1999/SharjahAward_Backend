@@ -11,6 +11,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
         public string? StrengthPoint { get; set; }
         public string? ImprovementAreas { get; set; }
         public int ArbitrationScore { get; set; }
+        public bool AttachFilesOnSubCriterion { get; set; }
         public List<AttachmanetsDto> SubCriterionAttachmanetsDto { get; set; } = new List<AttachmanetsDto>();
         public List<ChairmanNotesOnInitialArbitrationDto> ChairmanNotesOnArbitrationAuditDtos { get; set; } = new List<ChairmanNotesOnInitialArbitrationDto>();
         public List<ArbitrationAuditCriterionItemDto> SubCriterionItemDtos { get; set; } = new List<ArbitrationAuditCriterionItemDto>();
