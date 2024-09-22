@@ -15,6 +15,7 @@ using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorsByFormId;
+using SharijhaAward.Application.Features.Arbitrators.Queries.GetUnAssignedArbitratorsByFormId;
 using SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinator;
 using SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator;
 using SharijhaAward.Application.Features.Coordinators.Queries.ExportToExcel;
@@ -325,6 +326,32 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(response),
                 200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Arbitrators.xlsx"),
                 _ => BadRequest(response)
+            };
+        }
+        [HttpGet("GetUnAssignedArbitratorsByFormId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetUnAssignedArbitratorsByFormId([FromQuery] GetUnAssignedArbitratorsByFormIdQuery GetUnAssignedArbitratorsByFormIdQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetUnAssignedArbitratorsByFormIdQuery.lang = HeaderValue!;
+
+            BaseResponse<List<GetUnAssignedArbitratorsByFormIdListVM>> Response = await _Mediator.Send(GetUnAssignedArbitratorsByFormIdQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
             };
         }
     }

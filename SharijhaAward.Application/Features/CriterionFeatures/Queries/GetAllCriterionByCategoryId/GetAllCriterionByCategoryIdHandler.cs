@@ -86,49 +86,53 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                             ? x.MaxAttachmentNumber.Value
                             : null,
                         AttachmentType = x.AttachmentType,
-                        
+                        AttachFilesOnSubCriterion = (x.AttachFilesOnSubCriterion != null
+                            ? x.AttachFilesOnSubCriterion.Value
+                            : false)
                     }).ToList();
 
                 foreach (SubCriterionListVM SubCriterionObject in MainCriterionObject.SubCriterionListVM)
                 {
-                    SubCriterionObject.SubCriterionAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionAttachmentRepository
-                        .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
-                    
-                    if(SubCriterionObject.SubCriterionAttachments.Any(a=>a.IsAccept == false))
+                    if (!SubCriterionObject.AttachFilesOnSubCriterion)
                     {
-                        SubCriterionObject.rejected = true;
-                    }
+                        SubCriterionObject.SubCriterionAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionAttachmentRepository
+                            .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
 
-                    SubCriterionObject.CriterionItemListVM = _CriterionItemRepository
-                        .Where(x => x.CriterionId == SubCriterionObject.Id)
-                        .OrderBy(x => x.OrderId)
-                        .Select(x => new CriterionItemListVM()
+                        if (SubCriterionObject.SubCriterionAttachments.Any(a => a.IsAccept == false))
                         {
-                            Id = x.Id,
-                            Name = Language == "ar"
-                                ? x.ArabicName
-                                : x.EnglishName,
-                            SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
-                            MaxAttachmentNumber = x.MaxAttachmentNumber,
-                            AttachmentType = x.AttachmentType
-                            
-                        }).ToList();
-
-                    foreach (CriterionItemListVM CriterionItemObject in SubCriterionObject.CriterionItemListVM)
-                    {
-                        CriterionItemObject.CriterionItemAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionItemAttachmentRepository
-                            .Where(x => x.CriterionItemId == CriterionItemObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
-
-                        if(CriterionItemObject.CriterionItemAttachments.Any(a=>a.IsAccept == false))
-                        {
-                            CriterionItemObject.rejected = true;
+                            SubCriterionObject.rejected = true;
                         }
-                        
-                    }
 
-                    if(SubCriterionObject.CriterionItemListVM.Any(a=>a.rejected == true))
-                    {
-                        SubCriterionObject.rejected = true;
+                        SubCriterionObject.CriterionItemListVM = _CriterionItemRepository
+                            .Where(x => x.CriterionId == SubCriterionObject.Id)
+                            .OrderBy(x => x.OrderId)
+                            .Select(x => new CriterionItemListVM()
+                            {
+                                Id = x.Id,
+                                Name = Language == "ar"
+                                    ? x.ArabicName
+                                    : x.EnglishName,
+                                SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                                MaxAttachmentNumber = x.MaxAttachmentNumber,
+                                AttachmentType = x.AttachmentType
+
+                            }).ToList();
+
+                        foreach (CriterionItemListVM CriterionItemObject in SubCriterionObject.CriterionItemListVM)
+                        {
+                            CriterionItemObject.CriterionItemAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionItemAttachmentRepository
+                                .Where(x => x.CriterionItemId == CriterionItemObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
+
+                            if (CriterionItemObject.CriterionItemAttachments.Any(a => a.IsAccept == false))
+                            {
+                                CriterionItemObject.rejected = true;
+                            }
+                        }
+
+                        if (SubCriterionObject.CriterionItemListVM.Any(a => a.rejected == true))
+                        {
+                            SubCriterionObject.rejected = true;
+                        }
                     }
                 }
 

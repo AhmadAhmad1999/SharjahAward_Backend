@@ -9,7 +9,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
         public ArbitratorDto ArbitratorDto { get; set; } = new ArbitratorDto();
         public List<GetAllDynamicAttributeSectionsForAddListVMAdminDashboard> DynamicAttributesSections { get; set; } =
             new List<GetAllDynamicAttributeSectionsForAddListVMAdminDashboard>();
-        public List<GetAllClassesListVM> ArbitratorClasses { get; set; } = new List<GetAllClassesListVM>();
         public List<ResponsibilityUserDto>? ResponsibilityUsers { get; set; }        
     }
 }

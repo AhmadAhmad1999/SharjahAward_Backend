@@ -18,6 +18,7 @@ namespace SharijhaAward.Domain.Entities.CriterionModel
         public Category Category { get; set; } = null!;
         public int? MaxAttachmentNumber { get; set; }
         public AttachmentType? AttachmentType { get; set; }
+        public bool? AttachFilesOnSubCriterion { get; set; }
     }
 }
 

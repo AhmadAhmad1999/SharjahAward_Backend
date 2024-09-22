@@ -78,9 +78,9 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                 .ToListAsync();
 
             List<int> IntersectCategoriesIds = AlreadyExistCategoriesIds
-                .Intersect(Request.Categories).ToList();
+                .Intersect(Request.ArbitratorCateogryClasses.Select(x => x.Id)).ToList();
 
-            List<int> NewCategoriesIds = Request.Categories
+            List<int> NewCategoriesIds = Request.ArbitratorCateogryClasses.Select(x => x.Id)
                 .Where(x => !IntersectCategoriesIds.Contains(x))
                 .ToList();
 
@@ -94,9 +94,10 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                 .ToListAsync();
 
             List<int> IntersectArbitratorClassIds = AlreadyExistArbitratorClassIds
-                .Intersect(Request.ArbitratorCategoryClasses).ToList();
+                .Intersect(Request.ArbitratorCateogryClasses.SelectMany(x => x.Classes)).ToList();
 
-            List<int> NewArbitratorClassIds = Request.ArbitratorCategoryClasses
+            List<int> NewArbitratorClassIds = Request.ArbitratorCateogryClasses
+                .SelectMany(x => x.Classes)
                 .Where(x => !IntersectArbitratorClassIds.Contains(x))
                 .ToList();
 

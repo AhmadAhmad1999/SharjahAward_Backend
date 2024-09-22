@@ -135,7 +135,10 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         Title = Request.lang == "en"
                             ? SubCriterionEntityForThisMainCriterion.EnglishTitle
                             : SubCriterionEntityForThisMainCriterion.ArabicTitle,
-                        SubCriterionScore = SubCriterionEntityForThisMainCriterion.Score
+                        SubCriterionScore = SubCriterionEntityForThisMainCriterion.Score,
+                        AttachFilesOnSubCriterion = SubCriterionEntityForThisMainCriterion.AttachFilesOnSubCriterion != null
+                            ? SubCriterionEntityForThisMainCriterion.AttachFilesOnSubCriterion.Value
+                            : false
                     };
 
                     List<CriterionItem> CriterionItemEntitiesForThisSubCriterion = CriterionItemEntities

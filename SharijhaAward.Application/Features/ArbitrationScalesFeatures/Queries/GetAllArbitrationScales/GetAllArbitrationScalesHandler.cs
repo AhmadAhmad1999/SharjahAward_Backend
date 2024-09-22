@@ -89,7 +89,9 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
                             ? x.EnglishTitle
                             : x.ArabicTitle,
                         Score = x.Score,
-                        ScoreInPercentageForm = ((x.Score / (float)FullSscore) * 100).ToString() + "%"
+                        ScoreInPercentageForm = ((x.Score / (float)FullSscore) * 100).ToString() + "%",
+                        AttachFilesOnSubCriterion = x.AttachFilesOnSubCriterion != null
+                            ? x.AttachFilesOnSubCriterion.Value : false
                     }).ToList();
 
                 foreach (SubCriterionDto SubCriterionDto in MainCriterionDto.SubCriterionDto)

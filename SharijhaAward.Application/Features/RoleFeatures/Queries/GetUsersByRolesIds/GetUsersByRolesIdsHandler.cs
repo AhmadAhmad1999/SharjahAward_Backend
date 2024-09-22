@@ -9,14 +9,11 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRole
     public class GetUsersByRolesIdsHandler : IRequestHandler<GetUsersByRolesIdsQuery, BaseResponse<List<UsersInRoleDto>>>
     {
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
-        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
         private readonly IUserRepository _UserRepository;
         public GetUsersByRolesIdsHandler(IAsyncRepository<UserRole> UserRoleRepository,
-            IAsyncRepository<UserToken> UserTokenRepository,
             IUserRepository UserRepository)
         {
             _UserRoleRepository = UserRoleRepository;
-            _UserTokenRepository = UserTokenRepository;
             _UserRepository = UserRepository;
         }
 
@@ -42,6 +39,7 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRole
             List<UsersInRoleDto> SubscriberInRoleDtos = _UserRepository
                 .Where(x => SubscribersIds.Contains(x.Id) && x.isValidAccount)
                 .AsEnumerable()
+                .DistinctBy(x => x.Id)
                 .Select(x => new UsersInRoleDto()
                 {
                     Id = x.Id,
@@ -57,6 +55,7 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetUsersByRole
             List<UsersInRoleDto> NotSubscriberInRoleDtos = _UserRepository
                 .Where(x => NotSubscribersIds.Contains(x.Id) && x.isValidAccount)
                 .AsEnumerable()
+                .DistinctBy(x => x.Id)
                 .Select(x => new UsersInRoleDto()
                 {
                     Id = x.Id,
