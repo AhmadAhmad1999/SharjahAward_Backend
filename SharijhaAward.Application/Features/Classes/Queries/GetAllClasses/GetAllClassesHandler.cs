@@ -25,15 +25,18 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllClasses
 
             var filterObject = new FilterObject() { Filters = Request.filters };
 
-            List<GetAllClassesListVM> Classes = _Mapper.Map<List<GetAllClassesListVM>>(await _EducationalClassRepository
-                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
+            var Classes = await _EducationalClassRepository
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
+                .ToListAsync();
 
-            int TotalCount = await _EducationalClassRepository.GetCountAsync(null);
+            var data = _Mapper.Map<List<GetAllClassesListVM>>(Classes);
+
+            int TotalCount = await _EducationalClassRepository.GetCountAsync(c=>!c.isDeleted);
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);
 
-            return new BaseResponse<List<GetAllClassesListVM>>(ResponseMessage, true, 200, Classes, PaginationParameter);
+            return new BaseResponse<List<GetAllClassesListVM>>(ResponseMessage, true, 200, data, PaginationParameter);
         }
     }
 }

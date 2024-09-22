@@ -289,23 +289,24 @@ namespace SharijhaAward.Persistence.Repositories
         }
         public IQueryable<T> OrderByDescending<TKey>(FilterObject filterObject, Expression<Func<T, TKey>> keySelector, int page, int size)
         {
-            IQueryable<T> query = _DbSet.AsNoTracking();
+            var query = _DbSet.AsNoTracking().OrderByDescending(keySelector);
 
             if (filterObject != null && filterObject.Filters != null)
             {
-                query = Filtration(filterObject);
+                query = Filtration(filterObject).OrderByDescending(keySelector);
             }
 
             if (size == -1 || page == 0)
                 return _DbSet.AsNoTracking().OrderByDescending(keySelector);
+
             if (size == 0)
             {
                 size = 10;
-                query.AsNoTracking().OrderByDescending(keySelector).Skip((page - 1) * size).Take(size);
+                query = query.AsNoTracking().Skip((page - 1) * size).Take(size).OrderByDescending(keySelector);
             }
             else
             {
-                query.AsNoTracking().OrderByDescending(keySelector).Skip((page - 1) * size).Take(size);
+                query = query.AsNoTracking().Skip((page - 1) * size).Take(size).OrderByDescending(keySelector);
             }
 
             return query;

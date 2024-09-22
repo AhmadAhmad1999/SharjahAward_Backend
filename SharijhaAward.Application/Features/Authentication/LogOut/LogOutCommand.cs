@@ -6,6 +6,7 @@ namespace SharijhaAward.Application.Features.Authentication.LogOut
 {
     public class LogOutCommand : IRequest<BaseResponse<object>>
     {
+        public string? DeviceToken { get; set; }
         public string? token { get; set; }
         public PlatformType Platform { get; set; }
         public string? lang { get; set; }

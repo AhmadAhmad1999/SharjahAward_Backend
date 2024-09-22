@@ -46,7 +46,13 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.AsignMessageTo
                 return new BaseResponse<object>(msg, false, 400);
             }
 
-            foreach(var role in request.RoleId)
+            var roleType = _roleTypeRepository.Where(
+                r => r.MessageTypeId == request.TypeId
+                && request.RoleId.Contains(r.RoleId)).ToList();
+
+            await _roleTypeRepository.DeleteListAsync(roleType);
+
+            foreach (var role in request.RoleId)
             {
                 
                 var RoleType = new RoleMessageType()

@@ -101,6 +101,15 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                     UnReadedNotifications = Notifications.Where(n => !n.isReaded).ToList()
                 };
 
+                var UnRead = _UserNotificationRepository.Where(n => !n.isReaded).ToList();
+
+                foreach (var notification in UnRead)
+                {
+                    notification.isReaded = true;
+                }
+
+                await _UserNotificationRepository.UpdateListAsync(UnRead);
+
                 int TotalCount = await _UserNotificationRepository.GetCountAsync(x => x.UserId == CheckUserTokenIfExist.UserId);
 
                 Pagination PaginationParameter = new Pagination(Request.page,

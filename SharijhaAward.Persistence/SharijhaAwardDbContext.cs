@@ -1015,9 +1015,9 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<PageCard>()
-                .Navigation(p => p.PageStructure)
-                .AutoInclude();
+            //modelBuilder.Entity<PageCard>()
+            //    .Navigation(p => p.PageStructure)
+            //    .AutoInclude();
 
             modelBuilder.Entity<PageCard>().HasQueryFilter(p => !p.isDeleted);
 

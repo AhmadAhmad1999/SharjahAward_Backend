@@ -64,7 +64,6 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                                 ? x.RecordId : null
                         }).ToListAsync();
 
-                    
                 }
                 else
                 {
@@ -101,7 +100,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                 Response = Response.Where(r => r.UserName.Contains(Request.UserName!)).ToList();
             }
 
-            int TotalCount = await _LogUserActionRepository.GetCountAsync(c => c.isDeleted);
+            int TotalCount = await _LogUserActionRepository.GetCountAsync(c =>!c.isDeleted);
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

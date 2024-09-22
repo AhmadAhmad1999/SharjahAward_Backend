@@ -349,6 +349,9 @@ namespace SharijhaAward.Api.Controllers
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
+            var DeviceToken = HttpContext.Request.Headers["fcm_token"];
+
+
             if (string.IsNullOrEmpty(Token))
                 return Unauthorized("You must send the token");
 
@@ -360,7 +363,8 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<object> Response = await _Mediator.Send(new LogOutCommand()
             {
                 token = Token,
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                DeviceToken = DeviceToken
             });
 
             return Response.statusCode switch
