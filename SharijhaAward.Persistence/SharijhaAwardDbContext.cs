@@ -1009,9 +1009,9 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<StrategicPartner>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<PageStructure>()
-                .Navigation(p => p.pageStructure)
-                .AutoInclude();
+            //modelBuilder.Entity<PageStructure>()
+            //    .Navigation(p => p.pageStructure)
+            //    .AutoInclude();
 
             modelBuilder.Entity<PageStructure>().HasQueryFilter(p => !p.isDeleted);
 

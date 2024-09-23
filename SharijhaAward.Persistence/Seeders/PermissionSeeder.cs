@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async void Seed()
         {
             if (!_context.Permissions.Any())
             {
-                _context.Permissions.AddRange(
+               await _context.Permissions.AddRangeAsync(
                 //-------------AboutAward---------
                 new Permission()
                 {
@@ -2589,7 +2589,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
 
                 });
-                _context.SaveChanges();
+              await _context.SaveChangesAsync();
             }
         }
 

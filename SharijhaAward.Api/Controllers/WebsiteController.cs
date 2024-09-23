@@ -28,9 +28,11 @@ using SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId;
 using SharijhaAward.Application.Features.News.Queries.GetNewsById;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPages;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPagesWithSubPages;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageBySlug;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPagesInCell;
 using SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferenceSourcePage;
 using SharijhaAward.Application.Features.Settings.Queries.GetPrivacyPolicy;
 using SharijhaAward.Application.Features.Settings.Queries.GetTermsOfUse;
@@ -851,6 +853,47 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
+
+        [HttpGet("GetMainPages")]
+        public async Task<IActionResult> GetMainPages(int page = 1, int perPage = 10)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _Mediator.Send(new GetMainPagesQuery()
+            {
+                page = page,
+                perPage = perPage,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetPagesInCell")]
+        public async Task<IActionResult> GetPagesInCell(int page = 1, int perPage = 10)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _Mediator.Send(new GetPagesInCellQuery()
+            {
+                page = page,
+                perPage = perPage,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
         [HttpGet("AppsVersions/GetAllLastVersionsForAllTypes")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

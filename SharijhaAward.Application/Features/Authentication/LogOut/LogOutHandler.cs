@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.Authentication.LogOut
 
             UserToken? UserToken = await _UserTokenRepository
                 .FirstOrDefaultAsync(x => x.UserId == UserId && x.Token.ToLower() == Request.token!.ToLower().Replace("bearer ", string.Empty) &&
-                    x.Platform == Request.Platform);
+                    x.Platform == Request.Platform && x.DeviceToken == Request.DeviceToken);
 
             if (UserToken is null)
             {

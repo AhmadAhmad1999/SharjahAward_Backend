@@ -17,5 +17,6 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
         public int ParentId { get; set; }
         public string Slug { get; set; } = string.Empty;
         public bool IsHide { get; set; }
+        public int orderId { get; set; }
     }
 }

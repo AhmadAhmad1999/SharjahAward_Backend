@@ -38,6 +38,11 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
                 }
             }
             
+            if(request.PageType != Domain.Constants.PageType.MainPageWithoutSubPage && request.PagePostion == Domain.Constants.CustomPageConstants.PagePostion.InCells)
+            {
+                return new BaseResponse<int>("لا يمكن إضافة هذه الصفحة الى الخلايا", false, 400);
+            }
+
             var page = _mapper.Map<PageStructure>(request);
 
             if(request.Icon != null)

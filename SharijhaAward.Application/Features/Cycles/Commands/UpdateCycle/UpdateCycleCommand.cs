@@ -20,7 +20,7 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle
         public string ArabicName { get; set; } = string.Empty;
         [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
-        public Status Status { get; set; } = Status.InActive;
+        public Status Status { get; set; }
         public DateTime RegistrationPortalOpeningDate { get; set; }
         public DateTime RegistrationPortalClosingDate { get; set; }
         public DateTime? SubscriberPortalClosingDate { get; set; }

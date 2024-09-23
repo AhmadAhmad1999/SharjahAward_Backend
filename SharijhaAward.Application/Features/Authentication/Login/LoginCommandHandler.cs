@@ -72,7 +72,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                 request.Platform != null)
             {
                 UserToken? CheckIfAlreadyExistUserToken = await _UserTokenRepository
-                    .FirstOrDefaultAsync(x => x.UserId == response.user.Id);
+                    .FirstOrDefaultAsync(x => x.UserId == response.user.Id && x.DeviceToken == request.DeviceToken);
 
                 if (CheckIfAlreadyExistUserToken is not null)
                 {

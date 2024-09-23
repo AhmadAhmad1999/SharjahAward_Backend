@@ -1,5 +1,6 @@
 ﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants;
+using SharijhaAward.Domain.Constants.CustomPageConstants;
 using SharijhaAward.Domain.Entities.PageStructureModels;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace SharijhaAward.Domain.Entities.PageStructureModel
         public bool IsHide { get; set; }
         public string Slug { get; set; } = string.Empty;
         public PageType PageType { get; set; }
+        public PagePostion PagePostion { get; set; }
+        public int orderId { get; set; }
         public bool Deletable { get; set; }
 
         public PageStructure pageStructure { get; set; } = null!;

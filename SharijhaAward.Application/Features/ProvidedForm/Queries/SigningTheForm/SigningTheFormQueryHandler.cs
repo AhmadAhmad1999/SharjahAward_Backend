@@ -79,6 +79,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
 
+            //var UserToken = _UserTokenRepository
+            //    .Where(x => x.UserId == User.Id)
+            //    .ToList();
+
             if (User.Password == CheckPassword)
             {
 
@@ -109,7 +113,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
 
                         await _NotificationRepository.AddAsync(NewNotificationEntity);
 
-                        FirebaseAdmin.Messaging.Message? NotificationMessages = await _UserTokenRepository
+                        List<FirebaseAdmin.Messaging.Message>? NotificationMessages = await _UserTokenRepository
                             .Where(x => User.Id == x.UserId && !string.IsNullOrEmpty(x.DeviceToken))
                             .Select(x => x.AppLanguage == "en"
                                 ? new FirebaseAdmin.Messaging.Message()
@@ -129,9 +133,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                                         Body = NewNotificationEntity.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
                                     },
                                     Token = x.DeviceToken
-                                }).FirstOrDefaultAsync();
+                                }).ToListAsync();
 
-                        UserNotification? UserNotificationEntities = await _UserTokenRepository
+                        List<UserNotification> UserNotificationEntities = await _UserTokenRepository
                             .Where(x => User.Id == x.UserId)
                             .GroupBy(x => x.UserId)
                             .Select(x => new UserNotification()
@@ -139,10 +143,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                                 UserId = x.Key,
                                 NotificationId = NewNotificationEntity.Id,
                                 isReaded = false
-                            }).FirstOrDefaultAsync();
+                            }).ToListAsync();
 
                         if (UserNotificationEntities is not null)
-                            await _UserNotificationRepository.AddAsync(UserNotificationEntities!);
+                            await _UserNotificationRepository.AddRangeAsync(UserNotificationEntities!);
 
                         string EmailSubject = $"Complete the steps to register for {form.Category.EnglishName} category" + " - " + $"تهانينا\r\nلقد اتممت خطوات التسجيل في فئة ال{form.Category.ArabicName}";
 
@@ -204,7 +208,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                         }, EmailSubject, FullEmailBody, AlternateView);
 
                         if (NotificationMessages is not null)
-                            await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendAsync(NotificationMessages);
+                            await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendEachAsync(NotificationMessages);
 
                         Transaction.Complete();
                     }

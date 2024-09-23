@@ -1,4 +1,5 @@
 ﻿using SharijhaAward.Domain.Constants;
+using SharijhaAward.Domain.Constants.CustomPageConstants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,9 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public int numberOfSubPages { get; set; }
+        public PagePostion PagePostion { get; set; }
         public PageType PageType { get; set; }
+        public int orderId { get; set; }
         public bool IsHide { get; set; }
     }
 }

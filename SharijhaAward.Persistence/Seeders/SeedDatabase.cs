@@ -153,6 +153,12 @@ namespace SharijhaAward.Persistence.Seeders
                 
                 var TrainingWorkshopSeeder = new TrainingWorkshopSeeder(context);
                 TrainingWorkshopSeeder.Seed();
+
+                var CustomPageSeerer = new CustomPageSeeder(context);
+                CustomPageSeerer.Seed();
+
+                var RolePermissionSeeder = new RolePermissionSeeder(context);
+                RolePermissionSeeder.Seed();
             }
         }
 

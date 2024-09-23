@@ -25,11 +25,12 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
             var mainPages = await _pageStructureRepository
-                    .GetWhereThenPagedReponseAsync(p => p.ParentId == null, filterObject, request.page, request.perPage);
+                    .GetWhereThenPagedReponseAsync(p => p.ParentId == null && p.PagePostion == Domain.Constants.CustomPageConstants.PagePostion.InMenu, filterObject, request.page, request.perPage);
+                    
 
-            var subPages = await _pageStructureRepository.Where(p => p.ParentId != null).ToListAsync();
+            var subPages = await _pageStructureRepository.Where(p => p.ParentId != null).OrderBy(p=>p.orderId).ToListAsync();
             
-            var MainPages = _mapper.Map<List<MainPageWithSubPageListVM>>(mainPages);
+            var MainPages = _mapper.Map<List<MainPageWithSubPageListVM>>(mainPages).OrderBy(p=>p.orderId).ToList();
 
             List<PageStructure> pages = new List<PageStructure>();
 
@@ -61,7 +62,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
             Pagination PaginationParameter = new Pagination(request.page,
                 request.perPage, TotalCount);
 
-            return new BaseResponse<List<MainPageWithSubPageListVM>>("", true, 200, MainPages, PaginationParameter);
+            return new BaseResponse<List<MainPageWithSubPageListVM>>("", true, 200, MainPages , PaginationParameter);
         }
     }
 }

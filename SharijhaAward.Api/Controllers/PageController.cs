@@ -10,6 +10,7 @@ using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageByI
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageBySlug;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPages;
+using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPagesInCell;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -101,6 +102,26 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
 
             var response = await _mediator.Send(new GetMainPagesQuery()
+            {
+                page = page,
+                perPage = perPage,
+                lang = language!
+            });
+
+            return response.statusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetPagesInCell", Name = "GetPagesInCell")]
+        public async Task<IActionResult> GetPagesInCell(int page = 1, int perPage = 10)
+        {
+            var language = HttpContext.Request.Headers["lang"];
+
+            var response = await _mediator.Send(new GetPagesInCellQuery()
             {
                 page = page,
                 perPage = perPage,

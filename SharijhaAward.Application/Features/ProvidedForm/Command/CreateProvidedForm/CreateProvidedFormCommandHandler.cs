@@ -156,8 +156,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
             ProvidedForm.userId = int.Parse(UserId);
             ProvidedForm.CycleNumber = cycle.CycleNumber;
             ProvidedForm.CycleYear = cycle.Year;
-            ProvidedForm.Type = 0;
-            ProvidedForm.Status = 0;
+            ProvidedForm.Type = Domain.Constants.ProvidedFromConstants.ProvidedFormType.Current;
+            ProvidedForm.Status = Domain.Constants.ProvidedFromConstants.ProvidedFormStatus.Active;
             ProvidedForm.CurrentStep = 1;
             ProvidedForm.TotalStep = 6;
             ProvidedForm.PercentCompletion = 0;

@@ -36,7 +36,12 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Updat
             }
 
             var Icon = page.IconUrl;
-           
+
+            if (request.PageType != Domain.Constants.PageType.MainPageWithoutSubPage && request.PagePostion == Domain.Constants.CustomPageConstants.PagePostion.InCells)
+            {
+                return new BaseResponse<object>("لا يمكن إضافة هذه الصفحة الى الخلايا", false, 400);
+            }
+
             _mapper.Map(request, page, typeof(UpdatePageCommand), typeof(PageStructure));
 
             if (request.UpdateOnIcon != null && request.UpdateOnIcon == true)

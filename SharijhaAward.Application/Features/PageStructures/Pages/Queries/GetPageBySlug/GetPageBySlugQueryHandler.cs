@@ -8,9 +8,11 @@ using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetAl
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsByPageId;
 using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetAllTextCard;
+using SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStrategicPartners;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 using SharijhaAward.Domain.Entities.PageStructureModels;
+using SharijhaAward.Domain.Entities.StrategicPartnerModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +28,10 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
         private readonly IAsyncRepository<PageStructureImages> _pageStructureImagesRepository;
         private readonly IAsyncRepository<PageCard> _PageCardRepository;
         private readonly IAsyncRepository<ImageCard> _ImageCardRepository;
+        private readonly IAsyncRepository<StrategicPartner> _StrategicPartnerRepository;
         private readonly IMapper _mapper;
 
-        public GetPageBySlugQueryHandler(IAsyncRepository<PageStructure> pageStructureRepository,
+        public GetPageBySlugQueryHandler(IAsyncRepository<StrategicPartner> StrategicPartnerRepository, IAsyncRepository<PageStructure> pageStructureRepository,
             IMapper mapper, 
             IAsyncRepository<PageStructureImages> pageStructureImagesRepository,
             IAsyncRepository<PageCard> PageCardRepository,
@@ -39,6 +42,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
             _pageStructureImagesRepository = pageStructureImagesRepository;
             _PageCardRepository = PageCardRepository;
             _ImageCardRepository = ImageCardRepository;
+            _StrategicPartnerRepository = StrategicPartnerRepository;
         }
         public async Task<BaseResponse<PageDto>> Handle(GetPageBySlugQuery request, CancellationToken cancellationToken)
         {
@@ -73,6 +77,10 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
             
             var GoalCardsList = _mapper.Map<List<GoalCardListVM>>(await _PageCardRepository
                 .Where(x => x.PageId == page.Id && x.CardType == CardType.GoalCard)
+                .ToListAsync());
+
+            var StratigicPartnerCardsList = _mapper.Map<List<StrategicPartnerListVM>>(await _StrategicPartnerRepository
+                .Where(x => x.PageId == page.Id)
                 .ToListAsync());
 
             foreach (var Darkcard in DarkCardsList)
@@ -142,6 +150,18 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 data.Components!.Add(Component);
             }
 
+            foreach (var StratigicPartner in StratigicPartnerCardsList)
+            {
+                var Component = new Component()
+                {
+                    Card = StratigicPartner,
+                    CardType = "StratigicPartner",
+                    orderId = StratigicPartner.orderId,
+                    IsHide = StratigicPartner.IsHide
+                };
+
+                data.Components!.Add(Component);
+            }
             var goalComponent = new Component()
             {
                 Goals = GoalCardsList,

@@ -15,6 +15,9 @@ namespace SharijhaAward.Application.Features.StrategicPartners.Commands.CreateSt
         public string Name { get; set; } = string.Empty;
         public string? Url { get; set; }
         public string? lang { get; set; }
+        public int orderId { get; set; }
+        public bool IsHide { get; set; } = false;
+        public int PageId { get; set; } = 3;
     }
 }
  
