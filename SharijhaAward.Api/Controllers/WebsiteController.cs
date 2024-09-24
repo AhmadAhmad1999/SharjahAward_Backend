@@ -16,6 +16,7 @@ using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSpons
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStatistics;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 using SharijhaAward.Application.Features.Categories.Queries.GetCategoryById;
+using SharijhaAward.Application.Features.ChatBotFeature.Queries.TalkWithChatBot;
 using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
 using SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles;
@@ -54,6 +55,20 @@ namespace SharijhaAward.Api.Controllers
         {
             _Mediator = Mediator;
         }
+
+        [HttpGet("ChatBot")]
+        public async Task<IActionResult> ChatBot([FromQuery] string query)
+        {
+            var Response = await _Mediator.Send(new TalkWithChatBotQuery() { message = query });
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+
         [HttpGet("AboutPage/GetAboutPageWebSite")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

@@ -9,5 +9,7 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
     public class PropertyJson
     {
         public Dictionary<string, string> Properties { set; get; }
+        public Dictionary<string, string> Rule { set; get; }
+        
     }
 }

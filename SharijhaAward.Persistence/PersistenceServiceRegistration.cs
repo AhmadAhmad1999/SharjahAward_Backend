@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Persistence.Repositories;
 using SharijhaAward.Persistence.Seeders;
@@ -34,6 +35,7 @@ namespace SharijhaAward.Persistence
             services.AddScoped<ICategoryRepository , CategoryRepository>();
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<ISeedDatabase, SeedDatabase>();
+            services.AddScoped<IChatBotService, ChatBotService>();
 
             return services;
         }
