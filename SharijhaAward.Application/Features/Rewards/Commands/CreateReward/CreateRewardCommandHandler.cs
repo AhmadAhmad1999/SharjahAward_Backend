@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.Rewards.Commands.CreateReward
                 ? "Reward has been Added"
                 : "تم إضافة المكافئة";
 
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
            
             if (category == null )
             {

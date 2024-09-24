@@ -56,6 +56,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
             {
                 List<Category> subCategories = _categoryRepository
                     .Where(c => c.ParentId == data[i].Id)
+                    .Include(x => x.Parent!)
                     .ToList();
                
                 data[i].subcategories = _mapper.Map<List<SubcategoriesListVM>>(subCategories);

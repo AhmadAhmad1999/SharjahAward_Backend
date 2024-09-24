@@ -34,7 +34,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
             _CriterionAttachmentRepository = CriterionAttachmentRepository;
             _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
         }
-        public async Task<BaseResponse<List<MainCriterionListVM>>> Handle(GetAllCriterionByCategoryIdQuery Request, 
+        public async Task<BaseResponse<List<MainCriterionListVM>>> Handle(GetAllCriterionByCategoryIdQuery Request,
             CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                 ? Request.lang.ToLower() : "ar";
 
             Category? CheckIfCategoryIdIsExist = await _CategoryRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.CategoryId);
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.CategoryId);
 
             if (CheckIfCategoryIdIsExist == null)
             {
@@ -57,7 +57,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
             List<MainCriterionListVM> FullObjectResponse = new List<MainCriterionListVM>();
 
             List<Criterion> AllCriterionsEntities = await _CriterionRepository
-                .Where(x => x.CategoryId == Request.CategoryId).ToListAsync();
+                .Where(x => x.CategoryId == Request.CategoryId)
+                .Include(x => x.Parent!).ToListAsync();
 
             List<MainCriterionListVM> MainCriterionObjects = AllCriterionsEntities
                 .Where(x => x.ParentId == null)
@@ -65,7 +66,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                 .Select(x => new MainCriterionListVM()
                 {
                     Id = x.Id,
-                    Title = Language == "ar" 
+                    Title = Language == "ar"
                         ? x.ArabicTitle
                         : x.EnglishTitle
                 }).ToList();
@@ -93,16 +94,16 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
 
                 foreach (SubCriterionListVM SubCriterionObject in MainCriterionObject.SubCriterionListVM)
                 {
+                    SubCriterionObject.SubCriterionAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionAttachmentRepository
+                        .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
+
+                    if (SubCriterionObject.SubCriterionAttachments.Any(a => a.IsAccept == false))
+                    {
+                        SubCriterionObject.rejected = true;
+                    }
+
                     if (!SubCriterionObject.AttachFilesOnSubCriterion)
                     {
-                        SubCriterionObject.SubCriterionAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionAttachmentRepository
-                            .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
-
-                        if (SubCriterionObject.SubCriterionAttachments.Any(a => a.IsAccept == false))
-                        {
-                            SubCriterionObject.rejected = true;
-                        }
-
                         SubCriterionObject.CriterionItemListVM = _CriterionItemRepository
                             .Where(x => x.CriterionId == SubCriterionObject.Id)
                             .OrderBy(x => x.OrderId)
@@ -136,8 +137,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                     }
                 }
 
-                if(MainCriterionObject.SubCriterionListVM.Any(s=>s.rejected == true) 
-                    || MainCriterionObject.SubCriterionListVM.Any(s=>s.CriterionItemListVM.Any(c=>c.rejected == true)))
+                if (MainCriterionObject.SubCriterionListVM.Any(s => s.rejected == true)
+                    || MainCriterionObject.SubCriterionListVM.Any(s => s.CriterionItemListVM.Any(c => c.rejected == true)))
                 {
                     MainCriterionObject.rejected = true;
                 }

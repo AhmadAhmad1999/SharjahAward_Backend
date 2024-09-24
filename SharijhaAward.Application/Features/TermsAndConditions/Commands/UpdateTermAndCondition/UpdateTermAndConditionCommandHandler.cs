@@ -39,7 +39,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateT
                 return new BaseResponse<object>(msg, false, 404);
             }
 
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _categoryRepository
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
 
             if(category == null || category.ParentId == null)
             {

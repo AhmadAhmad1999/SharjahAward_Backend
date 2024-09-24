@@ -568,10 +568,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             EducationalInstitutions,
 
             [Description("")] // Done
-            EduEntitiesCoordinator,
+            EntitiesCoordinator,
 
             [Description("")] // Done
-            EduEntitiesCoordinators,
+            EntitiesCoordinators,
 
             [Description("OurGoals/AboutAwardPageId")] // Done
             AboutAwardPage,

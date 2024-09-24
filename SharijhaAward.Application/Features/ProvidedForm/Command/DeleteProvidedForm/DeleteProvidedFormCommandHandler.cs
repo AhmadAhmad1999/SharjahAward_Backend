@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.DeleteProvided
                 return new BaseResponse<object>(msg, false, 404);
             }
 
-            var category = await _categoryRepository.GetByIdAsync(form!.categoryId);
+            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == form!.categoryId);
             var user = await _userRepository.GetByIdAsync(form.userId);
 
 

@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
         {
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
             if (category != null)
             {
                 var WorkShops = _workShopRepository.WhereThenInclude(

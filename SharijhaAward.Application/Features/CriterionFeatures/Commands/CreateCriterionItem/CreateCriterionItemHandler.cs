@@ -27,7 +27,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
             string ResponseMessage = string.Empty;
 
             Criterion? CheckIfSubCriterionIdDoesExist = await _CriterionRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.CriterionId);
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.CriterionId);
 
             if (CheckIfSubCriterionIdDoesExist == null)
             {

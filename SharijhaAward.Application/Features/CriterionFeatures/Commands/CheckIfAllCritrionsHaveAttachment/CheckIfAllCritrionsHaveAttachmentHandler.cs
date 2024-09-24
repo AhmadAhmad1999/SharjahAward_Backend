@@ -37,7 +37,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
                     (x.AttachFilesOnSubCriterion != null
                         ? x.AttachFilesOnSubCriterion.Value
                         : false) &&
-                    MainCriterionEntities.Select(y => y.Id).Any(y => y == x.ParentId)).ToListAsync();
+                    MainCriterionEntities.Select(y => y.Id).Any(y => y == x.ParentId))
+                .Include(x => x.Parent!).ToListAsync();
 
             List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
                 .Where(x => SubCriterionEntities.Select(y => y.Id).Contains(x.CriterionId)).ToListAsync();

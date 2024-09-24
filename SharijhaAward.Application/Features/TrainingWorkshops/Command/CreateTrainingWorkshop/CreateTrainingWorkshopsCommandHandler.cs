@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
 
         public async Task<BaseResponse<int>> Handle(CreateTrainingWorkshopsCommand request, CancellationToken cancellationToken)
         {
-            Category? category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            Category? category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
 
             if (category == null)
                 return new BaseResponse<int>("Category Not Found",false,404);

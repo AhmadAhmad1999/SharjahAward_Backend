@@ -74,7 +74,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Command.CreateProvided
 
             var FormsOfUser = _Providedrepository.Where(p => p.userId == int.Parse(UserId)).ToList();
             
-            var category =await _CategoryRepository.GetByIdAsync(request.categoryId);
+            var category =await _CategoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.categoryId);
            
             if(category == null)
             {

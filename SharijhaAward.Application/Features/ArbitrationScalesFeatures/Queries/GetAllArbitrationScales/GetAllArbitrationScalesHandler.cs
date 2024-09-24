@@ -34,6 +34,7 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
 
             List<Criterion> AllCriterions = await _CriterionRepository
                 .Where(x => x.CategoryId == Request.SubCategoryId)
+                .Include(x => x.Parent!)
                 .ToListAsync();
 
             List<Criterion> AllMainCriterionsEntities = AllCriterions

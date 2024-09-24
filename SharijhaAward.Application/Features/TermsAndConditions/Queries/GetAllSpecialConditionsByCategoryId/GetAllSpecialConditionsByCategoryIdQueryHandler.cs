@@ -52,7 +52,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
 
         public async Task<BaseResponse<List<TermAndConditionListVM>>> Handle(GetAllSpecialConditionsByCategoryIdQuery request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
             string msg;
             if (category == null)
             {

@@ -131,7 +131,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
                         var Categories = _CategoryRepository
                             .Where(x => CategoriesIds.Contains(x.Id))
-                            .Include(x=>x.Parent)
+                            .Include(x => x.Parent)
                             .AsEnumerable();
 
 
@@ -140,11 +140,11 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             {
                                 Id = x.Id,
                                 SubscriberName = (SubscribersNames.Select(y => y.RecordId).Contains(x.Id) && SubscribersNames.Any())
-                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
-                                : null,
+                                    ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
+                                    : null,
                                 subscriberCode = (Subscribers.Select(s => s.Id).Contains(x.userId) && Subscribers.Any())
-                                ? Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId
-                                : null,
+                                    ? Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId
+                                    : null,
                                 PercentCompletion = x.PercentCompletion,
                                 CycleNumber = x.CycleNumber,
                                 CycleYear = x.CycleYear,
@@ -165,9 +165,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
                                 SucceedToFinalArbitration = GetAllFromsInFinalArbitration
-                                .AsEnumerable()
-                                .Select(y => y.ProvidedFormId)
-                                .Contains(x.Id)
+                                    .AsEnumerable()
+                                    .Select(y => y.ProvidedFormId)
+                                    .Contains(x.Id),
+                                SubscriberId = x.userId
                             }).ToList()
                           : forms.AsEnumerable().Select(x => new FormListVm()
                           {
@@ -200,7 +201,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                               SucceedToFinalArbitration = GetAllFromsInFinalArbitration
                                 .AsEnumerable()
                                 .Select(y => y.ProvidedFormId)
-                                .Contains(x.Id)
+                                .Contains(x.Id),
+                              SubscriberId = x.userId
                           })
                           .Where(x => x.SubscriberName!.Contains(request.SubscriberName))
                           .ToList();
@@ -363,6 +365,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
                         var Categories = _CategoryRepository
                             .Where(x => CategoriesIds.Contains(x.Id))
+                            .Include(x => x.Parent)
                             .AsEnumerable();
 
                         var data = forms.AsEnumerable().Select(x => new FormListVm()
@@ -396,7 +399,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             SucceedToFinalArbitration = GetAllFromsInFinalArbitration
                                 .AsEnumerable()
                                 .Select(y => y.ProvidedFormId)
-                                .Contains(x.Id)
+                                .Contains(x.Id),
+                            SubscriberId = x.userId
                         }).ToList();
 
                         List<CycleConditionAttachment> AllCycleConditionAttachmentEntities = await _CycleConditionAttachmentRepository

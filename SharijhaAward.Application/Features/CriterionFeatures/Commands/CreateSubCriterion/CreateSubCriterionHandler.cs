@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
             string ResponseMessage = string.Empty;
 
             Criterion? CheckIfMainCriterionIdDoesExist = await _CriterionRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.ParentId && x.ParentId == null);
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.ParentId && x.ParentId == null);
 
             if (CheckIfMainCriterionIdDoesExist == null)
             {

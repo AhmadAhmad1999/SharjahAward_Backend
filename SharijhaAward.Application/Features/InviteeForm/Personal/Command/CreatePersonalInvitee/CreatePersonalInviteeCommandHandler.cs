@@ -64,7 +64,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
             PersonalInvitee? NewPersonalnvitee = _mapper.Map<PersonalInvitee>(Request);
             IEnumerable<int> ListOfUniqueIntegerId = _PersonalInviteeRepository.ListAllAsync()
                 .Result.Select(x => x.UniqueIntegerId);
-            
+
             Random Random = new Random();
             int UniqueIntegerId;
             do
@@ -79,7 +79,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 : false)
             {
                 Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(NewPersonalnvitee.EventId);
-                
+
                 // Generate BarCode..
                 string DataToSendIntoBarCode = $"{NewPersonalnvitee.UniqueIntegerId}";
                 string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.ImagePath!);
@@ -146,7 +146,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
 
-                using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                TransactionOptions TransactionOptions = new TransactionOptions
+                {
+                    IsolationLevel = IsolationLevel.ReadCommitted,
+                    Timeout = TimeSpan.FromMinutes(5)
+                };
+
+                using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                    TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
                 {
                     try
                     {
@@ -174,15 +181,15 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     EventTime = GregorianDate.ToString("hh:mm tt", ArabicCulture),
                     ImageURl = BarCodeImageURL,
                     DownLoadURL = DownloadBarCodeImageAPI,
-                    DownloadFileURL= DownloadedHTMLFileName
+                    DownloadFileURL = DownloadedHTMLFileName
                 };
             }
             else
             {
                 Domain.Entities.EventModel.Event EventEntity = await _EventRepository.GetByIdAsync(NewPersonalnvitee.EventId);
-                
+
                 CultureInfo EnglishCulture = new CultureInfo("en-US");
-                
+
                 // Generate BarCode..
                 string DataToSendIntoBarCode = $"{NewPersonalnvitee.UniqueIntegerId}";
                 string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.ImagePath!);
@@ -247,7 +254,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
 
-                using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                TransactionOptions TransactionOptions = new TransactionOptions
+                {
+                    IsolationLevel = IsolationLevel.ReadCommitted,
+                    Timeout = TimeSpan.FromMinutes(5)
+                };
+
+                using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                    TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
                 {
                     try
                     {

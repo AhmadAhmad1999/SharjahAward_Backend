@@ -156,8 +156,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetProvidedFor
                 await _formRepository.UpdateAsync(form);
             }
 
-            var Subcategory = await _categoryRepository.GetByIdAsync(form.categoryId);
-            var Maincategory = await _categoryRepository.GetByIdAsync(Subcategory!.ParentId);
+            var Subcategory = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == form.categoryId);
+            var Maincategory = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Subcategory!.ParentId);
             
             
             

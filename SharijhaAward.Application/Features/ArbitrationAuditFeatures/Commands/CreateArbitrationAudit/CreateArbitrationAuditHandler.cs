@@ -55,6 +55,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
 
             List<Criterion> CriterionEntities = await _CriterionRepository
                 .Where(x => ArbitrationAuditMainCommandCriterion.Contains(x.Id))
+                .Include(x => x.Parent!)
                 .ToListAsync();
 
             var ArbitrationAuditMainCommandCriterionItem = Request.ArbitrationAuditMainCommand

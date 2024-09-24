@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs;
 using SharijhaAward.Application.Responses;
@@ -38,7 +39,8 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.SearchForFAQs
                 return new BaseResponse<List<FAQListVm>>("There is no Cycle Active", false, 404);
             }
 
-            var Categories = _categoryRepository.Where(c => c.CycleId == Cycle.Id).ToList();
+            var Categories = _categoryRepository.Where(c => c.CycleId == Cycle.Id)
+                .Include(x => x.Parent!).ToList();
             
             List<FrequentlyAskedQuestion> frequentlyAskedQuestions = new List<FrequentlyAskedQuestion>();
             for(int i = 0; i < Categories.Count; i++)

@@ -21,7 +21,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.DeleteCategory
                 ? "The Category has been Deleted"
                 : "تم حذف الفئة بنجاح";
 
-            var category = await _CategoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _CategoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
 
             if (category == null)
             {

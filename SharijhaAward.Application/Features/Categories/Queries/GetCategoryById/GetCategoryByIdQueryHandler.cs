@@ -34,7 +34,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
 
         public async Task<BaseResponse<CategoryDto>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetByIdAsync(request.Id);
+            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.Id);
 
             if (category == null)
             {
@@ -48,7 +48,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
             var data = _mapper.Map<CategoryDto>(category);
 
             var Guide = await _explanatoryGuideRepository.FirstOrDefaultAsync(g => g.CategoryId == category.Id);
-            var mainCategory = await _categoryRepository.GetByIdAsync(category.ParentId)!;
+            var mainCategory = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == category.ParentId)!;
 
             data.isHasFile = Guide == null ? false : true; 
             data.Name = request.lang == "ar" ? category.ArabicName : category.EnglishName;

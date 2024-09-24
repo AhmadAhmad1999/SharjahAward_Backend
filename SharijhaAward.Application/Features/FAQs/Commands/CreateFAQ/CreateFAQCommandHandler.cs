@@ -34,7 +34,7 @@ namespace SharijhaAward.Application.Features.FAQs.Commands.CreateFAQ
         public async Task<BaseResponse<object>> Handle(CreateFAQCommand request, CancellationToken cancellationToken)
         {
             FrequentlyAskedQuestion faq = _mapper.Map<FrequentlyAskedQuestion>(request);
-            Category category = await _categoryRepository.GetByIdAsync(faq.CategoryId);
+            Category category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == faq.CategoryId);
             string msg;
             if (category == null)
             {

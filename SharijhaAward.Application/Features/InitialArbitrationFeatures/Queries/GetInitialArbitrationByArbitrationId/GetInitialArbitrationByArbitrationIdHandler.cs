@@ -82,6 +82,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
 
             List<Criterion> AllCriterionEntities = await _CriterionRepository
                 .Where(x => x.CategoryId == CategoryId)
+                .Include(x => x.Parent!)
                 .ToListAsync();
 
             List<Criterion> MainCriterionEntities = AllCriterionEntities

@@ -56,6 +56,7 @@ namespace SharijhaAward.Application.Features.ReferenceSources.Queries.GetReferen
             {
                 var SubCategories = await _categoryRepository
                     .Where(c => c.ParentId != null && c.CycleId == Cycle.Id)
+                    .Include(x => x.Parent!)
                     .ToListAsync();
 
                 foreach(var subCategory in SubCategories)

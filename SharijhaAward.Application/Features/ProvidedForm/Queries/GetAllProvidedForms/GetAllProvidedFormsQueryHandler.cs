@@ -118,14 +118,14 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
 
             for (int i = 0; i < data.Count(); i++)
             {
-                var SubCategory = await _categoryRepository.GetByIdAsync(form[i].categoryId);
+                var SubCategory = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == form[i].categoryId);
                 
                 if(SubCategory == null)
                 {
                     return new BaseResponse<List<FormListVm>>("", false, 400);
                 }
 
-                var Category = await _categoryRepository.GetByIdAsync(SubCategory!.ParentId);
+                var Category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == SubCategory!.ParentId);
                 
                 if (Category == null)
                 {
