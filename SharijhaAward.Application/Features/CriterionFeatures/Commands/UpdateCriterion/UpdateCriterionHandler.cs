@@ -22,7 +22,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCr
             string ResponseMessage = string.Empty;
 
             Criterion? CriterionEntityToUpdate = await _CriterionRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.Id);
 
             if (CriterionEntityToUpdate == null)
             {
@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCr
             if (CriterionEntityToUpdate.ParentId is not null)
             {
                 Criterion? CheckIfMainCriterionIdDoesExist = await _CriterionRepository
-                    .FirstOrDefaultAsync(x => x.Id == CriterionEntityToUpdate.ParentId && x.ParentId == null);
+                    .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == CriterionEntityToUpdate.ParentId && x.ParentId == null);
 
                 if (CheckIfMainCriterionIdDoesExist == null)
                 {

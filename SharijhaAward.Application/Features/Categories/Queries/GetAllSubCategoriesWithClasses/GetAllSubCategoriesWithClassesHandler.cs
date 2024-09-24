@@ -35,7 +35,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
                 if (Request.lang == "en")
                 {
                     CategoriesEntities = await _CategoryRepository
-                        .Where(x => x.Cycle.Status == Domain.Constants.Common.Status.Active &&
+                        .IncludeThenWhere(x => x.Parent!, x => x.Cycle.Status == Domain.Constants.Common.Status.Active &&
                             x.ParentId != null &&
                             x.EnglishName.ToLower().StartsWith(Request.CategoryName.ToLower()))
                         .ToListAsync();
@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
                 else
                 {
                     CategoriesEntities = await _CategoryRepository
-                        .Where(x => x.Cycle.Status == Domain.Constants.Common.Status.Active &&
+                        .IncludeThenWhere(x => x.Parent!, x => x.Cycle.Status == Domain.Constants.Common.Status.Active &&
                             x.ParentId != null &&
                             x.ArabicName.ToLower().StartsWith(Request.CategoryName.ToLower()))
                         .ToListAsync();
@@ -79,6 +79,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
                 List<Category> CategoriesEntities = await _CategoryRepository
                     .Where(x => x.Cycle.Status == Domain.Constants.Common.Status.Active &&
                         x.ParentId != null)
+                    .Include(x => x.Parent!)
                     .ToListAsync();
 
                 List<CategoryEducationalClass> CategoryEducationalClassEntities = await _CategoryEducationalClassRepository

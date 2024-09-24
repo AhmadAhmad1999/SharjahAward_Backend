@@ -55,6 +55,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsWithAr
                 .Where(x => x.ParentId != null
                     ? (Categories.Select(y => y.Id).Any(y => y == x.ParentId))
                     : false)
+                .Include(x => x.Parent)
                 .ToListAsync();
 
             var providedForms = await _formRepository

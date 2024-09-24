@@ -39,7 +39,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateEx
                 ? "The Explanatory has been Added"
                 : "تم إضافة الدليل التفسيري";
 
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
             if(category == null)
             {
                 msg = request.lang == "en"

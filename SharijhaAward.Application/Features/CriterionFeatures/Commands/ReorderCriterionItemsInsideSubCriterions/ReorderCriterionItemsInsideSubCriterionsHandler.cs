@@ -39,6 +39,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.ReorderC
                     List<Criterion> AllCriterions = await _CriterionRepository
                         .Where(x => Request.MainCriterionsDtos.Select(y => y.MainCriterionId)
                             .Any(y => y == x.Id || y == x.ParentId))
+                        .Include(x => x.Parent!)
                         .ToListAsync();
 
                     List<CriterionItem> AllCriterionItems = await _CriterionItemRepository

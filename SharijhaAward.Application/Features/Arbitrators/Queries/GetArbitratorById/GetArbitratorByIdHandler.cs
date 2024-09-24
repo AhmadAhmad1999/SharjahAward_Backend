@@ -72,7 +72,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                 .Where(x => x.ArbitratorId == Request.ArbitratorId)
                 .AsEnumerable();
 
-            ArbitratorDto.ArbitratorCategories = await _CategoryArbitratorRepository
+            ArbitratorDto.ArbitratorCateogryClasses = await _CategoryArbitratorRepository
                 .Where(x => x.ArbitratorId == Request.ArbitratorId)
                 .Select(x => new ArbitratorCategoryDto()
                 {
@@ -178,7 +178,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                     }
                 }
             }
-            
+
             var ResponsibilitiesUser = await _userRepository
                 .Where(u => u.UserId == Request.ArbitratorId)
                 .ToListAsync();

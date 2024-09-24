@@ -44,8 +44,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsBySubs
             
             for(int i = 0; i < data.Count(); i++)
             {
-                var Subcategory = await _categoryRepository.GetByIdAsync(data[i].categoryId);
-                var MainCategory = await _categoryRepository.GetByIdAsync(Subcategory!.ParentId);
+                var Subcategory = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == data[i].categoryId);
+                var MainCategory = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Subcategory!.ParentId);
 
                 data[i].SubCategoryName = request.lang == "en"? Subcategory.EnglishName : Subcategory.ArabicName;
                 data[i].MainCategoryName = request.lang == "en" ? MainCategory.EnglishName : MainCategory.ArabicName;

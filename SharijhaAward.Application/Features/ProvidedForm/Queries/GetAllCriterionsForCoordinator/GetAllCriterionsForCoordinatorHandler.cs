@@ -55,7 +55,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllCriterio
             List<GetAllCriterionsForCoordinatorListVM> FullObjectResponse = new List<GetAllCriterionsForCoordinatorListVM>();
 
             List<Criterion> AllCriterionsEntities = await _CriterionRepository
-                .Where(x => x.CategoryId == CheckIfFormIdIsExist.categoryId).ToListAsync();
+                .Where(x => x.CategoryId == CheckIfFormIdIsExist.categoryId)
+                .Include(x => x.Parent!).ToListAsync();
 
             List<GetAllCriterionsForCoordinatorListVM> MainCriterionObjects = AllCriterionsEntities
                 .Where(x => x.ParentId == null)

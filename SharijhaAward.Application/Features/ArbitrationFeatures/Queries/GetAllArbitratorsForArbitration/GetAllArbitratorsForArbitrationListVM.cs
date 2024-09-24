@@ -3,13 +3,14 @@ using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
-using System.ComponentModel.DataAnnotations;
 
 namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllArbitratorsForArbitration
 {
     public class GetAllArbitratorsForArbitrationListVM
     {
         public int Id { get; set; }
+        [ArabicNameValidation]
+        public string Name { get; set; } = null!;
         [ArabicNameValidation]
         public string ArabicName { get; set; } = null!;
         [EnglishNameValidation]

@@ -53,7 +53,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
 
         public async Task<BaseResponse<object>> Handle(CheckAllConditionsQuery request, CancellationToken cancellationToken)
         {
-           var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+           var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
             if(category == null)
             {
                 return new BaseResponse<object>("", false, 404);

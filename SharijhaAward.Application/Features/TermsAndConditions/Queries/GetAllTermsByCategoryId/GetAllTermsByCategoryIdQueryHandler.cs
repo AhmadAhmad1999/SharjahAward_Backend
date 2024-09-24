@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
         }
         public async Task<BaseResponse<List<TermAndConditionListVM>>> Handle(GetAllTermsByCategoryIdQuery request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
             string msg;
             if(category == null)
             {

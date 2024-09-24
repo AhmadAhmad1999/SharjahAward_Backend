@@ -34,7 +34,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
                     ? "There is no Explanatory Guide"
                     : "لا يوجد ملف تفسيري";
 
-            var Category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var Category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
             if(Category == null)
             {
                  msg = request.lang == "en"

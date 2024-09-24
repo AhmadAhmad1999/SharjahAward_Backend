@@ -100,14 +100,15 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData
                 if (request.ReplaceCategories != null && request.ReplaceCategories == true)
                 {
                     // Replace All Categories
-                    var categoriesForNewCycle = _categoryRepository.Where(c => c.CycleId == request.newCycleId);
+                    var categoriesForNewCycle = _categoryRepository.IncludeThenWhere(x => x.Parent!, c => c.CycleId == request.newCycleId);
                     await _categoryRepository.DeleteListAsync(categoriesForNewCycle);
                 }
                 // get All Main Categories
                 //var MainCategories = _categoryRepository.Where(c => c.CycleId == cycle.Id && c.ParentId == null);
                
                 var MainCategories = request.CategoryIds!.Count() > 0
-                   ? _categoryRepository.Where(c => c.CycleId == cycle.Id && c.ParentId == null && request.CategoryIds!.Contains(c.Id)).ToList()
+                   ? _categoryRepository
+                        .Where(c => c.CycleId == cycle.Id && c.ParentId == null && request.CategoryIds!.Contains(c.Id)).ToList()
                    : _categoryRepository.Where(c => c.CycleId == cycle.Id && c.ParentId == null).ToList();
 
                 foreach (var mainCategory in MainCategories)
@@ -116,8 +117,10 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData
                     //var SubCategories = _categoryRepository.Where(c => c.ParentId == mainCategory.Id && c.CycleId == cycle.Id).ToList();
 
                     var SubCategories = request.SubCategoryIds!.Count() > 0
-                   ? _categoryRepository.Where(c => c.ParentId == mainCategory.Id && c.CycleId == cycle.Id && request.SubCategoryIds!.Contains(c.Id)).ToList()
-                   : _categoryRepository.Where(c => c.ParentId == mainCategory.Id && c.CycleId == cycle.Id).ToList();
+                   ? _categoryRepository
+                        .IncludeThenWhere(x => x.Parent!, c => c.ParentId == mainCategory.Id && c.CycleId == cycle.Id && request.SubCategoryIds!.Contains(c.Id))
+                        .ToList()
+                   : _categoryRepository.IncludeThenWhere(x => x.Parent!, c => c.ParentId == mainCategory.Id && c.CycleId == cycle.Id).ToList();
 
                     ExplanatoryGuide explanatoryGuide = null!;
                     List<FrequentlyAskedQuestion> faqs = null!;
@@ -159,8 +162,9 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData
                         if(request.ImportCriterions == true)
                         {
                             criterions = request.CriterionIds!.Count() > 0
-                                 ? _criterionRepository.Where(c => c.CategoryId == subCategory.Id && request.CriterionIds!.Contains(c.Id)).ToList()
-                                 : _criterionRepository.Where(c => c.CategoryId == subCategory.Id).ToList();
+                                 ? _criterionRepository
+                                    .IncludeThenWhere(x => x.Parent!, c => c.CategoryId == subCategory.Id && request.CriterionIds!.Contains(c.Id)).ToList()
+                                 : _criterionRepository.IncludeThenWhere(x => x.Parent!, c => c.CategoryId == subCategory.Id).ToList();
                             
                             //criterions = _criterionRepository.Where(c => c.CategoryId == subCategory.Id).ToList();
                         }

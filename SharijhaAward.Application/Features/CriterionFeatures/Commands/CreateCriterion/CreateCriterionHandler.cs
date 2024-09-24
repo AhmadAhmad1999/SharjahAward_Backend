@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
             string ResponseMessage = string.Empty;
 
             Category? CheckIfCategoryIdDoesExist = await _CategoryRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.CategoryId);
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.CategoryId);
 
             if (CheckIfCategoryIdDoesExist == null)
             {

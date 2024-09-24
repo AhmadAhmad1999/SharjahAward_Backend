@@ -42,7 +42,8 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
 
         public async Task<BaseResponse<object>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var categoryToUpdate = await _categoryRepository.GetByIdAsync(request.Id);
+            var categoryToUpdate = await _categoryRepository
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.Id);
             string msg;
 
             if (request.RelatedToClasses == null && (request.EducationalClasses != null ? request.EducationalClasses.Any() : false))

@@ -17,7 +17,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.DeleteCr
             string ResponseMessage = string.Empty;
 
             Criterion? CriterionEntity = await _CriterionRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.Id);
 
             if (CriterionEntity == null)
             {

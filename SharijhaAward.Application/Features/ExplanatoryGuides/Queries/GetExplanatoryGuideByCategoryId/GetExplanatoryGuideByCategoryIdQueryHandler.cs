@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
 
         public async Task<BaseResponse<ExplanatoryGuideDto>> Handle(GetExplanatoryGuideByCategoryIdQuery request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
             if (category == null)
             {
                 return new BaseResponse<ExplanatoryGuideDto>("Category Not Found", false, 404);

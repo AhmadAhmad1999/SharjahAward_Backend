@@ -67,6 +67,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
                 .Where(x => x.ParentId != null
                     ? (MainCategories.Select(y => y.Id).Any(y => y == x.ParentId))
                     : false)
+                .Include(x => x.Parent!)
                 .ToListAsync();
 
             List<CategoryEducationalClass> AllCategoryEducationalClasses = await _CategoryEducationalClassRepository

@@ -54,6 +54,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
 
             List<Criterion> CriterionEntities = await _CriterionRepository
                 .Where(x => InitialArbitrationMainCommandCriterion.Contains(x.Id))
+                .Include(x => x.Parent!)
                 .ToListAsync();
 
             var InitialArbitrationMainCommandCriterionItem = Request.InitialArbitrationMainCommand

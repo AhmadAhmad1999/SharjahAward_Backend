@@ -57,7 +57,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
             GroupInvitee? NewGroupInvitee = _mapper.Map<GroupInvitee>(Request);
             IEnumerable<int> ListOfUniqueIntegerId = _groupInviteeRepository.ListAllAsync()
                 .Result.Select(x => x.UniqueIntegerId);
-            
+
             Random Random = new Random();
             int UniqueIntegerId;
             do
@@ -135,7 +135,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 List<string>? ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
 
-                using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                TransactionOptions TransactionOptions = new TransactionOptions
+                {
+                    IsolationLevel = IsolationLevel.ReadCommitted,
+                    Timeout = TimeSpan.FromMinutes(5)
+                };
+
+                using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                    TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
                 {
                     try
                     {
@@ -248,7 +255,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                 var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
                 ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
 
-                using (TransactionScope Transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                TransactionOptions TransactionOptions = new TransactionOptions
+                {
+                    IsolationLevel = IsolationLevel.ReadCommitted,
+                    Timeout = TimeSpan.FromMinutes(5)
+                };
+
+                using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                    TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
                 {
                     try
                     {
@@ -284,7 +298,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGro
                     EventName = EventEntity.EnglishName,
                     EventSiteName = EventEntity.EnglishSiteName,
                     EventDayName = EventEntity.EventDate.DayOfWeek.ToString(),
-                    EventDate = EventEntity.EventDate.ToString("d/M/yyyy" , EnglishCulture),
+                    EventDate = EventEntity.EventDate.ToString("d/M/yyyy", EnglishCulture),
                     EventTime = EventEntity.EventDate.ToString("HH:mm tt", EnglishCulture),
                     ImageURl = BarCodeImageURL,
                     DownLoadURL = DownloadedHTMLFileName,

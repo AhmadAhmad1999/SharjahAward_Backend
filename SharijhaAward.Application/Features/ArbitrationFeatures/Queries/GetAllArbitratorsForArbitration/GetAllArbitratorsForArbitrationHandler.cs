@@ -25,7 +25,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllA
             _ArbitrationRepository = ArbitrationRepository;
         }
 
-        public async Task<BaseResponse<List<GetAllArbitratorsForArbitrationListVM>>> 
+        public async Task<BaseResponse<List<GetAllArbitratorsForArbitrationListVM>>>
             Handle(GetAllArbitratorsForArbitrationQuery Request, CancellationToken cancellationToken)
         {
             FilterObject filterObject = new FilterObject() { Filters = Request.filters };
@@ -47,6 +47,9 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllA
                 .Select(x => new GetAllArbitratorsForArbitrationListVM()
                 {
                     Id = x.Id,
+                    Name = Request.lang == "en"
+                        ? x.EnglishName
+                        : x.ArabicName,
                     ArabicName = x.ArabicName,
                     Email = x.Email,
                     EnglishName = x.EnglishName,
@@ -58,7 +61,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllA
                             ArabicName = y.Category!.ArabicName,
                             EnglishName = y.Category!.EnglishName
                         }).ToList(),
-                    NumberOfAcceptedAssignedForms = AllArbitrations.Where(y => y.ArbitratorId == x.Id && 
+                    NumberOfAcceptedAssignedForms = AllArbitrations.Where(y => y.ArbitratorId == x.Id &&
                         y.isAccepted == FormStatus.Accepted).Count(),
                     NumberOfRejectedAssignedForms = AllArbitrations.Where(y => y.ArbitratorId == x.Id &&
                         y.isAccepted == FormStatus.Rejected).Count()

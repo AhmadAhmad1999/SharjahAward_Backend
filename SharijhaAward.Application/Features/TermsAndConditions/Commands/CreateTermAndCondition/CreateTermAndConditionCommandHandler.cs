@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateT
 
         public async Task<BaseResponse<object>> Handle(CreateTermAndConditionCommand request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
             string msg;
             if(category == null || category.ParentId == null)
             {

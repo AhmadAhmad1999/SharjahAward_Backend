@@ -57,6 +57,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
 
             List<Criterion> CriterionEntities = await _CriterionRepository
                 .Where(x => FinalArbitrationMainCommandCriterion.Contains(x.Id))
+                .Include(x => x.Parent!)
                 .ToListAsync();
 
             var FinalArbitrationMainCommandCriterionItem = Request.CreateFinalArbitrationScoreMainCommand

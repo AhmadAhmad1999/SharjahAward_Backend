@@ -95,7 +95,7 @@ namespace SharijhaAward.Application.Features.Categories.Command.CreateCategory
             }
             else if (request.ParentId != null)
             {
-                var ParentCategory = await _categoryRepository.GetByIdAsync(request.ParentId.Value);
+                var ParentCategory = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.ParentId.Value);
                 if (ParentCategory == null)
                 {
                     msg = request.lang == "en"

@@ -39,7 +39,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             }
 
             Category? CheckIfCategoryIdIsExist = await _CategoryRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.ArbitratorId);
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.ArbitratorId);
 
             if (CheckIfCategoryIdIsExist is null)
             {
