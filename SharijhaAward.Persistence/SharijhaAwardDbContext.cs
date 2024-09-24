@@ -1342,6 +1342,12 @@ namespace SharijhaAward.Persistence
 
         public void DeleteBackword(string ReflectedTableName, List<string> EntitiesIds)
         {
+            EntitiesIds = EntitiesToDelete
+                .Where(x => x.GetType().Name.ToLower() == ReflectedTableName.ToLower() &&
+                    !EntitiesIds.Contains(x.GetType().GetProperty("Id")!.GetValue(x)!.ToString()!))
+                .Select(x => x.GetType().GetProperty("Id")!.GetValue(x)!.ToString()!)
+                .ToList();
+
             DatabaseRelations Item = (DatabaseRelations)Enum.Parse(typeof(DatabaseRelations), ReflectedTableName);
 
             List<string> Path = GetEnumDescription(Item).Split(" ").ToList();
