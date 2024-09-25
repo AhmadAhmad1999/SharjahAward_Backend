@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.Instructions.Any())
             {
-                _context.Instructions.AddRange(
+               await _context.Instructions.AddRangeAsync(
                     new Instruction()
                     {
                         // Id = 1,
@@ -634,7 +634,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Slug = "subscriber_profile",
                         Title = "بروفايل مستخدم"
                     });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

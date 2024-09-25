@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.Agendas.Any())
             {
-                _context.Agendas.AddRange(
+               await _context.Agendas.AddRangeAsync(
                    new Agenda()
                    {
                        CycleId = 1,
@@ -113,7 +113,7 @@ namespace SharijhaAward.Persistence.Seeders
                        CurrentDate = DateTime.UtcNow.AddDays(30)
                    }
                 );
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

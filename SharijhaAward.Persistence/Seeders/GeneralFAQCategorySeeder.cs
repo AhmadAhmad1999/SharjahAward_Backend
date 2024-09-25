@@ -16,11 +16,12 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.GeneralFAQCategories.Any())
             {
-                _context.GeneralFAQCategories.AddRange(new GeneralFAQCategory()
+               await _context.GeneralFAQCategories.AddRangeAsync(
+                new GeneralFAQCategory()
                 {
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
@@ -44,7 +45,7 @@ namespace SharijhaAward.Persistence.Seeders
                     EnglishName = "Test General FAQ Category 2"
                 });
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
         }

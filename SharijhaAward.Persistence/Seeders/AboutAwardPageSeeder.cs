@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.AboutAwardPage.Any())
             {
-                _context.AboutAwardPage.AddRange(
+               await _context.AboutAwardPage.AddRangeAsync(
                     new AboutAwardPage()
                     {
                         // Id =1,
@@ -41,7 +41,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishOurVisionDescription = "Distinguished education",
                         OurVisionImage = "https://award-shj.ae/media/fuebwvg4/17.jpg?center=0.15180018758166036,0.48777667777111344&mode=crop&width=796&height=329&rnd=133312190453500000"
                     });
-                _context.SaveChanges();
+                 await _context.SaveChangesAsync();
             }
         }
     }

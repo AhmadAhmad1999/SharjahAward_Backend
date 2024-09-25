@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.ArbitrationScales.Any())
             {
-                _context.ArbitrationScales.AddRange(
+               await _context.ArbitrationScales.AddRangeAsync(
                     new ArbitrationScale()
                     {
                         // Id =1,
@@ -35,7 +35,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishTitle = "Forms and evidence",
                         DegreeScale = "0 - 100"
                     });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

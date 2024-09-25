@@ -17,11 +17,11 @@ namespace SharijhaAward.Persistence.Seeders
         {
             _context = context;
         }
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.PageStructures.Any())
             {
-                _context.PageStructures.AddRange(
+                await _context.PageStructures.AddRangeAsync(
                     new Domain.Entities.PageStructureModel.PageStructure()
                     {
                         hasHelography = true,
@@ -175,7 +175,7 @@ namespace SharijhaAward.Persistence.Seeders
                         ParentId = null
 
                     });
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
             }
         }
     }

@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.TrainingWorkshops.Any())
             {
-                _context.TrainingWorkshops.AddRange(
+                await _context.TrainingWorkshops.AddRangeAsync(
                    new TrainingWorkshop()
                    {
                        isDeleted = false,
@@ -53,7 +53,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Thumbnail = "https://backend.stg.award-shj.ae/UploadedFiles/photo_2024-03-25_10-21-14.jpg"
                    }
                 );
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

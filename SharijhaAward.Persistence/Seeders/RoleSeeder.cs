@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.Roles.Any())
             {
-                _context.Roles.AddRange(
+                await _context.Roles.AddRangeAsync(
                    new Role
                    {
                        // Id = 1,
@@ -79,7 +79,7 @@ namespace SharijhaAward.Persistence.Seeders
                        ArabicName = "فريق الجائزة"
                    }
                 );
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

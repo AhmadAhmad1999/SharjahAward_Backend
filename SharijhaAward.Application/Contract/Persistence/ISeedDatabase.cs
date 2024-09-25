@@ -8,6 +8,6 @@ namespace SharijhaAward.Application.Contract.Persistence
 {
     public interface ISeedDatabase
     {
-        void Initialize(IServiceProvider serviceProvider);
+        Task Initialize(IServiceProvider serviceProvider);
     }
 }

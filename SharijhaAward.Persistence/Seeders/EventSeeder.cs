@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.Events.Any())
             {
-                _context.Events.AddRange(
+               await _context.Events.AddRangeAsync(
                     new Event()
                     {
                         isDeleted = false,
@@ -64,7 +64,7 @@ namespace SharijhaAward.Persistence.Seeders
                         StartDate = DateTime.UtcNow.AddDays(6),
                         UniqueIntegerId = 2
                     });
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
             }
         }
     }

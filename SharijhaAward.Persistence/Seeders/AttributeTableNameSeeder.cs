@@ -16,11 +16,12 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.AttributeTableNames.Any())
             {
-                _context.AttributeTableNames.AddRange(new AttributeTableName()
+               await _context.AttributeTableNames.AddRangeAsync(
+                new AttributeTableName()
                 {
                     // Id =1,
                     Name = "ProvidedForm",
@@ -52,7 +53,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null
                 });
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

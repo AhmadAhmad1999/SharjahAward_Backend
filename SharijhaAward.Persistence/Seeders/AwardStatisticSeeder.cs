@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.AwardStatistics.Any())
             {
-                _context.AwardStatistics.AddRange(
+               await _context.AwardStatistics.AddRangeAsync(
                    new AwardStatistic()
                    {
                        // Id =1,
@@ -87,7 +87,7 @@ namespace SharijhaAward.Persistence.Seeders
                        StatisticValue = 5000,
                        CycleId = 1
                    });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

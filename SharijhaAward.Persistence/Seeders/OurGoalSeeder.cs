@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.OurGoals.Any())
             {
-                _context.OurGoals.AddRange(
+               await _context.OurGoals.AddRangeAsync(
                    new OurGoal()
                    {
                        // Id = 1,
@@ -34,7 +34,7 @@ namespace SharijhaAward.Persistence.Seeders
                        ArabicGoal = "1- تطوير القطاع التربوي من خلال بث روح التنافس بينهم؛ لتحقيق أفضل الممارسات التربوية. 2- تطوير أعمال الجائزة ومنهجياتها، ورفع الكفايات المهنية للعاملين بها. 3- دعم الطلاب المتميزين في مختلف المجالات، وإكسابهم مهارات متنوعة ومتكاملة. 4- تبني منهجية مبتكرة لاستقطاب وبناء الشراكات الداعمة للجائزة والتعليم.",
                        EnglishGoal = "1- Developing the educational sector by spreading the spirit of competition among them; To achieve best educational practices. 2- Developing the Award’s work and methodologies, and raising the professional competencies of its employees. 3- Supporting distinguished students in various fields, and providing them with diverse and integrated skills. 4- Adopting an innovative methodology to attract and build partnerships that support the award and education."
                    });
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
             }
         }
     }

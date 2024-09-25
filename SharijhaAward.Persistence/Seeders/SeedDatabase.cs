@@ -13,156 +13,149 @@ namespace SharijhaAward.Persistence.Seeders
 {
     public class SeedDatabase : ISeedDatabase
     {
-        public void Initialize(IServiceProvider serviceProvider)
+        public async Task Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new SharijhaAwardDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<SharijhaAwardDbContext>>()))
             {
                 var cycleSeeder = new CycleSeeder(context);
-                cycleSeeder.Seed();
+                await cycleSeeder.Seed();
 
                 var permissionHeaderSeeder = new PermissionHeaderSeeder(context);
-                permissionHeaderSeeder.Seed();
+                await permissionHeaderSeeder.Seed();
                 
                 var permissionSeeder = new PermissionSeeder(context);
-                permissionSeeder.Seed();
+                await permissionSeeder.Seed();
                 
                 var userSeeder = new UserSeeder(context);
-                userSeeder.Seed();
+                await userSeeder.Seed();
 
                 var coordinatorSeeder = new CoordinatorSeeder(context);
-                coordinatorSeeder.Seed();
+                await coordinatorSeeder.Seed();
 
                 var roleSeeder = new RoleSeeder(context);
-                roleSeeder.Seed();
+                await roleSeeder.Seed();
 
                 var userRoleSeeder = new UserRoleSeeder(context);
-                userRoleSeeder.Seed();
+                await userRoleSeeder.Seed();
 
                 var categorySeeder = new CategorySeeder(context);
-                categorySeeder.Seed(); 
+                await categorySeeder.Seed(); 
                 
                 var categoryFAQSeeder = new CategoryFAQSeeder(context);
-                categoryFAQSeeder.Seed();
+                await categoryFAQSeeder.Seed();
                 
                 var FrequentlyAskedQuestionSeeder = new FrequentlyAskedQuestionSeeder(context);
-                FrequentlyAskedQuestionSeeder.Seed();
+                await FrequentlyAskedQuestionSeeder.Seed();
 
                 var agendaSeeder = new AgendaSeeder(context);
-                agendaSeeder.Seed();
+                await agendaSeeder.Seed();
 
                 var aboutAwardPageSeeder = new AboutAwardPageSeeder(context);
-                aboutAwardPageSeeder.Seed();
+                await aboutAwardPageSeeder.Seed();
 
                 var CriterionSeeder = new CriterionSeeder(context);
-                CriterionSeeder.Seed();
+                await CriterionSeeder.Seed();
 
                 var CriterionItemSeeder = new CriterionItemSeeder(context);
-                CriterionItemSeeder.Seed();
+                await CriterionItemSeeder.Seed();
 
                 var ArbitrationScaleSeeder = new ArbitrationScaleSeeder(context);
-                ArbitrationScaleSeeder.Seed();
+                await ArbitrationScaleSeeder.Seed();
 
                 var ArbitrationScalesCriterionSeeder = new ArbitrationScalesCriterionSeeder(context);
-                ArbitrationScalesCriterionSeeder.Seed();
+                await ArbitrationScalesCriterionSeeder.Seed();
 
                 
                 var AttributeDataTypeSeeder = new AttributeDataTypeSeeder(context);
-                AttributeDataTypeSeeder.Seed();
+                await AttributeDataTypeSeeder.Seed();
                 
                 var AttributeOperationSeeder = new AttributeOperationSeeder(context);
-                AttributeOperationSeeder.Seed(); 
+                await AttributeOperationSeeder.Seed(); 
                 
                 var AttributeTableNameSeeder = new AttributeTableNameSeeder(context);
-                AttributeTableNameSeeder.Seed();
+                await AttributeTableNameSeeder.Seed();
                 
                 var AwardSponsorSeeder = new AwardSponsorSeeder(context);
-                AwardSponsorSeeder.Seed();
+                await AwardSponsorSeeder.Seed();
                 
                 var AwardStatisticSeeder = new AwardStatisticSeeder(context);
-                AwardStatisticSeeder.Seed();
-                
-                var CategoryFAQSeeder = new CategoryFAQSeeder(context);
-                CategoryFAQSeeder.Seed();
-                
-                var CategorySeeder = new CategorySeeder(context);
-                CategorySeeder.Seed();
-
+                await AwardStatisticSeeder.Seed();
 
                 var DynamicAttributeSectionSeeder = new DynamicAttributeSectionSeeder(context);
-                DynamicAttributeSectionSeeder.Seed();
+                await DynamicAttributeSectionSeeder.Seed();
 
                 var DynamicAttributeSeeder = new DynamicAttributeSeeder(context);
-                DynamicAttributeSeeder.Seed();
+                await DynamicAttributeSeeder.Seed();
 
 
                 var DynamicAttributeListValueSeeder = new DynamicAttributeListValueSeeder(context);
-                DynamicAttributeListValueSeeder.Seed();
+                await DynamicAttributeListValueSeeder.Seed();
                 
                 
                 var EducationalClassSeeder = new EducationalClassSeeder(context);
-                EducationalClassSeeder.Seed();
+                await EducationalClassSeeder.Seed();
 
                 var EducationalEntitySeeder = new EducationalEntitySeeder(context);
-                EducationalEntitySeeder.Seed();            
+                await EducationalEntitySeeder.Seed();            
                 
                 var EducationalInstitutionSeeder = new EducationalInstitutionSeeder(context);
-                EducationalInstitutionSeeder.Seed(); 
+                await EducationalInstitutionSeeder.Seed(); 
                 
                 var EventSeeder = new EventSeeder(context);
-                EventSeeder.Seed();
+                await EventSeeder.Seed();
                 
                 var ExplanatoryGuideSeeder = new ExplanatoryGuideSeeder(context);
-                ExplanatoryGuideSeeder.Seed();
+                await ExplanatoryGuideSeeder.Seed();
                 
                 var ExplanatoryMessageSeeder = new ExplanatoryMessageSeeder(context);
-                ExplanatoryMessageSeeder.Seed();
+                await ExplanatoryMessageSeeder.Seed();
                 
                 var GeneralFAQCategorySeeder = new GeneralFAQCategorySeeder(context);
-                GeneralFAQCategorySeeder.Seed();
+                await GeneralFAQCategorySeeder.Seed();
                 
                 var GeneralFAQSeeder = new GeneralFAQSeeder(context);
-                GeneralFAQSeeder.Seed();
+                await GeneralFAQSeeder.Seed();
                 
                 var GeneralWorkshopSeeder = new GeneralWorkshopSeeder(context);
-                GeneralWorkshopSeeder.Seed();
+                await GeneralWorkshopSeeder.Seed();
                 
                 var InstructionSeeder = new InstructionSeeder(context);
-                InstructionSeeder.Seed();
+                await InstructionSeeder.Seed();
                 
                 var NewsSeeder = new NewsSeeder(context);
-                NewsSeeder.Seed();
+                await NewsSeeder.Seed();
                 
                 var OnePageTextSeeder = new OnePageTextSeeder(context);
-                OnePageTextSeeder.Seed();
+                await OnePageTextSeeder.Seed();
                 
                 var OurGoalSeeder = new OurGoalSeeder(context);
-                OurGoalSeeder.Seed();
+                await OurGoalSeeder.Seed();
                 
                 var ReferenceSourceSeeder = new ReferenceSourceSeeder(context);
-                ReferenceSourceSeeder.Seed();
+                await ReferenceSourceSeeder.Seed();
                 
                 var RelatedAccountRequestSeeder = new RelatedAccountRequestSeeder(context);
-                RelatedAccountRequestSeeder.Seed();
+                await RelatedAccountRequestSeeder.Seed();
                 
                 var RelatedAccountSeeder = new RelatedAccountSeeder(context);
-                RelatedAccountSeeder.Seed();
+                await RelatedAccountSeeder.Seed();
                 
                 var TermAndConditionSeeder = new TermAndConditionSeeder(context);
-                TermAndConditionSeeder.Seed();
+                await TermAndConditionSeeder.Seed();
                 
                 var TrainingWorkshopSeeder = new TrainingWorkshopSeeder(context);
-                TrainingWorkshopSeeder.Seed();
+                await TrainingWorkshopSeeder.Seed();
 
                 var CustomPageSeerer = new CustomPageSeeder(context);
-                CustomPageSeerer.Seed();
+                await CustomPageSeerer.Seed();
 
                 var RolePermissionSeeder = new RolePermissionSeeder(context);
-                RolePermissionSeeder.Seed();
+                await RolePermissionSeeder.Seed();
             }
         }
 
-        //public void MakeMigration(IServiceProvider serviceProvider)
+        //public Task MakeMigration(IServiceProvider serviceProvider)
         //{
 
         //    Database.SetInitializer();

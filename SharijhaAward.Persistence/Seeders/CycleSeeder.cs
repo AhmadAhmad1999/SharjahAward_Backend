@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.Cycles.Any())
             {
-                _context.Cycles.AddRange(
+                await _context.Cycles.AddRangeAsync(
                    new Cycle()
                    {
                        //Id = 1,
@@ -47,7 +47,7 @@ namespace SharijhaAward.Persistence.Seeders
                        MarginOfDifferenceBetweenArbitrators = 10,
                        GroupCategoryNumber = 1
                    });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

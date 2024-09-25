@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.GeneralWorkshops.Any())
             {
-                _context.GeneralWorkshops.AddRange(
+               await _context.GeneralWorkshops.AddRangeAsync(
                     new GeneralWorkshop()
                     {
                         isDeleted = false,
@@ -62,7 +62,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Time = "2:00 - 3:00",
                         Video = null
                     });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

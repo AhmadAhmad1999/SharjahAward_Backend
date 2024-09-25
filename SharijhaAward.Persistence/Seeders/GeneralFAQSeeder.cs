@@ -16,11 +16,12 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.GeneralFAQs.Any())
             {
-                _context.GeneralFAQs.AddRange(new GeneralFAQ()
+                await _context.GeneralFAQs.AddRangeAsync(
+                new GeneralFAQ()
                 {
                     // Id = 1,
                     ArabicAnswer = "اختبار جواب 1",
@@ -77,7 +78,7 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedBy = null,
                     GeneralFrequentlyAskedQuestionCategoryId = 2
                 });
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
             }
 
         }

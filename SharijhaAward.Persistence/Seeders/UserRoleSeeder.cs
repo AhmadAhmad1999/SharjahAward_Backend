@@ -17,12 +17,12 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.UsersRoles.Any())
             {
                // _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.UsersRoles ON");
-                _context.UsersRoles.AddRange(
+               await _context.UsersRoles.AddRangeAsync(
                     new UserRole()
                     {
                         // Id =1,
@@ -80,7 +80,7 @@ namespace SharijhaAward.Persistence.Seeders
                         RoleId = 2
                     }
                 );
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.UsersRoles OFF");
             }

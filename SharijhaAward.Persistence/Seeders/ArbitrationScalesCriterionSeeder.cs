@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.ArbitrationScalesCriterions.Any())
             {
-                _context.ArbitrationScalesCriterions.AddRange(
+               await _context.ArbitrationScalesCriterions.AddRangeAsync(
                     new ArbitrationScalesCriterion()
                     {
                         // Id =1,
@@ -120,7 +120,7 @@ namespace SharijhaAward.Persistence.Seeders
                         CriterionItemId = 7,
                         ArbitrationScaleId = 1
                     });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

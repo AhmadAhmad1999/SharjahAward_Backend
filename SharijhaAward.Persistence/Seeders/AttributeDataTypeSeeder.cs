@@ -16,12 +16,13 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.AttributeDataTypes.Any())
             {
-                _context.AttributeDataTypes.AddRange(new AttributeDataType()
-                {
+               await _context.AttributeDataTypes.AddRangeAsync(
+                   new AttributeDataType()
+                     {
                     // Id =1,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
@@ -132,7 +133,7 @@ namespace SharijhaAward.Persistence.Seeders
                     ArabicName = "رقم هوية إماراتية"
                 });
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

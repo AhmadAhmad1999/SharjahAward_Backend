@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.ExplanatoryGuides.Any())
             {
-                _context.ExplanatoryGuides.AddRange(
+               await _context.ExplanatoryGuides.AddRangeAsync(
                     new ExplanatoryGuide()
                     {
                         // Id = 1,
@@ -64,7 +64,7 @@ namespace SharijhaAward.Persistence.Seeders
                         ArabicFilePath = "https://award-shj.ae/media/kovhdfgh/%D9%81%D8%A6%D8%A9-%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%85-%D8%A7%D9%84%D9%85%D8%AA%D9%85%D9%8A%D8%B2-30.pdf",
                         CategoryId = 5
                     });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

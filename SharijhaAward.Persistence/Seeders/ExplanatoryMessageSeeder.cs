@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.ExplanatoryMessages.Any())
             {
-                _context.ExplanatoryMessages.AddRange(
+               await _context.ExplanatoryMessages.AddRangeAsync(
                    new ExplanatoryMessage()
                    {
                        // Id = 1,
@@ -142,7 +142,7 @@ namespace SharijhaAward.Persistence.Seeders
                        EnglishText = "Please complete all stages of the new form to be able to participate successfully. You can participate in only two categories (an individual category and a group category) during one session and upload the required files when filling out the form.",
                        Type = TypeOfExplantoryMessage.TheFirstStepInTheForm2
                    });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

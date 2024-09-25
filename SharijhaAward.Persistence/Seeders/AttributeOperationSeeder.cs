@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.AttributeOperations.Any())
             {
-                _context.AttributeOperations.AddRange(
+               await _context.AttributeOperations.AddRangeAsync(
                    new AttributeOperation()
                    {
                        // Id =1,
@@ -103,7 +103,7 @@ namespace SharijhaAward.Persistence.Seeders
                        OperationAsString = "is not Empty"
                    }
                 );
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

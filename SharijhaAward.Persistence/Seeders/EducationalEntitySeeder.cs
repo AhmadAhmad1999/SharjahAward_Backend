@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.EducationalEntities.Any())
             {
-                _context.EducationalEntities.AddRange(
+               await _context.EducationalEntities.AddRangeAsync(
                     new EducationalEntity()
                     {
                         isDeleted = false,
@@ -44,7 +44,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishName = "Educational Entity 2",
                         ArabicName = "جهة تعليمية 2"
                     });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

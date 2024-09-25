@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.OnePageText.Any())
             {
-                _context.OnePageText.AddRange(
+               await _context.OnePageText.AddRangeAsync(
                     new OnePageText()
                     {
                         // Id = 1,
@@ -87,7 +87,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Type = Domain.Constants.OnePageText.OnePageTextType.AboutApp,
                         Slug = "About_Application"
                     });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

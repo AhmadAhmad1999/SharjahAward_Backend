@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.DynamicAttributeListValues.Any())
             {
-                _context.DynamicAttributeListValues.AddRange(
+               await _context.DynamicAttributeListValues.AddRangeAsync(
                     new DynamicAttributeListValue()
                     {
                         // Id =1,
@@ -82,7 +82,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishValue = "Test Value 5",
                         ArabicValue = "Test Value 5"
                     });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.ReferenceSources.Any())
             {
-                _context.ReferenceSources.AddRange(
+               await _context.ReferenceSources.AddRangeAsync(
                    new ReferenceSource()
                    {
                        // Id = 1,
@@ -88,7 +88,7 @@ namespace SharijhaAward.Persistence.Seeders
                        EnglishSources = "https://award-shj.ae/media/jnkg2b5u/%D8%AC%D8%A7%D8%A6%D8%B2%D8%A9-%D8%AC%D9%88%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-30.pdf",
                        ImageUrl = "https://award-shj.ae/media/hk2fyzfv/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B3%D9%84%D8%B7%D8%A7%D9%86.jpg?anchor=center&mode=crop&width=420&height=232&rnd=133099679521200000",
                    });
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
             }
         }
     }

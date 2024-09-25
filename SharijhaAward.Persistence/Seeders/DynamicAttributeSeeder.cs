@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.DynamicAttributes.Any())
             {
-                _context.DynamicAttributes.AddRange(
+               await _context.DynamicAttributes.AddRangeAsync(
                    new DynamicAttribute()
                    {
                        isDeleted = false,
@@ -206,7 +206,7 @@ namespace SharijhaAward.Persistence.Seeders
                        Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
                        LinkedToAnotherAttribute = false
                    });
-                _context.SaveChanges();
+                 await _context.SaveChangesAsync();
             }
         }
     }

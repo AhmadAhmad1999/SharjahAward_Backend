@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.DynamicAttributeSections.Any())
             {
-                _context.DynamicAttributeSections.AddRange(
+               await _context.DynamicAttributeSections.AddRangeAsync(
                     new DynamicAttributeSection()
                     {
                         ArabicName = "اختبار اسم 1",
@@ -37,7 +37,7 @@ namespace SharijhaAward.Persistence.Seeders
                         OrderId = 1
                     }
                 );
-                _context.SaveChanges();
+                 await _context.SaveChangesAsync();
             }
         }
     }

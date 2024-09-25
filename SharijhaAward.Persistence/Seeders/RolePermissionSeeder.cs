@@ -15,7 +15,7 @@ namespace SharijhaAward.Persistence.Seeders
         {
             _context = context;
         }
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.RolePermissions.Any())
             {
@@ -23,13 +23,14 @@ namespace SharijhaAward.Persistence.Seeders
 
                 foreach (var Permission in Permissions)
                 {
-                    _context.RolePermissions.Add(new Domain.Entities.IdentityModels.RolePermission()
-                    {
-                        RoleId = 1,
-                        PermissionId = Permission.Id,
-                    });
+                    await _context.RolePermissions.AddAsync(
+                          new Domain.Entities.IdentityModels.RolePermission()
+                          {
+                              RoleId = 1,
+                              PermissionId = Permission.Id,
+                          });
                 }
-                 _context.SaveChangesAsync();
+                 await _context.SaveChangesAsync();
             }
         }
     }

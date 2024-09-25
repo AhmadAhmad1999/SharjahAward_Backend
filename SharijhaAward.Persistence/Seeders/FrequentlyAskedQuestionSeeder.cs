@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.FrequentlyAskedQuestions.Any())
             {
-                _context.FrequentlyAskedQuestions.AddRange(
+                await _context.FrequentlyAskedQuestions.AddRangeAsync(
                     new FrequentlyAskedQuestion()
                     {
                         // Id = 1,
@@ -106,7 +106,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishQuestion = "What are the conditions for participation in the Sharjah Award for Excellence and Educational Excellence?",
                         EnglishAnswer = "The conditions for participation in the Sharjah Award for Excellence and Educational Excellence are divided into two parts:\r\n\r\nGeneral conditions: These are conditions that apply to all categories of the award.\r\nSpecial Conditions: These are specific conditions for a specific award category.\r\n\r\nTo view the general and specific conditions for the award categories, please follow the following steps:\r\n\r\nAccess the award categories page from the main menu of the website.\r\nClick on “Download the category interpretive guide” for the category you wish to view.\r\nThrough the interpretive guide you can view the general and special conditions of the category."
                     });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

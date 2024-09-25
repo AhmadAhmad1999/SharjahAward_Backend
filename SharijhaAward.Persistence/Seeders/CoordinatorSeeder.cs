@@ -17,11 +17,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.Coordinators.Any())
             {
-                _context.Coordinators.AddRange(
+                await _context.Coordinators.AddRangeAsync(
                 new Coordinator()
                 {
                     isDeleted = false,
@@ -75,7 +75,7 @@ namespace SharijhaAward.Persistence.Seeders
                     EnglishName = "Coordinator 4",
                     PhoneNumber = "009710574596825"
                 });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

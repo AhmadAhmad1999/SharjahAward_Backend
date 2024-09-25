@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.EducationalInstitutions.Any())
             {
-                _context.EducationalInstitutions.AddRange(
+               await _context.EducationalInstitutions.AddRangeAsync(
                    new EducationalInstitution()
                    {
                        isDeleted = false,
@@ -46,7 +46,7 @@ namespace SharijhaAward.Persistence.Seeders
                        EducationalEntityId = 2,
                        EnglishName = "Educational Entity 2"
                    });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.EducationalClasses.Any())
             {
-                _context.EducationalClasses.AddRange(
+               await _context.EducationalClasses.AddRangeAsync(
                     new EducationalClass()
                     {
                         isDeleted = false,
@@ -155,7 +155,7 @@ namespace SharijhaAward.Persistence.Seeders
                         EnglishName = "Twelfth class"
                     }
                 );
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
             }
         }
     }

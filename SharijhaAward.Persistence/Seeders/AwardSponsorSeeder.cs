@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.AwardSponsors.Any())
             {
-                _context.AwardSponsors.AddRange(
+               await _context.AwardSponsors.AddRangeAsync(
                     new AwardSponsor()
                     {
                         // Id =1,
@@ -46,7 +46,7 @@ namespace SharijhaAward.Persistence.Seeders
                         ArabicWritings = "صاحب السمو الشيخ الدكتور سلطان القاسمي، له العديد من المؤلفات منها\r\n\r\nمحاكم التفتيش\r\nسيرة مدينة (الجزء الأول)ـ\r\nسيرة مدينة (الجزء الثاني)ـ",
                         EnglishWritings = "His Highness Sheikh Dr. Sultan Al Qasimi has many publications, including:\r\n\r\ninquisition\r\nBiography of a city (Part One).\r\nBiography of a city (Part Two)."
                     });
-                _context.SaveChanges();
+                 await _context.SaveChangesAsync();
             }
         }
     }

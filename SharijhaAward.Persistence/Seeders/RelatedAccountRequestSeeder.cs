@@ -16,11 +16,11 @@ namespace SharijhaAward.Persistence.Seeders
             _context = context;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             if (!_context.RelatedAccountRequests.Any())
             {
-                _context.RelatedAccountRequests.AddRange(
+               await _context.RelatedAccountRequests.AddRangeAsync(
                    new RelatedAccountRequest()
                    {
                        isDeleted = false,
@@ -44,7 +44,7 @@ namespace SharijhaAward.Persistence.Seeders
                        ReceiverId = 1,
                        SenderId = 3
                    });
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
             }
         }
     }
