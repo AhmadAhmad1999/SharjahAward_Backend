@@ -557,6 +557,17 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedAt = null,
                     LastModifiedBy = null,
                     CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null
+                }, new PermissionHeader()
+                {
+                    // Id = 49,
+                    EnglishName = "ArbitrationManagement",
+                    ArabicName = "ادارة التحكيم",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,
                 });
                await _context.SaveChangesAsync();
