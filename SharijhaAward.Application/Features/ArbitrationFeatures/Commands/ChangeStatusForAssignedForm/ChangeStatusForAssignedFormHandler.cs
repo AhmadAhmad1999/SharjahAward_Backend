@@ -69,7 +69,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                 try
                 {
                     if (Request.isAccepted == FormStatus.Rejected &&
-                        (ArbitratorEntity.isChairman ||
+                        (ArbitratorEntity.isChairman &&
                         (Request.AsChairman != null ? Request.AsChairman.Value : false)))
                     {
                         ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
@@ -78,13 +78,31 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
 
                         ArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
                     }
+                    else if (Request.isAccepted == FormStatus.Rejected &&
+                        (ArbitratorEntity.isChairman &&
+                        (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
+                    {
+                        ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+
+                        ArbitrationEntity.isAccepted = Request.isAccepted;
+
+                        ArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
+                    }
                     else if (Request.isAccepted == FormStatus.Accepted &&
-                        (ArbitratorEntity.isChairman ||
+                        (ArbitratorEntity.isChairman &&
                         (Request.AsChairman != null ? Request.AsChairman.Value : false)))
                     {
                         ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
 
                         ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
+                    }
+                    else if (Request.isAccepted == FormStatus.Accepted &&
+                        (ArbitratorEntity.isChairman &&
+                        (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
+                    {
+                        ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
+
+                        ArbitrationEntity.isAccepted = Request.isAccepted;
                     }
                     else if (Request.isAccepted == FormStatus.NotArbitratedYet)
                     {
