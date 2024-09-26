@@ -2588,6 +2588,32 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedAt = null,
                     LastModifiedBy = null
 
+                }, new Permission()
+                {
+                    // Id = 184,
+                    Name = "عرض ادارة التحكيم",
+                    Action = "read",
+                    PermissionHeaderId = 49,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+
+                }, new Permission()
+                {
+                    // Id = 184,
+                    Name = "تصدير ادارة التحكيم",
+                    Action = "xlsx-exportable",
+                    PermissionHeaderId = 49,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+
                 });
                await _context.SaveChangesAsync();
             }
