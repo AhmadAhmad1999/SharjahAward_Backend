@@ -207,7 +207,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                             form.User!.Email
                         }, EmailSubject, FullEmailBody, AlternateView);
 
-                        if (NotificationMessages is not null)
+                        if (NotificationMessages is not null
+                            ? NotificationMessages.Any()
+                            : false)
                             await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendEachAsync(NotificationMessages);
 
                         Transaction.Complete();

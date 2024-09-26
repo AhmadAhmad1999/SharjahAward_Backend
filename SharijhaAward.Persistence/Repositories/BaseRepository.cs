@@ -79,7 +79,12 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task<T> AddAsync(T entity)
         {
             await _DbSet.AddAsync(entity);
-            typeof(T).GetProperty("CreatedAt")!.SetValue(entity, DateTime.UtcNow);
+            
+            if (typeof(T).GetProperty("CreatedAt") != null)
+            {
+                typeof(T).GetProperty("CreatedAt")!.SetValue(entity, DateTime.UtcNow);
+            }
+
             await _dbContext.SaveChangesAsync();
 
             return entity;
@@ -87,8 +92,13 @@ namespace SharijhaAward.Persistence.Repositories
         public async Task<T> AddAsync(T entity, string UserName)
         {
             await _DbSet.AddAsync(entity);
-            typeof(T).GetProperty("CreatedAt")!.SetValue(entity, DateTime.UtcNow);
-            typeof(T).GetProperty("CreatedBy")!.SetValue(entity, UserName);
+
+            if (typeof(T).GetProperty("CreatedAt") != null)
+            {
+                typeof(T).GetProperty("CreatedAt")!.SetValue(entity, DateTime.UtcNow);
+                typeof(T).GetProperty("CreatedBy")!.SetValue(entity, UserName);
+            }
+
             await _dbContext.SaveChangesAsync();
 
             return entity;
@@ -98,7 +108,7 @@ namespace SharijhaAward.Persistence.Repositories
             await _DbSet.AddRangeAsync(entities);
 
             PropertyInfo createdAtProperty = typeof(T).GetProperty("CreatedAt")!;
-            if (createdAtProperty != null && createdAtProperty.PropertyType == typeof(DateTime))
+            if (createdAtProperty != null ? createdAtProperty.PropertyType == typeof(DateTime) : false)
             {
                 DateTime currentTime = DateTime.Now;
                 foreach (T entity in entities)
@@ -138,9 +148,14 @@ namespace SharijhaAward.Persistence.Repositories
             {
                 try
                 {
-                    typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
-                    typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
+                    if (typeof(T).GetProperty("isDeleted") != null)
+                    {
+                        typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
+                        typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
+                    }
+
                     _dbContext.Entry(entity).State = EntityState.Modified;
+
                     await _dbContext.SaveChangesAsync();
 
                     Transaction2.Complete();
@@ -167,8 +182,12 @@ namespace SharijhaAward.Persistence.Repositories
                 {
                     entities.ToList().ForEach(entity =>
                     {
-                        typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
-                        typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
+                        if (typeof(T).GetProperty("isDeleted") != null)
+                        {
+                            typeof(T).GetProperty("isDeleted")!.SetValue(entity, true);
+                            typeof(T).GetProperty("DeletedAt")!.SetValue(entity, DateTime.UtcNow);
+                        }
+
                         _dbContext.Entry(entity).State = EntityState.Modified;
                     });
 

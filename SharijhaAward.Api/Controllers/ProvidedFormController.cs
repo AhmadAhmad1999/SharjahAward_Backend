@@ -20,6 +20,8 @@ using SharijhaAward.Application.Responses;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsWithArbitrators;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.ExportFormsWithArbitratorsToExcel;
+using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWithAllItsData;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -399,6 +401,32 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(response),
                 200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ProvidedFormsWithArbitrators.xlsx"),
                 _ => BadRequest(response)
+            };
+        }
+        [HttpGet("GetAllFormsWithAllItsData")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllFormsWithAllItsData([FromQuery] GetAllFormsWithAllItsDataQuery GetAllFormsWithAllItsDataQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllFormsWithAllItsDataQuery.lang = HeaderValue!;
+
+            BaseResponse<List<GetAllFormsWithAllItsDataListVM>> Response = await _mediator.Send(GetAllFormsWithAllItsDataQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
             };
         }
     }

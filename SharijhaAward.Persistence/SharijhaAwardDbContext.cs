@@ -236,7 +236,12 @@ namespace SharijhaAward.Persistence
         public DbSet<OnePageText> OnePageText { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<PageCard> PageCards { get; set; }
-        
+
+        public DbSet<AdvancedFormBuilderViewWhenRelation> AdvancedFormBuilderViewWhenRelations { get; set; }
+        public DbSet<AdvancedFormBuilderDependency> AdvancedFormBuilderDependencies { get; set; }
+        public DbSet<AdvancedFormBuilderDependencyGroup> AdvancedFormBuilderDependencyGroups { get; set; }
+        public DbSet<AdvancedFormBuilderDependencyValidation> AdvancedFormBuilderDependencyValidations { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -315,6 +320,10 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<Arbitration>()
                 .Navigation(p => p.ProvidedForm)
+                .AutoInclude();
+
+            modelBuilder.Entity<Arbitration>()
+                .Navigation(p => p.DoneArbitrationUser)
                 .AutoInclude();
 
             modelBuilder.Entity<Arbitration>().HasQueryFilter(p => !p.isDeleted);
@@ -1028,6 +1037,54 @@ namespace SharijhaAward.Persistence
                 .AutoInclude();
 
             modelBuilder.Entity<Reward>().HasQueryFilter(p => !p.isDeleted);
+
+            //modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>()
+            //    .Navigation(p => p.AdvancedFormBuilder)
+            //    .AutoInclude();
+
+            //modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>()
+            //    .Navigation(p => p.AdvancedFormBuilderListValue)
+            //    .AutoInclude();
+
+            //modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>()
+            //    .Navigation(p => p.AdvancedFormBuilderSection)
+            //    .AutoInclude();
+
+            //modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>().HasQueryFilter(p => !p.isDeleted);
+
+            //modelBuilder.Entity<AdvancedFormBuilderDependency>()
+            //    .Navigation(p => p.MainAdvancedFormBuilder)
+            //    .AutoInclude();
+
+            //modelBuilder.Entity<AdvancedFormBuilderDependency>()
+            //    .Navigation(p => p.AdvancedFormBuilderDependencyGroup)
+            //    .AutoInclude();
+
+            //modelBuilder.Entity<AdvancedFormBuilderDependency>()
+            //    .Navigation(p => p.AdvancedFormBuilder)
+            //    .AutoInclude();
+
+            //modelBuilder.Entity<AdvancedFormBuilderDependency>()
+            //    .Navigation(p => p.StaticAttribute)
+            //    .AutoInclude();
+
+            //modelBuilder.Entity<AdvancedFormBuilderDependency>()
+            //    .Navigation(p => p.AttributeOperation)
+            //    .AutoInclude();
+
+            //modelBuilder.Entity<AdvancedFormBuilderDependency>().HasQueryFilter(p => !p.isDeleted);
+
+            //modelBuilder.Entity<AdvancedFormBuilderDependencyValidation>()
+            //    .Navigation(p => p.AttributeOperation)
+            //    .AutoInclude();
+
+            //modelBuilder.Entity<AdvancedFormBuilderDependencyValidation>()
+            //    .Navigation(p => p.AdvancedFormBuilderDependencyGroup)
+            //    .AutoInclude();
+
+            //modelBuilder.Entity<AdvancedFormBuilderDependencyValidation>().HasQueryFilter(p => !p.isDeleted);
+
+            //modelBuilder.Entity<AdvancedFormBuilderDependencyGroup>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AwardStatistic>()
                 .Navigation(p => p.Cycle)

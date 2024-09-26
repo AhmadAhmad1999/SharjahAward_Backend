@@ -9,6 +9,8 @@ namespace SharijhaAward.Domain.Entities.AdvancedFormBuilderModel
         public string ArabicName { get; set; } = null!;
         public string EnglishName { get; set; } = null!;
         public bool TableTypeSection { get; set; }
+        public int? MinNumberOfRows { get; set; }
+        public int? MaxNumberOfRows { get; set; }
         public int VirtualTableForSectionId { get; set; }
         public VirtualTableForSection? VirtualTableForSection { get; set; }
     }

@@ -200,9 +200,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                         GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
                                             .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
 
-                                    GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                                        .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
-
                                     List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
                                         .Where(x => GroupOfArbitrationEntity.Key == x.ProvidedFormId)
                                         .ToList();
@@ -274,9 +271,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                     GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
                                         .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
 
-                                GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                                    .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
-
                                 List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
                                     .Where(x => GroupOfArbitrationEntity.Key == x.ProvidedFormId)
                                     .ToList();
@@ -325,6 +319,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 }
 
                 List<IGrouping<int, Arbitration>> GroupOfArbitrationEntities = new List<IGrouping<int, Arbitration>>();
+                List<IGrouping<int, Arbitration>> GroupOfArbitrationEntitiesForAverage = new List<IGrouping<int, Arbitration>>();
 
                 if (CheckIfUserIsNormalArbitrator is not null
                     ? (!CheckIfUserIsNormalArbitrator.isChairman ||
@@ -333,7 +328,12 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 {
                     GroupOfArbitrationEntities = await _ArbitrationRepository
                         .Where(x => x.ArbitratorId == UserId &&
-                            x.isAccepted == FormStatus.Accepted && x.isAcceptedFromChairman == FormStatus.Accepted)
+                            x.isAcceptedFromChairman == FormStatus.Accepted)
+                        .GroupBy(x => x.ProvidedFormId)
+                        .ToListAsync();
+
+                    GroupOfArbitrationEntitiesForAverage = await _ArbitrationRepository
+                        .Where(x => x.isAcceptedFromChairman == FormStatus.Accepted)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
                 }
@@ -347,11 +347,25 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
                     GroupOfArbitrationEntities = await _ArbitrationRepository
                         .Where(x => ComitteeArbitratorIds.Contains(x.ArbitratorId) &&
-                            x.isAccepted == FormStatus.Accepted && x.isAcceptedFromChairman == FormStatus.Accepted &&
+                            x.isAcceptedFromChairman == FormStatus.Accepted &&
+                            x.ArbitrationAuditType == ArbitrationType.DoneArbitratod)
+                        .GroupBy(x => x.ProvidedFormId)
+                        .ToListAsync();
+
+                    GroupOfArbitrationEntitiesForAverage = await _ArbitrationRepository
+                        .Where(x => x.isAcceptedFromChairman == FormStatus.Accepted &&
                             x.ArbitrationAuditType == ArbitrationType.DoneArbitratod)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
                 }
+
+                List<int> ArbitrationIdsForAverage = GroupOfArbitrationEntitiesForAverage
+                    .SelectMany(group => group.Select(arbitration => arbitration.Id))
+                    .ToList();
+
+                List<InitialArbitration> InitialArbitrationEntitiesForAverage = await _InitialArbitrationRepository
+                    .Where(x => ArbitrationIdsForAverage.Contains(x.ArbitrationId))
+                    .ToListAsync();
 
                 List<int> ArbitrationIds = GroupOfArbitrationEntities
                     .SelectMany(group => group.Select(arbitration => arbitration.Id))
@@ -387,8 +401,11 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
                 foreach (IGrouping<int, Arbitration> GroupOfArbitrationEntity in GroupOfArbitrationEntities)
                 {
+                    var GroupOfArbitrationEntityForAverage = GroupOfArbitrationEntitiesForAverage
+                        .FirstOrDefault(x => x.Key == GroupOfArbitrationEntity.Key);
+
                     if (GroupOfArbitrationEntity.All(x => x.Type == ArbitrationType.DoneArbitratod &&
-                        x.isAccepted == FormStatus.Accepted && x.isAcceptedFromChairman == FormStatus.Accepted))
+                        x.isAcceptedFromChairman == FormStatus.Accepted))
                     {
                         if (Request.ItExceededTheMarginOfDifferenceInArbitrationScores != null)
                         {
@@ -491,8 +508,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
                                 if (!BreakOuterLoop)
                                 {
-                                    List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
-                                        .Where(x => GroupOfArbitrationEntity.Select(y => new
+                                    List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntitiesForAverage
+                                        .Where(x => GroupOfArbitrationEntityForAverage!.Select(y => new
                                         {
                                             y.Id,
                                             y.Type
@@ -584,8 +601,8 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
                             if (!BreakOuterLoop)
                             {
-                                List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntities
-                                    .Where(x => GroupOfArbitrationEntity.Select(y => new
+                                List<InitialArbitration> InitialArbitrationEntitiesForThisArbitrations = InitialArbitrationEntitiesForAverage
+                                    .Where(x => GroupOfArbitrationEntityForAverage!.Select(y => new
                                     {
                                         y.Id,
                                         y.Type
@@ -598,9 +615,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                 if (NumberOfArbitrationEntitiesForThisAudit != 0)
                                     GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
                                         .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
-
-                                GetAllFormsForArbitrationAuditListVM.Average = InitialArbitrationEntitiesForThisArbitrations
-                                    .Sum(x => x.ArbitrationScore) / NumberOfArbitrationEntitiesForThisAudit;
 
                                 List<ArbitrationAudit> ArbitrationAuditEntitiesForThisArbitrations = ArbitrationAuditEntities
                                     .Where(x => GroupOfArbitrationEntity.Key == x.ProvidedFormId)

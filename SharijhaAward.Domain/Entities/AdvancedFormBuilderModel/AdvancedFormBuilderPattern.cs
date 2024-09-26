@@ -5,7 +5,8 @@ namespace SharijhaAward.Domain.Entities.AdvancedFormBuilderModel
     public class AdvancedFormBuilderPattern : AuditableEntity
     {
         public int Id { get; set; }
-        public string Key { get; set; } = null!;
+        public string ArabicTitle { get; set; } = null!;
+        public string EnglishTitle { get; set; } = null!;
         public string ArabicLabel { get; set; } = null!;
         public string EnglishLabel { get; set; } = null!;
         public string ArabicPlaceHolder { get; set; } = null!;

@@ -8,8 +8,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
     {
         public int Id { get; set; }
         public FormStatus isAccepted { get; set; } = FormStatus.NotArbitratedYet;
+        public bool? AsChairman { get; set; }
         public string? ReasonForRejecting { get; set; }
-        public FormStatus isAcceptedFromChairman { get; set; } = FormStatus.NotArbitratedYet;
         public string? token { get; set; }
         public string? lang { get; set; }
     }

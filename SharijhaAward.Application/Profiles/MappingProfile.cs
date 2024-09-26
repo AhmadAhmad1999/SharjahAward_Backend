@@ -364,6 +364,8 @@ using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetGoa
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.CreateGoalCard;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetAllGoalCardsByPageId;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.UpdateGoalCard;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllVirtualTables;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.UpdateVirtualTableFroSection;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -720,6 +722,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ExplanatoryMessage, UpdateExplanatoryMessageCommand>().ReverseMap();
             CreateMap<GeneralFAQ, UpdateGeneralFAQCommand>().ReverseMap();
             CreateMap<ChairmanNotesOnArbitrationAudit, UpdateChairmanNotesOnArbitrationAuditCommand>().ReverseMap();
+            CreateMap<VirtualTableForSection, UpdateVirtualTableFroSectionCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -787,6 +790,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AppVersion, GetAllLastVersionsForAllTypesListVM>().ReverseMap();
             CreateMap<HomePageSlider, GetHomePageSliderItemByIdDto>().ReverseMap();
             CreateMap<LogUserAction, LoggerDto>().ReverseMap();
+            CreateMap<VirtualTableForSection, GetAllVirtualTablesListVM>().ReverseMap();
         }
     }
 }
