@@ -16,7 +16,7 @@ using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSpons
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStatistics;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 using SharijhaAward.Application.Features.Categories.Queries.GetCategoryById;
-using SharijhaAward.Application.Features.ChatBotFeature.Queries.TalkWithChatBot;
+using SharijhaAward.Application.Features.ChatBotQuestions.Queries.TalkWithChatBot;
 using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
 using SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles;

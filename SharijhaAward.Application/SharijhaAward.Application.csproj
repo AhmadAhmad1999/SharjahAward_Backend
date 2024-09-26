@@ -52,6 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\ChatBotFeature\Queries\" />
     <Folder Include="Features\EducationalInstitutions\Queries\GetEducationalInstitutionsByEntityId\" />
     <Folder Include="Features\Identity\Role\Command\" />
     <Folder Include="Features\Subscriber\Queries\" />

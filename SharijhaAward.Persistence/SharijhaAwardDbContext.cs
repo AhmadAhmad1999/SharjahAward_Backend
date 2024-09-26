@@ -81,6 +81,7 @@ using AutoMapper;
 using System.Reflection;
 using static SharijhaAward.Application.Helpers.DatabaseRelationsHelper.DatabaseRelationsClass;
 using NPOI.HSSF.Record;
+using SharijhaAward.Domain.Entities.ChatBotModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -236,6 +237,9 @@ namespace SharijhaAward.Persistence
         public DbSet<OnePageText> OnePageText { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<PageCard> PageCards { get; set; }
+        public DbSet<ChatBotQuestion> ChatBotQuestions { get; set; }
+        public DbSet<WorkflowQuestion> WorkflowQuestions { get; set; }
+        
 
         public DbSet<AdvancedFormBuilderViewWhenRelation> AdvancedFormBuilderViewWhenRelations { get; set; }
         public DbSet<AdvancedFormBuilderDependency> AdvancedFormBuilderDependencies { get; set; }
@@ -283,12 +287,16 @@ namespace SharijhaAward.Persistence
                 relationship.DeleteBehavior = DeleteBehavior.NoAction;
             }
 
+
             //Filter for Deleted items
             modelBuilder.Entity<Achievement>()
                 .Navigation(p => p.User)
                 .AutoInclude();
 
             modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
+
+            modelBuilder.Entity<ChatBotQuestion>().HasQueryFilter(p => !p.isDeleted);
+
 
             modelBuilder.Entity<CriterionAttachment>()
                 .Navigation(p => p.Criterion)
