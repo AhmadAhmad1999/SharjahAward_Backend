@@ -767,7 +767,9 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             PageCard,
 
             [Description("")] // Done
-            PageCards
+            PageCards,
+            
+
         }
         public static string GetEnumDescription(Enum value)
         {

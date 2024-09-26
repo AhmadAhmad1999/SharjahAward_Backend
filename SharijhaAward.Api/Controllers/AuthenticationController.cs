@@ -20,6 +20,7 @@ using SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmationC
 using SharijhaAward.Application.Features.Settings.Commands.ResetPassword;
 using SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForResetPassword;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -345,7 +346,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> LogOut()
+        public async Task<IActionResult> LogOut([FromQuery] PlatformType Platform)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
@@ -364,7 +365,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 token = Token,
                 lang = HeaderValue!,
-                DeviceToken = DeviceToken
+                DeviceToken = DeviceToken,
+                Platform = Platform
             });
 
             return Response.statusCode switch
