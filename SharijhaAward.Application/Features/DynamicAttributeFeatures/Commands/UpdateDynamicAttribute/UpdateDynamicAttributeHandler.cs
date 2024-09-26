@@ -49,6 +49,29 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
         }
         public async Task<BaseResponse<object>> Handle(UpdateDynamicAttributeCommand Request, CancellationToken cancellationToken)
         {
+            string ResponseMessage = string.Empty;
+
+            DynamicAttribute? DynamicAttributeOldData = await _DynamicAttributeRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+
+            if (DynamicAttributeOldData == null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Field not found"
+                    : "هذا الحقل غير موجود";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
+
+            if (Request.AttributeDataTypeId != DynamicAttributeOldData.AttributeDataTypeId)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Dynamic attribute type can't be updated"
+                    : "لا يمكن تعديل نوع الحقل بعد إنشاءه";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             GeneralValidation? GeneralValidationEntity = await _GeneralValidationRepository
                 .FirstOrDefaultAsync(x => x.DynamicAttributeId == Request.Id);
 
@@ -75,20 +98,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
             {
                 try
                 {
-                    string ResponseMessage = string.Empty;
-
-                    DynamicAttribute? DynamicAttributeOldData = await _DynamicAttributeRepository
-                        .FirstOrDefaultAsync(x => x.Id == Request.Id);
-
-                    if (DynamicAttributeOldData == null)
-                    {
-                        ResponseMessage = Request.lang == "en"
-                            ? "Field not found"
-                            : "هذا الحقل غير موجود";
-
-                        return new BaseResponse<object>(ResponseMessage, false, 404);
-                    }
-
                     if (DynamicAttributeOldData.DynamicAttributeSection!.TableTypeSection)
                     {
                         Request.IsRequired = false;
@@ -207,7 +216,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                             .Select(x => new ViewWhenRelation()
                             {
                                 DynamicAttributeId = Request.Id,
-                                DynamicAttributeListValueId = x.DynamicAttributeListValueId
+                                DynamicAttributeListValueId = x.AttributeListValueId
                             }).ToList();
 
                         await _ViewWhenRelationRepository.AddRangeAsync(NewViewWhenRelationEntities);

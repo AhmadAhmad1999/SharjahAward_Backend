@@ -42,6 +42,27 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
 
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
+            List<UserRole> CheckIfThisUserHasFullAccessOrArbitratorRole = await _UserRoleRepository
+                .Where(x => x.UserId == UserId)
+                .ToListAsync();
+            if ((CheckIfThisUserHasFullAccessOrArbitratorRole is not null
+                ? CheckIfThisUserHasFullAccessOrArbitratorRole.Any(x => x.Role!.HaveFullAccess)
+                : false) && Request.AsFullAccess)
+            {
+
+            }
+            else if (CheckIfThisUserHasFullAccessOrArbitratorRole is not null
+                ? CheckIfThisUserHasFullAccessOrArbitratorRole.Any(x => x.Role!.EnglishName.ToLower() == "arbitrator" &&
+                    x.Role!.ArabicName == "محكم")
+                : false)
+            {
+
+            }
+            else
+            {
+                return new BaseResponse<List<GetAllFormsForSortingProcessListVM>>();
+            }
+
             Arbitrator? ArbitratorEntity = await _ArbitratorRepository.FirstOrDefaultAsync(x => x.Id == UserId);
 
             if (ArbitratorEntity is null)
@@ -192,7 +213,6 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                 {
                     ArbitrationsEntities = await _ArbitrationRepository
                         .Where(x => ArbitratorsIds.Contains(x.ArbitratorId) &&
-                            x.isAccepted == FormStatus.Accepted &&
                             (!string.IsNullOrEmpty(Request.filter.ArbitratorName)
                                 ? Request.lang == "en"
                                     ? x.Arbitrator!.EnglishName.ToLower().StartsWith(Request.filter.ArbitratorName.ToLower())
@@ -212,8 +232,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                 else
                 {
                     ArbitrationsEntities = await _ArbitrationRepository
-                        .Where(x => ArbitratorsIds.Contains(x.ArbitratorId) &&
-                            x.isAccepted == FormStatus.Accepted)
+                        .Where(x => ArbitratorsIds.Contains(x.ArbitratorId))
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)

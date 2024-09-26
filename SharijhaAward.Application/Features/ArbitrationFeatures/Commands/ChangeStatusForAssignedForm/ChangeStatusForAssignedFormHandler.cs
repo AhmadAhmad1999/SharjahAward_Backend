@@ -72,7 +72,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                         (ArbitratorEntity.isChairman &&
                         (Request.AsChairman != null ? Request.AsChairman.Value : false)))
                     {
-                        ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+                        // ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
 
                         ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
 
@@ -82,9 +82,10 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                         (ArbitratorEntity.isChairman &&
                         (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
                     {
-                        ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+                        // ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
 
                         ArbitrationEntity.isAccepted = Request.isAccepted;
+                        ArbitrationEntity.SortedAt = DateTime.UtcNow;
 
                         ArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
                     }
@@ -92,7 +93,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                         (ArbitratorEntity.isChairman &&
                         (Request.AsChairman != null ? Request.AsChairman.Value : false)))
                     {
-                        ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
+                        // ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
 
                         ArbitrationEntity.isAcceptedFromChairman = Request.isAccepted;
                     }
@@ -100,7 +101,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                         (ArbitratorEntity.isChairman &&
                         (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
                     {
-                        ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
+                        // ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
+                        ArbitrationEntity.SortedAt = DateTime.UtcNow;
 
                         ArbitrationEntity.isAccepted = Request.isAccepted;
                     }

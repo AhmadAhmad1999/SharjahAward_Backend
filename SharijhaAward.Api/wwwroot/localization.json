@@ -122,6 +122,12 @@
     "ActivityId": "المعرف الخاص بالعملية",
     "RecordId": "المعرف الذي تمت عليه العملية",
     "SubCategoryName": "إسم الفئة الفرعية",
-    "ArbitratorsNames" :  "أسماء المحكمين"
+    "ArbitratorsNames": "أسماء المحكمين",
+    "IsAccepted": "تمت الموافقة عليها",
+    "PercentCompletion": "نسبة الاكتمال",
+    "ArbitrationLevelForThisForm": "مرحلة التحكيم التي وصلت إليها الاستمارة",
+    "ArbitratorsForThisForm": "محكمين هذه الاستمارة",
+    "ArbitratorId": "معرف المحكم",
+    "ArbitratorName": "اسم المحكم"
   }
 }

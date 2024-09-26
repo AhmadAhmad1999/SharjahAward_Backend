@@ -1,9 +1,7 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System.Transactions;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute
 {
@@ -11,17 +9,11 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.D
     {
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<Dependency> _DependencyRepository;
-        private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
-        private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
         public DeleteDynamicAttributeHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
-            IAsyncRepository<Dependency> DependencyRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository)
+            IAsyncRepository<Dependency> DependencyRepository)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DependencyRepository = DependencyRepository;
-            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
-            _ViewWhenRelationRepository = ViewWhenRelationRepository;
         }
         public async Task<BaseResponse<object>> Handle(DeleteDynamicAttributeCommand Request, CancellationToken cancellationToken)
         {

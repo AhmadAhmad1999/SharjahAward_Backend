@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.UpdateAdvancedFormBuilder
@@ -14,5 +15,11 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Command
         public List<UpdateAdvancedFormBuilderValueDto>? Values { get; set; }
         public int? MaxSizeInKB { get; set; }
         public string? lang { get; set; }
+        public bool IsUnique { get; set; } = false;
+        public bool LinkedToAnotherAttribute { get; set; } = false;
+        public int AttributeDataTypeId { get; set; }
+        public CreateGeneralValidation? GeneralValidationObject { get; set; }
+        public List<CreateDependencyValidation>? DependencyValidations { get; set; }
+        public List<ViewWhenDto>? ViewWhenDtos { get; set; }
     }
 }

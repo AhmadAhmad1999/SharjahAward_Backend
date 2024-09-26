@@ -196,7 +196,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                             .Select(x => new ViewWhenRelation()
                             {
                                 DynamicAttributeId = NewDynamicAttributeEntity.Id,
-                                DynamicAttributeListValueId = x.DynamicAttributeListValueId
+                                DynamicAttributeListValueId = x.AttributeListValueId
                             }).ToList();
 
                         await _ViewWhenRelationRepository.AddRangeAsync(NewViewWhenRelationEntities);

@@ -24,6 +24,12 @@ namespace SharijhaAward.Application.Features.Authentication.UpdateFCMToken
 
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
+            if (string.IsNullOrEmpty(Request.token) ||
+                string.IsNullOrEmpty(Request.DeviceToken))
+            {
+                return new BaseResponse<AuthenticationResponse>(ResponseMessage, true, 200);
+            }
+
             UserToken? UserTokenEntity = await _UserTokenRepository
                 .FirstOrDefaultAsync(x => x.Platform == Request.Platform && 
                     x.Token.ToLower() == Request.token!.ToLower().Replace("bearer ", string.Empty) &&

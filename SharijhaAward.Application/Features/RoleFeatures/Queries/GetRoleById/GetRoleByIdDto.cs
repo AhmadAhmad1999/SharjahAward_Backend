@@ -11,5 +11,6 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetRoleById
         [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
         public List<int> PermissionsIds { get; set; } = new List<int>();
+        public bool HaveFullAccess { get; set; }
     }
 }

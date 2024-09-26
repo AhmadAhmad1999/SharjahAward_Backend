@@ -48,11 +48,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.Token!));
 
-            UserRole? CheckIfThisUserHasFullAccessOrArbitratorRole = await _UserRoleRepository
-                .FirstOrDefaultAsync(x => x.UserId == UserId &&
-                    x.Role!.EnglishName.ToLower() == "arbitrator");
+            List<UserRole> CheckIfThisUserHasFullAccessOrArbitratorRole = await _UserRoleRepository
+                .Where(x => x.UserId == UserId)
+                .ToListAsync();
 
-            if (CheckIfThisUserHasFullAccessOrArbitratorRole is null)
+            if ((CheckIfThisUserHasFullAccessOrArbitratorRole is not null
+                ? CheckIfThisUserHasFullAccessOrArbitratorRole.Any(x => x.Role!.HaveFullAccess)
+                : false) && Request.AsFullAccess)
             {
                 List<IGrouping<int, Arbitration>> GroupOfArbitrationEntities = new List<IGrouping<int, Arbitration>>();
 
@@ -304,7 +306,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
                 return new BaseResponse<List<GetAllFormsForArbitrationAuditListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
             }
-            else
+            else if (CheckIfThisUserHasFullAccessOrArbitratorRole is not null
+                ? CheckIfThisUserHasFullAccessOrArbitratorRole.Any(x => x.Role!.EnglishName.ToLower() == "arbitrator" &&
+                    x.Role!.ArabicName == "محكم")
+                : false)
             {
                 Arbitrator? CheckIfUserIsNormalArbitrator = await _ArbitratorRepository
                     .FirstOrDefaultAsync(x => x.Id == UserId);
@@ -650,6 +655,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 }
 
                 return new BaseResponse<List<GetAllFormsForArbitrationAuditListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
+            }
+            else
+            {
+                return new BaseResponse<List<GetAllFormsForArbitrationAuditListVM>>();
             }
         }
     }
