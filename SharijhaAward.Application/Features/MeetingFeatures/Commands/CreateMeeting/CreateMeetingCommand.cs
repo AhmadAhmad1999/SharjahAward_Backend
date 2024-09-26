@@ -18,6 +18,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeet
         public string? EnglishText { get; set; }
         public DateTime Date { get; set; }
         public MeetingTypes Type { get; set; }
+        public string? MeetingLink { get; set; }
         public List<CreateMeetingUserDto> UsersInfo { get; set; } = new List<CreateMeetingUserDto>();
         public List<int> CategoriesIds { get; set; } = new List<int>();
         public string? lang { get; set; }

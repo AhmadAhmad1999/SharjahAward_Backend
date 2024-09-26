@@ -119,7 +119,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                             ? ArbitrationAuditEntities
                                 .Where(y => y.ProvidedFormId == x.ProvidedFormId)
                                 .Select(y => y.ArbitrationScore)
-                                .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
+                                .Sum()
                             : 0,
                         CycleNumber = x.ProvidedForm!.CycleNumber,
                         CycleYear = x.ProvidedForm!.CycleYear,
@@ -168,7 +168,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                             ? ArbitrationAuditEntities
                                 .Where(y => y.ProvidedFormId == x.ProvidedFormId)
                                 .Select(y => y.ArbitrationScore)
-                                .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId)
+                                .Sum()
                             : 0,
                         CycleNumber = x.ProvidedForm!.CycleNumber,
                         CycleYear = x.ProvidedForm!.CycleYear,
@@ -219,7 +219,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                         ? (ArbitrationAuditEntities
                             .Where(y => y.ProvidedFormId == x.ProvidedFormId)
                             .Select(y => y.ArbitrationScore)
-                            .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
+                            .Sum())
                         : 0,
                     CycleNumber = x.ProvidedForm!.CycleNumber,
                     CycleYear = x.ProvidedForm!.CycleYear,

@@ -35,83 +35,84 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderPatterns.Command
 
         public async Task<BaseResponse<object>> Handle(SelectPatternAsAdvancedFormBuilderCommand Request, CancellationToken cancellationToken)
         {
+            return new BaseResponse<object>();
             string ResponseMessage = string.Empty;
 
-            AdvancedFormBuilderPattern? SelectedAdvancedFormBuilderPattern = await _AdvancedFormBuilderPatternRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.AdvancedFormBuilderPatternId);
+            //    AdvancedFormBuilderPattern? SelectedAdvancedFormBuilderPattern = await _AdvancedFormBuilderPatternRepository
+            //        .FirstOrDefaultAsync(x => x.Id == Request.AdvancedFormBuilderPatternId);
 
-            if (SelectedAdvancedFormBuilderPattern == null)
-            {
-                ResponseMessage = Request.lang == "en"
-                  ? "Pattern is not Found"
-                  : "النموذج غير موجود";
+            //    if (SelectedAdvancedFormBuilderPattern == null)
+            //    {
+            //        ResponseMessage = Request.lang == "en"
+            //          ? "Pattern is not Found"
+            //          : "النموذج غير موجود";
 
-                return new BaseResponse<object>(ResponseMessage, false, 404);
-            }
+            //        return new BaseResponse<object>(ResponseMessage, false, 404);
+            //    }
 
-            AttributeDataType? AttributeListDataTypeEntity = await _AttributeDataTypeRepository
-                .FirstOrDefaultAsync(x => x.Name.ToLower() == "List".ToLower());
+            //    AttributeDataType? AttributeListDataTypeEntity = await _AttributeDataTypeRepository
+            //        .FirstOrDefaultAsync(x => x.Name.ToLower() == "List".ToLower());
 
-            if (AttributeListDataTypeEntity == null)
-            {
-                ResponseMessage = Request.lang == "en"
-                  ? "Field type is not Found"
-                  : "نوع الحقل غير موجود";
+            //    if (AttributeListDataTypeEntity == null)
+            //    {
+            //        ResponseMessage = Request.lang == "en"
+            //          ? "Field type is not Found"
+            //          : "نوع الحقل غير موجود";
 
-                return new BaseResponse<object>(ResponseMessage, false, 404);
-            }
+            //        return new BaseResponse<object>(ResponseMessage, false, 404);
+            //    }
 
-            AdvancedFormBuilder NewAdvancedFormBuilderEntity = _Mapper.Map<AdvancedFormBuilder>(SelectedAdvancedFormBuilderPattern);
-            NewAdvancedFormBuilderEntity.Id = 0;
-            NewAdvancedFormBuilderEntity.CreatedAt = DateTime.UtcNow;
-            NewAdvancedFormBuilderEntity.DeletedAt = null;
-            NewAdvancedFormBuilderEntity.CreatedBy = null;
-            NewAdvancedFormBuilderEntity.LastModifiedAt = null;
-            NewAdvancedFormBuilderEntity.LastModifiedBy = null;
-            NewAdvancedFormBuilderEntity.LinkedToAnotherAttribute = false;
-            NewAdvancedFormBuilderEntity.AdvancedFormBuilderSectionId = Request.AdvancedFormBuilderSectionId;
-            NewAdvancedFormBuilderEntity.Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active;
-            NewAdvancedFormBuilderEntity.AttributeDataTypeId = AttributeListDataTypeEntity.Id;
+            //    AdvancedFormBuilder NewAdvancedFormBuilderEntity = _Mapper.Map<AdvancedFormBuilder>(SelectedAdvancedFormBuilderPattern);
+            //    NewAdvancedFormBuilderEntity.Id = 0;
+            //    NewAdvancedFormBuilderEntity.CreatedAt = DateTime.UtcNow;
+            //    NewAdvancedFormBuilderEntity.DeletedAt = null;
+            //    NewAdvancedFormBuilderEntity.CreatedBy = null;
+            //    NewAdvancedFormBuilderEntity.LastModifiedAt = null;
+            //    NewAdvancedFormBuilderEntity.LastModifiedBy = null;
+            //    NewAdvancedFormBuilderEntity.LinkedToAnotherAttribute = false;
+            //    NewAdvancedFormBuilderEntity.AdvancedFormBuilderSectionId = Request.AdvancedFormBuilderSectionId;
+            //    NewAdvancedFormBuilderEntity.Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active;
+            //    NewAdvancedFormBuilderEntity.AttributeDataTypeId = AttributeListDataTypeEntity.Id;
 
-            TransactionOptions TransactionOptions = new TransactionOptions
-            {
-                IsolationLevel = IsolationLevel.ReadCommitted,
-                Timeout = TimeSpan.FromMinutes(5)
-            };
+            //    TransactionOptions TransactionOptions = new TransactionOptions
+            //    {
+            //        IsolationLevel = IsolationLevel.ReadCommitted,
+            //        Timeout = TimeSpan.FromMinutes(5)
+            //    };
 
-            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
-                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
-            {
-                try
-                {
-                    await _AdvancedFormBuilderRepository.AddAsync(NewAdvancedFormBuilderEntity);
+            //    using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+            //        TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            //    {
+            //        try
+            //        {
+            //            await _AdvancedFormBuilderRepository.AddAsync(NewAdvancedFormBuilderEntity);
 
-                    List<AdvancedFormBuilderListValue> ListOfPatternValues = await _AdvancedFormBuilderPatternValueRepository
-                        .Where(x => x.AdvancedFormBuilderPatternId == Request.AdvancedFormBuilderPatternId)
-                        .Select(x => new AdvancedFormBuilderListValue()
-                        {
-                            Value = x.Value,
-                            CreatedAt = DateTime.UtcNow,
-                            CreatedBy = null,
-                            DeletedAt = null,
-                            AdvancedFormBuilderId = NewAdvancedFormBuilderEntity.Id,
-                            isDeleted = false,
-                            LastModifiedAt = null,
-                            LastModifiedBy = null
-                        }).ToListAsync();
+            //            List<AdvancedFormBuilderListValue> ListOfPatternValues = await _AdvancedFormBuilderPatternValueRepository
+            //                .Where(x => x.AdvancedFormBuilderPatternId == Request.AdvancedFormBuilderPatternId)
+            //                .Select(x => new AdvancedFormBuilderListValue()
+            //                {
+            //                    Value = x.Value,
+            //                    CreatedAt = DateTime.UtcNow,
+            //                    CreatedBy = null,
+            //                    DeletedAt = null,
+            //                    AdvancedFormBuilderId = NewAdvancedFormBuilderEntity.Id,
+            //                    isDeleted = false,
+            //                    LastModifiedAt = null,
+            //                    LastModifiedBy = null
+            //                }).ToListAsync();
 
-                    await _AdvancedFormBuilderListValueRepository.AddRangeAsync(ListOfPatternValues);
+            //            await _AdvancedFormBuilderListValueRepository.AddRangeAsync(ListOfPatternValues);
 
-                    Transaction.Complete();
-                }
-                catch (Exception)
-                {
-                    Transaction.Dispose();
-                    throw;
-                }
-            }
+            //            Transaction.Complete();
+            //        }
+            //        catch (Exception)
+            //        {
+            //            Transaction.Dispose();
+            //            throw;
+            //        }
+            //    }
 
-            return new BaseResponse<object>(ResponseMessage, true, 200);
+            //    return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

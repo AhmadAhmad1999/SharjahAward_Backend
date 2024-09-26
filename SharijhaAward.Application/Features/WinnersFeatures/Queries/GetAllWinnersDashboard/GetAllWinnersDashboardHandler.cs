@@ -113,7 +113,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                         ? (ArbitrationAuditEntities
                             .Where(y => y.ProvidedFormId == x.ProvidedFormId)
                             .Select(y => y.ArbitrationScore)
-                            .Sum() / ArbitrationAuditEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId))
+                            .Sum())
                         : 0,
                     FinalArbitrationScore = x.FinalArbitration!?.FinalScore ?? 0,
                     SubscriberName = SubscribersNames
@@ -125,8 +125,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                         ? x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.EnglishName ?? null
                         : x.ProvidedForm!.CategoryEducationalClass?.EducationalClass!.ArabicName ?? null,
                     EducationalEntityName = Request.lang == "en"
-                        ? x.ProvidedForm!.EducationalEntity!.EnglishName ?? null
-                        : x.ProvidedForm!.EducationalEntity!.ArabicName ?? null,
+                        ? x.ProvidedForm!.EducationalEntity?.EnglishName ?? null
+                        : x.ProvidedForm!.EducationalEntity?.ArabicName ?? null,
                     ProfilePhoto = x.ProvidedForm!.User.ImageURL,
                     Gender = x.ProvidedForm!.User.Gender,
                     WinningLevel = x.WinningLevel

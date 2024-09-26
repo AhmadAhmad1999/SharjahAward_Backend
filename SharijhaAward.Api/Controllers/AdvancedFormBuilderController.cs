@@ -7,10 +7,12 @@ using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.Cr
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.CreateVirtualTableFroSection;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.DeleteAdvancedFormBuilder;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.UpdateAdvancedFormBuilder;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.UpdateVirtualTableFroSection;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAdvancedFormBuilderById;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllAdvancedFormBuilderForDependency;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllAdvancedFormBuildersBySectionId;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllListAdvancedFormBuilders;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllVirtualTables;
 using SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValue;
 using SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValueForSave;
 using SharijhaAward.Application.Helpers.ExportReportForAdvancedFormBuilder;
@@ -366,6 +368,57 @@ namespace SharijhaAward.Api.Controllers
 
             AddAdvancedFormBuilderValueForSaveCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
             BaseResponse<AddAdvancedFormBuilderValueForSaveResponse>? Response = await _Mediator.Send(AddAdvancedFormBuilderValueForSaveCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllVirtualTables")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllVirtualTables([FromQuery] GetAllVirtualTablesQuery GetAllVirtualTablesQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllVirtualTablesQuery.lang = HeaderValue;
+
+            BaseResponse<List<GetAllVirtualTablesListVM>> Response = await _Mediator.Send(GetAllVirtualTablesQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("UpdateVirtualTableFroSection")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> UpdateVirtualTableFroSection([FromBody] UpdateVirtualTableFroSectionCommand UpdateVirtualTableFroSectionCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            UpdateVirtualTableFroSectionCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(UpdateVirtualTableFroSectionCommand);
 
             return Response.statusCode switch
             {

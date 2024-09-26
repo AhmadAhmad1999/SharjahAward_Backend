@@ -769,7 +769,20 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             PageCards,
             
+            [Description("")] // Done
+            AdvancedFormBuilderViewWhenRelation,
 
+            [Description("")] // Done
+            AdvancedFormBuilderViewWhenRelations,
+
+            [Description("")] // Done
+            AdvancedFormBuilder,
+
+            [Description("")] // Done
+            AdvancedFormBuilders,
+
+            AdvancedFormBuilderDependency,
+            AdvancedFormBuilderDependencies
         }
         public static string GetEnumDescription(Enum value)
         {

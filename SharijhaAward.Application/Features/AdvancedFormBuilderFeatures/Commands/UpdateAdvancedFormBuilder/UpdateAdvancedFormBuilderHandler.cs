@@ -25,88 +25,89 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Command
 
         public async Task<BaseResponse<object>> Handle(UpdateAdvancedFormBuilderCommand Request, CancellationToken cancellationToken)
         {
-            TransactionOptions TransactionOptions = new TransactionOptions
-            {
-                IsolationLevel = IsolationLevel.ReadCommitted,
-                Timeout = TimeSpan.FromMinutes(5)
-            };
+            return new BaseResponse<object>();
+            //TransactionOptions TransactionOptions = new TransactionOptions
+            //{
+            //    IsolationLevel = IsolationLevel.ReadCommitted,
+            //    Timeout = TimeSpan.FromMinutes(5)
+            //};
 
-            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
-                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
-            {
-                try
-                {
-                    string ResponseMessage = string.Empty;
+            //using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+            //    TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            //{
+            //    try
+            //    {
+            //        string ResponseMessage = string.Empty;
 
-                    AdvancedFormBuilder? AdvancedFormBuilderOldData = await _AdvancedFormBuilderRepository.GetByIdAsync(Request.Id);
+            //        AdvancedFormBuilder? AdvancedFormBuilderOldData = await _AdvancedFormBuilderRepository.GetByIdAsync(Request.Id);
 
-                    if (AdvancedFormBuilderOldData == null)
-                    {
-                        ResponseMessage = Request.lang == "en"
-                            ? "Field not found"
-                            : "هذا الحقل غير موجود";
+            //        if (AdvancedFormBuilderOldData == null)
+            //        {
+            //            ResponseMessage = Request.lang == "en"
+            //                ? "Field not found"
+            //                : "هذا الحقل غير موجود";
 
-                        return new BaseResponse<object>(ResponseMessage, false, 404);
-                    }
+            //            return new BaseResponse<object>(ResponseMessage, false, 404);
+            //        }
 
-                    _Mapper.Map(Request, AdvancedFormBuilderOldData, typeof(UpdateAdvancedFormBuilderCommand),
-                        typeof(AdvancedFormBuilder));
+            //        _Mapper.Map(Request, AdvancedFormBuilderOldData, typeof(UpdateAdvancedFormBuilderCommand),
+            //            typeof(AdvancedFormBuilder));
 
-                    await _AdvancedFormBuilderRepository.UpdateAsync(AdvancedFormBuilderOldData);
+            //        await _AdvancedFormBuilderRepository.UpdateAsync(AdvancedFormBuilderOldData);
 
-                    if (Request.Values is not null
-                            ? Request.Values.Any()
-                            : false)
-                    {
-                        List<AdvancedFormBuilderListValue> OldAdvancedFormBuilderValueEntities = await _AdvancedFormBuilderListValueRepository
-                            .Where(x => x.AdvancedFormBuilderId == Request.Id)
-                            .ToListAsync();
+            //        if (Request.Values is not null
+            //                ? Request.Values.Any()
+            //                : false)
+            //        {
+            //            List<AdvancedFormBuilderListValue> OldAdvancedFormBuilderValueEntities = await _AdvancedFormBuilderListValueRepository
+            //                .Where(x => x.AdvancedFormBuilderId == Request.Id)
+            //                .ToListAsync();
 
-                        List<AdvancedFormBuilderListValue> NewAdvancedFormBuilderListValuesEntities = Request.Values
-                            .Where(x => x.Id == 0)
-                            .Select(x => new AdvancedFormBuilderListValue()
-                            {
-                                Value = x.Value,
-                                AdvancedFormBuilderId = Request.Id
-                            }).ToList();
+            //            List<AdvancedFormBuilderListValue> NewAdvancedFormBuilderListValuesEntities = Request.Values
+            //                .Where(x => x.Id == 0)
+            //                .Select(x => new AdvancedFormBuilderListValue()
+            //                {
+            //                    Value = x.Value,
+            //                    AdvancedFormBuilderId = Request.Id
+            //                }).ToList();
 
-                        if (NewAdvancedFormBuilderListValuesEntities.Any())
-                            await _AdvancedFormBuilderListValueRepository.AddRangeAsync(NewAdvancedFormBuilderListValuesEntities);
+            //            if (NewAdvancedFormBuilderListValuesEntities.Any())
+            //                await _AdvancedFormBuilderListValueRepository.AddRangeAsync(NewAdvancedFormBuilderListValuesEntities);
 
-                        IEnumerable<UpdateAdvancedFormBuilderValueDto> UpdatedAdvancedFormBuilderListValues = Request.Values
-                            .Where(x => x.Id != 0);
+            //            IEnumerable<UpdateAdvancedFormBuilderValueDto> UpdatedAdvancedFormBuilderListValues = Request.Values
+            //                .Where(x => x.Id != 0);
 
-                        foreach (UpdateAdvancedFormBuilderValueDto AdvancedFormBuilderValue in UpdatedAdvancedFormBuilderListValues)
-                        {
-                            AdvancedFormBuilderListValue? AdvancedFormBuilderListValueEntity = OldAdvancedFormBuilderValueEntities
-                                .FirstOrDefault(x => x.Id == AdvancedFormBuilderValue.Id);
+            //            foreach (UpdateAdvancedFormBuilderValueDto AdvancedFormBuilderValue in UpdatedAdvancedFormBuilderListValues)
+            //            {
+            //                AdvancedFormBuilderListValue? AdvancedFormBuilderListValueEntity = OldAdvancedFormBuilderValueEntities
+            //                    .FirstOrDefault(x => x.Id == AdvancedFormBuilderValue.Id);
 
-                            if (AdvancedFormBuilderListValueEntity is not null)
-                            {
-                                if (AdvancedFormBuilderListValueEntity.Value.ToLower() != AdvancedFormBuilderValue.Value.ToLower())
-                                {
-                                    AdvancedFormBuilderListValueEntity.Value = AdvancedFormBuilderValue.Value;
+            //                if (AdvancedFormBuilderListValueEntity is not null)
+            //                {
+            //                    if (AdvancedFormBuilderListValueEntity.Value.ToLower() != AdvancedFormBuilderValue.Value.ToLower())
+            //                    {
+            //                        AdvancedFormBuilderListValueEntity.Value = AdvancedFormBuilderValue.Value;
 
-                                    await _AdvancedFormBuilderListValueRepository.UpdateAsync(AdvancedFormBuilderListValueEntity);
-                                }
-                            }
-                        }
-                    }
+            //                        await _AdvancedFormBuilderListValueRepository.UpdateAsync(AdvancedFormBuilderListValueEntity);
+            //                    }
+            //                }
+            //            }
+            //        }
 
-                    Transaction.Complete();
+            //        Transaction.Complete();
 
-                    ResponseMessage = Request.lang == "en"
-                        ? "Field has been updated successfully"
-                        : "تم تعديل الحقل بنجاح";
+            //        ResponseMessage = Request.lang == "en"
+            //            ? "Field has been updated successfully"
+            //            : "تم تعديل الحقل بنجاح";
 
-                    return new BaseResponse<object>(ResponseMessage, true, 200);
-                }
-                catch (Exception)
-                {
-                    Transaction.Dispose();
-                    throw;
-                }
-            }
+            //        return new BaseResponse<object>(ResponseMessage, true, 200);
+            //    }
+            //    catch (Exception)
+            //    {
+            //        Transaction.Dispose();
+            //        throw;
+            //    }
+            //}
         }
     }
 }
