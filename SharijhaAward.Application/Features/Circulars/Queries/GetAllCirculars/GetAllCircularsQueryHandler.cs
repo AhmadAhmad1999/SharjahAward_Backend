@@ -68,7 +68,7 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
                 if (Role!.EnglishName == "Coordinator")
                 {
                     var Circulars = _circularCoordinatorRepository
-                        .Where(c => c.CoordinatorId == int.Parse(User))
+                        .WhereThenFilter(c => c.CoordinatorId == int.Parse(User), filterObject)
                         .Select(c => c.Circular)
                         .ToList();
 
@@ -107,7 +107,7 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
                 NumberOfUnRead = allCircular.Where(c=>c.IsRead).Count()
             };
 
-            int Count = _circularRepository.GetCount(c => !c.isDeleted);
+            int Count = _circularRepository.WhereThenFilter(c => true, filterObject).Count();
            
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
           

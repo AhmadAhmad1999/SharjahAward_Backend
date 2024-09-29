@@ -366,6 +366,11 @@ using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetAll
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.UpdateGoalCard;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllVirtualTables;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.UpdateVirtualTableFroSection;
+using SharijhaAward.Domain.Entities.ChatBotModel;
+using SharijhaAward.Application.Features.ChatBotQuestions.Commands.CreateChatBotQuestion;
+using SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetChatBotQuestionById;
+using SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetInitalQuestions;
+using SharijhaAward.Application.Features.ChatBotQuestions.Queries.TalkWithChatBot;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -640,6 +645,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ImageCard, ImageCardListVM>().ReverseMap();
             CreateMap<ImageCard, ImageCardDto>().ReverseMap();
             CreateMap<PageStructureImages, PageImageDto>().ReverseMap();
+
+            CreateMap<ChatBotQuestion, CreateChatBotQuestionCommand>().ReverseMap();
+            CreateMap<ChatBotQuestion, ChatBotQuestionDto>().ReverseMap();
+            CreateMap<ChatBotQuestion, InitialQuestionDto>().ReverseMap();
+            CreateMap<ChatBotQuestion, ConversationWorkflowListVM>().ReverseMap();
 
 
             CreateMap<Domain.Entities.IndexModel.Index, CreateIndexCommand>().ReverseMap();

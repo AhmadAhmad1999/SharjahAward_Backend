@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
+using SharijhaAward.Domain.Constants.CustomPageConstants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,9 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
         public bool IsHide { get; set; }
         public string Slug { get; set; } = string.Empty;
         public PageType PageType { get; set; }
+        public PagePostion PagePostion { get; set; }
         public int orderId { get; set; }
+        public bool Deletable { get; set; }
         public List<SubPageListVM>? SubPages { get; set; } 
     }
 }

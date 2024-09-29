@@ -56,7 +56,7 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCom
                 .Where(x => x.ChairmanName.Contains(Request.ChairmanName!))
                 .ToListAsync();
 
-            int TotalCount = await _CommitteeRepository.GetCountAsync(null);
+            int TotalCount = _CommitteeRepository.WhereThenFilter(c => true, filterObject).Count();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

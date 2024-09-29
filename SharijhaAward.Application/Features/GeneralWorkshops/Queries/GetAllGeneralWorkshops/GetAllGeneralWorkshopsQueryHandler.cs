@@ -60,7 +60,7 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGene
                         : data[i].ArabicDescription;
                 }
             }
-            int count = await _generalWorkshopRepository.GetCountAsync(g => !g.isDeleted);
+            int count = await _generalWorkshopRepository.WhereThenFilter(g => true, filterObject).CountAsync();
 
             Pagination pagination = new Pagination(request.page, request.perPage, count);
 

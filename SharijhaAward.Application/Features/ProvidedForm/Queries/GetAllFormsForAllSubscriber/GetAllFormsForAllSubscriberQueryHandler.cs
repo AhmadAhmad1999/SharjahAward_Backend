@@ -20,6 +20,7 @@ using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
 using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.SystemAttachmentModel;
 
 namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsForAllSubscriber
@@ -45,6 +46,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
         private readonly IAsyncRepository<CycleConditionAttachment> _CycleConditionAttachmentRepository;
         private readonly IAsyncRepository<ConditionAttachment> _ConditionAttachmentRepository;
         private readonly IAsyncRepository<ExtraAttachmentFile> _ExtraAttachmentFileRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IJwtProvider _JwtProvider;
 
         public GetAllFormsForAllSubscriberQueryHandler(IAsyncRepository<Cycle> CycleRepository, IUserRepository UserRepository,
@@ -64,7 +66,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
             IAsyncRepository<CycleConditionsProvidedForm> cycleConditionsProvidedFormRepository,
             IAsyncRepository<CycleConditionAttachment> CycleConditionAttachmentRepository,
             IAsyncRepository<ConditionAttachment> ConditionAttachmentRepository,
-            IAsyncRepository<ExtraAttachmentFile> ExtraAttachmentFileRepository)
+            IAsyncRepository<ExtraAttachmentFile> ExtraAttachmentFileRepository,
+            IAsyncRepository<UserRole> UserRoleRepository)
         {
             _UserRepository = UserRepository;
             _CategoryRepository = CategoryRepository;
@@ -85,6 +88,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
             _CycleConditionAttachmentRepository = CycleConditionAttachmentRepository;
             _ConditionAttachmentRepository = ConditionAttachmentRepository;
             _ExtraAttachmentFileRepository = ExtraAttachmentFileRepository;
+            _UserRoleRepository = UserRoleRepository;
         }
 
         public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery request, CancellationToken cancellationToken)
@@ -96,6 +100,11 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
             if (cycle != null)
             {
                 int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(request.Token!));
+                
+                var Roles = _UserRoleRepository
+                    .Where(u => u.UserId == UserId)
+                    .Select(u => u.Role)
+                    .ToList();
 
                 Coordinator? CoordinatorEntity = await _CoordinatorRepository
                     .FirstOrDefaultAsync(x => x.Id == UserId);
@@ -107,9 +116,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         .Select(c => c.Id)
                         .ToListAsync();
 
-                    var forms = await _FormRepository
-                        .Where(f => f.Category.CycleId == cycle.Id)
-                        .ToListAsync();
+                    
+                    var forms = Roles.Any(r => r!.HaveFullAccess)
+                        ? await _FormRepository.ListAllAsync()
+                        :await _FormRepository.Where(f => f.Category.CycleId == cycle.Id).ToListAsync();
 
                     var Subscribers = await _UserRepository
                         .Where(s => s.SubscriberId != null)
@@ -309,9 +319,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         .Select(c => c.Id)
                         .ToListAsync();
 
-                    var forms = await _FormRepository
-                        .Where(f => f.Category.CycleId == cycle.Id)
-                        .ToListAsync();
+                    var forms = Roles.Any(r => r!.HaveFullAccess)
+                        ? await _FormRepository.ListAllAsync()
+                        : await _FormRepository.Where(f => f.Category.CycleId == cycle.Id).ToListAsync();
 
                     List<int> EduEntitiesIds = await _EduEntitiesCoordinatorRepository
                         .Where(x => x.CoordinatorId == UserId)

@@ -40,7 +40,7 @@ namespace SharijhaAward.Application.Features.Albums.Queries.GetAllAlbums
                     : item.ArabicTitle;
             }
 
-            int Count = _albumRepository.GetCount(a => !a.isDeleted);
+            int Count = _albumRepository.WhereThenFilter(a => true,filterObject).Count();
            
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
           

@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.Albums.Galleries.Queries.GetAllGall
             }
             
 
-            int Count = _galleryRepository.GetCount(g => g.AlbumId == album.Id && !g.isDeleted);
+            int Count = _galleryRepository.GetCount(g => g.AlbumId == album.Id);
            
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
           

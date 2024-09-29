@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.Rewards.Queries.GetAllRewards
             {
                 item.Rank = request.lang == "en" ? item.EnglishRank : item.ArabicRank;
             }
-            int count = _rewardRepository.GetCount(r => r.CategoryId == request.CategoryId);
+            int count = _rewardRepository.WhereThenFilter(r => r.CategoryId == request.CategoryId, filterObject).Count();
            
             Pagination pagination = new Pagination(request.page, request.perPage, count);
            

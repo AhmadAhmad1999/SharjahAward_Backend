@@ -53,7 +53,7 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
                     item.CycleNumber = cycle.CycleNumber;
                 }
 
-                int count = _awardStatisticRepository.GetCount(a => a.CycleId == request.CycleId);
+                int count = _awardStatisticRepository.WhereThenFilter(a => a.CycleId == request.CycleId, filterObject).Count();
 
                 Pagination pagination = new Pagination(request.page, request.perPage, count);
 
@@ -76,7 +76,7 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAward
                     item.CycleNumber = cycle == null ? 0 : cycle!.CycleNumber;
                 }
 
-                int count = _awardStatisticRepository.GetCount(a => a.CycleId == request.CycleId);
+                int count = _awardStatisticRepository.WhereThenFilter(a => true, filterObject).Count();
 
                 Pagination pagination = new Pagination(request.page, request.perPage, count);
 

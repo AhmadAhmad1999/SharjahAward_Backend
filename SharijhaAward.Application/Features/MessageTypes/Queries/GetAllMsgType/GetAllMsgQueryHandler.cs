@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType
                 messageType.RoleName = _roleRepository.Where(r => RoleIds.Contains(r.Id)).Select(r => r.ArabicName).ToList();
             }
 
-            var count = _messageTypeRepository.GetCount(m => !m.isDeleted);
+            var count = _messageTypeRepository.GetCount(null);
             Pagination pagination = new Pagination(request.page, request.perPage, count);
             return new BaseResponse<List<MessageTypeListVM>>("", true, 200, data, pagination);
         }

@@ -31,7 +31,7 @@ namespace SharijhaAward.Application.Features.Classes.Queries.GetAllClasses
 
             var data = _Mapper.Map<List<GetAllClassesListVM>>(Classes);
 
-            int TotalCount = await _EducationalClassRepository.GetCountAsync(c=>!c.isDeleted);
+            int TotalCount = _EducationalClassRepository.WhereThenFilter(c => true, filterObject).Count();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

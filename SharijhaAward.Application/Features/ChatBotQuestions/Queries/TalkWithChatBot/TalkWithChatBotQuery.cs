@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ChatBotQuestions.Queries.TalkWithChatBot
 {
-    public class TalkWithChatBotQuery : IRequest<BaseResponse<string>>
+    public class TalkWithChatBotQuery : IRequest<BaseResponse<ConversationDto>>
     {
-        public string message { get; set; } = string.Empty;
         public int QuestionId { get; set; }
         public string? lang { get; set; }
     }

@@ -32,7 +32,9 @@ namespace SharijhaAward.Application.Features.AppVersioningFeatures.Query.GetAllA
                 
             var data = _Mapper.Map<List<GetAllAppVersionsListVM>>(AllAppVersions);
 
-            int TotalCount = await _AppVersionRepository.GetCountAsync(null);
+            int TotalCount = Request.AppType == null
+                ? _AppVersionRepository.WhereThenFilter(a=>true, filterObject).Count()
+                : _AppVersionRepository.WhereThenFilter(a => a.AppType == Request.AppType, filterObject).Count();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

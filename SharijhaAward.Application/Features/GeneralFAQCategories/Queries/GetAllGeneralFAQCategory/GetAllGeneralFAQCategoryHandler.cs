@@ -83,7 +83,7 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
                 .Where(x => x.GeneralFAQListVM.Any())
                 .ToList();
 
-            int TotalCount = await _GeneralFAQCategoryRepository.GetCountAsync(null);
+            int TotalCount = await _GeneralFAQCategoryRepository.WhereThenFilter(i => true, filterObject).CountAsync();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);
