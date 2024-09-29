@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.FAQs.Queries.GetAllFAQs
                      : data[i].ArabicQuestion;
                 }
             }
-            int count = _faqRepository.GetCount(f => f.isDeleted == false);
+            int count = _faqRepository.GetCount(null);
             Pagination pagination = new Pagination(request.page, request.perPage, count);
             
             return new BaseResponse<List<FAQListVm>>("", true, 200, data, pagination);

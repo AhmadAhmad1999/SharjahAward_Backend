@@ -16,6 +16,7 @@ using SharijhaAward.Application.Features.AwardSponsorsPage.Queries.GetAwardSpons
 using SharijhaAward.Application.Features.AwardStatistics.Queries.GetAllAwardStatistics;
 using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 using SharijhaAward.Application.Features.Categories.Queries.GetCategoryById;
+using SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetInitalQuestions;
 using SharijhaAward.Application.Features.ChatBotQuestions.Queries.TalkWithChatBot;
 using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
@@ -56,10 +57,34 @@ namespace SharijhaAward.Api.Controllers
             _Mediator = Mediator;
         }
 
-        [HttpGet("ChatBot")]
-        public async Task<IActionResult> ChatBot([FromQuery] string query)
+        [HttpGet("ChatBot/GetInitialQuestions")]
+        public async Task<IActionResult> GetInitialQuestions()
         {
-            var Response = await _Mediator.Send(new TalkWithChatBotQuery() { message = query });
+            var lang = HttpContext.Request.Headers["lang"];
+
+            var Response = await _Mediator.Send(new GetInitialQuestionsQuery()
+            {
+                lang = lang!
+            });
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+
+        [HttpGet("ChatBot/TalkWithChatBot")]
+        public async Task<IActionResult> TalkWithChatBot([FromQuery] int QuestionId)
+        {
+            var lang = HttpContext.Request.Headers["lang"];
+
+            var Response = await _Mediator.Send(new TalkWithChatBotQuery()
+            {
+                QuestionId = QuestionId,
+                lang = lang!
+            });
 
             return Response.statusCode switch
             {

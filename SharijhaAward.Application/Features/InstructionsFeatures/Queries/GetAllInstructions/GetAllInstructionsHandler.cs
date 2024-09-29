@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAll
                 .OrderByDescending(filterObject ,x => x.CreatedAt, Request.page, Request.perPage)
                 .ToListAsync());
 
-            int TotalCount = await _InstructionRepository.GetCountAsync(null);
+            int TotalCount = await _InstructionRepository.WhereThenFilter(i => true, filterObject).CountAsync();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

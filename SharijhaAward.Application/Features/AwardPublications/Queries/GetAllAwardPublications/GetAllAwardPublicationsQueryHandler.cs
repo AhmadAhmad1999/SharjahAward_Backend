@@ -37,7 +37,7 @@ namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwa
 
             var data = _mapper.Map<List<AwardPublicationListVM>>(AwardPublications);
 
-            var Count = _awardPublicationRepository.GetCount(a => !a.isDeleted);
+            var Count = _awardPublicationRepository.WhereThenFilter(a => true, filterObject).Count();
             
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
 

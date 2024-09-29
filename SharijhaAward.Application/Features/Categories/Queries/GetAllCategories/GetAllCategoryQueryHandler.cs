@@ -86,7 +86,7 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
                 data[i].Description = request.lang == "ar" ? data[i].ArabicDescription : data[i].EnglishDescription;
             }
            
-            int count = _categoryRepository.GetCount(c=>c.isDeleted == false);
+            int count = _categoryRepository.Where(c=>c.CycleId == Cycle!.Id).Count();
            
             Pagination pagination = new Pagination(request.page,request.perPage,count);
            

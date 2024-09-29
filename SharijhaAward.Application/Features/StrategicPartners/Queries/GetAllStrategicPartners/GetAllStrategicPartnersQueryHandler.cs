@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStr
 
             var data = _mapper.Map<List<StrategicPartnerListVM>>(AllStrategicPartners);
 
-            int Count = _strategicPartnerRepository.GetCount(p => !p.isDeleted);
+            int Count = _strategicPartnerRepository.WhereThenFilter(p => true, filterObject).Count();
 
             Pagination pagination = new Pagination(request.page, request.perPage, Count);
 

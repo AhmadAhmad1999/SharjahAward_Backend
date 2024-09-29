@@ -67,7 +67,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordina
 
             string ResponseMessage = string.Empty;
 
-            int TotalCount = await _CoordinatorRepository.GetCountAsync(null);
+            int TotalCount = await _CoordinatorRepository.WhereThenFilter(a => true, filterObject).CountAsync();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

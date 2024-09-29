@@ -58,7 +58,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
             
             var data = _mapper.Map<List<EventListVM>>(allEventsVM);
 
-            var count =  _eventRepository.ListAllAsync().Result.Count();
+            var count =  _eventRepository.WhereThenFilter(a => true, filterObject).Count();
 
             Pagination pagination = new Pagination(request.page, request.perPage, count);
 

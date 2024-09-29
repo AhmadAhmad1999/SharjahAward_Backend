@@ -39,7 +39,7 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles
                         (x.EnglishName != "Coordinator" && x.ArabicName != "منسق") ? true : false
                 }).ToListAsync();
 
-            int TotalCount = await _RoleRepository.GetCountAsync(null);
+            int TotalCount = await _RoleRepository.WhereThenFilter(a => true, filterObject).CountAsync();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

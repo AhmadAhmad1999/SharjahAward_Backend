@@ -44,7 +44,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles
                     : data[i].ArabicName;
                 }
             }
-            int count = _cycleRepository.GetCount(c => c.isDeleted == false);
+            int count = _cycleRepository.WhereThenFilter(c => true, filterObject).Count();
             
             Pagination pagination =new Pagination(request.page, request.perPage, count);
            

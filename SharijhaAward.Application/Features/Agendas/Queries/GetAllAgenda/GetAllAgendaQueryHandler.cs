@@ -54,7 +54,7 @@ namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
                 data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
             }
             
-            int count = await _agendaRepository.GetCountAsync(a => a.isDeleted == false);
+            int count = await _agendaRepository.GetCountAsync(null);
             Pagination pagination = new Pagination(request.page,request.perPage,count);
             
             return new BaseResponse<List<AgendaListVm>>("", true, 200, data, pagination);

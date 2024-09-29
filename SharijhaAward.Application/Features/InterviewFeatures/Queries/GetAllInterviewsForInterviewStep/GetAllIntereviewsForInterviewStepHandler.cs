@@ -97,7 +97,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
                         Type = x.Type
                     }).ToListAsync();
 
-                int TotalCount = await _InterviewRepository.GetCountAsync(null);
+                int TotalCount = await _InterviewRepository.WhereThenFilter(i => true, filterObject).CountAsync();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);

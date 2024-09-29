@@ -36,7 +36,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryMessageFeatures.Queries.
                         : x.ArabicText
                 }).ToListAsync();
 
-            int TotalCount = await _ExplanatoryMessageRepository.GetCountAsync(null);
+            int TotalCount = await _ExplanatoryMessageRepository.WhereThenFilter(a => true, filterObject).CountAsync();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

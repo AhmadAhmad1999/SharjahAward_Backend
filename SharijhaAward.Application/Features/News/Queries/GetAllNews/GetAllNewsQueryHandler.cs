@@ -48,7 +48,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
                     .ToList();
             }
 
-            int count = _newsRepository.GetCount(n => n.isDeleted == false && !n.IsHidden);
+            int count = _newsRepository.WhereThenFilter(n => !n.IsHidden, filterObject).Count();
 
             Pagination pagination = new Pagination(request.page, request.perPage, count);
 

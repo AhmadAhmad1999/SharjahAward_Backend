@@ -30,7 +30,9 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
 
             var subPages = await _pageStructureRepository.Where(p => p.ParentId != null).OrderBy(p=>p.orderId).ToListAsync();
             
-            var MainPages = _mapper.Map<List<MainPageWithSubPageListVM>>(mainPages).OrderBy(p=>p.orderId).ToList();
+            var MainPages = _mapper.Map<List<MainPageWithSubPageListVM>>(mainPages)
+                .OrderBy(p=>p.orderId)
+                .ToList();
 
             List<PageStructure> pages = new List<PageStructure>();
 

@@ -62,8 +62,8 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycle
                     ? data[i].EnglishDescription : data[i].ArabicDescription;
             }
             int count = request.CycleId == null
-                ? _cycleConditionRepository.GetCount(c => !c.isDeleted)
-                : _cycleConditionRepository.GetCount(c => c.CycleId == request.CycleId);
+                ? _cycleConditionRepository.WhereThenFilter(c => true, filterObject).Count()
+                : _cycleConditionRepository.WhereThenFilter(c => c.CycleId == request.CycleId, filterObject).Count();
 
             Pagination pagination = new Pagination(request.page,request.perPage,count);
             

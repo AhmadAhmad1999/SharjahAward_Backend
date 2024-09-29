@@ -11,8 +11,10 @@ namespace SharijhaAward.Application.Features.ChatBotQuestions.Commands.CreateCha
 {
     public class CreateChatBotQuestionCommand : IRequest<BaseResponse<object>>
     {
-        public string Question { get; set; } = string.Empty;
-        public string Answer { get; set; } = string.Empty;
+        public string EnglishQuestion { get; set; } = string.Empty;
+        public string ArabicQuestion { get; set; } = string.Empty;
+        public string EnglishAnswer { get; set; } = string.Empty;
+        public string ArabicAnswer { get; set; } = string.Empty;
         public bool Initial { get; set; }
         public List<int>? WorkflowQuestionIds { get; set; } = null!;
     }

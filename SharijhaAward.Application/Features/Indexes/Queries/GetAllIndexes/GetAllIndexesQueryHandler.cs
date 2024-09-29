@@ -28,7 +28,7 @@ namespace SharijhaAward.Application.Features.Indexes.Queries.GetAllIndexes
 
             var data = _mapper.Map<List<IndexesListVM>>(indexes);
 
-            var count = _indexRepository.GetCount(i => !i.isDeleted);
+            var count = _indexRepository.GetCount(null);
             
             Pagination pagination = new Pagination(request.page, request.perPage, count);
 

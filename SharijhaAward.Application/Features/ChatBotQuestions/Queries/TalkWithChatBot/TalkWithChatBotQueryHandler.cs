@@ -13,24 +13,46 @@ using System.Threading.Tasks;
 namespace SharijhaAward.Application.Features.ChatBotQuestions.Queries.TalkWithChatBot
 {
     public class TalkWithChatBotQueryHandler
-        : IRequestHandler<TalkWithChatBotQuery, BaseResponse<string>>
+        : IRequestHandler<TalkWithChatBotQuery, BaseResponse<ConversationDto>>
     {
         private readonly IAsyncRepository<ChatBotQuestion> _chatBotQuestionRepository;
         private readonly IAsyncRepository<WorkflowQuestion> _workflowQuestionRepository;
-        private readonly IMapper _mapper;
 
         public TalkWithChatBotQueryHandler(IAsyncRepository<ChatBotQuestion> chatBotQuestionRepository, IAsyncRepository<WorkflowQuestion> workflowQuestionRepository, IMapper mapper)
         {
             _chatBotQuestionRepository = chatBotQuestionRepository;
             _workflowQuestionRepository = workflowQuestionRepository;
-            _mapper = mapper;
         }
 
-        public async Task<BaseResponse<string>> Handle(TalkWithChatBotQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<ConversationDto>> Handle(TalkWithChatBotQuery request, CancellationToken cancellationToken)
         {
-            var data = "";
+            var Question = await _chatBotQuestionRepository.GetByIdAsync(request.QuestionId);
+            
+            if(Question == null)
+            {
+                return new BaseResponse<ConversationDto>("", false, 200, null!);
+            }
 
-            return new BaseResponse<string>("", true, 200, data);
+            var workFlow = _workflowQuestionRepository
+                .Where(q => q.QuestionId == Question.Id)
+                .Select(q => q.Workflow)
+                .ToList();
+
+
+            var data = new ConversationDto()
+            {
+                Id = Question.Id,
+                Answer = request.lang == "en" ? Question.EnglishAnswer : Question.ArabicAnswer,
+                Workflow = workFlow.Select(q => new ConversationWorkflowListVM()
+                {
+                    Id = q.Id,
+                    Question = request.lang == "en" ? q.EnglishQuestion : q.ArabicQuestion
+                
+                }).ToList()
+            };
+
+
+            return new BaseResponse<ConversationDto>("", true, 200, data);
         }
     }
 }

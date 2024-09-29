@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetInitalQuestions
 {
-    public class GetInitialQuestionsQuery : IRequest<BaseResponse<WorkflowQuestionDto>>
+    public class GetInitialQuestionsQuery : IRequest<BaseResponse<List<InitialQuestionDto>>>
     {
+        public string? lang { get; set; }
     }
 }

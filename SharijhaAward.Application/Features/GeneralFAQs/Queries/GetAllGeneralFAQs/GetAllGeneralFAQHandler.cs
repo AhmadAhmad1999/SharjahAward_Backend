@@ -93,7 +93,9 @@ namespace SharijhaAward.Application.Features.GeneralFAQs.Queries.GetAllGeneralFA
                     }).ToListAsync();
             }
 
-            int TotalCount = _GeneralFAQRepository.GetCount(null);
+            int TotalCount = Request.CategoryId == null
+                ? _GeneralFAQRepository.WhereThenFilter(f => true, filterObject).Count()
+                : _GeneralFAQRepository.WhereThenFilter(f=>f.GeneralFrequentlyAskedQuestionCategoryId == Request.CategoryId, filterObject).Count();
 
             Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
 
