@@ -7,6 +7,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
@@ -23,6 +24,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
         private readonly IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
         private readonly IJwtProvider _JwtProvider;
 
         public GetAllFormsForFinalArbitrationHandler(IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
@@ -32,6 +34,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             IAsyncRepository<UserRole> UserRoleRepository,
             IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<ComitteeArbitrator> ComitteeArbitratorRepository,
+            IAsyncRepository<Cycle> CycleRepository,
             IJwtProvider JwtProvider)
         {
             _FinalArbitrationRepository = FinalArbitrationRepository;
@@ -41,6 +44,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             _UserRoleRepository = UserRoleRepository;
             _ArbitrationRepository = ArbitrationRepository;
             _ComitteeArbitratorRepository = ComitteeArbitratorRepository;
+            _CycleRepository = CycleRepository;
             _JwtProvider = JwtProvider;
         }
         public async Task<BaseResponse<GetAllFormsForFinalArbitrationMainListVM>>
@@ -150,6 +154,14 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     x.Role!.ArabicName == "محكم")
                 : false)
             {
+                Cycle? CheckIfThereIsActiveCycle = await _CycleRepository
+                    .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
+
+                if (CheckIfThereIsActiveCycle is null)
+                    return new BaseResponse<GetAllFormsForFinalArbitrationMainListVM>(ResponseMessage, false, 200);
+
+                int ActiveCycleId = CheckIfThereIsActiveCycle.Id;
+
                 Arbitrator? ArbitratorEntity = await _ArbitratorRepository
                     .FirstOrDefaultAsync(x => x.Id == UserId);
 
@@ -172,7 +184,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         .ToListAsync();
 
                     List<int> ArbitratorFormsIds = await _ArbitrationRepository
-                        .Where(x => ArbitratorIdsInCommitee.Contains(x.ArbitratorId))
+                        .Where(x => ArbitratorIdsInCommitee.Contains(x.ArbitratorId) &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                         .Select(x => x.ProvidedFormId)
                         .Distinct()
                         .ToListAsync();
@@ -187,7 +200,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     {
                         FinalArbitrationEntities = await _FinalArbitrationRepository
                             .Where(x => x.Type == Request.ArbitrationType &&
-                                ArbitratorFormsIds.Contains(x.ProvidedFormId))
+                                ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
@@ -195,11 +209,13 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
 
                         TotalCount = await _FinalArbitrationRepository
                             .GetCountAsync(x => x.Type == Request.ArbitrationType &&
-                                ArbitratorFormsIds.Contains(x.ProvidedFormId));
+                                ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId);
 
                         TypeCounts = await _FinalArbitrationRepository
                             .Where(x => x.Type == Request.ArbitrationType &&
-                                ArbitratorFormsIds.Contains(x.ProvidedFormId))
+                                ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                             .GroupBy(x => x.Type)
                             .Select(x => new { Type = x.Key, Count = x.Count() })
                             .ToDictionaryAsync(x => x.Type, x => x.Count);
@@ -207,17 +223,20 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     else
                     {
                         FinalArbitrationEntities = await _FinalArbitrationRepository
-                            .Where(x => ArbitratorFormsIds.Contains(x.ProvidedFormId))
+                            .Where(x => ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
                             .ToListAsync();
 
                         TotalCount = await _FinalArbitrationRepository
-                            .GetCountAsync(x => ArbitratorFormsIds.Contains(x.ProvidedFormId));
+                            .GetCountAsync(x => ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId);
 
                         TypeCounts = await _FinalArbitrationRepository
-                            .Where(x => ArbitratorFormsIds.Contains(x.ProvidedFormId))
+                            .Where(x => ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                             .GroupBy(x => x.Type)
                             .Select(x => new { Type = x.Key, Count = x.Count() })
                             .ToDictionaryAsync(x => x.Type, x => x.Count);
@@ -273,7 +292,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 else
                 {
                     List<int> ArbitratorFormsIds = await _ArbitrationRepository
-                        .Where(x => x.ArbitratorId == ArbitratorEntity.Id)
+                        .Where(x => x.ArbitratorId == ArbitratorEntity.Id &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                         .Select(x => x.ProvidedFormId)
                         .ToListAsync();
 
@@ -285,7 +305,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     {
                         FinalArbitrationEntities = await _FinalArbitrationRepository
                             .Where(x => x.Type == Request.ArbitrationType &&
-                                ArbitratorFormsIds.Contains(x.ProvidedFormId))
+                                ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
@@ -293,19 +314,22 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
 
                         TotalCount = await _FinalArbitrationRepository
                             .GetCountAsync(x => x.Type == Request.ArbitrationType &&
-                                ArbitratorFormsIds.Contains(x.ProvidedFormId));
+                                ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId);
                     }
                     else
                     {
                         FinalArbitrationEntities = await _FinalArbitrationRepository
-                            .Where(x => ArbitratorFormsIds.Contains(x.ProvidedFormId))
+                            .Where(x => ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
                             .ToListAsync();
 
                         TotalCount = await _FinalArbitrationRepository
-                            .GetCountAsync(x => ArbitratorFormsIds.Contains(x.ProvidedFormId));
+                            .GetCountAsync(x => ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId);
                     }
 
                     var Names = await _DynamicAttributeValueRepository
@@ -342,7 +366,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         }).ToList();
 
                     Dictionary<ArbitrationType, int> TypeCounts = await _FinalArbitrationRepository
-                        .Where(x => ArbitratorFormsIds.Contains(x.ProvidedFormId))
+                        .Where(x => ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                         .GroupBy(x => x.Type)
                         .Select(x => new { Type = x.Key, Count = x.Count() })
                         .ToDictionaryAsync(x => x.Type, x => x.Count);

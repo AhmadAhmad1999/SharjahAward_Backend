@@ -25,13 +25,19 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles
             
             string ResponseMessage = string.Empty;
 
-            List<GetAllRolesListVM> Roles = _Mapper.Map<List<GetAllRolesListVM>>(await _RoleRepository
-                .WhereThenFilter(x => (x.EnglishName != "Arbitrator" && x.ArabicName != "محكم") ||
-                    (x.EnglishName != "Coordinator" && x.ArabicName != "منسق"), filterObject)
+            List<GetAllRolesListVM> Roles = await _RoleRepository
+                .WhereThenFilter(x => true, filterObject)
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((Request.page - 1) * Request.perPage)
                 .Take(Request.perPage)
-                .ToListAsync());
+                .Select(x => new GetAllRolesListVM()
+                {
+                    Id = x.Id,
+                    ArabicName = x.ArabicName,
+                    EnglishName = x.EnglishName,
+                    isMainRole = (x.EnglishName != "Arbitrator" && x.ArabicName != "محكم") ||
+                        (x.EnglishName != "Coordinator" && x.ArabicName != "منسق") ? true : false
+                }).ToListAsync();
 
             int TotalCount = await _RoleRepository.GetCountAsync(null);
 

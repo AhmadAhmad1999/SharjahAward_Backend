@@ -6,6 +6,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
@@ -19,6 +20,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
         private readonly IJwtProvider _JWTProvider;
 
         public GetAllFormsForSortingProcessHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
@@ -26,6 +28,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
             IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<UserRole> UserRoleRepository,
             IAsyncRepository<ComitteeArbitrator> ComitteeArbitratorRepository,
+            IAsyncRepository<Cycle> CycleRepository,
             IJwtProvider JWTProvider)
         {
             _ArbitrationRepository = ArbitrationRepository;
@@ -33,6 +36,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
             _ArbitratorRepository = ArbitratorRepository;
             _UserRoleRepository = UserRoleRepository;
             _ComitteeArbitratorRepository = ComitteeArbitratorRepository;
+            _CycleRepository = CycleRepository;
             _JWTProvider = JWTProvider;
         }
         public async Task<BaseResponse<List<GetAllFormsForSortingProcessListVM>>>
@@ -170,6 +174,14 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                     x.Role!.ArabicName == "محكم")
                 : false)
             {
+                Cycle? CheckIfThereIsActiveCycle = await _CycleRepository
+                    .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
+
+                if (CheckIfThereIsActiveCycle is null)
+                    return new BaseResponse<List<GetAllFormsForSortingProcessListVM>>(ResponseMessage, false, 200);
+
+                int ActiveCycleId = CheckIfThereIsActiveCycle.Id;
+
                 Arbitrator? ArbitratorEntity = await _ArbitratorRepository.FirstOrDefaultAsync(x => x.Id == UserId);
 
                 if (ArbitratorEntity is null)
@@ -190,6 +202,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                     {
                         ArbitrationsEntities = await _ArbitrationRepository
                             .Where(x => ArbitratorsIds.Contains(x.ArbitratorId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId &&
                                 (!string.IsNullOrEmpty(Request.filter.ArbitratorName)
                                     ? Request.lang == "en"
                                         ? x.Arbitrator!.EnglishName.ToLower().StartsWith(Request.filter.ArbitratorName.ToLower())
@@ -209,7 +222,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                     else
                     {
                         ArbitrationsEntities = await _ArbitrationRepository
-                            .Where(x => ArbitratorsIds.Contains(x.ArbitratorId))
+                            .Where(x => ArbitratorsIds.Contains(x.ArbitratorId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
@@ -274,12 +288,14 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                     int TotalCount = 0;
 
                     if (Request.filter is null)
-                        TotalCount = await _ArbitrationRepository.GetCountAsync(x => ArbitratorsIds.Contains(x.ArbitratorId));
+                        TotalCount = await _ArbitrationRepository.GetCountAsync(x => ArbitratorsIds.Contains(x.ArbitratorId) &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleId);
 
                     else
                     {
                         TotalCount = await _ArbitrationRepository
                             .GetCountAsync(x => ArbitratorsIds.Contains(x.ArbitratorId) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId &&
                                 (!string.IsNullOrEmpty(Request.filter.ArbitratorName)
                                     ? Request.lang == "en"
                                         ? x.Arbitrator!.EnglishName.ToLower().StartsWith(Request.filter.ArbitratorName.ToLower())
@@ -312,6 +328,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                             .Where(x => (UserId != 0
                                 ? x.ArbitratorId == UserId
                                 : true) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId &&
                                 (!string.IsNullOrEmpty(Request.filter.ArbitratorName)
                                     ? Request.lang == "en"
                                         ? x.Arbitrator!.EnglishName.ToLower().StartsWith(Request.filter.ArbitratorName.ToLower())
@@ -331,9 +348,10 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                     else
                     {
                         ArbitrationsEntities = await _ArbitrationRepository
-                            .Where(x => UserId != 0
+                            .Where(x => (UserId != 0
                                 ? x.ArbitratorId == UserId
-                                : true)
+                                : true) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
@@ -398,9 +416,10 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                     int TotalCount = 0;
 
                     if (Request.filter is null)
-                        TotalCount = await _ArbitrationRepository.GetCountAsync(x => UserId != 0
+                        TotalCount = await _ArbitrationRepository.GetCountAsync(x => (UserId != 0
                             ? x.ArbitratorId == UserId
-                            : true);
+                            : true) &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleId);
 
                     else
                     {
@@ -408,6 +427,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                             .GetCountAsync(x => (UserId != 0
                                 ? x.ArbitratorId == UserId
                                 : true) &&
+                                x.ProvidedForm!.Category!.CycleId == ActiveCycleId &&
                                 (!string.IsNullOrEmpty(Request.filter.ArbitratorName)
                                     ? Request.lang == "en"
                                         ? x.Arbitrator!.EnglishName.ToLower().StartsWith(Request.filter.ArbitratorName.ToLower())

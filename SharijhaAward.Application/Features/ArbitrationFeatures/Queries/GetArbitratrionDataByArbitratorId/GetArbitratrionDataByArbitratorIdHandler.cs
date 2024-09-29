@@ -6,6 +6,7 @@ using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 
@@ -23,6 +24,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
         private readonly IAsyncRepository<ArbitrationAudit> _ArbitrationAuditRepository;
         private readonly IAsyncRepository<InitialArbitration> _InitialArbitrationRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
         public GetArbitratrionDataByArbitratorIdHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository,
@@ -31,7 +33,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
             IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
             IAsyncRepository<ArbitrationAudit> ArbitrationAuditRepository,
-            IAsyncRepository<InitialArbitration> InitialArbitrationRepository)
+            IAsyncRepository<InitialArbitration> InitialArbitrationRepository,
+            IAsyncRepository<Cycle> CycleRepository)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _ArbitratorRepository = ArbitratorRepository;
@@ -42,6 +45,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
             _FinalArbitrationRepository = FinalArbitrationRepository;
             _ArbitrationAuditRepository = ArbitrationAuditRepository;
             _InitialArbitrationRepository = InitialArbitrationRepository;
+            _CycleRepository = CycleRepository;
         }
 
         public async Task<BaseResponse<GetArbitratrionDataByArbitratorIdDto>> 
@@ -49,13 +53,23 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
         {
             string ResponseMessage = string.Empty;
 
+            Cycle? CheckIfThereIsActiveCycle = await _CycleRepository
+                .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
+
+            if (CheckIfThereIsActiveCycle is null)
+                return new BaseResponse<GetArbitratrionDataByArbitratorIdDto>(ResponseMessage, true, 200);
+
+            int ActiveCycleId = CheckIfThereIsActiveCycle.Id;
+
             List<int> ArbitratorCategoriesIds = await _CategoryArbitratorRepository
-                .Where(x => x.ArbitratorId == Request.Id)
+                .Where(x => x.ArbitratorId == Request.Id &&
+                    x.Category!.CycleId == ActiveCycleId)
                 .Select(x => x.CategoryId)
                 .ToListAsync();
 
             List<Arbitration> AllArbitrationEntities = await _ArbitrationRepository
-                .Where(x => x.ProvidedForm!.PercentCompletion == 100)
+                .Where(x => x.ProvidedForm!.PercentCompletion == 100 &&
+                    x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                 .ToListAsync();
 
             List<Arbitration> AllArbitratorAssingedForms = AllArbitrationEntities
@@ -70,28 +84,33 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
             List<DynamicAttributeValue> SubscribersNames = await _DynamicAttributeValueRepository
                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
-                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
+                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower() &&
+                    AllArbitrationEntities.Select(y => y.ProvidedFormId).Contains(x.RecordId!.Value))
                 .ToListAsync();
 
             List<int> ProvidedFormsInArbitrationResult = await _ArbitrationResultRepository
+                .Where(x => AllArbitrationEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
                 .Select(x => x.ProvidedFormId)
                 .Distinct()
                 .ToListAsync();
 
             List<int> ProvidedFormsInFinalArbitration = await _FinalArbitrationRepository
-                .Where(x => !ProvidedFormsInArbitrationResult.Contains(x.ProvidedFormId))
+                .Where(x => !ProvidedFormsInArbitrationResult.Contains(x.ProvidedFormId) &&
+                    AllArbitrationEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
                 .Select(x => x.ProvidedFormId)
                 .Distinct()
                 .ToListAsync();
 
             List<int> ProvidedFormsInArbitrationAudit = await _ArbitrationAuditRepository
-                .Where(x => !ProvidedFormsInFinalArbitration.Contains(x.ProvidedFormId))
+                .Where(x => !ProvidedFormsInFinalArbitration.Contains(x.ProvidedFormId) &&
+                    AllArbitrationEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
                 .Select(x => x.ProvidedFormId)
                 .Distinct()
                 .ToListAsync();
 
             List<int> ProvidedFormsInInitialArbitration = await _InitialArbitrationRepository
-                .Where(x => !ProvidedFormsInArbitrationAudit.Contains(x.Arbitration!.ProvidedFormId))
+                .Where(x => !ProvidedFormsInArbitrationAudit.Contains(x.Arbitration!.ProvidedFormId) &&
+                    AllArbitrationEntities.Select(y => y.ProvidedFormId).Contains(x.Arbitration!.ProvidedFormId))
                 .Select(x => x.Arbitration!.ProvidedFormId)
                 .Distinct()
                 .ToListAsync();
