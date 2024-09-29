@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetAllFormsForArbitrationAudit;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
@@ -49,11 +50,13 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
 
             int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
-            UserRole? CheckIfThisUserHasFullAccessOrArbitratorRole = await _UserRoleRepository
-                .FirstOrDefaultAsync(x => x.UserId == UserId &&
-                    x.Role!.EnglishName.ToLower() == "arbitrator");
+            List<UserRole> CheckIfThisUserHasFullAccessOrArbitratorRole = await _UserRoleRepository
+                .Where(x => x.UserId == UserId)
+                .ToListAsync();
 
-            if (CheckIfThisUserHasFullAccessOrArbitratorRole is null)
+            if ((CheckIfThisUserHasFullAccessOrArbitratorRole is not null
+                ? CheckIfThisUserHasFullAccessOrArbitratorRole.Any(x => x.Role!.HaveFullAccess)
+                : false) && Request.AsFullAccess)
             {
                 List<FinalArbitration> FinalArbitrationEntities = new List<FinalArbitration>();
 
@@ -142,7 +145,10 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 return new BaseResponse<GetAllFormsForFinalArbitrationMainListVM>(ResponseMessage, true, 200,
                     Response, PaginationParameter);
             }
-            else
+            else if (CheckIfThisUserHasFullAccessOrArbitratorRole is not null
+                ? CheckIfThisUserHasFullAccessOrArbitratorRole.Any(x => x.Role!.EnglishName.ToLower() == "arbitrator" &&
+                    x.Role!.ArabicName == "محكم")
+                : false)
             {
                 Arbitrator? ArbitratorEntity = await _ArbitratorRepository
                     .FirstOrDefaultAsync(x => x.Id == UserId);
@@ -355,6 +361,10 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     return new BaseResponse<GetAllFormsForFinalArbitrationMainListVM>(ResponseMessage, true, 200,
                         Response, PaginationParameter);
                 }
+            }
+            else
+            {
+                return new BaseResponse<GetAllFormsForFinalArbitrationMainListVM>(ResponseMessage, true, 200);
             }
         }
     }

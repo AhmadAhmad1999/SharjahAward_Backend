@@ -32,6 +32,23 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeet
         {
             string ResponseMessage = string.Empty;
 
+            if (string.IsNullOrEmpty(Request.MeetingLink) && Request.Type == Domain.Constants.MeetingTypes.Virtual)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? $"When the meeting type is virtual, then you have to enter a value for the meeting link"
+                    : $"عندما يكون نوع الاجتماع افتراضيًا، فيجب عليك إدخال قيمة لرابط الاجتماع";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+            else if (!string.IsNullOrEmpty(Request.MeetingLink) && Request.Type == Domain.Constants.MeetingTypes.OnSite)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? $"you can't insert a value for the meeting link unless the meeting type is virtual"
+                    : $"لا يمكنك إدخال قيمة لرابط الاجتماع إلا في حالة كون نوع الاجتماع افتراضياً";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             List<string> CheckForDuplicatedEmails = Request.UsersInfo
                 .GroupBy(m => m.Email.ToLower())
                 .Where(g => g.Count() > 1)

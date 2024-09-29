@@ -658,7 +658,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
             }
             else
             {
-                return new BaseResponse<List<GetAllFormsForArbitrationAuditListVM>>();
+                return new BaseResponse<List<GetAllFormsForArbitrationAuditListVM>>(ResponseMessage, true, 200);
             }
         }
     }

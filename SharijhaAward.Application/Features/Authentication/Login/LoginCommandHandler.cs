@@ -124,13 +124,19 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                     .Select(x => x.RoleId)
                     .ToListAsync();
                 
-                List<string> UserRolesNames = await _UserRoleRepository
+                List<UserRole> AllUserRolesEntities = await _UserRoleRepository
                     .Where(x => x.UserId == response.user.Id)
-                    .Select(x => x.Role!.EnglishName)
                     .ToListAsync();
+
+                List<string> UserRolesNames = AllUserRolesEntities
+                    .Select(x => x.Role!.EnglishName)
+                    .ToList();
 
                 response.user.RoleId = UserRolesIds;
                 response.user.RoleName = UserRolesNames;
+
+                if (AllUserRolesEntities.Any(x => x.Role!.HaveFullAccess))
+                    response.user.HasFullAccess = true;
 
                 response.UserPermissions = await _RolePermissionRepository
                     .Where(x => UserRolesIds.Contains(x.RoleId))

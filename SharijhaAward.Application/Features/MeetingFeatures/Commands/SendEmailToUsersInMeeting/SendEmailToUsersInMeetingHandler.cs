@@ -1,9 +1,7 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeeting;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
@@ -75,12 +73,21 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
                 string ForthEnglishLine = $"Meeting Type: {MeetingEntity.Type}";
                 string FifthEnglishLine = $"Meeting Text: {MeetingEntity.EnglishText}";
 
+                string MeetingLink = $"Meeting Link: {MeetingEntity.MeetingLink}";
+
                 string HtmlBody = "wwwroot/Send_Email_Template.html";
 
                 string HTMLContent = File.ReadAllText(HtmlBody);
 
                 byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
                 string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
+
+                if (string.IsNullOrEmpty(MeetingEntity.MeetingLink))
+                {
+                    string[]? HtmlBodySpliter = HtmlBody.Split("<!--MeetingLink-->");
+
+                    HtmlBody = HtmlBodySpliter[0] + HtmlBodySpliter[2];
+                }
 
                 string FullEmailBody = HTMLContent
                     .Replace("$FirstArabicLine$", FirstArabicLine, StringComparison.Ordinal)
@@ -94,7 +101,8 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
                     .Replace("$ForthEnglishLine$", ForthEnglishLine, StringComparison.Ordinal)
                     .Replace("$FifthEnglishLine$", FifthEnglishLine, StringComparison.Ordinal)
                     .Replace("$SixthArabicLine$", "", StringComparison.Ordinal)
-                    .Replace("$SixthEnglisLine$", "", StringComparison.Ordinal);
+                    .Replace("$SixthEnglisLine$", "", StringComparison.Ordinal)
+                    .Replace("$MeetingLink$", "", StringComparison.Ordinal);
 
                 // Create An AlternateView to Specify The HTML Body And Embed The Image..
                 AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(FullEmailBody, null, "text/html");

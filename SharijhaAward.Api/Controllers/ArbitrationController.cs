@@ -202,7 +202,8 @@ namespace SharijhaAward.Api.Controllers
                 lang = HeaderValue!,
                 page = Page,
                 perPage = PerPage,
-                AsChairman = filter != null ? filter.AsChairman : null
+                AsChairman = filter != null ? filter.AsChairman : null,
+                AsFullAccess = filter != null ? filter.AsFullAccess : false
             });
 
             return Response.statusCode switch

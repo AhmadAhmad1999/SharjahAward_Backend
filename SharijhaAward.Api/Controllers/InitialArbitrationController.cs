@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.Upd
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetAllFromsForInitialArbitration;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetInitialArbitrationByArbitrationId;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 
 namespace SharijhaAward.Api.Controllers
@@ -137,7 +138,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllFromsForInitialArbitration(ArbitrationType? ArbitrationType, bool? asChairman, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllFromsForInitialArbitration(ArbitrationType? ArbitrationType,
+            bool? asChairman, bool AsFullAccess, List<Filter>? filters, int Page = 1, int PerPage = 10)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
@@ -156,7 +158,9 @@ namespace SharijhaAward.Api.Controllers
                 perPage = PerPage,
                 Token = Token,
                 ArbitrationType = ArbitrationType,
-                asChairman = asChairman
+                asChairman = asChairman,
+                AsFullAccess = AsFullAccess,
+                filters = filters
             });
 
             return Response.statusCode switch

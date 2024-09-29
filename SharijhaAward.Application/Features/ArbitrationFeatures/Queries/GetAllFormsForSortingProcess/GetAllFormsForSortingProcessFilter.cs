@@ -5,6 +5,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
     public class GetAllFormsForSortingProcessFilter
     {
         public bool? AsChairman { get; set; }
+        public bool AsFullAccess { get; set; } = false;
         public string? ArbitratorName { get; set; }
         public string? SubscriberName { get; set; }
         public FormStatus? isAccepted { get; set; }

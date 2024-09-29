@@ -11,6 +11,9 @@ using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailToUsersInMeeting;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeeting;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeeting;
+using Microsoft.AspNetCore.Hosting;
+using SharijhaAward.Application.Features.InterviewFeatures.Commands.ImplementInterview;
+using SharijhaAward.Application.Features.MeetingFeatures.Commands.ImplementMeeting;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -229,6 +232,32 @@ namespace SharijhaAward.Api.Controllers
                 : "en";
 
             BaseResponse<object>? Response = await _Mediator.Send(CancelMeetingCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("ImplementMeeting")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ImplementMeeting([FromForm] ImplementMeetingCommand ImplementMeetingCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            ImplementMeetingCommand.lang = HeaderValue;
+
+            BaseResponse<object> Response = await _Mediator.Send(ImplementMeetingCommand);
 
             return Response.statusCode switch
             {

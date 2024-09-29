@@ -25,5 +25,6 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         public string? ImageURL { get; set; }
         public bool AcceptOnResponsibilities { get; set; }
         public bool? isChairman { get; set; }
+        public bool HasFullAccess { get; set; }
     }
 }

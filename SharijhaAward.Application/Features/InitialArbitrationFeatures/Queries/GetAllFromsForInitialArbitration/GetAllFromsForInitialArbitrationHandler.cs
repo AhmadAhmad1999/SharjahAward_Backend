@@ -48,11 +48,13 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
 
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.Token!));
 
-            UserRole? CheckIfThisUserHasFullAccessOrArbitratorRole = await _UserRoleRepository
-                .FirstOrDefaultAsync(x => x.UserId == UserId && 
-                    x.Role!.EnglishName.ToLower() == "arbitrator");
+            List<UserRole> CheckIfThisUserHasFullAccessOrArbitratorRole = await _UserRoleRepository
+                .Where(x => x.UserId == UserId)
+                .ToListAsync();
 
-            if (CheckIfThisUserHasFullAccessOrArbitratorRole is null)
+            if ((CheckIfThisUserHasFullAccessOrArbitratorRole is not null
+                ? CheckIfThisUserHasFullAccessOrArbitratorRole.Any(x => x.Role!.HaveFullAccess)
+                : false) && Request.AsFullAccess)
             {
                 List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
                     .Where(x => (Request.ArbitrationType != null
@@ -107,7 +109,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                 GetAllFromsForInitialArbitrationFullResponse FullResponse = new GetAllFromsForInitialArbitrationFullResponse()
                 {
                     GetAllFromsForInitialArbitrationListVM = Response,
-                    NumberOfNotBeenArbitratedForms = FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.NotBeenArbitrated) != null 
+                    NumberOfNotBeenArbitratedForms = FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.NotBeenArbitrated) != null
                         ? FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.NotBeenArbitrated)!.Count : 0,
                     NumberOfBeingReviewedForms = FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.BeingReviewed) != null
                         ? FullTotalCount.FirstOrDefault(x => x.Type == ArbitrationType.BeingReviewed)!.Count : 0,
@@ -136,7 +138,10 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     return new BaseResponse<GetAllFromsForInitialArbitrationFullResponse>(ResponseMessage, true, 200, FullResponse, PaginationParameter);
                 }
             }
-            else
+            else if (CheckIfThisUserHasFullAccessOrArbitratorRole is not null
+                ? CheckIfThisUserHasFullAccessOrArbitratorRole.Any(x => x.Role!.EnglishName.ToLower() == "arbitrator" &&
+                    x.Role!.ArabicName == "محكم")
+                : false)
             {
                 Arbitrator? ArbitratorEntity = await _ArbitratorRepository
                     .FirstOrDefaultAsync(x => x.Id == UserId);
@@ -320,8 +325,10 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                     return new BaseResponse<GetAllFromsForInitialArbitrationFullResponse>(ResponseMessage, true, 200, FullResponse, PaginationParameter);
                 }
             }
-
-            throw new NotImplementedException();
+            else
+            {
+                return new BaseResponse<GetAllFromsForInitialArbitrationFullResponse>(ResponseMessage, true, 200);
+            }
         }
     }
 }
