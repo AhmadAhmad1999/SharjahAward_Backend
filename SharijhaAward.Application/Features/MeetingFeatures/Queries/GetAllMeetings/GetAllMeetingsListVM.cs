@@ -15,6 +15,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetAllMeeti
         public string EnglishDescription { get; set; } = null!;
         public DateTime? Date { get; set; }
         public MeetingTypes Type { get; set; }
+        public string? MeetingLink { get; set; }
         public bool isImplemented { get; set; }
     }
 }

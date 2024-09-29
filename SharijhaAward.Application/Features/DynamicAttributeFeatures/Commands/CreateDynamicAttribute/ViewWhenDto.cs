@@ -2,6 +2,6 @@
 {
     public class ViewWhenDto
     {
-        public int DynamicAttributeListValueId { get; set; }
+        public int AttributeListValueId { get; set; }
     }
 }

@@ -54,6 +54,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                         ? x.ProvidedForm!.CycleNumber == Request.CycleNumber
                         : true) &&
                     (DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId)))
+                .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
 
             int TotalCount = ArbitrationResultEntities.Count();

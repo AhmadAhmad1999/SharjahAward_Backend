@@ -16,9 +16,10 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Command
         public int AttributeDataTypeId { get; set; }
         public int AdvancedFormBuilderSectionId { get; set; }
         public int? MaxSizeInKB { get; set; }
-        public List<string>? Values { get; set; }
+        public List<DynamicAttrbiuteValuesDto>? Values { get; set; }
         public CreateGeneralValidation? GeneralValidationObject { get; set; }
         public List<CreateDependencyValidation>? DependencyValidations { get; set; }
+        public List<ViewWhenDto>? ViewWhenDtos { get; set; }
         public string? lang { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetArbitrationAuditByArbitrationId;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetInitialArbitrationByArbitrationId;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
@@ -9,6 +10,7 @@ using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.GetFinalArbitrationById
 {
@@ -24,6 +26,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
         private readonly IAsyncRepository<ChairmanNotesOnFinalArbitrationScore> _ChairmanNotesOnFinalArbitrationScoreRepository;
         private readonly IAsyncRepository<ChairmanNotesOnInitialArbitration> _ChairmanNotesOnInitialArbitrationRepository;
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IJwtProvider _JwtProvider;
 
         public GetFinalArbitrationByIdHandler(IAsyncRepository<Criterion> CriterionRepository,
@@ -35,6 +38,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             IAsyncRepository<ChairmanNotesOnFinalArbitrationScore> ChairmanNotesOnFinalArbitrationScoreRepository,
             IAsyncRepository<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrationRepository,
             IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IAsyncRepository<UserRole> UserRoleRepository,
             IJwtProvider JwtProvider)
         {
             _CriterionRepository = CriterionRepository;
@@ -46,6 +50,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             _ChairmanNotesOnFinalArbitrationScoreRepository = ChairmanNotesOnFinalArbitrationScoreRepository;
             _ChairmanNotesOnInitialArbitrationRepository = ChairmanNotesOnInitialArbitrationRepository;
             _ArbitratorRepository = ArbitratorRepository;
+            _UserRoleRepository = UserRoleRepository;
             _JwtProvider = JwtProvider;
         }
         public async Task<BaseResponse<GetFinalArbitrationByIdMainDto>> 
@@ -72,11 +77,13 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
 
             if (ArbitratorEntity is null)
             {
-                ResponseMessage = Request.lang == "en"
-                    ? "Arbitrator is not Found"
-                    : "المحكم غير موجود";
+                UserRole? CheckIfThisUserHasFullAccess = await _UserRoleRepository
+                    .FirstOrDefaultAsync(x => x.Id == UserId);
 
-                return new BaseResponse<GetFinalArbitrationByIdMainDto>(ResponseMessage, false, 404);
+                if (CheckIfThisUserHasFullAccess is null)
+                {
+                    return new BaseResponse<GetFinalArbitrationByIdMainDto>(ResponseMessage, false, 200);
+                }
             }
 
             int CategoryId = FinalArbitrationEntity.ProvidedForm!.categoryId;
@@ -332,7 +339,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
             {
                 MainCriterions = FullResponse,
                 FinalArbitrationId = FinalArbitrationEntity.Id,
-                isChairman = ArbitratorEntity.isChairman,
+                isChairman = ArbitratorEntity ? .isChairman ?? false,
                 isDoneArbitration = (FinalArbitrationEntity.Type == ArbitrationType.DoneArbitratod ? true : false),
                 isAcceptedFromChairman = FinalArbitrationEntity.isAcceptedFromChairman,
                 ReasonForRejecting = FinalArbitrationEntity.ReasonForRejecting,

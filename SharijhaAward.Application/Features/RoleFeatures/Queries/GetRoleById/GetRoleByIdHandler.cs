@@ -43,7 +43,8 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetRoleById
                 Id = RoleEntity.Id,
                 ArabicName = RoleEntity.ArabicName,
                 EnglishName = RoleEntity.EnglishName,
-                PermissionsIds = PermissionsIds
+                PermissionsIds = PermissionsIds,
+                HaveFullAccess = RoleEntity.HaveFullAccess
             };
 
             return new BaseResponse<GetRoleByIdDto>(ResponseMessage, true, 200, Response);

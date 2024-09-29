@@ -13,6 +13,7 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole
         [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
         public List<int> PermissionsIds { get; set; } = new List<int>();
+        public bool HaveFullAccess { get; set; }
         public string? lang { get; set; }
     }
 }

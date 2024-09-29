@@ -71,7 +71,8 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Queries.GetMeetingB
                 isImplemented = MeetingEntity.isImplemented,
                 isCanceled = MeetingEntity.isCanceled,
                 ArabicReasonOfCanceling = MeetingEntity.ArabicReasonOfCanceling,
-                EnglishReasonOfCanceling = MeetingEntity.EnglishReasonOfCanceling
+                EnglishReasonOfCanceling = MeetingEntity.EnglishReasonOfCanceling,
+                MeetingLink = MeetingEntity.MeetingLink
             };
 
             return new BaseResponse<GetMeetingByIdDto>(ResponseMessage, true, 200, Response);

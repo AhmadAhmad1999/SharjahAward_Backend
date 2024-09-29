@@ -22,6 +22,8 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsWithArbitr
 using SharijhaAward.Application.Features.ProvidedForm.Queries.ExportFormsWithArbitratorsToExcel;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWithAllItsData;
+using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.ExportFormsWithAllItsDataToExcel;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -426,6 +428,25 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(Response),
                 200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("ExportFormsWithAllItsDataToExcel")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ExportFormsWithAllItsDataToExcel([FromQuery] ExportFormsWithAllItsDataToExcelQuery ExportFormsWithAllItsDataToExcelQuery)
+        {
+            BaseResponse<byte[]> Response = await _mediator.Send(ExportFormsWithAllItsDataToExcelQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => File(Response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Forms.xlsx"),
                 _ => BadRequest(Response)
             };
         }

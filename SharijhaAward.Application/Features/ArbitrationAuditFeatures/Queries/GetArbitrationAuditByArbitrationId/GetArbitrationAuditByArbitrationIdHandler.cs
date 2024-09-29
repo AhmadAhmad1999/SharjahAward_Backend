@@ -8,6 +8,7 @@ using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetInitialArbitrationByArbitrationId;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetArbitrationAuditByArbitrationId
 {
@@ -22,6 +23,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
         private readonly IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository;
         private readonly IAsyncRepository<ChairmanNotesOnArbitrationAudit> _ChairmanNotesOnArbitrationAuditRepository;
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IJwtProvider _JwtProvider;
 
         public GetArbitrationAuditByArbitrationIdHandler(IAsyncRepository<Criterion> CriterionRepository,
@@ -32,6 +34,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
             IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository,
             IAsyncRepository<ChairmanNotesOnArbitrationAudit> ChairmanNotesOnArbitrationAuditRepository,
             IAsyncRepository<Arbitrator> ArbitratorRepository,
+            IAsyncRepository<UserRole> UserRoleRepository,
             IJwtProvider JwtProvider)
         {
             _CriterionRepository = CriterionRepository;
@@ -42,6 +45,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
             _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
             _ChairmanNotesOnArbitrationAuditRepository = ChairmanNotesOnArbitrationAuditRepository;
             _ArbitratorRepository = ArbitratorRepository;
+            _UserRoleRepository = UserRoleRepository;
             _JwtProvider = JwtProvider;
         }
         public async Task<BaseResponse<GetArbitrationAuditByArbitrationIdResponse>> 
@@ -53,6 +57,17 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
 
             Arbitrator? ArbitraorEntity = await _ArbitratorRepository
                 .FirstOrDefaultAsync(x => x.Id == UserId);
+
+            if (ArbitraorEntity is null)
+            {
+                UserRole? CheckIfThisUserHasFullAccess = await _UserRoleRepository
+                    .FirstOrDefaultAsync(x => x.Id == UserId);
+
+                if (CheckIfThisUserHasFullAccess is null)
+                {
+                    return new BaseResponse<GetArbitrationAuditByArbitrationIdResponse>(ResponseMessage, false, 200);
+                }
+            }
 
             Arbitration? ArbitrationEntity = await _ArbitrationRepository
                 .FirstOrDefaultAsync(x => x.ProvidedFormId == Request.FormId);

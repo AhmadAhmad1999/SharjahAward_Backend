@@ -235,6 +235,5 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-
     }
 }

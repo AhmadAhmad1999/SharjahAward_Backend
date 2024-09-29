@@ -30,7 +30,7 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeet
         {
             string ResponseMessage = string.Empty;
 
-            if ((string.IsNullOrEmpty(Request.MeetingLink) && Request.Type == Domain.Constants.MeetingTypes.Virtual))
+            if (string.IsNullOrEmpty(Request.MeetingLink) && Request.Type == Domain.Constants.MeetingTypes.Virtual)
             {
                 ResponseMessage = Request.lang == "en"
                     ? $"When the meeting type is virtual, then you have to enter a value for the meeting link"
