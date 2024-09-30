@@ -25,7 +25,7 @@ namespace SharijhaAward.Persistence.Seeders
                     new Domain.Entities.PageStructureModel.PageStructure()
                     {
                         hasHelography = true,
-                        IconUrl = "",
+                        IconUrl = "wwwroot/UploadedFiles/Icons/AwardSponsor.svg",
                         EnglishTitle = "Award Sponsor",
                         ArabicTitle = "راعي الجائزة",
                         EnglishSubTitle = "Sharjah Award for Educational Excellence",
@@ -41,7 +41,7 @@ namespace SharijhaAward.Persistence.Seeders
                     },new Domain.Entities.PageStructureModel.PageStructure()
                     {
                         hasHelography = false,
-                        IconUrl = "",
+                        IconUrl = "wwwroot/UploadedFiles/Icons/AbouttheAward.svg",
                         EnglishTitle = "About Award",
                         ArabicTitle = "عن الجائزة",
                         EnglishSubTitle = "Sharjah Award for Educational Excellence",
@@ -58,7 +58,7 @@ namespace SharijhaAward.Persistence.Seeders
                     },new Domain.Entities.PageStructureModel.PageStructure()
                     {
                         hasHelography = false,
-                        IconUrl = "",
+                        IconUrl = "wwwroot/UploadedFiles/Icons/PartnersStrategists.svg",
                         EnglishTitle = "Strategic Partners",
                         ArabicTitle = "الشركاء الاستراتيجيين",
                         EnglishSubTitle = "Sharjah Award for Educational Excellence",
@@ -75,7 +75,7 @@ namespace SharijhaAward.Persistence.Seeders
                     },new Domain.Entities.PageStructureModel.PageStructure()
                     {
                         hasHelography = false,
-                        IconUrl = "",
+                        IconUrl = "wwwroot/UploadedFiles/Icons/MediaCenter.svg",
                         EnglishTitle = "Media Center",
                         ArabicTitle = "المركز الإعلامي",
                         EnglishSubTitle = "Sharjah Award for Educational Excellence",
@@ -92,7 +92,7 @@ namespace SharijhaAward.Persistence.Seeders
                     },new Domain.Entities.PageStructureModel.PageStructure()
                     {
                         hasHelography = false,
-                        IconUrl = "",
+                        IconUrl = "wwwroot/UploadedFiles/Icons/ContactDetails.svg",
                         EnglishTitle = "Contact Us",
                         ArabicTitle = "بيانات التواصل",
                         EnglishSubTitle = "Sharjah Award for Educational Excellence",
@@ -109,24 +109,129 @@ namespace SharijhaAward.Persistence.Seeders
                     },new Domain.Entities.PageStructureModel.PageStructure()
                     {
                         hasHelography = false,
-                        IconUrl = "",
+                        IconUrl = "wwwroot/UploadedFiles/Icons/PreviousSessions.svg",
                         EnglishTitle = "Previous Cycle",
                         ArabicTitle = "الدورات السابقة",
                         EnglishSubTitle = "Sharjah Award for Educational Excellence",
                         ArabicSubTitle = "جائزة الشارقة للتفوق و التميز التربوي",
                         IsHide = false,
                         Slug = "previous_cycle",
-                        PageType = PageType.MainPageWithSubPage,
+                        PageType = PageType.MainPageWithoutSubPage,
                         PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InMenu,
                         Deletable = false,
                         orderId = 6,
                         pageStructure = null!,
                         ParentId = null
 
+                    }, new Domain.Entities.PageStructureModel.PageStructure()
+                    {
+                        hasHelography = false,
+                        IconUrl = "",
+                        EnglishTitle = "Winners on Previous Cycle",
+                        ArabicTitle = "الدورات السابقة",
+                        EnglishSubTitle = "Sharjah Award for Educational Excellence",
+                        ArabicSubTitle = "جائزة الشارقة للتفوق و التميز التربوي",
+                        IsHide = false,
+                        Slug = "winners",
+                        PageType = PageType.SubPage,
+                        PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InMenu,
+                        Deletable = false,
+                        orderId = 1,
+                        //pageStructure = null!,
+                        ParentId = 6
+
+                    }, new Domain.Entities.PageStructureModel.PageStructure()
+                    {
+                        hasHelography = false,
+                        IconUrl = "",
+                        EnglishTitle = "Award Statistics",
+                        ArabicTitle = "إحصائيات الجائزة",
+                        EnglishSubTitle = "Sharjah Award for Educational Excellence",
+                        ArabicSubTitle = "جائزة الشارقة للتفوق و التميز التربوي",
+                        IsHide = false,
+                        Slug = "award_statistics",
+                        PageType = PageType.SubPage,
+                        PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InMenu,
+                        Deletable = false,
+                        orderId = 1,
+                        //pageStructure = null!,
+                        ParentId = 6
+
+                    }, new Domain.Entities.PageStructureModel.PageStructure()
+                    {
+                        hasHelography = false,
+                        IconUrl = "",
+                        EnglishTitle = "Award News",
+                        ArabicTitle = "أخبار الجائزة",
+                        EnglishSubTitle = "Sharjah Award for Educational Excellence",
+                        ArabicSubTitle = "جائزة الشارقة للتفوق و التميز التربوي",
+                        IsHide = false,
+                        Slug = "award_news",
+                        PageType = PageType.SubPage,
+                        PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InMenu,
+                        Deletable = false,
+                        orderId = 1,
+                        //pageStructure = null!,
+                        ParentId = 4
+
+                    }, new Domain.Entities.PageStructureModel.PageStructure()
+                    {
+                        hasHelography = false,
+                        IconUrl = "",
+                        EnglishTitle = "Social Media",
+                        ArabicTitle = "التواصل الإجتماعي",
+                        EnglishSubTitle = "Sharjah Award for Educational Excellence",
+                        ArabicSubTitle = "جائزة الشارقة للتفوق و التميز التربوي",
+                        IsHide = false,
+                        Slug = "social_media",
+                        PageType = PageType.SubPage,
+                        PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InMenu,
+                        Deletable = false,
+                        orderId = 2,
+                        //pageStructure = null!,
+                        ParentId = 4
+
                     },new Domain.Entities.PageStructureModel.PageStructure()
                     {
-                        hasHelography = true,
+                        hasHelography = false,
                         IconUrl = "",
+                        EnglishTitle = "Gallery",
+                        ArabicTitle = "معرض الصور و الفيديوهات",
+                        EnglishSubTitle = "Sharjah Award for Educational Excellence",
+                        ArabicSubTitle = "جائزة الشارقة للتفوق و التميز التربوي",
+                        IsHide = false,
+                        Slug = "gallery",
+                        PageType = PageType.SubPage,
+                        PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InMenu,
+                        Deletable = false,
+                        orderId = 3,
+                        //pageStructure = null!,
+                        ParentId = 4
+
+                    },new Domain.Entities.PageStructureModel.PageStructure()
+                    {
+                        hasHelography = false,
+                        IconUrl = "",
+                        EnglishTitle = "Award Publications",
+                        ArabicTitle = "إصدارات الجائزة",
+                        EnglishSubTitle = "Sharjah Award for Educational Excellence",
+                        ArabicSubTitle = "جائزة الشارقة للتفوق و التميز التربوي",
+                        IsHide = false,
+                        Slug = "award_publications",
+                        PageType = PageType.SubPage,
+                        PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InMenu,
+                        Deletable = false,
+                        orderId = 3,
+                        //pageStructure = null!,
+                        ParentId = 4
+
+                    },
+
+                    //------------------- Page In Cell -------------------
+                    new Domain.Entities.PageStructureModel.PageStructure()
+                    {
+                        hasHelography = true,
+                        IconUrl = "wwwroot/UploadedFiles/Icons/AwardCategories.svg",
                         EnglishTitle = "Award Categories",
                         ArabicTitle = "فئات الجائزة",
                         //EnglishSubTitle = "Sharjah Award for Educational Excellence",
@@ -143,7 +248,7 @@ namespace SharijhaAward.Persistence.Seeders
                     },new Domain.Entities.PageStructureModel.PageStructure()
                     {
                         hasHelography = true,
-                        IconUrl = "",
+                        IconUrl = "wwwroot/UploadedFiles/Icons/ReferenceSources.svg",
                         EnglishTitle = "Reference Sources",
                         ArabicTitle = "المصادر المرجعية",
                         //EnglishSubTitle = "Sharjah Award for Educational Excellence",
@@ -160,7 +265,7 @@ namespace SharijhaAward.Persistence.Seeders
                     },new Domain.Entities.PageStructureModel.PageStructure()
                     {
                         hasHelography = false,
-                        IconUrl = "",
+                        IconUrl = "wwwroot/UploadedFiles/Icons/FrequentlyAskedQuestions.svg",
                         EnglishTitle = "FAQs",
                         ArabicTitle = "الأسئلة الشائعة",
                         //EnglishSubTitle = "Sharjah Award for Educational Excellence",
@@ -171,6 +276,40 @@ namespace SharijhaAward.Persistence.Seeders
                         PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InCells,
                         Deletable = false,
                         orderId = 3,
+                        pageStructure = null!,
+                        ParentId = null
+
+                    },new Domain.Entities.PageStructureModel.PageStructure()
+                    {
+                        hasHelography = false,
+                        IconUrl = "wwwroot/UploadedFiles/Icons/Nominationforarbitration.svg",
+                        EnglishTitle = "Nomination for Arbitration",
+                        ArabicTitle = "الترشح للتحكيم",
+                        //EnglishSubTitle = "Sharjah Award for Educational Excellence",
+                        //ArabicSubTitle = "جائزة الشارقة للتفوق و التميز التربوي",
+                        IsHide = false,
+                        Slug = "nomination_for_arbitration",
+                        PageType = PageType.MainPageWithoutSubPage,
+                        PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InCells,
+                        Deletable = false,
+                        orderId = 4,
+                        pageStructure = null!,
+                        ParentId = null
+
+                    },new Domain.Entities.PageStructureModel.PageStructure()
+                    {
+                        hasHelography = false,
+                        IconUrl = "wwwroot/UploadedFiles/Icons/portalParticipants.svg",
+                        EnglishTitle = "Subscribers Portal",
+                        ArabicTitle = "بوابة المشتركين",
+                        //EnglishSubTitle = "Sharjah Award for Educational Excellence",
+                        //ArabicSubTitle = "جائزة الشارقة للتفوق و التميز التربوي",
+                        IsHide = false,
+                        Slug = "https://subscriber.stg.award-shj.ae/",
+                        PageType = PageType.MainPageWithoutSubPage,
+                        PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InCells,
+                        Deletable = false,
+                        orderId = 5,
                         pageStructure = null!,
                         ParentId = null
 

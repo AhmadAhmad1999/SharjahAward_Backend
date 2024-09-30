@@ -19,5 +19,8 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
         public PageType PageType { get; set; }
         public int orderId { get; set; }
         public bool IsHide { get; set; }
+        public string? IconUrl { get; set; }
+        public string Slug { get; set; } = string.Empty;
+        public bool Deletable { get; set; }
     }
 }

@@ -451,6 +451,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> MigrateAndSeedDatabase()
         {
             var db = _ServiceProvider.GetService<SharijhaAwardDbContext>();
+
             // Drop the existing database
             await db!.Database.EnsureDeletedAsync();
 

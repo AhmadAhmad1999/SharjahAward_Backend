@@ -37,10 +37,18 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
                     return new BaseResponse<int>("", false, 404);
                 }
             }
-            
+            var cellPages = _pageStructureRepository
+                .Where(p => p.PagePostion == Domain.Constants.CustomPageConstants.PagePostion.InCells)
+                .ToList();
+
             if(request.PageType != Domain.Constants.PageType.MainPageWithoutSubPage && request.PagePostion == Domain.Constants.CustomPageConstants.PagePostion.InCells)
             {
                 return new BaseResponse<int>("لا يمكن إضافة هذه الصفحة الى الخلايا", false, 400);
+            }
+
+            if (cellPages.Count() >= 5)
+            {
+                return new BaseResponse<int>("لا يمكن إضافة أكثر من خمسة صفحات إلى الخلايا", false, 400);
             }
 
             var page = _mapper.Map<PageStructure>(request);

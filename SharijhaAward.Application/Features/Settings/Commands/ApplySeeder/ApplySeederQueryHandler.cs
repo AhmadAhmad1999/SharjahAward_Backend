@@ -23,7 +23,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.ApplySeeder
         }
         public async Task<BaseResponse<object>> Handle(ApplySeederQuery request, CancellationToken cancellationToken)
         {
-            _seedDatabase.Initialize(_serviceProvider);
+            await _seedDatabase.Initialize(_serviceProvider);
 
             return new BaseResponse<object>("", true, 200);
         }
