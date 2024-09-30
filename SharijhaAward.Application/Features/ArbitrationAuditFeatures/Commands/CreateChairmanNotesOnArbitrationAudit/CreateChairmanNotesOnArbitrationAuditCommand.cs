@@ -8,5 +8,6 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
         public int ArbitrationAuditId { get; set; }
         public string Note { get; set; } = null!;
         public string? lang { get; set; }
+        public string? Token { get; set; }
     }
 }

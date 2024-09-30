@@ -156,7 +156,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
                         ArbitrationEntity.DateOfArbitration = DateTime.UtcNow;
                         ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
 
-                        ArbitrationEntity.isAcceptedFromChairman = FormStatus.NotArbitratedYet;
+                        // ArbitrationEntity.isAcceptedFromChairman = FormStatus.NotArbitratedYet;
                     }
 
                     else

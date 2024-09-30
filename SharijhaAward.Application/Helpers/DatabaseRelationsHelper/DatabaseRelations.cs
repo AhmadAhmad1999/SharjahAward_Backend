@@ -282,12 +282,6 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             AdvancedFormBuilderGeneralValidations,
 
-            [Description("AdvancedFormBuilderSections/VirtualTableForSectionId")] // Done
-            VirtualTableForSection,
-
-            [Description("AdvancedFormBuilderSections/VirtualTableForSectionId")] // Done
-            VirtualTableForSections,
-
             [Description("")] // Done
             DynamicAttributeTableValue,
 
@@ -453,14 +447,16 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "TrainingWorkshopSubscribers/UserId ResponsibilitiesUsers/UserId RelatedAccountRequests/SenderId " + // Done
                 "RelatedAccountRequests/ReceiverId RelatedAccounts/User1Id RelatedAccounts/User2Id " + // Done
                 "ProvidedForms/userId FinalArbitrations/DoneArbitrationUserId EmailMessages/UserId " + // Done
-                "Arbitrations/DoneArbitrationUserId Achievements/UserId")] // Done
+                "Arbitrations/DoneArbitrationUserId Achievements/UserId ChairmanNotesOnInitialArbitrations/ChairmanId " +
+                "ChairmanNotesOnArbitrationAudits/ChairmanId ChairmanNotesOnFinalArbitrationScores/ChairmanId")] // Done
             User,
 
             [Description("Arbitrators/Id Coordinators/Id UserTokens/UserId UsersRoles/UserId UserNotifications/UserId " + // Done
                 "TrainingWorkshopSubscribers/UserId ResponsibilitiesUsers/UserId RelatedAccountRequests/SenderId " + // Done
                 "RelatedAccountRequests/ReceiverId RelatedAccounts/User1Id RelatedAccounts/User2Id " + // Done
                 "ProvidedForms/userId FinalArbitrations/DoneArbitrationUserId EmailMessages/UserId " + // Done
-                "Arbitrations/DoneArbitrationUserId Achievements/UserId")] // Done
+                "Arbitrations/DoneArbitrationUserId Achievements/UserId ChairmanNotesOnInitialArbitrations/ChairmanId " +
+                "ChairmanNotesOnArbitrationAudits/ChairmanId ChairmanNotesOnFinalArbitrationScores/ChairmanId")] // Done
             Users,
 
             [Description("UsersRoles/RoleId RolePermissions/RoleId RoleMessageTypes/RoleId Responsibilities/RoleId")] // Done
@@ -775,14 +771,91 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             AdvancedFormBuilderViewWhenRelations,
 
-            [Description("")] // Done
+            [Description("AdvancedFormBuilderDependencies/MainAdvancedFormBuilderId AdvancedFormBuilderDependencies/AdvancedFormBuilderId " +
+                "AdvancedFormBuilderGeneralValidations/AdvancedFormBuilderId AdvancedFormBuilderListValues/AdvancedFormBuilderId " +
+                "AdvancedFormBuilderTableValues/AdvancedFormBuilderId AdvancedFormBuilderValues/AdvancedFormBuilderId " +
+                "AdvancedFormBuilderViewWhenRelations/AdvancedFormBuilderId")] // Done
             AdvancedFormBuilder,
 
-            [Description("")] // Done
+            [Description("AdvancedFormBuilderDependencies/MainAdvancedFormBuilderId AdvancedFormBuilderDependencies/AdvancedFormBuilderId " +
+                "AdvancedFormBuilderGeneralValidations/AdvancedFormBuilderId AdvancedFormBuilderListValues/AdvancedFormBuilderId " +
+                "AdvancedFormBuilderTableValues/AdvancedFormBuilderId AdvancedFormBuilderValues/AdvancedFormBuilderId " +
+                "AdvancedFormBuilderViewWhenRelations/AdvancedFormBuilderId")] // Done
             AdvancedFormBuilders,
 
+            [Description("")] // Done
             AdvancedFormBuilderDependency,
-            AdvancedFormBuilderDependencies
+
+            [Description("")] // Done
+            AdvancedFormBuilderDependencies,
+
+            [Description("AdvancedFormBuilders/AttributeDataTypeId")] // Done
+            AttributeDataType,
+
+            [Description("AdvancedFormBuilders/AttributeDataTypeId")] // Done
+            AttributeDataTypes,
+
+            [Description("AdvancedFormBuilders/AdvancedFormBuilderSectionId AdvancedFormBuilderViewWhenRelations/AdvancedFormBuilderSectionId")] // Done
+            AdvancedFormBuilderSection,
+
+            [Description("AdvancedFormBuilders/AdvancedFormBuilderSectionId AdvancedFormBuilderViewWhenRelations/AdvancedFormBuilderSectionId")] // Done
+            AdvancedFormBuilderSections,
+
+            [Description("AdvancedFormBuilderDependencies/AdvancedFormBuilderDependencyGroupId AdvancedFormBuilderDependencyValidations/AdvancedFormBuilderDependencyGroupId")] // Done
+            AdvancedFormBuilderDependencyGroup,
+
+            [Description("AdvancedFormBuilderDependencies/AdvancedFormBuilderDependencyGroupId AdvancedFormBuilderDependencyValidations/AdvancedFormBuilderDependencyGroupId")] // Done
+            AdvancedFormBuilderDependencyGroups,
+
+            [Description("AdvancedFormBuilderDependencies/StaticAttributeId")] // Done
+            StaticAttribute,
+
+            [Description("AdvancedFormBuilderDependencies/StaticAttributeId")] // Done
+            StaticAttributes,
+
+            [Description("AdvancedFormBuilderDependencies/AttributeOperationId AdvancedFormBuilderDependencyValidations/AttributeOperationId " +
+                "AdvancedFormBuilderGeneralValidations/AttributeOperationId")] // Done
+            AttributeOperation,
+
+            [Description("AdvancedFormBuilderDependencies/AttributeOperationId AdvancedFormBuilderDependencyValidations/AttributeOperationId " +
+                "AdvancedFormBuilderGeneralValidations/AttributeOperationId")] // Done
+            AttributeOperations,
+
+            [Description("")] // Done
+            AdvancedFormBuilderDependencyValidation,
+
+            [Description("")] // Done
+            AdvancedFormBuilderDependencyValidations,
+
+            [Description("AdvancedFormBuilderViewWhenRelations/AdvancedFormBuilderListValueId")] // Done
+            AdvancedFormBuilderListValue,
+
+            [Description("AdvancedFormBuilderViewWhenRelations/AdvancedFormBuilderListValueId")] // Done
+            AdvancedFormBuilderListValues,
+
+            [Description("AdvancedFormBuilderPatternValues/AdvancedFormBuilderPatternId")] // Done
+            AdvancedFormBuilderPattern,
+
+            [Description("AdvancedFormBuilderPatternValues/AdvancedFormBuilderPatternId")] // Done
+            AdvancedFormBuilderPatterns,
+
+            [Description("")] // Done
+            AdvancedFormBuilderPatternValue,
+
+            [Description("")] // Done
+            AdvancedFormBuilderPatternValues,
+
+            [Description("")] // Done
+            AdvancedFormBuilderTableValue,
+
+            [Description("")] // Done
+            AdvancedFormBuilderTableValues,
+
+            [Description("")] // Done
+            AdvancedFormBuilderValue,
+
+            [Description("")] // Done
+            AdvancedFormBuilderValues
         }
         public static string GetEnumDescription(Enum value)
         {

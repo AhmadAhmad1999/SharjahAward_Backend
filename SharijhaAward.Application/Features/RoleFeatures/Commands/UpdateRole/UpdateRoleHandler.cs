@@ -97,10 +97,6 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole
             {
                 try
                 {
-                    _Mapper.Map(Request, RoleEntityToUpdate, typeof(UpdateRoleCommand), typeof(Role));
-
-                    await _RoleRepository.UpdateAsync(RoleEntityToUpdate);
-
                     IQueryable<RolePermission> DeleteRolePermissionEntites = _RolePermissionRepository
                         .Where(x => x.RoleId == Request.Id &&
                             DeletePermissionIds.Contains(x.PermissionId));
@@ -137,6 +133,10 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.UpdateRole
 
                         await _UserTokenRepository.DeleteListAsync(UserTokenEntitiesToDelete);
                     }
+
+                    _Mapper.Map(Request, RoleEntityToUpdate, typeof(UpdateRoleCommand), typeof(Role));
+
+                    await _RoleRepository.UpdateAsync(RoleEntityToUpdate);
 
                     Transaction.Complete();
 

@@ -37,11 +37,18 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> CreateChairmanNotesOnInitialArbitration([FromBody] CreateChairmanNotesOnInitialArbitrationCommand CreateChairmanNotesOnInitialArbitrationCommand)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             CreateChairmanNotesOnInitialArbitrationCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            CreateChairmanNotesOnInitialArbitrationCommand.Token = Token;
 
             BaseResponse<object>? Response = await _Mediator.Send(CreateChairmanNotesOnInitialArbitrationCommand);
 

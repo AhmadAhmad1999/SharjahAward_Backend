@@ -187,7 +187,12 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                 {
                                     Id = x.Id,
                                     Note = x.Note,
-                                    CreatedAt = x.CreatedAt
+                                    CreatedAt = x.CreatedAt,
+                                    ChairmanId = x.ChairmanId,
+                                    ChairmanName = Request.lang == "en"
+                                        ? x.Chairman!.EnglishName
+                                        : x.Chairman!.ArabicName,
+                                    ChairmanEmail = x.Chairman!.Email
                                 })
                                 .OrderBy(x => x.Id)
                                 .ToList();
@@ -270,7 +275,12 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                     {
                                         Id = x.Id,
                                         Note = x.Note,
-                                        CreatedAt = x.CreatedAt
+                                        CreatedAt = x.CreatedAt,
+                                        ChairmanId = x.ChairmanId,
+                                        ChairmanName = Request.lang == "en"
+                                            ? x.Chairman!.EnglishName
+                                            : x.Chairman!.ArabicName,
+                                        ChairmanEmail = x.Chairman!.Email
                                     })
                                     .OrderBy(x => x.Id)
                                     .ToList();

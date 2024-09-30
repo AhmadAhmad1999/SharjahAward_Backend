@@ -189,9 +189,13 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                 {
                                     Id = x.Id,
                                     Note = x.Note,
-                                    CreatedAt = x.CreatedAt
-                                })
-                                .OrderBy(x => x.Id)
+                                    CreatedAt = x.CreatedAt,
+                                    ChairmanId = x.ChairmanId,
+                                    ChairmanName = Request.lang == "en"
+                                        ? x.Chairman!.EnglishName
+                                        : x.Chairman!.ArabicName,
+                                    ChairmanEmail = x.Chairman!.Email
+                                }).OrderBy(x => x.Id)
                                 .ToList();
 
                             SubCriterionDto.SubCriterionAttachmanetsDto = CriterionAttachmentEntities
@@ -272,7 +276,11 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                     {
                                         Id = x.Id,
                                         Note = x.Note,
-                                        CreatedAt = x.CreatedAt
+                                        CreatedAt = x.CreatedAt,
+                                        ChairmanName = Request.lang == "en"
+                                            ? x.Chairman!.EnglishName
+                                            : x.Chairman!.ArabicName,
+                                        ChairmanEmail = x.Chairman!.Email
                                     })
                                     .OrderBy(x => x.Id)
                                     .ToList();

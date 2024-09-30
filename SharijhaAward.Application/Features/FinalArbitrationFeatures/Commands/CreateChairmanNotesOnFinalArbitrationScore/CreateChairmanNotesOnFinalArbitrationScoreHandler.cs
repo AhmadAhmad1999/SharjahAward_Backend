@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
@@ -8,9 +9,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
     public class CreateChairmanNotesOnFinalArbitrationScoreHandler
         : IRequestHandler<CreateChairmanNotesOnFinalArbitrationScoreCommand, BaseResponse<object>>
     {
+        private readonly IJwtProvider _JwtProvider;
         private readonly IAsyncRepository<ChairmanNotesOnFinalArbitrationScore> _ChairmanNotesOnFinalArbitrationScoreRepository;
-        public CreateChairmanNotesOnFinalArbitrationScoreHandler(IAsyncRepository<ChairmanNotesOnFinalArbitrationScore> ChairmanNotesOnFinalArbitrationScoreRepository)
+        public CreateChairmanNotesOnFinalArbitrationScoreHandler(IJwtProvider JwtProvider,
+            IAsyncRepository<ChairmanNotesOnFinalArbitrationScore> ChairmanNotesOnFinalArbitrationScoreRepository)
         {
+            _JwtProvider = JwtProvider;
             _ChairmanNotesOnFinalArbitrationScoreRepository = ChairmanNotesOnFinalArbitrationScoreRepository;
         }
 
@@ -18,10 +22,13 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
         {
             string ResponseMessage = string.Empty;
 
+            int ChairmanId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
             ChairmanNotesOnFinalArbitrationScore NewChairmanNotesOnFinalArbitrationScoreEntity = new ChairmanNotesOnFinalArbitrationScore()
             {
                 FinalArbitrationScoreId = Request.FinalArbitrationScoreId,
-                Note = Request.Note
+                Note = Request.Note,
+                ChairmanId = ChairmanId
             };
 
             await _ChairmanNotesOnFinalArbitrationScoreRepository.AddAsync(NewChairmanNotesOnFinalArbitrationScoreEntity);

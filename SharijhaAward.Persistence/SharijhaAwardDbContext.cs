@@ -362,6 +362,10 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.FinalArbitrationScore)
                 .AutoInclude();
 
+            modelBuilder.Entity<ChairmanNotesOnFinalArbitrationScore>()
+                .Navigation(p => p.Chairman)
+                .AutoInclude();
+
             modelBuilder.Entity<ChairmanNotesOnFinalArbitrationScore>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DynamicAttributeTableValue>()
@@ -396,6 +400,10 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<AdvancedFormBuilderValue>()
                 .Navigation(p => p.AdvancedFormBuilder)
+                .AutoInclude();
+
+            modelBuilder.Entity<AdvancedFormBuilderValue>()
+                .Navigation(p => p.VirtualTable)
                 .AutoInclude();
 
             modelBuilder.Entity<AdvancedFormBuilderValue>().HasQueryFilter(p => !p.isDeleted);
@@ -475,6 +483,10 @@ namespace SharijhaAward.Persistence
                 .AutoInclude();
 
             modelBuilder.Entity<AdvancedFormBuilder>().HasQueryFilter(p => !p.isDeleted);
+            
+            modelBuilder.Entity<AdvancedFormBuilderSection>()
+                .Navigation(p => p.VirtualTableForSection)
+                .AutoInclude();
 
             modelBuilder.Entity<AdvancedFormBuilderSection>().HasQueryFilter(p => !p.isDeleted);
 
@@ -518,10 +530,18 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.ArbitrationAudit)
                 .AutoInclude();
 
+            modelBuilder.Entity<ChairmanNotesOnArbitrationAudit>()
+                .Navigation(p => p.Chairman)
+                .AutoInclude();
+
             modelBuilder.Entity<ChairmanNotesOnArbitrationAudit>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ChairmanNotesOnInitialArbitration>()
                 .Navigation(p => p.InitialArbitration)
+                .AutoInclude();
+
+            modelBuilder.Entity<ChairmanNotesOnInitialArbitration>()
+                .Navigation(p => p.Chairman)
                 .AutoInclude();
 
             modelBuilder.Entity<ChairmanNotesOnInitialArbitration>().HasQueryFilter(p => !p.isDeleted);
@@ -1046,53 +1066,53 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<Reward>().HasQueryFilter(p => !p.isDeleted);
 
-            //modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>()
-            //    .Navigation(p => p.AdvancedFormBuilder)
-            //    .AutoInclude();
+            modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>()
+                .Navigation(p => p.AdvancedFormBuilder)
+                .AutoInclude();
 
-            //modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>()
-            //    .Navigation(p => p.AdvancedFormBuilderListValue)
-            //    .AutoInclude();
+            modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>()
+                .Navigation(p => p.AdvancedFormBuilderListValue)
+                .AutoInclude();
 
-            //modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>()
-            //    .Navigation(p => p.AdvancedFormBuilderSection)
-            //    .AutoInclude();
+            modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>()
+                .Navigation(p => p.AdvancedFormBuilderSection)
+                .AutoInclude();
 
-            //modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderViewWhenRelation>().HasQueryFilter(p => !p.isDeleted);
 
-            //modelBuilder.Entity<AdvancedFormBuilderDependency>()
-            //    .Navigation(p => p.MainAdvancedFormBuilder)
-            //    .AutoInclude();
+            modelBuilder.Entity<AdvancedFormBuilderDependency>()
+                .Navigation(p => p.MainAdvancedFormBuilder)
+                .AutoInclude();
 
-            //modelBuilder.Entity<AdvancedFormBuilderDependency>()
-            //    .Navigation(p => p.AdvancedFormBuilderDependencyGroup)
-            //    .AutoInclude();
+            modelBuilder.Entity<AdvancedFormBuilderDependency>()
+                .Navigation(p => p.AdvancedFormBuilderDependencyGroup)
+                .AutoInclude();
 
-            //modelBuilder.Entity<AdvancedFormBuilderDependency>()
-            //    .Navigation(p => p.AdvancedFormBuilder)
-            //    .AutoInclude();
+            modelBuilder.Entity<AdvancedFormBuilderDependency>()
+                .Navigation(p => p.AdvancedFormBuilder)
+                .AutoInclude();
 
-            //modelBuilder.Entity<AdvancedFormBuilderDependency>()
-            //    .Navigation(p => p.StaticAttribute)
-            //    .AutoInclude();
+            modelBuilder.Entity<AdvancedFormBuilderDependency>()
+                .Navigation(p => p.StaticAttribute)
+                .AutoInclude();
 
-            //modelBuilder.Entity<AdvancedFormBuilderDependency>()
-            //    .Navigation(p => p.AttributeOperation)
-            //    .AutoInclude();
+            modelBuilder.Entity<AdvancedFormBuilderDependency>()
+                .Navigation(p => p.AttributeOperation)
+                .AutoInclude();
 
-            //modelBuilder.Entity<AdvancedFormBuilderDependency>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderDependency>().HasQueryFilter(p => !p.isDeleted);
 
-            //modelBuilder.Entity<AdvancedFormBuilderDependencyValidation>()
-            //    .Navigation(p => p.AttributeOperation)
-            //    .AutoInclude();
+            modelBuilder.Entity<AdvancedFormBuilderDependencyValidation>()
+                .Navigation(p => p.AttributeOperation)
+                .AutoInclude();
 
-            //modelBuilder.Entity<AdvancedFormBuilderDependencyValidation>()
-            //    .Navigation(p => p.AdvancedFormBuilderDependencyGroup)
-            //    .AutoInclude();
+            modelBuilder.Entity<AdvancedFormBuilderDependencyValidation>()
+                .Navigation(p => p.AdvancedFormBuilderDependencyGroup)
+                .AutoInclude();
 
-            //modelBuilder.Entity<AdvancedFormBuilderDependencyValidation>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderDependencyValidation>().HasQueryFilter(p => !p.isDeleted);
 
-            //modelBuilder.Entity<AdvancedFormBuilderDependencyGroup>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<AdvancedFormBuilderDependencyGroup>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AwardStatistic>()
                 .Navigation(p => p.Cycle)

@@ -367,14 +367,14 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     GroupOfArbitrationEntities = await _ArbitrationRepository
                         .Where(x => ComitteeArbitratorIds.Contains(x.ArbitratorId) &&
                             x.isAcceptedFromChairman == FormStatus.Accepted &&
-                            x.ArbitrationAuditType == ArbitrationType.DoneArbitratod &&
+                            // x.ArbitrationAuditType == ArbitrationType.DoneArbitratod &&
                             x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
 
                     GroupOfArbitrationEntitiesForAverage = await _ArbitrationRepository
                         .Where(x => x.isAcceptedFromChairman == FormStatus.Accepted &&
-                            x.ArbitrationAuditType == ArbitrationType.DoneArbitratod &&
+                            // x.ArbitrationAuditType == ArbitrationType.DoneArbitratod &&
                             x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
