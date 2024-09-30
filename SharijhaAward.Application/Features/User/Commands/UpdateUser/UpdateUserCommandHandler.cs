@@ -37,7 +37,20 @@ namespace SharijhaAward.Application.Features.User.Commands.UpdateUser
 
                 return new BaseResponse<object>(msg, false, 404);
             }
-            
+
+            var CheckIfEmailIsAlreadyUsed = await _userRepository
+                .FirstOrDefaultAsync(x => x.Email.ToLower() == request.Email.ToLower() &&
+                    x.Id != request.Id);
+
+            if (CheckIfEmailIsAlreadyUsed is not null)
+            {
+                msg = request.lang == "en"
+                    ? "This email is already used"
+                    : "البريد الإلكتروني مستخدم بالفعل";
+
+                return new BaseResponse<object>(msg, false, 400);
+            }
+
             _mapper.Map(request, userToUpdate, typeof(UpdateUserCommand), typeof(Domain.Entities.IdentityModels.User));
             
             await _userRepository.UpdateAsync(userToUpdate);
