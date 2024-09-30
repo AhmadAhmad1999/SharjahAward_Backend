@@ -15,14 +15,17 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser
         private readonly IMapper _Mapper;
         private readonly IUserRepository _UserRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IAsyncRepository<UserToken> _UserTokenRepository;
 
         public UpdateUserHandler(IMapper Mapper,
             IUserRepository UserRepository,
-            IAsyncRepository<UserRole> UserRoleRepository)
+            IAsyncRepository<UserRole> UserRoleRepository,
+            IAsyncRepository<UserToken> UserTokenRepository)
         {
             _Mapper = Mapper;
             _UserRepository = UserRepository;
             _UserRoleRepository = UserRoleRepository;
+            _UserTokenRepository = UserTokenRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateUserCommand2 Request, CancellationToken cancellationToken)
@@ -57,6 +60,10 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser
                 .Where(x => !IntersectRoleIds.Contains(x))
                 .ToList();
 
+            List<UserToken> AllUserTokenEntities = await _UserTokenRepository
+                .Where(x => x.UserId == Request.Id)
+                .ToListAsync();
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -90,6 +97,9 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser
 
                     if (NewUserRoleEntites.Count() > 0)
                         await _UserRoleRepository.AddRangeAsync(NewUserRoleEntites);
+
+                    if (AllUserTokenEntities.Any())
+                        await _UserTokenRepository.DeleteListAsync(AllUserTokenEntities);
 
                     _Mapper.Map(Request, UserEntityToUpdate, typeof(UpdateUserCommand2), typeof(Domain.Entities.IdentityModels.User));
 

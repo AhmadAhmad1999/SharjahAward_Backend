@@ -86,7 +86,12 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                         {
                             Id = ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.Id,
                             Note = ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.Note,
-                            CreatedAt = ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.CreatedAt
+                            CreatedAt = ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.CreatedAt,
+                            ChairmanId = ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.ChairmanId,
+                            ChairmanName = Request.lang == "en"
+                                ? ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.Chairman!.EnglishName
+                                : ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.Chairman!.ArabicName,
+                            ChairmanEmail = ChairmanNotesOnInitialArbitrationEntityForThisInitialArbitration.Chairman!.Email
                         };
 
                         InitialArbitrationDto.ChairmanNotesOnInitialArbitrationDtos.Add(ChairmanNotesOnInitialArbitrationDto);

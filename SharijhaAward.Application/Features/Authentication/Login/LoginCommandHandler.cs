@@ -184,6 +184,9 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                 }
                 else
                 {
+                    response.isChairman = null;
+                    response.user.isChairman = null;
+
                     Coordinator? CheckIfLogInUserIsCoordinator = await _CoordinatorRepository
                         .FirstOrDefaultAsync(x => x.Id == response.user.Id);
 

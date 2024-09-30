@@ -7,6 +7,7 @@ using SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllArbitr
 using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
 using SharijhaAward.Application.Features.WinnersFeatures.Queries.ExportWinnersToExcel;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Common;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -28,13 +29,19 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllArbitrationResults(int? CategoryId, string? SubscriberName,
+        public async Task<IActionResult> GetAllArbitrationResults([FromQuery] List<Filter>? filters,
+            int? CategoryId, string? SubscriberName,
             int? CycleNumber, string? CategoryName, bool? EligibleToWin, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
+
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
 
             BaseResponse<List<GetAllArbitrationResultsListVM>> Response = await _Mediator.Send(new GetAllArbitrationResultsQuery()
             {
@@ -45,7 +52,9 @@ namespace SharijhaAward.Api.Controllers
                 SubscriberName = SubscriberName,
                 CycleNumber = CycleNumber,
                 CategoryName = CategoryName,
-                EligibleToWin = EligibleToWin
+                EligibleToWin = EligibleToWin,
+                Token = Token,
+                filters = filters
             });
 
             return Response.statusCode switch

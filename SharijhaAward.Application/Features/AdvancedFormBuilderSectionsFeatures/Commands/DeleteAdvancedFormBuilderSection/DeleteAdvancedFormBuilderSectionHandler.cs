@@ -17,7 +17,8 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
             string ResponseMessage = string.Empty;
 
             AdvancedFormBuilderSection? AdvancedFormBuilderSectionToDelete = await _AdvancedFormBuilderSectionRepository
-                .GetByIdAsync(Request.Id);
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+
             if (AdvancedFormBuilderSectionToDelete == null)
             {
                 ResponseMessage = Request.lang == "en"

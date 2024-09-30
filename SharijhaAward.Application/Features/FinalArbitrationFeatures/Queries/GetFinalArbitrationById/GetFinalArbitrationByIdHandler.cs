@@ -129,7 +129,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     x.Note,
                     x.InitialArbitration!.CriterionId,
                     x.InitialArbitration!.CriterionItemId,
-                    x.CreatedAt
+                    x.CreatedAt,
+                    x.Chairman,
+                    x.ChairmanId
                 }).ToListAsync();
 
             List<MainCriterionForFinalArbitrationScoreDto> FullResponse = new List<MainCriterionForFinalArbitrationScoreDto>();
@@ -184,7 +186,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                     Id = x.Id,
                                     Note = x.Note,
                                     isFromArbitrationAudit = true,
-                                    CreatedAt = x.CreatedAt
+                                    CreatedAt = x.CreatedAt,
+                                    ChairmanId = x.ChairmanId,
+                                    ChairmanName = Request.lang == "en"
+                                        ? x.Chairman!.EnglishName
+                                        : x.Chairman!.ArabicName,
+                                    ChairmanEmail = x.Chairman!.Email
                                 }).ToList();
 
                             SubCriterionDto.SubCriterionAttachmanetsDto = CriterionAttachmentEntities
@@ -212,7 +219,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                     Id = x.Id,
                                     Note = x.Note,
                                     isFromArbitrationAudit = false,
-                                    CreatedAt = x.CreatedAt
+                                    CreatedAt = x.CreatedAt,
+                                    ChairmanId = x.ChairmanId,
+                                    ChairmanName = Request.lang == "en"
+                                        ? x.Chairman!.EnglishName
+                                        : x.Chairman!.ArabicName,
+                                    ChairmanEmail = x.Chairman!.Email
                                 }).Concat(ChairmanNotesOnInitialArbitrationEnttities
                                     .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
                                     .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
@@ -220,7 +232,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                         Id = x.Id,
                                         Note = x.Note,
                                         isFromArbitrationAudit = true,
-                                        CreatedAt = x.CreatedAt
+                                        CreatedAt = x.CreatedAt,
+                                        ChairmanId = x.ChairmanId,
+                                        ChairmanName = Request.lang == "en"
+                                        ? x.Chairman!.EnglishName
+                                        : x.Chairman!.ArabicName,
+                                        ChairmanEmail = x.Chairman!.Email
                                     })).ToList();
 
                             SubCriterionDto.SubCriterionAttachmanetsDto = CriterionAttachmentEntities
@@ -274,7 +291,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                         Id = x.Id,
                                         Note = x.Note,
                                         isFromArbitrationAudit = true,
-                                        CreatedAt = x.CreatedAt
+                                        CreatedAt = x.CreatedAt,
+                                        ChairmanId = x.ChairmanId,
+                                        ChairmanName = Request.lang == "en"
+                                            ? x.Chairman!.EnglishName
+                                            : x.Chairman!.ArabicName,
+                                        ChairmanEmail = x.Chairman!.Email
                                     }).ToList();
 
                                 CriterionItemDto.CriterionItemAttachmanetsDto = CriterionItemAttachmentEntities
@@ -313,7 +335,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                         Id = x.Id,
                                         Note = x.Note,
                                         isFromArbitrationAudit = false,
-                                        CreatedAt = x.CreatedAt
+                                        CreatedAt = x.CreatedAt,
+                                        ChairmanId = x.ChairmanId,
+                                        ChairmanName = Request.lang == "en"
+                                            ? x.Chairman!.EnglishName
+                                            : x.Chairman!.ArabicName,
+                                        ChairmanEmail = x.Chairman!.Email
                                     }).Concat(ChairmanNotesOnInitialArbitrationEnttities
                                         .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id)
                                         .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
@@ -321,7 +348,12 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                             Id = x.Id,
                                             Note = x.Note,
                                             isFromArbitrationAudit = true,
-                                            CreatedAt = x.CreatedAt
+                                            CreatedAt = x.CreatedAt,
+                                            ChairmanId = x.ChairmanId,
+                                            ChairmanName = Request.lang == "en"
+                                                ? x.Chairman!.EnglishName
+                                                : x.Chairman!.ArabicName,
+                                            ChairmanEmail = x.Chairman!.Email
                                         })).ToList();
                             }
 

@@ -1,12 +1,15 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitrationResultModel;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllArbitrationResults
 {
@@ -16,14 +19,24 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
         private readonly IAsyncRepository<ArbitrationResult> _ArbitrationResultRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IJwtProvider _JwtProvider;
 
         public GetAllArbitrationResultsHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<ArbitrationResult> ArbitrationResultRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository)
+            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
+            IAsyncRepository<Cycle> CycleRepository,
+            IAsyncRepository<UserRole> UserRoleRepository,
+            IJwtProvider JwtProvider)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _ArbitrationResultRepository = ArbitrationResultRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
+            _CycleRepository = CycleRepository;
+            _UserRoleRepository = UserRoleRepository;
+            _JwtProvider = JwtProvider;
+
         }
         public async Task<BaseResponse<List<GetAllArbitrationResultsListVM>>> 
             Handle(GetAllArbitrationResultsQuery Request, CancellationToken cancellationToken)
@@ -32,122 +45,261 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
 
             string ResponseMessage = string.Empty;
 
-            List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                .Where(x => x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)" &&
-                    (!string.IsNullOrEmpty(Request.SubscriberName)
-                        ? x.Value.ToLower().StartsWith(Request.SubscriberName.ToLower())
-                        : true))
-                .ToListAsync();
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
-            List<ArbitrationResult> ArbitrationResultEntities = new List<ArbitrationResult>();
+            UserRole? CheckIfUserHaveFullAccess = await _UserRoleRepository
+                .FirstOrDefaultAsync(x => x.UserId == UserId &&
+                    x.Role!.HaveFullAccess);
 
-            int TotalCount = await _ArbitrationResultRepository
-                .Where(x => Request.CategoryId != null 
-                    ? (x.ProvidedForm!.categoryId == Request.CategoryId.Value)
-                    : true)
-                .CountAsync();
-
-            if (Request.page != 0 && Request.PerPage != -1)
+            if (CheckIfUserHaveFullAccess is not null)
             {
-                ArbitrationResultEntities = await _ArbitrationResultRepository
-                    .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId) &&
-                        (Request.CategoryId != null 
-                            ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
-                            : true) &&
-                        (Request.CycleNumber != null
-                            ? x.ProvidedForm!.CycleNumber == Request.CycleNumber
-                            : true) &&
-                        (!string.IsNullOrEmpty(Request.CategoryName)
-                            ? (Request.lang == "en"
-                                ? x.ProvidedForm!.Category!.EnglishName.ToLower().StartsWith(Request.CategoryName.ToLower())
-                                : x.ProvidedForm!.Category!.ArabicName.ToLower().StartsWith(Request.CategoryName.ToLower()))
-                            : true) &&
-                        (Request.EligibleToWin != null
-                            ? x.EligibleToWin == Request.EligibleToWin
+                List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
+                    .Where(x => x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)" &&
+                        (!string.IsNullOrEmpty(Request.SubscriberName)
+                            ? x.Value.ToLower().StartsWith(Request.SubscriberName.ToLower())
                             : true))
-                    .OrderByDescending(x => x.CreatedAt)
-                    .Skip((Request.page - 1) * Request.PerPage)
-                    .Take(Request.PerPage)
                     .ToListAsync();
+
+                List<ArbitrationResult> ArbitrationResultEntities = new List<ArbitrationResult>();
+
+                int TotalCount = await _ArbitrationResultRepository
+                    .Where(x => Request.CategoryId != null
+                        ? (x.ProvidedForm!.categoryId == Request.CategoryId.Value)
+                        : true)
+                    .CountAsync();
+
+                if (Request.page != 0 && Request.PerPage != -1)
+                {
+                    ArbitrationResultEntities = await _ArbitrationResultRepository
+                        .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId) &&
+                            (Request.CategoryId != null
+                                ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
+                                : true) &&
+                            (Request.CycleNumber != null
+                                ? x.ProvidedForm!.CycleNumber == Request.CycleNumber
+                                : true) &&
+                            (!string.IsNullOrEmpty(Request.CategoryName)
+                                ? (Request.lang == "en"
+                                    ? x.ProvidedForm!.Category!.EnglishName.ToLower().StartsWith(Request.CategoryName.ToLower())
+                                    : x.ProvidedForm!.Category!.ArabicName.ToLower().StartsWith(Request.CategoryName.ToLower()))
+                                : true) &&
+                            (Request.EligibleToWin != null
+                                ? x.EligibleToWin == Request.EligibleToWin
+                                : true))
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.PerPage)
+                        .Take(Request.PerPage)
+                        .ToListAsync();
+                }
+                else
+                {
+                    ArbitrationResultEntities = await _ArbitrationResultRepository
+                        .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId) &&
+                            (Request.CategoryId != null
+                                ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
+                                : true) &&
+                            (Request.CycleNumber != null
+                                ? x.ProvidedForm!.CycleNumber == Request.CycleNumber
+                                : true) &&
+                            (!string.IsNullOrEmpty(Request.CategoryName)
+                                ? (Request.lang == "en"
+                                    ? x.ProvidedForm!.Category!.EnglishName.ToLower().StartsWith(Request.CategoryName.ToLower())
+                                    : x.ProvidedForm!.Category!.ArabicName.ToLower().StartsWith(Request.CategoryName.ToLower()))
+                                : true) &&
+                            (Request.EligibleToWin != null
+                                ? x.EligibleToWin == Request.EligibleToWin
+                                : true))
+                        .OrderByDescending(x => x.CreatedAt)
+                        .ToListAsync();
+                }
+
+                var SubscribersNames = DynamicAttributeValueEntities
+                    .Select(x => new
+                    {
+                        FormId = x.RecordId,
+                        SubscriberName = x.Value
+                    }).ToList();
+
+                List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
+                    .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
+                    .ToListAsync();
+
+                List<FinalArbitration> FinalArbitrationEntities = ArbitrationResultEntities
+                    .Select(x => x.FinalArbitration!)
+                    .ToList();
+
+                List<GetAllArbitrationResultsListVM> Response = ArbitrationResultEntities
+                    .Select(x => new GetAllArbitrationResultsListVM()
+                    {
+                        FormId = x.ProvidedFormId,
+                        CategoryId = x.ProvidedForm!.categoryId,
+                        CategoryName = Request.lang == "en"
+                            ? x.ProvidedForm!.Category!.EnglishName
+                            : x.ProvidedForm!.Category!.ArabicName,
+                        InitialArbitrationScoreDto = ArbitrationEntities
+                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                            .Select(y => new InitialArbitrationScoreDto()
+                            {
+                                InitialArbitrationScore = y.FullScore
+                            }).ToList(),
+                        ArbitrationAuditScore = ArbitrationEntities
+                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                            .Select(y => y.FullScore)
+                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                        FinalArbitrationScore = FinalArbitrationEntities
+                            .FirstOrDefault(y => y.ProvidedFormId == x.ProvidedFormId)
+                                ?.FinalScore ?? 0,
+                        EligibleForCertification = x.EligibleForCertification,
+                        EligibleForAStatement = x.EligibleForAStatement,
+                        EligibleToWin = x.EligibleToWin,
+                        GotCertification = x.GotCertification,
+                        GotStatement = x.GotStatement,
+                        Winner = x.Winner,
+                        DateOfObtainingTheCertificate = x.DateOfObtainingTheCertificate,
+                        DateOfObtainingTheStatement = x.DateOfObtainingTheStatement,
+                        WinningDate = x.WinningDate,
+                        SubscriberName = SubscribersNames
+                            .FirstOrDefault(y => y.FormId == x.ProvidedFormId)
+                                ?.SubscriberName ?? string.Empty,
+                        CycleNumber = x.ProvidedForm!.CycleNumber,
+                        CycleYear = x.ProvidedForm!.CycleYear
+                    }).ToList();
+
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.PerPage, TotalCount);
+
+                return new BaseResponse<List<GetAllArbitrationResultsListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
             }
             else
             {
-                ArbitrationResultEntities = await _ArbitrationResultRepository
-                    .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId) &&
-                        (Request.CategoryId != null
-                            ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
-                            : true) &&
-                        (Request.CycleNumber != null
-                            ? x.ProvidedForm!.CycleNumber == Request.CycleNumber
-                            : true) &&
-                        (!string.IsNullOrEmpty(Request.CategoryName)
-                            ? (Request.lang == "en"
-                                ? x.ProvidedForm!.Category!.EnglishName.ToLower().StartsWith(Request.CategoryName.ToLower())
-                                : x.ProvidedForm!.Category!.ArabicName.ToLower().StartsWith(Request.CategoryName.ToLower()))
-                            : true) &&
-                        (Request.EligibleToWin != null
-                            ? x.EligibleToWin == Request.EligibleToWin
+                Cycle? ActiveCycleEntity = await _CycleRepository
+                    .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
+
+                if (ActiveCycleEntity is null)
+                    return new BaseResponse<List<GetAllArbitrationResultsListVM>>(ResponseMessage, true, 200);
+
+                int ActiveCycleEntityId = ActiveCycleEntity.Id;
+
+                List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
+                    .Where(x => x.DynamicAttribute!.EnglishTitle == "Full name (identical to Emirates ID)" &&
+                        (!string.IsNullOrEmpty(Request.SubscriberName)
+                            ? x.Value.ToLower().StartsWith(Request.SubscriberName.ToLower())
                             : true))
-                    .OrderByDescending(x => x.CreatedAt)
                     .ToListAsync();
+
+                List<ArbitrationResult> ArbitrationResultEntities = new List<ArbitrationResult>();
+
+                int TotalCount = await _ArbitrationResultRepository
+                    .Where(x => x.ProvidedForm!.Category!.CycleId == ActiveCycleEntityId &&
+                        Request.CategoryId != null
+                            ? (x.ProvidedForm!.categoryId == Request.CategoryId.Value)
+                            : true)
+                    .CountAsync();
+
+                if (Request.page != 0 && Request.PerPage != -1)
+                {
+                    ArbitrationResultEntities = await _ArbitrationResultRepository
+                        .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId) &&
+                            (Request.CategoryId != null
+                                ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
+                                : true) &&
+                            (Request.CycleNumber != null
+                                ? x.ProvidedForm!.CycleNumber == Request.CycleNumber
+                                : true) &&
+                            (!string.IsNullOrEmpty(Request.CategoryName)
+                                ? (Request.lang == "en"
+                                    ? x.ProvidedForm!.Category!.EnglishName.ToLower().StartsWith(Request.CategoryName.ToLower())
+                                    : x.ProvidedForm!.Category!.ArabicName.ToLower().StartsWith(Request.CategoryName.ToLower()))
+                                : true) &&
+                            (Request.EligibleToWin != null
+                                ? x.EligibleToWin == Request.EligibleToWin
+                                : true) &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleEntityId)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.PerPage)
+                        .Take(Request.PerPage)
+                        .ToListAsync();
+                }
+                else
+                {
+                    ArbitrationResultEntities = await _ArbitrationResultRepository
+                        .Where(x => DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId) &&
+                            (Request.CategoryId != null
+                                ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
+                                : true) &&
+                            (Request.CycleNumber != null
+                                ? x.ProvidedForm!.CycleNumber == Request.CycleNumber
+                                : true) &&
+                            (!string.IsNullOrEmpty(Request.CategoryName)
+                                ? (Request.lang == "en"
+                                    ? x.ProvidedForm!.Category!.EnglishName.ToLower().StartsWith(Request.CategoryName.ToLower())
+                                    : x.ProvidedForm!.Category!.ArabicName.ToLower().StartsWith(Request.CategoryName.ToLower()))
+                                : true) &&
+                            (Request.EligibleToWin != null
+                                ? x.EligibleToWin == Request.EligibleToWin
+                                : true) &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleEntityId)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .ToListAsync();
+                }
+
+                var SubscribersNames = DynamicAttributeValueEntities
+                    .Select(x => new
+                    {
+                        FormId = x.RecordId,
+                        SubscriberName = x.Value
+                    }).ToList();
+
+                List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
+                    .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
+                    .ToListAsync();
+
+                List<FinalArbitration> FinalArbitrationEntities = ArbitrationResultEntities
+                    .Select(x => x.FinalArbitration!)
+                    .ToList();
+
+                List<GetAllArbitrationResultsListVM> Response = ArbitrationResultEntities
+                    .Select(x => new GetAllArbitrationResultsListVM()
+                    {
+                        FormId = x.ProvidedFormId,
+                        CategoryId = x.ProvidedForm!.categoryId,
+                        CategoryName = Request.lang == "en"
+                            ? x.ProvidedForm!.Category!.EnglishName
+                            : x.ProvidedForm!.Category!.ArabicName,
+                        InitialArbitrationScoreDto = ArbitrationEntities
+                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                            .Select(y => new InitialArbitrationScoreDto()
+                            {
+                                InitialArbitrationScore = y.FullScore
+                            }).ToList(),
+                        ArbitrationAuditScore = ArbitrationEntities
+                            .Where(y => y.ProvidedFormId == x.ProvidedFormId)
+                            .Select(y => y.FullScore)
+                            .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
+                        FinalArbitrationScore = FinalArbitrationEntities
+                            .FirstOrDefault(y => y.ProvidedFormId == x.ProvidedFormId)
+                                ?.FinalScore ?? 0,
+                        EligibleForCertification = x.EligibleForCertification,
+                        EligibleForAStatement = x.EligibleForAStatement,
+                        EligibleToWin = x.EligibleToWin,
+                        GotCertification = x.GotCertification,
+                        GotStatement = x.GotStatement,
+                        Winner = x.Winner,
+                        DateOfObtainingTheCertificate = x.DateOfObtainingTheCertificate,
+                        DateOfObtainingTheStatement = x.DateOfObtainingTheStatement,
+                        WinningDate = x.WinningDate,
+                        SubscriberName = SubscribersNames
+                            .FirstOrDefault(y => y.FormId == x.ProvidedFormId)
+                                ?.SubscriberName ?? string.Empty,
+                        CycleNumber = x.ProvidedForm!.CycleNumber,
+                        CycleYear = x.ProvidedForm!.CycleYear
+                    }).ToList();
+
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.PerPage, TotalCount);
+
+                return new BaseResponse<List<GetAllArbitrationResultsListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
             }
-
-            var SubscribersNames = DynamicAttributeValueEntities
-                .Select(x => new
-                {
-                    FormId = x.RecordId,
-                    SubscriberName = x.Value
-                }).ToList();
-
-            List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
-                .Where(x => ArbitrationResultEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
-                .ToListAsync();
-
-            List<FinalArbitration> FinalArbitrationEntities = ArbitrationResultEntities
-                .Select(x => x.FinalArbitration!)
-                .ToList();
-            
-            List<GetAllArbitrationResultsListVM> Response = ArbitrationResultEntities
-                .Select(x => new GetAllArbitrationResultsListVM()
-                {
-                    FormId = x.ProvidedFormId,
-                    CategoryId = x.ProvidedForm!.categoryId,
-                    CategoryName = Request.lang == "en"
-                        ? x.ProvidedForm!.Category!.EnglishName
-                        : x.ProvidedForm!.Category!.ArabicName,
-                    InitialArbitrationScoreDto = ArbitrationEntities
-                        .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                        .Select(y => new InitialArbitrationScoreDto()
-                        {
-                            InitialArbitrationScore = y.FullScore
-                        }).ToList(),
-                    ArbitrationAuditScore = ArbitrationEntities
-                        .Where(y => y.ProvidedFormId == x.ProvidedFormId)
-                        .Select(y => y.FullScore)
-                        .Sum() / ArbitrationEntities.Count(y => y.ProvidedFormId == x.ProvidedFormId),
-                    FinalArbitrationScore = FinalArbitrationEntities
-                        .FirstOrDefault(y => y.ProvidedFormId == x.ProvidedFormId)
-                            ?.FinalScore ?? 0,
-                    EligibleForCertification = x.EligibleForCertification,
-                    EligibleForAStatement = x.EligibleForAStatement,
-                    EligibleToWin = x.EligibleToWin,
-                    GotCertification = x.GotCertification,
-                    GotStatement = x.GotStatement,
-                    Winner = x.Winner,
-                    DateOfObtainingTheCertificate = x.DateOfObtainingTheCertificate,
-                    DateOfObtainingTheStatement = x.DateOfObtainingTheStatement,
-                    WinningDate = x.WinningDate,
-                    SubscriberName = SubscribersNames
-                        .FirstOrDefault(y => y.FormId == x.ProvidedFormId)
-                            ?.SubscriberName ?? string.Empty,
-                    CycleNumber = x.ProvidedForm!.CycleNumber,
-                    CycleYear = x.ProvidedForm!.CycleYear
-                }).ToList();
-
-            Pagination PaginationParameter = new Pagination(Request.page,
-                Request.PerPage, TotalCount);
-
-            return new BaseResponse<List<GetAllArbitrationResultsListVM>>(ResponseMessage, true, 200, Response, PaginationParameter);
         }
     }
 }

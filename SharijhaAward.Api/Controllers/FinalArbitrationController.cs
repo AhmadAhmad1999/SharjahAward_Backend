@@ -36,11 +36,18 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> CreateChairmanNotesOnFinalArbitrationScore([FromBody] CreateChairmanNotesOnFinalArbitrationScoreCommand CreateChairmanNotesOnFinalArbitrationScoreCommand)
         {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             CreateChairmanNotesOnFinalArbitrationScoreCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            CreateChairmanNotesOnFinalArbitrationScoreCommand.Token = Token;
 
             BaseResponse<object>? Response = await _Mediator.Send(CreateChairmanNotesOnFinalArbitrationScoreCommand);
 
@@ -144,7 +151,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllFormsForFinalArbitration(ArbitrationType? ArbitrationType, bool? AsChairman, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllFormsForFinalArbitration(ArbitrationType? ArbitrationType, bool? AsChairman,
+            bool AsFullAccess, int Page = 1, int PerPage = 10)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
@@ -163,7 +171,8 @@ namespace SharijhaAward.Api.Controllers
                 perPage = PerPage,
                 Token = Token,
                 ArbitrationType = ArbitrationType,
-                AsChairman = AsChairman
+                AsChairman = AsChairman,
+                AsFullAccess = AsFullAccess
             });
 
             return Response.statusCode switch

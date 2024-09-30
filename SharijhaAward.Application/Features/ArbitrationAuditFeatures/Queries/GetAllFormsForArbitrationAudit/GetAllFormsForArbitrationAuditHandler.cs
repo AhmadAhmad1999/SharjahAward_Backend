@@ -6,6 +6,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
@@ -21,6 +22,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
         private readonly IAsyncRepository<ArbitrationAudit> _ArbitrationAuditRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
         private readonly IJwtProvider _JWTProvider;
 
         public GetAllFormsForArbitrationAuditHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
@@ -30,6 +32,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
             IAsyncRepository<ArbitrationAudit> ArbitrationAuditRepository,
             IAsyncRepository<UserRole> UserRoleRepository,
             IAsyncRepository<ComitteeArbitrator> ComitteeArbitratorRepository,
+            IAsyncRepository<Cycle> CycleRepository,
             IJwtProvider JWTProvider)
         {
             _ArbitratorRepository = ArbitratorRepository;
@@ -39,6 +42,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
             _ArbitrationAuditRepository = ArbitrationAuditRepository;
             _UserRoleRepository = UserRoleRepository;
             _ComitteeArbitratorRepository = ComitteeArbitratorRepository;
+            _CycleRepository = CycleRepository;
             _JWTProvider = JWTProvider;
         }
 
@@ -311,6 +315,14 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     x.Role!.ArabicName == "محكم")
                 : false)
             {
+                Cycle? CheckIfThereIsActiveCycle = await _CycleRepository
+                    .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
+
+                if (CheckIfThereIsActiveCycle is null)
+                    return new BaseResponse<List<GetAllFormsForArbitrationAuditListVM>>(ResponseMessage, false, 200);
+
+                int ActiveCycleId = CheckIfThereIsActiveCycle.Id;
+
                 Arbitrator? CheckIfUserIsNormalArbitrator = await _ArbitratorRepository
                     .FirstOrDefaultAsync(x => x.Id == UserId);
 
@@ -333,12 +345,14 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                 {
                     GroupOfArbitrationEntities = await _ArbitrationRepository
                         .Where(x => x.ArbitratorId == UserId &&
-                            x.isAcceptedFromChairman == FormStatus.Accepted)
+                            x.isAcceptedFromChairman == FormStatus.Accepted &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
 
                     GroupOfArbitrationEntitiesForAverage = await _ArbitrationRepository
-                        .Where(x => x.isAcceptedFromChairman == FormStatus.Accepted)
+                        .Where(x => x.isAcceptedFromChairman == FormStatus.Accepted &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
                 }
@@ -353,13 +367,15 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                     GroupOfArbitrationEntities = await _ArbitrationRepository
                         .Where(x => ComitteeArbitratorIds.Contains(x.ArbitratorId) &&
                             x.isAcceptedFromChairman == FormStatus.Accepted &&
-                            x.ArbitrationAuditType == ArbitrationType.DoneArbitratod)
+                            // x.ArbitrationAuditType == ArbitrationType.DoneArbitratod &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
 
                     GroupOfArbitrationEntitiesForAverage = await _ArbitrationRepository
                         .Where(x => x.isAcceptedFromChairman == FormStatus.Accepted &&
-                            x.ArbitrationAuditType == ArbitrationType.DoneArbitratod)
+                            // x.ArbitrationAuditType == ArbitrationType.DoneArbitratod &&
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
                         .GroupBy(x => x.ProvidedFormId)
                         .ToListAsync();
                 }

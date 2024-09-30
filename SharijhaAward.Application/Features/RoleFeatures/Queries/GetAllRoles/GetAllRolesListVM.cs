@@ -10,5 +10,6 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles
         public string ArabicName { get; set; } = null!;
         [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
+        public bool isMainRole { get; set; }
     }
 }

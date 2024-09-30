@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
@@ -7,19 +8,25 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
 {
     public class CreateChairmanNotesOnInitialArbitrationHandler : IRequestHandler<CreateChairmanNotesOnInitialArbitrationCommand, BaseResponse<object>>
     {
+        private readonly IJwtProvider _JwtProvider;
         private readonly IAsyncRepository<ChairmanNotesOnInitialArbitration> _ChairmanNotesOnInitialArbitrationRepository;
-        public CreateChairmanNotesOnInitialArbitrationHandler(IAsyncRepository<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrationRepository)
+        public CreateChairmanNotesOnInitialArbitrationHandler(IJwtProvider JwtProvider,
+            IAsyncRepository<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrationRepository)
         {
+            _JwtProvider = JwtProvider;
             _ChairmanNotesOnInitialArbitrationRepository = ChairmanNotesOnInitialArbitrationRepository;
         }
         public async Task<BaseResponse<object>> Handle(CreateChairmanNotesOnInitialArbitrationCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
+            int ChairmanId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
             ChairmanNotesOnInitialArbitration NewChairmanNotesOnInitialArbitrationEntity = new ChairmanNotesOnInitialArbitration()
             {
                 InitialArbitrationId = Request.InitialArbitrationId,
-                Note = Request.Note
+                Note = Request.Note,
+                ChairmanId = ChairmanId
             };
 
             await _ChairmanNotesOnInitialArbitrationRepository.AddAsync(NewChairmanNotesOnInitialArbitrationEntity);
