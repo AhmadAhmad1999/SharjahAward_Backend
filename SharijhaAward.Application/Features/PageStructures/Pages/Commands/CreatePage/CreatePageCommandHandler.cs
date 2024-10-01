@@ -46,7 +46,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
                 return new BaseResponse<int>("لا يمكن إضافة هذه الصفحة الى الخلايا", false, 400);
             }
 
-            if (cellPages.Count() >= 5)
+            if (cellPages.Count() >= 5 && request.PagePostion == Domain.Constants.CustomPageConstants.PagePostion.InCells)
             {
                 return new BaseResponse<int>("لا يمكن إضافة أكثر من خمسة صفحات إلى الخلايا", false, 400);
             }

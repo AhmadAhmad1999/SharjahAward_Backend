@@ -25,6 +25,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Updat
         public string? ArabicContent { get; set; }
         public PagePostion PagePostion { get; set; }
         public PageType PageType { get; set; }
+        public string? RefUrl { get; set; }
         public int orderId { get; set; }
         public bool IsHide { get; set; }
         public string? lang { get; set; }

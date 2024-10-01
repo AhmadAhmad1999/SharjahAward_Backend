@@ -22,6 +22,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
         public string? EnglishContent { get; set; }
         public string? ArabicContent { get; set; }
         public string? Slug { get; set; }
+        public string? RefUrl { get; set; }
         public PagePostion PagePostion { get; set; }
         public PageType PageType { get; set; }
         public int orderId { get; set; }

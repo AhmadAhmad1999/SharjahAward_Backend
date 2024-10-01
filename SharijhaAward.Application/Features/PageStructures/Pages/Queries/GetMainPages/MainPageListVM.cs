@@ -21,6 +21,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
         public bool IsHide { get; set; }
         public string? IconUrl { get; set; }
         public string Slug { get; set; } = string.Empty;
+        public string? RefUrl { get; set; }
         public bool Deletable { get; set; }
     }
 }

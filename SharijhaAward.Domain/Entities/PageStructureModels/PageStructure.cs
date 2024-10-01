@@ -24,6 +24,7 @@ namespace SharijhaAward.Domain.Entities.PageStructureModel
         public string? ArabicContent { get; set; }
         public bool IsHide { get; set; }
         public string Slug { get; set; } = string.Empty;
+        public string? RefUrl { get; set; } 
         public PageType PageType { get; set; }
         public PagePostion PagePostion { get; set; }
         public int orderId { get; set; }

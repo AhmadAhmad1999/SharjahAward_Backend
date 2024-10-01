@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SharijhaAward.Application.Contract.Persistence;
@@ -13,6 +14,13 @@ namespace SharijhaAward.Persistence.Seeders
 {
     public class SeedDatabase : ISeedDatabase
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public SeedDatabase(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
+
         public async Task Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new SharijhaAwardDbContext(
@@ -147,7 +155,7 @@ namespace SharijhaAward.Persistence.Seeders
                 var TrainingWorkshopSeeder = new TrainingWorkshopSeeder(context);
                 await TrainingWorkshopSeeder.Seed();
 
-                var CustomPageSeerer = new CustomPageSeeder(context);
+                var CustomPageSeerer = new CustomPageSeeder(context, _httpContextAccessor);
                 await CustomPageSeerer.Seed();
 
                 var RolePermissionSeeder = new RolePermissionSeeder(context);

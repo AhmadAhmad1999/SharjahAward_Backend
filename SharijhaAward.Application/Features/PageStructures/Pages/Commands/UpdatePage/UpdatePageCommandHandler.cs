@@ -37,9 +37,18 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Updat
 
             var Icon = page.IconUrl;
 
+            var cellPages = _pageStructureRepository
+                .Where(p => p.PagePostion == Domain.Constants.CustomPageConstants.PagePostion.InCells)
+                .ToList();
+
             if (request.PageType != Domain.Constants.PageType.MainPageWithoutSubPage && request.PagePostion == Domain.Constants.CustomPageConstants.PagePostion.InCells)
             {
                 return new BaseResponse<object>("لا يمكن إضافة هذه الصفحة الى الخلايا", false, 400);
+            }
+
+            if (cellPages.Count() >= 5 && request.PagePostion == Domain.Constants.CustomPageConstants.PagePostion.InCells && !cellPages.Contains(page))
+            {
+                return new BaseResponse<object>("لا يمكن إضافة أكثر من خمسة صفحات إلى الخلايا", false, 400);
             }
 
             _mapper.Map(request, page, typeof(UpdatePageCommand), typeof(PageStructure));

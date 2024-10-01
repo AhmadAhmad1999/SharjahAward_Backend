@@ -16,6 +16,7 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
         public string ArabicTitle { get; set; } = string.Empty;
         public int ParentId { get; set; }
         public string Slug { get; set; } = string.Empty;
+        public string? RefUrl { get; set; }
         public bool IsHide { get; set; }
         public PageType PageType { get; set; }
         public PagePostion PagePostion { get; set; }
