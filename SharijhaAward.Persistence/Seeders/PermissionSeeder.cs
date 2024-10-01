@@ -2614,6 +2614,57 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedAt = null,
                     LastModifiedBy = null
 
+                },
+                //------------StrategicPartner----------------
+                new Permission()
+                {
+                    // Id = 185,
+                    Name = "إضافة شريك إستراتيجي",
+                    Action = "create",
+                    PermissionHeaderId = 37,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 186,
+                    Name = "حذف شريك إستراتيجي",
+                    Action = "delete",
+                    PermissionHeaderId = 37,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 187,
+                    Name = "عرض الشركاء الاستراتيجيين",
+                    Action = "read",
+                    PermissionHeaderId = 37,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 188,
+                    Name = "عرض تفاصيل التعميم",
+                    Action = "show-details",
+                    PermissionHeaderId = 6,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+
                 });
                await _context.SaveChangesAsync();
             }

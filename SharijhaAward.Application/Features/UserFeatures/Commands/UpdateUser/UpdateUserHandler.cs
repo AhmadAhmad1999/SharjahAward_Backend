@@ -44,6 +44,19 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            Domain.Entities.IdentityModels.User? CheckIfEmailIsAlreadyUsed = await _UserRepository
+                .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower() &&
+                    x.Id != Request.Id);
+
+            if (CheckIfEmailIsAlreadyUsed is not null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "This email is already used"
+                    : "البريد الإلكتروني مستخدم بالفعل";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             List<int> AlreadyExistRoleIds = await _UserRoleRepository
                 .Where(x => x.UserId == Request.Id)
                 .Select(x => x.RoleId)
