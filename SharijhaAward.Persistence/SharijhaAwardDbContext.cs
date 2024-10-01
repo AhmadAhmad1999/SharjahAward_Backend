@@ -82,6 +82,7 @@ using System.Reflection;
 using static SharijhaAward.Application.Helpers.DatabaseRelationsHelper.DatabaseRelationsClass;
 using NPOI.HSSF.Record;
 using SharijhaAward.Domain.Entities.ChatBotModel;
+using Microsoft.Extensions.Configuration;
 
 namespace SharijhaAward.Persistence
 {
@@ -90,15 +91,18 @@ namespace SharijhaAward.Persistence
         public List<object> EntitiesToDelete;
 
         private IMapper _Mapper;
+        private IConfiguration _Configuration;
         public SharijhaAwardDbContext(DbContextOptions<SharijhaAwardDbContext> options)
         : base(options)
         {
         }
         public SharijhaAwardDbContext(DbContextOptions<SharijhaAwardDbContext> options,
-            IMapper Mapper)
+            IMapper Mapper,
+            IConfiguration Configuration)
         : base(options)
         {
             _Mapper = Mapper;
+            _Configuration = Configuration;
         }
 
         public DbSet<SwitchArbitration> SwitchArbitrations { get; set; }
@@ -1530,6 +1534,14 @@ namespace SharijhaAward.Persistence
                             .ToList());
                     }
                 }
+            }
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(_Configuration.GetConnectionString("DefaultConnection"),
+                    options => options.MigrationsAssembly("SharijhaAward.Api"));
             }
         }
     }

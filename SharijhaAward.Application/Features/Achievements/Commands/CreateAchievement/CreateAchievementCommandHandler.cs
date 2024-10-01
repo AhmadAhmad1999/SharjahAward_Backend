@@ -4,46 +4,44 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AchievementModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Achievements.Commands.CreateAchievement
 {
     public class CreateAchievementCommandHandler
         : IRequestHandler<CreateAchievementCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<Achievement> _achievementsRepository;
-        private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _userRepository;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Achievement> _AchievementsRepository;
+        private readonly IUserRepository _UserRepository;
+        private readonly IJwtProvider _JwtProvider;
+        private readonly IMapper _Mapper;
 
-        public CreateAchievementCommandHandler(IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository,IAsyncRepository<Achievement> achievementsRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public CreateAchievementCommandHandler(IUserRepository UserRepository,
+            IAsyncRepository<Achievement> AchievementsRepository, 
+            IJwtProvider JwtProvider, 
+            IMapper Mapper)
         {
-            _achievementsRepository = achievementsRepository;
-            _userRepository = userRepository;
-            _jwtProvider = jwtProvider;
-            _mapper = mapper;
+            _AchievementsRepository = AchievementsRepository;
+            _UserRepository = UserRepository;
+            _JwtProvider = JwtProvider;
+            _Mapper = Mapper;
         }
 
-        public async Task<BaseResponse<object>> Handle(CreateAchievementCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CreateAchievementCommand Request, CancellationToken cancellationToken)
         {
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
-            if(User == null)
-            {
-                return new BaseResponse<object>("",false,401);
-            }
-            
-            var Achievement = _mapper.Map<Achievement>(request);
+            string ResponseMessage = string.Empty;
 
-            Achievement.UserId = User.Id;
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.token));
 
-            await _achievementsRepository.AddAsync(Achievement);
+            Domain.Entities.IdentityModels.User? User = await _UserRepository
+                .FirstOrDefaultAsync(x => x.Id == UserId);
 
-            return new BaseResponse<object>("", true, 200);
+            Achievement NewAchievementEntity = _Mapper.Map<Achievement>(Request);
+
+            NewAchievementEntity.UserId = User!.Id;
+
+            await _AchievementsRepository.AddAsync(NewAchievementEntity);
+
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }
