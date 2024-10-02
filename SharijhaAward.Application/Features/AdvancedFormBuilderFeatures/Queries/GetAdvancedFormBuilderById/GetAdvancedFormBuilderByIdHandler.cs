@@ -32,7 +32,8 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
             _Mapper = Mapper;
         }
 
-        public async Task<BaseResponse<GetAdvancedFormBuilderByIdDto>> Handle(GetAdvancedFormBuilderByIdQuery Request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<GetAdvancedFormBuilderByIdDto>> Handle(GetAdvancedFormBuilderByIdQuery Request,
+            CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
@@ -56,21 +57,22 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                 .FirstOrDefaultAsync(x => x.AdvancedFormBuilderId == Request.Id));
 
             IQueryable<IGrouping<int, AdvancedFormBuilderDependency>> Dependencies = _AdvancedFormBuilderDependencyRepository
-                .Where(x => x.MainAdvancedFormBuilderId == Request.Id)
+                .WhereThenInclude(x => x.MainAdvancedFormBuilderId == Request.Id, x => x.AttributeOperation!,
+                    x => x.AdvancedFormBuilder!, x => x.StaticAttribute!)
                 .GroupBy(x => x.AdvancedFormBuilderDependencyGroupId);
 
             foreach (IGrouping<int, AdvancedFormBuilderDependency> AdvancedFormBuilderDependency in Dependencies)
             {
-                AdvancedFormBuilderDependencyValidation? DependencyValidation = await _AdvancedFormBuilderDependencyValidationRepository
+                AdvancedFormBuilderDependencyValidation? AdvancedFormBuilderDependencyValidation = await _AdvancedFormBuilderDependencyValidationRepository
                     .IncludeThenFirstOrDefaultAsync(x => x.AttributeOperation!, x => x.AdvancedFormBuilderDependencyGroupId == AdvancedFormBuilderDependency.Key);
 
-                if (DependencyValidation != null)
+                if (AdvancedFormBuilderDependencyValidation != null)
                 {
-                    AdvancedFormBuilderDependencyValidationDto? DependencyValidationDto = new AdvancedFormBuilderDependencyValidationDto()
+                    AdvancedFormBuilderDependencyValidationDto? AdvancedFormBuilderDependencyValidationDto = new AdvancedFormBuilderDependencyValidationDto()
                     {
-                        Id = DependencyValidation.Id,
-                        Value = DependencyValidation.Value,
-                        Operation = DependencyValidation.AttributeOperation!.OperationAsString,
+                        Id = AdvancedFormBuilderDependencyValidation.Id,
+                        Value = AdvancedFormBuilderDependencyValidation.Value,
+                        Operation = AdvancedFormBuilderDependencyValidation.AttributeOperation!.OperationAsString,
                         Dependencies = AdvancedFormBuilderDependency.Select(x => new AdvancedFormBuilderDependencyDto()
                         {
                             Id = x.Id,
@@ -86,12 +88,21 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                         }).ToList()
                     };
 
-                    AdvancedFormBuilder.ListOfDependencies.Add(DependencyValidationDto);
+                    AdvancedFormBuilder.ListOfDependencies.Add(AdvancedFormBuilderDependencyValidationDto);
                 }
             }
 
-            AdvancedFormBuilder.Values = _Mapper.Map<List<AdvancedFormBuilderListValueListVM>>(_AdvancedFormBuilderListValueRepository
-                .Where(x => x.AdvancedFormBuilderId == Request.Id));
+            AdvancedFormBuilder.Values = await _AdvancedFormBuilderListValueRepository
+                .Where(x => x.AdvancedFormBuilderId == Request.Id)
+                .Select(x => new AdvancedFormBuilderListValueListVM()
+                {
+                    Id = x.Id,
+                    EnglishValue = x.EnglishValue,
+                    ArabicValue = x.ArabicValue,
+                    Value = Request.lang == "en"
+                        ? x.EnglishValue
+                        : x.ArabicValue
+                }).ToListAsync();
 
             return new BaseResponse<GetAdvancedFormBuilderByIdDto>(ResponseMessage, true, 200, AdvancedFormBuilder);
         }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -40,24 +41,29 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Commands.UpdateGen
                 return new BaseResponse<int>("", false, 404);
             }
             var Workshop = WorkshopToUpdate;
+
+            string OldThumbnale = WorkshopToUpdate.Thumbnale;
+            string? OldVideo = WorkshopToUpdate.Video;
+            string? OldAgendaImage = WorkshopToUpdate.AgendaImage;
+
             _mapper.Map(request, WorkshopToUpdate, typeof(UpdateGeneralWorkshopCommand), typeof(GeneralWorkshop));
 
-            if (request.UpdateThumbnale)
+            if (request.UpdateThumbnale && request.Thumbnale != null)
                 WorkshopToUpdate.Thumbnale = await _fileService.SaveFileAsync(request.Thumbnale, SystemFileType.Images);
             else
-                WorkshopToUpdate.Thumbnale = Workshop.Thumbnale;
+                WorkshopToUpdate.Thumbnale = OldThumbnale;
 
-            if (request.UpdateVideo)
+            if (request.UpdateVideo && request.Video != null)
                 WorkshopToUpdate.Video = await _fileService.SaveFileAsync(request.Video!, SystemFileType.Videos);
             else
-                WorkshopToUpdate.Video = Workshop.Video;
+                WorkshopToUpdate.Video = OldVideo;
 
             if (request.UpdateAgendaImage)
                 WorkshopToUpdate.AgendaImage = await _fileService.SaveFileAsync(request.AgendaImage!, SystemFileType.Images);
             else
-                WorkshopToUpdate.AgendaImage = Workshop.AgendaImage;
+                WorkshopToUpdate.AgendaImage = OldAgendaImage;
 
-             await _generalWorkshopRepository.UpdateAsync(WorkshopToUpdate);
+            await _generalWorkshopRepository.UpdateAsync(WorkshopToUpdate);
 
             return new BaseResponse<int>(msg, true, 200);
            

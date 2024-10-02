@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute;
+using SharijhaAward.Application.Features.DynamicAttributeFeaturesFeatures.Commands.CreateDynamicAttribute;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AdvancedFormBuilderModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
@@ -53,183 +52,183 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Command
 
             AdvancedFormBuilder? AdvancedFormBuilderOldData = await _AdvancedFormBuilderRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
-            return null;
-            //if (AdvancedFormBuilderOldData == null)
-            //{
-            //    ResponseMessage = Request.lang == "en"
-            //        ? "Field not found"
-            //        : "هذا الحقل غير موجود";
 
-            //    return new BaseResponse<object>(ResponseMessage, false, 404);
-            //}
+            if (AdvancedFormBuilderOldData == null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Field not found"
+                    : "هذا الحقل غير موجود";
 
-            //if (Request.AttributeDataTypeId != AdvancedFormBuilderOldData.AttributeDataTypeId)
-            //{
-            //    ResponseMessage = Request.lang == "en"
-            //        ? "Dynamic attribute type can't be updated"
-            //        : "لا يمكن تعديل نوع الحقل بعد إنشاءه";
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
 
-            //    return new BaseResponse<object>(ResponseMessage, false, 400);
-            //}
+            if (Request.AttributeDataTypeId != AdvancedFormBuilderOldData.AttributeDataTypeId)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Advanced form attribute type can't be updated"
+                    : "لا يمكن تعديل نوع الحقل بعد إنشاءه";
 
-            //AdvancedFormBuilderGeneralValidation? AdvancedFormBuilderGeneralValidationEntity = await _AdvancedFormBuilderGeneralValidationRepository
-            //    .FirstOrDefaultAsync(x => x.AdvancedFormBuilderId == Request.Id);
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
 
-            //List<AdvancedFormBuilderDependency> DependenciesEntities = await _AdvancedFormBuilderDependencyRepository
-            //    .Where(x => x.AdvancedFormBuilderId == Request.Id)
-            //    .ToListAsync();
+            AdvancedFormBuilderGeneralValidation? AdvancedFormBuilderGeneralValidationEntity = await _AdvancedFormBuilderGeneralValidationRepository
+                .FirstOrDefaultAsync(x => x.AdvancedFormBuilderId == Request.Id);
 
-            //List<AdvancedFormBuilderDependencyValidation> AdvancedFormBuilderDependencyValidationEntities = await _AdvancedFormBuilderDependencyValidationRepository
-            //    .Where(x => DependenciesEntities.Select(y => y.AdvancedFormBuilderDependencyGroupId).Contains(x.AdvancedFormBuilderDependencyGroupId))
-            //    .ToListAsync();
+            List<AdvancedFormBuilderDependency> AdvancedFormBuilderDependenciesEntities = await _AdvancedFormBuilderDependencyRepository
+                .Where(x => x.AdvancedFormBuilderId == Request.Id)
+                .ToListAsync();
 
-            //List<AdvancedFormBuilderViewWhenRelation> AdvancedFormBuilderViewWhenRelationEntities = await _AdvancedFormBuilderViewWhenRelationRepository
-            //    .Where(x => x.AdvancedFormBuilderId == Request.Id)
-            //    .ToListAsync();
+            List<AdvancedFormBuilderDependencyValidation> AdvancedFormBuilderDependencyValidationEntities = await _AdvancedFormBuilderDependencyValidationRepository
+                .Where(x => AdvancedFormBuilderDependenciesEntities.Select(y => y.AdvancedFormBuilderDependencyGroupId).Contains(x.AdvancedFormBuilderDependencyGroupId))
+                .ToListAsync();
 
-            //TransactionOptions TransactionOptions = new TransactionOptions
-            //{
-            //    IsolationLevel = IsolationLevel.ReadCommitted,
-            //    Timeout = TimeSpan.FromMinutes(5)
-            //};
+            List<AdvancedFormBuilderViewWhenRelation> ViewWhenRelationEntities = await _AdvancedFormBuilderViewWhenRelationRepository
+                .Where(x => x.AdvancedFormBuilderId == Request.Id)
+                .ToListAsync();
 
-            //using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
-            //    TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
-            //{
-            //    try
-            //    {
-            //        if (AdvancedFormBuilderOldData.AdvancedFormBuilderSection!.TableTypeSection)
-            //        {
-            //            Request.IsRequired = false;
-            //        }
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
-            //        _Mapper.Map(Request, AdvancedFormBuilderOldData, typeof(UpdateAdvancedFormBuilderCommand),
-            //            typeof(AdvancedFormBuilder));
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    if (AdvancedFormBuilderOldData.AdvancedFormBuilderSection!.TableTypeSection)
+                    {
+                        Request.IsRequired = false;
+                    }
 
-            //        await _AdvancedFormBuilderRepository.UpdateAsync(AdvancedFormBuilderOldData);
+                    _Mapper.Map(Request, AdvancedFormBuilderOldData, typeof(UpdateAdvancedFormBuilderCommand),
+                        typeof(AdvancedFormBuilder));
 
-            //        List<AdvancedFormBuilderListValue> OldAdvancedFormBuilderValueEntities = await _AdvancedFormBuilderListValueRepository
-            //            .Where(x => x.AdvancedFormBuilderId == Request.Id)
-            //            .ToListAsync();
+                    await _AdvancedFormBuilderRepository.UpdateAsync(AdvancedFormBuilderOldData);
 
-            //        if (Request.Values is not null
-            //            ? Request.Values.Any()
-            //            : false)
-            //        {
-            //            List<AdvancedFormBuilderListValue> NewAdvancedFormBuilderListValuesEntities = Request.Values
-            //                .Where(x => x.Id == 0)
-            //                .Select(x => new AdvancedFormBuilderListValue()
-            //                {
-            //                    ArabicValue = x.ArabicValue,
-            //                    EnglishValue = x.EnglishValue,
-            //                    AdvancedFormBuilderId = Request.Id
-            //                }).ToList();
+                    List<AdvancedFormBuilderListValue> OldAdvancedFormBuilderValueEntities = await _AdvancedFormBuilderListValueRepository
+                        .Where(x => x.AdvancedFormBuilderId == Request.Id)
+                        .ToListAsync();
 
-            //            if (NewAdvancedFormBuilderListValuesEntities.Any())
-            //                await _AdvancedFormBuilderListValueRepository.AddRangeAsync(NewAdvancedFormBuilderListValuesEntities);
+                    if (Request.Values is not null
+                        ? Request.Values.Any()
+                        : false)
+                    {
+                        List<AdvancedFormBuilderListValue> NewAdvancedFormBuilderListValuesEntities = Request.Values
+                            .Where(x => x.Id == 0)
+                            .Select(x => new AdvancedFormBuilderListValue()
+                            {
+                                ArabicValue = x.ArabicValue,
+                                EnglishValue = x.EnglishValue,
+                                AdvancedFormBuilderId = Request.Id
+                            }).ToList();
 
-            //            IEnumerable<UpdateAdvancedFormBuilderValueDto> UpdatedAdvancedFormBuilderListValues = Request.Values
-            //                .Where(x => x.Id != 0);
+                        if (NewAdvancedFormBuilderListValuesEntities.Any())
+                            await _AdvancedFormBuilderListValueRepository.AddRangeAsync(NewAdvancedFormBuilderListValuesEntities);
 
-            //            foreach (UpdateAdvancedFormBuilderValueDto AdvancedFormBuilderValue in UpdatedAdvancedFormBuilderListValues)
-            //            {
-            //                AdvancedFormBuilderListValue? AdvancedFormBuilderListValueEntity = OldAdvancedFormBuilderValueEntities
-            //                    .FirstOrDefault(x => x.Id == AdvancedFormBuilderValue.Id);
+                        IEnumerable<UpdateAdvancedFormBuilderValueDto> UpdatedAdvancedFormBuilderListValues = Request.Values
+                            .Where(x => x.Id != 0);
 
-            //                if (AdvancedFormBuilderListValueEntity is not null)
-            //                {
-            //                    if (AdvancedFormBuilderListValueEntity.ArabicValue.ToLower() != AdvancedFormBuilderValue.ArabicValue.ToLower() ||
-            //                        AdvancedFormBuilderListValueEntity.EnglishValue.ToLower() != AdvancedFormBuilderValue.EnglishValue.ToLower())
-            //                    {
-            //                        AdvancedFormBuilderListValueEntity.EnglishValue = AdvancedFormBuilderValue.EnglishValue;
-            //                        AdvancedFormBuilderListValueEntity.ArabicValue = AdvancedFormBuilderValue.ArabicValue;
+                        foreach (UpdateAdvancedFormBuilderValueDto AdvancedFormBuilderValue in UpdatedAdvancedFormBuilderListValues)
+                        {
+                            AdvancedFormBuilderListValue? AdvancedFormBuilderListValueEntity = OldAdvancedFormBuilderValueEntities
+                                .FirstOrDefault(x => x.Id == AdvancedFormBuilderValue.Id);
 
-            //                        await _AdvancedFormBuilderListValueRepository.UpdateAsync(AdvancedFormBuilderListValueEntity);
-            //                    }
-            //                }
-            //            }
-            //        }
+                            if (AdvancedFormBuilderListValueEntity is not null)
+                            {
+                                if (AdvancedFormBuilderListValueEntity.ArabicValue.ToLower() != AdvancedFormBuilderValue.ArabicValue.ToLower() ||
+                                    AdvancedFormBuilderListValueEntity.EnglishValue.ToLower() != AdvancedFormBuilderValue.EnglishValue.ToLower())
+                                {
+                                    AdvancedFormBuilderListValueEntity.EnglishValue = AdvancedFormBuilderValue.EnglishValue;
+                                    AdvancedFormBuilderListValueEntity.ArabicValue = AdvancedFormBuilderValue.ArabicValue;
 
-            //        List<AdvancedFormBuilderListValue> DeleteAdvancedFormBuilderListValuesEntities = OldAdvancedFormBuilderValueEntities
-            //            .Where(x => Request.Values != null
-            //                ? !Request.Values.Select(y => y.Id).Contains(x.Id)
-            //                : true)
-            //            .ToList();
+                                    await _AdvancedFormBuilderListValueRepository.UpdateAsync(AdvancedFormBuilderListValueEntity);
+                                }
+                            }
+                        }
+                    }
 
-            //        if (DeleteAdvancedFormBuilderListValuesEntities.Any())
-            //            await _AdvancedFormBuilderListValueRepository.DeleteListAsync(DeleteAdvancedFormBuilderListValuesEntities);
+                    List<AdvancedFormBuilderListValue> DeleteAdvancedFormBuilderListValuesEntities = OldAdvancedFormBuilderValueEntities
+                        .Where(x => Request.Values != null
+                            ? !Request.Values.Select(y => y.Id).Contains(x.Id)
+                            : true)
+                        .ToList();
 
-            //        if (AdvancedFormBuilderGeneralValidationEntity is not null)
-            //            await _AdvancedFormBuilderGeneralValidationRepository.DeleteAsync(AdvancedFormBuilderGeneralValidationEntity);
+                    if (DeleteAdvancedFormBuilderListValuesEntities.Any())
+                        await _AdvancedFormBuilderListValueRepository.DeleteListAsync(DeleteAdvancedFormBuilderListValuesEntities);
 
-            //        if (DependenciesEntities.Any())
-            //            await _AdvancedFormBuilderDependencyRepository.DeleteListAsync(DependenciesEntities);
+                    if (AdvancedFormBuilderGeneralValidationEntity is not null)
+                        await _AdvancedFormBuilderGeneralValidationRepository.DeleteAsync(AdvancedFormBuilderGeneralValidationEntity);
 
-            //        if (AdvancedFormBuilderDependencyValidationEntities.Any())
-            //            await _AdvancedFormBuilderDependencyValidationRepository.DeleteListAsync(AdvancedFormBuilderDependencyValidationEntities);
+                    if (AdvancedFormBuilderDependenciesEntities.Any())
+                        await _AdvancedFormBuilderDependencyRepository.DeleteListAsync(AdvancedFormBuilderDependenciesEntities);
 
-            //        if (AdvancedFormBuilderViewWhenRelationEntities.Any())
-            //            await _AdvancedFormBuilderViewWhenRelationRepository.DeleteListAsync(AdvancedFormBuilderViewWhenRelationEntities);
+                    if (AdvancedFormBuilderDependencyValidationEntities.Any())
+                        await _AdvancedFormBuilderDependencyValidationRepository.DeleteListAsync(AdvancedFormBuilderDependencyValidationEntities);
 
-            //        // Add General Validaiton if The Request.AdvancedFormBuilderGeneralValidationObject is NOT NULL..
-            //        if (Request.GeneralValidationObject is not null)
-            //        {
-            //            AdvancedFormBuilderGeneralValidation NewAdvancedFormBuilderGeneralValidationEntity = _Mapper.Map<AdvancedFormBuilderGeneralValidation>(Request.AdvancedFormBuilderGeneralValidationObject);
-            //            NewAdvancedFormBuilderGeneralValidationEntity.AdvancedFormBuilderId = Request.Id;
+                    if (ViewWhenRelationEntities.Any())
+                        await _AdvancedFormBuilderViewWhenRelationRepository.DeleteListAsync(ViewWhenRelationEntities);
 
-            //            await _AdvancedFormBuilderGeneralValidationRepository.AddAsync(NewAdvancedFormBuilderGeneralValidationEntity);
-            //        }
+                    // Add General Validaiton if The Request.GeneralValidationObject is NOT NULL..
+                    if (Request.GeneralValidationObject is not null)
+                    {
+                        AdvancedFormBuilderGeneralValidation NewAdvancedFormBuilderGeneralValidationEntity = _Mapper.Map<AdvancedFormBuilderGeneralValidation>(Request.GeneralValidationObject);
+                        NewAdvancedFormBuilderGeneralValidationEntity.AdvancedFormBuilderId = Request.Id;
 
-            //        // Add AdvancedFormBuilderDependency Validaiton if The Request.AdvancedFormBuilderDependencyValidations is NOT NULL..
-            //        if (Request.DependencyValidations is not null)
-            //        {
-            //            foreach (CreateDependencyValidation AdvancedFormBuilderDependencyValidationDTO in Request.DependencyValidations)
-            //            {
-            //                // Create New AdvancedFormBuilderAdvancedFormBuilderDependencyGroupId To Combine The Group Of Dependenies With Each Other and With Their Validation..
-            //                AdvancedFormBuilderDependencyGroup NewAdvancedFormBuilderAdvancedFormBuilderDependencyGroup = new AdvancedFormBuilderDependencyGroup();
-            //                await _AdvancedFormBuilderDependencyGroupRepository.AddAsync(NewAdvancedFormBuilderAdvancedFormBuilderDependencyGroup);
+                        await _AdvancedFormBuilderGeneralValidationRepository.AddAsync(NewAdvancedFormBuilderGeneralValidationEntity);
+                    }
 
-            //                foreach (CreateDependencyValidation AdvancedFormBuilderDependencyDTO in AdvancedFormBuilderDependencyValidationDTO.Dependencies)
-            //                {
-            //                    AdvancedFormBuilderDependency NewAdvancedFormBuilderDependencyEntity = _Mapper.Map<AdvancedFormBuilderDependency>(AdvancedFormBuilderDependencyDTO);
-            //                    NewAdvancedFormBuilderDependencyEntity.AdvancedFormBuilderAdvancedFormBuilderDependencyGroupId = NewAdvancedFormBuilderAdvancedFormBuilderDependencyGroup.Id;
-            //                    NewAdvancedFormBuilderDependencyEntity.MainAdvancedFormBuilderId = Request.Id;
-            //                    await _AdvancedFormBuilderDependencyRepository.AddAsync(NewAdvancedFormBuilderDependencyEntity);
-            //                }
+                    // Add Dependency Validaiton if The Request.DependencyValidations is NOT NULL..
+                    if (Request.DependencyValidations is not null)
+                    {
+                        foreach (CreateDependencyValidation DependencyValidationDTO in Request.DependencyValidations)
+                        {
+                            // Create New DependencyGroupId To Combine The Group Of Dependenies With Each Other and With Their Validation..
+                            AdvancedFormBuilderDependencyGroup NewAdvancedFormBuilderGroup = new AdvancedFormBuilderDependencyGroup();
+                            await _AdvancedFormBuilderDependencyGroupRepository.AddAsync(NewAdvancedFormBuilderGroup);
 
-            //                AdvancedFormBuilderDependencyValidation NewAdvancedFormBuilderDependencyValidationEntity = _Mapper.Map<AdvancedFormBuilderDependencyValidation>(AdvancedFormBuilderDependencyValidationDTO);
-            //                NewAdvancedFormBuilderDependencyValidationEntity.AdvancedFormBuilderAdvancedFormBuilderDependencyGroupId = NewAdvancedFormBuilderAdvancedFormBuilderDependencyGroup.Id;
-            //                await _AdvancedFormBuilderDependencyValidationRepository.AddAsync(NewAdvancedFormBuilderDependencyValidationEntity);
-            //            }
-            //        }
+                            foreach (CreateDependency DependencyDTO in DependencyValidationDTO.Dependencies)
+                            {
+                                AdvancedFormBuilderDependency NewAdvancedFormBuilderDependencyEntity = _Mapper.Map<AdvancedFormBuilderDependency>(DependencyDTO);
+                                NewAdvancedFormBuilderDependencyEntity.AdvancedFormBuilderDependencyGroupId = NewAdvancedFormBuilderGroup.Id;
+                                NewAdvancedFormBuilderDependencyEntity.MainAdvancedFormBuilderId = Request.Id;
+                                await _AdvancedFormBuilderDependencyRepository.AddAsync(NewAdvancedFormBuilderDependencyEntity);
+                            }
 
-            //        // Add ViewWhen Relation Data..
-            //        if (Request.ViewWhenDtos?.Any() ?? false)
-            //        {
-            //            List<AdvancedFormBuilderViewWhenRelation> NewAdvancedFormBuilderViewWhenRelationEntities = Request.ViewWhenDtos
-            //                .Select(x => new AdvancedFormBuilderViewWhenRelation()
-            //                {
-            //                    AdvancedFormBuilderId = Request.Id,
-            //                    AdvancedFormBuilderListValueId = x.AttributeListValueId
-            //                }).ToList();
+                            AdvancedFormBuilderDependencyValidation NewAdvancedFormBuilderDependencyValidationEntity = _Mapper.Map<AdvancedFormBuilderDependencyValidation>(DependencyValidationDTO);
+                            NewAdvancedFormBuilderDependencyValidationEntity.AdvancedFormBuilderDependencyGroupId = NewAdvancedFormBuilderGroup.Id;
+                            await _AdvancedFormBuilderDependencyValidationRepository.AddAsync(NewAdvancedFormBuilderDependencyValidationEntity);
+                        }
+                    }
 
-            //            await _AdvancedFormBuilderViewWhenRelationRepository.AddRangeAsync(NewAdvancedFormBuilderViewWhenRelationEntities);
-            //        }
+                    // Add ViewWhen Relation Data..
+                    if (Request.ViewWhenDtos?.Any() ?? false)
+                    {
+                        List<AdvancedFormBuilderViewWhenRelation> NewAdvancedFormBuilderViewWhenRelationEntities = Request.ViewWhenDtos
+                            .Select(x => new AdvancedFormBuilderViewWhenRelation()
+                            {
+                                AdvancedFormBuilderId = Request.Id,
+                                AdvancedFormBuilderListValueId = x.AttributeListValueId
+                            }).ToList();
 
-            //        Transaction.Complete();
+                        await _AdvancedFormBuilderViewWhenRelationRepository.AddRangeAsync(NewAdvancedFormBuilderViewWhenRelationEntities);
+                    }
 
-            //        ResponseMessage = Request.lang == "en"
-            //            ? "Field has been updated successfully"
-            //            : "تم تعديل الحقل بنجاح";
+                    Transaction.Complete();
 
-            //        return new BaseResponse<object>(ResponseMessage, true, 200);
-            //    }
-            //    catch (Exception)
-            //    {
-            //        Transaction.Dispose();
-            //        throw;
-            //    }
-            //}
+                    ResponseMessage = Request.lang == "en"
+                        ? "Field has been updated successfully"
+                        : "تم تعديل الحقل بنجاح";
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

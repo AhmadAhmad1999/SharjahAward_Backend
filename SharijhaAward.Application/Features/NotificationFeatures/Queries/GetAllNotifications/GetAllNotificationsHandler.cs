@@ -26,15 +26,30 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
 
             string ResponseMessage = string.Empty;
 
-            List<GetAllNotificationsListVM> Classes = _Mapper.Map<List<GetAllNotificationsListVM>>(await _NotificationRepository
-                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage).ToListAsync());
+            List<GetAllNotificationsListVM> NotificationEntities = await _NotificationRepository
+                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
+                .Select(x => new GetAllNotificationsListVM()
+                {
+                    ArabicBody = x.ArabicBody,
+                    ArabicTitle = x.ArabicTitle,
+                    Body = Request.lang == "en"
+                        ? x.EnglishBody : x.ArabicBody,
+                    EnglishBody = x.EnglishBody,
+                    CreatedAt = x.CreatedAt,
+                    EnglishTitle = x.EnglishTitle,
+                    Id = x.Id,
+                    isReaded = false,
+                    Title = Request.lang == "en"
+                        ? x.EnglishTitle : x.ArabicTitle,
+                }).ToListAsync();
 
-            int TotalCount = await _NotificationRepository.GetCountAsync(null);
+            int TotalCount = await _NotificationRepository.WhereThenFilter(x => true, filterObject)
+                .CountAsync();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);
 
-            return new BaseResponse<List<GetAllNotificationsListVM>>(ResponseMessage, true, 200, Classes, PaginationParameter);
+            return new BaseResponse<List<GetAllNotificationsListVM>>(ResponseMessage, true, 200, NotificationEntities, PaginationParameter);
         }
     }
 }

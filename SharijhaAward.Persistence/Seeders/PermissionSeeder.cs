@@ -2655,8 +2655,21 @@ namespace SharijhaAward.Persistence.Seeders
                 }, new Permission()
                 {
                     // Id = 188,
-                    Name = "عرض تفاصيل التعميم",
+                    Name = "عرض تفاصيل إشعار التعميم",
                     Action = "show-details",
+                    PermissionHeaderId = 6,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+
+                }, new Permission()
+                {
+                    // Id = 188,
+                    Name = "عرض إشعارات التعاميم",
+                    Action = "show-all",
                     PermissionHeaderId = 6,
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
