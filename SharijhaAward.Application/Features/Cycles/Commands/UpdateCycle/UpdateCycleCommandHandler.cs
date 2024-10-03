@@ -79,6 +79,19 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle
 
                 await _providedFormRepository.UpdateListAsync(forms);
             }
+            else if (cycleToUpdate.Status != Domain.Constants.Common.Status.Active && request.Status == Domain.Constants.Common.Status.Active)
+            {
+                var forms = _providedFormRepository
+                    .Where(f => f.Category.CycleId == cycleToUpdate.Id)
+                    .ToList();
+
+                foreach (var form in forms)
+                {
+                    form.Type = Domain.Constants.ProvidedFromConstants.ProvidedFormType.Current;
+                }
+
+                await _providedFormRepository.UpdateListAsync(forms);
+            }
 
             _mapper.Map(request, cycleToUpdate, typeof(UpdateCycleCommand), typeof(Cycle));
             

@@ -34,14 +34,12 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
             List<Criterion> SubCriterionEntities = await _CriterionRepository
                 .Where(x => x.CategoryId == Request.CategoryId &&
                     x.ParentId != null &&
-                    (x.AttachFilesOnSubCriterion != null
-                        ? x.AttachFilesOnSubCriterion.Value
-                        : false) &&
                     MainCriterionEntities.Select(y => y.Id).Any(y => y == x.ParentId))
                 .Include(x => x.Parent!).ToListAsync();
 
             List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
-                .Where(x => SubCriterionEntities.Select(y => y.Id).Contains(x.CriterionId)).ToListAsync();
+                .Where(x => SubCriterionEntities.Select(y => y.Id).Contains(x.CriterionId) &&
+                    x.Criterion!.AttachFilesOnSubCriterion == false).ToListAsync();
 
             List<Criterion> SubCriterionEntitiesWithNoItems = SubCriterionEntities
                 .Where(x => !CriterionItemEntities.Select(y => y.CriterionId).Contains(x.Id)).ToList();
@@ -52,7 +50,8 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
                 .ToListAsync();
 
             List<Criterion> CriterionEntitiesWithNoAttachments = SubCriterionEntitiesWithNoItems
-                .Where(x => !InsertedSubCriterionAttachment.Select(y => y.CriterionId).Contains(x.Id)).ToList();
+                .Where(x => !InsertedSubCriterionAttachment.Select(y => y.CriterionId).Contains(x.Id) &&
+                    x.AttachFilesOnSubCriterion == true).ToList();
 
             if (CriterionEntitiesWithNoAttachments.Any())
             {
@@ -64,7 +63,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
             }
 
             if (InsertedSubCriterionAttachment.Any()
-                ? InsertedSubCriterionAttachment.FirstOrDefault()!.Criterion!.MaxAttachmentNumber > 0
+                ? InsertedSubCriterionAttachment.FirstOrDefault()!.Criterion!.MaxAttachmentNumber != 0
                 : false)
             {
                 IGrouping<int, CriterionAttachment>? CheckMaxAttachment = InsertedSubCriterionAttachment
@@ -92,9 +91,10 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
             if (InsertedCriterionItemAttachment.Any())
             {
                 List<CriterionItem> CriterionItemEntitiesWithNoAttachments = CriterionItemEntities
-                    .Where(x => !InsertedCriterionItemAttachment.Select(y => y.CriterionItemId).Contains(x.Id)).ToList();
+                    .Where(x => !InsertedCriterionItemAttachment.Select(y => y.CriterionItemId).Contains(x.Id) &&
+                        x.Criterion!.AttachFilesOnSubCriterion == false).ToList();
 
-                if (CriterionItemEntitiesWithNoAttachments.Count() > 0)
+                if (CriterionItemEntitiesWithNoAttachments.Any())
                 {
                     ResponseMessage = Request.lang == "en"
                         ? $"You have to attach one file at least to this criterion item: {CriterionItemEntitiesWithNoAttachments[0].EnglishName}"
@@ -104,7 +104,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
                 }
 
                 if (InsertedCriterionItemAttachment.Any()
-                    ? InsertedCriterionItemAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber > 0
+                    ? InsertedCriterionItemAttachment.FirstOrDefault()!.CriterionItem!.MaxAttachmentNumber != 0
                     : false)
                 {
                     IGrouping<int, CriterionItemAttachment>? CheckMaxAttachment = InsertedCriterionItemAttachment
