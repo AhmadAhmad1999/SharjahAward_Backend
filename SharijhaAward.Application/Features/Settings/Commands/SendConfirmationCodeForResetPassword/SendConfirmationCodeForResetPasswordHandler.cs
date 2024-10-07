@@ -3,6 +3,7 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
+using System.Net.Mail;
 
 namespace SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForResetPassword
 {
@@ -42,24 +43,41 @@ namespace SharijhaAward.Application.Features.Settings.Commands.SendConfirmationC
             int ConfirmationCode = new Random().Next(10000, 99999);
 
             UserEntity.ConfirmationCodeForResetPassword = ConfirmationCode;
-            await _UserRepository.UpdateAsync(UserEntity);
 
-            EmailRequest EmailRequest = new EmailRequest()
+            List<string> Recipients = new List<string>()
             {
-                ToEmail = UserEntity.Email,
-                Subject = Request.lang == "ar"
-                    ? $"رمز تفعيل"
-                    : "Confirmation Code",
-                Body = Request.lang == "ar"
-                    ? $"رمز التفعيل الخاص بحسابك: {ConfirmationCode}"
-                    : $"This is your account's confirmation code: {ConfirmationCode}"
+                UserEntity.Email
             };
 
-            await _EmailSender.SendEmailForConfirmationCode(EmailRequest);
+            string EmailSubject = "معلومات الحساب الشخصي" + "-" + "Personal account information";
+
+            string HtmlBody = "wwwroot/ConfirmationCode_Template.html";
+
+            string HTMLContent = File.ReadAllText(HtmlBody);
+
+            byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+            string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
+
+            string FullEmailBody = HTMLContent
+                .Replace("$PersonalEmail$", UserEntity.Email)
+                .Replace("$ConfirmationCode$", ConfirmationCode.ToString());
+
+            // Create An AlternateView to Specify The HTML Body And Embed The Image..
+            AlternateView AlternateView2 = AlternateView.CreateAlternateViewFromString(FullEmailBody, null, "text/html");
+
+            LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+            AlternateView2.LinkedResources.Add(HeaderImage);
+
+            FullEmailBody = FullEmailBody
+                .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
+
+            await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody, AlternateView2);
 
             ResponseMessage = Request.lang == "en"
                 ? "Confirmation code sent successfuly"
                 : "تم إرسال كود التفعيل بنجاح";
+
+            await _UserRepository.UpdateAsync(UserEntity);
 
             return new BaseResponse<object>(ResponseMessage, true, 200);
         }

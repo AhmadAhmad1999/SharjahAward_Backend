@@ -12,6 +12,8 @@ using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
+using System.Globalization;
+using System.Net.Mail;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator
@@ -147,26 +149,9 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
 
                     await _ArbitratorRepository.AddAsync(NewArbitratorEntity);
 
-                    if (Request.SendEmail)
-                    {
-                        var EmailRequest = new EmailRequest()
-                        {
-                            ToEmail = Request.Email,
-                            Subject = Request.lang == "ar"
-                                    ? $"معلومات حساب المحكم"
-                                    : "Arbitrator Account Informations",
-                            Body = Request.lang == "ar"
-                                    ? $"البريد الإلكترني الخاص بك : {Request.Email} /n كلمة المرور : {Request.Password}"
-                                    : $"Your Email : {Request.Email} /n Password : {Request.Password}"
-                        };
-
-                        await _EmailSender.SendEmailForConfirmationCode(EmailRequest);
-                    }
-
                     var Responsibilities = await _responsibilityRepository
                          .Where(r => r.RoleId == Role.Id)
                          .ToListAsync();
-
 
                     var userResponsibilities = await _responsibilityUserRepository
                         .Where(r => r.UserId == NewUserEntity.Id)
@@ -218,6 +203,38 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                         });
 
                     await _ArbitratorClassRepository.AddRangeAsync(ArbitratorClassesEntities);
+
+                    if (Request.SendEmail)
+                    {
+                        List<string> Recipients = new List<string>()
+                        {
+                            Request.Email
+                        };
+
+                        string EmailSubject = "معلومات الحساب الشخصي" + "-" + "Personal account information";
+
+                        string HtmlBody = "wwwroot/AccountInfo_Template.html";
+
+                        string HTMLContent = File.ReadAllText(HtmlBody);
+
+                        byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                        string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
+
+                        string FullEmailBody = HTMLContent
+                            .Replace("$PersonalEmail$", Request.Email)
+                            .Replace("$Password$", Request.Password);
+
+                        // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                        AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(FullEmailBody, null, "text/html");
+
+                        LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                        AlternateView.LinkedResources.Add(HeaderImage);
+
+                        FullEmailBody = FullEmailBody
+                            .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
+
+                        await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody, AlternateView);
+                    }
 
                     Transaction.Complete();
 

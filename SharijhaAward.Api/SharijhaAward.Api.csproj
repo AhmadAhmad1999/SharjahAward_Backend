@@ -16,6 +16,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="wwwroot\AccountInfo_Template.html" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Aspose.HTML" Version="24.1.0" />
 		<PackageReference Include="Aspose.PDF" Version="24.1.0" />
 		<PackageReference Include="BarCode" Version="2024.2.1" />

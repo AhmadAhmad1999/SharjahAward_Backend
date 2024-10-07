@@ -9,6 +9,7 @@ using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AchievementModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
+using System.Net.Mail;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Authentication.SignUp
@@ -89,19 +90,34 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                                 ? "This account is not authenticated, please verify it using the confirmation code that was sent to your email inbox"
                                 : "لم يتم توثيق حسابك، يرجى التحقق منه باستخدام رمز التأكيد الذي تم إرساله إلى صندوق البريد الإلكتروني الخاص بك";
 
-                            EmailRequest EmailRequest2 = new EmailRequest()
+                            List<string> NotAuthenticatedRecipients = new List<string>()
                             {
-                                ToEmail = CheckEmail.Email,
-                                Subject = Request.lang == "ar"
-                                    ? $"رمز تفعيل"
-                                    : "Confirmation Code",
-                                Body = Request.lang == "ar"
-                                    ? $"رمز التفعيل الخاص بحسابك: {CheckEmail.ConfirmationCodeForSignUp}"
-                                    : $"This is your account's confirmation code: {CheckEmail.ConfirmationCodeForSignUp}"
+                                Request.Email
                             };
 
-                            await _EmailSender.SendEmailForConfirmationCode(EmailRequest2);
+                            string NotAuthenticatedEmailSubject = "رمز التحقق لتأكيد الحساب الشخصي" + "-" + "Verification code to confirm personal account";
 
+                            string NotAuthenticatedHtmlBody = "wwwroot/ConfirmationCode_Template.html";
+
+                            string NotAuthenticatedHTMLContent = File.ReadAllText(NotAuthenticatedHtmlBody);
+
+                            byte[] NotAuthenticatedHeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                            string NotAuthenticatedHeaderImagebase64String = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes);
+
+                            string NotAuthenticatedFullEmailBody = NotAuthenticatedHTMLContent
+                                .Replace("$PersonalEmail$", Request.Email)
+                                .Replace("$ConfirmationCode$", CheckEmail.ConfirmationCodeForSignUp ? .ToString() ?? null);
+
+                            // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                            AlternateView NotAuthenticatedAlternateView = AlternateView.CreateAlternateViewFromString(NotAuthenticatedFullEmailBody, null, "text/html");
+
+                            LinkedResource NotAuthenticatedHeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                            NotAuthenticatedAlternateView.LinkedResources.Add(NotAuthenticatedHeaderImage);
+
+                            NotAuthenticatedFullEmailBody = NotAuthenticatedFullEmailBody
+                                .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'");
+
+                            await _EmailSender.SendEmailAsync(NotAuthenticatedRecipients, NotAuthenticatedEmailSubject, NotAuthenticatedFullEmailBody, NotAuthenticatedAlternateView);
                             return new AuthenticationResponse()
                             {
                                 isSucceed = true,
@@ -180,18 +196,34 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
                         UserId = UserEntityAfterAdd.Id
                     };
 
-                    EmailRequest EmailRequest = new EmailRequest()
+                    List<string> Recipients = new List<string>()
                     {
-                        ToEmail = User.Email,
-                        Subject = Request.lang == "ar"
-                            ? $"رمز تفعيل"
-                            : "Confirmation Code",
-                        Body = Request.lang == "ar"
-                            ? $"رمز التفعيل الخاص بحسابك: {ConfirmationCode}"
-                            : $"This is your account's confirmation code: {ConfirmationCode}"
+                        Request.Email
                     };
 
-                    await _EmailSender.SendEmailForConfirmationCode(EmailRequest);
+                    string EmailSubject = "معلومات الحساب الشخصي" + "-" + "Personal account information";
+
+                    string HtmlBody = "wwwroot/ConfirmationCode_Template.html";
+
+                    string HTMLContent = File.ReadAllText(HtmlBody);
+
+                    byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                    string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
+
+                    string FullEmailBody = HTMLContent
+                        .Replace("$PersonalEmail$", Request.Email)
+                        .Replace("$ConfirmationCode$", ConfirmationCode.ToString());
+
+                    // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                    AlternateView AlternateView2 = AlternateView.CreateAlternateViewFromString(FullEmailBody, null, "text/html");
+
+                    LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                    AlternateView2.LinkedResources.Add(HeaderImage);
+
+                    FullEmailBody = FullEmailBody
+                        .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
+
+                    await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody, AlternateView2);
 
                     List<UserPermissionsDto> ListOfUserPermissionsDto = await _RolePermissionRepository
                         .Where(x => x.RoleId == NewUserRoleEntity.RoleId)

@@ -63,6 +63,24 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            if (DynamicAttributeOldData.DynamicAttributeSection!.ArabicName == "المعلومات الأساسية" &&
+                DynamicAttributeOldData.DynamicAttributeSection!.EnglishName == "Main Information")
+            {
+                DynamicAttributeOldData.ArabicLabel = Request.ArabicLabel;
+                DynamicAttributeOldData.ArabicPlaceHolder = Request.ArabicPlaceHolder;
+                DynamicAttributeOldData.EnglishLabel = Request.EnglishLabel;
+                DynamicAttributeOldData.EnglishPlaceHolder = Request.EnglishPlaceHolder;
+                DynamicAttributeOldData.IsRequired = Request.IsRequired;
+
+                await _DynamicAttributeRepository.UpdateAsync(DynamicAttributeOldData);
+
+                ResponseMessage = Request.lang == "en"
+                    ? "Field has been updated successfully"
+                    : "تم تعديل الحقل بنجاح";
+
+                return new BaseResponse<object>(ResponseMessage, true, 200);
+            }
+
             if (Request.AttributeDataTypeId != DynamicAttributeOldData.AttributeDataTypeId)
             {
                 ResponseMessage = Request.lang == "en"

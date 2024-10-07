@@ -62,6 +62,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Update
                     LastModifiedBy = null,
                     isAccepted = FormStatus.NotArbitratedYet,
                     isAcceptedFromChairman = FormStatus.NotArbitratedYet,
+                    isAcceptedFromChairmanFromArbitrationAudit = FormStatus.NotArbitratedYet,
                     AssignedByUserId = UserId
                 });
 

@@ -151,7 +151,7 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                     .Where(x => x.PercentCompletion != 100)
                     .Count();
 
-                float AllUnCompletedFormsAsPercentage = 100 - AllCompletedFormsAsPercentage;
+                float AllUnCompletedFormsAsPercentage = (100 * AllUnCompletedFormsAsNumber) / FormsNumber; ;
 
                 int AllAcceptedFormsAsNumber = AllProvidedFormsEntities
                     .Where(x => x.IsAccepted != null ? x.IsAccepted.Value : false)
@@ -163,7 +163,7 @@ namespace SharijhaAward.Application.Features.HomePageFeatures.Queries.GetAllHome
                     .Where(x => x.IsAccepted != null ? !x.IsAccepted.Value : false)
                     .Count();
 
-                float AllUnAcceptedFormsAsPercentage = 100 - AllAcceptedFormsAsPercentage;
+                float AllUnAcceptedFormsAsPercentage = (100 * AllUnAcceptedFormsAsNumber) / FormsNumber; ;
 
                 Arbitrator? CheckArbitratorEntity = await _ArbitratorRepository
                     .FirstOrDefaultAsync(x => x.Id == UserId);

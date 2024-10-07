@@ -12,6 +12,7 @@ using SharijhaAward.Domain.Entities.EducationCoordinatorModel;
 using SharijhaAward.Domain.Entities.EduInstitutionCoordinatorModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
+using System.Net.Mail;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordinator
@@ -125,21 +126,34 @@ namespace SharijhaAward.Application.Features.Coordinators.Commands.CreateCoordin
                     
                     if (Request.SendEmail)
                     {
-                        EmailRequest EmailRequest = new EmailRequest()
+                        List<string> Recipients = new List<string>()
                         {
-                            ToEmail = Request.Email,
-                            Subject = Request.lang == "ar"
-                                    ? $"معلومات حساب المنسق"
-                                    : "Coordinator Account Informations",
-                            Body = Request.lang == "ar"
-                                    ? $"البريد الإلكترني الخاص بك: {Request.Email} <br>" + "\n" +
-                                    $" كلمة المرور: {Request.Password}"
-                                    
-                                    : $"Your Email: {Request.Email} " +"\n" +
-                                    $" Password: {Request.Password}"
+                            Request.Email
                         };
 
-                        await _EmailSender.SendEmailForConfirmationCode(EmailRequest);
+                        string EmailSubject = "معلومات الحساب الشخصي" + "-" + "Personal account information";
+
+                        string HtmlBody = "wwwroot/AccountInfo_Template.html";
+
+                        string HTMLContent = File.ReadAllText(HtmlBody);
+
+                        byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                        string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
+
+                        string FullEmailBody = HTMLContent
+                            .Replace("$PersonalEmail$", Request.Email)
+                            .Replace("$Password$", Request.Password);
+
+                        // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                        AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(FullEmailBody, null, "text/html");
+
+                        LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                        AlternateView.LinkedResources.Add(HeaderImage);
+
+                        FullEmailBody = FullEmailBody
+                            .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
+
+                        await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody, AlternateView);
                     }
 
                     var role = await _roleRepository.GetByName("Coordinator");

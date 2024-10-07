@@ -500,49 +500,67 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     
                     if (ClassDynamicAttributes is not null)
                     {
-                        List<DynamicAttributeListValue> NewEducationalClasses = await _CategoryEducationalClassRepository
+                        List<DynamicAttributeListValue> OldDynamicAttributeListValueEntities = await _DynamicAttributeListValueRepository
+                            .Where(x => x.DynamicAttributeId == ClassDynamicAttributes.Id)
+                            .ToListAsync();
+
+                        IEnumerable<string> CombinedValues = OldDynamicAttributeListValueEntities
+                            .Select(x => x.ArabicValue + x.EnglishValue);
+
+                        List<CategoryEducationalClass> OldCategoryEducationalClassEntities = await _CategoryEducationalClassRepository
                             .Where(x => x.CategoryId == Request.CategoryId)
+                            .ToListAsync();
+
+                        IEnumerable<DynamicAttributeListValue> NewEducationalClasses = OldCategoryEducationalClassEntities
+                            .Where(x => !CombinedValues.Contains(x.EducationalClass!.ArabicName + x.EducationalClass!.EnglishName))
                             .Select(x => new DynamicAttributeListValue()
                             {
-                                isDeleted = false,
-                                DeletedAt = null,
-                                CreatedAt = DateTime.UtcNow,
-                                CreatedBy = null,
-                                LastModifiedAt = null,
-                                LastModifiedBy = null,
                                 DynamicAttributeId = ClassDynamicAttributes.Id,
                                 ArabicValue = x.EducationalClass!.ArabicName,
                                 EnglishValue = x.EducationalClass!.EnglishName
-                            }).ToListAsync();
+                            }).ToList();
 
-                        var AlreadyExist = await _DynamicAttributeListValueRepository
-                            .Where(x => !NewEducationalClasses.Select(y => y.ArabicValue).Contains(x.ArabicValue) &&
-                                !NewEducationalClasses.Select(y => y.EnglishValue).Contains(x.EnglishValue) &&
-                                x.DynamicAttributeId == ClassDynamicAttributes.Id)
-                            .ToListAsync();
+                        IEnumerable<DynamicAttributeListValue> DeletedEducationalClasses = OldDynamicAttributeListValueEntities
+                            .Where(x => !OldCategoryEducationalClassEntities
+                                .Select(y => y.EducationalClass!.ArabicName + y.EducationalClass!.EnglishName)
+                                .Contains(x.ArabicValue + x.EnglishValue));
 
+                        await _DynamicAttributeListValueRepository.DeleteListAsync(DeletedEducationalClasses);
                         await _DynamicAttributeListValueRepository.AddRangeAsync(NewEducationalClasses);
                     }
                     
-                    if (EducationalEntityDynamicAttributes is not null)
+                    if (EducationalEntityDynamicAttributes is not null &&
+                        CategoryEntity.RelatedToEducationalEntities)
                     {
-                        List<DynamicAttributeListValue> NewEducationalEntities = await _EducationalEntityRepository
+                        List<DynamicAttributeListValue> OldDynamicAttributeListValueEntities = await _DynamicAttributeListValueRepository
+                            .Where(x => x.DynamicAttributeId == EducationalEntityDynamicAttributes.Id)
+                            .ToListAsync();
+
+                        IEnumerable<string> CombinedValues = OldDynamicAttributeListValueEntities
+                            .Select(x => x.ArabicValue + x.EnglishValue);
+
+                        IReadOnlyList<EducationalEntity> OldEducationalEntities = await _EducationalEntityRepository
+                            .ListAllAsync();
+
+                        List<DynamicAttributeListValue> NewEducationalEntities = OldEducationalEntities
+                            .Where(x => !CombinedValues.Contains(x.ArabicName + x.EnglishName))
                             .Select(x => new DynamicAttributeListValue()
                             {
-                                isDeleted = false,
-                                DeletedAt = null,
-                                CreatedAt = DateTime.UtcNow,
-                                CreatedBy = null,
-                                LastModifiedAt = null,
-                                LastModifiedBy = null,
                                 DynamicAttributeId = EducationalEntityDynamicAttributes.Id,
                                 ArabicValue = x.ArabicName,
                                 EnglishValue = x.EnglishName
-                            }).ToListAsync();
+                            }).ToList();
 
+                        IEnumerable<DynamicAttributeListValue> DeletedEducationalEntities = OldDynamicAttributeListValueEntities
+                            .Where(x => !OldEducationalEntities
+                                .Select(y => y.ArabicName + y.EnglishName)
+                                .Contains(x.ArabicValue + x.EnglishValue));
+
+                        await _DynamicAttributeListValueRepository.DeleteListAsync(DeletedEducationalEntities);
                         await _DynamicAttributeListValueRepository.AddRangeAsync(NewEducationalEntities);
                     }
                 }
+
                 foreach (DynamicAttributeSectionListVM DynamicAttributeSection in DynamicAttributeSections)
                 {
                     DynamicAttributeSection.DynamicAttributes = _DynamicAttributeRepository

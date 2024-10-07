@@ -1331,7 +1331,8 @@ namespace SharijhaAward.Persistence
 
                 foreach (PropertyInfo ReflectedTable in ReflectedTables)
                 {
-                    if (ReflectedTable.Name == "DynamicAttributeValues")
+                    if (ReflectedTable.Name == "DynamicAttributeValues" &&
+                        Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/').Count() > 2)
                     {
                         string ForeignKeyName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[1];
                         string MainTableName = Path.FirstOrDefault(x => x.Split('/')[0] == ReflectedTable.Name)!.Split('/')[2];
