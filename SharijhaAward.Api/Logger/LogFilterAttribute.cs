@@ -91,8 +91,11 @@ namespace SharijhaAward.Api.Logger
                 throw new UnauthorizedAccessException();
             }
 
-            if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
-                token.ToLower() != "bearer" && token.ToLower() != "bearer ")
+            if (!string.IsNullOrEmpty(token)
+                ? (token.ToLower() != "bearer null" &&
+                    token.ToLower() != "bearer" && token.ToLower() != "bearer " &&
+                    token.ToLower() != "bearer undefined") 
+                : false)
                 UserId = int.Parse(_JwtProvider.GetUserIdFromToken(token));
 
             ActionExecutedContext APIResponse = await next();
