@@ -21,102 +21,104 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Comma
     public class CreateAttachmentCommandHandler
         : IRequestHandler<CreateAttachmentCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<ConditionAttachment> _attachmentsRepository;
-        private readonly IAsyncRepository<TermAndCondition> _termsRepository;
-        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formsRepository;
-        private readonly IAsyncRepository<ConditionsProvidedForms> _conditionFormsRepository;
-        private readonly IFileService _attachmentFileService;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<ConditionAttachment> _ConditionAttachmentRepository;
+        private readonly IAsyncRepository<TermAndCondition> _TermAndConditionRepository;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
+        private readonly IAsyncRepository<ConditionsProvidedForms> _ConditionsProvidedFormsRepository;
+        private readonly IFileService _FileService;
+        private readonly IJwtProvider _JwtProvider;
+        private readonly IMapper _Mapper;
 
-        public CreateAttachmentCommandHandler
-            (
-                 IAsyncRepository<ConditionAttachment> attachmentsRepository,
-                 IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formsRepository,
-                 IAsyncRepository<TermAndCondition> termsRepository,
-                 IAsyncRepository<ConditionsProvidedForms> conditionFormsRepository,
-                 IFileService attachmentFileService,
-                 IJwtProvider jwtProvider,
-                 IMapper mapper
-            )
+        public CreateAttachmentCommandHandler(IAsyncRepository<ConditionAttachment> _ConditionAttachmentRepository,
+            IAsyncRepository<TermAndCondition> _TermAndConditionRepository,
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository,
+            IAsyncRepository<ConditionsProvidedForms> _ConditionsProvidedFormsRepository,
+            IFileService _FileService,
+            IJwtProvider _JwtProvider,
+            IMapper _Mapper)
         {
-            _attachmentsRepository = attachmentsRepository;
-            _attachmentFileService = attachmentFileService;
-            _conditionFormsRepository = conditionFormsRepository;
-            _formsRepository = formsRepository; 
-            _termsRepository = termsRepository;
-            _jwtProvider = jwtProvider;
-            _mapper = mapper;
+            this._ConditionAttachmentRepository = _ConditionAttachmentRepository;
+            this._TermAndConditionRepository = _TermAndConditionRepository;
+            this._ProvidedFormRepository = _ProvidedFormRepository; 
+            this._ConditionsProvidedFormsRepository = _ConditionsProvidedFormsRepository;
+            this._FileService = _FileService;
+            this._JwtProvider = _JwtProvider;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<object>> Handle(CreateAttachmentCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CreateAttachmentCommand Request, CancellationToken cancellationToken)
         {
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var form = _formsRepository.FirstOrDefault(f => f.userId == int.Parse(UserId) && f.Id == request.formId);
-            var term = _termsRepository.FirstOrDefault(t => t.Id == request.TermAndConditionId);
+            string ResponseMessage = string.Empty;
+            
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.token));
+            
+            Domain.Entities.ProvidedFormModel.ProvidedForm? ProvidedFormEntity = _ProvidedFormRepository
+                .FirstOrDefault(x => x.userId == UserId && x.Id == Request.formId);
+
+            TermAndCondition? TermAndConditionEntity = await _TermAndConditionRepository
+                .FirstOrDefaultAsync(t => t.Id == Request.TermAndConditionId);
            
-            string msg;
-           
-            if (term == null)
+            if (TermAndConditionEntity == null)
             {
-                msg = request.lang == "en"
-                    ? "The TermAndCondition Not Found"
+                ResponseMessage = Request.lang == "en"
+                    ? "Term and condition is not found"
                     : "الشرط غير موجود";
 
-                return new BaseResponse<object>(msg, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
-            
-            var conditionsProvided = await _conditionFormsRepository
-                .FirstOrDefaultAsync(c => c.TermAndConditionId == term.Id &&
-                    c.ProvidedFormId == form!.Id);
 
-            List<ConditionAttachment> attachmentsEntities = new List<ConditionAttachment>();
+            ConditionsProvidedForms? ConditionsProvidedFormsEntity = await _ConditionsProvidedFormsRepository
+                .FirstOrDefaultAsync(c => c.TermAndConditionId == TermAndConditionEntity.Id &&
+                    c.ProvidedFormId == ProvidedFormEntity!.Id);
+
+            List<ConditionAttachment> AttachmentsEntities = new List<ConditionAttachment>();
             
-            if (conditionsProvided != null)
+            if (ConditionsProvidedFormsEntity != null)
             {
-                attachmentsEntities = await _attachmentsRepository
-                    .Where(x => x.ConditionsProvidedFormsId == conditionsProvided.Id &&
-                        (x.IsAccept != null ? !x.IsAccept.Value : false))
+                AttachmentsEntities = await _ConditionAttachmentRepository
+                    .Where(x => x.ConditionsProvidedFormsId == ConditionsProvidedFormsEntity.Id)
                     .ToListAsync();
 
-                if (attachmentsEntities.Any())
+                if (AttachmentsEntities.Any())
                 {
-                    var Attachment = attachmentsEntities.FirstOrDefault(a => a.IsAccept == false);
+                    var Attachment = AttachmentsEntities.Where(a => a.IsAccept == false);
 
-                    await _attachmentsRepository.DeleteAsync(Attachment!);
+                    if (Attachment != null)
+                        await _ConditionAttachmentRepository.DeleteListAsync(Attachment!);
                 }
             }
 
-            if (conditionsProvided == null)
+            if (ConditionsProvidedFormsEntity == null)
             {
-                conditionsProvided = new ConditionsProvidedForms()
+                ConditionsProvidedFormsEntity = new ConditionsProvidedForms()
                 {
                     IsAgree = false,
-                    ProvidedFormId = request.formId,
-                    TermAndConditionId = request.TermAndConditionId
+                    ProvidedFormId = Request.formId,
+                    TermAndConditionId = Request.TermAndConditionId
 
                 };
-                await _conditionFormsRepository.AddAsync(conditionsProvided);
+
+                await _ConditionsProvidedFormsRepository.AddAsync(ConditionsProvidedFormsEntity);
             }
 
-            var data = _mapper.Map<ConditionAttachment>(request);
-            data.ConditionsProvidedFormsId = conditionsProvided!.Id;
+            ConditionAttachment ConditionAttachment = _Mapper.Map<ConditionAttachment>(Request);
+            ConditionAttachment.ConditionsProvidedFormsId = ConditionsProvidedFormsEntity!.Id;
           
-            if(term.NeedAttachment)
+            if(TermAndConditionEntity.NeedAttachment)
             {
-                if (term.RequiredAttachmentNumber > attachmentsEntities.Count() || term.RequiredAttachmentNumber == 0)
+                if (TermAndConditionEntity.RequiredAttachmentNumber > AttachmentsEntities.Count() || TermAndConditionEntity.RequiredAttachmentNumber == 0)
                 {
-                    data.AttachementPath = await _attachmentFileService.SaveProvidedFormFilesAsync(request.attachment, form!.Id);
+                    ConditionAttachment.AttachementPath = await _FileService.SaveProvidedFormFilesAsync(Request.attachment, ProvidedFormEntity!.Id);
 
-                    await _attachmentsRepository.AddAsync(data);
+                    await _ConditionAttachmentRepository.AddAsync(ConditionAttachment);
                 }
                 else
                 {
-                    msg = request.lang == "en"
+                    ResponseMessage = Request.lang == "en"
                        ? "You can't upload more files"
                        : "لا يمكنك رفع المزيد من الملفات";
 
-                    return new BaseResponse<object>(msg, true, 400);
+                    return new BaseResponse<object>(ResponseMessage, true, 400);
                 }
             }
 

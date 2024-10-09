@@ -18,6 +18,9 @@ using SharijhaAward.Application.Features.Cycles.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData;
 using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.Cycles.Queries.GetActiveCycle;
+using Microsoft.AspNetCore.Hosting;
+using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
+using SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -26,10 +29,10 @@ namespace SharijhaAward.Api.Controllers
     [ApiController]
     public class CycleController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IMediator _Mediator;
         public CycleController(IMediator mediator)
         {
-            _mediator = mediator;
+            _Mediator = mediator;
         }
         [HttpPost(Name = "CreateCycle")]
         public async Task<IActionResult> CreateCycle([FromBody] CreateCycleCommand command)
@@ -38,7 +41,7 @@ namespace SharijhaAward.Api.Controllers
             var Language = HttpContext.Request.Headers["lang"];
 
             command.lang = Language!;
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -55,7 +58,7 @@ namespace SharijhaAward.Api.Controllers
 
             command.lang = Language!;
 
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
             return response.statusCode switch
             {
                 200 => Ok(response),
@@ -70,7 +73,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(
+            var response = await _Mediator.Send(
                 new GetCycleByIdQuery
                 {
                     Id = Id,
@@ -93,7 +96,7 @@ namespace SharijhaAward.Api.Controllers
             query.lang = Language!;
 
             //get data from mediator
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -107,7 +110,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> GetLimitedNumberOfCategories()
         {
             //get data from mediator
-            var response = await _mediator.Send(new GetLimteNumberOfCategoriesQuery());
+            var response = await _Mediator.Send(new GetLimteNumberOfCategoriesQuery());
 
             return response.statusCode switch
             {
@@ -124,7 +127,7 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<object>? Response = await _mediator.Send(new DeleteCycleCommand()
+            BaseResponse<object>? Response = await _Mediator.Send(new DeleteCycleCommand()
             {
                 Id = id,
                 lang = HeaderValue!
@@ -141,7 +144,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("CycleExportToExcel", Name = "CycleExportToExcel")]
         public async Task<IActionResult> CycleExportToExcel()
         {
-            var response = await _mediator.Send(new ExportToExcelQuery());
+            var response = await _Mediator.Send(new ExportToExcelQuery());
 
             return response.statusCode switch
             {
@@ -157,7 +160,7 @@ namespace SharijhaAward.Api.Controllers
             var Language = HttpContext.Request.Headers["lang"];
 
             query.lang = Language!;
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -181,7 +184,7 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<bool> Response = await _mediator.Send(new GetActiveCycleQuery()
+            BaseResponse<bool> Response = await _Mediator.Send(new GetActiveCycleQuery()
             {
                 lang = HeaderValue!
             });
@@ -190,6 +193,31 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(Response),
                 200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("ImportFromOldCycle")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ImportFromOldCycle([FromBody] ImportFromOldCycleCommand ImportFromOldCycleCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            ImportFromOldCycleCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object> Response = await _Mediator.Send(ImportFromOldCycleCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
                 _ => BadRequest(Response)
             };
         }

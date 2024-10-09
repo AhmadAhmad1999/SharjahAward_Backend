@@ -52,7 +52,8 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
                             : x.EnglishAnswer,
                         Question = Request.lang == "ar"
                             ? x.ArabicQuestion
-                            : x.EnglishQuestion
+                            : x.EnglishQuestion,
+                        GeneralFrequentlyAskedQuestionCategoryId = x.GeneralFrequentlyAskedQuestionCategoryId
                     }).ToListAsync();
             }
             else
@@ -72,9 +73,20 @@ namespace SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAll
                             : x.EnglishAnswer,
                         Question = Request.lang == "ar"
                             ? x.ArabicQuestion
-                            : x.EnglishQuestion
+                            : x.EnglishQuestion,
+                        GeneralFrequentlyAskedQuestionCategoryId = x.GeneralFrequentlyAskedQuestionCategoryId
                     }).ToListAsync();
             }
+
+            GeneralFAQCategories = GeneralFAQCategories
+                .Select(x => new GetAllGeneralFAQCategoryListVM()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    GeneralFAQListVM = AllGeneralFAQEntities
+                        .Where(y => y.GeneralFrequentlyAskedQuestionCategoryId == x.Id)
+                        .ToList()
+                }).ToList();
 
             int TotalCount = await _GeneralFAQCategoryRepository
                 .WhereThenFilter(x => true, filterObject)

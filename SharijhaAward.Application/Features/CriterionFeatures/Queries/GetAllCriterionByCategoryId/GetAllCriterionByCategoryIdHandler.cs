@@ -94,8 +94,18 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
 
                 foreach (SubCriterionListVM SubCriterionObject in MainCriterionObject.SubCriterionListVM)
                 {
-                    SubCriterionObject.SubCriterionAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionAttachmentRepository
-                        .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
+                    SubCriterionObject.SubCriterionAttachments = await _CriterionAttachmentRepository
+                        .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.ProvidedFormId)
+                        .Select(x => new AttachmentListVM()
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            Description = x.Description,
+                            AttachementPath = x.AttachementPath,
+                            SizeOfAttachmentInKB = x.Criterion!.SizeOfAttachmentInKB,
+                            IsAccept = x.IsAccepted,
+                            ReasonOfReject = x.ReasonForRejecting
+                        }).ToListAsync();
 
                     if (SubCriterionObject.SubCriterionAttachments.Any(a => a.IsAccept == false))
                     {
@@ -121,8 +131,21 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
 
                         foreach (CriterionItemListVM CriterionItemObject in SubCriterionObject.CriterionItemListVM)
                         {
-                            CriterionItemObject.CriterionItemAttachments = _Mapper.Map<List<AttachmentListVM>>(_CriterionItemAttachmentRepository
-                                .Where(x => x.CriterionItemId == CriterionItemObject.Id && x.ProvidedFormId == Request.ProvidedFormId));
+                            CriterionItemObject.CriterionItemAttachments = await _CriterionItemAttachmentRepository
+                                .Where(x => x.CriterionItemId == CriterionItemObject.Id && x.ProvidedFormId == Request.ProvidedFormId)
+                                .Select(x => new AttachmentListVM
+                                {
+                                    Id = x.Id,
+                                    Name = x.Name,
+                                    Description = x.Description,
+                                    AttachementPath = x.AttachementPath,
+                                    SizeOfAttachmentInKB = x.CriterionItem!.SizeOfAttachmentInKB != null 
+                                        ? x.CriterionItem!.SizeOfAttachmentInKB.Value 
+                                        : 0,
+                                    IsAccept = x.IsAccepted,
+                                    ReasonOfReject = x.ReasonForRejecting
+                                })
+                                .ToListAsync();
 
                             if (CriterionItemObject.CriterionItemAttachments.Any(a => a.IsAccept == false))
                             {

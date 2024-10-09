@@ -62,6 +62,18 @@
 		<Folder Include="wwwroot\Images\" />
 		<Folder Include="wwwroot\HTMLCodes\" />
 		<Folder Include="wwwroot\InvitationPDFFiles\" />
+		<Folder Include="wwwroot\ProvidedForm\1\" />
+		<Folder Include="wwwroot\ProvidedForm\2\" />
+		<Folder Include="wwwroot\ProvidedForm\3\" />
+		<Folder Include="wwwroot\ProvidedForm\4\" />
+		<Folder Include="wwwroot\ProvidedForm\5\" />
+		<Folder Include="wwwroot\ProvidedForm\7\" />
+		<Folder Include="wwwroot\UploadedFiles\Circulars\" />
+		<Folder Include="wwwroot\UploadedFiles\ExcelFiles\" />
+		<Folder Include="wwwroot\UploadedFiles\ExplanatoryGuide\" />
+		<Folder Include="wwwroot\UploadedFiles\Icons\" />
+		<Folder Include="wwwroot\UploadedFiles\Images\" />
+		<Folder Include="wwwroot\UploadedFiles\Videos\" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -31,8 +31,8 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
         public async Task<BaseResponse<ExplanatoryGuideDetailsDto>> Handle(GetExplanatoryGuideDetailsByCategoryIdQuery request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"
-                    ? "There is no Explanatory Guide"
-                    : "لا يوجد ملف تفسيري";
+                ? "There is no Explanatory Guide"
+                : "لا يوجد ملف تفسيري";
 
             var Category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
             if(Category == null)
@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
 
             if (Guide == null)
             {
-                return new BaseResponse<ExplanatoryGuideDetailsDto>(msg, false, 404, null!);
+                return new BaseResponse<ExplanatoryGuideDetailsDto>(msg, true, 200, null!);
             }
             var data = _mapper.Map<ExplanatoryGuideDetailsDto>(Guide);
             
