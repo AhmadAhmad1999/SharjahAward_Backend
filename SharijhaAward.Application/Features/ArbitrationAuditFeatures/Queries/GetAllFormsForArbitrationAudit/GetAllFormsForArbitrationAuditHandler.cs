@@ -128,7 +128,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                             GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
                                             {
                                                 FormId = ArbitrationEntity.ProvidedFormId,
-                                                Name = Names.FirstOrDefault(x => x.RecordId == ArbitrationEntity.ProvidedFormId)!.Value,
+                                                Name = Names.FirstOrDefault(x => x.RecordId == ArbitrationEntity.ProvidedFormId) ? .Value ?? "",
                                                 CategoryId = ArbitrationEntity.ProvidedForm!.categoryId,
                                                 CategoryName = Request.lang == "en"
                                                     ? ArbitrationEntity.ProvidedForm!.Category.EnglishName
@@ -164,7 +164,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                 GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
                                 {
                                     FormId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId,
-                                    Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId)!.Value,
+                                    Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId) ? .Value ?? "",
                                     CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
                                     CategoryName = Request.lang == "en"
                                         ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
@@ -229,7 +229,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                             GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
                             {
                                 FormId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId,
-                                Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId)!.Value,
+                                Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId) ? .Value ?? "",
                                 CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
                                 CategoryName = Request.lang == "en"
                                     ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
@@ -446,7 +446,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                             GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
                                             {
                                                 FormId = ArbitrationEntity.ProvidedFormId,
-                                                Name = Names.FirstOrDefault(x => x.RecordId == ArbitrationEntity.ProvidedFormId)!.Value,
+                                                Name = Names.FirstOrDefault(x => x.RecordId == ArbitrationEntity.ProvidedFormId) ? .Value ?? "",
                                                 CategoryId = ArbitrationEntity.ProvidedForm!.categoryId,
                                                 CategoryName = Request.lang == "en"
                                                     ? ArbitrationEntity.ProvidedForm!.Category.EnglishName
@@ -495,7 +495,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                 GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
                                 {
                                     FormId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId,
-                                    Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId)!.Value,
+                                    Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId) ? .Value ?? "",
                                     CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
                                     CategoryName = Request.lang == "en"
                                         ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName
@@ -570,7 +570,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                             GetAllFormsForArbitrationAuditListVM GetAllFormsForArbitrationAuditListVM = new GetAllFormsForArbitrationAuditListVM()
                             {
                                 FormId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId,
-                                Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId)!.Value,
+                                Name = Names.FirstOrDefault(x => x.RecordId == GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedFormId) ? .Value ?? "",
                                 CategoryId = GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.categoryId,
                                 CategoryName = Request.lang == "en"
                                     ? GroupOfArbitrationEntity.FirstOrDefault()!.ProvidedForm!.Category.EnglishName

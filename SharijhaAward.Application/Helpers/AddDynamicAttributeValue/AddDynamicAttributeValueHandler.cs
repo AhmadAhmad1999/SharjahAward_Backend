@@ -28,6 +28,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         private readonly IHttpContextAccessor _HttpContextAccessor;
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
         private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
+        private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
 
         public AddDynamicAttributeValueHandler(IAsyncRepository<EducationalClass> EducationalClassRepository,
             IAsyncRepository<ProvidedForm> ProvidedFormRepository,
@@ -40,7 +41,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
             IHttpContextAccessor HttpContextAccessor,
             IAsyncRepository<EducationalEntity> EducationalEntityRepository,
-            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository)
+            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository,
+            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository)
         {
             _EducationalClassRepository = EducationalClassRepository;
             _ProvidedFormRepository = ProvidedFormRepository;
@@ -54,6 +56,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             _HttpContextAccessor = HttpContextAccessor;
             _EducationalEntityRepository = EducationalEntityRepository;
             _ViewWhenRelationRepository = ViewWhenRelationRepository;
+            _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
         }
         public async Task<BaseResponse<AddDynamicAttributeValueResponse>> Handle(AddDynamicAttributeValueCommand Request, 
             CancellationToken cancellationToken)
@@ -3091,22 +3094,35 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                     string? StringValueForClass = Request.DynamicAttributesWithValues.FirstOrDefault(x => x.DynamicAttributeId == ClassDynamicAttribute.Id)!
                                         .ValueAsString;
 
-                                    EducationalClass? Classes = await _EducationalClassRepository
-                                        .FirstOrDefaultAsync(x => Request.lang == "en"
-                                            ? x.EnglishName.ToLower() == StringValueForClass!.ToLower()
-                                            : x.ArabicName.ToLower() == StringValueForClass!.ToLower());
+                                    int DynamicAttributeListValueId = 0;
 
-                                    if (Classes is not null)
+                                    if (!string.IsNullOrEmpty(StringValueForClass)
+                                        ? int.TryParse(StringValueForClass, out DynamicAttributeListValueId)
+                                        : false)
                                     {
-                                        CategoryEducationalClass NewCategoryEducationalClassEntity = new CategoryEducationalClass()
+                                        DynamicAttributeListValue? DynamicAttributeListValueEntity = await _DynamicAttributeListValueRepository
+                                            .FirstOrDefaultAsync(x => x.Id == DynamicAttributeListValueId);
+
+                                        if (DynamicAttributeListValueEntity is not null)
                                         {
-                                            CategoryId = ProvidedFormEntity!.categoryId,
-                                            EducationalClassId = Classes.Id
-                                        };
+                                            EducationalClass? Classes = await _EducationalClassRepository
+                                                .FirstOrDefaultAsync(x => Request.lang == "en"
+                                                    ? x.EnglishName.ToLower() == DynamicAttributeListValueEntity!.EnglishValue.ToLower()
+                                                    : x.ArabicName.ToLower() == DynamicAttributeListValueEntity!.ArabicValue!.ToLower());
 
-                                        await _CategoryEducationalClassRepository.AddAsync(NewCategoryEducationalClassEntity);
+                                            if (Classes is not null)
+                                            {
+                                                CategoryEducationalClass NewCategoryEducationalClassEntity = new CategoryEducationalClass()
+                                                {
+                                                    CategoryId = ProvidedFormEntity!.categoryId,
+                                                    EducationalClassId = Classes.Id
+                                                };
 
-                                        ProvidedFormEntity.CategoryEducationalClassId = NewCategoryEducationalClassEntity.Id;
+                                                await _CategoryEducationalClassRepository.AddAsync(NewCategoryEducationalClassEntity);
+
+                                                ProvidedFormEntity.CategoryEducationalClassId = NewCategoryEducationalClassEntity.Id;
+                                            }
+                                        }
                                     }
                                 }
 

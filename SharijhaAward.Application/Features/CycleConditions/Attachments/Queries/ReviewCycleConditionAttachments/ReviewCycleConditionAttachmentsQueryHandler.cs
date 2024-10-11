@@ -63,16 +63,6 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Queries
                     x.ProvidedFormId == form!.Id)
                 .ToListAsync();
 
-            for (int i = 0; i < Terms.Count(); i++)
-            {
-                var conditionsProvidedsobject =
-                     _cycleConditionsFormRepository.FirstOrDefault(
-                         c => c.ProvidedFormId == form!.Id && c.CycleConditionId == Terms[i].Id);
-
-                if (conditionsProvidedsobject != null)
-                    conditionsProvideds.Add(conditionsProvidedsobject!);
-            }
-
             var data = _mapper.Map<List<CycleConditionListVM>>(Terms);
 
             List<CycleConditionAttachment> AllAttachmentEntities = await _attachmentRepository
@@ -81,11 +71,23 @@ namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Queries
 
             for (int i = 0; i < data.Count; i++)
             {
-                data[i].Attachments = _mapper.Map<List<CycleConditionAttachmentListVm>>(AllAttachmentEntities
-                    .Where(x => x.CycleConditionsProvidedFormId == conditionsProvideds[i].Id)
-                    .ToList());
-                data[i].Acceptance = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvideds[i]);
-                    
+                var conditionsProvidedsobject =
+                     conditionsProvideds.FirstOrDefault(
+                         c => c.ProvidedFormId == form!.Id && c.CycleConditionId == Terms[i].Id);
+
+                if (conditionsProvidedsobject != null)
+                {
+                    data[i].Attachments = _mapper.Map<List<CycleConditionAttachmentListVm>>(AllAttachmentEntities
+                        .Where(x => x.CycleConditionsProvidedFormId == conditionsProvidedsobject.Id)
+                        .ToList());
+
+                    data[i].Acceptance = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvidedsobject);
+                }
+                else
+                {
+                    data[i].Attachments = new List<CycleConditionAttachmentListVm>();
+                    data[i].Acceptance = new CycleConditionProvidedFormListVm();
+                }
                 data[i].Title = request.lang == "en"
                     ? data[i].EnglishTitle
                     : data[i].ArabicTitle;

@@ -90,31 +90,43 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                         : false)
                 {
                     SubscribersNames = await _DynamicAttributeValueRepository
-                        .Where(x => ArbitrationsEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId) &&
-                            x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
+                        .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
                             x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower() &&
                             x.Value.ToLower().StartsWith(Request.filter.SubscriberName.ToLower()))
                         .ToListAsync();
 
-                    ArbitrationsEntities = ArbitrationsEntities
-                        .Where(x => SubscribersNames.Select(y => y.RecordId).Contains(x.ProvidedFormId))
-                        .ToList();
+                    if (SubscribersNames.Any())
+                    {
+                        ArbitrationsEntities = ArbitrationsEntities
+                            .Where(x => SubscribersNames.Select(y => y.RecordId).Contains(x.ProvidedFormId))
+                            .ToList();
+                    }
                 }
                 else
                 {
                     SubscribersNames = await _DynamicAttributeValueRepository
-                        .Where(x => ArbitrationsEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId) &&
-                            x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
+                        .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
                             x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
                         .ToListAsync();
                 }
+
+                List<GetAllFormsForSortingProcessListVMCategories> ArbitrationsEntitiesCategories = ArbitrationsEntities
+                    .Select(y => new GetAllFormsForSortingProcessListVMCategories()
+                    {
+                        Id = y.ProvidedForm!.Category!.Id,
+                        CategoryName = Request.lang == "en"
+                            ? y.ProvidedForm!.Category!.EnglishName
+                            : y.ProvidedForm!.Category!.ArabicName
+                    }).AsEnumerable()
+                    .DistinctBy(y => y.Id)
+                    .ToList();
 
                 List<GetAllFormsForSortingProcessListVM> Response = ArbitrationsEntities
                     .Select(x => new GetAllFormsForSortingProcessListVM()
                     {
                         Id = x.Id,
                         FormId = x.ProvidedFormId,
-                        SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
+                        SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId) ? .Value ?? "",
                         ArbitratorId = x.ArbitratorId,
                         ArbitratorName = Request.lang == "en"
                             ? x.Arbitrator!.EnglishName
@@ -126,16 +138,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                         isAccepted = x.isAccepted,
                         Reason = x.ReasonForRejecting,
                         isAcceptedFromChairman = x.isAcceptedFromChairman,
-                        Categories = ArbitrationsEntities
-                            .Select(y => new GetAllFormsForSortingProcessListVMCategories()
-                            {
-                                Id = y.ProvidedForm!.Category!.Id,
-                                CategoryName = Request.lang == "en"
-                                    ? y.ProvidedForm!.Category!.EnglishName
-                                    : y.ProvidedForm!.Category!.ArabicName
-                            }).AsEnumerable()
-                            .DistinctBy(y => y.Id)
-                            .ToList()
+                        Categories = ArbitrationsEntitiesCategories
                     }).ToList();
 
                 int TotalCount = 0;
@@ -261,7 +264,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                         {
                             Id = x.Id,
                             FormId = x.ProvidedFormId,
-                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
+                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId) ? .Value ?? "",
                             ArbitratorId = x.ArbitratorId,
                             ArbitratorName = Request.lang == "en"
                                 ? x.Arbitrator!.EnglishName
@@ -389,7 +392,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                         {
                             Id = x.Id,
                             FormId = x.ProvidedFormId,
-                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
+                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId) ? .Value ?? "",
                             ArbitratorId = x.ArbitratorId,
                             ArbitratorName = Request.lang == "en"
                                 ? x.Arbitrator!.EnglishName

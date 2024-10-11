@@ -83,13 +83,13 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CheckIfA
                 }
             }
 
-            List<CriterionItemAttachment> InsertedCriterionItemAttachment = await _CriterionItemAttachmentRepository
-                .Where(x => x.CriterionItem!.Criterion!.CategoryId == Request.CategoryId &&
-                    x.ProvidedFormId == Request.ProvidedFormId)
-                .ToListAsync();
-
-            if (InsertedCriterionItemAttachment.Any())
+            if (CriterionItemEntities.Any())
             {
+                List<CriterionItemAttachment> InsertedCriterionItemAttachment = await _CriterionItemAttachmentRepository
+                    .Where(x => x.CriterionItem!.Criterion!.CategoryId == Request.CategoryId &&
+                        x.ProvidedFormId == Request.ProvidedFormId)
+                    .ToListAsync();
+
                 List<CriterionItem> CriterionItemEntitiesWithNoAttachments = CriterionItemEntities
                     .Where(x => !InsertedCriterionItemAttachment.Select(y => y.CriterionItemId).Contains(x.Id) &&
                         x.Criterion!.AttachFilesOnSubCriterion == false).ToList();

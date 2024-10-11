@@ -118,7 +118,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     .Select(x => new GetAllFormsForFinalArbitrationListVM()
                     {
                         FormId = x.ProvidedFormId,
-                        Name = Names.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
+                        Name = Names.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value ?? "",
                         CategoryId = x.ProvidedForm!.categoryId,
                         CategoryName = Request.lang == "en"
                             ? x.ProvidedForm!.Category!.EnglishName
@@ -258,7 +258,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         .Select(x => new GetAllFormsForFinalArbitrationListVM()
                         {
                             FormId = x.ProvidedFormId,
-                            Name = Names.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
+                            Name = Names.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value ?? "",
                             CategoryId = x.ProvidedForm!.categoryId,
                             CategoryName = Request.lang == "en"
                                 ? x.ProvidedForm!.Category!.EnglishName
@@ -348,7 +348,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         .Select(x => new GetAllFormsForFinalArbitrationListVM()
                         {
                             FormId = x.ProvidedFormId,
-                            Name = Names.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
+                            Name = Names.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)?.Value ?? "",
                             CategoryId = x.ProvidedForm!.categoryId,
                             CategoryName = Request.lang == "en"
                                 ? x.ProvidedForm!.Category!.EnglishName

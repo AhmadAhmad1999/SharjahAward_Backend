@@ -19,6 +19,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository;
+        private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
         private readonly IAsyncRepository<ProvidedForm> _ProvidedFormRepository;
         private readonly IAsyncRepository<EducationalClass> _EducationalClassRepository;
@@ -28,6 +29,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
         public AddDynamicAttributeValueForSaveHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
             IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
+            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IHttpContextAccessor HttpContextAccessor,
             IAsyncRepository<ProvidedForm> ProvidedFormRepository,
             IAsyncRepository<EducationalClass> EducationalClassRepository,
@@ -37,6 +39,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
             _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
+            _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
             _HttpContextAccessor = HttpContextAccessor;
             _ProvidedFormRepository = ProvidedFormRepository;
             _EducationalClassRepository = EducationalClassRepository;
@@ -81,17 +84,21 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                     Request.DynamicAttributesWithTableValues.Select(y => y.DynamicAttributeId).Contains(x.Id))
                 .ToListAsync();
 
+            bool ForProvidedForm = false;
+            if (DynamicAttributeEntities.Any(x => x.DynamicAttributeSection!.AttributeTableNameId == 1))
+                ForProvidedForm = true;
+
             //int DynamicAttributeEntitiesCount = DynamicAttributeEntities.Count();
 
-            //if (DynamicAttributeEntitiesCount != Request.DynamicAttributesWithValues.Count() + 
-            //        Request.DynamicAttributesWithTableValues.Count())
-            //{
-            //    ResponseMessage = Request.lang == "en"
-            //        ? "Field is not found"
-            //        : "الحقل غير موجود";
+                //if (DynamicAttributeEntitiesCount != Request.DynamicAttributesWithValues.Count() + 
+                //        Request.DynamicAttributesWithTableValues.Count())
+                //{
+                //    ResponseMessage = Request.lang == "en"
+                //        ? "Field is not found"
+                //        : "الحقل غير موجود";
 
-            //    return new BaseResponse<AddDynamicAttributeValueForSaveResponse>(ResponseMessage, false, 404);
-            //}
+                //    return new BaseResponse<AddDynamicAttributeValueForSaveResponse>(ResponseMessage, false, 404);
+                //}
 
             List<DynamicAttribute> PhoneNumberDynamicAttributeEntities = DynamicAttributeEntities
                 .Where(x => x.AttributeDataType!.Name == "Phone Number" &&
@@ -338,22 +345,35 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                                     string? StringValueForClass = Request.DynamicAttributesWithValues.FirstOrDefault(x => x.DynamicAttributeId == ClassDynamicAttribute.Id)!
                                         .ValueAsString;
 
-                                    EducationalClass? Classes = await _EducationalClassRepository
-                                        .FirstOrDefaultAsync(x => Request.lang == "en"
-                                            ? x.EnglishName.ToLower() == StringValueForClass!.ToLower()
-                                            : x.ArabicName.ToLower() == StringValueForClass!.ToLower());
+                                    int DynamicAttributeListValueId = 0;
 
-                                    if (Classes is not null)
+                                    if (!string.IsNullOrEmpty(StringValueForClass)
+                                        ? int.TryParse(StringValueForClass, out DynamicAttributeListValueId)
+                                        : false)
                                     {
-                                        CategoryEducationalClass NewCategoryEducationalClassEntity = new CategoryEducationalClass()
+                                        DynamicAttributeListValue? DynamicAttributeListValueEntity = await _DynamicAttributeListValueRepository
+                                            .FirstOrDefaultAsync(x => x.Id == DynamicAttributeListValueId);
+
+                                        if (DynamicAttributeListValueEntity is not null)
                                         {
-                                            CategoryId = ProvidedFormEntity!.categoryId,
-                                            EducationalClassId = Classes.Id
-                                        };
+                                            EducationalClass? Classes = await _EducationalClassRepository
+                                                .FirstOrDefaultAsync(x => Request.lang == "en"
+                                                    ? x.EnglishName.ToLower() == DynamicAttributeListValueEntity!.EnglishValue.ToLower()
+                                                    : x.ArabicName.ToLower() == DynamicAttributeListValueEntity!.ArabicValue!.ToLower());
 
-                                        await _CategoryEducationalClassRepository.AddAsync(NewCategoryEducationalClassEntity);
+                                            if (Classes is not null)
+                                            {
+                                                CategoryEducationalClass NewCategoryEducationalClassEntity = new CategoryEducationalClass()
+                                                {
+                                                    CategoryId = ProvidedFormEntity!.categoryId,
+                                                    EducationalClassId = Classes.Id
+                                                };
 
-                                        ProvidedFormEntity.CategoryEducationalClassId = NewCategoryEducationalClassEntity.Id;
+                                                await _CategoryEducationalClassRepository.AddAsync(NewCategoryEducationalClassEntity);
+
+                                                ProvidedFormEntity.CategoryEducationalClassId = NewCategoryEducationalClassEntity.Id;
+                                            }
+                                        }
                                     }
                                 }
 
@@ -380,6 +400,21 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                                 await _ProvidedFormRepository.UpdateAsync(ProvidedFormEntity);
                             }
                         }
+                    }
+
+                    if (ForProvidedForm)
+                    {
+                        var DynamicAttributeListValueId = CheckForUpdateValues.FirstOrDefault(x => x.DynamicAttribute!.EnglishTitle == "Class" &&
+                            x.DynamicAttribute!.ArabicTitle == "الصف")?.Value;
+
+                        //if (DynamicAttributeListValueId is not null)
+                        //{
+                        //    var xx = await _DynamicAttributeListValueRepository
+                        //        .FirstOrDefaultAsync(x => x.Id == int.Parse(DynamicAttributeListValueId));
+
+                        //    var yy = await 
+                        //}
+                        
                     }
 
                     Transaction.Complete();

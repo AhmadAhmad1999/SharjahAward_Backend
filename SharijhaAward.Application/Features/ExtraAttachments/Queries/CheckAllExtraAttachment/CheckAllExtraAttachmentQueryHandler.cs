@@ -55,11 +55,11 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.CheckAllEx
                     .Where(x => x.ExtraAttachmentId == attachment.Id)
                     .ToList();
 
-                if (attachment.RequiredAttachmentNumber > AllExtraAttachmentFileEntitiesForThisAttachment.Count())
+                if (attachment.RequiredAttachmentNumber < AllExtraAttachmentFileEntitiesForThisAttachment.Count())
                 {
                     msg = request.lang == "en"
-                        ? "Please Complete Uploading The File "
-                        : "الرجاء إكمال رفع الملفات";
+                        ? $"You can't upload more than {attachment.RequiredAttachmentNumber} files"
+                        : $"لا يمكنك رفع أكثر من {attachment.RequiredAttachmentNumber} ملفات";
 
                     return new BaseResponse<object>(msg, false, 400);
                 }

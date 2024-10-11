@@ -61,7 +61,8 @@ namespace SharijhaAward.Api.Logger
                     (Controller_Function_Name[1].ToString() != "Website"))
                 {
                     if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
-                        token.ToLower() != "bearer" && token.ToLower() != "bearer ")
+                        token.ToLower() != "bearer" && token.ToLower() != "bearer " &&
+                        token.ToLower() != "bearer undefined")
                     {
                         IAsyncRepository<UserToken>? _UserTokenRepository = _ServiceProvider.GetService<IAsyncRepository<UserToken>>();
 

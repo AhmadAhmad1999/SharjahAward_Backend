@@ -134,7 +134,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
                         {
                             Id = x.Id,
                             CategoryName = x.Category!.EnglishName,
-                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)?.Value,
+                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) ? .Value ?? "",
                             EducationalClassName = x.CategoryEducationalClass != null
                                 ? x.CategoryEducationalClass!.EducationalClass!.EnglishName
                                 : null,
@@ -164,7 +164,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
                         {
                             Id = x.Id,
                             CategoryName = x.Category!.ArabicName,
-                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)?.Value,
+                            SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) ? .Value ?? "",
                             EducationalClassName = x.CategoryEducationalClass != null
                                 ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null,
                             IsAccepted = x.IsAccepted!,
@@ -215,7 +215,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
                             Id = x.Id,
                             CategoryName = x.Category!.EnglishName,
                             SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
-                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
+                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) ? .Value ?? ""
                                 : null,
                             EducationalClassName = x.CategoryEducationalClass != null
                                 ? x.CategoryEducationalClass!.EducationalClass!.EnglishName
@@ -247,7 +247,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
                             Id = x.Id,
                             CategoryName = x.Category!.ArabicName,
                             SubscriberName = SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id) != null
-                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value : null,
+                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)?.Value ?? "" : null,
                             EducationalClassName = x.CategoryEducationalClass != null
                                 ? x.CategoryEducationalClass!.EducationalClass!.ArabicName : null,
                             IsAccepted = x.IsAccepted!,

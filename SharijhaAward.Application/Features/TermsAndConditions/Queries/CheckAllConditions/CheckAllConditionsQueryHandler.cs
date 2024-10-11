@@ -77,34 +77,47 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
             {
                 for(int i=0; i < terms.Count(); i++)
                 {
-                    //Check on Terms that need Attachments
-                    if (terms[i].NeedAttachment)
+                    var conditionsProvidedsForThisTerm = conditionsProvideds
+                        .FirstOrDefault(x => x.TermAndConditionId == terms[i].Id);
+
+                    if (conditionsProvidedsForThisTerm != null)
                     {
-                        msg = request.lang == "en"
-                            ? "You can't upload more files"
-                            : "لا يمكنك رفع المزيد من الملفات";
-
-                        var AllConditionAttachmentEntititesForThisTerm = AllConditionAttachmentEntitites
-                            .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
-                            .ToList();
-
-                        if (terms[i].RequiredAttachmentNumber < AllConditionAttachmentEntititesForThisTerm.Count() &&
-                            terms[i].RequiredAttachmentNumber != 0)
-                        {
-                            return new BaseResponse<object>(msg, false, 400);
-                        }
-                    }
-
-                    //Check on Terms that don't need Attachments
-                    if (!terms[i].NeedAttachment)
-                    {
-                        if (!conditionsProvideds[i].IsAgree && !terms[i].NeedAttachment)
+                        //Check on Terms that need Attachments
+                        if (terms[i].NeedAttachment)
                         {
                             msg = request.lang == "en"
-                                ? "Pleas Agree on All Terms and Conditions"
-                                : "الرجاء الموافقة على جميع الشروط و الأحكام";
-                            return new BaseResponse<object>(msg, false, 400);
+                                ? "You can't upload more files"
+                                : "لا يمكنك رفع المزيد من الملفات";
 
+                            var AllConditionAttachmentEntititesForThisTerm = AllConditionAttachmentEntitites
+                                .Where(x => x.ConditionsProvidedFormsId == conditionsProvidedsForThisTerm.Id)
+                                .ToList();
+
+                            if (terms[i].RequiredAttachmentNumber < AllConditionAttachmentEntititesForThisTerm.Count() &&
+                                terms[i].RequiredAttachmentNumber != 0)
+                            {
+                                return new BaseResponse<object>(msg, false, 400);
+                            }
+                            if (!AllConditionAttachmentEntititesForThisTerm.Any())
+                            {
+                                msg = request.lang == "en"
+                                    ? $"You must upload at least on file for this term: {terms[i].EnglishTitle}"
+                                    : $"يجب رفع ملف واحد على الأقل للشرط الخاص التالي: {terms[i].ArabicTitle}";
+
+                                return new BaseResponse<object>(msg, false, 400);
+                            }
+                        }
+
+                        //Check on Terms that don't need Attachments
+                        if (!terms[i].NeedAttachment)
+                        {
+                            if (conditionsProvidedsForThisTerm is not null ? !conditionsProvidedsForThisTerm.IsAgree : true)
+                            {
+                                msg = request.lang == "en"
+                                    ? "Pleas Agree on All Terms and Conditions"
+                                    : "الرجاء الموافقة على جميع الشروط و الأحكام";
+                                return new BaseResponse<object>(msg, false, 400);
+                            }
                         }
                     }
                 }

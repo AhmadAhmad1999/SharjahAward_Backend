@@ -12,6 +12,7 @@ using SharijhaAward.Domain.Entities.FAQModel;
 using SharijhaAward.Domain.Entities.RewardModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
 {
@@ -112,246 +113,270 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                 }
             }
 
-            // MainCategoryImport
-            foreach (MainCategoryImport MainCategoryRequest in Request.MainCategoryImport)
+            TransactionOptions TransactionOptions = new TransactionOptions
             {
-                int MainCategoryId = 0;
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
-                if (MainCategoryRequest.TakeThisLevel && MainCategoryRequest.NewMainCategoryId is null)
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
                 {
-                    Category NewMainCategoryEntity = _Mapper.Map<Category>(CategoryEntities
-                        .FirstOrDefault(x => x.Id == MainCategoryRequest.Id));
-
-                    NewMainCategoryEntity.Id = 0;
-                    NewMainCategoryEntity.CycleId = Request.NewCycleId;
-
-                    await _CategoryRepository.AddAsync(NewMainCategoryEntity);
-
-                    MainCategoryId = NewMainCategoryEntity.Id;
-
-                    // SubCategoryImport
-                    foreach (SubCategoryImport SubCategoryRequest in MainCategoryRequest.SubCategoryImport)
+                    // MainCategoryImport
+                    foreach (MainCategoryImport MainCategoryRequest in Request.MainCategoryImport)
                     {
-                        int SubCategoryId = 0;
+                        int MainCategoryId = 0;
 
-                        if (SubCategoryRequest.TakeThisLevel && SubCategoryRequest.NewSubCategoryId is null)
+                        if (MainCategoryRequest.TakeThisLevel && MainCategoryRequest.NewMainCategoryId is null)
                         {
-                            Category NewSubCategoryEntity = _Mapper.Map<Category>(CategoryEntities
-                                .FirstOrDefault(x => x.Id == SubCategoryRequest.Id));
+                            Category NewMainCategoryEntity = _Mapper.Map<Category>(CategoryEntities
+                                .FirstOrDefault(x => x.Id == MainCategoryRequest.Id));
 
-                            NewSubCategoryEntity.Id = 0;
-                            NewSubCategoryEntity.ParentId = MainCategoryId;
+                            NewMainCategoryEntity.Id = 0;
+                            NewMainCategoryEntity.CycleId = Request.NewCycleId;
 
-                            await _CategoryRepository.AddAsync(NewSubCategoryEntity);
+                            await _CategoryRepository.AddAsync(NewMainCategoryEntity);
 
-                            SubCategoryId = NewSubCategoryEntity.Id;
-                        }
-                        else if (!SubCategoryRequest.TakeThisLevel && SubCategoryRequest.NewSubCategoryId is not null)
-                        {
-                            SubCategoryId = SubCategoryRequest.NewSubCategoryId.Value;
-                        }
+                            MainCategoryId = NewMainCategoryEntity.Id;
 
-                        // TermAndConditionsIds
-                        if (SubCategoryRequest.TermAndConditionsIds.Any())
-                            await CopyTermAndConditions(SubCategoryRequest.TermAndConditionsIds, SubCategoryId);
-
-                        // TakeTheExplanatoryGuide
-                        if (SubCategoryRequest.TakeTheExplanatoryGuide)
-                            await CopyExplanatoryGuide(SubCategoryRequest.Id, SubCategoryId);
-
-                        // TrainingWorkshopsIds
-                        if (SubCategoryRequest.TrainingWorkshopsIds.Any())
-                            await CopyTrainingWorkshops(SubCategoryRequest.TrainingWorkshopsIds, SubCategoryId);
-
-                        // FrequentlyAskedQuestionsIds
-                        if (SubCategoryRequest.FrequentlyAskedQuestionsIds.Any())
-                            await CopyFrequentlyAskedQuestions(SubCategoryRequest.FrequentlyAskedQuestionsIds, SubCategoryId);
-
-                        // RewardsIds
-                        if (SubCategoryRequest.RewardsIds.Any())
-                            await CopyRewardsIds(SubCategoryRequest.RewardsIds, SubCategoryId);
-
-                        // MainCriterionImport + SubCriterionImport
-                        if (SubCategoryRequest.MainCriterionImport.Any())
-                        {
-                            IEnumerable<int> MainCriterionImportIds = SubCategoryRequest.MainCriterionImport.Select(x => x.Id);
-
-                            IEnumerable<SubCriterionImport> SubCriterionImportRequest = SubCategoryRequest.MainCriterionImport
-                                .SelectMany(x => x.SubCriterionImport);
-
-                            IEnumerable<int> SubCriterionImportIds = SubCriterionImportRequest
-                                .Select(x => x.Id);
-
-                            if (MainCriterionImportIds.Any() ||
-                                SubCriterionImportIds.Any())
+                            // SubCategoryImport
+                            foreach (SubCategoryImport SubCategoryRequest in MainCategoryRequest.SubCategoryImport)
                             {
-                                IEnumerable<Criterion> NewCriterionEntities = CriterionEntitites
-                                    .Where(x => (MainCriterionImportIds.Contains(x.Id) && x.ParentId == null) ||
-                                        (SubCriterionImportIds.Contains(x.Id) && x.ParentId != null))
-                                    .Select(x => new Criterion()
-                                    {
-                                        Id = 0,
-                                        CategoryId = SubCategoryId,
-                                        OrderId = x.OrderId,
-                                        ArabicTitle = x.ArabicTitle,
-                                        EnglishTitle = x.EnglishTitle,
-                                        Score = x.Score,
-                                        SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
-                                        ParentId = x.ParentId,
-                                        MaxAttachmentNumber = x.MaxAttachmentNumber,
-                                        AttachmentType = x.AttachmentType,
-                                        AttachFilesOnSubCriterion = x.AttachFilesOnSubCriterion
-                                    });
+                                int SubCategoryId = 0;
 
-                                await _CriterionRepository.AddRangeAsync(NewCriterionEntities);
-
-                                // SubCriterionItemsIds
-                                foreach (SubCriterionImport SubCriterionImport in SubCriterionImportRequest)
+                                if (SubCategoryRequest.TakeThisLevel && SubCategoryRequest.NewSubCategoryId is null)
                                 {
-                                    IEnumerable<int> SubCriterionItemsIds = SubCategoryRequest.MainCriterionImport
-                                        .SelectMany(x => x.SubCriterionImport)
-                                        .SelectMany(x => x.SubCriterionItemsIds);
+                                    Category NewSubCategoryEntity = _Mapper.Map<Category>(CategoryEntities
+                                        .FirstOrDefault(x => x.Id == SubCategoryRequest.Id));
 
-                                    if (SubCriterionItemsIds.Any())
+                                    NewSubCategoryEntity.Id = 0;
+                                    NewSubCategoryEntity.ParentId = MainCategoryId;
+
+                                    await _CategoryRepository.AddAsync(NewSubCategoryEntity);
+
+                                    SubCategoryId = NewSubCategoryEntity.Id;
+                                }
+                                else if (!SubCategoryRequest.TakeThisLevel && SubCategoryRequest.NewSubCategoryId is not null)
+                                {
+                                    SubCategoryId = SubCategoryRequest.NewSubCategoryId.Value;
+                                }
+
+                                // TermAndConditionsIds
+                                if (SubCategoryRequest.TermAndConditionsIds.Any())
+                                    await CopyTermAndConditions(SubCategoryRequest.TermAndConditionsIds, SubCategoryId);
+
+                                // TakeTheExplanatoryGuide
+                                if (SubCategoryRequest.TakeTheExplanatoryGuide)
+                                    await CopyExplanatoryGuide(SubCategoryRequest.Id, SubCategoryId);
+
+                                // TrainingWorkshopsIds
+                                if (SubCategoryRequest.TrainingWorkshopsIds.Any())
+                                    await CopyTrainingWorkshops(SubCategoryRequest.TrainingWorkshopsIds, SubCategoryId);
+
+                                // FrequentlyAskedQuestionsIds
+                                if (SubCategoryRequest.FrequentlyAskedQuestionsIds.Any())
+                                    await CopyFrequentlyAskedQuestions(SubCategoryRequest.FrequentlyAskedQuestionsIds, SubCategoryId);
+
+                                // RewardsIds
+                                if (SubCategoryRequest.RewardsIds.Any())
+                                    await CopyRewardsIds(SubCategoryRequest.RewardsIds, SubCategoryId);
+
+                                // MainCriterionImport + SubCriterionImport
+                                if (SubCategoryRequest.MainCriterionImport.Any())
+                                {
+                                    IEnumerable<int> MainCriterionImportIds = SubCategoryRequest.MainCriterionImport.Select(x => x.Id);
+
+                                    IEnumerable<SubCriterionImport> SubCriterionImportRequest = SubCategoryRequest.MainCriterionImport
+                                        .SelectMany(x => x.SubCriterionImport);
+
+                                    IEnumerable<int> SubCriterionImportIds = SubCriterionImportRequest
+                                        .Select(x => x.Id);
+
+                                    if (MainCriterionImportIds.Any() ||
+                                        SubCriterionImportIds.Any())
                                     {
-                                        IEnumerable<CriterionItem> NewCriterionItemEntities = CriterionItemEntitites
-                                            .Where(x => SubCriterionItemsIds.Contains(x.Id))
-                                            .Select(x => new CriterionItem()
+                                        IEnumerable<Criterion> NewCriterionEntities = CriterionEntitites
+                                            .Where(x => (MainCriterionImportIds.Contains(x.Id) && x.ParentId == null) ||
+                                                (SubCriterionImportIds.Contains(x.Id) && x.ParentId != null))
+                                            .Select(x => new Criterion()
                                             {
                                                 Id = 0,
-                                                CriterionId = SubCriterionImport.Id,
+                                                CategoryId = SubCategoryId,
                                                 OrderId = x.OrderId,
-                                                ArabicName = x.ArabicName,
-                                                EnglishName = x.EnglishName,
+                                                ArabicTitle = x.ArabicTitle,
+                                                EnglishTitle = x.EnglishTitle,
                                                 Score = x.Score,
                                                 SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
-                                                ActualScore = x.ActualScore,
+                                                ParentId = x.ParentId,
                                                 MaxAttachmentNumber = x.MaxAttachmentNumber,
-                                                AttachmentType = x.AttachmentType
+                                                AttachmentType = x.AttachmentType,
+                                                AttachFilesOnSubCriterion = x.AttachFilesOnSubCriterion
                                             });
 
-                                        await _CriterionItemRepository.AddRangeAsync(NewCriterionItemEntities);
+                                        await _CriterionRepository.AddRangeAsync(NewCriterionEntities);
+
+                                        // SubCriterionItemsIds
+                                        foreach (SubCriterionImport SubCriterionImport in SubCriterionImportRequest)
+                                        {
+                                            IEnumerable<int> SubCriterionItemsIds = SubCategoryRequest.MainCriterionImport
+                                                .SelectMany(x => x.SubCriterionImport)
+                                                .SelectMany(x => x.SubCriterionItemsIds);
+
+                                            if (SubCriterionItemsIds.Any())
+                                            {
+                                                IEnumerable<CriterionItem> NewCriterionItemEntities = CriterionItemEntitites
+                                                    .Where(x => SubCriterionItemsIds.Contains(x.Id))
+                                                    .Select(x => new CriterionItem()
+                                                    {
+                                                        Id = 0,
+                                                        CriterionId = SubCriterionImport.Id,
+                                                        OrderId = x.OrderId,
+                                                        ArabicName = x.ArabicName,
+                                                        EnglishName = x.EnglishName,
+                                                        Score = x.Score,
+                                                        SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                                                        ActualScore = x.ActualScore,
+                                                        MaxAttachmentNumber = x.MaxAttachmentNumber,
+                                                        AttachmentType = x.AttachmentType
+                                                    });
+
+                                                await _CriterionItemRepository.AddRangeAsync(NewCriterionItemEntities);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (!MainCategoryRequest.TakeThisLevel && MainCategoryRequest.NewMainCategoryId is not null)
+                        {
+                            MainCategoryId = MainCategoryRequest.NewMainCategoryId.Value;
+
+                            // SubCategoryImport
+                            foreach (SubCategoryImport SubCategoryRequest in MainCategoryRequest.SubCategoryImport)
+                            {
+                                int SubCategoryId = 0;
+
+                                if (SubCategoryRequest.TakeThisLevel && SubCategoryRequest.NewSubCategoryId is null)
+                                {
+                                    Category NewSubCategoryEntity = _Mapper.Map<Category>(CategoryEntities
+                                        .FirstOrDefault(x => x.Id == SubCategoryRequest.Id));
+
+                                    NewSubCategoryEntity.Id = 0;
+                                    NewSubCategoryEntity.ParentId = MainCategoryId;
+
+                                    await _CategoryRepository.AddAsync(NewSubCategoryEntity);
+
+                                    SubCategoryId = NewSubCategoryEntity.Id;
+                                }
+                                else if (!SubCategoryRequest.TakeThisLevel && SubCategoryRequest.NewSubCategoryId is not null)
+                                {
+                                    SubCategoryId = SubCategoryRequest.NewSubCategoryId.Value;
+                                }
+
+                                // TermAndConditionsIds
+                                if (SubCategoryRequest.TermAndConditionsIds.Any())
+                                    await CopyTermAndConditions(SubCategoryRequest.TermAndConditionsIds, SubCategoryId);
+
+                                // TakeTheExplanatoryGuide
+                                if (SubCategoryRequest.TakeTheExplanatoryGuide)
+                                    await CopyExplanatoryGuide(SubCategoryRequest.Id, SubCategoryId);
+
+                                // TrainingWorkshopsIds
+                                if (SubCategoryRequest.TrainingWorkshopsIds.Any())
+                                    await CopyTrainingWorkshops(SubCategoryRequest.TrainingWorkshopsIds, SubCategoryId);
+
+                                // FrequentlyAskedQuestionsIds
+                                if (SubCategoryRequest.FrequentlyAskedQuestionsIds.Any())
+                                    await CopyFrequentlyAskedQuestions(SubCategoryRequest.FrequentlyAskedQuestionsIds, SubCategoryId);
+
+                                // RewardsIds
+                                if (SubCategoryRequest.RewardsIds.Any())
+                                    await CopyRewardsIds(SubCategoryRequest.RewardsIds, SubCategoryId);
+
+                                // MainCriterionImport + SubCriterionImport
+                                if (SubCategoryRequest.MainCriterionImport.Any())
+                                {
+                                    IEnumerable<int> MainCriterionImportIds = SubCategoryRequest.MainCriterionImport.Select(x => x.Id);
+
+                                    IEnumerable<SubCriterionImport> SubCriterionImportRequest = SubCategoryRequest.MainCriterionImport
+                                        .SelectMany(x => x.SubCriterionImport);
+
+                                    IEnumerable<int> SubCriterionImportIds = SubCriterionImportRequest
+                                        .Select(x => x.Id);
+
+                                    if (MainCriterionImportIds.Any() ||
+                                        SubCriterionImportIds.Any())
+                                    {
+                                        IEnumerable<Criterion> NewCriterionEntities = CriterionEntitites
+                                            .Where(x => (MainCriterionImportIds.Contains(x.Id) && x.ParentId == null) ||
+                                                (SubCriterionImportIds.Contains(x.Id) && x.ParentId != null))
+                                            .Select(x => new Criterion()
+                                            {
+                                                Id = 0,
+                                                CategoryId = SubCategoryId,
+                                                OrderId = x.OrderId,
+                                                ArabicTitle = x.ArabicTitle,
+                                                EnglishTitle = x.EnglishTitle,
+                                                Score = x.Score,
+                                                SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                                                ParentId = x.ParentId,
+                                                MaxAttachmentNumber = x.MaxAttachmentNumber,
+                                                AttachmentType = x.AttachmentType,
+                                                AttachFilesOnSubCriterion = x.AttachFilesOnSubCriterion
+                                            });
+
+                                        await _CriterionRepository.AddRangeAsync(NewCriterionEntities);
+
+                                        // SubCriterionItemsIds
+                                        foreach (SubCriterionImport SubCriterionImport in SubCriterionImportRequest)
+                                        {
+                                            IEnumerable<int> SubCriterionItemsIds = SubCategoryRequest.MainCriterionImport
+                                                .SelectMany(x => x.SubCriterionImport)
+                                                .SelectMany(x => x.SubCriterionItemsIds);
+
+                                            if (SubCriterionItemsIds.Any())
+                                            {
+                                                IEnumerable<CriterionItem> NewCriterionItemEntities = CriterionItemEntitites
+                                                    .Where(x => SubCriterionItemsIds.Contains(x.Id))
+                                                    .Select(x => new CriterionItem()
+                                                    {
+                                                        Id = 0,
+                                                        CriterionId = SubCriterionImport.Id,
+                                                        OrderId = x.OrderId,
+                                                        ArabicName = x.ArabicName,
+                                                        EnglishName = x.EnglishName,
+                                                        Score = x.Score,
+                                                        SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                                                        ActualScore = x.ActualScore,
+                                                        MaxAttachmentNumber = x.MaxAttachmentNumber,
+                                                        AttachmentType = x.AttachmentType
+                                                    });
+
+                                                await _CriterionItemRepository.AddRangeAsync(NewCriterionItemEntities);
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+
+                    Transaction.Complete();
                 }
-                else if (!MainCategoryRequest.TakeThisLevel && MainCategoryRequest.NewMainCategoryId is not null)
+                catch (Exception)
                 {
-                    MainCategoryId = MainCategoryRequest.NewMainCategoryId.Value;
-
-                    // SubCategoryImport
-                    foreach (SubCategoryImport SubCategoryRequest in MainCategoryRequest.SubCategoryImport)
-                    {
-                        int SubCategoryId = 0;
-
-                        if (SubCategoryRequest.TakeThisLevel && SubCategoryRequest.NewSubCategoryId is null)
-                        {
-                            Category NewSubCategoryEntity = _Mapper.Map<Category>(CategoryEntities
-                                .FirstOrDefault(x => x.Id == SubCategoryRequest.Id));
-
-                            NewSubCategoryEntity.Id = 0;
-                            NewSubCategoryEntity.ParentId = MainCategoryId;
-
-                            await _CategoryRepository.AddAsync(NewSubCategoryEntity);
-
-                            SubCategoryId = NewSubCategoryEntity.Id;
-                        }
-                        else if (!SubCategoryRequest.TakeThisLevel && SubCategoryRequest.NewSubCategoryId is not null)
-                        {
-                            SubCategoryId = SubCategoryRequest.NewSubCategoryId.Value;
-                        }
-
-                        // TermAndConditionsIds
-                        if (SubCategoryRequest.TermAndConditionsIds.Any())
-                            await CopyTermAndConditions(SubCategoryRequest.TermAndConditionsIds, SubCategoryId);
-
-                        // TakeTheExplanatoryGuide
-                        if (SubCategoryRequest.TakeTheExplanatoryGuide)
-                            await CopyExplanatoryGuide(SubCategoryRequest.Id, SubCategoryId);
-
-                        // TrainingWorkshopsIds
-                        if (SubCategoryRequest.TrainingWorkshopsIds.Any())
-                            await CopyTrainingWorkshops(SubCategoryRequest.TrainingWorkshopsIds, SubCategoryId);
-
-                        // FrequentlyAskedQuestionsIds
-                        if (SubCategoryRequest.FrequentlyAskedQuestionsIds.Any())
-                            await CopyFrequentlyAskedQuestions(SubCategoryRequest.FrequentlyAskedQuestionsIds, SubCategoryId);
-
-                        // RewardsIds
-                        if (SubCategoryRequest.RewardsIds.Any())
-                            await CopyRewardsIds(SubCategoryRequest.RewardsIds, SubCategoryId);
-
-                        // MainCriterionImport + SubCriterionImport
-                        if (SubCategoryRequest.MainCriterionImport.Any())
-                        {
-                            IEnumerable<int> MainCriterionImportIds = SubCategoryRequest.MainCriterionImport.Select(x => x.Id);
-
-                            IEnumerable<SubCriterionImport> SubCriterionImportRequest = SubCategoryRequest.MainCriterionImport
-                                .SelectMany(x => x.SubCriterionImport);
-
-                            IEnumerable<int> SubCriterionImportIds = SubCriterionImportRequest
-                                .Select(x => x.Id);
-
-                            if (MainCriterionImportIds.Any() ||
-                                SubCriterionImportIds.Any())
-                            {
-                                IEnumerable<Criterion> NewCriterionEntities = CriterionEntitites
-                                    .Where(x => (MainCriterionImportIds.Contains(x.Id) && x.ParentId == null) ||
-                                        (SubCriterionImportIds.Contains(x.Id) && x.ParentId != null))
-                                    .Select(x => new Criterion()
-                                    {
-                                        Id = 0,
-                                        CategoryId = SubCategoryId,
-                                        OrderId = x.OrderId,
-                                        ArabicTitle = x.ArabicTitle,
-                                        EnglishTitle = x.EnglishTitle,
-                                        Score = x.Score,
-                                        SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
-                                        ParentId = x.ParentId,
-                                        MaxAttachmentNumber = x.MaxAttachmentNumber,
-                                        AttachmentType = x.AttachmentType,
-                                        AttachFilesOnSubCriterion = x.AttachFilesOnSubCriterion
-                                    });
-
-                                await _CriterionRepository.AddRangeAsync(NewCriterionEntities);
-
-                                // SubCriterionItemsIds
-                                foreach (SubCriterionImport SubCriterionImport in SubCriterionImportRequest)
-                                {
-                                    IEnumerable<int> SubCriterionItemsIds = SubCategoryRequest.MainCriterionImport
-                                        .SelectMany(x => x.SubCriterionImport)
-                                        .SelectMany(x => x.SubCriterionItemsIds);
-
-                                    if (SubCriterionItemsIds.Any())
-                                    {
-                                        IEnumerable<CriterionItem> NewCriterionItemEntities = CriterionItemEntitites
-                                            .Where(x => SubCriterionItemsIds.Contains(x.Id))
-                                            .Select(x => new CriterionItem()
-                                            {
-                                                Id = 0,
-                                                CriterionId = SubCriterionImport.Id,
-                                                OrderId = x.OrderId,
-                                                ArabicName = x.ArabicName,
-                                                EnglishName = x.EnglishName,
-                                                Score = x.Score,
-                                                SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
-                                                ActualScore = x.ActualScore,
-                                                MaxAttachmentNumber = x.MaxAttachmentNumber,
-                                                AttachmentType = x.AttachmentType
-                                            });
-
-                                        await _CriterionItemRepository.AddRangeAsync(NewCriterionItemEntities);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    Transaction.Dispose();
+                    throw;
                 }
             }
 
-            throw new NotImplementedException();
+            ResponseMessage = Request.lang == "en"
+                ? "Import succeeded"
+                : "تم استيراد المعلومات بنجاح";
+
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
         public async Task CopyTermAndConditions(List<int> TermAndConditionsIds, int SubCategoryId)
         {

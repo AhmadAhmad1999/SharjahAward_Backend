@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetAllFormsForArbitrationAudit;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
@@ -95,7 +94,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                             ? x.ProvidedForm!.Category!.EnglishName
                             : x.ProvidedForm!.Category!.ArabicName,
                         DateOfArbitration = x.DateOfArbitration,
-                        Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
+                        Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId) ? .Value ?? "",
                         FullArbitrationScore = InitialArbitrationEntities
                             .Where(y => y.ArbitrationId == x.Id)
                             .Sum(y => y.ArbitrationScore),
@@ -226,7 +225,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                 ? x.ProvidedForm!.Category!.EnglishName
                                 : x.ProvidedForm!.Category!.ArabicName,
                             DateOfArbitration = x.DateOfArbitration,
-                            Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
+                            Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId) ? .Value ?? "",
                             FullArbitrationScore = InitialArbitrationEntities
                                 .Where(y => y.ArbitrationId == x.Id)
                                 .Sum(y => y.ArbitrationScore),
@@ -304,7 +303,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                                 ? x.ProvidedForm!.Category!.EnglishName
                                 : x.ProvidedForm!.Category!.ArabicName,
                             DateOfArbitration = x.DateOfArbitration,
-                            Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId)!.Value,
+                            Name = SubscribersNames.FirstOrDefault(y => y.RecordId == x.ProvidedFormId) ? .Value ?? "",
                             FullArbitrationScore = InitialArbitrationEntities
                                 .Where(y => y.ArbitrationId == x.Id)
                                 .Sum(y => y.ArbitrationScore),

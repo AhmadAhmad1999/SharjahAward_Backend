@@ -84,8 +84,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
             List<DynamicAttributeValue> SubscribersNames = await _DynamicAttributeValueRepository
                 .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
                     x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
-                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower() &&
-                    AllArbitrationEntities.Select(y => y.ProvidedFormId).Contains(x.RecordId!.Value))
+                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
                 .ToListAsync();
 
             List<int> ProvidedFormsInArbitrationResult = await _ArbitrationResultRepository

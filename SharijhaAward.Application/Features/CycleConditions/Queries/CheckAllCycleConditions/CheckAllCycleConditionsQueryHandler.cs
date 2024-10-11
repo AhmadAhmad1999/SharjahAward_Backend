@@ -63,13 +63,13 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
                 .Where(t => t.CycleId == cycle.Id)
                 .ToListAsync();
 
-            List<CycleConditionsProvidedForm> conditionsProvideds = await _conditionsProvidedFormsRepository
-                .Where(x => terms.Select(y => y.Id).Contains(x.CycleConditionId) &&
-                    x.ProvidedFormId == form!.Id)
-                .ToListAsync();
-
-            if (terms.Count() != 0)
+            if (terms.Any())
             {
+                List<CycleConditionAttachment> conditionsProvideds = await _conditionAttachmentRepository
+                    .Where(x => terms.Select(y => y.Id).Contains(x.CycleConditionsProvidedForm!.CycleConditionId) &&
+                        x.CycleConditionsProvidedForm!.ProvidedFormId == form!.Id)
+                    .ToListAsync();
+
                 for (int i = 0; i < terms.Count(); i++)
                 {
                     //Check on Terms that need Attachments
@@ -79,8 +79,8 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
                             ? "You can't upload more files"
                             : "لا يمكنك رفع المزيد من الملفات";
 
-                        List<CycleConditionsProvidedForm> conditionsProvidedsForThisTerm = conditionsProvideds
-                            .Where(x => x.CycleConditionId == terms[i].Id)
+                        List<CycleConditionAttachment> conditionsProvidedsForThisTerm = conditionsProvideds
+                            .Where(x => x.CycleConditionsProvidedForm!.CycleConditionId == terms[i].Id)
                             .ToList();
 
                         if (terms[i].RequiredAttachmentNumber < conditionsProvidedsForThisTerm.Count() && 
@@ -88,12 +88,21 @@ namespace SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCyc
                         {
                             return new BaseResponse<object>(msg, false, 400);
                         }
+
+                        if (!conditionsProvidedsForThisTerm.Any())
+                        {
+                            msg = request.lang == "en"
+                                ? $"You must upload at least on file for this term: {terms[i].EnglishTitle}"
+                                : $"يجب رفع ملف واحد على الأقل للشرط العام: {terms[i].ArabicTitle}";
+
+                            return new BaseResponse<object>(msg, false, 400);
+                        }
                     }
 
                     //Check on Terms that don't need Attachments
-                    if (!terms[i].NeedAttachment)
+                    else
                     {
-                        if (!conditionsProvideds[i].IsAgree && !terms[i].NeedAttachment)
+                        if (!conditionsProvideds[i].CycleConditionsProvidedForm!.IsAgree && !terms[i].NeedAttachment)
                         {
                             msg = request.lang == "en"
                                 ? "Pleas Agree on All Terms and Conditions"

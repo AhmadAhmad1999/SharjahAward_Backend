@@ -116,17 +116,33 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         .Select(c => c.Id)
                         .ToListAsync();
 
-                    
-                    var forms = Roles.Any(r => r!.HaveFullAccess)
-                        ? await _FormRepository.ListAllAsync()
-                        :await _FormRepository.Where(f => f.Category.CycleId == cycle.Id).ToListAsync();
+                    IReadOnlyList<Domain.Entities.ProvidedFormModel.ProvidedForm> forms;
 
-                    var Subscribers = await _UserRepository
-                        .Where(s => s.SubscriberId != null)
-                        .ToListAsync();
+                    if (request.page != 0 && request.perPage > 0)
+                    {
+                        forms = Roles.Any(r => r!.HaveFullAccess)
+                            ? await _FormRepository.OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+                                .ToListAsync()
+                            : await _FormRepository
+                                .Where(f => f.Category.CycleId == cycle.Id)
+                                .OrderByDescending(x => x.CreatedAt)
+                                .Skip((request.page - 1) * request.page)
+                                .Take(request.perPage)
+                                .ToListAsync();
+                    }
+                    else
+                    {
+                        forms = Roles.Any(r => r!.HaveFullAccess)
+                            ? await _FormRepository.ListAllAsync()
+                            : await _FormRepository.Where(f => f.Category.CycleId == cycle.Id).ToListAsync();
+                    }
 
                     if (forms.Any())
                     {
+                        var Subscribers = await _UserRepository
+                            .Where(s => s.SubscriberId != null)
+                            .ToListAsync();
+
                         List<FinalArbitration> GetAllFromsInFinalArbitration = await _FinalArbitrationRepository
                             .Where(x => forms.Select(y => y.Id).Contains(x.ProvidedFormId))
                             .ToListAsync();
@@ -144,13 +160,14 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             .Include(x => x.Parent)
                             .AsEnumerable();
 
+                        List<FormListVm> data = new List<FormListVm>();
 
-                        var data = request.SubscriberName == null
+                        data = request.SubscriberName == null
                             ? forms.AsEnumerable().Select(x => new FormListVm()
                             {
                                 Id = x.Id,
                                 SubscriberName = (SubscribersNames.Select(y => y.RecordId).Contains(x.Id) && SubscribersNames.Any())
-                                    ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
+                                    ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)?.Value ?? ""
                                     : null,
                                 subscriberCode = (Subscribers.Select(s => s.Id).Contains(x.userId) && Subscribers.Any())
                                     ? Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId
@@ -180,42 +197,42 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                     .Contains(x.Id),
                                 SubscriberId = x.userId
                             }).ToList()
-                          : forms.AsEnumerable().Select(x => new FormListVm()
-                          {
-                              Id = x.Id,
-                              SubscriberName = (SubscribersNames.Select(y => y.RecordId).Contains(x.Id) && SubscribersNames.Any())
-                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
+                            : forms.AsEnumerable().Select(x => new FormListVm()
+                            {
+                                Id = x.Id,
+                                SubscriberName = (SubscribersNames.Select(y => y.RecordId).Contains(x.Id) && SubscribersNames.Any())
+                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)?.Value ?? ""
                                 : null,
-                              subscriberCode = (Subscribers.Select(s => s.Id).Contains(x.userId) && Subscribers.Any())
+                                subscriberCode = (Subscribers.Select(s => s.Id).Contains(x.userId) && Subscribers.Any())
                                 ? Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId
                                 : null,
-                              PercentCompletion = x.PercentCompletion,
-                              CycleNumber = x.CycleNumber,
-                              CycleYear = x.CycleYear,
-                              Type = x.Type,
-                              Status = x.Status,
-                              SubscriberType = x.SubscriberType,
-                              CurrentStep = x.CurrentStep,
-                              TotalStep = x.TotalStep,
-                              FinalScore = x.FinalScore,
-                              IsAccepted = x.IsAccepted,
-                              //ReasonOfRejection = x.ReasonOfRejection!,
-                              categoryId = x.categoryId,
-                              CreatedAt = x.CreatedAt,
-                              CategoryName = request.lang == "en"
+                                PercentCompletion = x.PercentCompletion,
+                                CycleNumber = x.CycleNumber,
+                                CycleYear = x.CycleYear,
+                                Type = x.Type,
+                                Status = x.Status,
+                                SubscriberType = x.SubscriberType,
+                                CurrentStep = x.CurrentStep,
+                                TotalStep = x.TotalStep,
+                                FinalScore = x.FinalScore,
+                                IsAccepted = x.IsAccepted,
+                                //ReasonOfRejection = x.ReasonOfRejection!,
+                                categoryId = x.categoryId,
+                                CreatedAt = x.CreatedAt,
+                                CategoryName = request.lang == "en"
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
-                              SubCategoryName = request.lang == "en"
+                                SubCategoryName = request.lang == "en"
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
-                              SucceedToFinalArbitration = GetAllFromsInFinalArbitration
+                                SucceedToFinalArbitration = GetAllFromsInFinalArbitration
                                 .AsEnumerable()
                                 .Select(y => y.ProvidedFormId)
                                 .Contains(x.Id),
-                              SubscriberId = x.userId
-                          })
-                          .Where(x => x.SubscriberName!.Contains(request.SubscriberName))
-                          .ToList();
+                                SubscriberId = x.userId
+                            })
+                            .Where(x => x.SubscriberName!.Contains(request.SubscriberName))
+                            .ToList();
 
                         List<CycleConditionAttachment> AllCycleConditionAttachmentEntities = await _CycleConditionAttachmentRepository
                             .Where(x => forms.Select(y => y.Id).Contains(x.CycleConditionsProvidedForm!.ProvidedFormId) &&
@@ -351,9 +368,35 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             EducationalEntityObject = x
                         }).ToList();
 
-                    forms = forms
-                        .Where(x => DynamicAttributeValueEtities.Select(y => y.RecordId).Contains(x.Id))
-                        .ToList();
+                    if (request.page != 0 && request.perPage > 0)
+                    {
+                        forms = Roles.Any(r => r!.HaveFullAccess)
+                            ? forms
+                                .Where(x => DynamicAttributeValueEtities
+                                    .Select(y => y.RecordId).Contains(x.Id))
+                                .OrderByDescending(x => x.CreatedAt)
+                                .Skip((request.page - 1) * request.perPage)
+                                .Take(request.perPage)
+                                .ToList()
+                            : await _FormRepository
+                                .Where(f => DynamicAttributeValueEtities.Select(y => y.RecordId).Contains(f.Id))
+                                .OrderByDescending(x => x.CreatedAt)
+                                .Skip((request.page - 1) * request.page)
+                                .Take(request.perPage)
+                                .ToListAsync();
+                    }
+                    else
+                    {
+                        forms = Roles.Any(r => r!.HaveFullAccess)
+                            ? forms
+                                .Where(x => DynamicAttributeValueEtities
+                                    .Select(y => y.RecordId).Contains(x.Id))
+                                .OrderByDescending(x => x.CreatedAt)
+                                .ToList()
+                            : forms.Where(f => DynamicAttributeValueEtities.Select(y => y.RecordId).Contains(f.Id))
+                                .OrderByDescending(x => x.CreatedAt)
+                                .ToList();
+                    }
 
                     var Subscribers = await _UserRepository
                         .Where(s => s.SubscriberId != null)
@@ -382,7 +425,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         {
                             Id = x.Id,
                             SubscriberName = (SubscribersNames.Select(y => y.RecordId).Contains(x.Id) && SubscribersNames.Any())
-                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)!.Value
+                                ? SubscribersNames.FirstOrDefault(y => y.RecordId == x.Id)?.Value ?? ""
                                 : null,
                             subscriberCode = (Subscribers.Select(s => s.Id).Contains(x.userId) && Subscribers.Any())
                                 ? Subscribers.FirstOrDefault(s => s.Id == x.userId)!.SubscriberId

@@ -74,11 +74,14 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queri
 
             for (int i = 0; i < data.Count; i++)
             {
-                data[i].Attachments =  _mapper.Map<List<AttachmentListVM>>(AllConditionAttachmentEntities
-                    .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
-                    .ToList());
+                if (conditionsProvideds.Any())
+                {
+                    data[i].Attachments = _mapper.Map<List<AttachmentListVM>>(AllConditionAttachmentEntities
+                        .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
+                        .ToList());
 
-                data[i].Acceptance = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
+                    data[i].Acceptance = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
+                }
 
                 data[i].Title = request.lang == "en"
                     ? data[i].EnglishTitle

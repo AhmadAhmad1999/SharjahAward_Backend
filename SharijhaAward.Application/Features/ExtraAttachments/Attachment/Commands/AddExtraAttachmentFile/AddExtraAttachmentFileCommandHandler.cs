@@ -63,7 +63,8 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Attachment.Command
                 ExtraAttachmentsFileEntities.Remove(Attachment!);
             }
 
-            if  (ExtraAttachment.RequiredAttachmentNumber > ExtraAttachmentsFileEntities.Count() || ExtraAttachment.RequiredAttachmentNumber == 0)
+            if  (ExtraAttachment.RequiredAttachmentNumber > ExtraAttachmentsFileEntities.Count() ||
+                ExtraAttachment.RequiredAttachmentNumber == 0)
             {
                 var data = _mapper.Map<ExtraAttachmentFile>(request);
 
