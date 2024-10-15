@@ -300,6 +300,7 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ChatBotQuestion>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<WorkflowQuestion>().HasQueryFilter(p => !p.isDeleted);
 
 
             modelBuilder.Entity<CriterionAttachment>()
@@ -1343,7 +1344,8 @@ namespace SharijhaAward.Persistence
                         {
                             TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
                                 .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
-                                    ? (Record!.GetType().GetProperty("DynamicAttribute")!
+                                    ? (Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString() == EntityId &&
+                                    Record!.GetType().GetProperty("DynamicAttribute")!
                                         .GetValue(Record)!.GetType().GetProperty("DynamicAttributeSection")!
                                             .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
                                                 .GetValue(Record)!)!.GetType().GetProperty("AttributeTableNameId")!
@@ -1358,7 +1360,8 @@ namespace SharijhaAward.Persistence
                         {
                             TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
                                 .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
-                                    ? (Record!.GetType().GetProperty("DynamicAttribute")!
+                                    ? (Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString() == EntityId && 
+                                    Record!.GetType().GetProperty("DynamicAttribute")!
                                         .GetValue(Record)!.GetType().GetProperty("DynamicAttributeSection")!
                                             .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
                                                 .GetValue(Record)!)!.GetType().GetProperty("AttributeTableNameId")!
@@ -1373,7 +1376,8 @@ namespace SharijhaAward.Persistence
                         {
                             TableRecords = _Mapper.Map<List<object>>(this.GetType().GetProperty(ReflectedTable.Name)!.GetValue(this))
                                 .Where(Record => Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record) != null
-                                    ? (Record!.GetType().GetProperty("DynamicAttribute")!
+                                    ? (Record.GetType().GetProperty(ForeignKeyName)!.GetValue(Record)!.ToString() == EntityId && 
+                                    Record!.GetType().GetProperty("DynamicAttribute")!
                                         .GetValue(Record)!.GetType().GetProperty("DynamicAttributeSection")!
                                             .GetValue(Record!.GetType().GetProperty("DynamicAttribute")!
                                                 .GetValue(Record)!)!.GetType().GetProperty("AttributeTableNameId")!

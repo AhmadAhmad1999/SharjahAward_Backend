@@ -1,17 +1,11 @@
 ﻿using EnumsNET;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using QRCoder.Extensions;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetAllReceivedRequests;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetallSendedRequests
 {
@@ -35,33 +29,33 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.Geta
 
             List<GetAllReceivedRequestsListVM> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
                 ? await _RelatedAccountRequestRepository
-                    .Where(x => x.SenderId == UserId)
+                    .Where(x => x.ReceiverId == UserId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new GetAllReceivedRequestsListVM()
                     {
                         Id = x.Id,
-                        Email = x.Sender!.Email,
-                        Gender = x.Sender!.Gender,
+                        Email = x.Receiver!.Email,
+                        Gender = x.Receiver!.Gender,
                         Name = Request.lang == "en"
-                            ? x.Sender!.EnglishName
-                            : x.Sender!.ArabicName,
-                        ImageURL = x.Sender!.ImageURL,
+                            ? x.Receiver!.EnglishName
+                            : x.Receiver!.ArabicName,
+                        ImageURL = x.Receiver!.ImageURL,
                         Status = x.Status.GetName()!
                     }).ToListAsync()
                 : await _RelatedAccountRequestRepository
-                    .Where(x => x.SenderId == UserId)
+                    .Where(x => x.ReceiverId == UserId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
                     .Select(x => new GetAllReceivedRequestsListVM()
                     {
                         Id = x.Id,
-                        Email = x.Sender!.Email,
-                        Gender = x.Sender!.Gender,
+                        Email = x.Receiver!.Email,
+                        Gender = x.Receiver!.Gender,
                         Name = Request.lang == "en"
-                            ? x.Sender!.EnglishName
-                            : x.Sender!.ArabicName,
-                        ImageURL = x.Sender!.ImageURL,
+                            ? x.Receiver!.EnglishName
+                            : x.Receiver!.ArabicName,
+                        ImageURL = x.Receiver!.ImageURL,
                         Status = x.Status.GetName()!
                     }).ToListAsync();
 

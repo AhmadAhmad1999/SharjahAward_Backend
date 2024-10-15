@@ -15,57 +15,68 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.CheckAllEx
     public class CheckAllExtraAttachmentQueryHandler
         : IRequestHandler<CheckAllExtraAttachmentQuery, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _providedFormRepository;
-        private readonly IAsyncRepository<ExtraAttachment> _extraAttachmentRepository;
-        private readonly IAsyncRepository<ExtraAttachmentFile> _extraAttachmentFileRepository;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
+        private readonly IAsyncRepository<ExtraAttachment> _ExtraAttachmentRepository;
+        private readonly IAsyncRepository<ExtraAttachmentFile> _ExtraAttachmentFileRepository;
         
-        public CheckAllExtraAttachmentQueryHandler(IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository, IAsyncRepository<ExtraAttachment> extraAttachmentRepository, IAsyncRepository<ExtraAttachmentFile> extraAttachmentFileRepository)
+        public CheckAllExtraAttachmentQueryHandler(IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository,
+            IAsyncRepository<ExtraAttachment> ExtraAttachmentRepository, 
+            IAsyncRepository<ExtraAttachmentFile> ExtraAttachmentFileRepository)
         {
-            _providedFormRepository = providedFormRepository;
-            _extraAttachmentRepository = extraAttachmentRepository;
-            _extraAttachmentFileRepository = extraAttachmentFileRepository;
+            _ProvidedFormRepository = ProvidedFormRepository;
+            _ExtraAttachmentRepository = ExtraAttachmentRepository;
+            _ExtraAttachmentFileRepository = ExtraAttachmentFileRepository;
         }
 
-        public async Task<BaseResponse<object>> Handle(CheckAllExtraAttachmentQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CheckAllExtraAttachmentQuery Request, CancellationToken cancellationToken)
         {
-            string msg= "";
+            string ResponseMessage = string.Empty;
 
-            var form = await _providedFormRepository.FirstOrDefaultAsync(p => p.Id == request.formId);
+            Domain.Entities.ProvidedFormModel.ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.formId);
            
-            if (form == null)
+            if (ProvidedFormEntity is null)
             {
-                msg = request.lang == "en"
-                                ? "Provided Form Not Found"
-                                : "لا يوجد إستمارة";
+                ResponseMessage = Request.lang == "en"
+                    ? "Provided form is not found"
+                    : "الإستمارة غير موجودة";
 
-                return new BaseResponse<object>(msg, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            var extraAttachment = await _extraAttachmentRepository
-                .Where(e => e.ProvidedFormId == form!.Id)
+            List<ExtraAttachment> ExtraAttachmentEntities = await _ExtraAttachmentRepository
+                .Where(x => x.ProvidedFormId == ProvidedFormEntity.Id)
                 .ToListAsync();
 
-            List<ExtraAttachmentFile> AllExtraAttachmentFileEntities = await _extraAttachmentFileRepository
-                .Where(x => extraAttachment.Select(y => y.Id).Contains(x.ExtraAttachmentId))
+            List<ExtraAttachmentFile> AllExtraAttachmentFileEntities = await _ExtraAttachmentFileRepository
+                .Where(x => ExtraAttachmentEntities.Select(y => y.Id).Contains(x.ExtraAttachmentId))
                 .ToListAsync();
 
-            foreach (var attachment in extraAttachment)
+            foreach (ExtraAttachment ExtraAttachmentEntity in ExtraAttachmentEntities)
             {
                 List<ExtraAttachmentFile> AllExtraAttachmentFileEntitiesForThisAttachment = AllExtraAttachmentFileEntities
-                    .Where(x => x.ExtraAttachmentId == attachment.Id)
+                    .Where(x => x.ExtraAttachmentId == ExtraAttachmentEntity.Id)
                     .ToList();
 
-                if (attachment.RequiredAttachmentNumber < AllExtraAttachmentFileEntitiesForThisAttachment.Count())
+                if (ExtraAttachmentEntity.RequiredAttachmentNumber < AllExtraAttachmentFileEntitiesForThisAttachment.Count())
                 {
-                    msg = request.lang == "en"
-                        ? $"You can't upload more than {attachment.RequiredAttachmentNumber} files"
-                        : $"لا يمكنك رفع أكثر من {attachment.RequiredAttachmentNumber} ملفات";
+                    ResponseMessage = Request.lang == "en"
+                        ? $"You can't upload more than {ExtraAttachmentEntity.RequiredAttachmentNumber} files"
+                        : $"لا يمكنك رفع أكثر من {ExtraAttachmentEntity.RequiredAttachmentNumber} ملفات";
 
-                    return new BaseResponse<object>(msg, false, 400);
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                }
+                if (!AllExtraAttachmentFileEntitiesForThisAttachment.Any())
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? $"You must upload at least on file for this extra attachment: {ExtraAttachmentEntity.EnglishTitle}"
+                        : $"يجب رفع ملف واحد على الأقل للمرفق الإضافي: {ExtraAttachmentEntity.ArabicTitle}";
+
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
                 }
             }
 
-            return new BaseResponse<object>(msg, true, 200);
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }
