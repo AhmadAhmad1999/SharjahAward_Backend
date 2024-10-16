@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public List<InsertedDataDto> TermAndConditionsIds { get; set; } = new List<InsertedDataDto>();
-        public InsertedDataDto? TakeTheExplanatoryGuide { get; set; }
+        public List<InsertedDataDto> TakeTheExplanatoryGuide { get; set; } = new List<InsertedDataDto>();
         public List<InsertedDataDto> TrainingWorkshopsIds { get; set; } = new List<InsertedDataDto>();
         public List<InsertedDataDto> FrequentlyAskedQuestionsIds { get; set; } = new List<InsertedDataDto>();
         public List<InsertedDataDto> RewardsIds { get; set; } = new List<InsertedDataDto>();

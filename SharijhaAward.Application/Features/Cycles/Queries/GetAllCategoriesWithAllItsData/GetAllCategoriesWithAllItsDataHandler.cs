@@ -160,6 +160,7 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetAllCategoriesWith
                         ? x.EnglishName
                         : x.ArabicName,
                     SubCriterionDataDto = SubCategories
+                        .Where(y => y.ParentId == x.Id)
                         .Select(y => new SubCategoryDataDto()
                         {
                             Id = y.Id,
@@ -169,8 +170,11 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetAllCategoriesWith
                             TermAndConditionsIds = TermAndConditionEntities
                                 .Where(z => z.ParentId == y.Id)
                                 .ToList(),
-                            TakeTheExplanatoryGuide = ExplanatoryGuideEntities
-                                .FirstOrDefault(z => z.ParentId == y.Id),
+                            TakeTheExplanatoryGuide = ExplanatoryGuideEntities.Any(z => z.ParentId == y.Id)
+                                ? new List<InsertedDataDto>()
+                                {
+                                    ExplanatoryGuideEntities.FirstOrDefault(z => z.ParentId == y.Id)!
+                                } : new List<InsertedDataDto>(),
                             TrainingWorkshopsIds = TrainingWorkshopEntities
                                 .Where(z => z.ParentId == y.Id)
                                 .ToList(),

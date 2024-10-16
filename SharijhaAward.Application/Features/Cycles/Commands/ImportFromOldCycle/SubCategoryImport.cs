@@ -10,6 +10,6 @@
         public List<int> TrainingWorkshopsIds { get; set; } = new List<int>();
         public List<int> FrequentlyAskedQuestionsIds { get; set; } = new List<int>();
         public List<int> RewardsIds { get; set; } = new List<int>();
-        public List<MainCriterionImport> MainCriterionImport { get; set; } = new List<MainCriterionImport>();
+        public List<int> MainCriterionImport { get; set; } = new List<int>();
     }
 }

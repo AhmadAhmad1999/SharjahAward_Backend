@@ -357,6 +357,10 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
                     GetWinnersByLevelMainResponse = new GetWinnersByLevelMainResponse()
                 }));
 
+            Response = Response
+                .DistinctBy(x => x.ClassId)
+                .ToList();
+
             return new BaseResponse<List<GetWinnersByLevelGroupedByClassesListVM>>(ResponseMessage, true, 200, Response);
         }
     }
