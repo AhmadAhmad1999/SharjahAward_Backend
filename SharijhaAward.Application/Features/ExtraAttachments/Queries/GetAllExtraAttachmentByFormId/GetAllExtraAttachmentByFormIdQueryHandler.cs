@@ -51,7 +51,15 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
 
                 data[i].AttachmentList = _mapper.Map<List<AttachmentDto>>(AllAttachmentEntities
                     .Where(x => x.ExtraAttachmentId == data[i].Id)
-                    .ToList());
+                    .Select(x => new AttachmentDto()
+                    {
+                        Id = x.Id,
+                        FileDescription = x.FileDescription,
+                        FileName = x.FileName,
+                        FileUrl = x.FileUrl,
+                        IsAccept = x.IsAccept,
+                        ReasonOfReject = x.ReasonOfReject
+                    }).ToList());
 
                 if (data[i].AttachmentList!.Any(a => a.IsAccept == false))
                     data[i].Rejected = true;

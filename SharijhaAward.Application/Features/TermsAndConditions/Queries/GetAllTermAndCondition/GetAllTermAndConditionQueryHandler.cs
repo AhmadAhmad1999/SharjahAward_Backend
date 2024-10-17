@@ -30,10 +30,12 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
             var termsAndConditions = await _termAndConditionRepository
-                .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
-                .Where(x => request.CategoryId != null 
+                .WhereThenFilter(x => request.CategoryId != null 
                     ? x.CategoryId == request.CategoryId
-                    : true)
+                    : true, filterObject)
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((request.page - 1) * request.perPage)
+                .Take(request.perPage)
                 .ToListAsync();
             
             var data = _mapper.Map<List<TermAndConditionListVM>>(termsAndConditions);

@@ -104,12 +104,15 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSp
 
             for (int i = 0; i < data.Count; i++)
             {
-                data[i].ConditionsAttachments = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
+                var xx = conditionsProvideds
+                    .FirstOrDefault(x => x.TermAndConditionId == data[i].Id);
+
+                data[i].ConditionsAttachments = _mapper.Map<ConditionProvidedFormListVm>(xx);
 
                 if (data[i].NeedAttachment)
                 {
                     data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<AttachmentListVM>>(AllConditionAttachmentEntities
-                        .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
+                        .Where(x => x.ConditionsProvidedFormsId == xx.Id)
                         .ToList());
 
                     if (data[i].ConditionsAttachments!.Attachments.Any(a => a.IsAccept == false))
