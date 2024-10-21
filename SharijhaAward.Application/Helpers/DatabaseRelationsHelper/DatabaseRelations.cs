@@ -448,7 +448,8 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "RelatedAccountRequests/ReceiverId RelatedAccounts/User1Id RelatedAccounts/User2Id " + // Done
                 "ProvidedForms/userId FinalArbitrations/DoneArbitrationUserId EmailMessages/UserId " + // Done
                 "Arbitrations/DoneArbitrationUserId Achievements/UserId ChairmanNotesOnInitialArbitrations/ChairmanId " +
-                "ChairmanNotesOnArbitrationAudits/ChairmanId ChairmanNotesOnFinalArbitrationScores/ChairmanId")] // Done
+                "ChairmanNotesOnArbitrationAudits/ChairmanId ChairmanNotesOnFinalArbitrationScores/ChairmanId " +
+                "DigitalSignatures/UserId")] // Done
             User,
 
             [Description("Arbitrators/Id Coordinators/Id UserTokens/UserId UsersRoles/UserId UserNotifications/UserId " + // Done
@@ -456,7 +457,8 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "RelatedAccountRequests/ReceiverId RelatedAccounts/User1Id RelatedAccounts/User2Id " + // Done
                 "ProvidedForms/userId FinalArbitrations/DoneArbitrationUserId EmailMessages/UserId " + // Done
                 "Arbitrations/DoneArbitrationUserId Achievements/UserId ChairmanNotesOnInitialArbitrations/ChairmanId " +
-                "ChairmanNotesOnArbitrationAudits/ChairmanId ChairmanNotesOnFinalArbitrationScores/ChairmanId")] // Done
+                "ChairmanNotesOnArbitrationAudits/ChairmanId ChairmanNotesOnFinalArbitrationScores/ChairmanId " +
+                "DigitalSignatures/UserId")] // Done
             Users,
 
             [Description("UsersRoles/RoleId RolePermissions/RoleId RoleMessageTypes/RoleId Responsibilities/RoleId")] // Done
@@ -855,7 +857,19 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             AdvancedFormBuilderValue,
 
             [Description("")] // Done
-            AdvancedFormBuilderValues
+            AdvancedFormBuilderValues,
+            
+            [Description("")] // Done
+            Template,
+
+            [Description("")] // Done
+            Templates,
+
+            [Description("")] // Done
+            DigitalSignature,
+
+            [Description("")] // Done
+            DigitalSignatures
         }
         public static string GetEnumDescription(Enum value)
         {

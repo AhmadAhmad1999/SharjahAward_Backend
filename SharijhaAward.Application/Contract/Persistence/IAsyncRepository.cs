@@ -60,5 +60,6 @@ namespace SharijhaAward.Application.Contract.Persistence
         Task SaveChangesAsync();
         Task<int> ExecuteUpdateAsync(string sql);
         IEnumerable<T> AsEnumerable();
+        IQueryable<T> Filter(FilterObject filterObject);
     }
 }

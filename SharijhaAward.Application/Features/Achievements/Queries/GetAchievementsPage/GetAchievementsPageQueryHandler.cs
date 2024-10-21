@@ -1,54 +1,44 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AchievementModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Achievements.Queries.GetAchievementsPage
 {
     public class GetAchievementsPageQueryHandler
         : IRequestHandler<GetAchievementsPageQuery, BaseResponse<AchievementsDto>>
     {
-        private readonly IAsyncRepository<Achievement> _achievementsRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Achievement> _AchievementRepository;
+        private readonly IUserRepository _UserRepository;
+        private readonly IJwtProvider _JwtProvider;
+        private readonly IMapper _Mapper;
 
-        public GetAchievementsPageQueryHandler(IAsyncRepository<Achievement> achievementsRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetAchievementsPageQueryHandler(IAsyncRepository<Achievement> _AchievementRepository,
+            IUserRepository _UserRepository,
+            IJwtProvider _JwtProvider, 
+            IMapper _Mapper)
         {
-            _achievementsRepository = achievementsRepository;
-            _userRepository = userRepository;
-            _jwtProvider = jwtProvider;
-            _mapper = mapper;
+            this._AchievementRepository = _AchievementRepository;
+            this._UserRepository = _UserRepository;
+            this._JwtProvider = _JwtProvider;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<AchievementsDto>> Handle(GetAchievementsPageQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<AchievementsDto>> Handle(GetAchievementsPageQuery Request, CancellationToken cancellationToken)
         {
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            
-            if(UserId.IsNullOrEmpty())
-            {
-                return new BaseResponse<AchievementsDto>("Un Auth", false, 401);
-            }
-            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.token));
 
-            if(User == null)
-            {
-                return new BaseResponse<AchievementsDto>("User Not Found", false, 404);
-            }
-            var Achievements = await _achievementsRepository.FirstOrDefaultAsync(a => a.UserId == User.Id);
+            Domain.Entities.IdentityModels.User? User = await _UserRepository
+                .FirstOrDefaultAsync(x => x.Id == UserId);
 
-            var data = _mapper.Map<AchievementsDto>(Achievements);
+            Achievement? AchievementEntity = await _AchievementRepository
+                .FirstOrDefaultAsync(x => x.UserId == User!.Id);
 
-            return new BaseResponse<AchievementsDto>("", true, 200,data);
+            AchievementsDto AchievementsDto = _Mapper.Map<AchievementsDto>(AchievementEntity);
+
+            return new BaseResponse<AchievementsDto>("", true, 200,AchievementsDto);
         }
     }
 }

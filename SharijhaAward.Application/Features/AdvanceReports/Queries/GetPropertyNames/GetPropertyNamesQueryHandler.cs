@@ -5,61 +5,52 @@ using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
 using SharijhaAward.Domain.Entities.CycleModel;
-using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.AdvanceReports.Queries.GetPropertyNames
 {
     public class GetPropertyNamesQueryHandler
         : IRequestHandler<GetPropertyNamesQuery, BaseResponse<CyclePropertyDto>>
     {
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
-        private readonly IAsyncRepository<Category> _categoryRepository;
-        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm>_providedFormRepository;
-        private readonly IAsyncRepository<Arbitrator> _arbitratorRepository;
-        private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
-        private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _userRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
+        private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
+        private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _UserRepository;
 
-        public GetPropertyNamesQueryHandler(IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Category> categoryRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository, IAsyncRepository<Arbitrator> arbitratorRepository, IAsyncRepository<Coordinator> coordinatorRepository, IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository)
+        public GetPropertyNamesQueryHandler(IAsyncRepository<Cycle> _CycleRepository, 
+            IAsyncRepository<Category> _CategoryRepository, 
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository, 
+            IAsyncRepository<Arbitrator> _ArbitratorRepository,
+            IAsyncRepository<Coordinator> _CoordinatorRepository,
+            IAsyncRepository<Domain.Entities.IdentityModels.User> _UserRepository)
         {
-            _cycleRepository = cycleRepository;
-            _categoryRepository = categoryRepository;
-            _providedFormRepository = providedFormRepository;
-            _arbitratorRepository = arbitratorRepository;
-            _coordinatorRepository = coordinatorRepository;
-            _userRepository = userRepository;
+            this._CycleRepository = _CycleRepository;
+            this._CategoryRepository = _CategoryRepository;
+            this._ProvidedFormRepository = _ProvidedFormRepository;
+            this._ArbitratorRepository = _ArbitratorRepository;
+            this._CoordinatorRepository = _CoordinatorRepository;
+            this._UserRepository = _UserRepository;
         }
 
-        public async Task<BaseResponse<CyclePropertyDto>> Handle(GetPropertyNamesQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<CyclePropertyDto>> Handle(GetPropertyNamesQuery Request, CancellationToken cancellationToken)
         {
+            string ResponseMessage = string.Empty;
 
-            var cyclePropertyNames = await _cycleRepository.GetPropertyNames();
-
-            var categoryPropertyNames = await _cycleRepository.GetPropertyNames();
-
-            var providedFormPropertyNames = await _cycleRepository.GetPropertyNames();
-
-            var ProvidedForms = new ProvidedFormPropertyDto()
+            CyclePropertyDto CyclePropertyDto = new CyclePropertyDto()
             {
-                ProvidedFormProperties = providedFormPropertyNames
+                CycleProperties = await _CycleRepository.GetPropertyNames(),
+                Category = new CategoryPropertyDto()
+                {
+                    CatgegoryProperties = await _CycleRepository.GetPropertyNames(),
+                    ProvidedForms = new ProvidedFormPropertyDto()
+                    {
+                        ProvidedFormProperties = await _CycleRepository.GetPropertyNames()
+                    }
+                }
             };
 
-            var Category = new CategoryPropertyDto()
-            {
-                CatgegoryProperties = categoryPropertyNames,
-                ProvidedForms = ProvidedForms
-            };
-            var data = new CyclePropertyDto()
-            {
-                CycleProperties = cyclePropertyNames,
-                Category = Category
-            };
-
-            return new BaseResponse<CyclePropertyDto>("", true, 200, data);
+            return new BaseResponse<CyclePropertyDto>(ResponseMessage, true, 200, CyclePropertyDto);
         }
     }
 }

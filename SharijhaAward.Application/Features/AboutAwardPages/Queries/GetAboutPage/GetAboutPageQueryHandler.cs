@@ -4,76 +4,88 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AboutAwardPageModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage
 {
     public class GetAboutPageQueryHandler
         : IRequestHandler<GetAboutPageQuery, BaseResponse<AboutPageDto>>
     {
-        private readonly IAsyncRepository<AboutAwardPage> _aboutPageRepository;
-        private readonly IAsyncRepository<OurGoal> _goalRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<AboutAwardPage> _AboutAwardPageRepository;
+        private readonly IAsyncRepository<OurGoal> _OurGoalRepository;
+        private readonly IMapper _Mapper;
 
-        public GetAboutPageQueryHandler(IAsyncRepository<AboutAwardPage> aboutPageRepository, IAsyncRepository<OurGoal> goalRepository, IMapper mapper)
+        public GetAboutPageQueryHandler(IAsyncRepository<AboutAwardPage> _AboutAwardPageRepository,
+            IAsyncRepository<OurGoal> _OurGoalRepository,
+            IMapper _Mapper)
         {
-            _aboutPageRepository = aboutPageRepository;
-            _goalRepository = goalRepository;
-            _mapper = mapper;
+            this._AboutAwardPageRepository = _AboutAwardPageRepository;
+            this._OurGoalRepository = _OurGoalRepository;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<AboutPageDto>> Handle(GetAboutPageQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<AboutPageDto>> Handle(GetAboutPageQuery Request, CancellationToken cancellationToken)
         {
-            var AboutPage = await _aboutPageRepository.FirstOrDefaultAsync(x => true);
+            string ResponseMessage = string.Empty;
+
+            AboutAwardPage? AboutAwardPageEntity = await _AboutAwardPageRepository.FirstOrDefaultAsync(x => true);
             
-            if(AboutPage == null)
+            if(AboutAwardPageEntity is null)
             {
-                var NoData = _mapper.Map<AboutPageDto>(AboutPage);
-                return new BaseResponse<AboutPageDto>("Can't Reach This Page", true, 200, NoData);
+                ResponseMessage = Request.lang == "en"
+                    ? "Can't Reach This Page"
+                    : "لا يمكن الوصول لهذه الصفحة في الوقت الحالي";
+
+                return new BaseResponse<AboutPageDto>(ResponseMessage, true, 200, new AboutPageDto());
             }
 
-            var ourGols = await _goalRepository
-                .Where(x => x.AboutAwardPageId == AboutPage.Id)
-                .Select(x => new OurGoalsDto()
-                {
-                    Id = x.Id,
-                    IsHidden = x.IsHidden,
-                    ArabicGoal = x.ArabicGoal,
-                    EnglishGoal = x.EnglishGoal,
-                    Goal = request.lang == "en"
-                        ? x.EnglishGoal
-                        : x.ArabicGoal
-                }).ToListAsync();
+            if (Request.lang == "en")
+            {
+                List<OurGoalsDto> OurGoalsDto = await _OurGoalRepository
+                    .Where(x => x.AboutAwardPageId == AboutAwardPageEntity.Id)
+                    .Select(x => new OurGoalsDto()
+                    {
+                        Id = x.Id,
+                        IsHidden = x.IsHidden,
+                        ArabicGoal = x.ArabicGoal,
+                        EnglishGoal = x.EnglishGoal,
+                        Goal = x.EnglishGoal
+                    }).ToListAsync();
 
-            var data = _mapper.Map<AboutPageDto>(AboutPage);
+                AboutPageDto AboutPageDto = _Mapper.Map<AboutPageDto>(AboutAwardPageEntity);
 
-            data.OurGoals = ourGols;
-            
-            data.AboutTitle = request.lang == "en"
-                ? data.EnglishAboutTitle
-                : data.ArabicAboutTitle;
+                AboutPageDto.AboutTitle = AboutAwardPageEntity.EnglishAboutTitle;
+                AboutPageDto.AboutDescription = AboutAwardPageEntity.EnglishAboutDescription;
+                AboutPageDto.OurVisionTitle = AboutAwardPageEntity.EnglishOurVisionTitle;
+                AboutPageDto.OurVisionDescription = AboutAwardPageEntity.EnglishOurVisionDescription;
+                AboutPageDto.OurGoalTitle = AboutAwardPageEntity.EnglishOurGoalTitle;
+                AboutPageDto.OurGoals = OurGoalsDto;
 
-            data.AboutDescription = request.lang == "en"
-                ? data.EnglishAboutDescription
-                : data.ArabicAboutDescription;
-       
-            data.OurVisionTitle = request.lang == "en"
-                ? data.EnglishOurVisionTitle
-                : data.ArabicOurVisionTitle;
+                return new BaseResponse<AboutPageDto>(ResponseMessage, true, 200, AboutPageDto);
+            }
+            else
+            {
+                List<OurGoalsDto> OurGoalsDto = await _OurGoalRepository
+                    .Where(x => x.AboutAwardPageId == AboutAwardPageEntity.Id)
+                    .Select(x => new OurGoalsDto()
+                    {
+                        Id = x.Id,
+                        IsHidden = x.IsHidden,
+                        ArabicGoal = x.ArabicGoal,
+                        EnglishGoal = x.EnglishGoal,
+                        Goal = x.ArabicGoal
+                    }).ToListAsync();
 
-            data.OurVisionDescription = request.lang == "en"
-                ? data.EnglishOurVisionDescription
-                : data.ArabicOurVisionDescription;
+                AboutPageDto AboutPageDto = _Mapper.Map<AboutPageDto>(AboutAwardPageEntity);
 
-            data.OurGoalTitle = request.lang == "en"
-                ? data.EnglishOurGoalTitle
-                : data.ArabicOurGoalTitle;
+                AboutPageDto.AboutTitle = AboutAwardPageEntity.ArabicAboutTitle;
+                AboutPageDto.AboutDescription = AboutAwardPageEntity.ArabicAboutDescription;
+                AboutPageDto.OurVisionTitle = AboutAwardPageEntity.ArabicOurVisionTitle;
+                AboutPageDto.OurVisionDescription = AboutAwardPageEntity.ArabicOurVisionDescription;
+                AboutPageDto.OurGoalTitle = AboutAwardPageEntity.ArabicOurGoalTitle;
+                AboutPageDto.OurGoals = OurGoalsDto;
 
-            return new BaseResponse<AboutPageDto>("", true, 200, data);
+                return new BaseResponse<AboutPageDto>(ResponseMessage, true, 200, AboutPageDto);
+            }
         }
     }
 }

@@ -371,6 +371,15 @@ using SharijhaAward.Application.Features.ChatBotQuestions.Commands.CreateChatBot
 using SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetChatBotQuestionById;
 using SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetInitalQuestions;
 using SharijhaAward.Application.Features.ChatBotQuestions.Queries.TalkWithChatBot;
+using SharijhaAward.Domain.Entities.TemplateModel;
+using SharijhaAward.Application.Features.TemplateFeatures.Commands.CreateTemplate;
+using SharijhaAward.Application.Features.TemplateFeatures.Commands.UpdateTemplate;
+using SharijhaAward.Application.Features.TemplateFeatures.Queries.GetAllTemplates;
+using SharijhaAward.Application.Features.TemplateFeatures.Queries.GetTemplateById;
+using SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.CreateDigitalSignature;
+using SharijhaAward.Domain.Entities.DigitalSignatureModel;
+using SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.UpdateDigitalSignature;
+using SharijhaAward.Application.Features.DigitalSignatureFeatures.Queries.GetAllDigitalSignaturesForUser;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -702,6 +711,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AdvancedFormBuilder, AdvancedFormBuilderPattern>().ReverseMap();
             CreateMap<AdvancedFormBuilderSection, CreateAdvancedFormBuilderSectionCommand>().ReverseMap();
             CreateMap<ArbitrationAudit, ArbitrationAuditMainCommand>().ReverseMap();
+            CreateMap<Template, CreateTemplateCommand>().ReverseMap();
+            CreateMap<DigitalSignature, CreateDigitalSignatureCommand>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -733,6 +744,8 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<GeneralFAQ, UpdateGeneralFAQCommand>().ReverseMap();
             CreateMap<ChairmanNotesOnArbitrationAudit, UpdateChairmanNotesOnArbitrationAuditCommand>().ReverseMap();
             CreateMap<VirtualTableForSection, UpdateVirtualTableFroSectionCommand>().ReverseMap();
+            CreateMap<Template, UpdateTemplateCommand>().ReverseMap();
+            CreateMap<DigitalSignature, UpdateDigitalSignatureCommand>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
@@ -801,6 +814,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<HomePageSlider, GetHomePageSliderItemByIdDto>().ReverseMap();
             CreateMap<LogUserAction, LoggerDto>().ReverseMap();
             CreateMap<VirtualTableForSection, GetAllVirtualTablesListVM>().ReverseMap();
+            CreateMap<Template, GetAllTemplatesListVM>().ReverseMap();
+            CreateMap<Template, GetTemplateByIdDto>().ReverseMap();
+            CreateMap<DigitalSignature, GetAllDigitalSignaturesForUserListVM>().ReverseMap();
         }
     }
 }

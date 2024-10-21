@@ -75,7 +75,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
 
                 List<GetAllRelatedAccountsListVM> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
                     ? await _RelatedAccountRepository
-                        .Where(x => x.User1Id == UserId || x.User2Id == UserId)
+                        .Where(x => x.User1Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
                         .Select(x => new GetAllRelatedAccountsListVM()
                         {
@@ -89,7 +89,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                             CreatedAt = x.CreatedAt
                         }).ToListAsync()
                     : await _RelatedAccountRepository
-                        .Where(x => x.User1Id == UserId || x.User2Id == UserId)
+                        .Where(x => x.User1Id == UserId)
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)

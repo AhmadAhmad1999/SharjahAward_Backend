@@ -62,7 +62,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                     }).ToListAsync();
 
             int TotalCount = await _RelatedAccountRequestRepository
-                .GetCountAsync(x => x.ReceiverId == UserId);
+                .GetCountAsync(x => x.ReceiverId == UserId && x.Status == Domain.Constants.RelatedAccountRequestStatus.Pending);
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

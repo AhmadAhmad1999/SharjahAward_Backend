@@ -62,7 +62,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
 
             Pagination pagination = new Pagination(request.page, request.perPage, count);
 
-            return new BaseResponse<List<EventListVM>>("تم إسترجاع الفعاليات بنجاح", true, 200, data, pagination);
+            return new BaseResponse<List<EventListVM>>(string.Empty, true, 200, data, pagination);
         }
     }
 }

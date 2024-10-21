@@ -100,7 +100,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
                 LastModifiedAt = null,
                 LastModifiedBy = null,
                 SenderId = SenderId,
-                ReceiverId = UserRole.UserId
+                ReceiverId = UserRole.UserId,
+                Status = Domain.Constants.RelatedAccountRequestStatus.Pending
             };
 
             NewRelatedAccountRequestEntity.Status = Domain.Constants.RelatedAccountRequestStatus.Pending;

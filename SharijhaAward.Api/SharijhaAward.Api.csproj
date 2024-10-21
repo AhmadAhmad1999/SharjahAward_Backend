@@ -58,6 +58,7 @@
 		<Folder Include="wwwroot\Logs\" />
 		<Folder Include="wwwroot\AdvancedFormsFiles\" />
 		<Folder Include="wwwroot\DynamicFiles\" />
+		<Folder Include="wwwroot\DigitalSignatures\" />
 		<Folder Include="wwwroot\ProfilePics\" />
 		<Folder Include="wwwroot\GeneratedBarcode\" />
 		<Folder Include="wwwroot\Images\" />

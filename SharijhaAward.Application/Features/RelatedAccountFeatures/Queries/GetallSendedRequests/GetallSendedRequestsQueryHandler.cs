@@ -29,7 +29,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.Geta
 
             List<GetAllReceivedRequestsListVM> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
                 ? await _RelatedAccountRequestRepository
-                    .Where(x => x.ReceiverId == UserId)
+                    .Where(x => x.SenderId == UserId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new GetAllReceivedRequestsListVM()
                     {
@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.Geta
                         Status = x.Status.GetName()!
                     }).ToListAsync()
                 : await _RelatedAccountRequestRepository
-                    .Where(x => x.ReceiverId == UserId)
+                    .Where(x => x.SenderId == UserId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)

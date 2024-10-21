@@ -83,6 +83,8 @@ using static SharijhaAward.Application.Helpers.DatabaseRelationsHelper.DatabaseR
 using NPOI.HSSF.Record;
 using SharijhaAward.Domain.Entities.ChatBotModel;
 using Microsoft.Extensions.Configuration;
+using SharijhaAward.Domain.Entities.TemplateModel;
+using SharijhaAward.Domain.Entities.DigitalSignatureModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -243,6 +245,8 @@ namespace SharijhaAward.Persistence
         public DbSet<PageCard> PageCards { get; set; }
         public DbSet<ChatBotQuestion> ChatBotQuestions { get; set; }
         public DbSet<WorkflowQuestion> WorkflowQuestions { get; set; }
+        public DbSet<Template> Templates { get; set; }
+        public DbSet<DigitalSignature> DigitalSignatures { get; set; }
         
 
         public DbSet<AdvancedFormBuilderViewWhenRelation> AdvancedFormBuilderViewWhenRelations { get; set; }
@@ -298,6 +302,7 @@ namespace SharijhaAward.Persistence
                 .AutoInclude();
 
             modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Template>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ChatBotQuestion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<WorkflowQuestion>().HasQueryFilter(p => !p.isDeleted);
@@ -305,6 +310,12 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<CriterionAttachment>()
                 .Navigation(p => p.Criterion)
+                .AutoInclude();
+
+            modelBuilder.Entity<DigitalSignature>().HasQueryFilter(p => !p.isDeleted);
+
+            modelBuilder.Entity<DigitalSignature>()
+                .Navigation(p => p.User)
                 .AutoInclude();
 
             modelBuilder.Entity<CriterionAttachment>()

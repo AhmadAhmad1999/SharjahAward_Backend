@@ -218,6 +218,10 @@ namespace SharijhaAward.Persistence.Repositories
 
             return query.Where(predicate);
         }
+        public IQueryable<T> Filter(FilterObject filterObject)
+        {
+            return Filtration(filterObject);
+        }
         public async virtual Task<IReadOnlyList<T>> GetFilterThenPagedReponseAsync(FilterObject filterObject, int page, int size)
         {
             var query = await _DbSet.AsNoTracking().ToListAsync();
