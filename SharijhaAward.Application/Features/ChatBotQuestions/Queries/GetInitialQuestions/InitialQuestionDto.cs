@@ -9,6 +9,6 @@ namespace SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetInitalQ
     public class InitialQuestionDto
     {
         public int Id { get; set; }
-        public string Qusetion { get; set; } = string.Empty;
+        public string Question { get; set; } = string.Empty;
     }
 }

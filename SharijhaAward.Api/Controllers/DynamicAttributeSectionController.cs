@@ -10,6 +10,7 @@ using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Querie
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetDynamicAttributeSectionById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -19,9 +20,13 @@ namespace SharijhaAward.Api.Controllers
     public class DynamicAttributeSectionController : ControllerBase
     {
         private readonly IMediator _Mediator;
-        public DynamicAttributeSectionController(IMediator Mediator)
+        private readonly IWebHostEnvironment _WebHostEnvironment;
+
+        public DynamicAttributeSectionController(IMediator Mediator,
+            IWebHostEnvironment _WebHostEnvironment)
         {
             _Mediator = Mediator;
+            this._WebHostEnvironment = _WebHostEnvironment;
         }
         [HttpPost("CreateNewDynamicAttributeSection")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -111,7 +116,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAllDynamicAttributeSectionsForView(int? CategoryId,
-            bool? isArbitrator, int Page = 1, int PerPage = 10)
+            bool? isArbitrator, int EventId, InviteeTypes? InviteeType, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -124,7 +129,10 @@ namespace SharijhaAward.Api.Controllers
                 isArbitrator = isArbitrator != null ? isArbitrator.Value : false,
                 lang = HeaderValue!,
                 page = Page,
-                perPage = PerPage
+                perPage = PerPage,
+                WWWRootFilePath = _WebHostEnvironment.WebRootPath,
+                EventId = EventId,
+                InviteeType = InviteeType
             });
 
             return Response.statusCode switch
@@ -170,7 +178,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAllDynamicAttributeSectionsForAdd(int? ProvidedFormId,
-            int? ArbitratorId, int? CoordinatorId, bool? isArbitrator)
+            int? ArbitratorId, int? CoordinatorId, bool? isArbitrator, int? EventId, InviteeTypes? InviteeType,
+            int? GroupInviteeId, int? PersonalInviteeId, int? PersonalInviteeNumber, int? GroupInviteeNumber)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -183,7 +192,13 @@ namespace SharijhaAward.Api.Controllers
                 ProvidedFormId = ProvidedFormId,
                 ArbitratorId = ArbitratorId,
                 CoordinatorId = CoordinatorId,
-                isArbitrator = isArbitrator
+                isArbitrator = isArbitrator,
+                EventId = EventId,
+                InviteeType = InviteeType,
+                GroupInviteeId = GroupInviteeId,
+                PersonalInviteeId = PersonalInviteeId,
+                PersonalInviteeNumber = PersonalInviteeNumber,
+                GroupInviteeNumber = GroupInviteeNumber
             });
 
             return Response.statusCode switch

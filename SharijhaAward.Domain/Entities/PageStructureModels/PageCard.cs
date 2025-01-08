@@ -1,11 +1,6 @@
 ﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.PageStructureModel;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.PageStructureModels
 {
@@ -25,5 +20,8 @@ namespace SharijhaAward.Domain.Entities.PageStructureModels
 
         [ForeignKey(nameof(PageStructure))]
         public int PageId { get; set; }
+
+        public int? ParentId { get; set; }
+        public PageCard? Parent { get; set; }
     }
 }

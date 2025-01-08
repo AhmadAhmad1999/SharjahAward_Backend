@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 {
@@ -13,6 +14,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         public List<AddDynamicAttributeTableValueMobileCommand>? DynamicAttributesWithTableValuesMobile { get; set; }
         public List<IFormFile>? ValueAsBinaryFiles { get; set; }
         public List<IFormFile>? ValueAsBinaryFilesForTable { get; set; }
+        public int? EventId { get; set; }
+        public InviteeTypes? InviteeType { get; set; }
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }
     }

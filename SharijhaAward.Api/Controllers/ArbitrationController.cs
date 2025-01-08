@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.AssignFormsToArbitrator;
+using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.AssignMultipleFormsToMultipleArbitrators;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.ChangeStatusForAssignedForm;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.SwitchArbitrationFeature;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.UpdateAssignedFormsToArbitrator;
@@ -10,7 +11,6 @@ using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllArbit
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllFormsForSortingProcess;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbitratrionDataByArbitratorId;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetRemainingFormsWithFilters;
-using SharijhaAward.Application.Features.Classes.Queries.GetAllStudentsByClassId;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetFormStatusById;
 using SharijhaAward.Application.Responses;
 
@@ -52,6 +52,38 @@ namespace SharijhaAward.Api.Controllers
             AssignFormsToArbitratorCommand.Token = Token;
 
             BaseResponse<object>? Response = await _Mediator.Send(AssignFormsToArbitratorCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("AssignMultipleFormsToMultipleArbitrators")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> AssignMultipleFormsToMultipleArbitrators([FromBody] AssignMultipleFormsToMultipleArbitratorsCommand AssignMultipleFormsToMultipleArbitratorsCommand)
+        {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            AssignMultipleFormsToMultipleArbitratorsCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            AssignMultipleFormsToMultipleArbitratorsCommand.Token = Token;
+
+            BaseResponse<object>? Response = await _Mediator.Send(AssignMultipleFormsToMultipleArbitratorsCommand);
 
             return Response.statusCode switch
             {

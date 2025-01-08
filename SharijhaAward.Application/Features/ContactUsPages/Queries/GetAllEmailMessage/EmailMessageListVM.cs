@@ -1,11 +1,5 @@
 ﻿using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Constants.ContactUsConstants;
-using SharijhaAward.Domain.Entities.ContactUsModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage
 {
@@ -25,9 +19,8 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
         public bool IsRead { get; set; }
         public bool IsOutComing { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string PersonalPhotoUrl { get; set; } = string.Empty;
-        public Gender Gender {  get; set; }
+        public string? PersonalPhotoUrl { get; set; } = string.Empty;
+        public Gender? Gender {  get; set; }
         public List<EmailAttachmentListVm> Attachments { get; set; } = null!;
-
     }
 }

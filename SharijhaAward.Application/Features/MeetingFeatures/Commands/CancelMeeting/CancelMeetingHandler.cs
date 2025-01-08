@@ -6,6 +6,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using System.Globalization;
+using System.Net.Http;
 using System.Net.Mail;
 
 namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeeting
@@ -77,11 +78,12 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeet
                 string FifthEnglishLine = $"Meeting Text: {MeetingEntity.EnglishText}";
                 string SixthEnglisLine = $"Reason Of Cancelation: {Request.EnglishReasonOfCanceling}";
 
-                string HtmlBody = "wwwroot/Send_Email_Template.html";
+                string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath + "/Send_Email_Template.html");
 
-                string HTMLContent = File.ReadAllText(HtmlBody);
+                var Spliter = HTMLContent.Split("<!--MeetingLink-->");
+                HTMLContent = Spliter[0] + Spliter[2];
 
-                byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                byte[] HeaderImageBytes = await File.ReadAllBytesAsync(Request.WWWRootFilePath + "/assets/qr/header.png");
                 string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
 
                 string FullEmailBody = HTMLContent

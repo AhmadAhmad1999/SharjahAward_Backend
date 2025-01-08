@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.InterviewModel;
 
 namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetInterviewById
@@ -10,22 +9,19 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetInterv
     public class GetInterviewByIdHandler : IRequestHandler<GetInterviewByIdQuery, BaseResponse<GetInterviewByIdDto>>
     {
         private readonly IAsyncRepository<Interview> _InterviewRepository;
-        private readonly IAsyncRepository<InterviewUser> _InterviewUserRepository;
-        private readonly IAsyncRepository<InterviewCategory> _InterviewCategoryRepository;
-        private readonly IAsyncRepository<InterviewNote> _InterviewNoteRepository;
-        private readonly IAsyncRepository<InterviewQuestion> _InterviewQuestionRepository;
+        private readonly IAsyncRepository<InterviewInvitee> _InterviewInviteeRepository;
+        private readonly IAsyncRepository<InterviewInviteeParticipant> _InterviewInviteeParticipantRepository;
+        private readonly IAsyncRepository<InterviewInviteeNoteAndQuestion> _InterviewInviteeNoteAndQuestionRepository;
 
-        public GetInterviewByIdHandler(IAsyncRepository<Interview> InterviewRepository,
-            IAsyncRepository<InterviewUser> InterviewUserRepository,
-            IAsyncRepository<InterviewCategory> InterviewCategoryRepository,
-            IAsyncRepository<InterviewNote> InterviewNoteRepository,
-            IAsyncRepository<InterviewQuestion> InterviewQuestionRepository)
+        public GetInterviewByIdHandler(IAsyncRepository<Interview> _InterviewRepository,
+            IAsyncRepository<InterviewInvitee> _InterviewInviteeRepository,
+            IAsyncRepository<InterviewInviteeParticipant> _InterviewInviteeParticipantRepository,
+            IAsyncRepository<InterviewInviteeNoteAndQuestion> _InterviewInviteeNoteAndQuestionRepository)
         {
-            _InterviewRepository = InterviewRepository;
-            _InterviewUserRepository = InterviewUserRepository;
-            _InterviewCategoryRepository = InterviewCategoryRepository;
-            _InterviewNoteRepository = InterviewNoteRepository;
-            _InterviewQuestionRepository = InterviewQuestionRepository;
+            this._InterviewRepository = _InterviewRepository;
+            this._InterviewInviteeRepository = _InterviewInviteeRepository;
+            this._InterviewInviteeParticipantRepository = _InterviewInviteeParticipantRepository;
+            this._InterviewInviteeNoteAndQuestionRepository = _InterviewInviteeNoteAndQuestionRepository;
         }
 
         public async Task<BaseResponse<GetInterviewByIdDto>> Handle(GetInterviewByIdQuery Request, CancellationToken cancellationToken)
@@ -39,67 +35,83 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetInterv
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Interview is not Found"
-                    : "الاجتماع غير موجود";
+                    : "المقابلة غير موجودة";
 
                 return new BaseResponse<GetInterviewByIdDto>(ResponseMessage, false, 404);
             }
 
-            List<InterviewUser> InterviewUsersEntities = await _InterviewUserRepository
+            List<InterviewInvitee> InterviewInviteeEntities = await _InterviewInviteeRepository
                 .Where(x => x.InterviewId == Request.Id)
                 .ToListAsync();
 
-            List<Category> CategoriesEntities = await _InterviewCategoryRepository
-                .Where(x => x.InterviewId == Request.Id)
-                .Select(x => x.Category!)
+            List<InterviewInviteeParticipant> InterviewInviteeParticipantEntities = await _InterviewInviteeParticipantRepository
+                .Where(x => InterviewInviteeEntities.Select(y => y.Id).Contains(x.InterviewInviteeId))
                 .ToListAsync();
 
-            List<InterviewNote> InterviewNoteEntities = await _InterviewNoteRepository
-                .Where(x => x.InterviewId == Request.Id)
-                .ToListAsync();
-
-            List<InterviewQuestion> InterviewQuestionEntities = await _InterviewQuestionRepository
-                .Where(x => x.InterviewId == Request.Id)
+            List<InterviewInviteeNoteAndQuestion> InterviewInviteeNoteAndQuestionEntities = await _InterviewInviteeNoteAndQuestionRepository
+                .Where(x => InterviewInviteeEntities.Select(y => y.Id).Contains(x.InterviewInviteeId))
                 .ToListAsync();
 
             GetInterviewByIdDto Response = new GetInterviewByIdDto()
             {
+                Id = Request.Id,
                 ArabicName = InterviewEntity.ArabicName,
                 EnglishName = InterviewEntity.EnglishName,
                 ArabicDescription = InterviewEntity.ArabicDescription,
                 EnglishDescription = InterviewEntity.EnglishDescription,
                 StartDate = InterviewEntity.StartDate,
                 Type = InterviewEntity.Type,
-                UsersInfo = InterviewUsersEntities
-                    .Select(x => new InterviewUserDto()
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                        Name = x.Name
-                    }).ToList(),
-                CategoriesIds = CategoriesEntities
-                    .Select(x => x.Id).ToList(),
                 ArabicText = InterviewEntity.ArabicText,
                 EnglishText = InterviewEntity.EnglishText,
-                isImplemented = InterviewEntity.isImplemented,
-                isCanceled = InterviewEntity.isCanceled,
-                ArabicReasonOfCanceling = InterviewEntity.ArabicReasonOfCanceling,
-                EnglishReasonOfCanceling = InterviewEntity.EnglishReasonOfCanceling,
-                GetInterviewNoteDtos = InterviewNoteEntities
-                    .Select(x => new GetInterviewNoteDto()
-                    {
-                        Id = x.Id,
-                        ArabicNote = x.ArabicNote,
-                        EnglishNote = x.EnglishNote
-                    }).ToList(),
-                GetInterviewQuestionDtos = InterviewQuestionEntities
-                    .Select(x => new GetInterviewQuestionDto()
-                    {
-                        Id = x.Id,
-                        ArabicQuestion = x.ArabicQuestion,
-                        EnglishQuestion = x.EnglishQuestion
-                    }).ToList(),
                 Address = InterviewEntity.Address,
-                EndDate = InterviewEntity.EndDate
+                PeriodOfEachInviteeInMinutes = InterviewEntity.PeriodOfEachInviteeInMinutes,
+                Invitees = InterviewInviteeEntities
+                    .Where(y => y.InterviewId == Request.Id)
+                    .Select(y => new InterviewInviteeDto()
+                    {
+                        Id = y.Id,
+                        OrderId = y.OrderId,
+                        InterviewId = y.InterviewId,
+                        isCancelled = y.isCancelled,
+                        ArabicReasonForCancelling = y.ArabicReasonForCancelling,
+                        EnglishReasonForCancelling = y.EnglishReasonForCancelling,
+                        isImplemented = y.isImplemented,
+                        StartDate = y.StartDate,
+                        EndDate = y.EndDate,
+                        InviteeLink = y.InviteeLink,
+                        ExternalUsersEmails = InterviewInviteeParticipantEntities
+                            .Where(z => z.InterviewInviteeId == y.Id &&
+                                !string.IsNullOrEmpty(z.ExternalUserEmail))
+                            .Select(z => z.ExternalUserEmail!).ToList(),
+                        ArbitratorsIds = InterviewInviteeParticipantEntities
+                            .Where(z => z.InterviewInviteeId == y.Id &&
+                                z.ArbitratorId != null)
+                            .Select(z => z.ArbitratorId!.Value).ToList(),
+                        SubscribersIds = InterviewInviteeParticipantEntities
+                            .Where(z => z.InterviewInviteeId == y.Id &&
+                                z.SubscriberId != null)
+                            .Select(z => z.SubscriberId!.Value).ToList(),
+                        Notes = InterviewInviteeNoteAndQuestionEntities
+                            .Where(z => z.InterviewInviteeId == y.Id &&
+                                !z.isQuestion)
+                            .Select(z => new InterviewInviteeNoteAndQuestionDto()
+                            {
+                                Id = z.Id,
+                                ArabicText = z.ArabicText,
+                                EnglishText = z.EnglishText,
+                                InterviewInviteeId = z.InterviewInviteeId
+                            }).ToList(),
+                        Questions = InterviewInviteeNoteAndQuestionEntities
+                            .Where(z => z.InterviewInviteeId == y.Id &&
+                                z.isQuestion)
+                            .Select(z => new InterviewInviteeNoteAndQuestionDto()
+                            {
+                                Id = z.Id,
+                                ArabicText = z.ArabicText,
+                                EnglishText = z.EnglishText,
+                                InterviewInviteeId = z.InterviewInviteeId
+                            }).ToList()
+                    }).ToList()
             };
 
             return new BaseResponse<GetInterviewByIdDto>(ResponseMessage, true, 200, Response);

@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
-using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTrainingWorkshopById
 {
@@ -13,15 +13,15 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTraini
         : IRequestHandler<GetTrainingWorkshopByIdQuery, BaseResponse<TrainingWorkshopDto>>
     {
         private readonly IAsyncRepository<TrainingWorkshop> _trainingWorkshopRepository;
-        private readonly IAsyncRepository<TrainingWrokshopeAttachment> _TrainingWrokshopeAttachmentRepository;
+        private readonly IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository;
         private readonly IMapper _mapper;
 
         public GetTrainingWorkshopByIdQueryHandler(IAsyncRepository<TrainingWorkshop> trainingWorkshopRepository,
-            IAsyncRepository<TrainingWrokshopeAttachment> TrainingWrokshopeAttachmentRepository,
+            IAsyncRepository<TrainingWorkshopAttachment> TrainingWorkshopAttachmentRepository,
             IMapper mapper)
         {
             _trainingWorkshopRepository = trainingWorkshopRepository;
-            _TrainingWrokshopeAttachmentRepository = TrainingWrokshopeAttachmentRepository;
+            _TrainingWorkshopAttachmentRepository = TrainingWorkshopAttachmentRepository;
             _mapper = mapper;
         }
 
@@ -35,8 +35,8 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTraini
 
             var data = _mapper.Map<TrainingWorkshopDto>(trainingWorkshop);
 
-            data.Attachments = await _TrainingWrokshopeAttachmentRepository
-                .Where(x => x.WorkshopeId == request.Id)
+            data.Attachments = await _TrainingWorkshopAttachmentRepository
+                .Where(x => x.TrainingWorkshopId == request.Id)
                 .Select(x => new WorkshopAttachmentListVM()
                 {
                     Id = x.Id,

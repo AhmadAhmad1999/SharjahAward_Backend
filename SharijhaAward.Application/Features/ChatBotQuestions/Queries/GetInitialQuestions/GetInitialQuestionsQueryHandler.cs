@@ -32,7 +32,7 @@ namespace SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetInitial
                 .Select(q => new InitialQuestionDto()
                 {
                     Id = q.Id,
-                    Qusetion = request.lang == "en" ? q.EnglishQuestion : q.ArabicQuestion
+                    Question = request.lang == "en" ? q.EnglishQuestion : q.ArabicQuestion
                 }).ToListAsync();
 
             return new BaseResponse<List<InitialQuestionDto>>("", true, 200, Questions);

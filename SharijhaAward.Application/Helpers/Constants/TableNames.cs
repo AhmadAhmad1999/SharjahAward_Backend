@@ -4,6 +4,7 @@
     {
         ProvidedForm = 1,
         Coordinator = 2,
-        Arbitrator = 3
+        Arbitrator = 3,
+        Event = 4
     }
 }

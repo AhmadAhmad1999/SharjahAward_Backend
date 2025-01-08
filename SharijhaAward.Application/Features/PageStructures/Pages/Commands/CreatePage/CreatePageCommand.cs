@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.CreateDarkCard;
+using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.CreateGoalCard;
+using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.CreateImageCard;
+using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Commands.CreateParagraphCard;
+using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.CreateTextCard;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Constants.CustomPageConstants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.CreatePage
 {
@@ -29,5 +29,10 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.Creat
         public bool IsHide { get; set; }
         public int? ParentId { get; set; }
         public string? lang { get; set; }
+        public List<CreateDarkCardCommand> DarkCardRequest { get; set; } = new List<CreateDarkCardCommand>();
+        public List<CreateParagraphCardCommand> ParagraphCardRequest { get; set; } = new List<CreateParagraphCardCommand>();
+        public List<CreateGoalCardCommand> GoalCardRequest { get; set; } = new List<CreateGoalCardCommand>();
+        public List<CreateImageCardCommand> ImageCardRequest { get; set; } = new List<CreateImageCardCommand>();
+        public List<CreateTextCardCommand> TextCardRequest { get; set; } = new List<CreateTextCardCommand>();
     }
 }

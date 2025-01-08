@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.CommitteeFeatures.Commands.CreateCommittee;
@@ -9,9 +8,7 @@ using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllChairma
 using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllCommittees;
 using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommitteeById;
 using SharijhaAward.Application.Responses;
-
 using SharijhaAward.Api.Logger;
-using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.CommitteeFeatures.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers

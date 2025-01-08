@@ -1,13 +1,19 @@
 ﻿using MediatR;
+using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
+using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.CreateDynamicAttribute
 {
     public class CreateDynamicAttributeCommand : IRequest<BaseResponse<CreateDynamicAttributeResponse>>
     {
+        [ArabicNameValidation]
         public string ArabicLabel { get; set; } = null!;
+        [EnglishNameValidation]
         public string EnglishLabel { get; set; } = null!;
+        [ArabicNameValidation]
         public string ArabicPlaceHolder { get; set; } = null!;
+        [EnglishNameValidation]
         public string EnglishPlaceHolder { get; set; } = null!;
         public bool IsRequired { get; set; } = false;
         public bool IsUnique { get; set; } = false;

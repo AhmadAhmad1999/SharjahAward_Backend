@@ -1,51 +1,68 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType
 {
     public class GetAllMsgQueryHandler 
         : IRequestHandler<GetAllMsgQuery, BaseResponse<List<MessageTypeListVM>>>
     {
-        private readonly IAsyncRepository<MessageType> _messageTypeRepository;
-        private readonly IAsyncRepository<RoleMessageType> _roleTypeRepository;
-        private readonly IAsyncRepository<Role> _roleRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Role> _RoleRepository;
+        private readonly IAsyncRepository<RoleMessageType> _RoleMessageTypeRepository;
+        private readonly IAsyncRepository<MessageType> _MessageTypeRepository;
 
-        public GetAllMsgQueryHandler(IAsyncRepository<Role> roleRepository, IAsyncRepository<RoleMessageType> roleTypeRepository, IAsyncRepository<MessageType> messageTypeRepository, IMapper mapper)
+        public GetAllMsgQueryHandler(IAsyncRepository<Role> _RoleRepository, 
+            IAsyncRepository<RoleMessageType> _RoleMessageTypeRepository, 
+            IAsyncRepository<MessageType> _MessageTypeRepository)
         {
-            _messageTypeRepository = messageTypeRepository;
-            _roleTypeRepository = roleTypeRepository;
-            _roleRepository = roleRepository;
-            _mapper = mapper;
+            this._RoleRepository = _RoleRepository;
+            this._RoleMessageTypeRepository = _RoleMessageTypeRepository;
+            this._MessageTypeRepository = _MessageTypeRepository;
         }
 
-        public async Task<BaseResponse<List<MessageTypeListVM>>> Handle(GetAllMsgQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<MessageTypeListVM>>>
+            Handle(GetAllMsgQuery Request, CancellationToken cancellationToken)
         {
-            var allMessageTypes = await _messageTypeRepository
-                .GetPagedReponseAsync(request.page,request.perPage);
+            string ResponseMessage = string.Empty;
 
-            var data = _mapper.Map<List<MessageTypeListVM>>(allMessageTypes);
-           
-            foreach( var messageType in data)
-            {
-                messageType.Type = request.lang == "en" ? messageType.EnglishType : messageType.ArabicType;
-                var RoleIds = _roleTypeRepository.Where(m => m.MessageTypeId == messageType.Id).Select(m => m.RoleId).ToList();
-                messageType.RoleName = _roleRepository.Where(r => RoleIds.Contains(r.Id)).Select(r => r.ArabicName).ToList();
-            }
+            List<MessageType> MessageTypeEntities = await _MessageTypeRepository
+                .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
+                .ToListAsync();
 
-            var count = _messageTypeRepository.GetCount(null);
-            Pagination pagination = new Pagination(request.page, request.perPage, count);
-            return new BaseResponse<List<MessageTypeListVM>>("", true, 200, data, pagination);
+            List<RoleMessageType> RoleMessageTypeEntities = await _RoleMessageTypeRepository
+                .Where(x => MessageTypeEntities.Select(y => y.Id).Contains(x.MessageTypeId))
+                .ToListAsync();
+
+            List<MessageTypeListVM> Response = MessageTypeEntities
+                .Select(x => new MessageTypeListVM()
+                {
+                    Id = x.Id,
+                    Type = Request.lang == "en" 
+                        ? x.EnglishType
+                        : x.ArabicType,
+                    ArabicType = x.ArabicType,
+                    EnglishType = x.EnglishType,
+                    RoleName = RoleMessageTypeEntities
+                        .Where(y => y.MessageTypeId == x.Id)
+                        .Select(y => y.Role!)
+                        .Select(y => new MessageTypeRoleDto()
+                        {
+                            Id = y.Id,
+                            RoleName = Request.lang == "en"
+                                ? y.EnglishName
+                                : y.ArabicName
+                        }).ToList()
+                }).ToList();
+
+            int TotalCount = await _MessageTypeRepository.GetCountAsync(null);
+
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
+
+            return new BaseResponse<List<MessageTypeListVM>>(ResponseMessage, true, 200, Response, Pagination);
         }
     }
 }

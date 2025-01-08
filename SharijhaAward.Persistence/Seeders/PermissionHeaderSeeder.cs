@@ -1,9 +1,4 @@
 ﻿using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Persistence.Seeders
 {
@@ -563,6 +558,72 @@ namespace SharijhaAward.Persistence.Seeders
                     // Id = 49,
                     EnglishName = "ArbitrationManagement",
                     ArabicName = "ادارة التحكيم",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    // Id = 50,
+                    EnglishName = "Advanced Forms",
+                    ArabicName = "النماذج المتقدمة",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    // Id = 51,
+                    EnglishName = "Certificate Templates",
+                    ArabicName = "نماذج الشهادات",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    // Id = 52,
+                    EnglishName = "Digital Signatures",
+                    ArabicName = "التواقيع الرقمية",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    // Id = 53,
+                    EnglishName = "ChatBot",
+                    ArabicName = "إدارة الChatBot",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    // Id = 54,
+                    EnglishName = "NewsTicker",
+                    ArabicName = "الشريط الإخباري",
+                    isDeleted = false,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                }, new PermissionHeader()
+                {
+                    // Id = 55,
+                    EnglishName = "StaticNotification",
+                    ArabicName = "الإشعارات الستاتيكية",
                     isDeleted = false,
                     DeletedAt = null,
                     LastModifiedAt = null,

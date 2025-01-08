@@ -11,124 +11,133 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
     public class GetAllEmailMessageQueryHandler
         : IRequestHandler<GetAllEmailMessageQuery, BaseResponse<List<EmailMessageListVM>>>
     {
-        private readonly IAsyncRepository<EmailMessage> _emailMessageRepository;
-        private readonly IAsyncRepository<MessageType> _messageTypeRepository;
+        private readonly IAsyncRepository<EmailMessage> _EmailMessageRepository;
+        private readonly IAsyncRepository<MessageType> _MessageTypeRepository;
         private readonly IAsyncRepository<EmailAttachment> _EmailAttachmentRepository;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _userRepository;
-        private readonly IMapper _mapper;
+        private readonly IJwtProvider _JWTProvider;
+        private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _UserRepository;
+        private readonly IMapper _Mapper;
 
-        public GetAllEmailMessageQueryHandler(IAsyncRepository<MessageType> messageTypeRepository, 
-            IAsyncRepository<EmailMessage> emailMessageRepository,
-            IAsyncRepository<EmailAttachment> EmailAttachmentRepository,
-            IJwtProvider jwtProvider, 
-            IAsyncRepository<Domain.Entities.IdentityModels.User> userRepository, 
-            IMapper mapper)
+        public GetAllEmailMessageQueryHandler(IAsyncRepository<EmailMessage> _EmailMessageRepository, 
+            IAsyncRepository<MessageType> _MessageTypeRepository, 
+            IAsyncRepository<EmailAttachment> _EmailAttachmentRepository,
+            IJwtProvider _JWTProvider, 
+            IAsyncRepository<Domain.Entities.IdentityModels.User> _UserRepository, 
+            IMapper _Mapper)
         {
-            _emailMessageRepository = emailMessageRepository;
-            _messageTypeRepository = messageTypeRepository;
-            _EmailAttachmentRepository = EmailAttachmentRepository;
-            _jwtProvider = jwtProvider;
-            _userRepository = userRepository;
-            _mapper = mapper;
+            this._EmailMessageRepository = _EmailMessageRepository;
+            this._MessageTypeRepository = _MessageTypeRepository;
+            this._EmailAttachmentRepository = _EmailAttachmentRepository;
+            this._JWTProvider = _JWTProvider;
+            this._UserRepository = _UserRepository;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<List<EmailMessageListVM>>> Handle(GetAllEmailMessageQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<EmailMessageListVM>>> Handle(GetAllEmailMessageQuery Request, CancellationToken cancellationToken)
         {
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token!);
-            
-            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
-            
-            if (User == null)
-            {
-                string msg = request.lang == "en"
-                         ? "Un Authorize"
-                         : "إنتهت صلاحية الجلسة";
+            int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
-                return new BaseResponse<List<EmailMessageListVM>>(msg, false, 401);
-            }
+            Domain.Entities.IdentityModels.User? User = await _UserRepository
+                .FirstOrDefaultAsync(x => x.Id == UserId)!;
 
-            var EmailMessages = new List<EmailMessage>();
+            List<EmailMessage> EmailMessages = new List<EmailMessage>();
 
-            var MainEmails = await _emailMessageRepository
-                .Where(e => e.Id == e.MessageId)
+            List<EmailMessage> MainEmailMessageEntities = await _EmailMessageRepository
+                .Where(x => x.Id == x.MessageId &&
+                    x.UserId == UserId)
                 .ToListAsync();
 
-            foreach (var email in MainEmails)
+            foreach (EmailMessage MainEmailMessageEntity in MainEmailMessageEntities)
             {
-                var emailMessage = await _emailMessageRepository
-                    .Where(m=> m.MessageId == email.Id && m.Id != email.Id)
+                EmailMessage? ResponseEmailMessageEntities = await _EmailMessageRepository
+                    .Where(x => x.MessageId == MainEmailMessageEntity.Id && 
+                        x.Id != MainEmailMessageEntity.Id)
                     .OrderByDescending(x => x.CreatedAt)
                     .FirstOrDefaultAsync();
 
-                if (emailMessage == null)
-                {
-                    EmailMessages.Add(email);
-                }
+                if (ResponseEmailMessageEntities is null)
+                    EmailMessages.Add(MainEmailMessageEntity);
 
                 else
-                {
-                    EmailMessages.Add(emailMessage);
-                }
+                    EmailMessages.Add(ResponseEmailMessageEntities);
             }
 
-            if (request.filter == 1)
+            if (Request.filter == 1)
             {
                 EmailMessages = EmailMessages
-                  .Where(m => m.From == User.Email)
+                  .Where(x => x.From == User!.Email)
                   .OrderByDescending(x => x.CreatedAt)
-                  .Skip((request.page - 1) * request.perPage)
-                  .Take(request.perPage)
+                  .Skip((Request.page - 1) * Request.perPage)
+                  .Take(Request.perPage)
                   .ToList();
             }
 
-            if (request.filter == 2)
+            if (Request.filter == 2)
             {
                 EmailMessages = EmailMessages
-                   .Where(m => m.To == User.Email)
+                   .Where(x => x.To == User!.Email)
                    .OrderByDescending(x => x.CreatedAt)
-                   .Skip((request.page - 1) * request.perPage)
-                   .Take(request.perPage)
+                   .Skip((Request.page - 1) * Request.perPage)
+                   .Take(Request.perPage)
                    .ToList();
             }
 
-            if (request.query != null)
+            if (Request.query != null)
             {
-                EmailMessages = _emailMessageRepository
-                    .Where(m => m.Body.Contains(request.query))
+                EmailMessages = _EmailMessageRepository
+                    .Where(m => m.Body.Contains(Request.query))
                     .OrderByDescending(x => x.CreatedAt).ToList();
             }
-          
-            var data = _mapper.Map<List<EmailMessageListVM>>(EmailMessages);
-            
-            int UnReadingMessages = _emailMessageRepository.GetCount(m => !m.IsRead && m.To == User.Email);
 
             List<EmailAttachment> AllEmailAttachmentEntities = await _EmailAttachmentRepository
-                .Where(x => data.Select(y => y.Id).Contains(x.MessageId))
+                .Where(x => EmailMessages.Select(y => y.Id).Contains(x.MessageId))
                 .ToListAsync();
 
-            for (int i = 0; i < data.Count(); i++)
-            {
-                   
-                var Type = await _messageTypeRepository.GetByIdAsync(EmailMessages[i].TypeId);
-                    
-                var Sender = await _userRepository.GetByIdAsync(EmailMessages[i].UserId);
+            List<EmailMessageListVM> Response = EmailMessages
+                .Select(x => new EmailMessageListVM()
+                {
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    From = x.From,
+                    To = x.To,
+                    Body = x.Body,
+                    TypeId = x.TypeId,
+                    TypeName = Request.lang == "en"
+                        ? x.Type!.EnglishType
+                        : x.Type!.ArabicType,
+                    Status = x.Status,
+                    MessageId = x.MessageId,
+                    IsReplay = x.MessageId == x.Id
+                        ? false
+                        : true,
+                    IsRead = x.IsRead,
+                    IsOutComing = User!.Email == x.From 
+                        ? true 
+                        : false,
+                    CreatedAt = x.CreatedAt,
+                    PersonalPhotoUrl = x.UserId != null 
+                        ? x.User!.ImageURL!
+                        : string.Empty,
+                    Gender = x.UserId != null 
+                        ? x.User!.Gender
+                        : null,
+                    Attachments = _Mapper.Map<List<EmailAttachmentListVm>>(AllEmailAttachmentEntities
+                        .Where(x => x.MessageId == x.Id)
+                        .ToList())
+                }).ToList();
+            
+            int UnReadingMessages = await _EmailMessageRepository
+                .GetCountAsync(x => !x.IsRead && x.To == User!.Email);
 
-                data[i].TypeName = request.lang == "en" ? Type!.EnglishType : Type!.ArabicType;
-                data[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(AllEmailAttachmentEntities
-                    .Where(x => x.MessageId == EmailMessages[i].Id)
-                    .ToList());   
-                data[i].IsReplay = data[i].MessageId == data[i].Id ? false : true;
-                data[i].PersonalPhotoUrl = Sender.ImageURL!;
-                data[i].Gender = Sender.Gender;
-                data[i].IsOutComing = User.Email == data[i].From ? true : false;
-            }
+            int TotalCount = await _EmailMessageRepository
+                .GetCountAsync(x => (x.To == User!.Email || 
+                    x.From == User.Email) &&
+                    x.MessageId == x.Id);
             
-            int Count = _emailMessageRepository.GetCount(m => m.To == User.Email || m.From == User.Email && m.MessageId == m.Id);
-            
-            Pagination pagination = new Pagination(request.page,request.perPage, Count);
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
                
-            return new BaseResponse<List<EmailMessageListVM>>("", true, 200, data, pagination,UnReadingMessages);
+            return new BaseResponse<List<EmailMessageListVM>>("", true, 200, Response, Pagination,UnReadingMessages);
         }
     }
 }

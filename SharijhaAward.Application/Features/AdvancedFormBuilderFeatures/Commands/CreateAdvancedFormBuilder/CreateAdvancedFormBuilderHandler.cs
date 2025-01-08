@@ -93,7 +93,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Command
                         ? "This advanced form field's arabic name is already used"
                         : "اسم هذا الحقل باللغة العربية مستخدم مسبقاً";
 
-                else if (CheckIfAdvancedFormBuilderNameIsUsed.ArabicLabel.ToLower() == Request.ArabicLabel.ToLower())
+                else if (CheckIfAdvancedFormBuilderNameIsUsed.EnglishLabel.ToLower() == Request.EnglishLabel.ToLower())
                     ResponseMessage = Request.lang == "en"
                         ? "This advanced form field's english name is already used"
                         : "اسم هذا الحقل باللغة العربية مستخدم مسبقاً";
@@ -182,6 +182,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Command
                                 AdvancedFormBuilderDependency NewDependencyEntity = _Mapper.Map<AdvancedFormBuilderDependency>(DependencyDTO);
                                 NewDependencyEntity.AdvancedFormBuilderDependencyGroupId = NewAdvancedFormBuilderDependencyGroup.Id;
                                 NewDependencyEntity.MainAdvancedFormBuilderId = NewAdvancedFormBuilderEntity.Id;
+                                NewDependencyEntity.AdvancedFormBuilderId = DependencyDTO.DynamicAttributeId;
                                 await _DependencyRepository.AddAsync(NewDependencyEntity);
                             }
 

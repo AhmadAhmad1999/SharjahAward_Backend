@@ -18,10 +18,13 @@ namespace SharijhaAward.Api.Controllers
     public class TemplatesController : ControllerBase
     {
         private readonly IMediator _Mediator;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public TemplatesController(IMediator Mediator)
+        public TemplatesController(IMediator Mediator,
+            IWebHostEnvironment _WebHostEnvironment)
         {
             _Mediator = Mediator;
+            this._WebHostEnvironment = _WebHostEnvironment;
         }
         [HttpDelete("ActivateTemplate/{Id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -59,13 +62,15 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> CreateTemplate([FromBody] CreateTemplateCommand CreateTemplateCommand)
+        public async Task<IActionResult> CreateTemplate([FromForm] CreateTemplateCommand CreateTemplateCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             CreateTemplateCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            CreateTemplateCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/CertificateTemplates/";
 
             BaseResponse<object>? Response = await _Mediator.Send(CreateTemplateCommand);
 
@@ -112,13 +117,15 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> UpdateTemplate([FromBody] UpdateTemplateCommand UpdateTemplateCommand)
+        public async Task<IActionResult> UpdateTemplate([FromForm] UpdateTemplateCommand UpdateTemplateCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             UpdateTemplateCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            UpdateTemplateCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/CertificateTemplates/";
 
             BaseResponse<object>? Response = await _Mediator.Send(UpdateTemplateCommand);
 

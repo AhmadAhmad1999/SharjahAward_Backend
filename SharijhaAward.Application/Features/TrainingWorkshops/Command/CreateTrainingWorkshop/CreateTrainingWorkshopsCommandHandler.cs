@@ -3,47 +3,98 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
-
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTrainingWorkshop
 {
     public class CreateTrainingWorkshopsCommandHandler
         : IRequestHandler<CreateTrainingWorkshopsCommand , BaseResponse<int>>
     {
-        private readonly IAsyncRepository<TrainingWorkshop> _trainingWorkshopRepository;
-        private readonly IAsyncRepository<Category> _categoryRepository;
-        private readonly IFileService _fileService;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<TrainingWorkshop> _TrainingWorkshopRepository;
+        private readonly IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository;
+        private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IFileService _FileService;
+        private readonly IMapper _Mapper;
 
-        public CreateTrainingWorkshopsCommandHandler(
-            IFileService fileService,
-            IAsyncRepository<TrainingWorkshop> trainingWorkshopRepository,
-            IAsyncRepository<Category> categoryRepository,
-            IMapper mapper
-            )
+        public CreateTrainingWorkshopsCommandHandler(IAsyncRepository<TrainingWorkshop> _TrainingWorkshopRepository,
+            IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository,
+            IAsyncRepository<Category> _CategoryRepository,
+            IFileService _FileService,
+            IMapper _Mapper)
         {
-            _fileService = fileService;
-            _trainingWorkshopRepository = trainingWorkshopRepository;
-            _categoryRepository = categoryRepository;
-            _mapper = mapper;
+            this._TrainingWorkshopRepository = _TrainingWorkshopRepository;
+            this._TrainingWorkshopAttachmentRepository = _TrainingWorkshopAttachmentRepository;
+            this._CategoryRepository = _CategoryRepository;
+            this._FileService = _FileService;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<int>> Handle(CreateTrainingWorkshopsCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateTrainingWorkshopsCommand Request, CancellationToken cancellationToken)
         {
-            Category? category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
+            string ResponseMessage = string.Empty;
 
-            if (category == null)
-                return new BaseResponse<int>("Category Not Found",false,404);
+            Category? CategoryEntity = await _CategoryRepository
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.CategoryId);
 
-            TrainingWorkshop workshop = _mapper.Map<TrainingWorkshop>(request);
-            string ThumbnailPath = await _fileService.SaveFileAsync(request.Thumbnail, 0);
-            workshop.Thumbnail = ThumbnailPath;
+            if (CategoryEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Category is not found"
+                    : "الفئة غير موجودة";
 
-            var data = await _trainingWorkshopRepository.AddAsync(workshop);
+                return new BaseResponse<int>(ResponseMessage, false, 404);
+            }
 
-            return new BaseResponse<int>("", true, 200, data.Id);
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
+
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    TrainingWorkshop NewTrainingWorkshopEntity = _Mapper.Map<TrainingWorkshop>(Request);
+
+                    string ThumbnailPath = await _FileService.SaveFileAsync(Request.Thumbnail, 0);
+
+                    NewTrainingWorkshopEntity.Thumbnail = ThumbnailPath;
+
+                    TrainingWorkshop Response = await _TrainingWorkshopRepository.AddAsync(NewTrainingWorkshopEntity);
+
+                    IEnumerable<TrainingWorkshopAttachment> NewTrainingWorkshopAttachmentEntities = Request.TrainingWorkshopAttachments
+                        .Select(x => new TrainingWorkshopAttachment()
+                        {
+                            EnglishName = x.EnglishName,
+                            ArabicName = x.ArabicName,
+                            AttachementPath = _FileService.SaveFileAsync(x.attachment, SystemFileType.Pdf).Result,
+                            SizeOfAttachmentInKB = 0,
+                            AttachmentType = x.AttachmentType,
+                            TrainingWorkshopId = Response.Id
+                        });
+
+                    await _TrainingWorkshopAttachmentRepository.AddRangeAsync(NewTrainingWorkshopAttachmentEntities);
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Created successfully"
+                        : "تم إنشاء الورشة التدريبية بنجاح";
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<int>(ResponseMessage, true, 200, Response.Id);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

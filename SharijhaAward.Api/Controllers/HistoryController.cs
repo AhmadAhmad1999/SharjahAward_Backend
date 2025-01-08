@@ -4,9 +4,11 @@ using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryByController;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Application.Features.LoggerFeatures.Queries.ExportToExcel;
+using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class HistoryController : ControllerBase

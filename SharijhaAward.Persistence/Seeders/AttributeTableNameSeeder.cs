@@ -1,9 +1,4 @@
 ﻿using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Persistence.Seeders
 {
@@ -45,6 +40,16 @@ namespace SharijhaAward.Persistence.Seeders
                 {
                     // Id =3,
                     Name = "Arbitrator",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new AttributeTableName()
+                {
+                    // Id =4,
+                    Name = "Event",
                     isDeleted = false,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = null,

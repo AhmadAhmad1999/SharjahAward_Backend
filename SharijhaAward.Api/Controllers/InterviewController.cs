@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Api.Logger;
-using SharijhaAward.Application.Features.InterviewFeatures.Commands.CancelInterview;
+using SharijhaAward.Application.Features.InterviewFeatures.Commands.CancelInterviewInvitee;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteInterview;
-using SharijhaAward.Application.Features.InterviewFeatures.Commands.ImplementInterview;
+using SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteInterviewInvitee;
+using SharijhaAward.Application.Features.InterviewFeatures.Commands.ImplementInterviewInvitee;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.SendEmailToUsersInInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep;
@@ -27,6 +28,33 @@ namespace SharijhaAward.Api.Controllers
         {
             _Mediator = Mediator;
             _WebHostEnvironment = WebHostEnvironment;
+        }
+        [HttpPut("CancelInterviewInvitee")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> CancelInterview([FromBody] CancelInterviewInviteeCommand CancelInterviewInviteeCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            CancelInterviewInviteeCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            CancelInterviewInviteeCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
+
+            BaseResponse<object>? Response = await _Mediator.Send(CancelInterviewInviteeCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
         [HttpPost("CreateInterview")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -50,31 +78,6 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(Response),
                 404 => NotFound(Response),
-                _ => BadRequest(Response)
-            };
-        }
-        [HttpPut("CancelInterview")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> CancelInterview([FromBody] CancelInterviewCommand CancelInterviewCommand)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            CancelInterviewCommand.lang = !string.IsNullOrEmpty(HeaderValue)
-                ? HeaderValue
-                : "en";
-
-            BaseResponse<object>? Response = await _Mediator.Send(CancelInterviewCommand);
-
-            return Response.statusCode switch
-            {
-                404 => NotFound(Response),
-                200 => Ok(Response),
                 _ => BadRequest(Response)
             };
         }
@@ -106,6 +109,62 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
+        [HttpDelete("DeleteInterviewInvitee/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> DeleteInterviewInvitee(int Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(new DeleteInterviewInviteeCommand()
+            {
+                Id = Id,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("ImplementInterviewInvitee")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ImplementInterview([FromForm] ImplementInterviewInviteeMainCommand ImplementInterviewInviteeMainCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            ImplementInterviewInviteeMainCommand.lang = HeaderValue;
+
+            ImplementInterviewInviteeMainCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/InterviewAttachments/";
+
+            BaseResponse<object> Response = await _Mediator.Send(ImplementInterviewInviteeMainCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
         [HttpPost("SendEmailToUsersInInterview")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -121,6 +180,8 @@ namespace SharijhaAward.Api.Controllers
             SendEmailToUsersInInterviewCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            SendEmailToUsersInInterviewCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
 
             BaseResponse<object>? Response = await _Mediator.Send(SendEmailToUsersInInterviewCommand);
 
@@ -208,32 +269,6 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpPost("ImplementInterview")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> ImplementInterview([FromForm] ImplementInterviewMainCommand ImplementInterviewMainCommand)
-        {
-            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
-
-            if (string.IsNullOrEmpty(HeaderValue))
-                HeaderValue = "en";
-
-            ImplementInterviewMainCommand.lang = HeaderValue;
-            ImplementInterviewMainCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
-
-            BaseResponse<object> Response = await _Mediator.Send(ImplementInterviewMainCommand);
-
-            return Response.statusCode switch
-            {
-                404 => NotFound(Response),
-                200 => Ok(Response),
-                _ => BadRequest(Response)
-            };
-        }
+        
     }
 }

@@ -432,7 +432,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                         {
                             if (Request.ItExceededTheMarginOfDifferenceInArbitrationScores.Value)
                             {
-                                List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntity
+                                if (GroupOfArbitrationEntityForAverage is null)
+                                    continue;
+
+                                List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntityForAverage
                                     .ToList();
 
                                 foreach (Arbitration ArbitrationEntity in DoneArbitratodGroupOfArbitrationEntity)
@@ -511,7 +514,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                         : null)
                                 };
 
-                                List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntity
+                                if (GroupOfArbitrationEntityForAverage is null)
+                                    continue;
+
+                                List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntityForAverage
                                     .Where(x => x.Type == ArbitrationType.DoneArbitratod)
                                     .ToList();
 
@@ -585,7 +591,10 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
                                     : null)
                             };
 
-                            List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntity
+                            if (GroupOfArbitrationEntityForAverage is null)
+                                continue;
+
+                            List<Arbitration> DoneArbitratodGroupOfArbitrationEntity = GroupOfArbitrationEntityForAverage
                                 .Where(x => x.Type == ArbitrationType.DoneArbitratod)
                                 .ToList();
 

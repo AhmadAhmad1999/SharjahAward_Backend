@@ -12,6 +12,7 @@ using SharijhaAward.Domain.Entities.FAQModel;
 using SharijhaAward.Domain.Entities.RewardModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
+using System.Net.Http;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
@@ -464,14 +465,11 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
 
                 if (CheckNewExplanatoryGuideEntity is not null)
                 {
-                    if (File.Exists(CheckNewExplanatoryGuideEntity.EnglishFilePath) &&
-                        File.Exists(CheckNewExplanatoryGuideEntity.ArabicFilePath))
-                    {
-                        File.Delete(CheckNewExplanatoryGuideEntity.EnglishFilePath);
-                        File.Delete(CheckNewExplanatoryGuideEntity.ArabicFilePath);
+                    File.Delete(CheckNewExplanatoryGuideEntity.EnglishFilePath);
 
-                        await _ExplanatoryGuideRepository.DeleteAsync(CheckNewExplanatoryGuideEntity);
-                    }
+                    File.Delete(CheckNewExplanatoryGuideEntity.ArabicFilePath);
+
+                    await _ExplanatoryGuideRepository.DeleteAsync(CheckNewExplanatoryGuideEntity);
                 }
 
                 ExplanatoryGuide NewExplanatoryGuideEntity = new ExplanatoryGuide()

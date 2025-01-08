@@ -1,7 +1,5 @@
-﻿using Aspose.Pdf.Operators;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.CycleConditions.Attachments.Queries.AcceptOnAttachments;
 using SharijhaAward.Application.Features.CycleConditions.Commands.CreateCycleCondition;
 using SharijhaAward.Application.Features.CycleConditions.Commands.DeleteCycleCondition;
@@ -11,8 +9,6 @@ using SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCycleCo
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycleConditions;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId;
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionById;
-using SharijhaAward.Application.Features.TermsAndConditions.Queries.AgreeOnTermsAndCondition;
-using SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAllConditions;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.CycleConditions.Attachments.Queries.ReviewCycleConditionAttachments;
 using SharijhaAward.Application.Features.CycleConditions.Queries.ExportToExcel;

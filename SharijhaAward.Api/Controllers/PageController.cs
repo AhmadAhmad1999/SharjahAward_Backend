@@ -1,16 +1,17 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.PageStructures.Pages.Commands.CreatePage;
 using SharijhaAward.Application.Features.PageStructures.Pages.Commands.DeletePage;
 using SharijhaAward.Application.Features.PageStructures.Pages.Commands.UpdatePage;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPagesWithSubPages;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
-
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageBySlug;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPages;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPagesInCell;
+using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Responses;
+using SharijhaAward.Application.Features.PageStructures.Pages.Commands.ReorderPages;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -173,6 +174,33 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
-        
+        [HttpPost("ReorderPages")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ReorderPages([FromBody] ReorderPagesCommand ReorderPagesCommand)
+        {
+            if (!ReorderPagesCommand.ValidateUniqueness(out var ErrorMessage))
+                return BadRequest(new BaseResponse<object> (ErrorMessage, false, 400));
+
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            ReorderPagesCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _mediator.Send(ReorderPagesCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
     }
 }

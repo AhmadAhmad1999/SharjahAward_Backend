@@ -16,8 +16,9 @@
         public int AdvancedFormBuilderSectionId { get; set; }
         public string? AdvancedFormBuilderSectionName { get; set; }
         public int? MaxSizeInKB { get; set; }
-        public AdvancedFormBuilderGeneralValidationDto? GeneralValidation { get; set; }
-        public List<AdvancedFormBuilderDependencyValidationDto> ListOfDependencies { get; set; } = new List<AdvancedFormBuilderDependencyValidationDto>();
+        public bool ViewInTable { get; set; }
+        public AdvancedFormBuilderGeneralValidationDto? GeneralValidationObject { get; set; }
+        public List<AdvancedFormBuilderDependencyValidationDto> DependencyValidations { get; set; } = new List<AdvancedFormBuilderDependencyValidationDto>();
         public List<AdvancedFormBuilderListValueListVM>? Values { get; set; }
     }
 }

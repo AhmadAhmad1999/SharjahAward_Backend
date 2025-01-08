@@ -1,9 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using SharijhaAward.Application.Features.CycleConditions.Attachments.Queries.AcceptOnAttachments;
-using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId;
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queries.AcceptOnSpecialConditionAttachments;
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Queries.ReviewSpecialConditionAttachments;
 using SharijhaAward.Application.Features.TermsAndConditions.Commands.CreateTermAndCondition;
@@ -15,7 +12,6 @@ using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllSpecia
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetTermAndConditionById;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.ExportToExcel;
 

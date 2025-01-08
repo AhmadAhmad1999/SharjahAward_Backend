@@ -23,10 +23,11 @@ namespace SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.D
         public async Task<BaseResponse<object>> Handle(DeleteGoalCardCommand request, CancellationToken cancellationToken)
         {
             string msg = request.lang == "en"
-            ? "Dark Card has been Deleted"
-            : "تم حذف العنصر ";
+                ? "Dark Card has been Deleted"
+                : "تم حذف العنصر ";
 
-            var goalCard = await _pageCardRepository.GetByIdAsync(request.Id);
+            var goalCard = await _pageCardRepository
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.Id);
 
             if (goalCard == null)
             {

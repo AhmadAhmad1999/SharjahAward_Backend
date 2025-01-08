@@ -42,10 +42,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("CycleConditionsProvidedForms/CycleConditionId")] // Done
             CycleCondition,
 
-            [Description("TrainingWrokshopeAttachment/WorkshopeId TrainingWorkshopSubscriber/TrainingWorkshopsId")] // Done
+            [Description("TrainingWorkshopAttachments/TrainingWorkshopId TrainingWorkshopSubscriber/TrainingWorkshopsId")] // Done
             TrainingWorkshop,
 
-            [Description("TrainingWrokshopeAttachment/WorkshopeId TrainingWorkshopSubscriber/TrainingWorkshopsId")] // Done
+            [Description("TrainingWorkshopAttachments/TrainingWorkshopId TrainingWorkshopSubscriber/TrainingWorkshopsId")] // Done
             TrainingWorkshops,
 
             [Description("ConditionsProvidedForms/TermAndConditionId")] // Done
@@ -64,14 +64,14 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "ArbitratorForms/ProvidedFormId ConditionsProvidedForms/ProvidedFormId CoordinatorForms/ProvidedFormId " + // Done
                 "FinalArbitrations/ProvidedFormId ExtraAttachments/ProvidedFormId CycleConditionsProvidedForms/ProvidedFormId " + // Done
                 "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId DynamicAttributeValues/RecordId/ProvidedForm " +
-                "SwitchArbitrations/ProvidedFormId")] // Done
+                "SwitchArbitrations/ProvidedFormId SavedCertificate/ProvidedFormId")] // Done
             ProvidedForm,
 
             [Description("Arbitrations/ProvidedFormId ArbitrationAudits/ProvidedFormId ArbitrationResults/ProvidedFormId " + // Done
                 "ArbitratorForms/ProvidedFormId ConditionsProvidedForms/ProvidedFormId CoordinatorForms/ProvidedFormId " + // Done
                 "FinalArbitrations/ProvidedFormId ExtraAttachments/ProvidedFormId CycleConditionsProvidedForms/ProvidedFormId " + // Done
                 "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId DynamicAttributeValues/RecordId/ProvidedForm " +
-                "SwitchArbitrations/ProvidedFormId")] // Done
+                "SwitchArbitrations/ProvidedFormId SavedCertificate/ProvidedFormId")] // Done
             ProvidedForms,
 
             [Description("")] // Done
@@ -79,12 +79,6 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             
             [Description("")] // Done
             MeetingCategories,
-
-            [Description("")] // Done
-            InterviewCategory,
-
-            [Description("")] // Done
-            InterviewCategories,
 
             [Description("")] // Done
             FrequentlyAskedQuestion,
@@ -143,7 +137,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             CycleConditionsProvidedForms,
 
             [Description("")] // Done
-            TrainingWrokshopeAttachment,
+            TrainingWorkshopAttachment,
+
+            [Description("")] // Done
+            TrainingWorkshopAttachments,
 
             [Description("")] // Done
             TrainingWorkshopSubscriber,
@@ -285,37 +282,11 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             DynamicAttributeTableValue,
 
-            [Description("")] // Done
-            InterviewAttachment,
-
-            [Description("")] // Done
-            InterviewAttachments,
-
-            [Description("InterviewUsers/InterviewId InterviewQuestions/InterviewId InterviewNotes/InterviewId " + // Done
-                "InterviewCategories/InterviewId InterviewAttachments/InterviewId")] // Done
+            [Description("InterviewCategories/InterviewId InterviewInvitees/InterviewId")] // Done
             Interview,
 
-            [Description("InterviewUsers/InterviewId InterviewQuestions/InterviewId InterviewNotes/InterviewId " + // Done
-                "InterviewCategories/InterviewId InterviewAttachments/InterviewId")] // Done
+            [Description("InterviewCategories/InterviewId InterviewInvitees/InterviewId")] // Done
             Interviews,
-
-            [Description("")] // Done
-            InterviewNote,
-
-            [Description("")] // Done
-            InterviewNotes,
-
-            [Description("")] // Done
-            InterviewQuestion,
-
-            [Description("")] // Done
-            InterviewQuestions,
-
-            [Description("")] // Done
-            InterviewUser,
-
-            [Description("")] // Done
-            InterviewUsers,
 
             [Description("")] // Done
             UserNotifications,
@@ -398,13 +369,13 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("FinalArbitrations/ArbitratorId Committees/ChairmanId ComitteesArbitrators/ArbitratorId CircularChairmans/ChairmanId " +
                 "CircularArbitrators/ArbitratorId CategoriesArbitrators/ArbitratorId ArbitratorForms/ArbitratorId " +
                 "ArbitratorClasses/ArbitratorId Arbitrations/ArbitratorId Users/Id DynamicAttributeValues/RecordId/Arbitrator " +
-                "SwitchArbitrations/OldArbitratorId SwitchArbitrations/NewArbitratorId")] // Done
+                "SwitchArbitrations/OldArbitratorId SwitchArbitrations/NewArbitratorId InterviewInviteeParticipants/ArbitratorId")] // Done
             Arbitrator,
 
             [Description("FinalArbitrations/ArbitratorId Committees/ChairmanId ComitteesArbitrators/ArbitratorId CircularChairmans/ChairmanId " +
                 "CircularArbitrators/ArbitratorId CategoriesArbitrators/ArbitratorId ArbitratorForms/ArbitratorId " +
                 "ArbitratorClasses/ArbitratorId Arbitrations/ArbitratorId Users/Id DynamicAttributeValues/RecordId/Arbitrator " +
-                "SwitchArbitrations/OldArbitratorId SwitchArbitrations/NewArbitratorId")] // Done
+                "SwitchArbitrations/OldArbitratorId SwitchArbitrations/NewArbitratorId InterviewInviteeParticipants/ArbitratorId")] // Done
             Arbitrators,
 
             [Description("")] // Done
@@ -449,7 +420,7 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "ProvidedForms/userId FinalArbitrations/DoneArbitrationUserId EmailMessages/UserId " + // Done
                 "Arbitrations/DoneArbitrationUserId Achievements/UserId ChairmanNotesOnInitialArbitrations/ChairmanId " +
                 "ChairmanNotesOnArbitrationAudits/ChairmanId ChairmanNotesOnFinalArbitrationScores/ChairmanId " +
-                "DigitalSignatures/UserId")] // Done
+                "DigitalSignatures/UserId InterviewInviteeParticipants/SubscriberId")] // Done
             User,
 
             [Description("Arbitrators/Id Coordinators/Id UserTokens/UserId UsersRoles/UserId UserNotifications/UserId " + // Done
@@ -458,7 +429,7 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "ProvidedForms/userId FinalArbitrations/DoneArbitrationUserId EmailMessages/UserId " + // Done
                 "Arbitrations/DoneArbitrationUserId Achievements/UserId ChairmanNotesOnInitialArbitrations/ChairmanId " +
                 "ChairmanNotesOnArbitrationAudits/ChairmanId ChairmanNotesOnFinalArbitrationScores/ChairmanId " +
-                "DigitalSignatures/UserId")] // Done
+                "DigitalSignatures/UserId InterviewInviteeParticipants/SubscriberId")] // Done
             Users,
 
             [Description("UsersRoles/RoleId RolePermissions/RoleId RoleMessageTypes/RoleId Responsibilities/RoleId")] // Done
@@ -761,10 +732,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             SwitchArbitrations,
 
-            [Description("")] // Done
+            [Description("PageCards/ParentId")] // Done
             PageCard,
 
-            [Description("")] // Done
+            [Description("PageCards/ParentId")] // Done
             PageCards,
             
             [Description("")] // Done
@@ -859,21 +830,71 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             AdvancedFormBuilderValues,
             
-            [Description("")] // Done
+            [Description("SavedCertificates/TemplateId")] // Done
             Template,
 
-            [Description("")] // Done
+            [Description("SavedCertificates/TemplateId")] // Done
             Templates,
 
-            [Description("")] // Done
+            [Description("SavedCertificates/DigitalSignatureId")] // Done
             DigitalSignature,
 
+            [Description("SavedCertificates/DigitalSignatureId")] // Done
+            DigitalSignatures,
+
+            [Description("InterviewInviteeParticipants/InterviewInviteeId InterviewInviteeNoteAndQuestions/InterviewInviteeId " +
+                "InterviewInviteeAttachments/InterviewInviteeId")] // Done
+            InterviewInvitee,
+
+            [Description("InterviewInviteeParticipants/InterviewInviteeId InterviewInviteeNoteAndQuestions/InterviewInviteeId " +
+                "InterviewInviteeAttachments/InterviewInviteeId")] // Done
+            InterviewInvitees,
+
             [Description("")] // Done
-            DigitalSignatures
+            InterviewInviteeParticipant,
+
+            [Description("")] // Done
+            InterviewInviteeParticipants,
+
+            [Description("")] // Done
+            InterviewInviteeNoteAndQuestion,
+
+            [Description("")] // Done
+            InterviewInviteeNoteAndQuestions,
+
+            [Description("")] // Done
+            InterviewInviteeAttachment,
+
+            [Description("")] // Done
+            InterviewInviteeAttachments,
+
+            [Description("")] // Done
+            WorkflowQuestion,
+
+            [Description("")] // Done
+            WorkflowQuestions,
+
+            [Description("")] // Done
+            StaticNotification,
+
+            [Description("")] // Done
+            StaticNotifications,
+
+            [Description("")] // Done
+            NewsTicker,
+
+            [Description("")] // Done
+            NewsTickers,
+
+            [Description("")] // Done
+            SavedCertificate,
+
+            [Description("")] // Done
+            SavedCertificates
         }
         public static string GetEnumDescription(Enum value)
         {
-            FieldInfo FI = value.GetType().GetField(value.ToString());
+            FieldInfo? FI = value.GetType().GetField(value.ToString());
 
             DescriptionAttribute[] attributes =
                 (DescriptionAttribute[])FI.GetCustomAttributes(

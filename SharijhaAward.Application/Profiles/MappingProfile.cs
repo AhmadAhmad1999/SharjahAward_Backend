@@ -64,10 +64,10 @@ using SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle;
 using SharijhaAward.Application.Features.Cycles.Queries.GetCycleById;
 using SharijhaAward.Application.Features.User.Commands.UpdateUser;
 using SharijhaAward.Application.Features.Categories.Command.UpdateCategory;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
+using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.UpdateAdvancedFormBuilderSection;
 
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.UpdateDynamicAttribute;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllAdvancedFormBuildersBySectionId;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.UpdateAdvancedFormBuilder;
 using SharijhaAward.Domain.Entities.AgendaModel;
 using SharijhaAward.Application.Features.Agendas.Commands.CreateAgenda;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
@@ -96,7 +96,7 @@ using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditi
 using SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycleConditions;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateExplanatoryGuide;
-using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
+using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment;
 using SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterion;
@@ -104,7 +104,7 @@ using SharijhaAward.Domain.Entities.CriterionModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCriterionByCategoryId;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
+using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Queries.GetAllAdvancedFormBuilderSectionsForView;
 using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllEducationalEntities;
@@ -380,6 +380,21 @@ using SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.Creat
 using SharijhaAward.Domain.Entities.DigitalSignatureModel;
 using SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.UpdateDigitalSignature;
 using SharijhaAward.Application.Features.DigitalSignatureFeatures.Queries.GetAllDigitalSignaturesForUser;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAdvancedFormBuilderById;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.UpdateDynamicAttributeSection;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.UpdateDynamicAttribute;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
+using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllDynamicAttributesBySectionId;
+using SharijhaAward.Application.Features.DigitalSignatureFeatures.Queries.GetDigitalSignatureById;
+using SharijhaAward.Application.Features.ChatBotQuestions.Commands.UpdateChatBotQuestion;
+using SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetAllChatBotQuestions;
+using SharijhaAward.Domain.Entities.StaticNotificationModel;
+using SharijhaAward.Application.Features.StaticNotificationFeatures.Queries.GetStaticNotificationById;
+using SharijhaAward.Domain.Entities.NewsTickerModel;
+using SharijhaAward.Application.Features.NewsTickerFeatures.Commands.CreateNewsTicker;
+using SharijhaAward.Application.Features.NewsTickerFeatures.Commands.UpdateNewsTicker;
+using SharijhaAward.Application.Features.NewsTickerFeatures.Queries.GetAllNewsTicker;
+using SharijhaAward.Application.Features.NewsTickerFeatures.Queries.GetNewsTickerById;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -507,9 +522,9 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<ExplanatoryGuide, UpdateExplanatoryGuideCommand>().ReverseMap();
            
 
-            CreateMap<TrainingWrokshopeAttachment, WorkshopAttachmentListVM>().ReverseMap();
-            CreateMap<TrainingWrokshopeAttachment, CreateWorkshopeAttachmentCommand>().ReverseMap();
-            CreateMap<TrainingWrokshopeAttachment, UpdateWorkshopAttachmentCommand>().ReverseMap();
+            CreateMap<TrainingWorkshopAttachment, WorkshopAttachmentListVM>().ReverseMap();
+            CreateMap<TrainingWorkshopAttachment, CreateWorkshopeAttachmentCommand>().ReverseMap();
+            CreateMap<TrainingWorkshopAttachment, UpdateWorkshopAttachmentCommand>().ReverseMap();
          
             CreateMap<EducationalEntity, EducationalEntitiesListVm>().ReverseMap();
             CreateMap<EducationalEntity, EducationalEntityExcelDto>().ReverseMap();
@@ -707,12 +722,11 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<AdvancedFormBuilderDependency, CreateDependency>().ReverseMap();
             CreateMap<AdvancedFormBuilderDependencyValidation, CreateDependencyValidation>().ReverseMap();
             CreateMap<InitialArbitration, InitialArbitrationMainCommand>().ReverseMap();
-            CreateMap<AdvancedFormBuilderListValue, CreateAdvancedFormBuilderListValueCommand>().ReverseMap();
-            CreateMap<AdvancedFormBuilder, AdvancedFormBuilderPattern>().ReverseMap();
             CreateMap<AdvancedFormBuilderSection, CreateAdvancedFormBuilderSectionCommand>().ReverseMap();
             CreateMap<ArbitrationAudit, ArbitrationAuditMainCommand>().ReverseMap();
             CreateMap<Template, CreateTemplateCommand>().ReverseMap();
             CreateMap<DigitalSignature, CreateDigitalSignatureCommand>().ReverseMap();
+            CreateMap<CreateNewsTickerCommand, NewsTicker>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();
@@ -746,25 +760,35 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<VirtualTableForSection, UpdateVirtualTableFroSectionCommand>().ReverseMap();
             CreateMap<Template, UpdateTemplateCommand>().ReverseMap();
             CreateMap<DigitalSignature, UpdateDigitalSignatureCommand>().ReverseMap();
+            CreateMap<ChatBotQuestion, UpdateChatBotQuestionCommand>().ReverseMap();
+            CreateMap<UpdateNewsTickerCommand, NewsTicker>().ReverseMap();
 
             // Get..
             CreateMap<DynamicAttributeSection, DynamicAttributeSectionListVM>().ReverseMap();
+            CreateMap<AdvancedFormBuilderSection, AdvancedFormBuilderSectionListVM>().ReverseMap();
             CreateMap<DynamicAttribute, DynamicAttributeListVM>().ReverseMap();
+            CreateMap<AdvancedFormBuilder, AdvancedFormBuilderListVM>().ReverseMap();
             CreateMap<DynamicAttribute, GetDynamicAttributeByIdDto>().ReverseMap();
+            CreateMap<AdvancedFormBuilder, GetAdvancedFormBuilderByIdDto>().ReverseMap();
             CreateMap<AttributeDataType, GetAllDataTypesListVM>().ReverseMap();
             CreateMap<GeneralValidation, GeneralValidationDto>()
                 .ForMember(x => x.AttributeOperation, x => x.MapFrom(y => y.AttributeOperation.OperationAsString));
             CreateMap<GeneralValidationDto, GeneralValidation>();
             CreateMap<DynamicAttributeListValue, CreateDynamicAttributeListValueCommand>();
+            CreateMap<AdvancedFormBuilderListValue, CreateAdvancedFormBuilderListValueCommand>();
             CreateMap<AttributeOperation, GetAllAttributeOperationsListVM>()
                 .ForMember(x => x.Name, x => x.MapFrom(y => y.OperationAsString));
             CreateMap<GetAllAttributeOperationsListVM, AttributeOperation>()
                 .ForMember(x => x.OperationAsString, x => x.MapFrom(y => y.Name));
             CreateMap<DynamicAttributeListValue, DynamicAttributeListValueListVM>().ReverseMap();
+            CreateMap<AdvancedFormBuilderListValue, AdvancedFormBuilderListValueListVM>().ReverseMap();
             CreateMap<AttributeTableName, GetAllAttributeTablesNamesListVM>().ReverseMap();
             CreateMap<DynamicAttribute, DynamicAttributePattern>().ReverseMap();
+            CreateMap<AdvancedFormBuilder, AdvancedFormBuilderPattern>().ReverseMap();
             CreateMap<DynamicAttributePattern, GetAllDynamicAttributePatternListVM>().ReverseMap();
+            CreateMap<AdvancedFormBuilderPattern, GetAllAdvancedFormBuilderPatternListVM>().ReverseMap();
             CreateMap<DynamicAttributePatternValue, GetDynamicAttributePatternByIdValues>().ReverseMap();
+            CreateMap<AdvancedFormBuilderPatternValue, GetAdvancedFormBuilderPatternByIdValues>().ReverseMap();
             CreateMap<DynamicAttributePattern, GetDynamicAttributePatternByIdDto>().ReverseMap();
             CreateMap<CriterionAttachment, AttachmentListVM>().ReverseMap();
             CreateMap<CriterionItemAttachment, AttachmentListVM>().ReverseMap();
@@ -804,9 +828,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Interview, GetAllInterviewsForInterviewStepListVM>().ReverseMap();
             CreateMap<CriterionAttachment, GetAllCriterionsForCoordinatorAttachment>().ReverseMap();
             CreateMap<CriterionItemAttachment, GetAllCriterionsForCoordinatorAttachment>().ReverseMap();
-            CreateMap<AdvancedFormBuilderPattern, GetAllAdvancedFormBuilderPatternListVM>().ReverseMap();
             CreateMap<AdvancedFormBuilderPattern, GetAdvancedFormBuilderPatternByIdDto>().ReverseMap();
-            CreateMap<AdvancedFormBuilderPatternValue, GetAdvancedFormBuilderPatternByIdValues>().ReverseMap();
             CreateMap<ExplanatoryMessage, GetAllExplanatoryMessageListVM>().ReverseMap();
             CreateMap<ExplanatoryMessage, GetExplanatoryMessageByIdDto>().ReverseMap();
             CreateMap<GeneralFAQ, GeneralFAQDto>().ReverseMap();
@@ -817,6 +839,13 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Template, GetAllTemplatesListVM>().ReverseMap();
             CreateMap<Template, GetTemplateByIdDto>().ReverseMap();
             CreateMap<DigitalSignature, GetAllDigitalSignaturesForUserListVM>().ReverseMap();
+            CreateMap<AdvancedFormBuilderGeneralValidation, AdvancedFormBuilderGeneralValidationDto>().ReverseMap();
+            CreateMap<InterviewInvitee, UpdateInterviewInviteeDto>().ReverseMap();
+            CreateMap<DigitalSignature, GetDigitalSignatureByIdDto>().ReverseMap();
+            CreateMap<ChatBotQuestion, ChatBotQuestionsListVM>().ReverseMap();
+            CreateMap<StaticNotification, GetStaticNotificationByIdDto>().ReverseMap();
+            CreateMap<GetAllNewsTickerListVM, NewsTicker>().ReverseMap();
+            CreateMap<GetNewsTickerByIdDto, NewsTicker>().ReverseMap();
         }
     }
 }

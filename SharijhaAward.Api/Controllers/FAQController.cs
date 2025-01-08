@@ -1,8 +1,5 @@
-﻿using Aspose.Pdf.Operators;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using SharijhaAward.Application.Features.Categories.Queries.GetAllCategories;
 using SharijhaAward.Application.Features.FAQs.Commands.CreateFAQ;
 using SharijhaAward.Application.Features.FAQs.Commands.DeleteFAQ;
 using SharijhaAward.Application.Features.FAQs.Commands.UpdateFAQ;

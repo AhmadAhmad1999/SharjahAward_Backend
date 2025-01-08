@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.MessageTypes.Commands.CreateMsgType;
 using SharijhaAward.Application.Features.MessageTypes.Commands.DeleteMsgType;

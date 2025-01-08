@@ -42,17 +42,11 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditProfile
 
             if (Request.ProfileImage != null)
             {
-                bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
-
-                string FolderPath = isHttps
-                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/ProfilePics"
-                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/ProfilePics";
-
                 string? FileName = $"{Request.ProfileImage!.FileName}";
-                string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
+                string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"/ProfilePics/{FileName}";
 
                 string? FolderPathToCreate = Request.WWWRootFilePath!;
-                string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
+                string? FilePathToSaveToCreate = FolderPathToCreate + $"/{FileName}";
 
                 while (File.Exists(FilePathToSaveIntoDataBase))
                 {

@@ -1,11 +1,7 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
-using Hangfire;
-using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using NLog;
@@ -17,15 +13,11 @@ using SharijhaAward.Api.Logger;
 using SharijhaAward.Api.MiddleWares;
 using SharijhaAward.Api.OptionsSetup;
 using SharijhaAward.Application;
-using SharijhaAward.Application.Contract.Infrastructure;
-using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Infrastructure;
-using SharijhaAward.Infrastructure.Authentication;
 using SharijhaAward.Persistence;
-using SharijhaAward.Persistence.Repositories;
-using SharijhaAward.Persistence.Seeders;
 using System.Net;
+
+string ResponseMessage = string.Empty;
 
 try
 {
@@ -167,11 +159,40 @@ try
     }
     app.UseStaticFiles(new StaticFileOptions
     {
-        FileProvider = new PhysicalFileProvider(
-               Path.Combine(builder.Environment.ContentRootPath, "wwwroot/UploadedFiles")),
-        RequestPath = "/UploadedFiles"
-    });
+        ServeUnknownFileTypes = true,
+        OnPrepareResponse = ctx =>
+        {
+            if (ctx.Context.Request.Headers.ContainsKey("Origin"))
+            {
+                var origin = ctx.Context.Request.Headers["Origin"].ToString();
 
+                var allowedOrigins = new[]
+                {
+                    builder.Configuration.GetValue<string>("WebSite_Front_URL"),
+                    builder.Configuration.GetValue<string>("Dashboard_Front_URL"),
+                    builder.Configuration.GetValue<string>("Subscriber_Front_URL")
+                };
+
+                if (allowedOrigins.Contains(origin))
+                {
+                    ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", origin);
+                }
+                else
+                {
+                    ResponseMessage = $"Origin not allowed: {origin}";
+
+                    string xx = null;
+                    string yy = xx.ToLower();
+                }
+            }
+            else
+            {
+                // Handle the case where Origin is not sent
+                Console.WriteLine("Origin header not present in the request.");
+            }
+        }
+    });
+    
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseHttpsRedirection();
@@ -207,18 +228,33 @@ catch (Exception ex)
 
     var app = builder.Build();
 
-    app.Use(async (Runcontext, next) =>
+    if (!string.IsNullOrEmpty(ResponseMessage))
     {
-        Runcontext.Response.Clear();
-        Runcontext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+        app.Use(async (Runcontext, next) =>
+        {
+            Runcontext.Response.Clear();
+            Runcontext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
 
-        if (ex.InnerException is not null ? !string.IsNullOrEmpty(ex.InnerException.Message) : false)
-            await Runcontext.Response.WriteAsync(JsonConvert.SerializeObject(new { ErrorMessage = ex.Message, ErrorInnerMessage = ex.InnerException.Message }));
-        else
-            await Runcontext.Response.WriteAsync(JsonConvert.SerializeObject(new { ErrorMessage = ex.Message }));
+            await Runcontext.Response.WriteAsync(JsonConvert.SerializeObject(new { ErrorMessage = ResponseMessage }));
 
-        await next.Invoke();
-    });
+            await next.Invoke();
+        });
+    }
+    else
+    {
+        app.Use(async (Runcontext, next) =>
+        {
+            Runcontext.Response.Clear();
+            Runcontext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+            if (ex.InnerException is not null ? !string.IsNullOrEmpty(ex.InnerException.Message) : false)
+                await Runcontext.Response.WriteAsync(JsonConvert.SerializeObject(new { ErrorMessage = ex.Message, ErrorInnerMessage = ex.InnerException.Message }));
+            else
+                await Runcontext.Response.WriteAsync(JsonConvert.SerializeObject(new { ErrorMessage = ex.Message }));
+
+            await next.Invoke();
+        });
+    }
 
     app.Run();
 }   

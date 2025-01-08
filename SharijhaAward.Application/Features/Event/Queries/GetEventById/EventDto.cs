@@ -29,5 +29,6 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetEventById
         public DateTime EndDate { get; set; }
         public DateTime EventDate { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool isPublic { get; set; }
     }
 }

@@ -7,5 +7,6 @@
         public string PlaceHolder { get; set; } = null!;
         public string Status { get; set; } = null!;
         public string AttributeDataTypeName { get; set; } = null!;
+        public bool ViewInTable { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
@@ -13,18 +12,22 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateIn
         public string ArabicName { get; set; } = null!;
         [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
+
         public string ArabicDescription { get; set; } = null!;
         public string EnglishDescription { get; set; } = null!;
+
         public string? ArabicText { get; set; }
         public string? EnglishText { get; set; }
+
         public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+
         public MeetingTypes Type { get; set; }
         public string? Address { get; set; }
-        public List<CreateInterviewUserDto> UsersInfo { get; set; } = new List<CreateInterviewUserDto>();
-        public List<int> CategoriesIds { get; set; } = new List<int>();
-        public List<InterviewNoteDto> InterviewNoteDtos { get; set; } = new List<InterviewNoteDto>();
-        public List<InterviewQuestionDto> InterviewQuestionDtos { get; set; } = new List<InterviewQuestionDto>();
+
+        public int PeriodOfEachInviteeInMinutes { get; set; }
+
+        public List<CreateInterviewInviteeDto> Invitees { get; set; } = new List<CreateInterviewInviteeDto>();
+        
         public string? lang { get; set; }
     }
 }

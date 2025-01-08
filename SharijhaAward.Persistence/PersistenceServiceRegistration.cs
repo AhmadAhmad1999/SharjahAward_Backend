@@ -5,11 +5,6 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Persistence.Repositories;
 using SharijhaAward.Persistence.Seeders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Persistence
 {
@@ -23,8 +18,9 @@ namespace SharijhaAward.Persistence
 
             // Default Database..
             services.AddDbContext<SharijhaAwardDbContext>(options =>
-                options.UseSqlServer(connectionString: configuration.GetConnectionString("DefaultConnection")));
-            
+                options.UseSqlServer(connectionString: configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly("SharijhaAward.Api")));
+
             services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
 
             services.AddScoped<IEventRepository, EventRepository>();

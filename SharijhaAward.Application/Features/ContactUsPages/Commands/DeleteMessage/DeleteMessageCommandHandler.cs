@@ -2,42 +2,39 @@
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ContactUsPages.Commands.DeleteMessage
 {
     public class DeleteMessageCommandHandler : IRequestHandler<DeleteMessageCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<EmailMessage> _emailMessageRepository;
+        private readonly IAsyncRepository<EmailMessage> _EmailMessageRepository;
 
-        public DeleteMessageCommandHandler(IAsyncRepository<EmailMessage> emailMessageRepository)
+        public DeleteMessageCommandHandler(IAsyncRepository<EmailMessage> _EmailMessageRepository)
         {
-            _emailMessageRepository = emailMessageRepository;
+            this._EmailMessageRepository = _EmailMessageRepository;
         }
 
-        public async Task<BaseResponse<object>> Handle(DeleteMessageCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(DeleteMessageCommand Request, CancellationToken cancellationToken)
         {
-            string msg = request.lang == "en"
-                ? "Message has been Deleted"
+            string ResponseMessage = Request.lang == "en"
+                ? "Message has been deleted"
                 : "تم حذف الرسالة";
 
-            var messageToDelete = await _emailMessageRepository.GetByIdAsync(request.Id);
-            if (messageToDelete == null)
-            {
-                msg = request.lang == "en"
-                ? "Message not found"
-                : "الرسالة غير موجودة";
+            EmailMessage? EmailMessageEntityToDelete = await _EmailMessageRepository
+                .IncludeThenFirstOrDefaultAsync(x => x.message!, x => x.Id == Request.Id);
 
-                return new BaseResponse<object>(msg, false, 404);
+            if (EmailMessageEntityToDelete is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Message not found"
+                    : "الرسالة غير موجودة";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            await _emailMessageRepository.DeleteAsync(messageToDelete);
+            await _EmailMessageRepository.DeleteAsync(EmailMessageEntityToDelete);
 
-            return new BaseResponse<object>(msg, true, 200);
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

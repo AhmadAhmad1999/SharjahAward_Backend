@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Indexes.Commands.CreateIndex;
 using SharijhaAward.Application.Features.Indexes.Commands.DeleteIndex;
 using SharijhaAward.Application.Features.Indexes.Commands.UpdateIndex;
@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.Indexes.Queries.GetIndexById;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class IndexController : ControllerBase

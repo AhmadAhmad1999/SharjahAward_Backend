@@ -18,5 +18,6 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
         [PhoneNumberValidation]
         public string PhoneNumber { get; set; } = null!;
         public string? lang { get; set; }
+        public string? WWWRootFilePath { get; set; }
     }
 }

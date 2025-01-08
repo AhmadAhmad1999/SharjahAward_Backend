@@ -1,12 +1,5 @@
-﻿using MailKit.Search;
-using Microsoft.AspNetCore.Http;
-using Org.BouncyCastle.Crmf;
+﻿using Microsoft.AspNetCore.Http;
 using SharijhaAward.Domain.Constants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Persistence.Seeders
 {
@@ -41,7 +34,7 @@ namespace SharijhaAward.Persistence.Seeders
                         IsHide = false,
                         Slug = "award_sponsor",
                         PageType = PageType.MainPageWithoutSubPage,
-                        Deletable = false,
+                        Deletable = true,
                         orderId = 1,
                         pageStructure = null!,
                         ParentId = null
@@ -58,7 +51,7 @@ namespace SharijhaAward.Persistence.Seeders
                         Slug = "about_award",
                         PageType = PageType.MainPageWithoutSubPage,
                         PagePostion = Domain.Constants.CustomPageConstants.PagePostion.InMenu,
-                        Deletable = false,
+                        Deletable = true,
                         orderId = 2,
                         pageStructure = null!,
                         ParentId = null

@@ -53,7 +53,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                 return new BaseResponse<GetAdvancedFormBuilderByIdDto>(ResponseMessage, false, 404);
             }
 
-            AdvancedFormBuilder.GeneralValidation = _Mapper.Map<AdvancedFormBuilderGeneralValidationDto>(await _AdvancedFormBuilderGeneralValidationRepository
+            AdvancedFormBuilder.GeneralValidationObject = _Mapper.Map<AdvancedFormBuilderGeneralValidationDto>(await _AdvancedFormBuilderGeneralValidationRepository
                 .FirstOrDefaultAsync(x => x.AdvancedFormBuilderId == Request.Id));
 
             IQueryable<IGrouping<int, AdvancedFormBuilderDependency>> Dependencies = _AdvancedFormBuilderDependencyRepository
@@ -61,10 +61,14 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                     x => x.AdvancedFormBuilder!, x => x.StaticAttribute!)
                 .GroupBy(x => x.AdvancedFormBuilderDependencyGroupId);
 
+            List<AdvancedFormBuilderDependencyValidation> AdvancedFormBuilderDependencyValidations = await _AdvancedFormBuilderDependencyValidationRepository
+                .IncludeThenWhere(x => x.AttributeOperation!, x => Dependencies.Select(y => y.Key).Contains(x.AdvancedFormBuilderDependencyGroupId))
+                .ToListAsync();
+
             foreach (IGrouping<int, AdvancedFormBuilderDependency> AdvancedFormBuilderDependency in Dependencies)
             {
-                AdvancedFormBuilderDependencyValidation? AdvancedFormBuilderDependencyValidation = await _AdvancedFormBuilderDependencyValidationRepository
-                    .IncludeThenFirstOrDefaultAsync(x => x.AttributeOperation!, x => x.AdvancedFormBuilderDependencyGroupId == AdvancedFormBuilderDependency.Key);
+                AdvancedFormBuilderDependencyValidation? AdvancedFormBuilderDependencyValidation = AdvancedFormBuilderDependencyValidations
+                    .FirstOrDefault(x => x.AdvancedFormBuilderDependencyGroupId == AdvancedFormBuilderDependency.Key);
 
                 if (AdvancedFormBuilderDependencyValidation != null)
                 {
@@ -84,11 +88,13 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                                     : x.StaticAttribute!.ArabicLabel)
                                 : (Request.lang == "en"
                                     ? x.AdvancedFormBuilder!.EnglishLabel
-                                    : x.AdvancedFormBuilder!.ArabicLabel)
+                                    : x.AdvancedFormBuilder!.ArabicLabel),
+                            DynamicAttributeId = x.AdvancedFormBuilderId != null ? x.AdvancedFormBuilderId.Value : 0,
+                            AttributeOperationId = x.AttributeOperationId
                         }).ToList()
                     };
 
-                    AdvancedFormBuilder.ListOfDependencies.Add(AdvancedFormBuilderDependencyValidationDto);
+                    AdvancedFormBuilder.DependencyValidations.Add(AdvancedFormBuilderDependencyValidationDto);
                 }
             }
 

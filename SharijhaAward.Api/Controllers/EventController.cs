@@ -7,22 +7,15 @@ using SharijhaAward.Application.Features.Event.Commands.UpdateEvent;
 using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
 using SharijhaAward.Application.Features.Event.Queries.GetEventById;
 using SharijhaAward.Application.Features.Event.Queries.GetEventWithInvitees;
-using Aspose.Html;
-using Aspose.Html.Converters;
-using System.Net;
-using BarcodeStandard;
-using Microsoft.AspNetCore.Components.Web;
 using Aspose.Pdf;
-using System;
-using PdfSaveOptions = Aspose.Pdf.PdfSaveOptions;
-using SharijhaAward.Application.Helpers.ExcelHelper;
-using NPOI.SS.Extractor;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
 using SelectPdf;
-using PdfSharpCore.Pdf.Content.Objects;
-using System.Xml;
 using SharijhaAward.Api.Logger;
+using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Responses;
+using SharijhaAward.Application.Features.Event.Queries.GetAllInviteesByEventId;
+using SharijhaAward.Application.Features.Event.Queries.ExportAllInviteesByTypeAndEventId;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -154,7 +147,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("DownloadQRCode")]
         public IActionResult DownloadQRCode(string QRCodeName)
         {
-            string QRImagePath = _WebHostEnvironment.WebRootPath + "\\Images\\" + QRCodeName;
+            string QRImagePath = _WebHostEnvironment.WebRootPath + "/Images/" + QRCodeName;
 
             if (!System.IO.File.Exists(QRImagePath)) return NotFound();
 
@@ -202,7 +195,7 @@ namespace SharijhaAward.Api.Controllers
                 BarCodeName = "BarCodeFor" + ttt.LastOrDefault();
             }
 
-            string BarCodeImagePath = _WebHostEnvironment.WebRootPath + "\\GeneratedBarcode\\" + BarCodeName;
+            string BarCodeImagePath = _WebHostEnvironment.WebRootPath + "/GeneratedBarcode/" + BarCodeName;
 
             if (!System.IO.File.Exists(BarCodeImagePath)) return NotFound();
 
@@ -244,7 +237,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("DownloadTempletAsPdf")]
         public IActionResult DownloadTempletAsPdf(string htmlFile)
         {
-            string Path = _WebHostEnvironment.WebRootPath + "\\HTMLCodes\\" + htmlFile;
+            string Path = _WebHostEnvironment.WebRootPath + "/DynamicFiles/" + "/HTMLCodes/" + htmlFile;
             string HTML = System.IO.File.ReadAllText(Path);
             HTML = HTML.Replace("StrTag", "<").Replace("EndTag", ">");
 
@@ -275,6 +268,58 @@ namespace SharijhaAward.Api.Controllers
             var EventsList =await _Mediator.Send(new ExportToExcelQuery());
             var file = _excelHelper.ExportToExcel(EventsList);
             return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Events.xlsx");
+        }
+        [HttpGet("GetAllInviteesByEventId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllInviteesByEventId([FromQuery] GetAllInviteesByEventIdQuery GetAllInviteesByEventIdQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllInviteesByEventIdQuery.lang = HeaderValue!;
+
+            BaseResponse<List<GetAllInviteesByEventIdListVM>> Response = await _Mediator.Send(GetAllInviteesByEventIdQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("ExportAllInviteesByTypeAndEventId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ExportAllInviteesByTypeAndEventId([FromQuery] ExportAllInviteesByTypeAndEventIdQuery ExportAllInviteesByTypeAndEventIdQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            ExportAllInviteesByTypeAndEventIdQuery.lang = HeaderValue!;
+
+            BaseResponse<ExportAllInviteesByTypeAndEventIdResponse> Response = await _Mediator.Send(ExportAllInviteesByTypeAndEventIdQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
         }
     }
 }

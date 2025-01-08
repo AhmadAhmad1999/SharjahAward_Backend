@@ -51,6 +51,27 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
         {
             string ResponseMessage = string.Empty;
 
+            DynamicAttribute? CheckIfDynamicAttributeNameIsUsed = await _DynamicAttributeRepository
+                .FirstOrDefaultAsync(x => x.DynamicAttributeSectionId == Request.DynamicAttributeSectionId &&
+                    (x.ArabicLabel.ToLower() == Request.ArabicLabel.ToLower() ||
+                        x.EnglishLabel.ToLower() == Request.EnglishLabel.ToLower()) &&
+                    x.Id != Request.Id);
+
+            if (CheckIfDynamicAttributeNameIsUsed is not null)
+            {
+                if (CheckIfDynamicAttributeNameIsUsed.ArabicLabel.ToLower() == Request.ArabicLabel.ToLower())
+                    ResponseMessage = Request.lang == "en"
+                        ? "This dynamic field's arabic name is already used"
+                        : "اسم هذا الحقل باللغة العربية مستخدم مسبقاً";
+
+                else if (CheckIfDynamicAttributeNameIsUsed.EnglishLabel.ToLower() == Request.EnglishLabel.ToLower())
+                    ResponseMessage = Request.lang == "en"
+                        ? "This dynamic field's english name is already used"
+                        : "اسم هذا الحقل باللغة العربية مستخدم مسبقاً";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             DynamicAttribute? DynamicAttributeOldData = await _DynamicAttributeRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 

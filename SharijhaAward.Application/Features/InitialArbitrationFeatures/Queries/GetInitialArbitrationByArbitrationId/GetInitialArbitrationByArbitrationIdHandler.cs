@@ -152,7 +152,10 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
                         .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
                         .ToList();
 
-                    if (!CriterionItemEntitiesForThisSubCriterion.Any())
+                    if (!CriterionItemEntitiesForThisSubCriterion.Any() ||
+                        (SubCriterionEntityForThisMainCriterion.AttachFilesOnSubCriterion is not null
+                            ? SubCriterionEntityForThisMainCriterion.AttachFilesOnSubCriterion.Value
+                            : false))
                     {
                         InitialArbitration? InitialArbitrationEntitiesForThisSubCriterion = InitialArbitrationEntities
                             .FirstOrDefault(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id && x.CriterionItemId == null);

@@ -100,8 +100,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                             EligibleToWin = true;
 
                         ArbitrationResult? ArbitrationResultEntity = await _ArbitrationResultRepository
-                            .FirstOrDefaultAsync(x => x.ProvidedFormId == FinalArbitrationEntity.ProvidedFormId &&
-                                x.FinalArbitrationId == FinalArbitrationEntity.Id);
+                            .FirstOrDefaultAsync(x => x.ProvidedFormId == FinalArbitrationEntity.ProvidedFormId);
 
                         if (ArbitrationResultEntity is not null)
                         {
@@ -120,7 +119,8 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                                 EligibleForAStatement = EligibleForAStatement,
                                 EligibleToWin = EligibleToWin,
                                 GotCertification = false,
-                                GotStatement = false,
+                                GotStatement1 = false,
+                                GotStatement2 = false,
                                 Winner = false,
                                 FinalArbitrationId = FinalArbitrationEntity.Id
                             };

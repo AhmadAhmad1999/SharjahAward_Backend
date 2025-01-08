@@ -1,20 +1,10 @@
 ﻿using AutoMapper.Internal;
 using Microsoft.EntityFrameworkCore;
-using PdfSharpCore.Pdf;
-using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Common;
-using SharijhaAward.Domain.Entities.CommitteeModel;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
-using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace SharijhaAward.Persistence.Repositories
 {

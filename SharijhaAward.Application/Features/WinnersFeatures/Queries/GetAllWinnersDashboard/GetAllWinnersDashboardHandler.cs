@@ -44,6 +44,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
 
             List<ArbitrationResult> ArbitrationResultEntities = await _ArbitrationResultRepository
                 .Where(x => x.Winner && x.EligibleToWin &&
+                    x.FinalArbitrationId != null &&
                     (Request.CategoryId != null
                         ? x.ProvidedForm!.categoryId == Request.CategoryId.Value
                         : true) &&

@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.CreateImageCard;
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.DeleteImageCard;
 using SharijhaAward.Application.Features.PageStructures.ImageCards.Commands.UpdateImageCard;
@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetIm
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ImageCardController : ControllerBase

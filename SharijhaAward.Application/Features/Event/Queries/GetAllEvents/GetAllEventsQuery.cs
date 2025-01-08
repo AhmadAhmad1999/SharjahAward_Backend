@@ -14,6 +14,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
         public string lang { get; set; }=string.Empty;
         public int page { get; set; } = 1;
         public int perPage { get; set; } = 10;
+        public bool InSubscriber { get; set; }
         public List<Filter>? filters { get; set; }
     }
 }

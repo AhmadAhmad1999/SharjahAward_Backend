@@ -18,7 +18,13 @@ using SharijhaAward.Application.Features.Settings.Commands.EditAboutApp;
 using SharijhaAward.Application.Features.Settings.Queries.GetAboutApp;
 using SharijhaAward.Application.Features.Settings.Commands.ApplySeeder;
 using SharijhaAward.Persistence;
-//using System.Web.Http;
+using EFCore.AutomaticMigrations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System.Data.Entity;
+using SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeArbitrationResultsStatus;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -88,7 +94,8 @@ namespace SharijhaAward.Api.Controllers
                 token = Token,
                 lang = !string.IsNullOrEmpty(HeaderValue)
                     ? HeaderValue
-                    : "en"
+                    : "en",
+                WWWRootFilePath = _WebHostEnvironment.WebRootPath
             });
 
             return Response.statusCode switch
@@ -119,7 +126,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            EditProfileCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\ProfilePics\\";
+            EditProfileCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/ProfilePics/";
             EditProfileCommand.Token = Token;
 
             BaseResponse<object>? Response = await _Mediator.Send(EditProfileCommand);
@@ -446,16 +453,11 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-
         [HttpGet("MigrateAndSeedDatabase", Name = "MigrateAndSeedDatabase")]
         public async Task<IActionResult> MigrateAndSeedDatabase()
         {
             var db = _ServiceProvider.GetService<SharijhaAwardDbContext>();
-
-            // Drop the existing database
             await db!.Database.EnsureDeletedAsync();
-
-            // Recreate the database schema
             await db.Database.EnsureCreatedAsync();
 
             var Response = await _Mediator.Send(new ApplySeederQuery());
@@ -466,7 +468,17 @@ namespace SharijhaAward.Api.Controllers
                 200 => Ok(Response),
                 _ => BadRequest(Response)
             };
+        }
+        [HttpPost("UpdateDatabaseToLastMigration", Name = "UpdateDatabaseToLastMigration")]
+        public async Task<IActionResult> UpdateDatabaseToLastMigration()
+        {
+            SharijhaAwardDbContext? _DbContext = _ServiceProvider.GetService<SharijhaAwardDbContext>();
 
+            MigrateDatabaseToLatestVersion.DbMigrationsOptions.AutomaticMigrationDataLossAllowed = true;
+            MigrateDatabaseToLatestVersion.DbMigrationsOptions.AutomaticMigrationsEnabled = true;
+            MigrateDatabaseToLatestVersion.DbMigrationsOptions.ResetDatabaseSchema = false;
+            await MigrateDatabaseToLatestVersion.ExecuteAsync(_DbContext);
+            return Ok();
         }
     }
 }

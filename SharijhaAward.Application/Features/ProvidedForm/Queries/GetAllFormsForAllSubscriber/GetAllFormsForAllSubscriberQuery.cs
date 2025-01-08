@@ -14,5 +14,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public string? SubscriberName { get; set; }
         public string? lang { get; set; }
         public string? Token { get; set; }
+        public bool MultipleAssign { get; set; } = false;
     }
 }

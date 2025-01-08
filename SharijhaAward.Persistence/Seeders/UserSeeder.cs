@@ -1,10 +1,5 @@
 ﻿using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Persistence.Seeders
 {
@@ -33,7 +28,7 @@ namespace SharijhaAward.Persistence.Seeders
                        // Id = 10,
                        Email = "Coordinator@Coordinator.com",
                        PhoneNumber = "009710512345678",
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        EnglishName = "Coordinator 1",
                        ArabicName = "منسق 1",
                        ConfirmationCodeForResetPassword = null,
@@ -52,7 +47,7 @@ namespace SharijhaAward.Persistence.Seeders
                        // Id = 11,
                        Email = "Coordinator2@Coordinator2.com",
                        PhoneNumber = "009710585469325",
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        EnglishName = "Coordinator 2",
                        ArabicName = "منسق 2",
                        ConfirmationCodeForResetPassword = null,
@@ -71,7 +66,7 @@ namespace SharijhaAward.Persistence.Seeders
                        // Id = 12,
                        Email = "Coordinator3@Coordinator3.com",
                        PhoneNumber = "009710598563247",
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        EnglishName = "Coordinator 3",
                        ArabicName = "منسق 3",
                        ConfirmationCodeForResetPassword = null,
@@ -90,7 +85,7 @@ namespace SharijhaAward.Persistence.Seeders
                        // Id = 13,
                        Email = "Coordinator4@Coordinator4.com",
                        PhoneNumber = "009710574596825",
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        EnglishName = "Coordinator 4",
                        ArabicName = "منسق 4",
                        ConfirmationCodeForResetPassword = null,
@@ -111,7 +106,7 @@ namespace SharijhaAward.Persistence.Seeders
                        PhoneNumber = "009710574596811",
                        EnglishName = "Admin 123",
                        Gender = Gender.Male,
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        // Id = 1,
                        ConfirmationCodeForResetPassword = null,
                        ConfirmationCodeForSignUp = null,
@@ -130,7 +125,7 @@ namespace SharijhaAward.Persistence.Seeders
                        PhoneNumber = "009710574596812",
                        EnglishName = "Admin 123 #",
                        Gender = Gender.Male,
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        // Id = 2,
                        ConfirmationCodeForResetPassword = null,
                        ConfirmationCodeForSignUp = null,
@@ -149,7 +144,7 @@ namespace SharijhaAward.Persistence.Seeders
                        PhoneNumber = "0097105745968213",
                        EnglishName = "Admin 123 ##",
                        Gender = Gender.Male,
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        // Id = 3,
                        ConfirmationCodeForResetPassword = null,
                        ConfirmationCodeForSignUp = null,
@@ -168,7 +163,7 @@ namespace SharijhaAward.Persistence.Seeders
                        PhoneNumber = "009710574596814",
                        EnglishName = "Admin 123 ##@",
                        Gender = Gender.Male,
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        // Id = 4,
                        ConfirmationCodeForResetPassword = null,
                        ConfirmationCodeForSignUp = null,
@@ -187,7 +182,7 @@ namespace SharijhaAward.Persistence.Seeders
                        PhoneNumber = "009710574596815",
                        EnglishName = "Admin 123 ##@@",
                        Gender = Gender.Male,
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        // Id = 5,
                        ConfirmationCodeForResetPassword = null,
                        ConfirmationCodeForSignUp = null,
@@ -206,7 +201,7 @@ namespace SharijhaAward.Persistence.Seeders
                        PhoneNumber = "009710574596816",
                        EnglishName = "Tamer",
                        Gender = Gender.Male,
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        // Id = 6,
                        ConfirmationCodeForResetPassword = null,
                        ConfirmationCodeForSignUp = null,
@@ -226,7 +221,7 @@ namespace SharijhaAward.Persistence.Seeders
                        PhoneNumber = "009710574596817",
                        EnglishName = "yaman",
                        Gender = Gender.Male,
-                       Password = "vO2sa5VimvnqRAqRbqHARyr9kG2rrXN6brfIXLU4ikM=",
+                       Password = "4f1ECSE0NjovtAqjILqi2++8Y6a5qxathsKFbaJcLCY=",
                        // Id = 7,
                        ConfirmationCodeForResetPassword = null,
                        ConfirmationCodeForSignUp = null,

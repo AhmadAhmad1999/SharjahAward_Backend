@@ -11,6 +11,7 @@ using System.Net;
 using Microsoft.Extensions.Hosting;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using EnumsNET;
+using System.Net.Http;
 
 namespace SharijhaAward.Infrastructure.FileServices
 {
@@ -20,10 +21,12 @@ namespace SharijhaAward.Infrastructure.FileServices
         private readonly string _SavePath;
         private readonly string _SaveProvidedFormPath;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HttpClient _HttpClient;
 
-        public FileService( IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
+        public FileService( IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor,
+            HttpClient _HttpClient)
         {
-
+            this._HttpClient = _HttpClient;
             _SavePath = Path.Combine(environment.ContentRootPath + "/wwwroot", "UploadedFiles");
 
             _SaveProvidedFormPath = Path.Combine(environment.ContentRootPath + "/wwwroot", "ProvidedForm");
@@ -100,7 +103,11 @@ namespace SharijhaAward.Infrastructure.FileServices
         public async Task<byte[]> ReadFileAsync(string filePath, SystemFileType fileType)
         {
             var path = _SavePath + '/' + fileType.GetName() + '/' + filePath.Split('/').LastOrDefault();
-            return await File.ReadAllBytesAsync(path);
+
+            var response2 = await _HttpClient.GetAsync(path);
+            response2.EnsureSuccessStatusCode();
+
+            return await response2.Content.ReadAsByteArrayAsync();
         }
 
     }

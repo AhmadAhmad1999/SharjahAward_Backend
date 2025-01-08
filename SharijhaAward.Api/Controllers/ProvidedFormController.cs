@@ -20,10 +20,10 @@ using SharijhaAward.Application.Responses;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetFormsWithArbitrators;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.ExportFormsWithArbitratorsToExcel;
-using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWithAllItsData;
-using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.ExportFormsWithAllItsDataToExcel;
+using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByFormId;
+using Microsoft.AspNetCore.Hosting;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -32,11 +32,14 @@ namespace SharijhaAward.Api.Controllers
     [ApiController]
     public class ProvidedFormController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IMediator _Mediator;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public ProvidedFormController(IMediator mediator)
+        public ProvidedFormController(IMediator mediator,
+            IWebHostEnvironment _WebHostEnvironment)
         {
-            _mediator = mediator;
+            _Mediator = mediator;
+            this._WebHostEnvironment = _WebHostEnvironment;
         }
 
         [HttpPost(Name = "CreateProvidedForm")]
@@ -49,7 +52,7 @@ namespace SharijhaAward.Api.Controllers
             command.token = token!;
             command.lang = Language!;
 
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -63,7 +66,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new DeleteProvidedFormCommand()
+            var response = await _Mediator.Send(new DeleteProvidedFormCommand()
             {
                 lang =Language!,
                 providedFormId = Id
@@ -80,7 +83,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost("ChangeStep", Name= "ChangeStep")]
         public async Task<IActionResult> ChangeStep(ChangeStepQuery query)
         {
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -105,7 +108,7 @@ namespace SharijhaAward.Api.Controllers
             query.lang = Language!;
             query.token = token!;
 
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -129,7 +132,7 @@ namespace SharijhaAward.Api.Controllers
             //{
             //    return Unauthorized();
             //}
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -153,7 +156,7 @@ namespace SharijhaAward.Api.Controllers
             //{
             //    return Unauthorized();
             //}
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -170,7 +173,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetProvidedFormByIdQuery()
+            var response = await _Mediator.Send(new GetProvidedFormByIdQuery()
             {
                 UserId = UserId,
                 Id = Id,
@@ -195,9 +198,11 @@ namespace SharijhaAward.Api.Controllers
                 return Unauthorized();
             }
             query.token = token!;
-            query.lang = language.IsNullOrEmpty() ? "ar" : language!; 
+            query.lang = language.IsNullOrEmpty() ? "ar" : language!;
 
-            var response = await _mediator.Send(query);
+            query.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
+
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -219,7 +224,7 @@ namespace SharijhaAward.Api.Controllers
             {
                 return Unauthorized();
             }
-            var response = await _mediator.Send(new GetFormsBySubscriberIdQuery()
+            var response = await _Mediator.Send(new GetFormsBySubscriberIdQuery()
             {
                 lang = Language!,
                 page= page,
@@ -251,7 +256,7 @@ namespace SharijhaAward.Api.Controllers
             query.token = token!;
             query.lang = Language!;
 
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -277,7 +282,7 @@ namespace SharijhaAward.Api.Controllers
             query.token = token!;
             query.lang = Language!;
 
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -303,7 +308,7 @@ namespace SharijhaAward.Api.Controllers
             query.token = token!;
             query.lang = Language!;
 
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -329,7 +334,7 @@ namespace SharijhaAward.Api.Controllers
             query.token = token!;
             query.lang = Language!;
 
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -354,7 +359,7 @@ namespace SharijhaAward.Api.Controllers
             query.token = token!;
             query.lang = Language!;
 
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -379,7 +384,7 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<GetAllCriterionsForCoordinatorListVM>> Response = await _mediator.Send(new GetAllCriterionsForCoordinatorQuery()
+            BaseResponse<List<GetAllCriterionsForCoordinatorListVM>> Response = await _Mediator.Send(new GetAllCriterionsForCoordinatorQuery()
             {
                 lang = HeaderValue!,
                 FormId = FormId
@@ -396,7 +401,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("ExportFormsWithArbitratorsToExcel", Name = "ExportFormsWithArbitratorsToExcel")]
         public async Task<IActionResult> ExportFormsWithArbitratorsToExcel([FromQuery] ExportFormsWithArbitratorsToExcelQuery query)
         {
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -422,7 +427,7 @@ namespace SharijhaAward.Api.Controllers
 
             GetAllFormsWithAllItsDataQuery.lang = HeaderValue!;
 
-            BaseResponse<List<GetAllFormsWithAllItsDataListVM>> Response = await _mediator.Send(GetAllFormsWithAllItsDataQuery);
+            BaseResponse<List<GetAllFormsWithAllItsDataListVM>> Response = await _Mediator.Send(GetAllFormsWithAllItsDataQuery);
 
             return Response.statusCode switch
             {
@@ -441,12 +446,40 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> ExportFormsWithAllItsDataToExcel([FromQuery] ExportFormsWithAllItsDataToExcelQuery ExportFormsWithAllItsDataToExcelQuery)
         {
-            BaseResponse<byte[]> Response = await _mediator.Send(ExportFormsWithAllItsDataToExcelQuery);
+            BaseResponse<byte[]> Response = await _Mediator.Send(ExportFormsWithAllItsDataToExcelQuery);
 
             return Response.statusCode switch
             {
                 404 => NotFound(Response),
                 200 => File(Response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Forms.xlsx"),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllFilesByFormId/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllFilesByFormId(int Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllFilesByFormIdMainResponse>> Response = await _Mediator.Send(new GetAllFilesByFormIdQuery()
+            {
+                Id = Id,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
                 _ => BadRequest(Response)
             };
         }

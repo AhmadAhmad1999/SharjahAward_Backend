@@ -19,6 +19,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetAllListDynamicAttributes;
 using SharijhaAward.Application.Helpers.AddDynamicAttributeForNewRow;
+using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -294,7 +295,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            AddDynamicAttributeValueCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
+            AddDynamicAttributeValueCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/DynamicFiles/";
             BaseResponse<AddDynamicAttributeValueResponse>? Response = await _Mediator.Send(AddDynamicAttributeValueCommand);
 
             return Response.statusCode switch
@@ -320,7 +321,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            AddDynamicAttributeValueForSaveCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
+            AddDynamicAttributeValueForSaveCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/DynamicFiles/";
             BaseResponse<AddDynamicAttributeValueForSaveResponse>? Response = await _Mediator.Send(AddDynamicAttributeValueForSaveCommand);
 
             return Response.statusCode switch
@@ -389,7 +390,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllDynamicAttributeForDependency(int CategoryId, int AttributeTableNameId)
+        public async Task<IActionResult> GetAllDynamicAttributeForDependency(int? CategoryId, int? AttributeTableNameId, int? EventId, InviteeTypes? InviteeType)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -400,7 +401,9 @@ namespace SharijhaAward.Api.Controllers
             {
                 CategoryId = CategoryId,
                 AttributeTableNameId = AttributeTableNameId,
-                lang = HeaderValue!
+                lang = HeaderValue!,
+                EventId = EventId,
+                InviteeType = InviteeType
             });
 
             return Response.statusCode switch

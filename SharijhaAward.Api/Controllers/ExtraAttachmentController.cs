@@ -1,9 +1,5 @@
-﻿using Aspose.Html.Dom.Css;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SharijhaAward.Application.Features.Categories.Command.DeleteCategory;
-using SharijhaAward.Application.Features.CycleConditions.Attachments.Queries.AcceptOnAttachments;
 using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.AddExtraAttachmentFile;
 using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Commands.DeleteExtraAttachmentFile;
 using SharijhaAward.Application.Features.ExtraAttachments.Attachment.Queries.AcceptOnExtraAttachmentFiles;
@@ -12,7 +8,6 @@ using SharijhaAward.Application.Features.ExtraAttachments.Commands.DeleteExtraAt
 using SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAttachment;
 using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachment;
 using SharijhaAward.Api.Logger;
-using SharijhaAward.Application.Features.CycleConditions.Queries.CheckAllCycleConditions;
 using SharijhaAward.Application.Features.ExtraAttachments.Queries.CheckAllExtraAttachment;
 
 namespace SharijhaAward.Api.Controllers

@@ -1,13 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.ContactUsModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage
 {
@@ -24,8 +17,6 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
 
         public string? lang { get; set; } = string.Empty;
         public string? token { get; set; } = string.Empty;
-        //public List<ContactUsAttachmentDto>? ContactUsAttachments { get; set; }
-        public List<IFormFile>? EmailAttachments { get; set; } 
-       
+        public List<IFormFile> EmailAttachments { get; set; } = new List<IFormFile>();
     }
 }

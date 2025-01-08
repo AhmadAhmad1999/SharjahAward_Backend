@@ -8,181 +8,242 @@ using SharijhaAward.Application.Features.PageStructures.ImageCards.Queries.GetAl
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsByPageId;
 using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetAllTextCard;
-using SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStrategicPartners;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 using SharijhaAward.Domain.Entities.PageStructureModels;
-using SharijhaAward.Domain.Entities.StrategicPartnerModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageBySlug
 {
     public class GetPageBySlugQueryHandler
         : IRequestHandler<GetPageBySlugQuery, BaseResponse<PageDto>>
     {
-        private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
-        private readonly IAsyncRepository<PageStructureImages> _pageStructureImagesRepository;
+        private readonly IAsyncRepository<PageStructure> _PageStructureRepository;
+        private readonly IAsyncRepository<PageStructureImages> _PageStructureImagesRepository;
         private readonly IAsyncRepository<PageCard> _PageCardRepository;
         private readonly IAsyncRepository<ImageCard> _ImageCardRepository;
-        private readonly IAsyncRepository<StrategicPartner> _StrategicPartnerRepository;
-        private readonly IMapper _mapper;
+        private readonly IMapper _Mapper;
 
-        public GetPageBySlugQueryHandler(IAsyncRepository<StrategicPartner> StrategicPartnerRepository, IAsyncRepository<PageStructure> pageStructureRepository,
-            IMapper mapper, 
-            IAsyncRepository<PageStructureImages> pageStructureImagesRepository,
-            IAsyncRepository<PageCard> PageCardRepository,
-            IAsyncRepository<ImageCard> ImageCardRepository)
+        public GetPageBySlugQueryHandler(IAsyncRepository<PageStructure> _PageStructureRepository,
+            IAsyncRepository<PageStructureImages> _PageStructureImagesRepository,
+            IAsyncRepository<PageCard> _PageCardRepository,
+            IAsyncRepository<ImageCard> _ImageCardRepository,
+            IMapper _Mapper)
         {
-            _pageStructureRepository = pageStructureRepository;
-            _mapper = mapper;
-            _pageStructureImagesRepository = pageStructureImagesRepository;
-            _PageCardRepository = PageCardRepository;
-            _ImageCardRepository = ImageCardRepository;
-            _StrategicPartnerRepository = StrategicPartnerRepository;
+            this._PageStructureRepository = _PageStructureRepository;
+            this._PageStructureImagesRepository = _PageStructureImagesRepository;
+            this._PageCardRepository = _PageCardRepository;
+            this._ImageCardRepository = _ImageCardRepository;
+            this._Mapper = _Mapper;
         }
-        public async Task<BaseResponse<PageDto>> Handle(GetPageBySlugQuery request, CancellationToken cancellationToken)
+
+        public async Task<BaseResponse<PageDto>> Handle(GetPageBySlugQuery Request, CancellationToken cancellationToken)
         {
-            var page = await _pageStructureRepository
-                .FirstOrDefaultAsync(p => p.Slug == request.Slug);
+            string ResponseMessage = string.Empty;
 
-            if (page == null)
+            PageStructure? PageStructureEntity = await _PageStructureRepository
+                .FirstOrDefaultAsync(x => x.Slug == Request.Slug);
+
+            if (PageStructureEntity is null)
             {
-                return new BaseResponse<PageDto>("", false, 404);
+                ResponseMessage = Request.lang == "en"
+                    ? "Page structure is not found"
+                    : "بناء الصفحة غير موجود";
+
+                return new BaseResponse<PageDto>(ResponseMessage, false, 404);
             }
 
-            var data = _mapper.Map<PageDto>(page);
+            List<PageCard> AllPageCardEntities = await _PageCardRepository
+                .Where(x => x.PageId == PageStructureEntity.Id)
+                .ToListAsync();
 
-            data.Components = new List<Component>();
-           
-
-            var DarkCardsList = _mapper.Map<List<DarkCardListVM>>(await _PageCardRepository
-                .Where(x => x.PageId == page.Id && x.CardType == CardType.DarkCard)
-                .ToListAsync());
-
-            var ParagraphCardsList = _mapper.Map<List<ParagraphCardListVM>>(await _PageCardRepository
-                .Where(x => x.PageId == page.Id && x.CardType == CardType.ParagraphCard)
-                .ToListAsync());
-
-            var ImageCardsList = _mapper.Map<List<ImageCardListVM>>(await _ImageCardRepository
-                .Where(x => x.PageId == page.Id)
-                .ToListAsync());
-
-            var TextCardsList = _mapper.Map<List<TextCardListVM>>(await _PageCardRepository
-                .Where(x => x.PageId == page.Id && x.CardType == CardType.TextCard)
-                .ToListAsync());
-            
-            var GoalCardsList = _mapper.Map<List<GoalCardListVM>>(await _PageCardRepository
-                .Where(x => x.PageId == page.Id && x.CardType == CardType.GoalCard)
-                .ToListAsync());
-
-            var StratigicPartnerCardsList = _mapper.Map<List<StrategicPartnerListVM>>(await _StrategicPartnerRepository
-                .Where(x => x.PageId == page.Id)
-                .ToListAsync());
-
-            foreach (var Darkcard in DarkCardsList)
-            {
-                Darkcard.Title = request.lang == "en" ? Darkcard.EnglishTitle : Darkcard.ArabicTitle;
-                Darkcard.Content = request.lang == "en" ? Darkcard.EnglishContent : Darkcard.ArabicContent;
-
-                var Component = new Component()
+            List<Component> DarkCardsList = AllPageCardEntities
+                .Where(x => x.CardType == CardType.DarkCard)
+                .Select(x => new Component()
                 {
-                    Card = Darkcard,
-                    CardType = "DarkCard",
-                    orderId = Darkcard.orderId,
-                    IsHide = Darkcard.IsHide
-                };
+                    CardType = CardType.DarkCard.ToString(),
+                    orderId = x.orderId,
+                    IsHide = x.IsHide,
+                    Card = new DarkCardListVM()
+                    {
+                        Id = x.Id,
+                        ArabicContent = !string.IsNullOrEmpty(x.ArabicContent) ? x.ArabicContent : string.Empty,
+                        EnglishContent = !string.IsNullOrEmpty(x.EnglishContent) ? x.EnglishContent : string.Empty,
+                        Content = Request.lang == "en"
+                            ? (!string.IsNullOrEmpty(x.EnglishContent) ? x.EnglishContent : string.Empty)
+                            : (!string.IsNullOrEmpty(x.ArabicContent) ? x.ArabicContent : string.Empty),
+                        ArabicTitle = !string.IsNullOrEmpty(x.ArabicTitle) ? x.ArabicTitle : string.Empty,
+                        EnglishTitle = !string.IsNullOrEmpty(x.EnglishTitle) ? x.EnglishTitle : string.Empty,
+                        Title = Request.lang == "en"
+                            ? (!string.IsNullOrEmpty(x.EnglishTitle) ? x.EnglishTitle : string.Empty)
+                            : (!string.IsNullOrEmpty(x.ArabicTitle) ? x.ArabicTitle : string.Empty),
+                        CardType = CardType.DarkCard,
+                        IsHide = x.IsHide,
+                        orderId = x.orderId
+                    },
+                    Goals = null
+                }).ToList();
 
-                data.Components!.Add(Component);
-            }
-
-
-
-            foreach (var Paragraphcard in ParagraphCardsList)
-            {
-                Paragraphcard.Title = request.lang == "en" ? Paragraphcard.EnglishTitle : Paragraphcard.ArabicTitle;
-                Paragraphcard.Content = request.lang == "en" ? Paragraphcard.EnglishContent : Paragraphcard.ArabicContent;
-               
-                var Component = new Component()
+            List<Component> ParagraphCardsList = AllPageCardEntities
+                .Where(x => x.CardType == CardType.ParagraphCard)
+                .Select(x => new Component()
                 {
-                    Card = Paragraphcard,
-                    CardType = "ParagraphCard",
-                    orderId = Paragraphcard.orderId,
-                    IsHide = Paragraphcard.IsHide
-                };
+                    CardType = CardType.ParagraphCard.ToString(),
+                    orderId = x.orderId,
+                    IsHide = x.IsHide,
+                    Card = new ParagraphCardListVM()
+                    {
+                        Id = x.Id,
+                        ArabicContent = x.ArabicContent,
+                        EnglishContent = x.EnglishContent,
+                        Content = Request.lang == "en"
+                            ? x.EnglishContent
+                            : x.ArabicContent,
+                        ArabicTitle = x.ArabicTitle,
+                        EnglishTitle = x.EnglishTitle,
+                        Title = Request.lang == "en"
+                            ? x.EnglishTitle
+                            : x.ArabicTitle,
+                        CardType = CardType.ParagraphCard,
+                        ImageInStart = x.ImageInStart,
+                        ImageUrl = x.ImageUrl,
+                        IsHide = x.IsHide,
+                        orderId = x.orderId,
+                        PageId = x.PageId
+                    },
+                    Goals = null
+                }).ToList();
 
-                data.Components!.Add(Component);
-            }
+            List<ImageCard> ImageCardEntities = await _ImageCardRepository
+                .Where(x => x.PageId == PageStructureEntity.Id)
+                .ToListAsync();
 
-            foreach (var Imagecard in ImageCardsList)
-            {
-                var Images = _pageStructureImagesRepository.Where(i => i.ImageCardId == Imagecard.Id).ToList();
+            IEnumerable<PageStructureImages> PageStructureImagesEntities = await _PageStructureImagesRepository
+                .Where(x => ImageCardEntities.Select(y => y.Id).Contains(x.ImageCardId))
+                .ToListAsync();
 
-                Imagecard.CardImages = _mapper.Map<List<PageImageDto>>(Images);
-
-                var Component = new Component()
+            List<Component> ImageCardsList = ImageCardEntities
+                .Where(x => x.PageId == PageStructureEntity.Id)
+                .Select(x => new Component()
                 {
-                    Card = Imagecard,
-                    CardType = "ImageCard",
-                    orderId = Imagecard.orderId,
-                    IsHide = Imagecard.IsHide
-                };
+                    CardType = CardType.ImageCard.ToString(),
+                    orderId = x.orderId,
+                    IsHide = x.IsHide,
+                    Card = new ImageCardListVM()
+                    {
+                        Id = x.Id,
+                        IsHide = x.IsHide,
+                        orderId = x.orderId,
+                        CardImages = PageStructureImagesEntities
+                            .Where(y => y.ImageCardId == x.Id)
+                            .Select(y => new PageImageDto()
+                            {
+                                Id = y.Id,
+                                ImageId = y.ImageCardId,
+                                ImageUrl = y.ImageUrl
+                            }).ToList(),
+                    },
+                    Goals = null
+                }).ToList();
 
-                data.Components!.Add(Component);
-            }
-
-            foreach (var Textcard in TextCardsList)
-            {
-
-                Textcard.Content = request.lang == "en" ? Textcard.EnglishContent : Textcard.ArabicContent;
-
-                var Component = new Component()
+            List<Component> TextCardsList = AllPageCardEntities
+                .Where(x => x.CardType == CardType.TextCard)
+                .Select(x => new Component()
                 {
-                    Card = Textcard,
-                    CardType = "TextCard",
-                    orderId = Textcard.orderId,
-                    IsHide = Textcard.IsHide
-                };
+                    CardType = CardType.TextCard.ToString(),
+                    orderId = x.orderId,
+                    IsHide = x.IsHide,
+                    Card = new TextCardListVM()
+                    {
+                        Id = x.Id,
+                        ArabicContent = x.ArabicContent,
+                        EnglishContent = x.EnglishContent,
+                        Content = Request.lang == "en"
+                            ? x.EnglishContent
+                            : x.ArabicContent,
+                        orderId = x.orderId,
+                        IsHide = x.IsHide,
+                        CardType = CardType.TextCard,
+                        PageStructureId = x.PageId
+                    },
+                    Goals = null
+                }).ToList();
 
-                data.Components!.Add(Component);
+            PageDto Response = _Mapper.Map<PageDto>(PageStructureEntity);
+
+            if (Request.lang == "en")
+            {
+                Response.Title = Response.EnglishTitle;
+                Response.SubTitle = Response.EnglishSubTitle;
+                Response.Content = Response.EnglishContent;
+            }
+            else
+            {
+                Response.Title = Response.ArabicTitle;
+                Response.SubTitle = Response.ArabicSubTitle;
+                Response.Content = Response.ArabicContent;
             }
 
-            foreach (var StratigicPartner in StratigicPartnerCardsList)
+            Response.numberOfSubPages = await _PageStructureRepository
+                .GetCountAsync(x => x.ParentId == PageStructureEntity.Id);
+
+            Response.Components = DarkCardsList
+                .Concat(ParagraphCardsList)
+                .Concat(ImageCardsList)
+                .Concat(TextCardsList)
+                .ToList();
+
+            List<PageCard> GoalCardsList = AllPageCardEntities
+                .Where(x => x.CardType == CardType.GoalCard)
+                .ToList();
+
+            if (GoalCardsList.Any())
             {
-                var Component = new Component()
+                IEnumerable<PageCard> MainGoalCards = GoalCardsList
+                    .Where(x => x.ParentId == null);
+
+                foreach (PageCard MainGoalCard in MainGoalCards)
                 {
-                    Card = StratigicPartner,
-                    CardType = "StratigicPartner",
-                    orderId = StratigicPartner.orderId,
-                    IsHide = StratigicPartner.IsHide
-                };
-
-                data.Components!.Add(Component);
+                    Response.Components.Add(new Component()
+                    {
+                        CardType = CardType.GoalCard.ToString(),
+                        orderId = MainGoalCard.orderId,
+                        IsHide = MainGoalCard.IsHide,
+                        Goals = new MainGoalCardData()
+                        {
+                            ArabicTitle = MainGoalCard.ArabicTitle,
+                            EnglishTitle = MainGoalCard.EnglishTitle,
+                            Title = Request.lang == "en"
+                                ? MainGoalCard.EnglishTitle
+                                : MainGoalCard.ArabicTitle,
+                            IsHide = MainGoalCard.IsHide,
+                            PageId = MainGoalCard.PageId,
+                            orderId = MainGoalCard.orderId,
+                            Id = MainGoalCard.Id,
+                            SubGoals = GoalCardsList
+                                .Where(x => x.ParentId == MainGoalCard.Id)
+                                .Select(x => new GoalCardListVM()
+                                {
+                                    Id = x.Id,
+                                    IsHide = x.IsHide,
+                                    ArabicContent = x.ArabicContent,
+                                    EnglishContent = x.EnglishContent,
+                                    orderId = x.orderId,
+                                    PageId = MainGoalCard.PageId,
+                                    Content = Request.lang == "en"
+                                        ? x.EnglishContent
+                                        : x.ArabicContent,
+                                    CardType = CardType.GoalCard
+                                }).ToList()
+                        }
+                    });
+                }
             }
-            var goalComponent = new Component()
-            {
-                Goals = GoalCardsList,
-                CardType = "GoalCard",
-                orderId = 0
-            };
 
-            data.Components.Add(goalComponent);
+            Response.Components = Response.Components
+                .OrderBy(x => x.orderId)
+                .ToList();
 
-            data.Components = data.Components.OrderBy(c => c.orderId).ToList();
-            //data.Goals = data.Goals.OrderBy(c => c.orderId).ToList();
-
-            data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle;
-
-            data.SubTitle = request.lang == "en" ? data.EnglishSubTitle! : data.ArabicSubTitle!;
-
-            data.Content = request.lang == "en" ? data.EnglishContent! : data.ArabicContent!;
-
-            data.numberOfSubPages = _pageStructureRepository.GetCount(p => p.ParentId == page.Id && !p.isDeleted);
-
-            return new BaseResponse<PageDto>("", true, 200, data);
+            return new BaseResponse<PageDto>(ResponseMessage, true, 200, Response);
         }
     }
 }

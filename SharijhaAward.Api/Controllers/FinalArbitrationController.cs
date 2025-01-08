@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.ChangeFinalArbitrationStatus;
 using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.CreateChairmanNotesOnFinalArbitrationScore;
 using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.CreateFinalArbitrationScore;
@@ -9,12 +10,12 @@ using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.Delet
 using SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.UpdateChairmanNotesOnFinalArbitrationScore;
 using SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.GetAllFormsForFinalArbitration;
 using SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.GetFinalArbitrationById;
-using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.ChangeArbitrationStatus;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class FinalArbitrationController : ControllerBase
@@ -190,7 +191,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetFinalArbitrationById(int FormId)
+        public async Task<IActionResult> GetFinalArbitrationByFormId(int FormId)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 

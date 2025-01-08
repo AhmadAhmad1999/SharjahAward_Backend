@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AdvancedFormBuilderListValues.Commands.CreateAdvancedFormBuilderListValue;
 using SharijhaAward.Application.Features.AdvancedFormBuilderListValues.Commands.DeleteAdvancedFormBuilderListValue;
 using SharijhaAward.Application.Features.AdvancedFormBuilderListValues.Commands.UpdateAdvancedFormBuilderListValue;
@@ -8,6 +9,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AdvancedFormBuilderListValuesController : ControllerBase

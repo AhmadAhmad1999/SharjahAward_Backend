@@ -2,6 +2,7 @@
 using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Commands.CreateDynamicAttributeSection
 {
@@ -16,6 +17,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Co
         public bool TableTypeSection { get; set; }
         public int? MinNumberOfRows { get; set; }
         public int? MaxNumberOfRows { get; set; }
+        public InviteeTypes? InviteeType { get; set; }
         public string? lang { get; set; }
     }
 }

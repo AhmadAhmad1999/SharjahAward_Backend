@@ -5,7 +5,6 @@ using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Commands.
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Commands.UpdateParagraphCard;
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsByPageId;
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetParagraphCardById;
-
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsDashborad;
 

@@ -8,5 +8,6 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
     {
         public int MeetingId { get; set; }
         public string? lang { get; set; }
+        public string? WWWRootFilePath { get; set; }
     }
 }

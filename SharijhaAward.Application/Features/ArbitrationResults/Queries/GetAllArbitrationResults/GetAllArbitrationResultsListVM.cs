@@ -5,6 +5,8 @@
         public int FormId { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
+        public bool CategoryContainStatement { get; set; }
+        public bool CategoryContainCertificate { get; set; }
         public string SubscriberName { get; set; } = null!;
         public int CycleNumber { get; set; }
         public string CycleYear { get; set; } = string.Empty;
@@ -15,10 +17,12 @@
         public bool EligibleForAStatement { get; set; }
         public bool EligibleToWin { get; set; }
         public bool GotCertification { get; set; }
-        public bool GotStatement { get; set; }
+        public bool GotStatement1 { get; set; }
+        public bool GotStatement2 { get; set; }
         public bool Winner { get; set; }
         public DateTime? DateOfObtainingTheCertificate { get; set; }
-        public DateTime? DateOfObtainingTheStatement { get; set; }
+        public DateTime? DateOfObtainingTheStatement1 { get; set; }
+        public DateTime? DateOfObtainingTheStatement2 { get; set; }
         public DateTime? WinningDate { get; set; }
     }
 }

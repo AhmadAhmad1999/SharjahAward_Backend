@@ -1,10 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
-using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
-using SharijhaAward.Application.Features.EducationalEntities.Command.DeleteEducationalEntity;
 using SharijhaAward.Application.Features.EducationalInstitutions.Commands.CreateEducationalInstitution;
 using SharijhaAward.Application.Features.EducationalInstitutions.Commands.DeleteEducationalInstitutions;
 using SharijhaAward.Application.Features.EducationalInstitutions.Commands.UpdateEducationalInstitutions;
@@ -13,7 +9,6 @@ using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllE
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetEducationalInstitutionById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
-using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetExcelFilePrototype;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.ImportDataFormExcel;
 

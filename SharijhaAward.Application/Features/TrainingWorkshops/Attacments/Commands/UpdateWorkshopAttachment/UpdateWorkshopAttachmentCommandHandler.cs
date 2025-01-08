@@ -5,7 +5,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
-using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
+using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +18,11 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
         : IRequestHandler<UpdateWorkshopAttachmentCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<TrainingWorkshop> _workshopRepository;
-        private readonly IAsyncRepository<TrainingWrokshopeAttachment> _attachmentRepository;
+        private readonly IAsyncRepository<TrainingWorkshopAttachment> _attachmentRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public UpdateWorkshopAttachmentCommandHandler(IAsyncRepository<TrainingWorkshop> workshopRepository, IAsyncRepository<TrainingWrokshopeAttachment> attachmentRepository, IFileService fileService, IMapper mapper)
+        public UpdateWorkshopAttachmentCommandHandler(IAsyncRepository<TrainingWorkshop> workshopRepository, IAsyncRepository<TrainingWorkshopAttachment> attachmentRepository, IFileService fileService, IMapper mapper)
         {
             _workshopRepository = workshopRepository;
             _attachmentRepository = attachmentRepository;
@@ -47,7 +47,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
             }
             var attachment = attachmentToUpdate.AttachementPath;
 
-            _mapper.Map(request, attachmentToUpdate, typeof(UpdateWorkshopAttachmentCommand), typeof(TrainingWrokshopeAttachment));
+            _mapper.Map(request, attachmentToUpdate, typeof(UpdateWorkshopAttachmentCommand), typeof(TrainingWorkshopAttachment));
     
             if (request.EditOnAttachment)
                 attachmentToUpdate.AttachementPath = await _fileService.SaveFileAsync(request.attachment, SystemFileType.Pdf);

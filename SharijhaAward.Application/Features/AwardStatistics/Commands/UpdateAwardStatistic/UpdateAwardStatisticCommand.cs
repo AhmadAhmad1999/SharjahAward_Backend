@@ -14,6 +14,7 @@ namespace SharijhaAward.Application.Features.AwardStatistics.Commands.UpdateAwar
         public string EnglishTitle { get; set; } = string.Empty;
         public string ArabicTitle { get; set; } = string.Empty;
         public int StatisticValue { get; set; }
+        public int CycleId { get; set; }
         public string? lang { get; set; }
     }
 }

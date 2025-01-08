@@ -2815,18 +2815,12 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValue
 
                     foreach (AddAdvancedFormBuilderValueMainCommand AdvancedFormBuilderAsFile in AdvancedFormBuildersAsFile)
                     {
-                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
-
-                        string FolderPath = isHttps
-                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
-                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
-
                         string? FileName = $"{Request.VirtualTableId}-{AdvancedFormBuilderAsFile.ValueAsBinaryFile!.FileName}";
 
-                        string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
+                        string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"{FileName}";
 
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
-                        string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
+                        string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
                         while (File.Exists(FilePathToSaveIntoDataBase))
                         {
@@ -2834,9 +2828,11 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValue
                             FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
                         }
 
-                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                        using (MemoryStream MemoryStream = new MemoryStream())
                         {
-                            AdvancedFormBuilderAsFile.ValueAsBinaryFile.CopyTo(FileStream);
+                            AdvancedFormBuilderAsFile.ValueAsBinaryFile.CopyTo(MemoryStream);
+                            byte[] FileBytes = MemoryStream.ToArray();
+                            await File.WriteAllBytesAsync(FilePathToSaveToCreate, FileBytes);
                         }
 
                         AdvancedFormBuilderAsFile.ValueAsBinaryFile = null;
@@ -2872,18 +2868,12 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValue
 
                     foreach (AddAdvancedFormBuilderTableValueMainCommand AdvancedFormBuilderAsFile in AdvancedFormBuildersTableValueAsFile)
                     {
-                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
-
-                        string FolderPath = isHttps
-                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
-                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
-
                         string? FileName = $"{Request.VirtualTableId}-{AdvancedFormBuilderAsFile.ValueAsBinaryFile!.FileName}";
 
-                        string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
+                        string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"{FileName}";
 
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
-                        string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
+                        string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
                         while (File.Exists(FilePathToSaveIntoDataBase))
                         {
@@ -2891,9 +2881,11 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValue
                             FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
                         }
 
-                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                        using (MemoryStream MemoryStream = new MemoryStream())
                         {
-                            AdvancedFormBuilderAsFile.ValueAsBinaryFile.CopyTo(FileStream);
+                            AdvancedFormBuilderAsFile.ValueAsBinaryFile.CopyTo(MemoryStream);
+                            byte[] FileBytes = MemoryStream.ToArray();
+                            await File.WriteAllBytesAsync(FilePathToSaveToCreate, FileBytes);
                         }
 
                         AdvancedFormBuilderAsFile.ValueAsBinaryFile = null;

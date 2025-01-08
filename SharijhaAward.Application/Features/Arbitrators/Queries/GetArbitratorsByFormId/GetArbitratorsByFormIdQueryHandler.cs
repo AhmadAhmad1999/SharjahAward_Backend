@@ -1,70 +1,55 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators;
-using SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.ArbitratorFormModel;
-using SharijhaAward.Domain.Entities.CoordinatorFormModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharijhaAward.Domain.Entities.ArbitrationModel;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorsByFormId
 {
     public class GetArbitratorsByFormIdQueryHandler
         : IRequestHandler<GetArbitratorsByFormIdQuery, BaseResponse<List<ArbitratorsListVM>>>
     {
-        private readonly IAsyncRepository<ArbitratorForm> _arbitratorFormRepository;
-        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _providedFormRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
+        private readonly IMapper _Mapper;
 
-        public GetArbitratorsByFormIdQueryHandler(IAsyncRepository<ArbitratorForm> arbitratorFormRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetArbitratorsByFormIdQueryHandler(IAsyncRepository<Arbitration> _ArbitrationRepository,
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository,
+            IMapper _Mapper)
         {
-            _arbitratorFormRepository = arbitratorFormRepository;
-            _providedFormRepository = providedFormRepository;
-            _userRepository = userRepository;
-            _jwtProvider = jwtProvider;
-            _mapper = mapper;
+            this._ArbitrationRepository = _ArbitrationRepository;
+            this._ProvidedFormRepository = _ProvidedFormRepository;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<List<ArbitratorsListVM>>> Handle(GetArbitratorsByFormIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<ArbitratorsListVM>>> Handle(GetArbitratorsByFormIdQuery Request, CancellationToken cancellationToken)
         {
-            var adminId = _jwtProvider.GetUserIdFromToken(request.token);
+            string ResponseMessage = string.Empty;
 
-            var Admin = await _userRepository.GetByIdAsync(int.Parse(adminId));
-            if (Admin == null)
-            {
-                return new BaseResponse<List<ArbitratorsListVM>>("UnAuht", false, 401);
-            }
+            Domain.Entities.ProvidedFormModel.ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.formId);
 
-            var form = await _providedFormRepository.GetByIdAsync(request.formId);
-            if (form == null)
+            if (ProvidedFormEntity is null)
             {
                 return new BaseResponse<List<ArbitratorsListVM>>("Form Not Found", false, 404);
             }
 
-            var Arbitrators = await _arbitratorFormRepository
-                .Where(a => a.ProvidedFormId == form.Id)
-                .Include(a=>a.Arbitrator)
-                .Select(f => f.Arbitrator)
-                .Skip((request.page - 1) * request.perPage)
-                .Take(request.perPage)
-                .ToListAsync();
-                
-            var data = _mapper.Map<List<ArbitratorsListVM>>(Arbitrators);
+            List<ArbitratorsListVM> ArbitratorsListVM = _Mapper.Map<List<ArbitratorsListVM>>(await _ArbitrationRepository
+                .Where(x => x.ProvidedFormId == ProvidedFormEntity.Id)
+                .Skip((Request.page - 1) * Request.perPage)
+                .Take(Request.perPage)
+                .Select(x => x.Arbitrator!)
+                .ToListAsync());
 
-            var count = _arbitratorFormRepository.Where(a => a.ProvidedFormId == form.Id).Count();
+            int TotalCount = await _ArbitrationRepository
+                .GetCountAsync(x => x.ProvidedFormId == ProvidedFormEntity.Id);
 
-            Pagination pagination = new Pagination(request.page, request.perPage, count);
+            Pagination PaginationParameter = new Pagination(Request.page,
+                Request.perPage, TotalCount);
 
-            return new BaseResponse<List<ArbitratorsListVM>>("", true, 200, data, pagination);
+            return new BaseResponse<List<ArbitratorsListVM>>(ResponseMessage, true, 200, ArbitratorsListVM, PaginationParameter);
         }
     }
 }

@@ -1,14 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SharijhaAward.Application.Contract.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Persistence.Seeders
 {
@@ -160,6 +153,9 @@ namespace SharijhaAward.Persistence.Seeders
 
                 var RolePermissionSeeder = new RolePermissionSeeder(context);
                 await RolePermissionSeeder.Seed();
+
+                var StaticNotificationSeeder = new StaticNotificationSeeder(context);
+                await StaticNotificationSeeder.Seed();
             }
         }
 

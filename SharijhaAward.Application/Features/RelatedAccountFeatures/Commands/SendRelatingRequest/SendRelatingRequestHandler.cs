@@ -7,6 +7,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.NotificationModel;
 using SharijhaAward.Domain.Entities.RelatedAccountModel;
+using SharijhaAward.Domain.Entities.StaticNotificationModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.SendRelatingRequest
@@ -21,6 +22,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
         private readonly IJwtProvider _JWTProvider;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IAsyncRepository<UserToken> _UserTokenRepository;
+        private readonly IAsyncRepository<StaticNotification> _StaticNotificationRepository;
 
         public SendRelatingRequestHandler(IUserRepository UserRepository,
             IAsyncRepository<RelatedAccountRequest> RelatedAccountRequestRepository,
@@ -29,7 +31,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
             IJwtProvider JWTProvider,
             IAsyncRepository<UserRole> UserRoleRepository,
             IAsyncRepository<Notification> NotificationRepository,
-            IAsyncRepository<UserToken> UserTokenRepository)
+            IAsyncRepository<UserToken> UserTokenRepository,
+            IAsyncRepository<StaticNotification> _StaticNotificationRepository)
         {
             _UserNotificationRepository = UserNotificationRepository;
             _UserRepository = UserRepository;
@@ -39,6 +42,7 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
             _UserRoleRepository = UserRoleRepository;
             _UserTokenRepository = UserTokenRepository;
             _NotificationRepository = NotificationRepository;
+            this._StaticNotificationRepository = _StaticNotificationRepository;
         }
         public async Task<BaseResponse<object>> Handle(SendRelatingRequestCommand Request, CancellationToken cancellationToken)
         {
@@ -67,18 +71,6 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
                 return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
-            RelatedAccountRequest? CheckIfRelatedAccountRequestIsAlreadyExist = await _RelatedAccountRequestRepository
-                .FirstOrDefaultAsync(x => x.SenderId == SenderId && x.ReceiverId == UserRole.UserId);
-
-            if (CheckIfRelatedAccountRequestIsAlreadyExist is not null)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "You already sent a request to this account's email"
-                    : "لقد قمت مسبقاً بإرسال طلب لهذا الحساب";
-
-                return new BaseResponse<object>(ResponseMessage, false, 400);
-            }
-
             RelatedAccount? CheckIfRelatedAccountIsAlreadyExist = await _RelatedAccountRepository
                 .FirstOrDefaultAsync(x => x.User1Id == SenderId && x.User2Id == UserRole.UserId);
 
@@ -89,6 +81,21 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
                     : "هذا الحساب موجود مسبقاً في قائمة الحسابات المرتبطة الخاصة بك";
 
                 return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+            else
+            {
+                RelatedAccountRequest? CheckIfRelatedAccountRequestIsAlreadyExist = await _RelatedAccountRequestRepository
+                    .FirstOrDefaultAsync(x => x.SenderId == SenderId && x.ReceiverId == UserRole.UserId &&
+                        x.Status != Domain.Constants.RelatedAccountRequestStatus.Accepted);
+
+                if (CheckIfRelatedAccountRequestIsAlreadyExist is not null)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? "You've already sent a request to this account's email"
+                        : "لقد قمت مسبقاً بإرسال طلب لهذا الحساب";
+
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                }
             }
 
             RelatedAccountRequest NewRelatedAccountRequestEntity = new RelatedAccountRequest()
@@ -117,48 +124,57 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
             {
                 try
                 {
-
                     await _RelatedAccountRequestRepository.AddAsync(NewRelatedAccountRequestEntity);
 
-                    List<FirebaseAdmin.Messaging.Message> NotificationMessages = await _UserTokenRepository
-                        .Where(x => x.User!.Email == Request.ReceiverEmail && !string.IsNullOrEmpty(x.DeviceToken))
-                        .Select(x => x.AppLanguage == "en"
-                            ? new FirebaseAdmin.Messaging.Message()
-                            {
-                                Notification = new FirebaseAdmin.Messaging.Notification
-                                {
-                                    Title = "Related Account Request",
-                                    Body = "You have a new Related Account Request"
-                                },
-                                Token = x.DeviceToken
-                            } : new FirebaseAdmin.Messaging.Message()
-                            {
-                                Notification = new FirebaseAdmin.Messaging.Notification
-                                {
-                                    Title = "طلب إرتباط",
-                                    Body = "لديك طلب إرتباط جديد"
-                                },
-                                Token = x.DeviceToken
-                            }).ToListAsync();
+                    StaticNotification? StaticNotificationEntity = await _StaticNotificationRepository
+                        .FirstOrDefaultAsync(x => x.StaticNotificationType == StaticNotificationTypes.SendRelatingRequest &&
+                            x.isActive);
 
-                    if (NotificationMessages.Any())
-                        await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendEachAsync(NotificationMessages);
-
-         
-                    var Notification = await _NotificationRepository.AddAsync(new Notification()
+                    if (StaticNotificationEntity is not null)
                     {
-                        EnglishTitle = "Related Account Request",
-                        EnglishBody = "You have a new Related Account Request",
-                        ArabicTitle = "طلب إرتباط",
-                        ArabicBody = "لديك طلب إرتباط جديد"
-                    });
+                        Notification NewNotificationEntity = new Notification()
+                        {
+                            ArabicTitle = StaticNotificationEntity!.ArabicTitle,
+                            ArabicBody = StaticNotificationEntity!.ArabicBody,
+                            EnglishTitle = StaticNotificationEntity!.EnglishTitle,
+                            EnglishBody = StaticNotificationEntity!.EnglishBody
+                        };
 
-                    await _UserNotificationRepository.AddAsync(new UserNotification()
-                    {
-                        NotificationId = Notification.Id,
-                        UserId = UserRole.UserId,
-                        isReaded = false
-                    });
+                        await _NotificationRepository.AddAsync(NewNotificationEntity);
+
+                        List<FirebaseAdmin.Messaging.Message>? NotificationMessages = await _UserTokenRepository
+                            .Where(x => x.User!.Email == Request.ReceiverEmail && !string.IsNullOrEmpty(x.DeviceToken))
+                            .Select(x => x.AppLanguage == "en"
+                                ? new FirebaseAdmin.Messaging.Message()
+                                {
+                                    Notification = new FirebaseAdmin.Messaging.Notification
+                                    {
+                                        Title = NewNotificationEntity.EnglishTitle,
+                                        Body = NewNotificationEntity.EnglishBody
+                                    },
+                                    Token = x.DeviceToken
+                                } : new FirebaseAdmin.Messaging.Message()
+                                {
+                                    Notification = new FirebaseAdmin.Messaging.Notification
+                                    {
+                                        Title = NewNotificationEntity.ArabicTitle,
+                                        Body = NewNotificationEntity.ArabicBody
+                                    },
+                                    Token = x.DeviceToken
+                                }).ToListAsync();
+
+                        if (NotificationMessages is not null
+                            ? NotificationMessages.Any()
+                            : false)
+                            await FirebaseAdmin.Messaging.FirebaseMessaging.DefaultInstance.SendEachAsync(NotificationMessages);
+
+                        await _UserNotificationRepository.AddAsync(new UserNotification()
+                        {
+                            NotificationId = StaticNotificationEntity.Id,
+                            UserId = UserRole.UserId,
+                            isReaded = false
+                        });
+                    }
 
                     Transaction.Complete();
                 }

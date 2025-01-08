@@ -14,7 +14,8 @@ namespace SharijhaAward.Api.Logger
         }
         protected override void Append(StringBuilder builder, LogEventInfo logEvent)
         {
-            builder.Append(_WebHostEnvironment.WebRootPath);
+            string wwwRootPath = _WebHostEnvironment.WebRootPath;
+            builder.Append(wwwRootPath);
         }
     }
 }

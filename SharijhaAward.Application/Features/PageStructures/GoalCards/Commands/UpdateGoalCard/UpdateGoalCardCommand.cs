@@ -1,10 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharijhaAward.Domain.Entities.PageStructureModels;
 
 namespace SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.UpdateGoalCard
 {
@@ -12,10 +8,15 @@ namespace SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.U
     {
         public int Id { get; set; }
         public int orderId { get; set; }
-        public string EnglishContent { get; set; } = string.Empty;
-        public string ArabicContent { get; set; } = string.Empty;
+        public string? EnglishTitle { get; set; }
+        public string? ArabicTitle { get; set; }
+        public string? EnglishContent { get; set; }
+        public string? ArabicContent { get; set; }
         public bool IsHide { get; set; }
         public int PageId { get; set; }
         public string? lang { get; set; }
+        public CardType CardType { get; set; }
+        public int? ParentId { get; set; }
+        public List<UpdateGoalCardCommand> SubGoals { get; set; } = new List<UpdateGoalCardCommand>();
     }
 }

@@ -24,6 +24,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 using IronBarCode;
 using System.Text.RegularExpressions;
+using System.Net.Http;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee
 {
@@ -85,16 +86,14 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.ImagePath!);
 
                 // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
-                string HtmlBody = "wwwroot/QREmail_ar.html";
-
-                string HTMLContent = File.ReadAllText(HtmlBody);
+                string HTMLContent = await File.ReadAllTextAsync(Request.ImagePath + "/QREmail_ar.html");
 
                 CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
                 bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
 
                 string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
-                string DownloadedHTMLFilePath = Request.ImagePath + "\\HTMLCodes\\" + DownloadedHTMLFileName;
+                string DownloadedHTMLFilePath = Request.ImagePath + "/HTMLCodes/" + DownloadedHTMLFileName;
 
                 string DownloadBarCodeImageAPI = isHttps
                     ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFileName}"
@@ -133,10 +132,10 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
 
-                byte[] BarCodeImageImageBytes = File.ReadAllBytes(BarCodeImagePath);
+                byte[] BarCodeImageImageBytes = await File.ReadAllBytesAsync(BarCodeImagePath);
                 string BarCodeImagebase64String = Convert.ToBase64String(BarCodeImageImageBytes);
 
-                byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                byte[] HeaderImageBytes = await File.ReadAllBytesAsync(Request.ImagePath + "/assets/qr/header.png");
                 string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
 
                 string ManipulatedBodyForPdf = ManipulatedBody
@@ -160,7 +159,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                         NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
 
                         await _EmailSender.SendEmail(EmailRequest, AlternateView);
-                        File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
+                        await File.WriteAllTextAsync(DownloadedHTMLFilePath, ManipulatedBodyForPdf, Encoding.UTF8);
 
                         Transaction.Complete();
                     }
@@ -195,14 +194,12 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                 string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.ImagePath!);
 
                 // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
-                string HtmlBody = "wwwroot/QREmail_en.html";
-
-                string HTMLContent = File.ReadAllText(HtmlBody);
+                string HTMLContent = await File.ReadAllTextAsync(Request.ImagePath + "/QREmail_en.html");
 
                 bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
 
                 string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
-                string DownloadedHTMLFilePath = Request.ImagePath + "\\HTMLCodes\\" + DownloadedHTMLFileName;
+                string DownloadedHTMLFilePath = Request.ImagePath + "/HTMLCodes/" + DownloadedHTMLFileName;
 
                 string DownloadBarCodeImageAPI = isHttps
                     ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFileName}"
@@ -241,10 +238,10 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                     ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
                     : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
 
-                byte[] BarCodeImageImageBytes = File.ReadAllBytes(BarCodeImagePath);
+                byte[] BarCodeImageImageBytes = await File.ReadAllBytesAsync(BarCodeImagePath);
                 string BarCodeImagebase64String = Convert.ToBase64String(BarCodeImageImageBytes);
 
-                byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                byte[] HeaderImageBytes = await File.ReadAllBytesAsync(Request.ImagePath + "/assets/qr/header.png");
                 string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
 
                 string ManipulatedBodyForPdf = ManipulatedBody
@@ -268,7 +265,7 @@ namespace SharijhaAward.Application.Features.InviteeForm.Personal.Command.Create
                         NewPersonalnvitee = await _PersonalInviteeRepository.AddAsync(NewPersonalnvitee);
 
                         await _EmailSender.SendEmail(EmailRequest, AlternateView);
-                        File.WriteAllText(DownloadedHTMLFilePath, ManipulatedBodyForPdf);
+                        await File.WriteAllTextAsync(DownloadedHTMLFilePath, ManipulatedBodyForPdf, Encoding.UTF8);
 
                         Transaction.Complete();
                     }

@@ -28,39 +28,78 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                 int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
                 List<GetAllRelatedAccountsListVM> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
-                    ? await _RelatedAccountRepository
-                        .Where(x => x.User1Id == UserId)
-                        .OrderByDescending(x => x.CreatedAt)
-                        .Select(x => new GetAllRelatedAccountsListVM()
-                        {
-                            Id = x.Id,
-                            Name = Request.lang == "ar"
-                            ? x.User2!.ArabicName
-                            : x.User2!.EnglishName,
-                            Email = x.User2!.Email,
-                            Gender = x.User2!.Gender,
-                            ImageURL = x.User2!.ImageURL,
-                            CreatedAt = x.CreatedAt
-                        }).ToListAsync()
-                    : await _RelatedAccountRepository
-                        .Where(x => x.User1Id == UserId)
-                        .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.perPage)
-                        .Take(Request.perPage)
-                        .Select(x => new GetAllRelatedAccountsListVM()
-                        {
-                            Id = x.Id,
-                            Name = Request.lang == "ar"
-                            ? x.User2!.ArabicName
-                            : x.User2!.EnglishName,
-                            Email = x.User2!.Email,
-                            Gender = x.User2!.Gender,
-                            ImageURL = x.User2!.ImageURL,
-                            CreatedAt = x.CreatedAt
-                        }).ToListAsync();
+                    ? (Request.ShowAccountsThatAcceptedMyRelatingRequest
+                        ? await _RelatedAccountRepository
+                            .Where(x => x.User1Id == UserId)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .Select(x => new GetAllRelatedAccountsListVM()
+                            {
+                                Id = x.Id,
+                                Name = Request.lang == "ar"
+                                ? x.User2!.ArabicName
+                                : x.User2!.EnglishName,
+                                Email = x.User2!.Email,
+                                Gender = x.User2!.Gender,
+                                ImageURL = x.User2!.ImageURL,
+                                CreatedAt = x.CreatedAt
+                            }).ToListAsync()
+                        : await _RelatedAccountRepository
+                            .Where(x => x.User2Id == UserId)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .Select(x => new GetAllRelatedAccountsListVM()
+                            {
+                                Id = x.Id,
+                                Name = Request.lang == "ar"
+                                ? x.User1!.ArabicName
+                                : x.User1!.EnglishName,
+                                Email = x.User1!.Email,
+                                Gender = x.User1!.Gender,
+                                ImageURL = x.User1!.ImageURL,
+                                CreatedAt = x.CreatedAt
+                            }).ToListAsync())
+                    : (Request.ShowAccountsThatAcceptedMyRelatingRequest
+                        ? await _RelatedAccountRepository
+                            .Where(x => x.User1Id == UserId)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .Skip((Request.page - 1) * Request.perPage)
+                            .Take(Request.perPage)
+                            .Select(x => new GetAllRelatedAccountsListVM()
+                            {
+                                Id = x.Id,
+                                Name = Request.lang == "ar"
+                                ? x.User2!.ArabicName
+                                : x.User2!.EnglishName,
+                                Email = x.User2!.Email,
+                                Gender = x.User2!.Gender,
+                                ImageURL = x.User2!.ImageURL,
+                                CreatedAt = x.CreatedAt
+                            }).ToListAsync()
+                        : await _RelatedAccountRepository
+                            .Where(x => x.User2Id == UserId)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .Skip((Request.page - 1) * Request.perPage)
+                            .Take(Request.perPage)
+                            .Select(x => new GetAllRelatedAccountsListVM()
+                            {
+                                Id = x.Id,
+                                Name = Request.lang == "ar"
+                                ? x.User1!.ArabicName
+                                : x.User1!.EnglishName,
+                                Email = x.User1!.Email,
+                                Gender = x.User1!.Gender,
+                                ImageURL = x.User1!.ImageURL,
+                                CreatedAt = x.CreatedAt
+                            }).ToListAsync());
 
-                int TotalCount = await _RelatedAccountRepository
-                    .GetCountAsync(x => x.User1Id == UserId);
+                int TotalCount = 0;
+                
+                if (Request.ShowAccountsThatAcceptedMyRelatingRequest)
+                    TotalCount = await _RelatedAccountRepository
+                        .GetCountAsync(x => x.User1Id == UserId);
+
+                else
+                    TotalCount = await _RelatedAccountRepository
+                        .GetCountAsync(x => x.User2Id == UserId);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
@@ -74,39 +113,78 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.GetA
                 int UserId = Request.Id.Value;
 
                 List<GetAllRelatedAccountsListVM> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
-                    ? await _RelatedAccountRepository
-                        .Where(x => x.User1Id == UserId)
-                        .OrderByDescending(x => x.CreatedAt)
-                        .Select(x => new GetAllRelatedAccountsListVM()
-                        {
-                            Id = x.Id,
-                            Name = Request.lang == "ar"
-                            ? x.User2!.ArabicName
-                            : x.User2!.EnglishName,
-                            Email = x.User2!.Email,
-                            Gender = x.User2!.Gender,
-                            ImageURL = x.User2!.ImageURL,
-                            CreatedAt = x.CreatedAt
-                        }).ToListAsync()
-                    : await _RelatedAccountRepository
-                        .Where(x => x.User1Id == UserId)
-                        .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.perPage)
-                        .Take(Request.perPage)
-                        .Select(x => new GetAllRelatedAccountsListVM()
-                        {
-                            Id = x.Id,
-                            Name = Request.lang == "ar"
-                            ? x.User2!.ArabicName
-                            : x.User2!.EnglishName,
-                            Email = x.User2!.Email,
-                            Gender = x.User2!.Gender,
-                            ImageURL = x.User2!.ImageURL,
-                            CreatedAt = x.CreatedAt
-                        }).ToListAsync();
+                    ? (Request.ShowAccountsThatAcceptedMyRelatingRequest
+                        ? await _RelatedAccountRepository
+                            .Where(x => x.User1Id == UserId)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .Select(x => new GetAllRelatedAccountsListVM()
+                            {
+                                Id = x.Id,
+                                Name = Request.lang == "ar"
+                                    ? x.User2!.ArabicName
+                                    : x.User2!.EnglishName,
+                                Email = x.User2!.Email,
+                                Gender = x.User2!.Gender,
+                                ImageURL = x.User2!.ImageURL,
+                                CreatedAt = x.CreatedAt
+                            }).ToListAsync()
+                        : await _RelatedAccountRepository
+                            .Where(x => x.User2Id == UserId)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .Select(x => new GetAllRelatedAccountsListVM()
+                            {
+                                Id = x.Id,
+                                Name = Request.lang == "ar"
+                                    ? x.User1!.ArabicName
+                                    : x.User1!.EnglishName,
+                                Email = x.User1!.Email,
+                                Gender = x.User1!.Gender,
+                                ImageURL = x.User1!.ImageURL,
+                                CreatedAt = x.CreatedAt
+                            }).ToListAsync())
+                    : (Request.ShowAccountsThatAcceptedMyRelatingRequest
+                        ? await _RelatedAccountRepository
+                            .Where(x => x.User1Id == UserId)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .Skip((Request.page - 1) * Request.perPage)
+                            .Take(Request.perPage)
+                            .Select(x => new GetAllRelatedAccountsListVM()
+                            {
+                                Id = x.Id,
+                                Name = Request.lang == "ar"
+                                    ? x.User2!.ArabicName
+                                    : x.User2!.EnglishName,
+                                Email = x.User2!.Email,
+                                Gender = x.User2!.Gender,
+                                ImageURL = x.User2!.ImageURL,
+                                CreatedAt = x.CreatedAt
+                            }).ToListAsync()
+                        : await _RelatedAccountRepository
+                            .Where(x => x.User2Id == UserId)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .Skip((Request.page - 1) * Request.perPage)
+                            .Take(Request.perPage)
+                            .Select(x => new GetAllRelatedAccountsListVM()
+                            {
+                                Id = x.Id,
+                                Name = Request.lang == "ar"
+                                    ? x.User1!.ArabicName
+                                    : x.User1!.EnglishName,
+                                Email = x.User1!.Email,
+                                Gender = x.User1!.Gender,
+                                ImageURL = x.User1!.ImageURL,
+                                CreatedAt = x.CreatedAt
+                            }).ToListAsync());
 
-                int TotalCount = await _RelatedAccountRepository
-                    .GetCountAsync(x => x.User1Id == UserId);
+                int TotalCount = 0;
+
+                if (Request.ShowAccountsThatAcceptedMyRelatingRequest)
+                    TotalCount = await _RelatedAccountRepository
+                        .GetCountAsync(x => x.User1Id == UserId);
+
+                else
+                    TotalCount = await _RelatedAccountRepository
+                        .GetCountAsync(x => x.User2Id == UserId);
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);

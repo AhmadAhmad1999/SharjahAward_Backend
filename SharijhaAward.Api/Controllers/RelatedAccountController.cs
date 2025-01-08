@@ -235,7 +235,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllRelatedAccounts(int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllRelatedAccounts(bool ShowAccountsThatAcceptedMyRelatingRequest, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -252,7 +252,8 @@ namespace SharijhaAward.Api.Controllers
                 lang = HeaderValue!,
                 token = Token,
                 page = Page,
-                perPage = PerPage
+                perPage = PerPage,
+                ShowAccountsThatAcceptedMyRelatingRequest = ShowAccountsThatAcceptedMyRelatingRequest
             });
 
             return Response.statusCode switch

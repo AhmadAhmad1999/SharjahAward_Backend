@@ -16,11 +16,6 @@ using SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorById;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorsByFormId;
 using SharijhaAward.Application.Features.Arbitrators.Queries.GetUnAssignedArbitratorsByFormId;
-using SharijhaAward.Application.Features.Coordinators.Commands.DeleteCoordinator;
-using SharijhaAward.Application.Features.Coordinators.Commands.UpdateCoordinator;
-using SharijhaAward.Application.Features.Coordinators.Queries.ExportToExcel;
-using SharijhaAward.Application.Features.Coordinators.Queries.GetAllCoordinators;
-using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -55,7 +50,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            CreateArbitratorCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
+            CreateArbitratorCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/DynamicFiles/";
 
             BaseResponse<int>? Response = await _Mediator.Send(CreateArbitratorCommand);
 
@@ -110,7 +105,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            UpdateArbitratorCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
+            UpdateArbitratorCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/DynamicFiles/";
 
             BaseResponse<object>? Response = await _Mediator.Send(UpdateArbitratorCommand);
 

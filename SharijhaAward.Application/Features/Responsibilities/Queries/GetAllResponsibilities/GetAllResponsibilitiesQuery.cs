@@ -15,6 +15,6 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResp
         public int page { get; set; } = 1;
         public int perPage { get; set; } = 10;
         public List<Filter>? filters { get; set; }
-
+        public string? lang { get; set; }
     }
 }

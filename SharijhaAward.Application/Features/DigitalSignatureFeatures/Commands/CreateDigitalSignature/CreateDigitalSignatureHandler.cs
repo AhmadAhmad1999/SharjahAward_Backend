@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
@@ -47,18 +48,12 @@ namespace SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.C
                 {
                     NewDigitalSignatureEntity.UserId = UserId;
 
-                    bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
-
-                    string FolderPath = isHttps
-                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DigitalSignatures"
-                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DigitalSignatures";
-
                     string? FileName = $"{NewDigitalSignatureEntity.Id}-{NewDigitalSignatureEntity.UserName}";
 
-                    string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
+                    string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"/DigitalSignatures/{FileName}";
 
                     string? FolderPathToCreate = Request.WWWRootFilePath!;
-                    string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
+                    string? FilePathToSaveToCreate = FolderPathToCreate + $"/{FileName}";
 
                     while (File.Exists(FilePathToSaveIntoDataBase))
                     {
@@ -72,6 +67,15 @@ namespace SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.C
                     }
 
                     NewDigitalSignatureEntity.ImageUrl = FilePathToSaveIntoDataBase;
+
+                    byte[] salt = new byte[16] { 52, 123, 55, 148, 64, 30, 175, 37, 25, 240, 115, 57, 13, 255, 41, 74 };
+
+                    NewDigitalSignatureEntity.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: NewDigitalSignatureEntity.Password,
+                        salt: salt,
+                        prf: KeyDerivationPrf.HMACSHA256,
+                        iterationCount: 100000,
+                        numBytesRequested: 256 / 8));
 
                     await _DigitalSignatureRepository.AddAsync(NewDigitalSignatureEntity);
 

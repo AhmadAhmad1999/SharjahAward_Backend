@@ -1,58 +1,60 @@
-﻿using AutoMapper;
-using MediatR;
-using SharijhaAward.Application.Contract.Infrastructure;
+﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ChatBotModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ChatBotQuestions.Queries.TalkWithChatBot
 {
     public class TalkWithChatBotQueryHandler
         : IRequestHandler<TalkWithChatBotQuery, BaseResponse<ConversationDto>>
     {
-        private readonly IAsyncRepository<ChatBotQuestion> _chatBotQuestionRepository;
-        private readonly IAsyncRepository<WorkflowQuestion> _workflowQuestionRepository;
+        private readonly IAsyncRepository<ChatBotQuestion> _ChatBotQuestionRepository;
+        private readonly IAsyncRepository<WorkflowQuestion> _WorkflowQuestionRepository;
 
-        public TalkWithChatBotQueryHandler(IAsyncRepository<ChatBotQuestion> chatBotQuestionRepository, IAsyncRepository<WorkflowQuestion> workflowQuestionRepository, IMapper mapper)
+        public TalkWithChatBotQueryHandler(IAsyncRepository<ChatBotQuestion> _ChatBotQuestionRepository, 
+            IAsyncRepository<WorkflowQuestion> _WorkflowQuestionRepository)
         {
-            _chatBotQuestionRepository = chatBotQuestionRepository;
-            _workflowQuestionRepository = workflowQuestionRepository;
+            this._ChatBotQuestionRepository = _ChatBotQuestionRepository;
+            this._WorkflowQuestionRepository = _WorkflowQuestionRepository;
         }
 
-        public async Task<BaseResponse<ConversationDto>> Handle(TalkWithChatBotQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<ConversationDto>> Handle(TalkWithChatBotQuery Request, CancellationToken cancellationToken)
         {
-            var Question = await _chatBotQuestionRepository.GetByIdAsync(request.QuestionId);
+            string ResponseMessage = string.Empty;
+
+            ChatBotQuestion? ChatBotQuestionEntity = await _ChatBotQuestionRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.QuestionId);
             
-            if(Question == null)
+            if(ChatBotQuestionEntity is null)
             {
-                return new BaseResponse<ConversationDto>("", false, 200, null!);
+                ResponseMessage = Request.lang == "en"
+                    ? "Chatbot question is not found"
+                    : "السؤال غير موجود";
+
+                return new BaseResponse<ConversationDto>(ResponseMessage, false, 404);
             }
 
-            var workFlow = _workflowQuestionRepository
-                .Where(q => q.QuestionId == Question.Id)
-                .Select(q => q.Workflow)
+            List<ChatBotQuestion> WorkflowQuestionEntities = _WorkflowQuestionRepository
+                .Where(x => x.QuestionId == ChatBotQuestionEntity.Id)
+                .Select(x => x.Workflow)
                 .ToList();
 
-
-            var data = new ConversationDto()
+            ConversationDto Response = new ConversationDto()
             {
-                Id = Question.Id,
-                Answer = request.lang == "en" ? Question.EnglishAnswer : Question.ArabicAnswer,
-                Workflow = workFlow.Select(q => new ConversationWorkflowListVM()
+                Id = ChatBotQuestionEntity.Id,
+                Answer = Request.lang == "en" 
+                    ? ChatBotQuestionEntity.EnglishAnswer 
+                    : ChatBotQuestionEntity.ArabicAnswer,
+                Workflow = WorkflowQuestionEntities.Select(x => new ConversationWorkflowListVM()
                 {
-                    Id = q.Id,
-                    Question = request.lang == "en" ? q.EnglishQuestion : q.ArabicQuestion
-                
+                    Id = x.Id,
+                    Question = Request.lang == "en" 
+                        ? x.EnglishQuestion 
+                        : x.ArabicQuestion
                 }).ToList()
             };
 
-
-            return new BaseResponse<ConversationDto>("", true, 200, data);
+            return new BaseResponse<ConversationDto>(ResponseMessage, true, 200, Response);
         }
     }
 }

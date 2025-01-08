@@ -2,17 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.ChangeAdvancedFormBuilderStatus;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.CreateAdvancedFormBuilder;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.CreateVirtualTableFroSection;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.DeleteAdvancedFormBuilder;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.DeleteVirtualTableFroSection;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.UpdateAdvancedFormBuilder;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.UpdateVirtualTableFroSection;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAdvancedFormBuilderById;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllAdvancedFormBuilderForDependency;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllAdvancedFormBuildersBySectionId;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllInputedAdvancedFormsByVirtualTableForSectionId;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllListAdvancedFormBuilders;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAllVirtualTables;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAnalysisByVirtualTableForSectionId;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetInputedAdvancedFormsByVirtualTableId;
 using SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValue;
 using SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValueForSave;
 using SharijhaAward.Application.Helpers.ExportReportForAdvancedFormBuilder;
@@ -21,6 +26,7 @@ using System.Text;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AdvancedFormBuilderController : ControllerBase
@@ -218,6 +224,34 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
+        [HttpDelete("DeleteVirtualTableFroSection/{Id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> DeleteVirtualTableFroSection(int Id)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(new DeleteVirtualTableFroSectionCommand()
+            {
+                Id = Id,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
         [HttpPut("UpdateAdvancedFormBuilder")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -337,10 +371,10 @@ namespace SharijhaAward.Api.Controllers
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
             AddAdvancedFormBuilderValueCommand.lang = !string.IsNullOrEmpty(HeaderValue)
-            ? HeaderValue
-            : "en";
+                ? HeaderValue
+                : "en";
 
-            AddAdvancedFormBuilderValueCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\AdvancedFormsFiles\\";
+            AddAdvancedFormBuilderValueCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/AdvancedFormsFiles/";
             BaseResponse<AddAdvancedFormBuilderValueResponse>? Response = await _Mediator.Send(AddAdvancedFormBuilderValueCommand);
 
             return Response.statusCode switch
@@ -366,8 +400,8 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            AddAdvancedFormBuilderValueForSaveCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
-            BaseResponse<AddAdvancedFormBuilderValueForSaveResponse>? Response = await _Mediator.Send(AddAdvancedFormBuilderValueForSaveCommand);
+            AddAdvancedFormBuilderValueForSaveCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/AdvancedFormsFiles/";
+            BaseResponse<int> Response = await _Mediator.Send(AddAdvancedFormBuilderValueForSaveCommand);
 
             return Response.statusCode switch
             {
@@ -419,6 +453,89 @@ namespace SharijhaAward.Api.Controllers
                 : "en";
 
             BaseResponse<object>? Response = await _Mediator.Send(UpdateVirtualTableFroSectionCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAnalysisByVirtualTableForSectionId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAnalysisByVirtualTableForSectionId(int VirtualTableForSectionId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAnalysisByVirtualTableForSectionIdListVM>> Response = await _Mediator.Send(new GetAnalysisByVirtualTableForSectionIdQuery()
+            {
+                VirtualTableForSectionId = VirtualTableForSectionId,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllInputedAdvancedFormsByVirtualTableForSectionId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllInputedAdvancedFormsByVirtualTableForSectionId([FromQuery] GetAllInputedAdvancedFormsByVirtualTableForSectionIdQuery GetAllInputedAdvancedFormsByVirtualTableForSectionIdQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllInputedAdvancedFormsByVirtualTableForSectionIdQuery.lang = HeaderValue;
+
+            BaseResponse<GetAllInputedAdvancedFormsByVirtualTableForSectionIdListVM> Response = 
+                await _Mediator.Send(GetAllInputedAdvancedFormsByVirtualTableForSectionIdQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetInputedAdvancedFormsByVirtualTableId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetInputedAdvancedFormsByVirtualTableId(int VirtualTableForSectionId, int VirtualTableId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetInputedAdvancedFormsByVirtualTableIdDto> Response = await _Mediator.Send(new GetInputedAdvancedFormsByVirtualTableIdQuery()
+            {
+                VirtualTableForSectionId = VirtualTableForSectionId,
+                VirtualTableId = VirtualTableId,
+                lang = HeaderValue!
+            });
 
             return Response.statusCode switch
             {

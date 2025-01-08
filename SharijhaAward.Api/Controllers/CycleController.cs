@@ -1,25 +1,17 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.Cycles.Commands.CreateCycle;
 using SharijhaAward.Application.Features.Cycles.Commands.DeleteCycle;
 using SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle;
 using SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles;
 using SharijhaAward.Application.Features.Cycles.Queries.GetCycleById;
 using SharijhaAward.Application.Features.Cycles.Queries.GetLimteNumberOfCategories;
-using SharijhaAward.Application.Features.GeneralFAQs.Commands.DeleteGeneralFAQ;
-using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
-using SharijhaAward.Domain.Common;
-using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Cycles.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.Cycles.Queries.CycleImportLastData;
-using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.Cycles.Queries.GetActiveCycle;
-using Microsoft.AspNetCore.Hosting;
-using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
 using SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle;
 using SharijhaAward.Application.Features.Cycles.Queries.GetAllCategoriesWithAllItsData;
 

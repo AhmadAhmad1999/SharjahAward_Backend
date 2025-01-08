@@ -69,8 +69,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                 try
                 {
                     if (Request.isAccepted == FormStatus.Rejected &&
-                        (ArbitratorEntity.isChairman &&
-                        (Request.AsChairman != null ? Request.AsChairman.Value : false)))
+                        ArbitratorEntity.isChairman &&
+                        (Request.AsChairman != null ? Request.AsChairman.Value : false))
                     {
                         // ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
 
@@ -79,8 +79,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                         ArbitrationEntity.ReasonForRejecting = Request.ReasonForRejecting;
                     }
                     else if (Request.isAccepted == FormStatus.Rejected &&
-                        (ArbitratorEntity.isChairman &&
-                        (Request.AsChairman != null ? !Request.AsChairman.Value : false)))
+                        ArbitratorEntity.isChairman &&
+                        (Request.AsChairman != null ? !Request.AsChairman.Value : false))
                     {
                         // ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
 

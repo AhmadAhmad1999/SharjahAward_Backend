@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AboutAwardPages.Commands.CreateAboutPage;
@@ -18,15 +18,20 @@ namespace SharijhaAward.Api.Controllers
     public class AboutPageController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly HttpClient _HttpClient;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public AboutPageController(IMediator mediator)
+        public AboutPageController(IMediator mediator,
+            HttpClient _HttpClient,
+            IWebHostEnvironment _WebHostEnvironment)
         {
             _mediator = mediator;
+            this._HttpClient = _HttpClient;
+            this._WebHostEnvironment = _WebHostEnvironment;
         }
         [HttpPost(Name = "CreateAboutPage")]
         public async Task<IActionResult> CreateAboutPage([FromForm] CreateAboutPageCommand command)
         {
-
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 

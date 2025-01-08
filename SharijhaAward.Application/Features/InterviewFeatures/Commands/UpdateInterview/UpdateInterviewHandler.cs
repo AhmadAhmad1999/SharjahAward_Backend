@@ -11,25 +11,22 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
     public class UpdateInterviewHandler : IRequestHandler<UpdateInterviewCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<Interview> _InterviewRepository;
-        private readonly IAsyncRepository<InterviewUser> _InterviewUserRepository;
-        private readonly IAsyncRepository<InterviewCategory> _InterviewCategoryRepository;
-        private readonly IAsyncRepository<InterviewNote> _InterviewNoteRepository;
-        private readonly IAsyncRepository<InterviewQuestion> _InterviewQuestionRepository;
+        private readonly IAsyncRepository<InterviewInvitee> _InterviewInviteeRepository;
+        private readonly IAsyncRepository<InterviewInviteeParticipant> _InterviewInviteeParticipantRepository;
+        private readonly IAsyncRepository<InterviewInviteeNoteAndQuestion> _InterviewInviteeNoteAndQuestionRepository;
         private readonly IMapper _Mapper;
 
-        public UpdateInterviewHandler(IAsyncRepository<Interview> InterviewRepository,
-            IAsyncRepository<InterviewUser> InterviewUserRepository,
-            IAsyncRepository<InterviewCategory> InterviewCategoryRepository,
-            IAsyncRepository<InterviewNote> InterviewNoteRepository,
-            IAsyncRepository<InterviewQuestion> InterviewQuestionRepository,
-            IMapper Mapper)
+        public UpdateInterviewHandler(IAsyncRepository<Interview> _InterviewRepository,
+            IAsyncRepository<InterviewInvitee> _InterviewInviteeRepository,
+            IAsyncRepository<InterviewInviteeParticipant> _InterviewInviteeParticipantRepository,
+            IAsyncRepository<InterviewInviteeNoteAndQuestion> _InterviewInviteeNoteAndQuestionRepository,
+            IMapper _Mapper)
         {
-            _InterviewRepository = InterviewRepository;
-            _InterviewUserRepository = InterviewUserRepository;
-            _InterviewCategoryRepository = InterviewCategoryRepository;
-            _InterviewNoteRepository = InterviewNoteRepository;
-            _InterviewQuestionRepository = InterviewQuestionRepository;
-            _Mapper = Mapper;
+            this._InterviewRepository = _InterviewRepository;
+            this._InterviewInviteeRepository = _InterviewInviteeRepository;
+            this._InterviewInviteeParticipantRepository = _InterviewInviteeParticipantRepository;
+            this._InterviewInviteeNoteAndQuestionRepository = _InterviewInviteeNoteAndQuestionRepository;
+            this._Mapper = _Mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateInterviewCommand Request, CancellationToken cancellationToken)
@@ -61,29 +58,6 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
                 return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
-            List<string> CheckForDuplicatedEmails = Request.UsersInfo
-                .GroupBy(m => m.Email.ToLower())
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key)
-                .ToList();
-
-            if (CheckForDuplicatedEmails.Any())
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? $"The following emails are duplicated: {string.Join(", ", CheckForDuplicatedEmails)}"
-                    : $"البُرُد الإلكترونية التالية مكررة: {string.Join(", ", CheckForDuplicatedEmails)}";
-
-                return new BaseResponse<object>(ResponseMessage, false, 400);
-            }
-
-            List<InterviewNote> InterviewNoteEntitiesToDelete = await _InterviewNoteRepository
-                .Where(x => x.InterviewId == Request.Id)
-                .ToListAsync();
-
-            List<InterviewQuestion> InterviewQuestionEntitiesToDelete = await _InterviewQuestionRepository
-                .Where(x => x.InterviewId == Request.Id)
-                .ToListAsync();
-
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -99,59 +73,150 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
                     
                     await _InterviewRepository.UpdateAsync(InterviewEntity);
 
-                    await _InterviewNoteRepository.DeleteListAsync(InterviewNoteEntitiesToDelete);
-                    await _InterviewQuestionRepository.DeleteListAsync(InterviewQuestionEntitiesToDelete);
+                    IEnumerable<InterviewInviteeNoteAndQuestion> InterviewInviteeNoteAndQuestionEntitiesToAdd = new List<InterviewInviteeNoteAndQuestion>();
+                    
+                    IEnumerable<InterviewInviteeParticipant> InterviewInviteeParticipantEntitiesToAdd = new List<InterviewInviteeParticipant>();
 
-                    IEnumerable<InterviewNote> NewInterviewNoteEntities = Request.InterviewNoteDtos
-                        .Select(x => new InterviewNote()
-                        {
-                            ArabicNote = x.ArabicNote,
-                            EnglishNote = x.EnglishNote,
-                            InterviewId = Request.Id
-                        });
-
-                    await _InterviewNoteRepository.AddRangeAsync(InterviewNoteEntitiesToDelete);
-
-                    IEnumerable<InterviewQuestion> NewInterviewQuestionEntities = Request.InterviewQuestionDtos
-                        .Select(x => new InterviewQuestion()
-                        {
-                            ArabicQuestion = x.ArabicQuestion,
-                            EnglishQuestion = x.EnglishQuestion,
-                            InterviewId = Request.Id
-                        });
-
-                    await _InterviewQuestionRepository.AddRangeAsync(InterviewQuestionEntitiesToDelete);
-
-                    List<InterviewUser> OldInterviewUserEntities = await _InterviewUserRepository
-                        .Where(x => x.InterviewId == Request.Id)
+                    List<InterviewInvitee> InterviewInviteeEntities = await _InterviewInviteeRepository
+                        .Where(x => Request.Invitees.Select(y => y.Id).Contains(x.Id))
                         .ToListAsync();
 
-                    await _InterviewUserRepository.DeleteListAsync(OldInterviewUserEntities);
-
-                    List<InterviewUser> NewInterviewUserEntities = Request.UsersInfo
-                        .Select(x => new InterviewUser()
-                        {
-                            Name = x.Name,
-                            Email = x.Email,
-                            InterviewId = Request.Id
-                        }).ToList();
-
-                    await _InterviewUserRepository.AddRangeAsync(NewInterviewUserEntities);
-
-                    List<InterviewCategory> OldInterviewCategoryEntities = await _InterviewCategoryRepository
-                        .Where(x => x.InterviewId == Request.Id)
+                    IEnumerable<InterviewInviteeNoteAndQuestion> InterviewInviteeNoteAndQuestionEntitiesToDelete = await _InterviewInviteeNoteAndQuestionRepository
+                        .Where(x => InterviewInviteeEntities.Select(y => y.Id).Contains(x.InterviewInviteeId))
                         .ToListAsync();
 
-                    await _InterviewCategoryRepository.DeleteListAsync(OldInterviewCategoryEntities);
+                    IEnumerable<InterviewInviteeParticipant> InterviewInviteeParticipantEntitiesToDelete = await _InterviewInviteeParticipantRepository
+                        .Where(x => InterviewInviteeEntities.Select(y => y.Id).Contains(x.InterviewInviteeId))
+                        .ToListAsync();
 
-                    List<InterviewCategory> NewInterviewCategoryEntities = Request.CategoriesIds
-                        .Select(x => new InterviewCategory()
+                    foreach (UpdateInterviewInviteeDto Invitee in Request.Invitees)
+                    {
+                        int InterviewInviteeEntityId = 0;
+
+                        if (Invitee.Id is not 0)
+                            InterviewInviteeEntityId = Invitee.Id;
+
+                        else
                         {
-                            CategoryId = x,
-                            InterviewId = Request.Id
-                        }).ToList();
+                            InterviewInvitee NewInterviewInviteeEntity = new InterviewInvitee()
+                            {
+                                OrderId = Invitee.OrderId,
+                                InterviewId = InterviewEntity.Id,
+                                StartDate = InterviewEntity.StartDate
+                                    .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1)),
+                                EndDate = InterviewEntity.StartDate
+                                    .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1))
+                                    .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes),
+                                InviteeLink = Invitee.InviteeLink
+                            };
 
-                    await _InterviewCategoryRepository.AddRangeAsync(NewInterviewCategoryEntities);
+                            await _InterviewInviteeRepository.AddAsync(NewInterviewInviteeEntity);
+
+                            InterviewInviteeEntityId = NewInterviewInviteeEntity.Id;
+                        }
+
+                        InterviewInvitee? InterviewInviteeEntityToUpdate = InterviewInviteeEntities
+                            .FirstOrDefault(x => x.Id == InterviewInviteeEntityId);
+
+                        if (InterviewInviteeEntityToUpdate is not null)
+                        {
+                            _Mapper.Map(Invitee, InterviewInviteeEntityToUpdate, typeof(UpdateInterviewInviteeDto), typeof(InterviewInvitee));
+
+                            InterviewInviteeEntityToUpdate.StartDate = Request.StartDate
+                                .AddMinutes(Request.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1));
+
+                            InterviewInviteeEntityToUpdate.EndDate = Request.StartDate
+                                .AddMinutes(Request.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1))
+                                .AddMinutes(Request.PeriodOfEachInviteeInMinutes);
+
+                            await _InterviewInviteeRepository.UpdateAsync(InterviewInviteeEntityToUpdate);
+                        }
+
+                        List<string> CheckForDuplicatedEmails = Invitee.ExternalUsersEmails
+                            .GroupBy(x => x.ToLower())
+                            .Where(x => x.Count() > 1)
+                            .Select(x => x.Key)
+                            .ToList();
+
+                        if (CheckForDuplicatedEmails.Any())
+                        {
+                            ResponseMessage = Request.lang == "en"
+                                ? $"in invitee number: {Invitee.OrderId}, the following emails are duplicated: {string.Join(", ", CheckForDuplicatedEmails)}"
+                                : $"في الدعوة ذات الرقم: {Invitee.OrderId} البُرُد الإلكترونية التالية مكررة: {string.Join(", ", CheckForDuplicatedEmails)}";
+
+                            return new BaseResponse<object>(ResponseMessage, false, 400);
+                        }
+
+                        List<InterviewInviteeNoteAndQuestion> InterviewNoteEntitiesToDelete = await _InterviewInviteeNoteAndQuestionRepository
+                            .Where(x => x.InterviewInviteeId == Request.Id)
+                            .ToListAsync();
+
+                        InterviewInviteeNoteAndQuestionEntitiesToDelete = InterviewInviteeNoteAndQuestionEntitiesToDelete
+                            .Concat(InterviewNoteEntitiesToDelete);
+
+                        if (Invitee.SubscribersIds.Any())
+                            Invitee.SubscribersIds = Invitee.SubscribersIds.Distinct().ToList();
+
+                        if (Invitee.ArbitratorsIds.Any())
+                            Invitee.ArbitratorsIds = Invitee.ArbitratorsIds.Distinct().ToList();
+
+                        IEnumerable<InterviewInviteeParticipant> InviteeArbitrators = Invitee.ArbitratorsIds
+                            .Select(x => new InterviewInviteeParticipant()
+                            {
+                                InterviewInviteeId = InterviewInviteeEntityId,
+                                ArbitratorId = x,
+                                CanImplementTheInterview = true
+                            });
+
+                        IEnumerable<InterviewInviteeParticipant> InviteeSubscribers = Invitee.SubscribersIds
+                            .Select(x => new InterviewInviteeParticipant()
+                            {
+                                InterviewInviteeId = InterviewInviteeEntityId,
+                                SubscriberId = x,
+                                CanImplementTheInterview = true
+                            });
+
+                        IEnumerable<InterviewInviteeParticipant> InviteeExternalUsers = Invitee.ExternalUsersEmails
+                            .Select(x => new InterviewInviteeParticipant()
+                            {
+                                InterviewInviteeId = InterviewInviteeEntityId,
+                                ExternalUserEmail = x,
+                                CanImplementTheInterview = true
+                            });
+
+                        InterviewInviteeParticipantEntitiesToAdd = InterviewInviteeParticipantEntitiesToAdd
+                            .Concat(InviteeArbitrators)
+                            .Concat(InviteeSubscribers)
+                            .Concat(InviteeExternalUsers);
+
+                        IEnumerable<InterviewInviteeNoteAndQuestion> InviteeNotes = Invitee.Notes
+                            .Select(x => new InterviewInviteeNoteAndQuestion()
+                            {
+                                ArabicText = x.ArabicText,
+                                EnglishText = x.EnglishText,
+                                InterviewInviteeId = InterviewInviteeEntityId,
+                                isQuestion = false
+                            });
+
+                        IEnumerable<InterviewInviteeNoteAndQuestion> InviteeQuestions = Invitee.Questions
+                            .Select(x => new InterviewInviteeNoteAndQuestion()
+                            {
+                                ArabicText = x.ArabicText,
+                                EnglishText = x.EnglishText,
+                                InterviewInviteeId = InterviewInviteeEntityId,
+                                isQuestion = true
+                            });
+
+                        InterviewInviteeNoteAndQuestionEntitiesToAdd = InterviewInviteeNoteAndQuestionEntitiesToAdd
+                            .Concat(InviteeNotes)
+                            .Concat(InviteeQuestions);
+                    }
+
+                    await _InterviewInviteeParticipantRepository.DeleteListAsync(InterviewInviteeParticipantEntitiesToDelete);
+                    await _InterviewInviteeParticipantRepository.AddRangeAsync(InterviewInviteeParticipantEntitiesToAdd);
+
+                    await _InterviewInviteeNoteAndQuestionRepository.DeleteListAsync(InterviewInviteeNoteAndQuestionEntitiesToDelete);
+                    await _InterviewInviteeNoteAndQuestionRepository.AddRangeAsync(InterviewInviteeNoteAndQuestionEntitiesToAdd);
 
                     Transaction.Complete();
 

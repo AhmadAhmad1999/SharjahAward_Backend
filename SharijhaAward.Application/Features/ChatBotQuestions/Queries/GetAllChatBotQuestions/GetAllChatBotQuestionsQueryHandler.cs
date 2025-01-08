@@ -1,53 +1,44 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ChatBotModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetAllChatBotQuestions
 {
     public class GetAllChatBotQuestionsQueryHandler
         : IRequestHandler<GetAllChatBotQuestionsQuery, BaseResponse<List<ChatBotQuestionsListVM>>>
     {
-        private readonly IAsyncRepository<ChatBotQuestion> _chatBotQuestionRepository;
-        private readonly IAsyncRepository<WorkflowQuestion> _workflowQuestionRepository;
-        private readonly IMapper _mapper;          
+        private readonly IAsyncRepository<ChatBotQuestion> _ChatBotQuestionRepository;
 
-        public GetAllChatBotQuestionsQueryHandler(IAsyncRepository<ChatBotQuestion> chatBotQuestionRepository, IAsyncRepository<WorkflowQuestion> workflowQuestionRepository, IMapper mapper)
+        public GetAllChatBotQuestionsQueryHandler(IAsyncRepository<ChatBotQuestion> _ChatBotQuestionRepository)
         {
-            _chatBotQuestionRepository = chatBotQuestionRepository;
-            _workflowQuestionRepository = workflowQuestionRepository;
-            _mapper = mapper;
+            this._ChatBotQuestionRepository = _ChatBotQuestionRepository;
         }
 
-        public async Task<BaseResponse<List<ChatBotQuestionsListVM>>> Handle(GetAllChatBotQuestionsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<ChatBotQuestionsListVM>>> Handle(GetAllChatBotQuestionsQuery Request, CancellationToken cancellationToken)
         {
-            var ChatBotQuestions = await _chatBotQuestionRepository
-                .GetPagedReponseAsync(request.page, request.perPage);
+            string ResponseMessage = string.Empty;
 
-            var data = _mapper.Map<List<ChatBotQuestionsListVM>>(ChatBotQuestions);
+            List<ChatBotQuestionsListVM> Response = await _ChatBotQuestionRepository
+                .OrderByDescending(x => x.CreatedBy, Request.page, Request.perPage)
+                .Select(x => new ChatBotQuestionsListVM()
+                {
+                    Id = x.Id,
+                    Question = Request.lang == "en"
+                        ? x.EnglishQuestion
+                        : x.ArabicQuestion,
+                    Answer = Request.lang == "en"
+                        ? x.EnglishAnswer
+                        : x.ArabicAnswer,
+                    Initial = x.Initial
+                }).ToListAsync();
 
-            foreach(var item in data)
-            {
-                var WorkflowQuestions = _workflowQuestionRepository
-                    .Where(q => q.QuestionId == item.Id)
-                    .Select(q => q.Workflow)
-                    .ToList();
+            int TotalCount = await _ChatBotQuestionRepository.GetCountAsync(null);
+            
+            Pagination pagination = new Pagination(Request.page, Request.perPage, TotalCount);
 
-                item.WorkflowQuestions = _mapper.Map<List<WorkflowQuestionDto>>(WorkflowQuestions);
-            }
-
-            var count = _chatBotQuestionRepository.GetCount(null);
-
-            Pagination pagination = new Pagination(request.page, request.perPage, count);
-
-            return new BaseResponse<List<ChatBotQuestionsListVM>>("", true, 200, data, pagination);
-
+            return new BaseResponse<List<ChatBotQuestionsListVM>>(ResponseMessage, true, 200, Response, pagination);
         }
     }
 }

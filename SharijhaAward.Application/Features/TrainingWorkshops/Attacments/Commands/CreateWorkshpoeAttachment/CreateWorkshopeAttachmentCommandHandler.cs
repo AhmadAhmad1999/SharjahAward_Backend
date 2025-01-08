@@ -4,13 +4,8 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
+using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
-using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment
 {
@@ -18,11 +13,11 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
         : IRequestHandler<CreateWorkshopeAttachmentCommand, BaseResponse<object>>
     {
         private readonly IAsyncRepository<TrainingWorkshop> _workshopRepository;
-        private readonly IAsyncRepository<TrainingWrokshopeAttachment> _attachmentRepository;
+        private readonly IAsyncRepository<TrainingWorkshopAttachment> _attachmentRepository;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public CreateWorkshopeAttachmentCommandHandler(IAsyncRepository<TrainingWorkshop> workshopRepository, IAsyncRepository<TrainingWrokshopeAttachment> attachmentRepository, IFileService fileService, IMapper mapper)
+        public CreateWorkshopeAttachmentCommandHandler(IAsyncRepository<TrainingWorkshop> workshopRepository, IAsyncRepository<TrainingWorkshopAttachment> attachmentRepository, IFileService fileService, IMapper mapper)
         {
             _workshopRepository = workshopRepository;
             _attachmentRepository = attachmentRepository;
@@ -37,7 +32,7 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
             {
                 return new BaseResponse<object>("", false, 404);
             }
-            var data = _mapper.Map<TrainingWrokshopeAttachment>(request);
+            var data = _mapper.Map<TrainingWorkshopAttachment>(request);
             data.AttachementPath = await _fileService.SaveFileAsync(request.attachment, SystemFileType.Pdf);
             await _attachmentRepository.AddAsync(data);
 

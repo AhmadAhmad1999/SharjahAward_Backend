@@ -13,6 +13,12 @@ namespace SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.U
         public string UserName { get; set; } = null!;
         [PasswordValidation]
         public string Password { get; set; } = null!;
+        public string OldUserName { get; set; } = null!;
+        public string OldPassword { get; set; } = null!;
+        public string ArabicFullName { get; set; } = null!;
+        public string EnglishFullName { get; set; } = null!;
+        public string EnglishOccupation { get; set; } = null!;
+        public string ArabicOccupation { get; set; } = null!;
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }
     }

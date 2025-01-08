@@ -6,9 +6,6 @@ using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.GetAllF
 using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.GetFilePathById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
-using Microsoft.AspNetCore.Hosting;
-using SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrator;
-using SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.FilesManagementFeatures.Queries.ExportToExcel;
 
 namespace SharijhaAward.Api.Controllers
@@ -36,21 +33,18 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllFilesByFilter(int FilterId, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllFilesByFilter([FromQuery] GetAllFilesByFilterQuery GetAllFilesByFilterQuery)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<List<GetAllFilesByFilterListVM>> Response = await _Mediator.Send(new GetAllFilesByFilterQuery()
-            {
-                FilterId = FilterId,
-                page = Page,
-                perPage = PerPage,
-                lang = HeaderValue,
-                wwwRootFilePath = _WebHostEnvironment.WebRootPath
-            });
+            GetAllFilesByFilterQuery.lang = HeaderValue;
+
+            GetAllFilesByFilterQuery.wwwRootFilePath = _WebHostEnvironment.WebRootPath;
+
+            BaseResponse<List<GetAllFilesByFilterListVM>> Response = await _Mediator.Send(GetAllFilesByFilterQuery);
 
             return Response.statusCode switch
             {

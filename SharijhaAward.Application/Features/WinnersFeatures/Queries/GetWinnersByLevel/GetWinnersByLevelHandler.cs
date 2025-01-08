@@ -57,7 +57,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
 
             List<ArbitrationResult> ArbitrationResultEntities = await _ArbitrationResultRepository
                 .Where(x => x.ProvidedForm!.categoryId == Request.CategoryId &&
-                    x.EligibleToWin)
+                    x.EligibleToWin &&
+                    x.FinalArbitrationId != null)
                 .OrderByDescending(x => x.FinalArbitration!.FinalScore)
                 .ToListAsync();
 
@@ -187,11 +188,13 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetWinnersB
             }
 
             int TotalCount = await _ArbitrationResultRepository
-                .GetCountAsync(x => !RequestedWinners.Select(y => y.FormId).Contains(x.ProvidedFormId));
+                .GetCountAsync(x => !RequestedWinners.Select(y => y.FormId).Contains(x.ProvidedFormId) &&
+                    x.FinalArbitrationId != null);
 
             List<ArbitrationResult> RemainingWinnersQuery = await _ArbitrationResultRepository
                 .Where(x => !RequestedWinners.Select(y => y.FormId).Contains(x.ProvidedFormId) &&
-                    !SelectedWinners.Select(y => y.FormId).Contains(x.ProvidedFormId))
+                    !SelectedWinners.Select(y => y.FormId).Contains(x.ProvidedFormId) &&
+                    x.FinalArbitrationId != null)
                 .ToListAsync();
 
             List<ArbitrationResult> FilteredWinners = RemainingWinnersQuery

@@ -52,7 +52,7 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
                 return new BaseResponse<object>(msg,false,404);
             }
 
-            byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
+            byte[] salt = new byte[16] { 52, 123, 55, 148, 64, 30, 175, 37, 25, 240, 115, 57, 13, 255, 41, 74 };
 
             if (request.Id == null)
             {

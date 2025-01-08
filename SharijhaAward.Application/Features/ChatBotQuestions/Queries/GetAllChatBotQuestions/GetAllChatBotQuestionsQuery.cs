@@ -12,5 +12,6 @@ namespace SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetAllChat
     {
         public int page { get; set; } = 1;
         public int perPage { get; set; } = 10;
+        public string? lang { get; set; }
     }
 }

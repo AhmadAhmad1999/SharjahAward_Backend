@@ -1,16 +1,10 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.SocialMediaPage.Commands.CreateSocialMediaItem;
 using SharijhaAward.Application.Features.SocialMediaPage.Commands.DeleteSocialMediaItem;
 using SharijhaAward.Application.Features.SocialMediaPage.Commands.UpdateSocialMediaItem;
 using SharijhaAward.Application.Features.SocialMediaPage.Queries.GetAllSocialMediaItems;
 using SharijhaAward.Application.Features.SocialMediaPage.Queries.GetSocialMediaItemById;
-using SharijhaAward.Application.Features.StrategicPartners.Commands.CreateStrategicPartner;
-using SharijhaAward.Application.Features.StrategicPartners.Commands.DeleteStrategicPartner;
-using SharijhaAward.Application.Features.StrategicPartners.Commands.UpdateStrategicPartner;
-using SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStrategicPartners;
-using SharijhaAward.Application.Features.StrategicPartners.Queries.GetStrategicPartnerById;
 using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers

@@ -1,15 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SharijhaAward.Application.Features.Circulars.Command.DeleteCircular;
-using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
 using SharijhaAward.Application.Features.HomePageSliderItems.Commands.CreateHomePageSliderItem;
 using SharijhaAward.Application.Features.HomePageSliderItems.Commands.DeleteHomePageSliderItem;
 using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllHomePageSliderItems;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.HomePageSliderItems.Commands.UpdateHomePageSliderItem;
 using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
-using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetHomePageSliderItemById;
 
@@ -17,6 +13,7 @@ namespace SharijhaAward.Api.Controllers
 {
     [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
+    [ApiController]
     public class HomePageSliderController : ControllerBase
     {
         private readonly IMediator _mediator;

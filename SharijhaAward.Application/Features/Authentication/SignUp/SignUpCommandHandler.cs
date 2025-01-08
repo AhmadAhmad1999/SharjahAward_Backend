@@ -9,6 +9,7 @@ using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AchievementModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
+using System.Net.Http;
 using System.Net.Mail;
 using System.Transactions;
 
@@ -61,7 +62,7 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
                     Domain.Entities.IdentityModels.User User = _mapper.Map<Domain.Entities.IdentityModels.User>(Request);
 
-                    byte[] salt = new byte[16] { 41, 214, 78, 222, 28, 87, 170, 211, 217, 125, 200, 214, 185, 144, 44, 34 };
+                    byte[] salt = new byte[16] { 52, 123, 55, 148, 64, 30, 175, 37, 25, 240, 115, 57, 13, 255, 41, 74 };
 
                     User.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                         password: User.Password,
@@ -97,11 +98,13 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
                             string NotAuthenticatedEmailSubject = "رمز التحقق لتأكيد الحساب الشخصي" + "-" + "Verification code to confirm personal account";
 
-                            string NotAuthenticatedHtmlBody = "wwwroot/ConfirmationCode_Template.html";
+                            string NotAuthenticatedHtmlBody = Request.WWWRootFilePath + "/ConfirmationCode_Template.html";
 
-                            string NotAuthenticatedHTMLContent = File.ReadAllText(NotAuthenticatedHtmlBody);
+                            string NotAuthenticatedHTMLContent = await File.ReadAllTextAsync(NotAuthenticatedHtmlBody);
 
-                            byte[] NotAuthenticatedHeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                            // Fetch the image as a byte array
+                            byte[] NotAuthenticatedHeaderImageBytes = await File.ReadAllBytesAsync(Request.WWWRootFilePath + "/assets/qr/header.png");
+
                             string NotAuthenticatedHeaderImagebase64String = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes);
 
                             string NotAuthenticatedFullEmailBody = NotAuthenticatedHTMLContent
@@ -203,11 +206,11 @@ namespace SharijhaAward.Application.Features.Authentication.SignUp
 
                     string EmailSubject = "معلومات الحساب الشخصي" + "-" + "Personal account information";
 
-                    string HtmlBody = "wwwroot/ConfirmationCode_Template.html";
+                    string NotAuthenticatedHtmlBody3 = Request.WWWRootFilePath + "/ConfirmationCode_Template.html";
+                    string HTMLContent = await File.ReadAllTextAsync(NotAuthenticatedHtmlBody3);
 
-                    string HTMLContent = File.ReadAllText(HtmlBody);
+                    byte[] HeaderImageBytes = await File.ReadAllBytesAsync(Request.WWWRootFilePath + "/assets/qr/header.png");
 
-                    byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
                     string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
 
                     string FullEmailBody = HTMLContent

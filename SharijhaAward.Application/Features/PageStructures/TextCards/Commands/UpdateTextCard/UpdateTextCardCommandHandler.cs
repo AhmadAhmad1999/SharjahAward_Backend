@@ -43,7 +43,7 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Commands.U
                 return new BaseResponse<object>(msg, false, 404);
             }
 
-            var page = await _pageStructureRepository.GetByIdAsync(request.PageStructureId);
+            var page = await _pageStructureRepository.GetByIdAsync(request.PageId);
             
             if (page == null)
             {

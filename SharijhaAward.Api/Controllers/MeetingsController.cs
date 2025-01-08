@@ -11,9 +11,10 @@ using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailToUsersInMeeting;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.UpdateMeeting;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeeting;
-using Microsoft.AspNetCore.Hosting;
-using SharijhaAward.Application.Features.InterviewFeatures.Commands.ImplementInterview;
 using SharijhaAward.Application.Features.MeetingFeatures.Commands.ImplementMeeting;
+using SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeetingURL;
+using Microsoft.Graph.Models;
+using Microsoft.AspNetCore.Hosting;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -23,9 +24,15 @@ namespace SharijhaAward.Api.Controllers
     public class MeetingsController : ControllerBase
     {
         private readonly IMediator _Mediator;
-
-        public MeetingsController(IMediator Mediator)
+        private readonly IConfiguration _Configuration;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
+        
+        public MeetingsController(IMediator Mediator, IConfiguration _Configuration,
+            IWebHostEnvironment _WebHostEnvironment)
         {
+            this._Configuration = _Configuration;
+            this._WebHostEnvironment = _WebHostEnvironment;
+            
             _Mediator = Mediator;
         }
         [HttpPost("CreateMeeting")]
@@ -181,6 +188,8 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
+            SendEmailToUsersInMeetingCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
+
             BaseResponse<object>? Response = await _Mediator.Send(SendEmailToUsersInMeetingCommand);
 
             return Response.statusCode switch
@@ -231,6 +240,8 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
+            CancelMeetingCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
+
             BaseResponse<object>? Response = await _Mediator.Send(CancelMeetingCommand);
 
             return Response.statusCode switch
@@ -263,6 +274,35 @@ namespace SharijhaAward.Api.Controllers
             {
                 404 => NotFound(Response),
                 200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("CreateMeetingURL")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> CreateMeetingURL([FromQuery] CreateMeetingURLCommand CreateMeetingURLCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            CreateMeetingURLCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            CreateMeetingURLCommand.TenantId = _Configuration["AzureAd:TenantId"];
+            CreateMeetingURLCommand.ClientId = _Configuration["AzureAd:ClientId"];
+            CreateMeetingURLCommand.ClientSecret = _Configuration["AzureAd:ClientSecret"];
+
+            BaseResponse<OnlineMeeting>? Response = await _Mediator.Send(CreateMeetingURLCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
                 _ => BadRequest(Response)
             };
         }

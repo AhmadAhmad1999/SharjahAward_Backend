@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.LoggerModel;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace SharijhaAward.Api.Logger
 {
@@ -58,6 +55,8 @@ namespace SharijhaAward.Api.Logger
                     Controller_Function_Name[0].ToString() != "CheckConfirmationCodeForForgettonPassword" &&
                     Controller_Function_Name[0].ToString() != "SignUpFromAdminDashboard" &&
                     Controller_Function_Name[0].ToString() != "MigrateAndSeedDatabase" &&
+                    Controller_Function_Name[0].ToString() != "DownloadTempletAsPdf" &&
+                    Controller_Function_Name[0].ToString() != "UpdateDatabaseToLastMigration" &&
                     (Controller_Function_Name[1].ToString() != "Website"))
                 {
                     if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
@@ -218,16 +217,6 @@ namespace SharijhaAward.Api.Logger
                         else if (CheckIfIdInRequest.Value != null)
                         {
                             NewLog.RecordId = int.Parse(CheckIfIdInRequest.Value.ToString()!);
-                        }
-                        else if (CheckIfIdInRequest.Value == null && Parameters.FirstOrDefault().Value != null)
-                        {
-                            PropertyInfo? CheckIdInCommand = Parameters.FirstOrDefault().Value.GetType().GetProperty("Id");
-
-                            if (CheckIdInCommand != null)
-                            {
-                                NewLog.RecordId = int.Parse(Parameters.FirstOrDefault().Value.GetType()
-                                    .GetProperty("Id")!.GetValue(Parameters.FirstOrDefault().Value)!.ToString()!);
-                            }
                         }
 
                         _LogUserActionRepository.AddAsync(NewLog);

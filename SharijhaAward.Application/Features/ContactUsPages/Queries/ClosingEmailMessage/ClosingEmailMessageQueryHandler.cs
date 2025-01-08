@@ -1,64 +1,42 @@
 ﻿using MediatR;
-using SharijhaAward.Application.Contract.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
-using SharijhaAward.Domain.Entities.IdentityModels;
-using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ContactUsPages.Queries.ClosingEmailMessage
 {
     public class ClosingEmailMessageQueryHandler
         : IRequestHandler<ClosingEmailMessageQuery, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<EmailMessage> _emailMessageRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IAsyncRepository<UserRole> _userRoleRepository;
-        private readonly IAsyncRepository<RoleMessageType> _roleMessageTypeRepository;
-        private readonly IJwtProvider _jwtProvider;
+        private readonly IAsyncRepository<EmailMessage> _EmailMessageRepository;
 
-        public ClosingEmailMessageQueryHandler(IJwtProvider jwtProvider, IAsyncRepository<EmailMessage> emailMessageRepository, IUserRepository userRepository, IAsyncRepository<UserRole> userRoleRepository, IAsyncRepository<RoleMessageType> roleMessageTypeRepository)
+        public ClosingEmailMessageQueryHandler(IAsyncRepository<EmailMessage> _EmailMessageRepository)
         {
-            _emailMessageRepository = emailMessageRepository;
-            _jwtProvider = jwtProvider;
-            _userRepository = userRepository;
-            _userRoleRepository = userRoleRepository;
-            _roleMessageTypeRepository = roleMessageTypeRepository;
+            this._EmailMessageRepository = _EmailMessageRepository;
         }
 
-        public async Task<BaseResponse<object>> Handle(ClosingEmailMessageQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(ClosingEmailMessageQuery Request, CancellationToken cancellationToken)
         {
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
+            string ResponseMessage = string.Empty;
+
+            EmailMessage? EmailMessageEntity = await _EmailMessageRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id); 
+            
+            if(EmailMessageEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Email message is not found"
+                    : "رسالة الإيميل غير موجودة";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
+
+            await _EmailMessageRepository
+                .Where(x => x.MessageId == EmailMessageEntity.MessageId)
+                .ExecuteUpdateAsync(x => x.SetProperty(y => y.Status, Domain.Constants.ContactUsConstants.MessageStatus.Close));
            
-            if(UserId == null)
-            {
-                return new BaseResponse<object>("Un Auth", false, 401);
-            }
-
-            var Role = _userRoleRepository.Where(r => r.UserId == int.Parse(UserId)).ToList();
-            
-            var message = await _emailMessageRepository.GetByIdAsync(request.Id); 
-            
-            if(message == null)
-            {
-                return new BaseResponse<object>("", false, 404);
-            }
-            
-            var allMessages = _emailMessageRepository.Where(m => m.MessageId == message.MessageId).ToList();
-           
-            foreach(var msg in allMessages)
-            {
-                msg.Status = Domain.Constants.ContactUsConstants.MessageStatus.Close;
-            }
-
-            await _emailMessageRepository.UpdateListAsync(allMessages);
-
-            return new BaseResponse<object>("", true, 200);
+            return new BaseResponse<object>(ResponseMessage, true, 200);
         }
     }
 }

@@ -10,10 +10,10 @@ namespace SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queri
     public class ParagraphCardListVM
     {
         public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
+        public string? Title { get; set; } = string.Empty;
         public string? Content { get; set; } = string.Empty;
-        public string EnglishTitle { get; set; } = string.Empty;
-        public string ArabicTitle { get; set; } = string.Empty;
+        public string? EnglishTitle { get; set; } = string.Empty;
+        public string? ArabicTitle { get; set; } = string.Empty;
         public string? EnglishContent { get; set; } = string.Empty;
         public string? ArabicContent { get; set; } = string.Empty;
         public string? ImageUrl { get; set; } = string.Empty;

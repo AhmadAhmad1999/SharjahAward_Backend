@@ -1,20 +1,34 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Helpers.ExcelHelper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Persistence.Repositories
 {
     public class ChatBotService : IChatBotService
     {
+        private readonly HttpClient _HttpClient;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
+
+        public ChatBotService(HttpClient _HttpClient,
+            IHttpContextAccessor _HttpContextAccessor)
+        {
+            this._HttpClient = _HttpClient;
+            this._HttpContextAccessor = _HttpContextAccessor;
+        }
         public string GetResponse(string message)
         {
-            string fileName = "wwwroot/RuleBased.json";
-            string jsonString = File.ReadAllText(fileName);
+            string fileName = "wwwroot/";
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string FolderPath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            var response = _HttpClient.GetAsync(FolderPath + "/RuleBased.json").Result;
+            response.EnsureSuccessStatusCode();
+            string jsonString = response.Content.ReadAsStringAsync().Result;
             var ObjectData = JsonConvert.DeserializeObject<PropertyJson>(jsonString);
 
             // Convert the user message to lowercase for case-insensitive matching

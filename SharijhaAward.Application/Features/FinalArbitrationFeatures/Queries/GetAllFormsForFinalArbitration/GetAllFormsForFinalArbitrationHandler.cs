@@ -72,7 +72,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 {
                     FinalArbitrationEntities = await _FinalArbitrationRepository
                         .Where(x => x.Type == Request.ArbitrationType)
-                        .OrderByDescending(x => x.CreatedAt)
+                        .OrderByDescending(x => x.ProvidedFormId)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
                         .ToListAsync();
@@ -89,7 +89,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 else
                 {
                     FinalArbitrationEntities = await _FinalArbitrationRepository
-                        .OrderByDescending(x => x.CreatedAt, Request.page, Request.perPage)
+                        .OrderByDescending(x => x.ProvidedFormId, Request.page, Request.perPage)
                         .ToListAsync();
 
                     TotalCount = await _FinalArbitrationRepository
@@ -123,7 +123,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         CategoryName = Request.lang == "en"
                             ? x.ProvidedForm!.Category!.EnglishName
                             : x.ProvidedForm!.Category!.ArabicName,
-                        FinalScore = FinalArbitrationScoreEntities.Sum(y => y.ArbitrationScore),
+                        FinalScore = FinalArbitrationScoreEntities
+                            .Where(y => y.FinalArbitrationId == x.Id)
+                            .Sum(y => y.ArbitrationScore),
                         DateOfArbitration = x.DateOfArbitration,
                         isAcceptedFromChairman = x.isAcceptedFromChairman,
                         Type = x.Type,
@@ -202,7 +204,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             .Where(x => x.Type == Request.ArbitrationType &&
                                 ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
                                 x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
-                            .OrderByDescending(x => x.CreatedAt)
+                            .OrderByDescending(x => x.ProvidedFormId)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
                             .ToListAsync();
@@ -225,7 +227,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         FinalArbitrationEntities = await _FinalArbitrationRepository
                             .Where(x => ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
                                 x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
-                            .OrderByDescending(x => x.CreatedAt)
+                            .OrderByDescending(x => x.ProvidedFormId)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
                             .ToListAsync();
@@ -263,7 +265,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             CategoryName = Request.lang == "en"
                                 ? x.ProvidedForm!.Category!.EnglishName
                                 : x.ProvidedForm!.Category!.ArabicName,
-                            FinalScore = FinalArbitrationScoreEntities.Sum(y => y.ArbitrationScore),
+                            FinalScore = FinalArbitrationScoreEntities
+                                .Where(y => y.FinalArbitrationId == x.Id)
+                                .Sum(y => y.ArbitrationScore),
                             DateOfArbitration = x.DateOfArbitration,
                             isAcceptedFromChairman = x.isAcceptedFromChairman,
                             Type = x.Type,
@@ -307,7 +311,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             .Where(x => x.Type == Request.ArbitrationType &&
                                 ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
                                 x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
-                            .OrderByDescending(x => x.CreatedAt)
+                            .OrderByDescending(x => x.ProvidedFormId)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
                             .ToListAsync();
@@ -322,7 +326,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         FinalArbitrationEntities = await _FinalArbitrationRepository
                             .Where(x => ArbitratorFormsIds.Contains(x.ProvidedFormId) &&
                                 x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
-                            .OrderByDescending(x => x.CreatedAt)
+                            .OrderByDescending(x => x.ProvidedFormId)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
                             .ToListAsync();
@@ -353,7 +357,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             CategoryName = Request.lang == "en"
                                 ? x.ProvidedForm!.Category!.EnglishName
                                 : x.ProvidedForm!.Category!.ArabicName,
-                            FinalScore = FinalArbitrationScoreEntities.Sum(y => y.ArbitrationScore),
+                            FinalScore = FinalArbitrationScoreEntities
+                                .Where(y => y.FinalArbitrationId == x.Id)
+                                .Sum(y => y.ArbitrationScore),
                             DateOfArbitration = x.DateOfArbitration,
                             isAcceptedFromChairman = x.isAcceptedFromChairman,
                             Type = x.Type,

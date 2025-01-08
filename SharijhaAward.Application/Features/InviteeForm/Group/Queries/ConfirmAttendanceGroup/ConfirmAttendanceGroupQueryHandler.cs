@@ -1,76 +1,42 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.InvitationModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using SharijhaAward.Domain.Entities.EventModel;
 
 namespace SharijhaAward.Application.Features.InviteeForm.Group.Queries.ConfirmAttendanceGroup
 {
     public class ConfirmAttendanceGroupQueryHandler
         : IRequestHandler<ConfirmAttendanceGroupQuery, BaseResponse<object>>
     {
-        private readonly IGroupInviteeRepository _GroupInviteeRepository;
-        private readonly IPersonalInviteeRepository _PersonalInviteeRepository;
-        public ConfirmAttendanceGroupQueryHandler(IGroupInviteeRepository GroupInviteeRepository,
-            IPersonalInviteeRepository PersonalInviteeRepository)
+        private readonly IAsyncRepository<GroupInviteeVirtualTable> _GroupInviteeVirtualTableRepository;
+        public ConfirmAttendanceGroupQueryHandler(IAsyncRepository<GroupInviteeVirtualTable> _GroupInviteeVirtualTableRepository)
         {
-            _GroupInviteeRepository = GroupInviteeRepository;
-            _PersonalInviteeRepository = PersonalInviteeRepository;
+            this._GroupInviteeVirtualTableRepository = _GroupInviteeVirtualTableRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(ConfirmAttendanceGroupQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
 
-            GroupInvitee? GroupInviteeEntity = await _GroupInviteeRepository
-                .GetByIdAsync(Request.Id);
+            GroupInviteeVirtualTable? GroupInviteeVirtualTableEntity = await _GroupInviteeVirtualTableRepository
+                .FirstOrDefaultAsync(x => x.UniqueIntegerId == Request.Id);
 
-            if (GroupInviteeEntity == null)
+            if (GroupInviteeVirtualTableEntity == null)
             {
-                PersonalInvitee? PersonalInviteeEntity = await _PersonalInviteeRepository
-                    .GetByIdAsync(Request.Id);
+                ResponseMessage = Request.lang == "en"
+                    ? "This identifier is not valid"
+                    : "هذا المعرف غير صالح";
 
-                if (PersonalInviteeEntity == null)
-                {
-                    ResponseMessage = Request.lang == "en"
-                        ? "This identifier is not valid"
-                        : "هذا المعرف غير صالح";
-
-                    return new BaseResponse<object>()
-                    {
-                        data = null,
-                        message = ResponseMessage,
-                        pagination = null,
-                        statusCode = 400,
-                        success = false
-                    };
-                }
-                else
-                {
-                    ResponseMessage = Request.lang == "en"
-                        ? "This identifier is not valid for group invites, but it's valid for personal invites"
-                        : "هذا المعرف غير صالح للدعوات الجماعية، ولكنه صالح للدعوات الشخصية";
-
-                    return new BaseResponse<object>()
-                    {
-                        data = null,
-                        message = ResponseMessage,
-                        pagination = null,
-                        statusCode = 400,
-                        success = false
-                    };
-                }
+                return new BaseResponse<object>(ResponseMessage, false, 400);
             }
 
-            await _GroupInviteeRepository.ConfirmationofAttendance(GroupInviteeEntity, Request.NumberOfAttendees);
+            GroupInviteeVirtualTableEntity.NumberOfActualAttendance = Request.NumberOfActualAttendance;
+            GroupInviteeVirtualTableEntity.IsAttend = true;
+
+            await _GroupInviteeVirtualTableRepository.UpdateAsync(GroupInviteeVirtualTableEntity);
 
             ResponseMessage = Request.lang == "en"
-                ? "Confirmed Sucsessfuly"
+                ? "Confirmed successfully"
                 : "تم تأكيد الدعوة الجماعية بنجاح";
 
             return new BaseResponse<object>(ResponseMessage, true, 200);

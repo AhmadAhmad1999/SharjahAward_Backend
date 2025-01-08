@@ -11,5 +11,9 @@ namespace SharijhaAward.Domain.Entities.DigitalSignatureModel
         public string Password { get; set; } = null!;
         public int UserId { get; set; }
         public User? User { get; set; }
+        public string ArabicFullName { get; set; } = null!;
+        public string EnglishFullName { get; set; } = null!;
+        public string EnglishOccupation { get; set; } = null!;
+        public string ArabicOccupation { get; set; } = null!;
     }
 }

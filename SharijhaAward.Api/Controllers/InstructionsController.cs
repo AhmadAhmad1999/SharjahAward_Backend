@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Features.InstructionsFeatures.Commands.UpdateInstruction;
 using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetAllInstructions;
 using SharijhaAward.Application.Features.InstructionsFeatures.Queries.GetInstructionBySlugId;

@@ -1,13 +1,7 @@
-﻿using Aspose.Pdf.Plugins;
-using SharijhaAward.Domain.Common;
+﻿using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Constants.ContactUsConstants;
 using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Domain.Entities.ContactUsModels
 {

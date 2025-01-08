@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.TemplateModel;
@@ -11,12 +12,15 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Commands.CreateTem
     {
         private readonly IMapper _Mapper;
         private readonly IAsyncRepository<Template> _TemplateRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public CreateTemplateHandler(IMapper Mapper,
-            IAsyncRepository<Template> _TemplateRepository)
+        public CreateTemplateHandler(IMapper _Mapper,
+            IAsyncRepository<Template> _TemplateRepository,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _Mapper = Mapper;
+            this._Mapper = _Mapper;
             this._TemplateRepository = _TemplateRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateTemplateCommand Request, CancellationToken cancellationToken)
@@ -37,7 +41,8 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Commands.CreateTem
                     if (Request.isActive)
                     {
                         Template? ActiveTemplateEntity = await _TemplateRepository
-                            .FirstOrDefaultAsync(x => x.isActive);
+                            .FirstOrDefaultAsync(x => x.isActive &&
+                                x.TemplateType == Request.TemplateType);
 
                         if (ActiveTemplateEntity is not null)
                         {
@@ -47,6 +52,29 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Commands.CreateTem
                     }
 
                     Template NewTemplateEntity = _Mapper.Map<Template>(Request);
+
+                    if (Request.BackgroundImageFile is not null)
+                    {
+                        string? FileName = $"{NewTemplateEntity.TemplateType}-{NewTemplateEntity.TemplateVersion}";
+
+                        string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"/CertificateTemplates/{FileName}";
+
+                        string? FolderPathToCreate = Request.WWWRootFilePath!;
+                        string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
+
+                        while (File.Exists(FilePathToSaveIntoDataBase))
+                        {
+                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
+                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
+                        }
+
+                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                        {
+                            Request.BackgroundImageFile.CopyTo(FileStream);
+                        }
+
+                        NewTemplateEntity.BackgroundImageUrl = FilePathToSaveIntoDataBase;
+                    }
 
                     await _TemplateRepository.AddAsync(NewTemplateEntity);
 

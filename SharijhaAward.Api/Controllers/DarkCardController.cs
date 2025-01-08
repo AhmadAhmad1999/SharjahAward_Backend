@@ -1,11 +1,5 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SharijhaAward.Application.Features.Circulars.Command.CreateCircular;
-using SharijhaAward.Application.Features.Circulars.Command.DeleteCircular;
-using SharijhaAward.Application.Features.Circulars.Command.UpdateCircular;
-using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
-using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.CreateDarkCard;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.DeleteDarkCard;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.UpdateDarkCard;

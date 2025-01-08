@@ -1,10 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SharijhaAward.Domain.Entities.IdentityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Persistence.Seeders
 {
@@ -2678,10 +2672,357 @@ namespace SharijhaAward.Persistence.Seeders
                     LastModifiedAt = null,
                     LastModifiedBy = null
 
+                }, new Permission()
+                {
+                    // Id = 189,
+                    Name = "عرض النماذج المتقدمة",
+                    Action = "show-all",
+                    PermissionHeaderId = 50,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 190,
+                    Name = "إضافة نموذج متقدم",
+                    Action = "create",
+                    PermissionHeaderId = 50,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 191,
+                    Name = "حذف نموذج متقدم",
+                    Action = "delete",
+                    PermissionHeaderId = 50,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 192,
+                    Name = "تعديل نموذج متقدم",
+                    Action = "update",
+                    PermissionHeaderId = 50,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 193,
+                    Name = "عرض تفاصيل نموذج متقدم",
+                    Action = "read",
+                    PermissionHeaderId = 50,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 194,
+                    Name = "تفعيل نموذج شهادة",
+                    Action = "active",
+                    PermissionHeaderId = 51,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 195,
+                    Name = "عرض نماذج الشهادات",
+                    Action = "show-all",
+                    PermissionHeaderId = 51,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 196,
+                    Name = "إضافة نموذج شهادة",
+                    Action = "create",
+                    PermissionHeaderId = 51,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 197,
+                    Name = "حذف نموذج شهادة",
+                    Action = "delete",
+                    PermissionHeaderId = 51,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 198,
+                    Name = "تعديل نموذج شهادة",
+                    Action = "update",
+                    PermissionHeaderId = 51,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 199,
+                    Name = "عرض تفاصيل نموذج شهادة",
+                    Action = "read",
+                    PermissionHeaderId = 51,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 200,
+                    Name = "عرض التواقيع الرقمية",
+                    Action = "show-all",
+                    PermissionHeaderId = 52,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 201,
+                    Name = "إضافة توقيع رقمي",
+                    Action = "create",
+                    PermissionHeaderId = 52,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 202,
+                    Name = "حذف توقيع رقمي",
+                    Action = "delete",
+                    PermissionHeaderId = 52,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 203,
+                    Name = "تعديل توقيع رقمي",
+                    Action = "update",
+                    PermissionHeaderId = 52,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 204,
+                    Name = "عرض تفاصيل توقيع رقمي",
+                    Action = "read",
+                    PermissionHeaderId = 52,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 205,
+                    Name = "عرض تفاصيل الChatBot",
+                    Action = "read",
+                    PermissionHeaderId = 53,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 206,
+                    Name = "تعديل الChatBot",
+                    Action = "update",
+                    PermissionHeaderId = 53,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 207,
+                    Name = "التحدث مع الChatBot",
+                    Action = "read",
+                    PermissionHeaderId = 53,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 208,
+                    Name = "إضافة سؤال إلى الChatBot",
+                    Action = "create",
+                    PermissionHeaderId = 53,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 209,
+                    Name = "حذف سؤال من الChatBot",
+                    Action = "delete",
+                    PermissionHeaderId = 53,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 210,
+                    Name = "عرض الأسئلة ضمن الChatBot",
+                    Action = "read",
+                    PermissionHeaderId = 53,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 211,
+                    Name = "إضافة شريط إخباري",
+                    Action = "create",
+                    PermissionHeaderId = 54,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 212,
+                    Name = "عرض شريط إخباري",
+                    Action = "read",
+                    PermissionHeaderId = 54,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 213,
+                    Name = "تعديل شريط إخباري",
+                    Action = "update",
+                    PermissionHeaderId = 54,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 214,
+                    Name = "حذف شريط إخباري",
+                    Action = "delete",
+                    PermissionHeaderId = 54,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 215,
+                    Name = "عرض إشعار ستاتيكي",
+                    Action = "read",
+                    PermissionHeaderId = 55,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 216,
+                    Name = "تعديل حالة إشعار ستاتيكي",
+                    Action = "update",
+                    PermissionHeaderId = 55,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 217,
+                    Name = "تعديل نص إشعار ستاتيكي",
+                    Action = "update",
+                    PermissionHeaderId = 55,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
                 });
                await _context.SaveChangesAsync();
             }
         }
-
     }
 }

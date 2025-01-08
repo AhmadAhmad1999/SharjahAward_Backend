@@ -8,5 +8,6 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
         public string Name { get; set; } = null!;
         public bool TableTypeSection { get; set; }
         public List<AdvancedFormBuilderListWithListValuesVM> AdvancedFormBuilders { get; set; } = new List<AdvancedFormBuilderListWithListValuesVM>();
+        public List<ViewWhenForAddDto> ViewWhenForAddDtos { get; set; } = new List<ViewWhenForAddDto>();
     }
 }

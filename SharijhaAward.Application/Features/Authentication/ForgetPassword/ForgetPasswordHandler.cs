@@ -2,6 +2,7 @@
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
+using System.Net.Http;
 using System.Net.Mail;
 
 namespace SharijhaAward.Application.Features.Authentication.ForgetPassword
@@ -44,11 +45,9 @@ namespace SharijhaAward.Application.Features.Authentication.ForgetPassword
 
             string EmailSubject = "معلومات الحساب الشخصي" + "-" + "Personal account information";
 
-            string HtmlBody = "wwwroot/ConfirmationCode_Template.html";
+            string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath + "/ConfirmationCode_Template.html");
 
-            string HTMLContent = File.ReadAllText(HtmlBody);
-
-            byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+            byte[] HeaderImageBytes = await File.ReadAllBytesAsync(Request.WWWRootFilePath + "/assets/qr/header.png");
             string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
 
             string FullEmailBody = HTMLContent

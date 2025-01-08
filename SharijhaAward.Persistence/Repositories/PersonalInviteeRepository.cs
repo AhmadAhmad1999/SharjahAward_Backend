@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Domain.Entities.InvitationModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static QRCoder.PayloadGenerator;
 
 namespace SharijhaAward.Persistence.Repositories
 {

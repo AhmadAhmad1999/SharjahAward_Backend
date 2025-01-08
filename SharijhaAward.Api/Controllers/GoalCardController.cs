@@ -1,12 +1,10 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.CreateGoalCard;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.DeleteGoalCard;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetAllGoalCardsByPageId;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetGoalCardById;
-using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.CreateGoalCard;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Queries.GetAllGoalCardsDashboard;
 using SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.UpdateGoalCard;
 

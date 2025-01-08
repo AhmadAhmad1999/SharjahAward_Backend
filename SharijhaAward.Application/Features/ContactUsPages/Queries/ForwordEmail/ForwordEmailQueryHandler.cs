@@ -4,64 +4,60 @@ using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ContactUsPages.Queries.ForwordEmail
 {
     public class ForwordEmailQueryHandler
         : IRequestHandler<ForwordEmailQuery, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<EmailMessage> _emailMessageRepository;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IUserRepository _userRepository;
-        public ForwordEmailQueryHandler(IUserRepository userRepository, IJwtProvider jwtProvider, IAsyncRepository<EmailMessage> emailMessageRepository)
+        private readonly IUserRepository _UserRepository;
+        private readonly IJwtProvider _JWTProvider;
+        private readonly IAsyncRepository<EmailMessage> _EmailMessageRepository;
+        public ForwordEmailQueryHandler(IUserRepository _UserRepository,
+            IJwtProvider _JWTProvider,
+            IAsyncRepository<EmailMessage> _EmailMessageRepository)
         {
-            _emailMessageRepository = emailMessageRepository;
-            _jwtProvider = jwtProvider;
-            _userRepository = userRepository;
+            this._UserRepository = _UserRepository;
+            this._JWTProvider = _JWTProvider;
+            this._EmailMessageRepository = _EmailMessageRepository;
         }
 
-        public async Task<BaseResponse<object>> Handle(ForwordEmailQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(ForwordEmailQuery Request, CancellationToken cancellationToken)
         {
-            var Message = await _emailMessageRepository.GetByIdAsync(request.MsgId);
-            if(Message == null)
-            {
+            EmailMessage? EmailMessageEntity = await _EmailMessageRepository
+                .IncludeThenFirstOrDefaultAsync(x => x.message!, x => x.Id == Request.MsgId);
+
+            if(EmailMessageEntity is null)
                 return new BaseResponse<object>("", false, 404);
-            }
 
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
-            if (User == null)
-            {
+            Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
+                .FirstOrDefaultAsync(x => x.Id == int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!)));
+
+            if (UserEntity is null)
                 return new BaseResponse<object>("", false, 401);
-            }
-            Message.From = User.Email;
-            if (!request.To.IsNullOrEmpty())
+
+            EmailMessageEntity.From = UserEntity.Email;
+
+            if (!Request.To.IsNullOrEmpty())
             {
-                var UserAsign = await _userRepository.GetByEmailAsync(request.To!,false);
+                Domain.Entities.IdentityModels.User? UserAssignEntity = await _UserRepository
+                    .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.To!.ToLower() &&
+                        string.IsNullOrEmpty(x.SubscriberId));
                
-                if(UserAsign == null)
-                {
-                    return new BaseResponse<object>("This Email Not Found", false, 400);
-                }
+                if (UserAssignEntity is null)
+                    return new BaseResponse<object>("This email is not found", false, 400);
                
-                Message.To = request.To;
+                EmailMessageEntity.To = Request.To;
 
-                Message.AsignId = UserAsign.Id;
+                EmailMessageEntity.AsignId = UserAssignEntity.Id;
             }
-            if(request.TypeId != null)
-            {
-                Message.TypeId = (int)request.TypeId;
-            }
-            
 
-            await _emailMessageRepository.UpdateAsync(Message);
+            if(Request.TypeId != null)
+                EmailMessageEntity.TypeId = (int)Request.TypeId;
 
-            return new BaseResponse<object>("", true, 200);
+            await _EmailMessageRepository.UpdateAsync(EmailMessageEntity);
+
+            return new BaseResponse<object>("تم إعادة توجيه الرسالة بنجاح", true, 200);
         }
     }
 }

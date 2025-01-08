@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
 using SharijhaAward.Application.Features.News.Commands.CreateNews;
 using SharijhaAward.Application.Features.News.Commands.DeleteNews;
 using SharijhaAward.Application.Features.News.Commands.UpdateNews;

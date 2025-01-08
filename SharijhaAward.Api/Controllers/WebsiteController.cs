@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage;
 using SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPageWebSite;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetVirtualTableById;
+using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Queries.GetAllAdvancedFormBuilderSectionsForAdd;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 using SharijhaAward.Application.Features.Albums.Galleries.Queries.GetAllGalleries;
@@ -21,6 +22,7 @@ using SharijhaAward.Application.Features.ChatBotQuestions.Queries.TalkWithChatBo
 using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessage;
 using SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd;
 using SharijhaAward.Application.Features.Event.Queries.GetEventById;
 using SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAllGeneralFAQCategory;
 using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllHomePageSliderItems;
@@ -30,6 +32,7 @@ using SharijhaAward.Application.Features.MessageTypes.Queries.GetAllMsgType;
 using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId;
 using SharijhaAward.Application.Features.News.Queries.GetNewsById;
+using SharijhaAward.Application.Features.NewsTickerFeatures.Queries.GetAllNewsTicker;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPages;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPagesWithSubPages;
 using SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById;
@@ -41,7 +44,11 @@ using SharijhaAward.Application.Features.Settings.Queries.GetTermsOfUse;
 using SharijhaAward.Application.Features.SocialMediaPage.Queries.GetAllSocialMediaItems;
 using SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStrategicPartners;
 using SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinnersForWebsite;
+using SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValue;
+using SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValueForSave;
+using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -51,10 +58,13 @@ namespace SharijhaAward.Api.Controllers
     public class WebsiteController : ControllerBase
     {
         private readonly IMediator _Mediator;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public WebsiteController(IMediator Mediator)
+        public WebsiteController(IMediator Mediator,
+            IWebHostEnvironment _WebHostEnvironment)
         {
             _Mediator = Mediator;
+            this._WebHostEnvironment = _WebHostEnvironment;
         }
 
         [HttpGet("ChatBot/GetInitialQuestions")]
@@ -884,7 +894,7 @@ namespace SharijhaAward.Api.Controllers
 
             query.lang = HeaderValue!;
 
-            BaseResponse<List<MainPageWithSubPageListVM>> Response = await _Mediator.Send(query);
+            BaseResponse<GetMainPagesWithSubPagesResponse> Response = await _Mediator.Send(query);
 
             return Response.statusCode switch
             {
@@ -953,6 +963,205 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = HeaderValue!
             });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllAdvancedFormBuilderSectionsForAdd/{PrivateHashKey}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllAdvancedFormBuilderSectionsForAdd(string PrivateHashKey)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllAdvancedFormBuilderSectionsForAddListVM>> Response = await _Mediator.Send(new GetAllAdvancedFormBuilderSectionsForAddQuery()
+            {
+                lang = HeaderValue!,
+                PrivateHashKey = PrivateHashKey
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("AddAdvancedFormBuilderValue")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            AddAdvancedFormBuilderValue([FromForm] AddAdvancedFormBuilderValueCommand AddAdvancedFormBuilderValueCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            AddAdvancedFormBuilderValueCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            AddAdvancedFormBuilderValueCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/AdvancedFormsFiles/";
+            BaseResponse<AddAdvancedFormBuilderValueResponse>? Response = await _Mediator.Send(AddAdvancedFormBuilderValueCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("AddAdvancedFormBuilderValueForSave")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            AddAdvancedFormBuilderValueForSave([FromForm] AddAdvancedFormBuilderValueForSaveCommand AddAdvancedFormBuilderValueForSaveCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            AddAdvancedFormBuilderValueForSaveCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            AddAdvancedFormBuilderValueForSaveCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/AdvancedFormsFiles/";
+            BaseResponse<int> Response = await _Mediator.Send(AddAdvancedFormBuilderValueForSaveCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetVirtualTableById/{PrivateHashKey}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetVirtualTableById(string PrivateHashKey)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<GetVirtualTableByIdDto> Response = await _Mediator.Send(new GetVirtualTableByIdQuery()
+            {
+                PrivateHashKey = PrivateHashKey,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("DynamicAttributeSection/GetAllDynamicAttributeSectionsForAdd")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllDynamicAttributeSectionsForAdd(int? ProvidedFormId,
+            int? ArbitratorId, int? CoordinatorId, bool? isArbitrator, int? EventId, InviteeTypes? InviteeType,
+            int? GroupInviteeId, int? PersonalInviteeId, int? GroupInviteeNumber, int? PersonalInviteeNumber)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>> Response = await _Mediator.Send(new GetAllDynamicAttributeSectionsForAddQuery()
+            {
+                lang = HeaderValue!,
+                ProvidedFormId = ProvidedFormId,
+                ArbitratorId = ArbitratorId,
+                CoordinatorId = CoordinatorId,
+                isArbitrator = isArbitrator,
+                EventId = EventId,
+                InviteeType = InviteeType,
+                GroupInviteeId = GroupInviteeId,
+                PersonalInviteeId = PersonalInviteeId,
+                GroupInviteeNumber = GroupInviteeNumber,
+                PersonalInviteeNumber = PersonalInviteeNumber
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("DynamicAttribute/AddDynamicAttributeValue")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            AddDynamicAttributeValue([FromForm] AddDynamicAttributeValueCommand AddDynamicAttributeValueCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+            AddDynamicAttributeValueCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            AddDynamicAttributeValueCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/DynamicFiles/";
+            BaseResponse<AddDynamicAttributeValueResponse>? Response = await _Mediator.Send(AddDynamicAttributeValueCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("NewsTickers/GetAllNewsTicker")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllNewsTicker([FromQuery] GetAllNewsTickerQuery GetAllNewsTickerQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllNewsTickerQuery.lang = HeaderValue!;
+
+            BaseResponse<List<GetAllNewsTickerListVM>> Response = await _Mediator.Send(GetAllNewsTickerQuery);
 
             return Response.statusCode switch
             {

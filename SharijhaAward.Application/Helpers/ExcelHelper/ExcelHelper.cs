@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllArbitrationResults;
 using SharijhaAward.Domain.Constants;
 using QRCoder.Extensions;
+using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 
 
 namespace SharijhaAward.Application.Helpers.ExcelHelper
@@ -16,11 +18,14 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
     public class ExcelHelper<T> : IExcelHelper<T> where T : class
     {
         private IServiceProvider _ServiceProvider;
-        
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public ExcelHelper(IServiceProvider serviceProvider)
+
+        public ExcelHelper(IServiceProvider serviceProvider,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             _ServiceProvider = serviceProvider;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
 
@@ -38,8 +43,14 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
             var style = workbook.CreateCellStyle();
             style.SetFont(font);
 
-            string fileName = "wwwroot/localization.json";
-            string jsonString = File.ReadAllText(fileName);
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string FolderPath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            string jsonString = File.ReadAllText(FolderPath + "/localization.json");
+
             var ObjectData = JsonConvert.DeserializeObject<PropertyJson>(jsonString);
 
             var colIndex = 0;

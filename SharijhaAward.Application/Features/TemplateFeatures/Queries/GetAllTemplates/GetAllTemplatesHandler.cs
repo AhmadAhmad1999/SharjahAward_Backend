@@ -26,18 +26,65 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Queries.GetAllTemp
 
             FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
-            List<GetAllTemplatesListVM> GetAllTemplatesListVM = _Mapper.Map<List<GetAllTemplatesListVM>>(await _TemplateRepository
-                .OrderByDescending(FilterObject, x => x.CreatedAt, Request.page, Request.perPage)
-                .ToListAsync());
+            if (Request.isActive is not null)
+            {
+                if (Request.page != 0 && Request.perPage != -1)
+                {
+                    List<GetAllTemplatesListVM> GetAllTemplatesListVM = _Mapper.Map<List<GetAllTemplatesListVM>>(await _TemplateRepository
+                        .WhereThenFilter(x => x.isActive == Request.isActive &&
+                            (Request.TemplateType != null ? x.TemplateType == Request.TemplateType : true), FilterObject)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
+                        .ToListAsync());
 
-            int TotalCount = await _TemplateRepository
-                .Filter(FilterObject)
-                .CountAsync();
+                    int TotalCount = await _TemplateRepository
+                        .WhereThenFilter(x => x.isActive == Request.isActive &&
+                            (Request.TemplateType != null ? x.TemplateType == Request.TemplateType : true), FilterObject)
+                        .CountAsync();
 
-            Pagination PaginationParameter = new Pagination(Request.page,
-                Request.perPage, TotalCount);
+                    Pagination PaginationParameter = new Pagination(Request.page,
+                        Request.perPage, TotalCount);
 
-            return new BaseResponse<List<GetAllTemplatesListVM>>(ResponseMessage, true, 200, GetAllTemplatesListVM, PaginationParameter);
+                    return new BaseResponse<List<GetAllTemplatesListVM>>(ResponseMessage, true, 200, GetAllTemplatesListVM, PaginationParameter);
+                }
+                else
+                {
+                    List<GetAllTemplatesListVM> GetAllTemplatesListVM = _Mapper.Map<List<GetAllTemplatesListVM>>(await _TemplateRepository
+                        .WhereThenFilter(x => x.isActive == Request.isActive &&
+                            (Request.TemplateType != null ? x.TemplateType == Request.TemplateType : true), FilterObject)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .ToListAsync());
+
+                    int TotalCount = await _TemplateRepository
+                        .WhereThenFilter(x => x.isActive == Request.isActive &&
+                            (Request.TemplateType != null ? x.TemplateType == Request.TemplateType : true), FilterObject)
+                        .CountAsync();
+
+                    Pagination PaginationParameter = new Pagination(Request.page,
+                        Request.perPage, TotalCount);
+
+                    return new BaseResponse<List<GetAllTemplatesListVM>>(ResponseMessage, true, 200, GetAllTemplatesListVM, PaginationParameter);
+                }
+            }
+            else
+            {
+                List<GetAllTemplatesListVM> GetAllTemplatesListVM = _Mapper.Map<List<GetAllTemplatesListVM>>(await _TemplateRepository
+                    .WhereThenFilter(x => Request.TemplateType != null ? x.TemplateType == Request.TemplateType : true, FilterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.page)
+                    .Take(Request.perPage)
+                    .ToListAsync());
+
+                int TotalCount = await _TemplateRepository
+                    .WhereThenFilter(x => Request.TemplateType != null ? x.TemplateType == Request.TemplateType : true, FilterObject)
+                    .CountAsync();
+
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.perPage, TotalCount);
+
+                return new BaseResponse<List<GetAllTemplatesListVM>>(ResponseMessage, true, 200, GetAllTemplatesListVM, PaginationParameter);
+            }
         }
     }
 }

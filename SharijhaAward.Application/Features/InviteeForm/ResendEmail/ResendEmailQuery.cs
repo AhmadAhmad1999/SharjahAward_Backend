@@ -1,14 +1,9 @@
 ﻿using MediatR;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Application.Features.InviteeForm.ResendEmail
 {
-    public class ResendEmailQuery : IRequest<Unit>
+    public class ResendEmailQuery : IRequest<BaseResponse<object>>
     {
         public int InviteeId { get; set; }
         public string Type { get; set; }=string.Empty;

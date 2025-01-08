@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
@@ -9,113 +10,130 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ContactUsModels;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.RoleMessageTypeModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetMsgByIdForAwardTeam
 {
     public class GetMsgByIdForAwardTeamQueryHandler
         : IRequestHandler<GetMsgByIdForAwardTeamQuery, BaseResponse<EmailMessageDto>>
     {
-        private readonly IAsyncRepository<EmailMessage> _emailMessageRepository;
-        private readonly IAsyncRepository<EmailAttachment> _emailAttachmentRepository;
-        private readonly IAsyncRepository<RoleMessageType> _roleMessageTypeRepository;
-        private readonly IAsyncRepository<MessageType> _messageTypeRepository;
-        private readonly IAsyncRepository<UserRole> _userRoleRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<EmailMessage> _EmailMessageRepository;
+        private readonly IAsyncRepository<EmailAttachment> _EmailAttachmentRepository;
+        private readonly IAsyncRepository<RoleMessageType> _RoleMessageTypeRepository;
+        private readonly IAsyncRepository<MessageType> _MessageTypeRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IUserRepository _UserRepository;
+        private readonly IJwtProvider _JwtProvider;
+        private readonly IMapper _Mapper;
 
-        public GetMsgByIdForAwardTeamQueryHandler(IAsyncRepository<RoleMessageType> roleMessageTypeRepository, IAsyncRepository<UserRole> userRoleRepository, IAsyncRepository<EmailMessage> emailMessageRepository, IAsyncRepository<EmailAttachment> emailAttachmentRepository, IAsyncRepository<MessageType> messageTypeRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetMsgByIdForAwardTeamQueryHandler(IAsyncRepository<RoleMessageType> _RoleMessageTypeRepository, IAsyncRepository<UserRole> _UserRoleRepository, IAsyncRepository<EmailMessage> _EmailMessageRepository, IAsyncRepository<EmailAttachment> _EmailAttachmentRepository, IAsyncRepository<MessageType> _MessageTypeRepository, IUserRepository _UserRepository, IJwtProvider _JwtProvider, IMapper _Mapper)
         {
-            _emailMessageRepository = emailMessageRepository;
-            _emailAttachmentRepository = emailAttachmentRepository;
-            _messageTypeRepository = messageTypeRepository;
-            _roleMessageTypeRepository = roleMessageTypeRepository;
-            _userRoleRepository = userRoleRepository;
-            _userRepository = userRepository;
-            _jwtProvider = jwtProvider;
-            _mapper = mapper;
+            this._EmailMessageRepository = _EmailMessageRepository;
+            this._EmailAttachmentRepository = _EmailAttachmentRepository;
+            this._MessageTypeRepository = _MessageTypeRepository;
+            this._RoleMessageTypeRepository = _RoleMessageTypeRepository;
+            this._UserRoleRepository = _UserRoleRepository;
+            this._UserRepository = _UserRepository;
+            this._JwtProvider = _JwtProvider;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<EmailMessageDto>> Handle(GetMsgByIdForAwardTeamQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<EmailMessageDto>> Handle(GetMsgByIdForAwardTeamQuery Request, CancellationToken cancellationToken)
         {
-            string msg;
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token);
-            var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
+            string ResponseMessage = string.Empty;
 
-            if (User == null)
-            {
-                msg = request.lang == "en"
-                    ? "Un Authorize"
-                    : "إنتهت صلاحية الجلسة";
-                return new BaseResponse<EmailMessageDto>(msg, false, 401);
-            }
-            var RoleIds = _userRoleRepository.Where(r => r.UserId == int.Parse(UserId)).Select(r => r.RoleId).ToList();
-           
-            List<int> MessageTypeIds = new List<int>();
-
-            for (int i = 0; i < RoleIds.Count(); i++)
-            {
-                var TypeIds = _roleMessageTypeRepository.Where(r => r.RoleId == RoleIds[i]).Select(r => r.MessageTypeId).ToList();
-                MessageTypeIds.AddRange(TypeIds);
-            }
-
-            var message = await _emailMessageRepository
-                .FirstOrDefaultAsync(m => m.Id == request.Id);
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.token));
             
-            if (message == null && !MessageTypeIds.Contains(message!.TypeId))
+            var User = await _UserRepository
+                .FirstOrDefaultAsync(x => x.Id == UserId);
+
+            List<int> RoleIds = await _UserRoleRepository
+                .Where(x => x.UserId == UserId)
+                .Select(x => x.RoleId)
+                .ToListAsync();
+           
+            List<int> MessageTypeIds = await _RoleMessageTypeRepository
+                .Where(x => RoleIds.Contains(x.RoleId))
+                .Select(x => x.MessageTypeId)
+                .ToListAsync();
+
+            EmailMessage? EmailMessageEntity = await _EmailMessageRepository
+                .FirstOrDefaultAsync(m => m.Id == Request.Id);
+            
+            if (EmailMessageEntity is null)
             {
-                msg = request.lang == "en"
-                    ? "Message Not Found"
+                ResponseMessage = Request.lang == "en"
+                    ? "Message is not found"
                     : "الرسالة غير موجودة";
 
-                return new BaseResponse<EmailMessageDto>(msg, false, 404);
+                return new BaseResponse<EmailMessageDto>(ResponseMessage, false, 404);
             }
 
-            if (!message.IsRead)
+            if (!EmailMessageEntity.IsRead)
             {
-                message.IsRead = true;
-                message.Status = Domain.Constants.ContactUsConstants.MessageStatus.InProgress;
-                await _emailMessageRepository.UpdateAsync(message);
+                EmailMessageEntity.IsRead = true;
+                EmailMessageEntity.Status = Domain.Constants.ContactUsConstants.MessageStatus.InProgress;
+                await _EmailMessageRepository.UpdateAsync(EmailMessageEntity);
             }
-            var Type = await _messageTypeRepository.GetByIdAsync(message.TypeId);
 
-            var data = _mapper.Map<EmailMessageDto>(message);
+            EmailMessageDto Response = _Mapper.Map<EmailMessageDto>(EmailMessageEntity);
 
-            var Sender = await _userRepository.GetByIdAsync(message.UserId);
+            if (EmailMessageEntity.UserId is null)
+                Response.FromWebsite = true;
 
-            data.Attachments = _mapper.Map<List<EmailAttachmentListVm>>(await _emailAttachmentRepository
-                .Where(x => x.MessageId == data.Id).ToListAsync());
+            Response.Attachments = _Mapper.Map<List<EmailAttachmentListVm>>(await _EmailAttachmentRepository
+                .Where(x => x.MessageId == Response.Id).ToListAsync());
 
-            data.PersonalPhotoUrl = Sender.ImageURL!;
-            data.Gender = Sender.Gender;
-            data.TypeName = request.lang == "en" ? Type!.EnglishType : Type!.ArabicType;
+            Response.PersonalPhotoUrl = EmailMessageEntity.User is not null 
+                ? EmailMessageEntity.User!.ImageURL!
+                : string.Empty;
 
-            var ReplayMessages = await _emailMessageRepository
-                .Where(m => m.MessageId == message.Id && m.Id != message.Id)
+            Response.Gender = EmailMessageEntity.User is not null
+                ? EmailMessageEntity.User!.Gender
+                : null;
+
+            Response.TypeName = Request.lang == "en" 
+                ? EmailMessageEntity.Type!.EnglishType 
+                : EmailMessageEntity.Type!.ArabicType;
+
+            List<EmailMessage> ReplayMessages = await _EmailMessageRepository
+                .Where(x => x.MessageId == EmailMessageEntity.Id &&
+                    x.Id != EmailMessageEntity.Id)
                 .ToListAsync();
 
-            data.ReplayMessages = _mapper.Map<List<EmailMessageDto>>(ReplayMessages);
-
-            List<EmailAttachment> AllEmailAttachmentEntities = await _emailAttachmentRepository
-                .Where(x => data.ReplayMessages.Select(y => y.Id).Contains(x.MessageId))
+            List<EmailAttachment> AllEmailAttachmentEntities = await _EmailAttachmentRepository
+                .Where(x => ReplayMessages.Select(y => y.Id).Contains(x.MessageId))
                 .ToListAsync();
 
-            for (int i = 0; i < data.ReplayMessages.Count(); i++)
-            {
-                data.ReplayMessages[i].PersonalPhotoUrl = User.ImageURL!;
-                data.ReplayMessages[i].Gender = User.Gender;
+            Response.ReplayMessages = ReplayMessages
+                .Select(x => new EmailMessageDto()
+                {
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    From = x.From,
+                    To = x.To,
+                    Body = x.Body,
+                    TypeId = x.TypeId,
+                    TypeName = Request.lang == "en"
+                        ? x.Type.EnglishType
+                        : x.Type.ArabicType,
+                    Status = x.Status,
+                    IsRead = x.IsRead,
+                    MessageId = x.MessageId,
+                    IsReplay = x.MessageId == x.Id
+                        ? false
+                        : true,
+                    CreatedAt = x.CreatedAt,
+                    PersonalPhotoUrl = User!.ImageURL!,
+                    Gender = User!.Gender!,
+                    Attachments = _Mapper.Map<List<EmailAttachmentListVm>>(AllEmailAttachmentEntities
+                        .Where(y => x.Id == y.MessageId)
+                        .ToList()),
+                    FromWebsite = EmailMessageEntity.UserId == null
+                        ? true : false
+                }).ToList();
 
-                data.ReplayMessages[i].Attachments = _mapper.Map<List<EmailAttachmentListVm>>(AllEmailAttachmentEntities
-                    .Where(x => x.MessageId == data.ReplayMessages[i].Id)
-                    .ToList());
-            }
-
-            return new BaseResponse<EmailMessageDto>("", true, 200, data);
+            return new BaseResponse<EmailMessageDto>("", true, 200, Response);
         }
     }
 }

@@ -1,13 +1,6 @@
-﻿using Aspose.Pdf.Plugins;
-using MediatR;
-using Microsoft.AspNetCore.Hosting;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using NPOI.HPSF;
-using PdfSharpCore.Pdf;
 using SharijhaAward.Application.Contract.Infrastructure;
-using SharijhaAward.Application.Features.Event.Queries.GetAllEvents;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.DeleteWorkshopAttachment;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.UpdateWorkshopAttachment;
@@ -17,11 +10,12 @@ using SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTrainin
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTrainingWorkshops;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetTrainingWorkshopById;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId;
-using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
-using System;
-using System.Text.Json.Nodes;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.TrainingWorkshops.Queries.ExportToExcel;
+using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Application.Features.AppVersioningFeatures.Command.CreateNewAppVersion;
+using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -30,34 +24,41 @@ namespace SharijhaAward.Api.Controllers
     [ApiController]
     public class TrainingWorkshopController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IMediator _Mediator;
         private readonly IWebHostEnvironment _environment;
         private readonly IFileService _fileService;
 
         public TrainingWorkshopController(IFileService fileService, IMediator mediator, IWebHostEnvironment environment)
         {
-            _mediator = mediator;
+            _Mediator = mediator;
             _environment = environment;
             _fileService = fileService;
         }
 
         [HttpPost(Name = "CreateTrainingWorkshop")]
 
-        public async Task<ActionResult> CreateTrainingWorkshop([FromForm] CreateTrainingWorkshopsCommand command)
+        public async Task<ActionResult> CreateTrainingWorkshop([FromForm] CreateTrainingWorkshopsCommand CreateTrainingWorkshopsCommand)
         {
-            var response = await _mediator.Send(command);
-            return Ok(
-                new
-                {
-                    data = response,
-                    message = "تم إنشاء دورة تدريبية بنجاح"
-                });
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            CreateTrainingWorkshopsCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<int>? Response = await _Mediator.Send(CreateTrainingWorkshopsCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
         }
         [HttpPut(Name = "UpdateTringingWorkshop")]
 
         public async Task<ActionResult> UpdateTringingWorkshop([FromForm] UpdateTrainingWorkshopCommand command)
         {
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -73,7 +74,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new DeleteTrainingWorkshopCommand() {Id = Id });
+            var response = await _Mediator.Send(new DeleteTrainingWorkshopCommand() {Id = Id });
             return response.statusCode switch
             {
                 200 => Ok(response),
@@ -88,7 +89,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetTrainingWorkshopByIdQuery()
+            var response = await _Mediator.Send(new GetTrainingWorkshopByIdQuery()
             { 
                 Id = Id,
                 lang = Language!
@@ -108,7 +109,7 @@ namespace SharijhaAward.Api.Controllers
             var Language = HttpContext.Request.Headers["lang"];
 
             //get data from mediator
-            var response = await _mediator.Send(new GetAllTrainingWorkshopsQuery()
+            var response = await _Mediator.Send(new GetAllTrainingWorkshopsQuery()
             {
                 lang = Language!,
                 perPage=perPage,
@@ -132,7 +133,7 @@ namespace SharijhaAward.Api.Controllers
 
             query.lang = language!;
 
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
             
             return response.statusCode switch
             {
@@ -144,7 +145,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpPost("AddAttachmentToTrainingWorkShop", Name ="AddAttachmentToTrainingWorkShop")]
         public async Task<IActionResult> AddAttachmentToTrainingWorkShop([FromForm] CreateWorkshopeAttachmentCommand command)
         {
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
             return response.statusCode switch
             {
                 200 => Ok(response),
@@ -161,7 +162,7 @@ namespace SharijhaAward.Api.Controllers
            
             command.lang = language!;
 
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
             return response.statusCode switch
             {
                 200 => Ok(response),
@@ -176,7 +177,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new DeleteWorkshopAttachmentCommand()
+            var response = await _Mediator.Send(new DeleteWorkshopAttachmentCommand()
             {
                 Id = Id ,
                 lang = language!
@@ -193,7 +194,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("TrainingWorkshopsExportToExcel", Name = "TrainingWorkshopsExportToExcel")]
         public async Task<IActionResult> TrainingWorkshopsExportToExcel()
         {
-            var response = await _mediator.Send(new ExportToExcelQuery());
+            var response = await _Mediator.Send(new ExportToExcelQuery());
 
             return response.statusCode switch
             {

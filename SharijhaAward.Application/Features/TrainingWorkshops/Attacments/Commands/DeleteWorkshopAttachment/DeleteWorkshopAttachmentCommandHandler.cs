@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
+using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +13,9 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
     public class DeleteWorkshopAttachmentCommandHandler
         : IRequestHandler<DeleteWorkshopAttachmentCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<TrainingWrokshopeAttachment> _attachmentRepository;
+        private readonly IAsyncRepository<TrainingWorkshopAttachment> _attachmentRepository;
         
-        public DeleteWorkshopAttachmentCommandHandler(IAsyncRepository<TrainingWrokshopeAttachment> attachmentRepository)
+        public DeleteWorkshopAttachmentCommandHandler(IAsyncRepository<TrainingWorkshopAttachment> attachmentRepository)
         {
             _attachmentRepository = attachmentRepository;
         }

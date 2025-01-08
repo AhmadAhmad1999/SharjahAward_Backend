@@ -33,22 +33,65 @@ namespace SharijhaAward.Application.Features.DigitalSignatureFeatures.Queries.Ge
 
             FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
-            List<GetAllDigitalSignaturesForUserListVM> GetAllDigitalSignaturesForUserListVM = _Mapper.Map<List<GetAllDigitalSignaturesForUserListVM>>(await _DigitalSignatureRepository
-                .WhereThenFilter(x => x.UserId == UserId, FilterObject)
-                .OrderByDescending(x => x.CreatedAt)
-                .Skip((Request.page - 1) * Request.perPage)
-                .Take(Request.perPage)
-                .ToListAsync());
+            if (Request.perPage == -1 ||
+                Request.page == 0)
+            {
+                List<GetAllDigitalSignaturesForUserListVM> GetAllDigitalSignaturesForUserListVM = await _DigitalSignatureRepository
+                    .WhereThenFilter(x => x.UserId == UserId, FilterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Select(x => new GetAllDigitalSignaturesForUserListVM()
+                    {
+                        Id = x.Id,
+                        FullName = Request.lang == "en"
+                            ? x.EnglishFullName
+                            : x.ArabicFullName,
+                        ImageUrl = x.ImageUrl,
+                        Occupation = Request.lang == "en"
+                            ? x.EnglishOccupation 
+                            : x.ArabicOccupation,
+                        UserName = x.UserName
+                    }).ToListAsync();
 
-            int TotalCount = await _DigitalSignatureRepository
-                .WhereThenFilter(x => x.UserId == UserId, FilterObject)
-                .CountAsync();
+                int TotalCount = await _DigitalSignatureRepository
+                    .WhereThenFilter(x => x.UserId == UserId, FilterObject)
+                    .CountAsync();
 
-            Pagination PaginationParameter = new Pagination(Request.page,
-                Request.perPage, TotalCount);
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.perPage, TotalCount);
 
-            return new BaseResponse<List<GetAllDigitalSignaturesForUserListVM>>(ResponseMessage, true, 200, 
-                GetAllDigitalSignaturesForUserListVM, PaginationParameter);
+                return new BaseResponse<List<GetAllDigitalSignaturesForUserListVM>>(ResponseMessage, true, 200,
+                    GetAllDigitalSignaturesForUserListVM, PaginationParameter);
+            }
+            else
+            {
+                List<GetAllDigitalSignaturesForUserListVM> GetAllDigitalSignaturesForUserListVM = await _DigitalSignatureRepository
+                    .WhereThenFilter(x => x.UserId == UserId, FilterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
+                    .Select(x => new GetAllDigitalSignaturesForUserListVM()
+                    {
+                        Id = x.Id,
+                        FullName = Request.lang == "en"
+                            ? x.EnglishFullName
+                            : x.ArabicFullName,
+                        ImageUrl = x.ImageUrl,
+                        Occupation = Request.lang == "en"
+                            ? x.EnglishOccupation
+                            : x.ArabicOccupation,
+                        UserName = x.UserName
+                    }).ToListAsync();
+
+                int TotalCount = await _DigitalSignatureRepository
+                    .WhereThenFilter(x => x.UserId == UserId, FilterObject)
+                    .CountAsync();
+
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.perPage, TotalCount);
+
+                return new BaseResponse<List<GetAllDigitalSignaturesForUserListVM>>(ResponseMessage, true, 200,
+                    GetAllDigitalSignaturesForUserListVM, PaginationParameter);
+            }
         }
     }
 }

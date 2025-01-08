@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharijhaAward.Persistence.Seeders
+﻿namespace SharijhaAward.Persistence.Seeders
 {
     public class RolePermissionSeeder
     {

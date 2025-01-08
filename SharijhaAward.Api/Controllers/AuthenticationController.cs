@@ -1,11 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
-using OpenQA.Selenium.DevTools.V120.Browser;
 using SharijhaAward.Api.Logger;
-using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllFormsForSortingProcess;
-using SharijhaAward.Application.Features.Authentication;
 using SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForForgettonPassword;
 using SharijhaAward.Application.Features.Authentication.CheckConfirmationCodeForSignUp;
 using SharijhaAward.Application.Features.Authentication.ForgetPassword;
@@ -16,9 +14,6 @@ using SharijhaAward.Application.Features.Authentication.SignUp;
 using SharijhaAward.Application.Features.Authentication.SignUpFromAdminDashboard;
 using SharijhaAward.Application.Features.Authentication.UpdateFCMToken;
 using SharijhaAward.Application.Features.Authentication.VerifyAccount;
-using SharijhaAward.Application.Features.Settings.Commands.CheckForConfirmationCode;
-using SharijhaAward.Application.Features.Settings.Commands.ResetPassword;
-using SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForResetPassword;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System.Text.Json;
@@ -32,10 +27,13 @@ namespace SharijhaAward.Api.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IMediator _Mediator;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public AuthenticationController(IMediator mediator)
+        public AuthenticationController(IMediator mediator,
+            IWebHostEnvironment _WebHostEnvironment)
         {
             _Mediator = mediator;
+            this._WebHostEnvironment = _WebHostEnvironment;
         }
         [HttpGet("APIForTestPublishOnly")]
         public IActionResult APIForTestPublishOnly()
@@ -126,7 +124,8 @@ namespace SharijhaAward.Api.Controllers
                 RoleName = user.RoleName,
                 Gender = user.Gender,
                 PhoneNumber = user.PhoneNumber,
-                lang = HeaderValue
+                lang = HeaderValue,
+                WWWRootFilePath = _WebHostEnvironment.WebRootPath
             });
 
             if (!response.isSucceed)
@@ -277,7 +276,8 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<int>? Response = await _Mediator.Send(new ForgetPasswordCommand()
             {
                 lang = HeaderValue!,
-                Email = Email
+                Email = Email,
+                WWWRootFilePath = _WebHostEnvironment.WebRootPath
             });
 
             return Response.statusCode switch

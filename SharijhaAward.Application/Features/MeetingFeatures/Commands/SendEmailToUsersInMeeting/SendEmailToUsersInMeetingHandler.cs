@@ -6,6 +6,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.MeetingModel;
 using SharijhaAward.Domain.Entities.MeetingUserModel;
 using System.Globalization;
+using System.Net.Http;
 using System.Net.Mail;
 
 namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailToUsersInMeeting
@@ -75,18 +76,16 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.SendEmailT
 
                 string MeetingLink = $"Meeting Link: {MeetingEntity.MeetingLink}";
 
-                string HtmlBody = "wwwroot/Send_Email_Template.html";
+                string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath + "/Send_Email_Template.html");
 
-                string HTMLContent = File.ReadAllText(HtmlBody);
-
-                byte[] HeaderImageBytes = File.ReadAllBytes("wwwroot/assets/qr/header.png");
+                byte[] HeaderImageBytes = await File.ReadAllBytesAsync(Request.WWWRootFilePath + "/assets/qr/header.png");
                 string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
 
                 if (string.IsNullOrEmpty(MeetingEntity.MeetingLink))
                 {
-                    string[]? HtmlBodySpliter = HtmlBody.Split("<!--MeetingLink-->");
+                    string[]? HtmlBodySpliter = HTMLContent.Split("<!--MeetingLink-->");
 
-                    HtmlBody = HtmlBodySpliter[0] + HtmlBodySpliter[2];
+                    HTMLContent = HtmlBodySpliter[0] + HtmlBodySpliter[2];
                 }
 
                 string FullEmailBody = HTMLContent

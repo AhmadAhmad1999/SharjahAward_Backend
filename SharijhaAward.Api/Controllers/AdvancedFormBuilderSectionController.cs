@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.CreateAdvancedFormBuilderSection;
 using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.DeleteAdvancedFormBuilderSection;
 using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.ReorderAdvancedFormBuildersInsideTheSections;
@@ -12,6 +13,7 @@ using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class AdvancedFormBuilderSectionController : ControllerBase
@@ -152,7 +154,7 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        [HttpGet("GetAllAdvancedFormBuilderSectionsForAdd")]
+        [HttpGet("GetAllAdvancedFormBuilderSectionsForAdd/{PrivateHashKey}/{VirtualTableId}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -160,7 +162,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllAdvancedFormBuilderSectionsForAdd(int VirtualTableForSectionId)
+        public async Task<IActionResult> GetAllAdvancedFormBuilderSectionsForAdd(string PrivateHashKey, int? VirtualTableId)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -170,7 +172,8 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<List<GetAllAdvancedFormBuilderSectionsForAddListVM>> Response = await _Mediator.Send(new GetAllAdvancedFormBuilderSectionsForAddQuery()
             {
                 lang = HeaderValue!,
-                VirtualTableForSectionId = VirtualTableForSectionId
+                PrivateHashKey = PrivateHashKey,
+                VirtualTableId = VirtualTableId
             });
 
             return Response.statusCode switch

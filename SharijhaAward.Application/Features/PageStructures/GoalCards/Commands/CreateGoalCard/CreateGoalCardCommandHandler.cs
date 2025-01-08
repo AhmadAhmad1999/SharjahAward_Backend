@@ -45,7 +45,7 @@ namespace SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.C
 
             var GoalCards = new List<PageCard>();
 
-            foreach (var card in request.GoalCards)
+            foreach (var card in request.SubGoals)
             {
                 var GoalCard = new PageCard()
                 {

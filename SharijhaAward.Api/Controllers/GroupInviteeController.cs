@@ -1,12 +1,7 @@
-﻿using FluentValidation;
-using MediatR;
-using Microsoft.AspNetCore.Hosting;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Contract.Infrastructure;
-using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.DeleteGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Group.Command.UpdateGroupInvitee;
@@ -15,12 +10,7 @@ using SharijhaAward.Application.Features.InviteeForm.Group.Queries.ExportGroupTo
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGroupInvitees;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetGroupInviteeById;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ConfirmAttendancePersonal;
-using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.ExportToExcel;
 using SharijhaAward.Application.Responses;
-using System.Net;
-
 using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers

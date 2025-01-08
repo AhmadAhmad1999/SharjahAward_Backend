@@ -8,5 +8,6 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
         public int CategoryId { get; set; }
         public int? EducationalClassId { get; set; }
         public string? lang { get; set; }
+        public string? WWWRootFilePath { get; set; }
     }
 }

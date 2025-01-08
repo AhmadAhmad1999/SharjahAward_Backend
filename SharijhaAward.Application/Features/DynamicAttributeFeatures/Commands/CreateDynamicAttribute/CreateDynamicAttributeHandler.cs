@@ -91,7 +91,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.C
                         ? "This dynamic field's arabic name is already used"
                         : "اسم هذا الحقل باللغة العربية مستخدم مسبقاً";
 
-                else if (CheckIfDynamicAttributeNameIsUsed.ArabicLabel.ToLower() == Request.ArabicLabel.ToLower())
+                else if (CheckIfDynamicAttributeNameIsUsed.EnglishLabel.ToLower() == Request.EnglishLabel.ToLower())
                     ResponseMessage = Request.lang == "en"
                         ? "This dynamic field's english name is already used"
                         : "اسم هذا الحقل باللغة العربية مستخدم مسبقاً";

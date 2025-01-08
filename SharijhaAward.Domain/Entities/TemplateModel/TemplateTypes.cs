@@ -5,6 +5,7 @@
         CertificateOfParticipation = 0,
         Testimonial_Version_1 = 1,
         Testimonial_Version_2 = 2,
-        Winning = 3
+        Winning = 3,
+        Evaluation_Form = 4
     }
 }

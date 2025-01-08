@@ -16,5 +16,6 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
         [PasswordValidation]
         public string password { get; set; } = string.Empty;
         public int providedFormId {  get; set; }
+        public string? WWWRootFilePath { get; set; }
     }
 }

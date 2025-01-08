@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SharijhaAward.Infrastructure.Authentication;
 using Microsoft.IdentityModel.Tokens;

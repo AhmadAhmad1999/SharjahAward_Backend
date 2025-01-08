@@ -1,15 +1,10 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SharijhaAward.Application.Features.Agendas.Commands.DeleteAgenda;
-using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
-using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 using SharijhaAward.Application.Features.AwardPublications.Commands.CreateAwardPublication;
 using SharijhaAward.Application.Features.AwardPublications.Commands.DeleteAwardPublication;
 using SharijhaAward.Application.Features.AwardPublications.Queries.DownloadAwardPublication;
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwardPublications;
 using SharijhaAward.Application.Features.AwardPublications.Queries.GetAwardPublicationById;
-using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideByCategoryId;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AwardPublications.Commands.UpdateAwardPublication;
 

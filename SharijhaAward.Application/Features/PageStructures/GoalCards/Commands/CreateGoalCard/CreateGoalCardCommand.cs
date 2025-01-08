@@ -11,9 +11,13 @@ namespace SharijhaAward.Application.Features.PageStructures.GoalCards.Commands.C
 {
     public class CreateGoalCardCommand : IRequest<BaseResponse<object>>
     {
-        public List<Card> GoalCards { get; set; } = new List<Card>();
+        public string? EnglishTitle { get; set; } = string.Empty;
+        public string? ArabicTitle { get; set; } = string.Empty;
+        public List<Card> SubGoals { get; set; } = new List<Card>();
         public string? lang { get; set; }
         public int PageId { get; set; }
+        public bool IsHide { get; set; }
+        public int orderId { get; set; }
     }
     public class Card
     {

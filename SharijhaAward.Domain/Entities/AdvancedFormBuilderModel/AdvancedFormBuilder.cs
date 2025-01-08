@@ -19,6 +19,7 @@ namespace SharijhaAward.Domain.Entities.AdvancedFormBuilderModel
         public bool LinkedToAnotherAttribute { get; set; } = false;
         public DynamicAttributeStatus Status { get; set; } = DynamicAttributeStatus.Inactive;
         public int? MaxSizeInKB { get; set; }
+        public bool ViewInTable { get; set; }
         public int AttributeDataTypeId { get; set; }
         public AttributeDataType? AttributeDataType { get; set; }
         public int AdvancedFormBuilderSectionId { get; set; }

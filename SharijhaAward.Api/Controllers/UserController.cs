@@ -1,9 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
-using SharijhaAward.Application.Features.Settings.Commands.SendConfirmationCodeForResetPassword;
 using SharijhaAward.Application.Features.User.Commands.DeleteUser;
 using SharijhaAward.Application.Features.User.Commands.UpdateUser;
 using SharijhaAward.Application.Features.User.Queries.AsignRoleToUser;
@@ -12,9 +9,6 @@ using SharijhaAward.Application.Features.User.Queries.GetAllSubscribers;
 using SharijhaAward.Application.Features.User.Queries.GetAllUsers;
 using SharijhaAward.Application.Features.User.Queries.GetUserById;
 using SharijhaAward.Application.Responses;
-using System.Reflection.Metadata.Ecma335;
-
-
 using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers

@@ -167,7 +167,10 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                         .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
                         .ToList();
 
-                    if (!CriterionItemEntitiesForThisSubCriterion.Any())
+                    if (!CriterionItemEntitiesForThisSubCriterion.Any() ||
+                        (SubCriterionEntityForThisMainCriterion.AttachFilesOnSubCriterion is not null
+                            ? SubCriterionEntityForThisMainCriterion.AttachFilesOnSubCriterion.Value
+                            : false))
                     {
                         FinalArbitrationScore? FinalArbitrationScoreEntitiesForThisSubCriterion = FinalArbitrationScoreEntities
                             .FirstOrDefault(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id && x.CriterionItemId == null);

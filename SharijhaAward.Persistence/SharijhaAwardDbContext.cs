@@ -16,7 +16,7 @@ using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
 using SharijhaAward.Domain.Entities.CategoryFAQ;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
-using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
+// using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
 using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.AttachmentModel;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
@@ -80,11 +80,14 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using AutoMapper;
 using System.Reflection;
 using static SharijhaAward.Application.Helpers.DatabaseRelationsHelper.DatabaseRelationsClass;
-using NPOI.HSSF.Record;
 using SharijhaAward.Domain.Entities.ChatBotModel;
 using Microsoft.Extensions.Configuration;
 using SharijhaAward.Domain.Entities.TemplateModel;
 using SharijhaAward.Domain.Entities.DigitalSignatureModel;
+using SharijhaAward.Domain.Entities.StaticNotificationModel;
+using SharijhaAward.Domain.Entities.NewsTickerModel;
+using SharijhaAward.Domain.Entities.SavedCertificateModel;
+using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -125,12 +128,11 @@ namespace SharijhaAward.Persistence
         public DbSet<FinalArbitrationScore> FinalArbitrationScores { get; set; }
         public DbSet<ChairmanNotesOnFinalArbitrationScore> ChairmanNotesOnFinalArbitrationScores { get; set; }
         public DbSet<FinalArbitration> FinalArbitrations { get; set; }
-        public DbSet<InterviewAttachment> InterviewAttachments { get; set; }
         public DbSet<Interview> Interviews { get; set; }
-        public DbSet<InterviewNote> InterviewNotes { get; set; }
-        public DbSet<InterviewQuestion> InterviewQuestions { get; set; }
-        public DbSet<InterviewCategory> InterviewCategories { get; set; }
-        public DbSet<InterviewUser> InterviewUsers { get; set; }
+        public DbSet<InterviewInvitee> InterviewInvitees { get; set; }
+        public DbSet<InterviewInviteeParticipant> InterviewInviteeParticipants { get; set; }
+        public DbSet<InterviewInviteeNoteAndQuestion> InterviewInviteeNoteAndQuestions { get; set; }
+        public DbSet<InterviewInviteeAttachment> InterviewInviteeAttachments { get; set; }
         public DbSet<InitialArbitration> InitialArbitrations { get; set; }
         public DbSet<ArbitrationAudit> ArbitrationAudits { get; set; }
         public DbSet<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrations { get; set; }
@@ -195,7 +197,7 @@ namespace SharijhaAward.Persistence
         public DbSet<CategoryFAQ> CategoryFAQs { get; set; }
         public DbSet<ExplanatoryGuide> ExplanatoryGuides { get; set; }
         public DbSet<CycleCondition> CycleCondition { get; set; }
-        public DbSet<TrainingWrokshopeAttachment> TrainingWrokshopeAttachment { get; set; }
+        public DbSet<TrainingWorkshopAttachment> TrainingWorkshopAttachments { get; set; }
         public DbSet<ConditionAttachment> ConditionAttachments { get; set; }
         public DbSet<Coordinator> Coordinators { get; set; }
         public DbSet<EducationalEntity> EducationalEntities { get; set; }
@@ -247,6 +249,11 @@ namespace SharijhaAward.Persistence
         public DbSet<WorkflowQuestion> WorkflowQuestions { get; set; }
         public DbSet<Template> Templates { get; set; }
         public DbSet<DigitalSignature> DigitalSignatures { get; set; }
+        public DbSet<PersonalInviteeVirtualTable> PersonalInviteeVirtualTables { get; set; }
+        public DbSet<GroupInviteeVirtualTable> GroupInviteeVirtualTables { get; set; }
+        public DbSet<StaticNotification> StaticNotifications { get; set; }
+        public DbSet<NewsTicker> NewsTickers { get; set; }
+        public DbSet<SavedCertificate> SavedCertificates { get; set; }
         
 
         public DbSet<AdvancedFormBuilderViewWhenRelation> AdvancedFormBuilderViewWhenRelations { get; set; }
@@ -301,6 +308,7 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.User)
                 .AutoInclude();
 
+            modelBuilder.Entity<TrainingWorkshopAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Template>().HasQueryFilter(p => !p.isDeleted);
 
@@ -312,6 +320,12 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Criterion)
                 .AutoInclude();
 
+            modelBuilder.Entity<TrainingWorkshopAttachment>()
+                .Navigation(p => p.TrainingWorkshop)
+                .AutoInclude();
+
+            modelBuilder.Entity<StaticNotification>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<NewsTicker>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<DigitalSignature>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<DigitalSignature>()
@@ -332,7 +346,18 @@ namespace SharijhaAward.Persistence
                 .Navigation(p => p.Receiver)
                 .AutoInclude();
 
+            modelBuilder.Entity<SavedCertificate>()
+                .Navigation(p => p.ProvidedForm)
+                .AutoInclude();
+            modelBuilder.Entity<SavedCertificate>()
+                .Navigation(p => p.Template)
+                .AutoInclude();
+            modelBuilder.Entity<SavedCertificate>()
+                .Navigation(p => p.DigitalSignature)
+                .AutoInclude();
+
             modelBuilder.Entity<RelatedAccountRequest>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<SavedCertificate>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AppVersion>().HasQueryFilter(p => !p.isDeleted);
 
@@ -423,6 +448,7 @@ namespace SharijhaAward.Persistence
                 .AutoInclude();
 
             modelBuilder.Entity<AdvancedFormBuilderValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<VirtualTableForSection>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AdvancedFormBuilderGeneralValidation>()
                 .Navigation(p => p.AdvancedFormBuilder)
@@ -506,41 +532,39 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<AdvancedFormBuilderSection>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<InterviewAttachment>()
-                .Navigation(p => p.Interview)
-                .AutoInclude();
-
-            modelBuilder.Entity<InterviewAttachment>().HasQueryFilter(p => !p.isDeleted);
-
             modelBuilder.Entity<Interview>().HasQueryFilter(p => !p.isDeleted);
+            
+            modelBuilder.Entity<InterviewInvitee>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<InterviewQuestion>()
+            modelBuilder.Entity<InterviewInvitee>()
                 .Navigation(p => p.Interview)
                 .AutoInclude();
 
-            modelBuilder.Entity<InterviewQuestion>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<InterviewInviteeParticipant>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<InterviewNote>()
-                .Navigation(p => p.Interview)
+            modelBuilder.Entity<InterviewInviteeParticipant>()
+                .Navigation(p => p.InterviewInvitee)
                 .AutoInclude();
 
-            modelBuilder.Entity<InterviewNote>().HasQueryFilter(p => !p.isDeleted);
-
-            modelBuilder.Entity<InterviewCategory>()
-                .Navigation(p => p.Interview)
+            modelBuilder.Entity<InterviewInviteeParticipant>()
+                .Navigation(p => p.Subscriber)
                 .AutoInclude();
 
-            modelBuilder.Entity<InterviewCategory>()
-                .Navigation(p => p.Category)
+            modelBuilder.Entity<InterviewInviteeParticipant>()
+                .Navigation(p => p.Arbitrator)
                 .AutoInclude();
 
-            modelBuilder.Entity<InterviewCategory>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<InterviewInviteeNoteAndQuestion>().HasQueryFilter(p => !p.isDeleted);
 
-            modelBuilder.Entity<InterviewUser>()
-                .Navigation(p => p.Interview)
+            modelBuilder.Entity<InterviewInviteeNoteAndQuestion>()
+                .Navigation(p => p.InterviewInvitee)
                 .AutoInclude();
 
-            modelBuilder.Entity<InterviewUser>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<InterviewInviteeAttachment>().HasQueryFilter(p => !p.isDeleted);
+
+            modelBuilder.Entity<InterviewInviteeAttachment>()
+                .Navigation(p => p.InterviewInvitee)
+                .AutoInclude();
 
             modelBuilder.Entity<ChairmanNotesOnArbitrationAudit>()
                 .Navigation(p => p.ArbitrationAudit)

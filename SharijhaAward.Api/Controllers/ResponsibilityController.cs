@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.Responsibilities.Commands.CreateResponsibility;
@@ -81,7 +80,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> GetAllResponsibilities([FromQuery] GetAllResponsibilitiesQuery query)
         {
             var language = HttpContext.Request.Headers["lang"];
-
+            query.lang = language!;
             var response = await _mediator.Send(query);
 
             return response.statusCode switch

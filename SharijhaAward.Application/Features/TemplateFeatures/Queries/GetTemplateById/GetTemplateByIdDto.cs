@@ -5,7 +5,8 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Queries.GetTemplat
     public class GetTemplateByIdDto
     {
         public int Id { get; set; }
-        public string BackgroundImageUrl { get; set; } = null!;
+        public string? BackgroundImageUrl { get; set; }
+        public string? BackgroundImageColor { get; set; }
         public string TemplateVersion { get; set; } = null!;
         public string FontColor { get; set; } = null!;
         public TemplateTypes TemplateType { get; set; }

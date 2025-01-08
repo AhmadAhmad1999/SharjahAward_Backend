@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 	  <Content Remove="wwwroot\localization.json" />
+	  <Content Remove="wwwroot\Nationalities\Nationalities.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -20,29 +21,32 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Aspose.HTML" Version="24.1.0" />
-		<PackageReference Include="Aspose.PDF" Version="24.1.0" />
-		<PackageReference Include="BarCode" Version="2024.2.1" />
-		<PackageReference Include="DinkToPdf" Version="1.0.8" />
-		<PackageReference Include="Hangfire" Version="1.8.12" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+		<PackageReference Include="EFCore.AutomaticMigrations" Version="8.0.5" />
+		<PackageReference Include="EntityFramework" Version="6.5.1" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 		<PackageReference Include="NLog" Version="5.3.2" />
 		<PackageReference Include="NLog.Extensions.Logging" Version="5.3.10" />
 		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.10" />
-		<PackageReference Include="PdfSharpCore" Version="1.3.63" />
-		<PackageReference Include="QRCoder" Version="1.4.3" />
-		<PackageReference Include="RestSharp" Version="110.2.0" />
 		<PackageReference Include="Select.HtmlToPdf.NetCore" Version="23.2.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+		<PackageReference Include="System.Text.Json" Version="8.0.5" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -53,28 +57,31 @@
 
 	<ItemGroup>
 		<Folder Include="QREmailHelper\" />
-		<Folder Include="wwwroot\DynamicFiles\" />
-		<Folder Include="wwwroot\InterviewAttachments\" />
-		<Folder Include="wwwroot\Logs\" />
 		<Folder Include="wwwroot\AdvancedFormsFiles\" />
-		<Folder Include="wwwroot\DynamicFiles\" />
-		<Folder Include="wwwroot\DigitalSignatures\" />
-		<Folder Include="wwwroot\ProfilePics\" />
-		<Folder Include="wwwroot\GeneratedBarcode\" />
+		<Folder Include="wwwroot\DynamicFiles\GeneratedBarcode\" />
+		<Folder Include="wwwroot\DynamicFiles\HTMLCodes\" />
 		<Folder Include="wwwroot\Images\" />
-		<Folder Include="wwwroot\HTMLCodes\" />
+		<Folder Include="wwwroot\InterviewAttachments\" />
 		<Folder Include="wwwroot\InvitationPDFFiles\" />
-		<Folder Include="wwwroot\ProvidedForm\1\" />
-		<Folder Include="wwwroot\ProvidedForm\2\" />
-		<Folder Include="wwwroot\ProvidedForm\3\" />
-		<Folder Include="wwwroot\ProvidedForm\4\" />
-		<Folder Include="wwwroot\ProvidedForm\5\" />
-		<Folder Include="wwwroot\ProvidedForm\7\" />
+		<Folder Include="wwwroot\Logs\" />
+		<Folder Include="wwwroot\GeneratedBarcode\" />
+		<Folder Include="wwwroot\HTMLCodes\" />
+		<Folder Include="wwwroot\GeneratedBarcode\" />
+		<Folder Include="wwwroot\HTMLCodes\" />
+		<Folder Include="wwwroot\ProfilePics\" />
+		<Folder Include="wwwroot\ProvidedForm\" />
+		<Folder Include="wwwroot\SavedCertificates\EvaluationFormCertificates\" />
+		<Folder Include="wwwroot\SavedCertificates\ParticipationCertificates\" />
+		<Folder Include="wwwroot\SavedCertificates\Statment1Certificates\" />
+		<Folder Include="wwwroot\SavedCertificates\Statment2Certificates\" />
+		<Folder Include="wwwroot\SavedCertificates\WinningCertificates\" />
 		<Folder Include="wwwroot\UploadedFiles\Circulars\" />
+		<Folder Include="wwwroot\UploadedFiles\ContactUsFiles\" />
 		<Folder Include="wwwroot\UploadedFiles\ExcelFiles\" />
 		<Folder Include="wwwroot\UploadedFiles\ExplanatoryGuide\" />
 		<Folder Include="wwwroot\UploadedFiles\Icons\" />
 		<Folder Include="wwwroot\UploadedFiles\Images\" />
+		<Folder Include="wwwroot\UploadedFiles\Pdf\" />
 		<Folder Include="wwwroot\UploadedFiles\Videos\" />
 	</ItemGroup>
 
@@ -82,6 +89,7 @@
 		<None Include="wwwroot\assets\qr\qr.png" />
 		<None Include="wwwroot\assets\qr\QRCodeForstringPersonalInvite.png" />
 		<None Include="wwwroot\localization.json" />
+		<None Include="wwwroot\Nationalities\Nationalities.json" />
 	</ItemGroup>
 
 </Project>

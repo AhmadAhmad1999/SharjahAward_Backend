@@ -36,6 +36,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
         {
             List<IGrouping<Category, ArbitrationResult>> WinnersEntities = await _ArbitrationResultRepository
                 .Where(x => x.ProvidedForm!.Category!.CycleId == Request.CycleId &&
+                    x.FinalArbitrationId != null &&
                     x.Winner && x.WinningLevel != null && x.WinningDate != null)
                 .GroupBy(x => x.ProvidedForm!.Category!)
                 .ToListAsync();

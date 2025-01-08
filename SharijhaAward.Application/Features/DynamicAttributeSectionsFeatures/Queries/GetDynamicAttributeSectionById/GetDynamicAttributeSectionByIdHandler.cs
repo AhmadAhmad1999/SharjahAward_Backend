@@ -29,7 +29,8 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             string Language = !string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() : "ar";
 
-            GetDynamicAttributeSectionByIdDto? DynamicAttributeSection = await _DynamicAttributeSectionRepository.Where(x => x.Id == Request.Id)
+            GetDynamicAttributeSectionByIdDto? DynamicAttributeSection = await _DynamicAttributeSectionRepository
+                .Where(x => x.Id == Request.Id)
                 .Select(x => new GetDynamicAttributeSectionByIdDto()
                 {
                     Id = x.Id,

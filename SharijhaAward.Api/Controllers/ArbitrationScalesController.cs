@@ -7,7 +7,6 @@ using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.Dele
 using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Commands.UpdateArbitrationScale;
 using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.GetAllArbitrationScales;
 using SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.GetArbitrationScaleById;
-using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers

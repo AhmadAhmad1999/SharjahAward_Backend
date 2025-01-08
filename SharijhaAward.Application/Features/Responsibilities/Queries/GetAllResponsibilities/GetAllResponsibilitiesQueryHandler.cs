@@ -1,47 +1,57 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilities
 {
     public class GetAllResponsibilitiesQueryHandler
         : IRequestHandler<GetAllResponsibilitiesQuery, BaseResponse<List<ResponsibilityListVM>>>
     {
-        private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Responsibility> _ResponsibilityRepository;
 
-        public GetAllResponsibilitiesQueryHandler(IAsyncRepository<Responsibility> responsibilityRepository, IMapper mapper)
+        public GetAllResponsibilitiesQueryHandler(IAsyncRepository<Responsibility> _ResponsibilityRepository)
         {
-            _responsibilityRepository = responsibilityRepository;
-            _mapper = mapper;
+            this._ResponsibilityRepository = _ResponsibilityRepository;
         }
 
-        public async Task<BaseResponse<List<ResponsibilityListVM>>> Handle(GetAllResponsibilitiesQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<ResponsibilityListVM>>> Handle(GetAllResponsibilitiesQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            string ResponseMessage = string.Empty;
+            
+            FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
-            var responsibilities = request.RoleId == null
-                ? await _responsibilityRepository.OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage).ToListAsync()
-                : await _responsibilityRepository.GetWhereThenPagedReponseAsync(r => r.RoleId == request.RoleId, filterObject, request.page, request.perPage);
+            IReadOnlyList<Responsibility> ResponsibilitiesEntities = Request.RoleId == null
+                ? await _ResponsibilityRepository
+                    .OrderByDescending(FilterObject, x => x.CreatedAt, Request.page, Request.perPage)
+                    .ToListAsync()
+                : await _ResponsibilityRepository
+                    .GetWhereThenPagedReponseAsync(r => r.RoleId == Request.RoleId, FilterObject, Request.page, Request.perPage);
 
-            var data = _mapper.Map<List<ResponsibilityListVM>>(responsibilities);
+            List<ResponsibilityListVM> Response = ResponsibilitiesEntities
+                .Select(x => new ResponsibilityListVM()
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    RoleId = x.RoleId,
+                    RoleName = Request.lang == "en"
+                        ? x.Role.EnglishName
+                        : x.Role.ArabicName
+                }).ToList();
 
-            var count = request.RoleId == null
-                ? _responsibilityRepository.WhereThenFilter(r => true, filterObject).Count()
-                : _responsibilityRepository.WhereThenFilter(r => r.RoleId == request.RoleId, filterObject).Count();
+            int TotalCount = Request.RoleId == null
+                ? await _ResponsibilityRepository
+                    .WhereThenFilter(r => true, FilterObject)
+                    .CountAsync()
+                : await _ResponsibilityRepository
+                    .WhereThenFilter(r => r.RoleId == Request.RoleId, FilterObject)
+                    .CountAsync();
 
-            Pagination pagination = new Pagination(request.page, request.perPage, count);
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
 
-            return new BaseResponse<List<ResponsibilityListVM>>("", true, 200, data, pagination);
+            return new BaseResponse<List<ResponsibilityListVM>>(ResponseMessage, true, 200, Response, Pagination);
         }
     }
 }

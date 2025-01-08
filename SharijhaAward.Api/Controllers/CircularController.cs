@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.Circulars.Command.CreateCircular;
 using SharijhaAward.Application.Features.Circulars.Command.DeleteCircular;
@@ -11,6 +10,9 @@ using SharijhaAward.Application.Features.Circulars.Queries.ExportToExcel;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.Circulars.Command.Attachments.DeleteAttachment;
 using SharijhaAward.Application.Features.Circulars.Command.Attachments.AddAttachment;
+using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Responses;
+using SharijhaAward.Application.Features.Circulars.Queries.GetAllCircularsForAdmin;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -19,11 +21,11 @@ namespace SharijhaAward.Api.Controllers
     [ApiController]
     public class CircularController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IMediator _Mediator;
 
         public CircularController(IMediator mediator)
         {
-            _mediator = mediator;
+            _Mediator = mediator;
         }
 
         [HttpPost(Name = "CreateCircular")]
@@ -35,7 +37,7 @@ namespace SharijhaAward.Api.Controllers
             command.lang = language!;
             command.token = token!;
 
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -52,7 +54,7 @@ namespace SharijhaAward.Api.Controllers
 
 
 
-            var response = await _mediator.Send(new DeleteCircularCommand()
+            var response = await _Mediator.Send(new DeleteCircularCommand()
             {
                 Id = Id,
                 lang = language!
@@ -72,8 +74,9 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
 
             command.lang = language!;
+            command.token = HttpContext.Request.Headers.Authorization!;
 
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -98,7 +101,7 @@ namespace SharijhaAward.Api.Controllers
             query.lang = language!;
             query.token = token!;
 
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -114,7 +117,7 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request?.Headers.Authorization;
 
-            var response = await _mediator.Send(new GetCircularByIdQuery()
+            var response = await _Mediator.Send(new GetCircularByIdQuery()
             {
                 lang = language!,
                 token = token!,
@@ -132,7 +135,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("CircularExportToExcel", Name = "CircularExportToExcel")]
         public async Task<IActionResult> CircularExportToExcel()
         {
-            var response = await _mediator.Send(new CircularExportToExcelQuery());
+            var response = await _Mediator.Send(new CircularExportToExcelQuery());
 
             return response.statusCode switch
             {
@@ -149,7 +152,7 @@ namespace SharijhaAward.Api.Controllers
 
             command.lang = language!;
 
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -166,7 +169,7 @@ namespace SharijhaAward.Api.Controllers
 
 
 
-            var response = await _mediator.Send(new DeleteAttachmentCommand()
+            var response = await _Mediator.Send(new DeleteAttachmentCommand()
             {
                 CircularFileId = CircularFileId,
                 lang = language!
@@ -177,6 +180,32 @@ namespace SharijhaAward.Api.Controllers
                 200 => Ok(response),
                 404 => NotFound(response),
                 _ => BadRequest(response)
+            };
+        }
+        [HttpGet("GetAllCircularsForAdmin")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllCircularsForAdmin([FromQuery] GetAllCircularsForAdminQuery GetAllCircularsForAdminQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllCircularsForAdminQuery.lang = HeaderValue!;
+
+            BaseResponse<CircularListVm> Response = await _Mediator.Send(GetAllCircularsForAdminQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
             };
         }
     }

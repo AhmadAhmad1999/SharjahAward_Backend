@@ -12,5 +12,6 @@ namespace SharijhaAward.Application.Features.MeetingFeatures.Commands.CancelMeet
         [MaxLength]
         public string EnglishReasonOfCanceling { get; set; } = null!;
         public string? lang { get; set; }
+        public string? WWWRootFilePath { get; set; }
     }
 }

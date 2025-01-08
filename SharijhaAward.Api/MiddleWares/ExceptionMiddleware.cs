@@ -1,12 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using SharijhaAward.Application.Contract.Infrastructure;
-using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Exceptions;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.EducationalClassModel;
-using SharijhaAward.Domain.Entities.IdentityModels;
 using System.Net;
 
 namespace SharijhaAward.Api.MiddleWares

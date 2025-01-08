@@ -1,17 +1,7 @@
-﻿using Aspose.Pdf;
-using Aspose.Pdf.Operators;
-using FluentValidation;
-using MediatR;
-using Microsoft.AspNetCore.Hosting;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Application.Contract.Infrastructure;
-using SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.DeleteDynamicAttribute;
-using SharijhaAward.Application.Features.Event.Queries.ExportToExcel;
-using SharijhaAward.Application.Features.InviteeForm.Group.Command.CreateGroupInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.CreatePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.DeletePersonalInvitee;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Command.UpdatePersonalInvitee;
@@ -21,9 +11,6 @@ using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetAllPers
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalByInviteeNumber;
 using SharijhaAward.Application.Features.InviteeForm.Personal.Queries.GetPersonalInviteeById;
 using SharijhaAward.Application.Responses;
-using System.Globalization;
-using System.Net;
-using System.Resources;
 using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers

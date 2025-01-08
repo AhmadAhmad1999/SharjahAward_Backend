@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.PageStructureModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,8 @@ namespace SharijhaAward.Application.Features.PageStructures.TextCards.Commands.U
         public string ArabicContent { get; set; } = string.Empty;
         public int orderId { get; set; }
         public bool IsHide { get; set; }
-        public int PageStructureId { get; set; }
+        public int PageId { get; set; }
         public string? lang { get; set; }
+        public CardType CardType { get; set; }
     }
 }

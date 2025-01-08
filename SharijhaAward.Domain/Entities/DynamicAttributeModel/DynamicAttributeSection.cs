@@ -1,4 +1,5 @@
 ﻿using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
 {
@@ -14,5 +15,6 @@ namespace SharijhaAward.Domain.Entities.DynamicAttributeModel
         public int? MaxNumberOfRows { get; set; }
         public int AttributeTableNameId { get; set; }
         public AttributeTableName? AttributeTableName { get; set; }
+        public InviteeTypes? InviteeType { get; set; }
     }
 }

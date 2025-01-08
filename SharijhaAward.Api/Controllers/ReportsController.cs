@@ -1,11 +1,12 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.AdvanceReports.Commands.CreateAdvanceReports;
 using SharijhaAward.Application.Features.AdvanceReports.Queries.GetPropertyNames;
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class ReportsController : ControllerBase

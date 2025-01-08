@@ -17,6 +17,9 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using MailKit.Security;
 using SharijhaAward.Domain.Entities.ContactUsModels;
+using SharijhaAward.Application.Helpers.RecipientsWithViewsHelper;
+using PdfSharpCore.Pdf;
+using SelectPdf;
 
 namespace SharijhaAward.Infrastructure.EmailSernder
 {
@@ -158,6 +161,14 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                 .Select(x => x.Select(v => v.value).ToList())
                 .ToList();
         }
+        private List<List<RecipientsWithViews>> SplitRecipientsIntoBatches(List<RecipientsWithViews> recipients)
+        {
+            return recipients
+                .Select((value, index) => new { value, index })
+                .GroupBy(x => x.index / BatchSize)
+                .Select(x => x.Select(v => v.value).ToList())
+                .ToList();
+        }
         public async Task<List<string>> SendEmailAsync(List<string> recipients, string subject, string body, AlternateView AlternateView)
         {
             try
@@ -226,6 +237,99 @@ namespace SharijhaAward.Infrastructure.EmailSernder
             {
                 throw;
             }
+        }
+        
+        public async Task<List<string>> SendEmailAsyncWithDifferentBodies(List<RecipientsWithViews> Recipients, string Subject)
+        {
+            try
+            {
+                string SenderEmail = _Configuration.GetSection("SMTP:SenderEmail").Value!;
+                string Password = _Configuration.GetSection("SMTP:Password").Value!;
+                string Host = _Configuration.GetSection("SMTP:Host").Value!;
+                int.TryParse(_Configuration.GetSection("SMTP:Port").Value, out int Port);
+
+                NetworkCredential Credentials = new NetworkCredential
+                {
+                    UserName = SenderEmail,
+                    Password = Password
+                };
+
+                List<List<RecipientsWithViews>> Batches = SplitRecipientsIntoBatches(Recipients);
+
+                List<string> InvalidEmails = new List<string>();
+
+                await Task.Run(() =>
+                {
+                    Parallel.ForEach(Batches, Batch =>
+                    {
+                        using (var Client = new SmtpClient())
+                        {
+                            Client.Credentials = Credentials;
+                            Client.Host = Host;
+                            Client.Port = Port;
+                            Client.EnableSsl = true;
+
+                            foreach (RecipientsWithViews Recipient in Batch)
+                            {
+                                try
+                                {
+                                    // Generate PDF from HTML
+                                    byte[] pdfData = GeneratePdfFromHtml(Recipient.Body);
+
+                                    MailMessage Message = new MailMessage
+                                    {
+                                        From = new MailAddress(SenderEmail),
+                                        Subject = Subject,
+                                        IsBodyHtml = false, // Plain text body
+                                        Body = "Please find the attached PDF for details."
+                                    };
+                                    //MailMessage Message = new MailMessage
+                                    //{
+                                    //    From = new MailAddress(SenderEmail),
+                                    //    Subject = Subject,
+                                    //    IsBodyHtml = true,
+                                    //    Body = Recipient.Body
+                                    //};
+
+                                    // Attach the PDF
+                                    MemoryStream pdfStream = new MemoryStream(pdfData);
+                                    Attachment pdfAttachment = new Attachment(pdfStream, "details.pdf", "application/pdf");
+                                    Message.Attachments.Add(pdfAttachment);
+
+                                    Message.AlternateViews.Add(Recipient.AlternateView!);
+
+                                    Message.To.Add(Recipient.Recipient);
+                                    Client.Send(Message);
+                                }
+                                catch (SmtpException)
+                                {
+                                    throw;
+                                }
+                                catch (Exception)
+                                {
+                                    InvalidEmails.Add(Recipient.Recipient);
+                                }
+                            }
+                        }
+                    });
+                });
+
+                return InvalidEmails;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        private byte[] GeneratePdfFromHtml(string htmlContent)
+        {
+            HtmlToPdf oHtmlToPdf = new HtmlToPdf();
+            SelectPdf.PdfDocument oPdfDocument = oHtmlToPdf.ConvertHtmlString(htmlContent);
+
+            byte[] pdf = oPdfDocument.Save();
+            oPdfDocument.Close();
+
+            return pdf;
         }
     }
 }

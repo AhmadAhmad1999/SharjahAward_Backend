@@ -1,9 +1,5 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SharijhaAward.Application.Features.Circulars.Command.DeleteCircular;
-using SharijhaAward.Application.Features.Circulars.Command.UpdateCircular;
-using SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars;
 using SharijhaAward.Application.Features.StrategicPartners.Commands.CreateStrategicPartner;
 using SharijhaAward.Application.Features.StrategicPartners.Commands.DeleteStrategicPartner;
 using SharijhaAward.Application.Features.StrategicPartners.Commands.UpdateStrategicPartner;

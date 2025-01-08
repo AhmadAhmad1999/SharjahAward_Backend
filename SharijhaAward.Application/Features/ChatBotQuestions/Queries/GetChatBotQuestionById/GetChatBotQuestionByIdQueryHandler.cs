@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetAllChatBotQuestions;
+using SharijhaAward.Application.Features.Classes.Queries.GetClassById;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ChatBotModel;
 using System;
@@ -15,32 +17,59 @@ namespace SharijhaAward.Application.Features.ChatBotQuestions.Queries.GetChatBot
     public class GetChatBotQuestionByIdQueryHandler
         : IRequestHandler<GetChatBotQuestionByIdQuery, BaseResponse<ChatBotQuestionDto>>
     {
-        private readonly IAsyncRepository<ChatBotQuestion> _chatBotQuestionRepository;
-        private readonly IAsyncRepository<WorkflowQuestion> _workflowQuestionRepository;
+        private readonly IAsyncRepository<ChatBotQuestion> _ChatBotQuestionRepository;
+        private readonly IAsyncRepository<WorkflowQuestion> _WorkflowQuestionRepository;
         private readonly IMapper _mapper;
 
         public GetChatBotQuestionByIdQueryHandler(IAsyncRepository<ChatBotQuestion> chatBotQuestionRepository, IAsyncRepository<WorkflowQuestion> workflowQuestionRepository, IMapper mapper)
         {
-            _chatBotQuestionRepository = chatBotQuestionRepository;
-            _workflowQuestionRepository = workflowQuestionRepository;
+            _ChatBotQuestionRepository = chatBotQuestionRepository;
+            _WorkflowQuestionRepository = workflowQuestionRepository;
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<ChatBotQuestionDto>> Handle(GetChatBotQuestionByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<ChatBotQuestionDto>> Handle(GetChatBotQuestionByIdQuery Request, CancellationToken cancellationToken)
         {
-            var ChatBotQuestion = await _chatBotQuestionRepository
-                .GetByIdAsync(request.Id);
+            string ResponseMessage = string.Empty;
 
-            var data = _mapper.Map<ChatBotQuestionDto>(ChatBotQuestion);
+            ChatBotQuestion? ChatBotQuestionEntity = await _ChatBotQuestionRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
-            var WorkflowQuestions = _workflowQuestionRepository
-               .Where(q => q.QuestionId == data.Id)
-               .Select(q => q.Workflow)
-               .ToList();
+            if (ChatBotQuestionEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Chatbot question is not found"
+                    : "السؤال غير موجود";
 
-            data.WorkflowQuestions = _mapper.Map<List<WorkflowQuestionDto>>(WorkflowQuestions);
-            
-            return new BaseResponse<ChatBotQuestionDto>("", true, 200, data);
+                return new BaseResponse<ChatBotQuestionDto>(ResponseMessage, false, 404);
+            }
+
+            List<ChatBotQuestion> WorkflowQuestionsEntities = await _WorkflowQuestionRepository
+               .Where(x => x.QuestionId == ChatBotQuestionEntity.Id)
+               .Select(x => x.Workflow)
+               .ToListAsync();
+
+            ChatBotQuestionDto Response = new ChatBotQuestionDto()
+            {
+                Id = ChatBotQuestionEntity.Id,
+                EnglishAnswer = ChatBotQuestionEntity.EnglishAnswer,
+                ArabicAnswer = ChatBotQuestionEntity.ArabicAnswer,
+                ArabicQuestion = ChatBotQuestionEntity.ArabicQuestion,
+                EnglishQuestion = ChatBotQuestionEntity.EnglishQuestion,
+                Initial = ChatBotQuestionEntity.Initial,
+                WorkflowQuestions = WorkflowQuestionsEntities
+                    .Select(y => new WorkflowQuestionDto()
+                    {
+                        Id = y.Id,
+                        EnglishAnswer = y.EnglishAnswer,
+                        ArabicAnswer = y.ArabicAnswer,
+                        ArabicQuestion = y.ArabicQuestion,
+                        EnglishQuestion = y.EnglishQuestion,
+                        Initial = y.Initial,
+                    }).ToList()
+            };
+
+            return new BaseResponse<ChatBotQuestionDto>(ResponseMessage, true, 200, Response);
         }
     }
 }

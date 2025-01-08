@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Application.Features.Rewards.Commands.CreateReward;
 using SharijhaAward.Application.Features.Rewards.Commands.DeleteReward;

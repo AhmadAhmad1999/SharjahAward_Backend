@@ -174,7 +174,8 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                         if (DynamicAttributeEntities.Any())
                         {
                             List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                                .Where(x => DynamicAttributeEntities.Select(y => y.Id).Contains(x.DynamicAttributeId))
+                                .Where(x => DynamicAttributeEntities.Select(y => y.Id).Contains(x.DynamicAttributeId) &&
+                                    x.RecordId == response.user.Id)
                                 .ToListAsync();
 
                             if (DynamicAttributeValueEntities.Count() != DynamicAttributeEntities.Count())
@@ -206,7 +207,8 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                             if (DynamicAttributeEntities.Any())
                             {
                                 List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
-                                    .Where(x => DynamicAttributeEntities.Select(y => y.Id).Contains(x.DynamicAttributeId))
+                                    .Where(x => DynamicAttributeEntities.Select(y => y.Id).Contains(x.DynamicAttributeId) &&
+                                        x.RecordId == response.user.Id)
                                     .ToListAsync();
 
                                 if (DynamicAttributeValueEntities.Count() != DynamicAttributeEntities.Count())

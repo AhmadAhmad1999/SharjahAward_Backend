@@ -49,7 +49,8 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                     .OrderByDescending(x => x.Id)
                     .Select(x => new DownloadFilesByIdsListVM()
                     {
-                        FilePath = x.AttachementPath
+                        FilePath = x.AttachementPath.Replace("\\", "/"),
+                        FileName = x.Name
                     }).ToListAsync();
 
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200,
@@ -64,7 +65,8 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                     .OrderByDescending(x => x.Id)
                     .Select(x => new DownloadFilesByIdsListVM()
                     {
-                        FilePath = x.AttachementPath
+                        FilePath = x.AttachementPath.Replace("\\", "/"),
+                        FileName = x.Name
                     }).ToListAsync();
 
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200,
@@ -79,7 +81,8 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                     .OrderByDescending(x => x.Id)
                     .Select(x => new DownloadFilesByIdsListVM()
                     {
-                        FilePath = x.AttachementPath
+                        FilePath = x.AttachementPath.Replace("\\", "/"),
+                        FileName = x.Name
                     }).ToListAsync();
 
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200,
@@ -94,7 +97,8 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                     .OrderByDescending(x => x.Id)
                     .Select(x => new DownloadFilesByIdsListVM()
                     {
-                        FilePath = x.AttachementPath
+                        FilePath = x.AttachementPath.Replace("\\", "/"),
+                        FileName = x.Name
                     }).ToListAsync();
 
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200,
@@ -102,7 +106,7 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
             }
             else if (Request.FilterId == (int)FilesFilter.SubscriberPersonalAndAcademicInformation)
             {
-                List<DownloadFilesByIdsListVM> FilesValues = await _DynamicAttributeValueRepository
+                List<DownloadFilesByIdsListVM> FilesValues1 = await _DynamicAttributeValueRepository
                     .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
@@ -112,27 +116,36 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                     .OrderByDescending(x => x.Id)
                     .Select(x => new DownloadFilesByIdsListVM()
                     {
-                        FilePath = x.Value
+                        FilePath = x.Value.Replace("\\", "/"),
+                        isDynamic = true,
+                        FileName = string.Empty
                     })
-                    .Union(await _DynamicAttributeTableValueRepository
-                        .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
-                            x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
-                            ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
-                            (!Request.DownloadAllFiles
-                                ? Request.TableAttributeIds.Any(y => y == x.Id)
-                                : true))
-                        .OrderByDescending(x => x.Id)
-                        .Select(x => new DownloadFilesByIdsListVM()
-                        {
-                            FilePath = x.Value
-                        }).ToListAsync())
                     .ToListAsync();
+
+                List<DownloadFilesByIdsListVM> FilesValues2 = await _DynamicAttributeTableValueRepository
+                    .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                        x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
+                        (!Request.DownloadAllFiles
+                            ? Request.TableAttributeIds.Any(y => y == x.Id)
+                            : true))
+                    .OrderByDescending(x => x.Id)
+                    .Select(x => new DownloadFilesByIdsListVM()
+                    {
+                        FilePath = x.Value.Replace("\\", "/"),
+                        FileName = string.Empty,
+                        isDynamic = true
+                    }).ToListAsync();
+                
+                List<DownloadFilesByIdsListVM> FilesValues = FilesValues1
+                    .Union(FilesValues2)
+                    .ToList();
 
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200, FilesValues);
             }
             else if (Request.FilterId == (int)FilesFilter.CoordinatorFiles)
             {
-                List<DownloadFilesByIdsListVM> FilesValues = await _DynamicAttributeValueRepository
+                List<DownloadFilesByIdsListVM> FilesValues1 = await _DynamicAttributeValueRepository
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
                         (!Request.DownloadAllFiles
@@ -141,27 +154,33 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                     .OrderByDescending(x => x.Id)
                     .Select(x => new DownloadFilesByIdsListVM()
                     {
-                        FilePath = x.Value
-                    })
-                    .Union(await _DynamicAttributeTableValueRepository
-                        .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
-                            x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
-                            ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
-                            (!Request.DownloadAllFiles
-                                ? Request.TableAttributeIds.Any(y => y == x.Id)
-                                : true))
-                        .OrderByDescending(x => x.Id)
-                        .Select(x => new DownloadFilesByIdsListVM()
-                        {
-                            FilePath = x.Value
-                        }).ToListAsync())
-                    .ToListAsync();
+                        FilePath = x.Value.Replace("\\", "/"),
+                        isDynamic = true,
+                        FileName = string.Empty
+                    }).ToListAsync();
+
+                List<DownloadFilesByIdsListVM> FilesValues2 = await _DynamicAttributeTableValueRepository
+                    .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                        x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
+                        (!Request.DownloadAllFiles
+                            ? Request.TableAttributeIds.Any(y => y == x.Id)
+                            : true))
+                    .OrderByDescending(x => x.Id)
+                    .Select(x => new DownloadFilesByIdsListVM()
+                    {
+                        FilePath = x.Value.Replace("\\", "/"),
+                        isDynamic = true,
+                        FileName = string.Empty
+                    }).ToListAsync();
+
+                List<DownloadFilesByIdsListVM> FilesValues = FilesValues1.Union(FilesValues2).ToList();
 
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200, FilesValues);
             }
             else if (Request.FilterId == (int)FilesFilter.ArbitratorFiles)
             {
-                List<DownloadFilesByIdsListVM> FilesValues = await _DynamicAttributeValueRepository
+                List<DownloadFilesByIdsListVM> FilesValues1 = await _DynamicAttributeValueRepository
                     .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2 &&
                         ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
                         (!Request.DownloadAllFiles
@@ -170,21 +189,29 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Dow
                     .OrderByDescending(x => x.Id)
                     .Select(x => new DownloadFilesByIdsListVM()
                     {
-                        FilePath = x.Value
-                    })
-                    .Union(await _DynamicAttributeTableValueRepository
-                        .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
-                            x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
-                            ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
-                            (!Request.DownloadAllFiles
-                                ? Request.TableAttributeIds.Any(y => y == x.Id)
-                                : true))
-                        .OrderByDescending(x => x.Id)
-                        .Select(x => new DownloadFilesByIdsListVM()
-                        {
-                            FilePath = x.Value
-                        }).ToListAsync())
-                    .ToListAsync();
+                        FilePath = x.Value.Replace("\\", "/"),
+                        isDynamic = true,
+                        FileName = string.Empty
+                    }).ToListAsync();
+
+                List<DownloadFilesByIdsListVM> FilesValues2 = await _DynamicAttributeTableValueRepository
+                    .Where(x => (x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -1 &&
+                        x.DynamicAttribute!.DynamicAttributeSection!.RecordIdOnRelation != -2) &&
+                        ((x.DynamicAttribute!.AttributeDataTypeId == 3 || x.DynamicAttribute!.AttributeDataTypeId == 4)) &&
+                        (!Request.DownloadAllFiles
+                            ? Request.TableAttributeIds.Any(y => y == x.Id)
+                            : true))
+                    .OrderByDescending(x => x.Id)
+                    .Select(x => new DownloadFilesByIdsListVM()
+                    {
+                        FilePath = x.Value.Replace("\\", "/"),
+                        isDynamic = true,
+                        FileName = string.Empty
+                    }).ToListAsync();
+
+                List<DownloadFilesByIdsListVM> FilesValues = FilesValues1
+                    .Union(FilesValues2)
+                    .ToList();
 
                 return new BaseResponse<List<DownloadFilesByIdsListVM>>(ResponseMessage, true, 200, FilesValues);
             }

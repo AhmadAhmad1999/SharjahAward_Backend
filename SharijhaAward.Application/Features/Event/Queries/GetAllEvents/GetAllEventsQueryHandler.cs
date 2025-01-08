@@ -27,10 +27,36 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
         {
             FilterObject filterObject = new FilterObject() { Filters = request.filters };
 
-            var allEvents = request.perPage == -1 || request.page==0
-                ? await _eventRepository.OrderByDescending(filterObject, x => x.CreatedAt, 0, -1).ToListAsync()
-                : await _eventRepository.OrderByDescending(filterObject, x => x.CreatedAt, request.page,request.perPage).ToListAsync();
-           
+            List<Domain.Entities.EventModel.Event> allEvents = new List<Domain.Entities.EventModel.Event>();
+
+            if (request.InSubscriber)
+            {
+                if (request.perPage == -1 || request.page == 0)
+                {
+                    allEvents = await _eventRepository
+                        .WhereThenFilter(x => x.isPublic, filterObject)
+                        .OrderBy(x => x.CreatedAt)
+                        .ToListAsync();
+                }
+                else
+                {
+                    allEvents = _eventRepository
+                        .WhereThenFilter(x => x.isPublic, filterObject)
+                        .AsEnumerable()
+                        .OrderBy(x => x.CreatedAt)
+                        .AsEnumerable()
+                        .Skip((request.page - 1) * request.perPage)
+                        .Take(request.perPage)
+                        .ToList();
+                }
+            }
+            else
+            {
+                allEvents = request.perPage == -1 || request.page == 0
+                    ? await _eventRepository.OrderByDescending(filterObject, x => x.CreatedAt, 0, -1).ToListAsync()
+                    : await _eventRepository.OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage).ToListAsync();
+            }
+
             List<EventListVM> allEventsVM = new List<EventListVM>();
          
             for (int i=0 ; i < allEvents.Count ; i++)
@@ -53,6 +79,7 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetAllEvents
                 vm.ArabicLocation = allEvents[i].ArabicLocation;
                 vm.ArabicSiteName = allEvents[i].ArabicSiteName;
                 vm.CreatedAt= allEvents[i].CreatedAt;
+                vm.isPublic= allEvents[i].isPublic;
                 allEventsVM.Add(vm);
             }
             

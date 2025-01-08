@@ -2,6 +2,7 @@
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DigitalSignatureModel;
+using System.Net.Http;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.DeleteDigitalSignature

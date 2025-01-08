@@ -1,11 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharijhaAward.Api.Logger;
-using SharijhaAward.Application.Features.AboutAwardPages.Commands.UpdateAboutPage;
-using SharijhaAward.Application.Features.Agendas.Commands.DeleteAgenda;
-using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
-using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
 using SharijhaAward.Application.Features.Albums.Commands.CreateAlbum;
 using SharijhaAward.Application.Features.Albums.Commands.DeleteAlbum;
 using SharijhaAward.Application.Features.Albums.Commands.UpdateAlbum;

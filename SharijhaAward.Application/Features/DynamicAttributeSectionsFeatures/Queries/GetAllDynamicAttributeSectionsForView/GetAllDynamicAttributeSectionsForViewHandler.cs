@@ -6,10 +6,11 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.DynamicAttribute;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
-using RestSharp;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using System.Text.Json;
+using System.Net.Http;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView
 {
@@ -22,13 +23,15 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
+        private readonly IAsyncRepository<Domain.Entities.EventModel.Event> _EventRepository;
 
         public GetAllDynamicAttributeSectionsForViewHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
             IAsyncRepository<Category> CategoryRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
-            IAsyncRepository<EducationalEntity> EducationalEntityRepository)
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository,
+            IAsyncRepository<Domain.Entities.EventModel.Event> _EventRepository)
         {
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeRepository = DynamicAttributeRepository;
@@ -36,11 +39,13 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             _CategoryRepository = CategoryRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _EducationalEntityRepository = EducationalEntityRepository;
+            this._EventRepository = _EventRepository;
         }
         public async Task<BaseResponse<List<DynamicAttributeSectionListVM>>> Handle(GetAllDynamicAttributeSectionsForViewQuery Request,
             CancellationToken cancellationToken)
         {
-            if (Request.CategoryId is not null)
+            if (Request.CategoryId is not null &&
+                Request.CategoryId != 0)
             {
                 string Language = !string.IsNullOrEmpty(Request.lang)
                     ? Request.lang.ToLower() : "ar";
@@ -297,48 +302,31 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                     DynamicAttribute? NationalityDynamicAttributes = MainInformationDynamicAttribute
                         .FirstOrDefault(x => x.AttributeDataTypeId == 8 && x.EnglishTitle.ToLower() == "Nationality".ToLower());
 
-                    string BaseUrl = "https://restcountries.com/v3.1/";
+                    // Fetch content from the URL
+                    string json = await File.ReadAllTextAsync($"{Request.WWWRootFilePath}/Nationalities/Nationalities.json");
 
-                    RestClient RestClient = new RestClient(BaseUrl);
-                    RestRequest RestRequest = new RestRequest("all", Method.Get);
-
-                    RestResponse<List<NationalityResponse>> Response = RestClient.Execute<List<NationalityResponse>>(RestRequest);
-
-                    if (Response.IsSuccessful)
+                    var Nationalities = JsonSerializer.Deserialize<List<NationalityResponse>>(json, new JsonSerializerOptions
                     {
-                        List<NationalityResponse> Nationalities = Response.Data!;
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase // Matches JSON camelCase properties to PascalCase C# properties
+                    });
 
-                        List<NationalityDto> FormattedResponse = new List<NationalityDto>();
-
-                        foreach (NationalityResponse Nationality in Nationalities!)
-                        {
-                            NationalityDto nationalityDto = new NationalityDto
+                    if (NationalityDynamicAttributes is not null)
+                    {
+                        IEnumerable<DynamicAttributeListValue> NewNationalitiesValues = Nationalities!
+                            .Select(x => new DynamicAttributeListValue()
                             {
-                                ArabicName = Nationality.Translations.ara.common,
-                                EnglishName = Nationality.Name.Common
-                            };
+                                isDeleted = false,
+                                DeletedAt = null,
+                                CreatedAt = DateTime.UtcNow,
+                                CreatedBy = null,
+                                LastModifiedAt = null,
+                                LastModifiedBy = null,
+                                DynamicAttributeId = NationalityDynamicAttributes.Id,
+                                EnglishValue = x.Name.Common,
+                                ArabicValue = x.Translations.ara.common,
+                            });
 
-                            FormattedResponse.Add(nationalityDto);
-                        }
-
-                        if (NationalityDynamicAttributes is not null)
-                        {
-                            IEnumerable<DynamicAttributeListValue> NewNationalitiesValues = FormattedResponse
-                                .Select(x => new DynamicAttributeListValue()
-                                {
-                                    isDeleted = false,
-                                    DeletedAt = null,
-                                    CreatedAt = DateTime.UtcNow,
-                                    CreatedBy = null,
-                                    LastModifiedAt = null,
-                                    LastModifiedBy = null,
-                                    DynamicAttributeId = NationalityDynamicAttributes.Id,
-                                    EnglishValue = x.EnglishName,
-                                    ArabicValue = x.ArabicName
-                                });
-
-                            await _DynamicAttributeListValueRepository.AddRangeAsync(NewNationalitiesValues);
-                        }
+                        await _DynamicAttributeListValueRepository.AddRangeAsync(NewNationalitiesValues);
                     }
 
                     DynamicAttribute? GenderDynamicAttributes = MainInformationDynamicAttribute
@@ -606,6 +594,194 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 200, DynamicAttributeSections, PaginationParameter);
             }
+            else if (Request.EventId is not null &&
+                Request.EventId != 0)
+            {
+                string Language = !string.IsNullOrEmpty(Request.lang)
+                    ? Request.lang.ToLower() : "ar";
+
+                string ResponseMessage = string.Empty;
+
+                Domain.Entities.EventModel.Event? EventEntity = await _EventRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.EventId);
+
+                if (EventEntity == null)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? "Event is not found"
+                        : "الفعالية غير موجودة";
+
+                    return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, false, 404);
+                }
+
+                List<DynamicAttributeSectionListVM> DynamicAttributeSections = new List<DynamicAttributeSectionListVM>();
+
+                if (Request.page != 0 && Request.perPage != -1)
+                    DynamicAttributeSections = await _DynamicAttributeSectionRepository
+                        .IncludeThenWhere(x => x.AttributeTableName!,
+                            x => x.RecordIdOnRelation == Request.EventId &&
+                            x.AttributeTableName!.Name.ToLower() == TableNames.Event.ToString().ToLower() &&
+                            x.InviteeType == Request.InviteeType)
+                        .OrderBy(x => x.OrderId)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
+                        .Select(x => new DynamicAttributeSectionListVM()
+                        {
+                            Id = x.Id,
+                            Name = Language == "ar"
+                                ? x.ArabicName
+                                : x.EnglishName,
+                            TableTypeSection = x.TableTypeSection
+                        }).ToListAsync();
+
+                else
+                    DynamicAttributeSections = await _DynamicAttributeSectionRepository
+                        .IncludeThenWhere(x => x.AttributeTableName!,
+                            x => x.RecordIdOnRelation == Request.EventId &&
+                            x.AttributeTableNameId == 4 &&
+                            x.InviteeType == Request.InviteeType)
+                        .OrderBy(x => x.OrderId)
+                        .Select(x => new DynamicAttributeSectionListVM()
+                        {
+                            Id = x.Id,
+                            Name = Language == "ar"
+                                ? x.ArabicName
+                                : x.EnglishName,
+                            TableTypeSection = x.TableTypeSection
+                        }).ToListAsync();
+
+                if (DynamicAttributeSections.FirstOrDefault(x => x.Name.ToLower() == "Main Information".ToLower() ||
+                        x.Name == "المعلومات الأساسية") == null)
+                {
+                    DynamicAttributeSection PersonalInformationSection = new DynamicAttributeSection()
+                    {
+                        isDeleted = false,
+                        DeletedAt = null,
+                        CreatedAt = DateTime.UtcNow,
+                        CreatedBy = null,
+                        LastModifiedAt = null,
+                        LastModifiedBy = null,
+                        ArabicName = "المعلومات الأساسية",
+                        EnglishName = "Main Information",
+                        AttributeTableNameId = 4,
+                        RecordIdOnRelation = Request.EventId,
+                        TableTypeSection = false,
+                        InviteeType = Request.InviteeType
+                    };
+
+                    await _DynamicAttributeSectionRepository.AddAsync(PersonalInformationSection);
+
+                    DynamicAttributeSections.Add(new DynamicAttributeSectionListVM()
+                    {
+                        Id = PersonalInformationSection.Id,
+                        Name = Language == "en"
+                            ? PersonalInformationSection.EnglishName
+                            : PersonalInformationSection.ArabicName
+                    });
+
+                    if (Request.InviteeType == Domain.Constants.InviteeTypes.Personal)
+                    {
+                        DynamicAttribute MainInformationDynamicAttribute = new DynamicAttribute()
+                        {
+                            isDeleted = false,
+                            DeletedAt = null,
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            DynamicAttributeSectionId = PersonalInformationSection.Id,
+                            EnglishLabel = "Email",
+                            EnglishTitle = "Email",
+                            ArabicLabel = "البريد الالكتروني",
+                            ArabicTitle = "البريد الالكتروني",
+                            AttributeDataTypeId = 1,
+                            IsRequired = true,
+                            IsUnique = false,
+                            LinkedToAnotherAttribute = false,
+                            MaxSizeInKB = null,
+                            Status = DynamicAttributeStatus.Active,
+                            ArabicPlaceHolder = "البريد الالكتروني",
+                            EnglishPlaceHolder = "Email",
+                            OrderId = 1
+                        };
+
+                        await _DynamicAttributeRepository.AddAsync(MainInformationDynamicAttribute);
+                    }
+                    else if (Request.InviteeType == Domain.Constants.InviteeTypes.Group)
+                    {
+                        DynamicAttribute MainInformationDynamicAttribute = new DynamicAttribute()
+                        {
+                            isDeleted = false,
+                            DeletedAt = null,
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            DynamicAttributeSectionId = PersonalInformationSection.Id,
+                            EnglishLabel = "Email (Student Supervisor)",
+                            EnglishTitle = "Email (Student Supervisor)",
+                            ArabicLabel = "البريد الالكتروني (المشرف على الطلبة)",
+                            ArabicTitle = "البريد الالكتروني (المشرف على الطلبة)",
+                            AttributeDataTypeId = 1,
+                            IsRequired = true,
+                            IsUnique = false,
+                            LinkedToAnotherAttribute = false,
+                            MaxSizeInKB = null,
+                            Status = DynamicAttributeStatus.Active,
+                            ArabicPlaceHolder = "البريد الالكتروني (المشرف على الطلبة)",
+                            EnglishPlaceHolder = "Email (Student Supervisor)",
+                            OrderId = 1
+                        };
+
+                        await _DynamicAttributeRepository.AddAsync(MainInformationDynamicAttribute);
+                    }
+                }
+
+                foreach (DynamicAttributeSectionListVM DynamicAttributeSection in DynamicAttributeSections)
+                {
+                    DynamicAttributeSection.DynamicAttributes = _DynamicAttributeRepository
+                        .WhereThenInclude(x => x.DynamicAttributeSectionId == DynamicAttributeSection.Id,
+                            x => x.AttributeDataType!)
+                        .OrderBy(x => x.OrderId)
+                        .Select(x => new DynamicAttributeListVM()
+                        {
+                            Id = x.Id,
+                            AttributeDataTypeName = x.AttributeDataType!.Name,
+                            Label = Language.ToLower() == "ar"
+                                ? x.ArabicLabel
+                                : x.EnglishLabel,
+                            PlaceHolder = Language.ToLower() == "ar"
+                                ? x.ArabicPlaceHolder
+                                : x.EnglishPlaceHolder,
+                            Status = x.Status.ToString()
+                        }).ToList();
+                }
+
+                DynamicAttributeSectionListVM? MainInformationDynamicSection = DynamicAttributeSections
+                    .FirstOrDefault(x => x.Name.ToLower() == "Main Information".ToLower() ||
+                        x.Name == "المعلومات الأساسية");
+
+                if (MainInformationDynamicSection is not null)
+                {
+                    int IndexOfMainInformationSection = DynamicAttributeSections.IndexOf(MainInformationDynamicSection);
+
+                    DynamicAttributeSectionListVM? FirstDynamicSection = DynamicAttributeSections.FirstOrDefault();
+
+                    if (FirstDynamicSection is not null)
+                    {
+                        DynamicAttributeSections[0] = MainInformationDynamicSection;
+                        DynamicAttributeSections[IndexOfMainInformationSection] = FirstDynamicSection;
+                    }
+                }
+
+                int TotalCount = await _DynamicAttributeSectionRepository.GetCountAsync(x => x.RecordIdOnRelation == Request.EventId &&
+                    x.AttributeTableName!.Name.ToLower() == TableNames.Event.ToString().ToLower());
+
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.perPage, TotalCount);
+
+                return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 200, DynamicAttributeSections, PaginationParameter);
+            }
             else if (Request.isArbitrator is not null)
             {
                 string Language = !string.IsNullOrEmpty(Request.lang)
@@ -684,6 +860,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 return new BaseResponse<List<DynamicAttributeSectionListVM>>(ResponseMessage, true, 200, DynamicAttributeSections, PaginationParameter);
             }
+
             return new BaseResponse<List<DynamicAttributeSectionListVM>>();
         }
     }

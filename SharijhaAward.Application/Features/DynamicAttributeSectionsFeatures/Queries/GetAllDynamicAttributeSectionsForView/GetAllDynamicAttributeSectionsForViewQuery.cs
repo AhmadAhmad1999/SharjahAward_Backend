@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForView
 {
@@ -7,7 +8,10 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
     {
         public int? CategoryId { get; set; }
         public bool? isArbitrator { get; set; }
+        public int? EventId { get; set; }
+        public InviteeTypes? InviteeType { get; set; }
         public string lang { get; set; } = string.Empty;
+        public string WWWRootFilePath { get; set; } = string.Empty;
         public int page { get; set; }
         public int perPage { get; set; }
     }

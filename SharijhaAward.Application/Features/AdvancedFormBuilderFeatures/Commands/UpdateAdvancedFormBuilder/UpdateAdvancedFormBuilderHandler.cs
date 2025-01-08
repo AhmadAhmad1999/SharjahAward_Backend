@@ -75,7 +75,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Command
                 .FirstOrDefaultAsync(x => x.AdvancedFormBuilderId == Request.Id);
 
             List<AdvancedFormBuilderDependency> AdvancedFormBuilderDependenciesEntities = await _AdvancedFormBuilderDependencyRepository
-                .Where(x => x.AdvancedFormBuilderId == Request.Id)
+                .Where(x => x.MainAdvancedFormBuilderId == Request.Id)
                 .ToListAsync();
 
             List<AdvancedFormBuilderDependencyValidation> AdvancedFormBuilderDependencyValidationEntities = await _AdvancedFormBuilderDependencyValidationRepository

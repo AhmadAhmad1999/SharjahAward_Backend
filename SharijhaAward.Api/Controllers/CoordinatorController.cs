@@ -39,7 +39,7 @@ namespace SharijhaAward.Api.Controllers
             var Language = HttpContext.Request.Headers["lang"];
             command.lang = Language!;
 
-            command.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
+            command.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/DynamicFiles/";
 
             var response = await _mediator.Send(command);
 
@@ -99,7 +99,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            UpdateCoordinatorCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "\\DynamicFiles\\";
+            UpdateCoordinatorCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/DynamicFiles/";
 
             BaseResponse<object>? Response = await _mediator.Send(UpdateCoordinatorCommand);
 

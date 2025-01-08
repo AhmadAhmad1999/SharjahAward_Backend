@@ -7,13 +7,8 @@ using SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetAllTrainin
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
-using SharijhaAward.Domain.Entities.TrainingWrokshopeAttachments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId
 {
@@ -21,21 +16,21 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
         : IRequestHandler<GetWorkShopsByCategoryIdQuery, BaseResponse<List<TrainingWorkshopListVm>>>
     {
         private readonly IAsyncRepository<TrainingWorkshop> _workShopRepository;
-        private readonly IAsyncRepository<TrainingWrokshopeAttachment> _TrainingWrokshopeAttachmentRepository;
+        private readonly IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IMapper _mapper;
 
         public GetWorkShopsByCategoryIdQueryHandler(
             IAsyncRepository<TrainingWorkshop> workShopRepository,
-            IAsyncRepository<TrainingWrokshopeAttachment> TrainingWrokshopeAttachmentRepository,
+            IAsyncRepository<TrainingWorkshopAttachment> TrainingWorkshopAttachmentRepository,
             IAsyncRepository<Category> categoryRepository, 
             IMapper mapper,
             IHttpContextAccessor httpContextAccessor
             )
         {
             _workShopRepository = workShopRepository;
-            _TrainingWrokshopeAttachmentRepository = TrainingWrokshopeAttachmentRepository;
+            _TrainingWorkshopAttachmentRepository = TrainingWorkshopAttachmentRepository;
             _categoryRepository = categoryRepository;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
@@ -56,14 +51,14 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
 
                 var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops);
 
-                List<TrainingWrokshopeAttachment> AllTrainingWrokshopeAttachmentEntitites = await _TrainingWrokshopeAttachmentRepository
-                    .Where(x => data.Select(y => y.Id).Contains(x.WorkshopeId))
+                List<TrainingWorkshopAttachment> AllTrainingWrokshopeAttachmentEntitites = await _TrainingWorkshopAttachmentRepository
+                    .Where(x => data.Select(y => y.Id).Contains(x.TrainingWorkshopId))
                     .ToListAsync();
 
                 for (int i = 0; i < data.Count; i++)
                 {
                     data[i].Attachments = AllTrainingWrokshopeAttachmentEntitites
-                        .Where(x => x.WorkshopeId == data[i].Id)
+                        .Where(x => x.TrainingWorkshopId == data[i].Id)
                         .Select(x => new WorkshopAttachmentListVM()
                         {
                             Id = x.Id,

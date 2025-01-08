@@ -1,15 +1,10 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MimeKit;
-using SelectPdf;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.CreateExplanatoryGuide;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.DeleteExplanatoryGuide;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Commands.UpdateExplanatoryGuide;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideByCategoryId;
 using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideDetailsByCategoryId;
-using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers

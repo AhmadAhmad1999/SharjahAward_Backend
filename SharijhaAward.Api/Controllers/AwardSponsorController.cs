@@ -1,8 +1,5 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SharijhaAward.Application.Features.Agendas.Commands.DeleteAgenda;
-using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Commands.CreateAwardSponsor;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Commands.DeleteAwardSponsor;
 using SharijhaAward.Application.Features.AwardSponsorsPage.Commands.UpdateAwardSponsor;

@@ -1,12 +1,9 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Features.CycleConditions.Attachments.Commands.CreateAttachment;
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.CreateAttachment;
 using SharijhaAward.Application.Features.TermsAndConditions.Attacments.Commands.DeleteAttachment;
-
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.CycleConditions.Attachments.Commands.DeleteAttachment;
 

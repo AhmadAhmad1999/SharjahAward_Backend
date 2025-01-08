@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.CreateTextCard;
 using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.DeleteTextCard;
 using SharijhaAward.Application.Features.PageStructures.TextCards.Commands.UpdateTextCard;
@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.PageStructures.TextCards.Queries.GetTex
 
 namespace SharijhaAward.Api.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute))]
     [Route("api/[controller]")]
     [ApiController]
     public class TextCardController : ControllerBase

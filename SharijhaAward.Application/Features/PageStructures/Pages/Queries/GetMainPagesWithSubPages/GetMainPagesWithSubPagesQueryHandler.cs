@@ -3,68 +3,106 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Constants.CustomPageConstants;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 
 namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMainPagesWithSubPages
 {
     public class GetMainPagesWithSubPagesQueryHandler
-        : IRequestHandler<GetMainPagesWithSubPagesQuery, BaseResponse<List<MainPageWithSubPageListVM>>>
+        : IRequestHandler<GetMainPagesWithSubPagesQuery, BaseResponse<GetMainPagesWithSubPagesResponse>>
     {
-        private readonly IAsyncRepository<PageStructure> _pageStructureRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<PageStructure> _PageStructureRepository;
+        private readonly IMapper _Mapper;
 
-        public GetMainPagesWithSubPagesQueryHandler(IAsyncRepository<PageStructure> pageStructureRepository, IMapper mapper)
+        public GetMainPagesWithSubPagesQueryHandler(IAsyncRepository<PageStructure> _PageStructureRepository,
+            IMapper _Mapper)
         {
-            _pageStructureRepository = pageStructureRepository;
-            _mapper = mapper;
+            this._PageStructureRepository = _PageStructureRepository;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<List<MainPageWithSubPageListVM>>> Handle(GetMainPagesWithSubPagesQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<GetMainPagesWithSubPagesResponse>> Handle(GetMainPagesWithSubPagesQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            string ResponseMessage = string.Empty;
 
-            var mainPages = await _pageStructureRepository
-                    .GetWhereThenPagedReponseAsync(p => p.ParentId == null && p.PagePostion == Domain.Constants.CustomPageConstants.PagePostion.InMenu, filterObject, request.page, request.perPage);
-                    
+            List<PageStructure> AllMainPages = await _PageStructureRepository
+                .Where(p => p.ParentId == null)
+                .ToListAsync();
 
-            var subPages = await _pageStructureRepository.Where(p => p.ParentId != null).OrderBy(p=>p.orderId).ToListAsync();
-            
-            var MainPages = _mapper.Map<List<MainPageWithSubPageListVM>>(mainPages)
-                .OrderBy(p=>p.orderId)
-                .ToList();
+            IEnumerable<PageStructure> SubPages = await _PageStructureRepository
+                .Where(x => x.ParentId != null)
+                .OrderBy(x => x.orderId)
+                .ToListAsync();
 
-            List<PageStructure> pages = new List<PageStructure>();
-
-            foreach (var page in MainPages)
+            GetMainPagesWithSubPagesResponse Response = new GetMainPagesWithSubPagesResponse()
             {
-                pages.Clear();
-                page.Title = request.lang == "en" ? page.EnglishTitle : page.ArabicTitle;
-
-                foreach (var subPage in subPages)
-                {
-                    if(page.Id == subPage.ParentId)
+                InsideCells = AllMainPages
+                    .Where(x => x.PagePostion == PagePostion.InCells)
+                    .Select(x => new MainPageWithSubPageListVM()
                     {
-                        pages.Add(subPage);
-                    }
-                }
-                var SubPages = _mapper.Map<List<SubPageListVM>>(pages);
+                        Id = x.Id,
+                        IconUrl = x.IconUrl,
+                        Title = Request.lang == "en"
+                            ? x.EnglishTitle
+                            : x.ArabicTitle,
+                        EnglishTitle = x.EnglishTitle,
+                        ArabicTitle = x.ArabicTitle,
+                        IsHide = x.IsHide,
+                        Slug = x.Slug,
+                        RefUrl = x.RefUrl,
+                        PageType = x.PageType,
+                        PagePostion = x.PagePostion,
+                        orderId = x.orderId,
+                        Deletable = x.Deletable,
+                        SubPages = new List<SubPageListVM>()
+                    })
+                    .OrderBy(x => x.orderId)
+                    .ToList(),
+                OutsideCells = AllMainPages
+                    .Where(x => x.PagePostion == PagePostion.InMenu)
+                    .Select(x => new MainPageWithSubPageListVM()
+                    {
+                        Id = x.Id,
+                        IconUrl = x.IconUrl,
+                        Title = Request.lang == "en"
+                            ? x.EnglishTitle
+                            : x.ArabicTitle,
+                        EnglishTitle = x.EnglishTitle,
+                        ArabicTitle = x.ArabicTitle,
+                        IsHide = x.IsHide,
+                        Slug = x.Slug,
+                        RefUrl = x.RefUrl,
+                        PageType = x.PageType,
+                        PagePostion = x.PagePostion,
+                        orderId = x.orderId,
+                        Deletable = x.Deletable,
+                        SubPages = SubPages
+                            .Where(y => y.ParentId == x.Id)
+                            .Select(y => new SubPageListVM()
+                            {
+                                Id = y.Id,
+                                Title = Request.lang == "en"
+                                    ? y.EnglishTitle
+                                    : y.ArabicTitle,
+                                EnglishTitle = y.EnglishTitle,
+                                ArabicTitle = y.ArabicTitle,
+                                ParentId = y.ParentId!.Value,
+                                Slug = y.Slug,
+                                RefUrl = y.RefUrl,
+                                IsHide = y.IsHide,
+                                PageType = y.PageType,
+                                PagePostion = y.PagePostion,
+                                orderId = y.orderId,
+                                Deletable = y.Deletable
+                            })
+                            .OrderBy(x => x.orderId)
+                            .ToList()
+                    })
+                    .OrderBy(x => x.orderId)
+                    .ToList()
+            };
 
-                foreach(var subPage in SubPages)
-                {
-                    subPage.Title = request.lang == "en" ? subPage.EnglishTitle : subPage.ArabicTitle;
-                }
-
-                page.SubPages = SubPages;
-            }
-
-            int TotalCount = await _pageStructureRepository
-                .GetCountAsync(p => p.ParentId == null);
-
-            Pagination PaginationParameter = new Pagination(request.page,
-                request.perPage, TotalCount);
-
-            return new BaseResponse<List<MainPageWithSubPageListVM>>("", true, 200, MainPages , PaginationParameter);
+            return new BaseResponse<GetMainPagesWithSubPagesResponse>(ResponseMessage, true, 200, Response);
         }
     }
 }

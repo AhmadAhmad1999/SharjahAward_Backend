@@ -7,5 +7,6 @@ namespace SharijhaAward.Application.Features.Settings.Commands.SendConfirmationC
     {
         public string? token { get; set; }
         public string? lang { get; set; }
+        public string? WWWRootFilePath { get; set; }
     }
 }

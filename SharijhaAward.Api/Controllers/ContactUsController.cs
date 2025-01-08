@@ -1,9 +1,5 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Commands.DeleteMessage;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.ClosingEmailMessage;
@@ -12,9 +8,6 @@ using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessa
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgForAwardTeam;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMessageById;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetMsgByIdForAwardTeam;
-using SharijhaAward.Application.Responses;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-
 using SharijhaAward.Api.Logger;
 
 namespace SharijhaAward.Api.Controllers
@@ -163,7 +156,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetAllMessagesForAwardTeam", Name = "GetAllMessagesForAwardTeam")]
-        public async Task<IActionResult> GetAllMessagesForAwardTeam(int page = 1, int perPage = 10)
+        public async Task<IActionResult> GetAllMessagesForAwardTeam(bool FromWebsite, int page = 1, int perPage = 10)
         {
             var token = HttpContext.Request.Headers.Authorization;
 
@@ -179,7 +172,8 @@ namespace SharijhaAward.Api.Controllers
                 token = token!,
                 page = page,
                 perPage = perPage,
-                lang = Language!
+                lang = Language!,
+                FromWebsite = FromWebsite
             });
             return response.statusCode switch
             {

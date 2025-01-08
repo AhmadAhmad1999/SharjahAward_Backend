@@ -17,6 +17,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Command
         public string? lang { get; set; }
         public bool IsUnique { get; set; } = false;
         public bool LinkedToAnotherAttribute { get; set; } = false;
+        public bool ViewInTable { get; set; }
         public int AttributeDataTypeId { get; set; }
         public CreateGeneralValidation? GeneralValidationObject { get; set; }
         public List<CreateDependencyValidation>? DependencyValidations { get; set; }

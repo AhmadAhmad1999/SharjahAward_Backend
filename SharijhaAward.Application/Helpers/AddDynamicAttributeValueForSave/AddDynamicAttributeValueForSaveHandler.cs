@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
@@ -50,6 +51,49 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
         public async Task<BaseResponse<AddDynamicAttributeValueForSaveResponse>> Handle(AddDynamicAttributeValueForSaveCommand Request,
             CancellationToken cancellationToken)
         {
+            int AttributeTableNameId = 0;
+
+            if (Request.DynamicAttributesWithValues.Any())
+            {
+                DynamicAttribute? DynamicAttributeForAttributeTableNameId = await _DynamicAttributeRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithValues[0].DynamicAttributeId);
+
+                if (DynamicAttributeForAttributeTableNameId is not null)
+                    AttributeTableNameId = DynamicAttributeForAttributeTableNameId.DynamicAttributeSection!.AttributeTableNameId;
+            }
+            else if (Request.DynamicAttributesWithTableValues.Any())
+            {
+                DynamicAttribute? DynamicAttributeForAttributeTableNameId = await _DynamicAttributeRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithTableValues[0].DynamicAttributeId);
+
+                if (DynamicAttributeForAttributeTableNameId is not null)
+                    AttributeTableNameId = DynamicAttributeForAttributeTableNameId.DynamicAttributeSection!.AttributeTableNameId;
+            }
+            else if (Request.DynamicAttributesWithValuesMobile != null
+                ? Request.DynamicAttributesWithValuesMobile.Any()
+                : false)
+            {
+                DynamicAttribute? DynamicAttributeForAttributeTableNameId = await _DynamicAttributeRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithValuesMobile[0].DynamicAttributeId);
+
+                if (DynamicAttributeForAttributeTableNameId is not null)
+                    AttributeTableNameId = DynamicAttributeForAttributeTableNameId.DynamicAttributeSection!.AttributeTableNameId;
+            }
+            else if (Request.DynamicAttributesWithTableValuesMobile != null
+                ? Request.DynamicAttributesWithTableValuesMobile.Any()
+                : false)
+            {
+                DynamicAttribute? DynamicAttributeForAttributeTableNameId = await _DynamicAttributeRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithTableValuesMobile[0].DynamicAttributeId);
+
+                if (DynamicAttributeForAttributeTableNameId is not null)
+                    AttributeTableNameId = DynamicAttributeForAttributeTableNameId.DynamicAttributeSection!.AttributeTableNameId;
+            }
+            else
+            {
+                return new BaseResponse<AddDynamicAttributeValueForSaveResponse>("", false, 500);
+            }
+
             if ((Request.DynamicAttributesWithValuesMobile != null && Request.ValueAsBinaryFiles != null)
                 ? (Request.DynamicAttributesWithValuesMobile.Any() && Request.ValueAsBinaryFiles.Any()) : false)
             {
@@ -194,7 +238,9 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                 try
                 {
                     List<DynamicAttributeValue> CheckForUpdateValues = await _DynamicAttributeValueRepository
-                        .Where(x => x.RecordId == Request.RecordId).ToListAsync();
+                        .Where(x => x.RecordId == Request.RecordId &&
+                            x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == AttributeTableNameId)
+                        .ToListAsync();
 
                     if (CheckForUpdateValues.Count() > 0)
                         await _DynamicAttributeValueRepository.DeleteListAsync(CheckForUpdateValues);
@@ -204,18 +250,12 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
 
                     foreach (AddDynamicAttributeValueForSaveMainCommand DynamicAttributeAsFile in DynamicAttributesAsFile)
                     {
-                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
-
-                        string FolderPath = isHttps
-                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
-                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
-
                         string? FileName = $"{Request.RecordId}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
 
-                        string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
+                        string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"{FileName}";
 
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
-                        string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
+                        string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
                         while (File.Exists(FilePathToSaveIntoDataBase))
                         {
@@ -223,9 +263,11 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                             FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
                         }
 
-                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                        using (MemoryStream MemoryStream = new MemoryStream())
                         {
-                            DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(FileStream);
+                            DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(MemoryStream);
+                            byte[] FileBytes = MemoryStream.ToArray();
+                            await File.WriteAllBytesAsync(FilePathToSaveToCreate, FileBytes);
                         }
 
                         DynamicAttributeAsFile.ValueAsBinaryFile = null;
@@ -254,7 +296,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                     await _DynamicAttributeValueRepository.AddRangeAsync(DynamicAttributeValuesEntities);
 
                     List<DynamicAttributeTableValue> DynamicAttributeTableValueEnititiesToDelete = await _DynamicAttributeTableValueRepository
-                        .Where(x => x.RecordId == Request.RecordId)
+                        .Where(x => x.RecordId == Request.RecordId &&
+                            x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == AttributeTableNameId)
                         .ToListAsync();
 
                     if (DynamicAttributeTableValueEnititiesToDelete.Any())
@@ -265,18 +308,12 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
 
                     foreach (AddDynamicAttributeTableValueForSaveMainCommand DynamicAttributeAsFile in DynamicAttributesTableValueAsFile)
                     {
-                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
-
-                        string FolderPath = isHttps
-                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
-                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
-
                         string? FileName = $"{Request.RecordId}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
 
-                        string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
+                        string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"{FileName}";
 
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
-                        string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
+                        string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
                         while (File.Exists(FilePathToSaveIntoDataBase))
                         {
@@ -284,9 +321,11 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                             FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
                         }
 
-                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                        using (MemoryStream MemoryStream = new MemoryStream())
                         {
-                            DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(FileStream);
+                            DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(MemoryStream);
+                            byte[] FileBytes = MemoryStream.ToArray();
+                            await File.WriteAllBytesAsync(FilePathToSaveToCreate, FileBytes);
                         }
 
                         DynamicAttributeAsFile.ValueAsBinaryFile = null;

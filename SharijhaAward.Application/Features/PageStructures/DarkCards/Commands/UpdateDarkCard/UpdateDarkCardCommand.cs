@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
+using SharijhaAward.Domain.Entities.PageStructureModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +20,6 @@ namespace SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.U
         public bool IsHide { get; set; }
         public int PageId { get; set; }
         public string? lang { get; set; }
+        public CardType CardType { get; set; }
     }
 }

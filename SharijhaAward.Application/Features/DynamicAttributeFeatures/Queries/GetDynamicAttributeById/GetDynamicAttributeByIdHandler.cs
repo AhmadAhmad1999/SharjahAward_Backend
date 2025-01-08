@@ -61,10 +61,14 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                     x => x.DynamicAttribute!, x => x.StaticAttribute!)
                 .GroupBy(x => x.DependencyGroupId);
 
+            List<DependencyValidation> DependencyValidations = await _DependencyValidationRepository
+                .IncludeThenWhere(x => x.AttributeOperation!, x => Dependencies.Select(y => y.Key).Contains(x.DependencyGroupId))
+                .ToListAsync();
+
             foreach (IGrouping<int, Dependency> Dependency in Dependencies)
             {
-                DependencyValidation? DependencyValidation = await _DependencyValidationRepository
-                    .IncludeThenFirstOrDefaultAsync(x => x.AttributeOperation!, x => x.DependencyGroupId == Dependency.Key);
+                DependencyValidation? DependencyValidation = DependencyValidations
+                    .FirstOrDefault(x => x.DependencyGroupId == Dependency.Key);
 
                 if (DependencyValidation != null)
                 {

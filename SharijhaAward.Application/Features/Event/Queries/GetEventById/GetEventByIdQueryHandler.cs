@@ -47,7 +47,9 @@ namespace SharijhaAward.Application.Features.Event.Queries.GetEventById
                         EnglishName = Event.EnglishName,
                         EnglishDescription = Event.EnglishDescription,
                         EnglishLocation = Event.EnglishLocation,
-                        EnglishSiteName = Event.EnglishSiteName
+                        EnglishSiteName = Event.EnglishSiteName,
+                        isPublic = Event.isPublic,
+                        CreatedAt = Event.CreatedAt
                     };
                     return _mapper.Map<EventDto>(@event);
             }

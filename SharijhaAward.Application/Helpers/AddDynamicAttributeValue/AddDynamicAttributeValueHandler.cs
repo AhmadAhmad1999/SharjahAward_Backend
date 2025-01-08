@@ -1,14 +1,23 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using QRCoder;
+using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
+using SharijhaAward.Application.Features.InviteeForm;
+using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.EducationalClassModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using SharijhaAward.Domain.Entities.EventModel;
+using SharijhaAward.Domain.Entities.InvitationModels;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
+using System.Globalization;
+using System.Net.Http;
+using System.Net.Mail;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
@@ -29,6 +38,11 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
         private readonly IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
+        private readonly IAsyncRepository<PersonalInviteeVirtualTable> _PersonalInviteeVirtualTableRepository;
+        private readonly IAsyncRepository<GroupInviteeVirtualTable> _GroupInviteeVirtualTableRepository;
+        private IEmailSender _EmailSender;
+        private IEmailCodesGenerator _QRCodeGenerator;
+        private readonly IAsyncRepository<Event> _EventRepository;
 
         public AddDynamicAttributeValueHandler(IAsyncRepository<EducationalClass> EducationalClassRepository,
             IAsyncRepository<ProvidedForm> ProvidedFormRepository,
@@ -42,7 +56,12 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             IHttpContextAccessor HttpContextAccessor,
             IAsyncRepository<EducationalEntity> EducationalEntityRepository,
             IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository,
-            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository)
+            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
+            IAsyncRepository<PersonalInviteeVirtualTable> _PersonalInviteeVirtualTableRepository,
+            IAsyncRepository<GroupInviteeVirtualTable> _GroupInviteeVirtualTableRepository,
+            IEmailSender _EmailSender,
+            IEmailCodesGenerator _QRCodeGenerator,
+            IAsyncRepository<Event> _EventRepository)
         {
             _EducationalClassRepository = EducationalClassRepository;
             _ProvidedFormRepository = ProvidedFormRepository;
@@ -57,10 +76,117 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
             _EducationalEntityRepository = EducationalEntityRepository;
             _ViewWhenRelationRepository = ViewWhenRelationRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
+            this._PersonalInviteeVirtualTableRepository = _PersonalInviteeVirtualTableRepository;
+            this._GroupInviteeVirtualTableRepository = _GroupInviteeVirtualTableRepository;
+            this._EmailSender = _EmailSender;
+            this._QRCodeGenerator = _QRCodeGenerator;
+            this._EventRepository = _EventRepository;
         }
         public async Task<BaseResponse<AddDynamicAttributeValueResponse>> Handle(AddDynamicAttributeValueCommand Request, 
             CancellationToken cancellationToken)
         {
+            int AttributeTableNameId = 0;
+            int NumberOfExpectedAttendance = 0;
+            if (Request.DynamicAttributesWithValues.Any())
+            {
+                DynamicAttribute? DynamicAttributeForAttributeTableNameId = await _DynamicAttributeRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithValues[0].DynamicAttributeId);
+
+                if (DynamicAttributeForAttributeTableNameId is not null)
+                    AttributeTableNameId = DynamicAttributeForAttributeTableNameId.DynamicAttributeSection!.AttributeTableNameId;
+
+                AddDynamicAttributeValueMainCommand? NumberOfExpectedAttendanceRequest = Request.DynamicAttributesWithValues
+                    .FirstOrDefault(x => x.DynamicAttributeId == -1);
+
+                if (NumberOfExpectedAttendanceRequest is not null)
+                    NumberOfExpectedAttendance = int.Parse(NumberOfExpectedAttendanceRequest.ValueAsString!);
+            }
+            else if (Request.DynamicAttributesWithTableValues.Any())
+            {
+                DynamicAttribute? DynamicAttributeForAttributeTableNameId = await _DynamicAttributeRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithTableValues[0].DynamicAttributeId);
+
+                if (DynamicAttributeForAttributeTableNameId is not null)
+                    AttributeTableNameId = DynamicAttributeForAttributeTableNameId.DynamicAttributeSection!.AttributeTableNameId;
+            }
+            else if (Request.DynamicAttributesWithValuesMobile != null
+                ? Request.DynamicAttributesWithValuesMobile.Any()
+                : false)
+            {
+                DynamicAttribute? DynamicAttributeForAttributeTableNameId = await _DynamicAttributeRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithValuesMobile[0].DynamicAttributeId);
+
+                if (DynamicAttributeForAttributeTableNameId is not null)
+                    AttributeTableNameId = DynamicAttributeForAttributeTableNameId.DynamicAttributeSection!.AttributeTableNameId;
+            }
+            else if (Request.DynamicAttributesWithTableValuesMobile != null
+                ? Request.DynamicAttributesWithTableValuesMobile.Any()
+                : false)
+            {
+                DynamicAttribute? DynamicAttributeForAttributeTableNameId = await _DynamicAttributeRepository
+                    .FirstOrDefaultAsync(x => x.Id == Request.DynamicAttributesWithTableValuesMobile[0].DynamicAttributeId);
+
+                if (DynamicAttributeForAttributeTableNameId is not null)
+                    AttributeTableNameId = DynamicAttributeForAttributeTableNameId.DynamicAttributeSection!.AttributeTableNameId;
+            }
+            else
+            {
+                return new BaseResponse<AddDynamicAttributeValueResponse>("", false, 500);
+            }
+
+            int? CopyOfUniqueIntegerId = 0;
+            GroupInviteeVirtualTable CheckGroupInviteeVirtualTable = null;
+
+            if (Request.RecordId == 0 &&
+                Request.InviteeType is not null)
+            {
+                if (Request.InviteeType == Domain.Constants.InviteeTypes.Personal)
+                {
+                    PersonalInviteeVirtualTable NewPersonalInviteeVirtualTableEntity = new PersonalInviteeVirtualTable();
+
+                    IEnumerable<int> ListOfUniqueIntegerId = _PersonalInviteeVirtualTableRepository.ListAllAsync()
+                        .Result.Select(x => x.UniqueIntegerId);
+
+                    Random Random = new Random();
+                    int UniqueIntegerId;
+                    do
+                    {
+                        UniqueIntegerId = Random.Next(100000000, 999999999);
+                    } while (ListOfUniqueIntegerId.Contains(UniqueIntegerId));
+
+                    NewPersonalInviteeVirtualTableEntity.UniqueIntegerId = UniqueIntegerId;
+
+                    await _PersonalInviteeVirtualTableRepository.AddAsync(NewPersonalInviteeVirtualTableEntity);
+
+                    Request.RecordId = NewPersonalInviteeVirtualTableEntity.Id;
+
+                    CopyOfUniqueIntegerId = UniqueIntegerId;
+                }
+                else
+                {
+                    GroupInviteeVirtualTable NewGroupInviteeVirtualTableEntity = new GroupInviteeVirtualTable();
+
+                    IEnumerable<int> ListOfUniqueIntegerId = _GroupInviteeVirtualTableRepository.ListAllAsync()
+                        .Result.Select(x => x.UniqueIntegerId);
+
+                    Random Random = new Random();
+                    int UniqueIntegerId;
+                    do
+                    {
+                        UniqueIntegerId = Random.Next(100000000, 999999999);
+                    } while (ListOfUniqueIntegerId.Contains(UniqueIntegerId));
+
+                    NewGroupInviteeVirtualTableEntity.UniqueIntegerId = UniqueIntegerId;
+
+                    await _GroupInviteeVirtualTableRepository.AddAsync(NewGroupInviteeVirtualTableEntity);
+
+                    Request.RecordId = NewGroupInviteeVirtualTableEntity.Id;
+
+                    CopyOfUniqueIntegerId = UniqueIntegerId;
+                    CheckGroupInviteeVirtualTable = NewGroupInviteeVirtualTableEntity;
+                }
+            }
+
             if ((Request.DynamicAttributesWithValuesMobile != null && Request.ValueAsBinaryFiles != null)
                 ? (Request.DynamicAttributesWithValuesMobile.Any() && Request.ValueAsBinaryFiles.Any()) : false)
             {
@@ -101,1368 +227,104 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 
             foreach (AddDynamicAttributeValueMainCommand InputDynamicAttributeWithValues in Request.DynamicAttributesWithValues)
             {
-                DynamicAttribute? DynamicAttributeEntity = DynamicAttributeEntities
-                    .FirstOrDefault(x => x.Id == InputDynamicAttributeWithValues.DynamicAttributeId);
-
-                if (DynamicAttributeEntity == null)
+                if (InputDynamicAttributeWithValues.DynamicAttributeId != -1)
                 {
-                    ResponseMessage = Request.lang == "en"
-                        ? "Field is not found"
-                        : "الحقل غير موجود";
+                    DynamicAttribute? DynamicAttributeEntity = DynamicAttributeEntities
+                        .FirstOrDefault(x => x.Id == InputDynamicAttributeWithValues.DynamicAttributeId);
 
-                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 404);
-                }
-
-                if (DynamicAttributeEntity.AttributeDataType!.Name == "Phone Number")
-                {
-                    if (InputDynamicAttributeWithValues.ValueAsString != "0097105")
+                    if (DynamicAttributeEntity == null)
                     {
-                        if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString)
-                            ? (!InputDynamicAttributeWithValues.ValueAsString.StartsWith("0097105") ||
-                                InputDynamicAttributeWithValues.ValueAsString.Replace("0097105", string.Empty).Count() != 8)
-                        : false)
+                        ResponseMessage = Request.lang == "en"
+                            ? "Field is not found"
+                            : "الحقل غير موجود";
+
+                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 404);
+                    }
+
+                    if (DynamicAttributeEntity.AttributeDataType!.Name == "Phone Number")
+                    {
+                        if (InputDynamicAttributeWithValues.ValueAsString != "0097105")
+                        {
+                            if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString)
+                                ? (!InputDynamicAttributeWithValues.ValueAsString.StartsWith("0097105") ||
+                                    InputDynamicAttributeWithValues.ValueAsString.Replace("0097105", string.Empty).Count() != 8)
+                            : false)
+                            {
+                                ResponseMessage = Request.lang == "en"
+                                    ? $"The field {DynamicAttributeEntity.EnglishTitle} can't has this value"
+                                    : $"الحقل {DynamicAttributeEntity.ArabicTitle} لا يمكن أن يحتوي على هذه القيمة";
+
+                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                            }
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString))
+                    {
+                        // Unique Constraint..
+                        DynamicAttributeValue? CheckUnique = await _DynamicAttributeValueRepository
+                            .IncludeThenFirstOrDefaultAsync(x => x.DynamicAttribute!, x => x.DynamicAttributeId == DynamicAttributeEntity.Id &&
+                                x.RecordId != Request.RecordId && x.DynamicAttribute!.IsUnique &&
+                                x.Value.ToLower() == InputDynamicAttributeWithValues.ValueAsString.ToLower());
+
+                        if (CheckUnique != null)
                         {
                             ResponseMessage = Request.lang == "en"
-                                ? $"The field {DynamicAttributeEntity.EnglishTitle} can't has this value"
-                                : $"الحقل {DynamicAttributeEntity.ArabicTitle} لا يمكن أن يحتوي على هذه القيمة";
+                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value is already used, please insert a different value"
+                                : $"قيمة هذا الحقل: {DynamicAttributeEntity.ArabicLabel} مستخدمة مسبقاً, الرجاء إدخال قيمة مختلفة";
 
                             return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                         }
                     }
-                }
 
-                if (!string.IsNullOrEmpty(InputDynamicAttributeWithValues.ValueAsString))
-                {
-                    // Unique Constraint..
-                    DynamicAttributeValue? CheckUnique = await _DynamicAttributeValueRepository
-                        .IncludeThenFirstOrDefaultAsync(x => x.DynamicAttribute!, x => x.DynamicAttributeId == DynamicAttributeEntity.Id &&
-                            x.RecordId != Request.RecordId && x.DynamicAttribute!.IsUnique &&
-                            x.Value.ToLower() == InputDynamicAttributeWithValues.ValueAsString.ToLower());
+                    // Check General Validation..
+                    GeneralValidation? GeneralValidationEntity = await _GeneralValidationRepository
+                        .IncludeThenFirstOrDefaultAsync(x => x.AttributeOperation!, x => x.DynamicAttributeId == InputDynamicAttributeWithValues.DynamicAttributeId);
 
-                    if (CheckUnique != null)
+                    if (GeneralValidationEntity != null)
                     {
-                        ResponseMessage = Request.lang == "en"
-                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value is already used, please insert a different value"
-                            : $"قيمة هذا الحقل: {DynamicAttributeEntity.ArabicLabel} مستخدمة مسبقاً, الرجاء إدخال قيمة مختلفة";
+                        string DataTypeAsName = DynamicAttributeEntity.AttributeDataType!.Name;
+                        string? InputDynamicAttributeValueAsString = InputDynamicAttributeWithValues.ValueAsString;
+                        string ValidationOperation = GeneralValidationEntity.AttributeOperation!.OperationAsString;
+                        string? ValidationValue = GeneralValidationEntity.Value;
 
-                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                    }
-                }
-
-                // Check General Validation..
-                GeneralValidation? GeneralValidationEntity = await _GeneralValidationRepository
-                    .IncludeThenFirstOrDefaultAsync(x => x.AttributeOperation!, x => x.DynamicAttributeId == InputDynamicAttributeWithValues.DynamicAttributeId);
-
-                if (GeneralValidationEntity != null)
-                {
-                    string DataTypeAsName = DynamicAttributeEntity.AttributeDataType!.Name;
-                    string? InputDynamicAttributeValueAsString = InputDynamicAttributeWithValues.ValueAsString;
-                    string ValidationOperation = GeneralValidationEntity.AttributeOperation!.OperationAsString;
-                    string? ValidationValue = GeneralValidationEntity.Value;
-
-                    if (DataTypeAsName.ToLower() == "Text".ToLower() ||
-                        DataTypeAsName.ToLower() == "Email".ToLower() ||
-                        DataTypeAsName.ToLower() == "Phone Number".ToLower() ||
-                        DataTypeAsName.ToLower() == "List".ToLower() ||
-                        DataTypeAsName.ToLower() == "Location".ToLower())
-                    {
-                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                        if (DataTypeAsName.ToLower() == "Text".ToLower() ||
+                            DataTypeAsName.ToLower() == "Email".ToLower() ||
+                            DataTypeAsName.ToLower() == "Phone Number".ToLower() ||
+                            DataTypeAsName.ToLower() == "List".ToLower() ||
+                            DataTypeAsName.ToLower() == "Location".ToLower())
                         {
-                            if (ValidationOperation == "!=")
+                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
                             {
-                                if (!string.IsNullOrEmpty(ValidationValue) 
-                                    ? InputDynamicAttributeValueAsString.ToLower() == ValidationValue!.ToLower()
-                                    : false)
+                                if (ValidationOperation == "!=")
                                 {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == "=")
-                            {
-                                if (!string.IsNullOrEmpty(ValidationValue) 
-                                    ? InputDynamicAttributeValueAsString.ToLower() != ValidationValue!.ToLower()
-                                    : false)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                            {
-                                if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                            {
-                                if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                        }
-                    }
-                    else if (DataTypeAsName.ToLower() == "Number".ToLower())
-                    {
-                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                        {
-                            if (ValidationOperation == "!=")
-                            {
-                                if (InputDynamicAttributeValueAsString == ValidationValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == "=")
-                            {
-                                if (InputDynamicAttributeValueAsString != ValidationValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                            {
-                                if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == "<")
-                            {
-                                bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                    out int InputDynamicAttributeValueAsInteger);
-                                if (!CheckInputDynamicAttributeValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-
-                                int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
-
-                                if (InputDynamicAttributeValueAsInteger >= GeneralValidationValueAsInteger)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsInteger}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsInteger}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == "<=")
-                            {
-                                bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                    out int InputDynamicAttributeValueAsInteger);
-                                if (!CheckInputDynamicAttributeValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-
-                                int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
-
-                                if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsInteger}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == ">")
-                            {
-                                bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                    out int InputDynamicAttributeValueAsInteger);
-                                if (!CheckInputDynamicAttributeValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-
-                                int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
-
-                                if (InputDynamicAttributeValueAsInteger <= GeneralValidationValueAsInteger)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsInteger}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsInteger}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == ">=")
-                            {
-                                bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                    out int InputDynamicAttributeValueAsInteger);
-                                if (!CheckInputDynamicAttributeValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-
-                                int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
-
-                                if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsInteger}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                            {
-                                if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                        }
-                    }
-                    else if (DataTypeAsName.ToLower() == "Date".ToLower())
-                    {
-                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                        {
-                            if (ValidationOperation == "!=")
-                            {
-                                if (InputDynamicAttributeValueAsString == ValidationValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == "=")
-                            {
-                                if (InputDynamicAttributeValueAsString != ValidationValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                            {
-                                if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == "<")
-                            {
-                                bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                    out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                if (!CheckInputDynamicAttributeValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-
-                                DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                if (InputDynamicAttributeValueAsDateOnly >= GeneralValidationValueAsDateOnly)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsDateOnly}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsDateOnly}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == "<=")
-                            {
-                                bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                    out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                if (!CheckInputDynamicAttributeValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-
-                                DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsDateOnly}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == ">")
-                            {
-                                bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                    out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                if (!CheckInputDynamicAttributeValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-
-                                DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                if (InputDynamicAttributeValueAsDateOnly <= GeneralValidationValueAsDateOnly)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsDateOnly}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsDateOnly}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation == ">=")
-                            {
-                                bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                    out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                if (!CheckInputDynamicAttributeValue)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-
-                                DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsDateOnly}"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                            else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                            {
-                                if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    ResponseMessage = Request.lang == "en"
-                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                }
-                            }
-                        }
-                    }
-                    else if (DataTypeAsName.ToLower() == "Image".ToLower() ||
-                        DataTypeAsName.ToLower() == "File".ToLower())
-                    {
-                        IFormFile? InputDynamicAttributeValueAsBinaryFile = InputDynamicAttributeWithValues.ValueAsBinaryFile;
-
-                        if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                        {
-                            if (InputDynamicAttributeValueAsBinaryFile is not null)
-                            {
-                                ResponseMessage = Request.lang == "en"
-                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                            }
-                        }
-                        else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                        {
-                            if (InputDynamicAttributeValueAsBinaryFile is null)
-                            {
-                                ResponseMessage = Request.lang == "en"
-                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                            }
-                        }
-                    }
-                }
-
-                // Check Dependency Validation..
-                if (DynamicAttributeEntity.LinkedToAnotherAttribute)
-                {
-                    List<IGrouping<int, Dependency>> DependenciesEntitiesGroupByGroupId = _DependencyRepository
-                        .WhereThenInclude(x => x.MainDynamicAttributeId == InputDynamicAttributeWithValues.DynamicAttributeId,
-                            x => x.AttributeOperation!, x => x.DynamicAttribute!, x => x.DynamicAttribute!.AttributeDataType!)
-                        .GroupBy(x => x.DependencyGroupId).ToList();
-
-                    foreach (IGrouping<int, Dependency> DependencyEntityGroupByGroupId in DependenciesEntitiesGroupByGroupId)
-                    {
-                        int CheckAllDependenciesInGroup = 0;
-                        foreach (Dependency DependencyEntityInGroup in DependencyEntityGroupByGroupId.ToList())
-                        {
-                            string DataTypeAsName = DependencyEntityInGroup.DynamicAttribute!.AttributeDataType!.Name;
-
-                            AddDynamicAttributeValueMainCommand? CheckIfDependencyValueIsInserted = Request.DynamicAttributesWithValues
-                                .FirstOrDefault(x => x.DynamicAttributeId == DependencyEntityInGroup.DynamicAttributeId);
-
-                            if (CheckIfDependencyValueIsInserted == null)
-                                break;
-
-                            string? InputDynamicAttributeValueAsString = CheckIfDependencyValueIsInserted.ValueAsString;
-
-                            string DependencyOperation = DependencyEntityInGroup.AttributeOperation!.OperationAsString;
-                            string DependencyValue = DependencyEntityInGroup.Value;
-
-                            if (DataTypeAsName.ToLower() == "Text".ToLower() ||
-                                DataTypeAsName.ToLower() == "Email".ToLower() ||
-                                DataTypeAsName.ToLower() == "Phone Number".ToLower() ||
-                                DataTypeAsName.ToLower() == "List".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    if (DependencyOperation == "!=")
+                                    if (!string.IsNullOrEmpty(ValidationValue)
+                                        ? InputDynamicAttributeValueAsString.ToLower() == ValidationValue!.ToLower()
+                                        : false)
                                     {
-                                        if (InputDynamicAttributeValueAsString.ToLower() == DependencyValue.ToLower())
-                                            break;
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
 
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == "=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString.ToLower() != DependencyValue.ToLower())
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                     }
                                 }
-                                else
+                                else if (ValidationOperation == "=")
                                 {
-                                    if (DependencyOperation.ToLower() == "is Empty".ToLower())
+                                    if (!string.IsNullOrEmpty(ValidationValue)
+                                        ? InputDynamicAttributeValueAsString.ToLower() != ValidationValue!.ToLower()
+                                        : false)
                                     {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
 
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
                                     }
                                 }
-                            }
-                            else if (DataTypeAsName.ToLower() == "Number".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                else if (ValidationOperation.ToLower() == "is Empty".ToLower())
                                 {
-                                    if (DependencyOperation == "!=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString == DependencyValue)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == "=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString != DependencyValue)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == "<")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                            out int InputDynamicAttributeValueAsInteger);
-
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
-
-                                        if (InputDynamicAttributeValueAsInteger >= GeneralValidationValueAsInteger)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == "<=")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                            out int InputDynamicAttributeValueAsInteger);
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
-
-                                        if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == ">")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                            out int InputDynamicAttributeValueAsInteger);
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
-
-                                        if (InputDynamicAttributeValueAsInteger <= GeneralValidationValueAsInteger)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == ">=")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                            out int InputDynamicAttributeValueAsInteger);
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
-
-                                        if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                }
-                                else
-                                {
-                                    if (DependencyOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                }
-                            }
-                            else if (DataTypeAsName.ToLower() == "Date".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    if (DependencyOperation == "!=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString == DependencyValue)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == "=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString != DependencyValue)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == "<")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                            out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                        if (InputDynamicAttributeValueAsDateOnly >= GeneralValidationValueAsDateOnly)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == "<=")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                            out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                        if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == ">")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                            out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                        if (InputDynamicAttributeValueAsDateOnly <= GeneralValidationValueAsDateOnly)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation == ">=")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                            out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                        if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                }
-                                else
-                                {
-                                    if (DependencyOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                    else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                            break;
-
-                                        else
-                                            CheckAllDependenciesInGroup++;
-                                    }
-                                }
-                            }
-                            else if (DataTypeAsName.ToLower() == "Image".ToLower() ||
-                                DataTypeAsName.ToLower() == "File".ToLower())
-                            {
-                                IFormFile? InputDynamicAttributeValueAsBinaryFile = CheckIfDependencyValueIsInserted.ValueAsBinaryFile;
-
-                                if (DependencyOperation.ToLower() == "is Empty".ToLower())
-                                {
-                                    if (InputDynamicAttributeValueAsBinaryFile is not null)
-                                        break;
-
-                                    else
-                                        CheckAllDependenciesInGroup++;
-                                }
-                                else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
-                                {
-                                    if (InputDynamicAttributeValueAsBinaryFile is null)
-                                        break;
-
-                                    else
-                                        CheckAllDependenciesInGroup++;
-                                }
-                            }
-                        }
-
-                        if (CheckAllDependenciesInGroup == DependencyEntityGroupByGroupId.ToList().Count())
-                        {
-                            string DataTypeAsName = DynamicAttributeEntity.AttributeDataType!.Name;
-                            string? InputDynamicAttributeValueAsString = InputDynamicAttributeWithValues.ValueAsString;
-
-                            DependencyValidation? DependencyValidationEntityForThisGroup = await _DependencyValidationRepository
-                                .IncludeThenFirstOrDefaultAsync(x => x.AttributeOperation!,
-                                    x => x.DependencyGroupId == DependencyEntityGroupByGroupId.Key);
-
-                            if (DependencyValidationEntityForThisGroup == null)
-                                continue;
-
-                            string ValidationOperation = DependencyValidationEntityForThisGroup!.AttributeOperation!.OperationAsString;
-                            string ValidationValue = DependencyValidationEntityForThisGroup!.Value;
-
-                            if (DataTypeAsName.ToLower() == "Text".ToLower() ||
-                                DataTypeAsName.ToLower() == "Email".ToLower() ||
-                                DataTypeAsName.ToLower() == "Phone Number".ToLower() ||
-                                DataTypeAsName.ToLower() == "List".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    if (ValidationOperation == "!=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString.ToLower() == ValidationValue.ToLower())
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == "=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString.ToLower() != ValidationValue.ToLower())
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (DataTypeAsName.ToLower() == "Number".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    if (ValidationOperation == "!=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString == ValidationValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == "=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString != ValidationValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == "<")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                            out int InputDynamicAttributeValueAsInteger);
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
-
-                                        if (InputDynamicAttributeValueAsInteger >= GeneralValidationValueAsInteger)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsInteger}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsInteger}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == "<=")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                            out int InputDynamicAttributeValueAsInteger);
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
-
-                                        if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsInteger}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == ">")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                            out int InputDynamicAttributeValueAsInteger);
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
-
-                                        if (InputDynamicAttributeValueAsInteger <= GeneralValidationValueAsInteger)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsInteger}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsInteger}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == ">=")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
-                                            out int InputDynamicAttributeValueAsInteger);
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
-
-                                        if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsInteger}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (DataTypeAsName.ToLower() == "Date".ToLower())
-                            {
-                                if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                {
-                                    if (ValidationOperation == "!=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString == ValidationValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == "=")
-                                    {
-                                        if (InputDynamicAttributeValueAsString != ValidationValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == "<")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                            out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                        if (InputDynamicAttributeValueAsDateOnly >= GeneralValidationValueAsDateOnly)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsDateOnly}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsDateOnly}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == "<=")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                            out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                        if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsDateOnly}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == ">")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                            out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                        if (InputDynamicAttributeValueAsDateOnly <= GeneralValidationValueAsDateOnly)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsDateOnly}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsDateOnly}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation == ">=")
-                                    {
-                                        bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
-                                            out DateOnly InputDynamicAttributeValueAsDateOnly);
-
-                                        if (!CheckInputDynamicAttributeValue)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-
-                                        DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
-
-                                        if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsDateOnly}"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                                    {
-                                        if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                    else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
-                                    {
-                                        if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
-                                        {
-                                            ResponseMessage = Request.lang == "en"
-                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
-                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
-
-                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (DataTypeAsName.ToLower() == "Image".ToLower() ||
-                                DataTypeAsName.ToLower() == "File".ToLower())
-                            {
-                                IFormFile? InputDynamicAttributeValueAsBinaryFile = InputDynamicAttributeWithValues.ValueAsBinaryFile;
-
-                                if (ValidationOperation.ToLower() == "is Empty".ToLower())
-                                {
-                                    if (InputDynamicAttributeValueAsBinaryFile is not null)
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
                                     {
                                         ResponseMessage = Request.lang == "en"
                                             ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
@@ -1473,13 +335,1280 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                 }
                                 else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
                                 {
-                                    if (InputDynamicAttributeValueAsBinaryFile is null)
+                                    if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
                                     {
                                         ResponseMessage = Request.lang == "en"
                                             ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
                                             : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
 
                                         return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                {
+                                    if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                            }
+                        }
+                        else if (DataTypeAsName.ToLower() == "Number".ToLower())
+                        {
+                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                            {
+                                if (ValidationOperation == "!=")
+                                {
+                                    if (InputDynamicAttributeValueAsString == ValidationValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation == "=")
+                                {
+                                    if (InputDynamicAttributeValueAsString != ValidationValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                {
+                                    if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation == "<")
+                                {
+                                    bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                        out int InputDynamicAttributeValueAsInteger);
+                                    if (!CheckInputDynamicAttributeValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+
+                                    int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
+
+                                    if (InputDynamicAttributeValueAsInteger >= GeneralValidationValueAsInteger)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsInteger}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsInteger}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation == "<=")
+                                {
+                                    bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                        out int InputDynamicAttributeValueAsInteger);
+                                    if (!CheckInputDynamicAttributeValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+
+                                    int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
+
+                                    if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsInteger}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation == ">")
+                                {
+                                    bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                        out int InputDynamicAttributeValueAsInteger);
+                                    if (!CheckInputDynamicAttributeValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+
+                                    int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
+
+                                    if (InputDynamicAttributeValueAsInteger <= GeneralValidationValueAsInteger)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsInteger}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsInteger}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation == ">=")
+                                {
+                                    bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                        out int InputDynamicAttributeValueAsInteger);
+                                    if (!CheckInputDynamicAttributeValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+
+                                    int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
+
+                                    if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsInteger}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                {
+                                    if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                            }
+                        }
+                        else if (DataTypeAsName.ToLower() == "Date".ToLower())
+                        {
+                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                            {
+                                if (ValidationOperation == "!=")
+                                {
+                                    if (InputDynamicAttributeValueAsString == ValidationValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation == "=")
+                                {
+                                    if (InputDynamicAttributeValueAsString != ValidationValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                {
+                                    if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation == "<")
+                                {
+                                    bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                        out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                    if (!CheckInputDynamicAttributeValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+
+                                    DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                    if (InputDynamicAttributeValueAsDateOnly >= GeneralValidationValueAsDateOnly)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsDateOnly}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsDateOnly}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation == "<=")
+                                {
+                                    bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                        out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                    if (!CheckInputDynamicAttributeValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+
+                                    DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                    if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsDateOnly}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation == ">")
+                                {
+                                    bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                        out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                    if (!CheckInputDynamicAttributeValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+
+                                    DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                    if (InputDynamicAttributeValueAsDateOnly <= GeneralValidationValueAsDateOnly)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsDateOnly}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsDateOnly}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation == ">=")
+                                {
+                                    bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                        out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                    if (!CheckInputDynamicAttributeValue)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+
+                                    DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                    if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsDateOnly}"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                                else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                {
+                                    if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        ResponseMessage = Request.lang == "en"
+                                            ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                            : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                        return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                    }
+                                }
+                            }
+                        }
+                        else if (DataTypeAsName.ToLower() == "Image".ToLower() ||
+                            DataTypeAsName.ToLower() == "File".ToLower())
+                        {
+                            IFormFile? InputDynamicAttributeValueAsBinaryFile = InputDynamicAttributeWithValues.ValueAsBinaryFile;
+
+                            if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                            {
+                                if (InputDynamicAttributeValueAsBinaryFile is not null)
+                                {
+                                    ResponseMessage = Request.lang == "en"
+                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                }
+                            }
+                            else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                            {
+                                if (InputDynamicAttributeValueAsBinaryFile is null)
+                                {
+                                    ResponseMessage = Request.lang == "en"
+                                        ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                        : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                }
+                            }
+                        }
+                    }
+
+                    // Check Dependency Validation..
+                    if (DynamicAttributeEntity.LinkedToAnotherAttribute)
+                    {
+                        List<IGrouping<int, Dependency>> DependenciesEntitiesGroupByGroupId = _DependencyRepository
+                            .WhereThenInclude(x => x.MainDynamicAttributeId == InputDynamicAttributeWithValues.DynamicAttributeId,
+                                x => x.AttributeOperation!, x => x.DynamicAttribute!, x => x.DynamicAttribute!.AttributeDataType!)
+                            .GroupBy(x => x.DependencyGroupId).ToList();
+
+                        foreach (IGrouping<int, Dependency> DependencyEntityGroupByGroupId in DependenciesEntitiesGroupByGroupId)
+                        {
+                            int CheckAllDependenciesInGroup = 0;
+                            foreach (Dependency DependencyEntityInGroup in DependencyEntityGroupByGroupId.ToList())
+                            {
+                                string DataTypeAsName = DependencyEntityInGroup.DynamicAttribute!.AttributeDataType!.Name;
+
+                                AddDynamicAttributeValueMainCommand? CheckIfDependencyValueIsInserted = Request.DynamicAttributesWithValues
+                                    .FirstOrDefault(x => x.DynamicAttributeId == DependencyEntityInGroup.DynamicAttributeId);
+
+                                if (CheckIfDependencyValueIsInserted == null)
+                                    break;
+
+                                string? InputDynamicAttributeValueAsString = CheckIfDependencyValueIsInserted.ValueAsString;
+
+                                string DependencyOperation = DependencyEntityInGroup.AttributeOperation!.OperationAsString;
+                                string DependencyValue = DependencyEntityInGroup.Value;
+
+                                if (DataTypeAsName.ToLower() == "Text".ToLower() ||
+                                    DataTypeAsName.ToLower() == "Email".ToLower() ||
+                                    DataTypeAsName.ToLower() == "Phone Number".ToLower() ||
+                                    DataTypeAsName.ToLower() == "List".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        if (DependencyOperation == "!=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString.ToLower() == DependencyValue.ToLower())
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == "=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString.ToLower() != DependencyValue.ToLower())
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (DependencyOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                    }
+                                }
+                                else if (DataTypeAsName.ToLower() == "Number".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        if (DependencyOperation == "!=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString == DependencyValue)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == "=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString != DependencyValue)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == "<")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                                out int InputDynamicAttributeValueAsInteger);
+
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
+
+                                            if (InputDynamicAttributeValueAsInteger >= GeneralValidationValueAsInteger)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == "<=")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                                out int InputDynamicAttributeValueAsInteger);
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
+
+                                            if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == ">")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                                out int InputDynamicAttributeValueAsInteger);
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
+
+                                            if (InputDynamicAttributeValueAsInteger <= GeneralValidationValueAsInteger)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == ">=")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                                out int InputDynamicAttributeValueAsInteger);
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            int.TryParse(DependencyValue, out int GeneralValidationValueAsInteger);
+
+                                            if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (DependencyOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                    }
+                                }
+                                else if (DataTypeAsName.ToLower() == "Date".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        if (DependencyOperation == "!=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString == DependencyValue)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == "=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString != DependencyValue)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == "<")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                                out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                            if (InputDynamicAttributeValueAsDateOnly >= GeneralValidationValueAsDateOnly)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == "<=")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                                out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                            if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == ">")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                                out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                            if (InputDynamicAttributeValueAsDateOnly <= GeneralValidationValueAsDateOnly)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation == ">=")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                                out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            DateOnly.TryParse(DependencyValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                            if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (DependencyOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                        else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                                break;
+
+                                            else
+                                                CheckAllDependenciesInGroup++;
+                                        }
+                                    }
+                                }
+                                else if (DataTypeAsName.ToLower() == "Image".ToLower() ||
+                                    DataTypeAsName.ToLower() == "File".ToLower())
+                                {
+                                    IFormFile? InputDynamicAttributeValueAsBinaryFile = CheckIfDependencyValueIsInserted.ValueAsBinaryFile;
+
+                                    if (DependencyOperation.ToLower() == "is Empty".ToLower())
+                                    {
+                                        if (InputDynamicAttributeValueAsBinaryFile is not null)
+                                            break;
+
+                                        else
+                                            CheckAllDependenciesInGroup++;
+                                    }
+                                    else if (DependencyOperation.ToLower() == "is not Empty".ToLower())
+                                    {
+                                        if (InputDynamicAttributeValueAsBinaryFile is null)
+                                            break;
+
+                                        else
+                                            CheckAllDependenciesInGroup++;
+                                    }
+                                }
+                            }
+
+                            if (CheckAllDependenciesInGroup == DependencyEntityGroupByGroupId.ToList().Count())
+                            {
+                                string DataTypeAsName = DynamicAttributeEntity.AttributeDataType!.Name;
+                                string? InputDynamicAttributeValueAsString = InputDynamicAttributeWithValues.ValueAsString;
+
+                                DependencyValidation? DependencyValidationEntityForThisGroup = await _DependencyValidationRepository
+                                    .IncludeThenFirstOrDefaultAsync(x => x.AttributeOperation!,
+                                        x => x.DependencyGroupId == DependencyEntityGroupByGroupId.Key);
+
+                                if (DependencyValidationEntityForThisGroup == null)
+                                    continue;
+
+                                string ValidationOperation = DependencyValidationEntityForThisGroup!.AttributeOperation!.OperationAsString;
+                                string ValidationValue = DependencyValidationEntityForThisGroup!.Value;
+
+                                if (DataTypeAsName.ToLower() == "Text".ToLower() ||
+                                    DataTypeAsName.ToLower() == "Email".ToLower() ||
+                                    DataTypeAsName.ToLower() == "Phone Number".ToLower() ||
+                                    DataTypeAsName.ToLower() == "List".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        if (ValidationOperation == "!=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString.ToLower() == ValidationValue.ToLower())
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == "=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString.ToLower() != ValidationValue.ToLower())
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (DataTypeAsName.ToLower() == "Number".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        if (ValidationOperation == "!=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString == ValidationValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == "=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString != ValidationValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == "<")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                                out int InputDynamicAttributeValueAsInteger);
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
+
+                                            if (InputDynamicAttributeValueAsInteger >= GeneralValidationValueAsInteger)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsInteger}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsInteger}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == "<=")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                                out int InputDynamicAttributeValueAsInteger);
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
+
+                                            if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsInteger}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == ">")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                                out int InputDynamicAttributeValueAsInteger);
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
+
+                                            if (InputDynamicAttributeValueAsInteger <= GeneralValidationValueAsInteger)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsInteger}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsInteger}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == ">=")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = int.TryParse(InputDynamicAttributeValueAsString,
+                                                out int InputDynamicAttributeValueAsInteger);
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a number"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون رقم";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            int.TryParse(ValidationValue, out int GeneralValidationValueAsInteger);
+
+                                            if (InputDynamicAttributeValueAsInteger > GeneralValidationValueAsInteger)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsInteger}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsInteger}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (DataTypeAsName.ToLower() == "Date".ToLower())
+                                {
+                                    if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                    {
+                                        if (ValidationOperation == "!=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString == ValidationValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be equal to: {InputDynamicAttributeValueAsString}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون مساوية لهذه القيمة: {InputDynamicAttributeValueAsString}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == "=")
+                                        {
+                                            if (InputDynamicAttributeValueAsString != ValidationValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be equal to: {ValidationValue}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون مساوية لهذه القيمة: {ValidationValue}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == "<")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                                out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                            if (InputDynamicAttributeValueAsDateOnly >= GeneralValidationValueAsDateOnly)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than: {GeneralValidationValueAsDateOnly}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر من: {GeneralValidationValueAsDateOnly}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == "<=")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                                out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                            if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be smaller than or equal to: {GeneralValidationValueAsDateOnly}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أصغر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == ">")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                                out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                            if (InputDynamicAttributeValueAsDateOnly <= GeneralValidationValueAsDateOnly)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than: {GeneralValidationValueAsDateOnly}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر من: {GeneralValidationValueAsDateOnly}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation == ">=")
+                                        {
+                                            bool CheckInputDynamicAttributeValue = DateOnly.TryParse(InputDynamicAttributeValueAsString,
+                                                out DateOnly InputDynamicAttributeValueAsDateOnly);
+
+                                            if (!CheckInputDynamicAttributeValue)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be a date"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون تاريخ";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+
+                                            DateOnly.TryParse(ValidationValue, out DateOnly GeneralValidationValueAsDateOnly);
+
+                                            if (InputDynamicAttributeValueAsDateOnly > GeneralValidationValueAsDateOnly)
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be bigger than or equal to: {GeneralValidationValueAsDateOnly}"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون أكبر او تساوي لهذه القيمة: {GeneralValidationValueAsDateOnly}";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                        else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                        {
+                                            if (string.IsNullOrEmpty(InputDynamicAttributeValueAsString))
+                                            {
+                                                ResponseMessage = Request.lang == "en"
+                                                    ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                                    : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                                return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (DataTypeAsName.ToLower() == "Image".ToLower() ||
+                                    DataTypeAsName.ToLower() == "File".ToLower())
+                                {
+                                    IFormFile? InputDynamicAttributeValueAsBinaryFile = InputDynamicAttributeWithValues.ValueAsBinaryFile;
+
+                                    if (ValidationOperation.ToLower() == "is Empty".ToLower())
+                                    {
+                                        if (InputDynamicAttributeValueAsBinaryFile is not null)
+                                        {
+                                            ResponseMessage = Request.lang == "en"
+                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value must be empty"
+                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن تكون فارغة";
+
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                        }
+                                    }
+                                    else if (ValidationOperation.ToLower() == "is not Empty".ToLower())
+                                    {
+                                        if (InputDynamicAttributeValueAsBinaryFile is null)
+                                        {
+                                            ResponseMessage = Request.lang == "en"
+                                                ? $"{DynamicAttributeEntity.EnglishLabel}'s value can't be empty"
+                                                : $"قيمة هذا الحقل {DynamicAttributeEntity.ArabicLabel} يجب أن لا تكون فارغة";
+
+                                            return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                        }
                                     }
                                 }
                             }
@@ -2932,22 +3061,21 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                 {
                     // Hard Delete On Dynamic Values..
                     List<DynamicAttributeValue> DynamicValuesToDelete = await _DynamicAttributeValueRepository
-                        .Where(x => x.RecordId == Request.RecordId).ToListAsync();
+                        .Where(x => x.RecordId == Request.RecordId &&
+                            x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == AttributeTableNameId &&
+                            (Request.InviteeType != null
+                                ? x.DynamicAttribute!.DynamicAttributeSection!.InviteeType == Request.InviteeType
+                                : true))
+                        .ToListAsync();
                     
                     List<AddDynamicAttributeValueMainCommand> DynamicAttributesAsFile = Request.DynamicAttributesWithValues
                         .Where(x => x.ValueAsBinaryFile != null).ToList();
 
                     foreach (AddDynamicAttributeValueMainCommand DynamicAttributeAsFile in DynamicAttributesAsFile)
                     {
-                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
-
-                        string FolderPath = isHttps
-                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
-                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
-
                         string? FileName = $"{Request.RecordId}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
 
-                        string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
+                        string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"{FileName}";
 
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
                         string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
@@ -2972,7 +3100,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                         .Select(x => x.DynamicAttributeId);
 
                     List<DynamicAttributeValue> DynamicAttributeValuesEntities = Request.DynamicAttributesWithValues
-                        .Where(x => !string.IsNullOrEmpty(x.ValueAsString))
+                        .Where(x => !string.IsNullOrEmpty(x.ValueAsString) &&
+                            x.DynamicAttributeId != -1)
                         .Select(x => new DynamicAttributeValue()
                         {
                             CreatedAt = DateTime.UtcNow,
@@ -2997,7 +3126,11 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                         await _DynamicAttributeValueRepository.DeleteListAsync(DynamicValuesToDelete);
                     
                     List<DynamicAttributeTableValue> DynamicAttributeTableValueEnititiesToDelete = await _DynamicAttributeTableValueRepository
-                        .Where(x => x.RecordId == Request.RecordId)
+                        .Where(x => x.RecordId == Request.RecordId &&
+                            x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == AttributeTableNameId &&
+                            (Request.InviteeType != null
+                                ? x.DynamicAttribute!.DynamicAttributeSection!.InviteeType == Request.InviteeType
+                                : true))
                         .ToListAsync();
 
                     if (DynamicAttributeTableValueEnititiesToDelete.Any())
@@ -3008,18 +3141,12 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 
                     foreach (AddDynamicAttributeTableValueMainCommand DynamicAttributeAsFile in DynamicAttributesTableValueAsFile)
                     {
-                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
-
-                        string FolderPath = isHttps
-                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles"
-                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/DynamicFiles";
-
                         string? FileName = $"{Request.RecordId}-{DynamicAttributeAsFile.ValueAsBinaryFile!.FileName}";
 
-                        string? FilePathToSaveIntoDataBase = Path.Combine(FolderPath, FileName);
+                        string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"{FileName}";
 
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
-                        string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
+                        string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
                         while (File.Exists(FilePathToSaveIntoDataBase))
                         {
@@ -3147,6 +3274,390 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                 }
 
                                 await _ProvidedFormRepository.UpdateAsync(ProvidedFormEntity);
+                            }
+                        }
+                    }
+
+                    if (Request.RecordId != 0 &&
+                        Request.InviteeType is not null)
+                    {
+                        if (Request.InviteeType == Domain.Constants.InviteeTypes.Personal)
+                        {
+                            if (!string.IsNullOrEmpty(Request.lang)
+                                ? Request.lang.ToLower() == "ar"
+                                : false)
+                            {
+                                Event EventEntity = await _EventRepository.GetByIdAsync(Request.EventId);
+
+                                // Generate BarCode..
+                                string DataToSendIntoBarCode = $"{CopyOfUniqueIntegerId}";
+                                string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.WWWRootFilePath!);
+
+                                // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
+                                string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath.Replace("/DynamicFiles", "") + "/QREmail_ar.html");
+
+                                CultureInfo ArabicCulture = new CultureInfo("ar-SY");
+
+                                bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+
+                                string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
+
+                                string DownloadedHTMLFilePath = Request.WWWRootFilePath + "/HTMLCodes/" + DownloadedHTMLFileName;
+
+                                string DownloadBarCodeImageAPI = isHttps
+                                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFileName}"
+                                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFileName}";
+
+                                DateTime GregorianDate = new DateTime(EventEntity.EventDate.Year, EventEntity.EventDate.Month,
+                                    EventEntity.EventDate.Day, EventEntity.EventDate.Hour, EventEntity.EventDate.Minute, EventEntity.EventDate.Second);
+
+                                string ManipulatedBody = HTMLContent
+                                    .Replace("$NewInvitee.Name$", "") // Invited Name..
+                                    .Replace("$EventEntity.ArabicName$", EventEntity.ArabicName, StringComparison.Ordinal) // Event Name in Arabic..
+                                    .Replace("$EventEntity.ArabicLocation$", EventEntity.ArabicSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                                    .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                                    .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("d/M/yyyy", ArabicCulture)) // Event Date..
+                                    .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("hh:mm tt", ArabicCulture)) // Event Time..
+                                    .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
+
+                                // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
+
+                                // Attach The Images As A Linked Resources..
+                                LinkedResource BarCodeImage = new LinkedResource(BarCodeImagePath) { ContentId = "BarCodeImage" }; // Bar Code Image..
+                                AlternateView.LinkedResources.Add(BarCodeImage);
+
+                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                AddDynamicAttributeValueMainCommand? EmailRequestValue = Request.DynamicAttributesWithValues
+                                    .FirstOrDefault(x => _DynamicAttributeRepository
+                                        .FirstOrDefault(y => y.Id == x.DynamicAttributeId &&
+                                            y.EnglishLabel == "Email" &&
+                                            y.DynamicAttributeSection!.AttributeTableNameId == 4 &&
+                                            y.DynamicAttributeSection!.RecordIdOnRelation == Request.EventId) != null);
+
+                                if (EmailRequestValue is null)
+                                {
+                                    ResponseMessage = Request.lang == "en"
+                                        ? "There is no email"
+                                        : "لا يوجد إيميل";
+
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                }
+
+                                EmailRequest EmailRequest = new EmailRequest()
+                                {
+                                    ToEmail = EmailRequestValue.ValueAsString!,
+                                    Subject = $"دعوة فردية لحضور {EventEntity.ArabicName}",
+                                    Body = ManipulatedBody,
+                                };
+
+                                string BarCodeImageURL = isHttps
+                                   ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
+                                   : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
+
+                                byte[] BarCodeImageImageBytes = await File.ReadAllBytesAsync(BarCodeImagePath);
+                                string BarCodeImagebase64String = Convert.ToBase64String(BarCodeImageImageBytes);
+
+                                byte[] HeaderImageBytes = await File.ReadAllBytesAsync(Request.WWWRootFilePath.Replace("/DynamicFiles", "") + "/assets/qr/header.png");
+                                string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
+
+                                string ManipulatedBodyForPdf = ManipulatedBody
+                                    .Replace("\"cid:BarCodeImage\"", $"'data:image/png;base64,{BarCodeImagebase64String}'")
+                                    .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
+
+                                var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
+                                ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
+
+                                await _EmailSender.SendEmail(EmailRequest, AlternateView);
+                                await File.WriteAllTextAsync(DownloadedHTMLFilePath, ManipulatedBodyForPdf, System.Text.Encoding.UTF8);
+                            }
+                            else
+                            {
+                                Event EventEntity = await _EventRepository.GetByIdAsync(Request.EventId);
+
+                                CultureInfo EnglishCulture = new CultureInfo("en-US");
+
+                                // Generate BarCode..
+                                string DataToSendIntoBarCode = $"{CopyOfUniqueIntegerId}";
+                                string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.WWWRootFilePath!);
+
+                                // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
+                                string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath.Replace("/DynamicFiles", "") + "/QREmail_en.html");
+
+                                bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+
+                                string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
+
+                                string DownloadedHTMLFilePath = Request.WWWRootFilePath + "/HTMLCodes/" + DownloadedHTMLFileName;
+
+                                string DownloadBarCodeImageAPI = isHttps
+                                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFileName}"
+                                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFileName}";
+
+                                DateTime GregorianDate = new DateTime(EventEntity.EventDate.Year, EventEntity.EventDate.Month,
+                                    EventEntity.EventDate.Day, EventEntity.EventDate.Hour, EventEntity.EventDate.Minute, EventEntity.EventDate.Second);
+
+                                string ManipulatedBody = HTMLContent
+                                    .Replace("$NewInvitee.Name$", "") // Invited Name..
+                                    .Replace("$EventEntity.EnglishName$", EventEntity.EnglishName, StringComparison.Ordinal) // Event Name in English..
+                                    .Replace("$EventEntity.EnglishLocation$", EventEntity.EnglishSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                                    .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                                    .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("d/M/yyyy", EnglishCulture)) // Event Date..
+                                    .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("hh:mm tt", EnglishCulture))
+                                    .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
+
+                                // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
+
+                                // Attach The Images As A Linked Resources..
+                                LinkedResource BarCodeImage = new LinkedResource(BarCodeImagePath) { ContentId = "BarCodeImage" }; // Bar Code Image..
+                                AlternateView.LinkedResources.Add(BarCodeImage);
+
+                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                AddDynamicAttributeValueMainCommand? EmailRequestValue = Request.DynamicAttributesWithValues
+                                    .FirstOrDefault(x => _DynamicAttributeRepository
+                                        .FirstOrDefault(y => y.Id == x.DynamicAttributeId &&
+                                            y.EnglishLabel == "Email" &&
+                                            y.DynamicAttributeSection!.AttributeTableNameId == 4 &&
+                                            y.DynamicAttributeSection!.RecordIdOnRelation == Request.EventId) != null);
+
+                                if (EmailRequestValue is null)
+                                {
+                                    ResponseMessage = Request.lang == "en"
+                                        ? "There is no email"
+                                        : "لا يوجد إيميل";
+
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                }
+
+                                EmailRequest EmailRequest = new EmailRequest()
+                                {
+                                    ToEmail = EmailRequestValue.ValueAsString!,
+                                    Subject = $"Personal Invitation to attend {EventEntity.EnglishName}",
+                                    Body = ManipulatedBody,
+                                };
+
+                                string BarCodeImageURL = isHttps
+                                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
+                                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
+
+                                byte[] BarCodeImageImageBytes = await File.ReadAllBytesAsync(BarCodeImagePath);
+                                string BarCodeImagebase64String = Convert.ToBase64String(BarCodeImageImageBytes);
+
+                                byte[] HeaderImageBytes = await File.ReadAllBytesAsync(Request.WWWRootFilePath.Replace("/DynamicFiles", "") + "/assets/qr/header.png");
+                                string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
+
+                                string ManipulatedBodyForPdf = ManipulatedBody
+                                    .Replace("\"cid:BarCodeImage\"", $"'data:image/png;base64,{BarCodeImagebase64String}'")
+                                    .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
+
+                                var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
+                                ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
+
+                                await _EmailSender.SendEmail(EmailRequest, AlternateView);
+                                await File.WriteAllTextAsync(DownloadedHTMLFilePath, ManipulatedBodyForPdf, System.Text.Encoding.UTF8);
+
+                                Transaction.Complete();
+                            }
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Request.lang)
+                                ? Request.lang.ToLower() == "ar"
+                                : false)
+                            {
+                                Event EventEntity = await _EventRepository.GetByIdAsync(Request.EventId);
+
+                                // Generate BarCode..
+                                string DataToSendIntoBarCode = $"{CopyOfUniqueIntegerId}";
+                                string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.WWWRootFilePath!);
+
+                                // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
+                                string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath.Replace("/DynamicFiles", "") + "/QREmail_ar.html");
+
+                                CultureInfo ArabicCulture = new CultureInfo("ar-SY");
+
+                                bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+                                string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
+
+                                string DownloadedHTMLFilePath = Request.WWWRootFilePath + "/HTMLCodes/" + DownloadedHTMLFileName;
+
+                                string DownloadBarCodeImageAPI = isHttps
+                                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFileName}"
+                                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFileName}";
+
+                                string ManipulatedBody = HTMLContent
+                                    .Replace("$NewInvitee.Name$", "") // Invited Name..
+                                    .Replace("$EventEntity.ArabicName$", EventEntity.ArabicName, StringComparison.Ordinal) // Event Name in Arabic..
+                                    .Replace("$EventEntity.ArabicLocation$", EventEntity.ArabicSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                                    .Replace("$EventEntity.StartDate.DayOfWeek$", EventEntity.EventDate.ToString("dddd", ArabicCulture), StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                                    .Replace("$EventEntity.StartDate.Date$", EventEntity.EventDate.ToString("d/M/yyyy", ArabicCulture), StringComparison.Ordinal) // Event Date..
+                                    .Replace("$EventEntity.StartDate.TimeOfDay$", EventEntity.EventDate.ToString("HH:mm tt", ArabicCulture), StringComparison.Ordinal) // Event Time..
+                                    .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
+
+                                // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
+
+                                // Attach The Images As A Linked Resources..
+                                LinkedResource BarCodeImage = new LinkedResource(BarCodeImagePath) { ContentId = "BarCodeImage" }; // Bar Code Image..
+                                AlternateView.LinkedResources.Add(BarCodeImage);
+
+                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                AddDynamicAttributeValueMainCommand? EmailRequestValue = Request.DynamicAttributesWithValues
+                                    .FirstOrDefault(x => _DynamicAttributeRepository
+                                        .FirstOrDefault(y => y.Id == x.DynamicAttributeId &&
+                                            y.EnglishLabel == "Email (Student Supervisor)" &&
+                                            y.DynamicAttributeSection!.AttributeTableNameId == 4 &&
+                                            y.DynamicAttributeSection!.RecordIdOnRelation == Request.EventId) != null);
+
+                                if (EmailRequestValue is null)
+                                {
+                                    ResponseMessage = Request.lang == "en"
+                                        ? "There is no email"
+                                        : "لا يوجد إيميل";
+
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                }
+
+                                EmailRequest EmailRequest = new EmailRequest()
+                                {
+                                    ToEmail = EmailRequestValue.ValueAsString!,
+                                    Subject = $"دعوة جماعية لحضور {EventEntity.ArabicName}",
+                                    Body = ManipulatedBody,
+                                };
+
+                                string BarCodeImageURL = isHttps
+                                   ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
+                                   : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
+
+                                byte[] BarCodeImageImageBytes = await File.ReadAllBytesAsync(BarCodeImagePath);
+                                string BarCodeImagebase64String = Convert.ToBase64String(BarCodeImageImageBytes);
+
+                                byte[] HeaderImageBytes = await File.ReadAllBytesAsync(Request.WWWRootFilePath.Replace("/DynamicFiles", "") + "/assets/qr/header.png");
+                                string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
+
+                                string ManipulatedBodyForPdf = ManipulatedBody
+                                    .Replace("\"cid:BarCodeImage\"", $"'data:image/png;base64,{BarCodeImagebase64String}'")
+                                    .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
+
+                                List<string>? ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
+                                ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
+
+                                await _EmailSender.SendEmail(EmailRequest, AlternateView);
+                                await File.WriteAllTextAsync(DownloadedHTMLFilePath, ManipulatedBodyForPdf, System.Text.Encoding.UTF8);
+                            }
+                            else
+                            {
+                                Event EventEntity = await _EventRepository.GetByIdAsync(Request.EventId);
+
+                                CultureInfo EnglishCulture = new CultureInfo("en-US");
+
+                                // Generate BarCode..
+                                string DataToSendIntoBarCode = $"{CopyOfUniqueIntegerId}";
+                                string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.WWWRootFilePath!);
+
+                                // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
+                                string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath.Replace("/DynamicFiles", "") + "/QREmail_en.html");
+
+                                bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+
+                                string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
+
+                                string DownloadedHTMLFilePath = Request.WWWRootFilePath + "/HTMLCodes/" + DownloadedHTMLFileName;
+
+                                string DownloadBarCodeImageAPI = isHttps
+                                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFileName}"
+                                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/api/Event/DownloadTempletAsPdf?htmlFile={DownloadedHTMLFileName}";
+
+                                DateTime GregorianDate = new DateTime(EventEntity.EventDate.Year, EventEntity.EventDate.Month,
+                                    EventEntity.EventDate.Day, EventEntity.EventDate.Hour, EventEntity.EventDate.Minute, EventEntity.EventDate.Second);
+
+                                string ManipulatedBody = HTMLContent
+                                    .Replace("$NewInvitee.Name$", "") // Invited Name..
+                                    .Replace("$EventEntity.EnglishName$", EventEntity.EnglishName, StringComparison.Ordinal) // Event Name in English..
+                                    .Replace("$EventEntity.EnglishLocation$", EventEntity.EnglishSiteName, StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                                    .Replace("$EventEntity.StartDate.DayOfWeek$", GregorianDate.DayOfWeek.ToString(), StringComparison.Ordinal) // Event Day (ex: Sunday)..
+                                    .Replace("$EventEntity.StartDate.Date$", GregorianDate.ToString("d/M/yyyy", EnglishCulture)) // Event Date..
+                                    .Replace("$EventEntity.StartDate.TimeOfDay$", GregorianDate.ToString("hh:mm tt", EnglishCulture)) // Event Time..
+                                    .Replace("$DownloadBarCodeAPI$", DownloadBarCodeImageAPI); // Download Bar Code Image API..
+
+                                // Create An AlternateView to Specify The HTML Body And Embed The Image..
+                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(ManipulatedBody, null, "text/html");
+
+                                // Attach The Images As A Linked Resources..
+                                LinkedResource BarCodeImage = new LinkedResource(BarCodeImagePath) { ContentId = "BarCodeImage" }; // Bar Code Image..
+                                AlternateView.LinkedResources.Add(BarCodeImage);
+
+                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/header.png") { ContentId = "HeaderImage" }; // Header Code Image..
+                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                AddDynamicAttributeValueMainCommand? EmailRequestValue = Request.DynamicAttributesWithValues
+                                    .FirstOrDefault(x => _DynamicAttributeRepository
+                                        .FirstOrDefault(y => y.Id == x.DynamicAttributeId &&
+                                            y.EnglishLabel == "Email" &&
+                                            y.DynamicAttributeSection!.AttributeTableNameId == 4 &&
+                                            y.DynamicAttributeSection!.RecordIdOnRelation == Request.EventId) != null);
+
+                                if (EmailRequestValue is null)
+                                {
+                                    ResponseMessage = Request.lang == "en"
+                                        ? "There is no email"
+                                        : "لا يوجد إيميل";
+
+                                    return new BaseResponse<AddDynamicAttributeValueResponse>(ResponseMessage, false, 400);
+                                }
+
+                                EmailRequest EmailRequest = new EmailRequest()
+                                {
+                                    ToEmail = EmailRequestValue.ValueAsString!,
+                                    Subject = $"Group Invitation to attend {EventEntity.EnglishName}",
+                                    Body = ManipulatedBody,
+                                };
+
+                                string BarCodeImageURL = isHttps
+                                  ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}"
+                                  : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}/GeneratedBarcode/{BarCodeImagePath.Split('\\').LastOrDefault()}";
+
+                                byte[] BarCodeImageImageBytes = await File.ReadAllBytesAsync(BarCodeImagePath);
+                                string BarCodeImagebase64String = Convert.ToBase64String(BarCodeImageImageBytes);
+
+                                byte[] HeaderImageBytes = await File.ReadAllBytesAsync(Request.WWWRootFilePath.Replace("/DynamicFiles", "") + "/assets/qr/header.png");
+                                string HeaderImagebase64String = Convert.ToBase64String(HeaderImageBytes);
+
+                                string ManipulatedBodyForPdf = ManipulatedBody
+                                    .Replace("\"cid:BarCodeImage\"", $"'data:image/png;base64,{BarCodeImagebase64String}'")
+                                    .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
+
+                                var ManipulatedBodyForPdfSpliter = ManipulatedBodyForPdf.Split("<!--here-->").ToList();
+                                ManipulatedBodyForPdf = ManipulatedBodyForPdfSpliter[0] + ManipulatedBodyForPdfSpliter[2];
+
+                                await _EmailSender.SendEmail(EmailRequest, AlternateView);
+                                await File.WriteAllTextAsync(DownloadedHTMLFilePath, ManipulatedBodyForPdf, System.Text.Encoding.UTF8);
+                            }
+
+                            if (CheckGroupInviteeVirtualTable is null)
+                            {
+                                GroupInviteeVirtualTable? GroupInviteeVirtualTableEntity = await _GroupInviteeVirtualTableRepository
+                                    .FirstOrDefaultAsync(x => x.Id == Request.RecordId);
+
+                                if (GroupInviteeVirtualTableEntity is not null)
+                                {
+                                    GroupInviteeVirtualTableEntity.NumberOfExpectedAttendance = NumberOfExpectedAttendance;
+
+                                    await _GroupInviteeVirtualTableRepository.UpdateAsync(GroupInviteeVirtualTableEntity);
+                                }
+                            }
+                            else
+                            {
+                                CheckGroupInviteeVirtualTable.NumberOfExpectedAttendance = NumberOfExpectedAttendance;
+
+                                await _GroupInviteeVirtualTableRepository.UpdateAsync(CheckGroupInviteeVirtualTable);
                             }
                         }
                     }

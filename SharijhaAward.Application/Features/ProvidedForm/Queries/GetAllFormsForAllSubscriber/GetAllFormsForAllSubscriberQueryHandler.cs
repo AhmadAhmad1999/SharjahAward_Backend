@@ -91,15 +91,15 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
             _UserRoleRepository = UserRoleRepository;
         }
 
-        public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<FormListVm>>> Handle(GetAllFormsForAllSubscriberQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
 
             var cycle = await _CycleRepository.FirstOrDefaultAsync(c => c.Status == Domain.Constants.Common.Status.Active);
 
             if (cycle != null)
             {
-                int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(request.Token!));
+                int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
                 
                 var Roles = _UserRoleRepository
                     .Where(u => u.UserId == UserId)
@@ -118,23 +118,32 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
                     IReadOnlyList<Domain.Entities.ProvidedFormModel.ProvidedForm> forms;
 
-                    if (request.page != 0 && request.perPage > 0)
+                    if (Request.page != 0 && Request.perPage > 0)
                     {
                         forms = Roles.Any(r => r!.HaveFullAccess)
-                            ? await _FormRepository.OrderByDescending(x => x.CreatedAt, request.page, request.perPage)
+                            ? await _FormRepository
+                                .Where(x => Request.MultipleAssign ? (x.PercentCompletion == 100 && x.IsAccepted != null) : true)
+                                .OrderByDescending(x => x.CreatedAt)
+                                .Skip((Request.page - 1) * Request.perPage)
+                                .Take(Request.perPage)
                                 .ToListAsync()
                             : await _FormRepository
-                                .Where(f => f.Category.CycleId == cycle.Id)
+                                .Where(x => x.Category.CycleId == cycle.Id &&
+                                    (Request.MultipleAssign ? (x.PercentCompletion == 100 && x.IsAccepted != null) : true))
                                 .OrderByDescending(x => x.CreatedAt)
-                                .Skip((request.page - 1) * request.page)
-                                .Take(request.perPage)
+                                .Skip((Request.page - 1) * Request.page)
+                                .Take(Request.perPage)
                                 .ToListAsync();
                     }
                     else
                     {
                         forms = Roles.Any(r => r!.HaveFullAccess)
-                            ? await _FormRepository.ListAllAsync()
-                            : await _FormRepository.Where(f => f.Category.CycleId == cycle.Id).ToListAsync();
+                            ? await _FormRepository
+                                .Where(x => Request.MultipleAssign ? (x.PercentCompletion == 100 && x.IsAccepted != null) : true)
+                                .ToListAsync()
+                            : await _FormRepository
+                                .Where(x => x.Category.CycleId == cycle.Id &&
+                                    Request.MultipleAssign ? (x.PercentCompletion == 100 && x.IsAccepted != null) : true).ToListAsync();
                     }
 
                     if (forms.Any())
@@ -162,7 +171,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
                         List<FormListVm> data = new List<FormListVm>();
 
-                        data = request.SubscriberName == null
+                        data = Request.SubscriberName == null
                             ? forms.AsEnumerable().Select(x => new FormListVm()
                             {
                                 Id = x.Id,
@@ -185,10 +194,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                 //ReasonOfRejection = x.ReasonOfRejection!,
                                 categoryId = x.categoryId,
                                 CreatedAt = x.CreatedAt,
-                                CategoryName = request.lang == "en"
+                                CategoryName = Request.lang == "en"
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
-                                SubCategoryName = request.lang == "en"
+                                SubCategoryName = Request.lang == "en"
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
                                 SucceedToFinalArbitration = GetAllFromsInFinalArbitration
@@ -219,10 +228,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                 //ReasonOfRejection = x.ReasonOfRejection!,
                                 categoryId = x.categoryId,
                                 CreatedAt = x.CreatedAt,
-                                CategoryName = request.lang == "en"
+                                CategoryName = Request.lang == "en"
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
-                                SubCategoryName = request.lang == "en"
+                                SubCategoryName = Request.lang == "en"
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
                                 SucceedToFinalArbitration = GetAllFromsInFinalArbitration
@@ -231,7 +240,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                 .Contains(x.Id),
                                 SubscriberId = x.userId
                             })
-                            .Where(x => x.SubscriberName!.Contains(request.SubscriberName))
+                            .Where(x => x.SubscriberName!.Contains(Request.SubscriberName))
                             .ToList();
 
                         List<CycleConditionAttachment> AllCycleConditionAttachmentEntities = await _CycleConditionAttachmentRepository
@@ -320,7 +329,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
                         int count = _FormRepository.GetCount(f => !f.isDeleted);
 
-                        Pagination pagination = new Pagination(request.page, request.perPage, count);
+                        Pagination pagination = new Pagination(Request.page, Request.perPage, count);
 
                         return new BaseResponse<List<FormListVm>>("", true, 200, data, pagination);
                     }
@@ -337,8 +346,13 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                         .ToListAsync();
 
                     var forms = Roles.Any(r => r!.HaveFullAccess)
-                        ? await _FormRepository.ListAllAsync()
-                        : await _FormRepository.Where(f => f.Category.CycleId == cycle.Id).ToListAsync();
+                        ? await _FormRepository
+                            .Where(x => Request.MultipleAssign ? (x.PercentCompletion == 100 && x.IsAccepted != null) : true)
+                            .ToListAsync()
+                        : await _FormRepository
+                            .Where(x => x.Category.CycleId == cycle.Id &&
+                                Request.MultipleAssign ? (x.PercentCompletion == 100 && x.IsAccepted != null) : true)
+                            .ToListAsync();
 
                     List<int> EduEntitiesIds = await _EduEntitiesCoordinatorRepository
                         .Where(x => x.CoordinatorId == UserId)
@@ -368,21 +382,21 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             EducationalEntityObject = x
                         }).ToList();
 
-                    if (request.page != 0 && request.perPage > 0)
+                    if (Request.page != 0 && Request.perPage > 0)
                     {
                         forms = Roles.Any(r => r!.HaveFullAccess)
                             ? forms
                                 .Where(x => DynamicAttributeValueEtities
                                     .Select(y => y.RecordId).Contains(x.Id))
                                 .OrderByDescending(x => x.CreatedAt)
-                                .Skip((request.page - 1) * request.perPage)
-                                .Take(request.perPage)
+                                .Skip((Request.page - 1) * Request.perPage)
+                                .Take(Request.perPage)
                                 .ToList()
                             : await _FormRepository
                                 .Where(f => DynamicAttributeValueEtities.Select(y => y.RecordId).Contains(f.Id))
                                 .OrderByDescending(x => x.CreatedAt)
-                                .Skip((request.page - 1) * request.page)
-                                .Take(request.perPage)
+                                .Skip((Request.page - 1) * Request.page)
+                                .Take(Request.perPage)
                                 .ToListAsync();
                     }
                     else
@@ -443,10 +457,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                             //ReasonOfRejection = x.ReasonOfRejection!,
                             categoryId = x.categoryId,
                             CreatedAt = x.CreatedAt,
-                            CategoryName = request.lang == "en"
+                            CategoryName = Request.lang == "en"
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.Parent!.ArabicName,
-                            SubCategoryName = request.lang == "en"
+                            SubCategoryName = Request.lang == "en"
                                 ? Categories.FirstOrDefault(y => y.Id == x.categoryId)!.EnglishName
                                 : Categories.FirstOrDefault(y => y.Id == x.categoryId)!.ArabicName,
                             SucceedToFinalArbitration = GetAllFromsInFinalArbitration
@@ -542,7 +556,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
 
                         int count = _FormRepository.GetCount(f => !f.isDeleted);
 
-                        Pagination pagination = new Pagination(request.page, request.perPage, count);
+                        Pagination pagination = new Pagination(Request.page, Request.perPage, count);
 
                         return new BaseResponse<List<FormListVm>>("", true, 200, data, pagination);
                     }

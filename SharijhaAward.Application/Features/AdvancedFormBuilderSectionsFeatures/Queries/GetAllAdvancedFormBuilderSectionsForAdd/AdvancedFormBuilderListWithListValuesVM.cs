@@ -1,4 +1,5 @@
 ﻿using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAdvancedFormBuilderById;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd;
 
 namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Queries.GetAllAdvancedFormBuilderSectionsForAdd
 {
@@ -6,6 +7,8 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
     {
         public int Id { get; set; }
         public string Label { get; set; } = null!;
+        public string ArabicTitle { get; set; } = null!;
+        public string EnglishTitle { get; set; } = null!;
         public string PlaceHolder { get; set; } = null!;
         public int AttributeDataTypeId { get; set; }
         public string AttributeDataTypeName { get; set; } = null!;
@@ -17,5 +20,6 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
         public string? ReasonForRejecting { get; set; }
         public int? MaxSizeInKB { get; set; }
         public List<AdvancedFormBuilderListValueListVM>? AdvancedFormBuilderListValues { get; set; }
+        public List<ViewWhenForAddDto>? ViewWhenForAddDtos { get; set; }
     }
 }

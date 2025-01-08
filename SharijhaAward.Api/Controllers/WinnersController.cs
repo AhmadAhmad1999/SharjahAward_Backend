@@ -19,10 +19,12 @@ namespace SharijhaAward.Api.Controllers
     public class WinnersController : ControllerBase
     {
         private readonly IMediator _Mediator;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public WinnersController(IMediator Mediator)
+        public WinnersController(IMediator Mediator, IWebHostEnvironment _WebHostEnvironment)
         {
             _Mediator = Mediator;
+            this._WebHostEnvironment = _WebHostEnvironment;
         }
         [HttpPut("SelectWinningForms")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -168,6 +170,8 @@ namespace SharijhaAward.Api.Controllers
             ConfirmSelectedWinningFormsCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            ConfirmSelectedWinningFormsCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
 
             BaseResponse<object>? Response = await _Mediator.Send(ConfirmSelectedWinningFormsCommand);
 
